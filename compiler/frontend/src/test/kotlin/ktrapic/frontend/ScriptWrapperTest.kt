@@ -47,7 +47,7 @@ class ScriptWrapperTest {
   }
 
   @Test
-  fun `default imports go at the start of the first line, moving no line`() {
+  fun `default imports go before the first import, moving no line`() {
     val wrapped =
         withScript("import kotlin.math.max\nval a = max(1, 2)\n") {
           ScriptWrapper.wrap(it, listOf("ktrapic.*"))
@@ -60,6 +60,32 @@ class ScriptWrapperTest {
     // Column 22 of the generated first line is the user's column 4 ("ort kotlin...").
     assertThat(wrapped.originalPosition(1, 22)).isEqualTo(1 to 4)
     assertThat(wrapped.originalPosition(2, 18)).isEqualTo(2 to 1)
+  }
+
+  @Test
+  fun `default imports follow a shebang, file annotations and a package line`() {
+    val withImport =
+        withScript(
+            "#!/usr/bin/env kotlin\n@file:Suppress(\"X\")\npackage p\nimport a.b\nval x = 1\n"
+        ) {
+          ScriptWrapper.wrap(it, listOf("ktrapic.*"))
+        }
+    assertThat(withImport.text)
+        .isEqualTo(
+            "#!/usr/bin/env kotlin\n@file:Suppress(\"X\")\npackage p\n" +
+                "import ktrapic.*; import a.b\nobject Program { val x = 1\n\n}\n"
+        )
+
+    val withoutImport =
+        withScript("#!/usr/bin/env kotlin\npackage p\n\nval x = 1\n") {
+          ScriptWrapper.wrap(it, listOf("ktrapic.*"))
+        }
+    assertThat(withoutImport.text)
+        .isEqualTo(
+            "#!/usr/bin/env kotlin\npackage p\n\nimport ktrapic.*; object Program { val x = 1\n\n}\n"
+        )
+    // Column 36 of the generated fourth line is the user's column 1 ("val x").
+    assertThat(withoutImport.originalPosition(4, 36)).isEqualTo(4 to 1)
   }
 
   @Test

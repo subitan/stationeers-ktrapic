@@ -835,6 +835,27 @@ class CompilerTest {
   }
 
   @Test
+  fun `the implied import comes after a shebang, file annotations and a package line`() {
+    val sources =
+        listOf(
+            "#!/usr/bin/env kotlin\nimport ktrapic.*\ndb.Setting = 1.0",
+            "#!/usr/bin/env kotlin\ndb.Setting = 1.0",
+            "@file:Suppress(\"UNUSED_VARIABLE\")\nimport ktrapic.*\nval x = 1\ndb.Setting = 1.0",
+            "@file:Suppress(\"UNUSED_VARIABLE\")\nval x = 1\ndb.Setting = 1.0",
+            "package foo\nimport ktrapic.*\ndb.Setting = 1.0",
+            "package foo\ndb.Setting = 1.0",
+        )
+    for (source in sources) {
+      assertWithMessage(source)
+          .that(Compiler.compile(source))
+          .isInstanceOf(CompileResult.Success::class.java)
+    }
+    val error =
+        (Compiler.compile("package foo\n\nd0.On = 1.0") as CompileResult.Failure).errors.first()
+    assertThat(error.line to error.column).isEqualTo(3 to 7)
+  }
+
+  @Test
   fun `kotlin errors are reported`() {
     assertThat(error("db.On = 1.0").line).isEqualTo(3)
   }
