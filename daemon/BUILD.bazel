@@ -1,0 +1,33 @@
+load("@rules_java//java:java_binary.bzl", "java_binary")
+load("@rules_kotlin//kotlin:jvm.bzl", "kt_jvm_library")
+load("//build_defs/kotlin:junit5.bzl", "kt_junit5_tests")
+
+kt_jvm_library(
+    name = "daemon_lib",
+    srcs = glob(["src/main/kotlin/**/*.kt"]),
+    deps = [
+        "//compiler/api",
+        "@maven//:com_google_code_gson_gson",
+    ],
+)
+
+# The compile daemon (PyTrapIC's stdin/stdout protocol). The playground and, later, the IC10
+# Editor plugin run its deploy jar: bazel build //daemon:ktrapic-daemon_deploy.jar
+java_binary(
+    name = "ktrapic-daemon",
+    main_class = "ktrapic.daemon.DaemonKt",
+    visibility = ["//visibility:public"],
+    runtime_deps = [":daemon_lib"],
+)
+
+kt_junit5_tests(
+    name = "daemon_tests",
+    srcs = glob(["src/test/kotlin/**/*.kt"]),
+    associates = [":daemon_lib"],
+    size = "medium",
+    deps = [
+        "@maven//:com_google_code_gson_gson",
+        "@maven//:com_google_truth_truth",
+        "@maven//:org_junit_jupiter_junit_jupiter_api",
+    ],
+)
