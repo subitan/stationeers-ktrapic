@@ -5,9 +5,12 @@ A system to allow IC10 programming using a constrained Kotlin (inspired by
 
 KTrapIC compiles a constrained subset of Kotlin to IC10, the assembly language of
 [Stationeers](https://store.steampowered.com/app/544550/Stationeers/)' programmable chips.
-It is at an early stage: the build is in place and the compiler is being written.
+It is at an early stage: programs using values, loops, conditions and the devices on a
+chip's pins compile; functions, batch operations and the IC10 Editor plugin are next.
 
+- `compiler/api`: `Compiler.compile(source, options)`, the whole pipeline from source to IC10.
 - `compiler/frontend`: runs the Kotlin K2 front end on a script and returns its IR.
+- `compiler/backend`: translates that IR to IC10, allocating registers r0–r15.
 - `compiler/ic10`: the IC10 program model, parser, and printer (normal, and compact with
   labels resolved to line numbers), plus the chip's size limits.
 - `emu`: an IC10 emulator with fake devices, so tests can check what a program does.
@@ -23,7 +26,7 @@ KTrapIC builds with [Bazel](https://bazel.build) (bzlmod), via
 
 ```
 bazel test //...
-bazel run //cli:ktrapic
+bazel run //cli:ktrapic -- [--compact] program.kts
 ```
 
 ### Dependencies
@@ -71,7 +74,8 @@ PyTrapIC is under the MIT License; its notice is in `runtime/data/PYTRAPIC-LICEN
 ## Formatting
 
 Kotlin sources are formatted with [ktfmt](https://github.com/facebook/ktfmt) 0.64 (default
-style); CI fails on unformatted code. With the
+style); CI fails on unformatted code, except the programs in `test/cases`, which are
+test input. With the
 [`ktfmt-0.64-with-dependencies.jar`](https://repo1.maven.org/maven2/com/facebook/ktfmt/0.64/)
 from Maven Central:
 
@@ -80,6 +84,14 @@ java -jar ktfmt-0.64-with-dependencies.jar <files...>
 ```
 
 ## Tests
+
+Golden programs live in `test/cases`: each `X.kts` must compile to `X.ic10`, and to
+`X.compact.ic10` with compact output. After a deliberate change to the output, rewrite them
+(the path must be absolute):
+
+```
+bazel test //compiler/api:GoldenTest --test_env=KTRAPIC_UPDATE_GOLDENS=$PWD/test/cases
+```
 
 Kotlin tests use JUnit 5 + Truth. In a package's `BUILD.bazel`, `kt_junit5_tests` (from
 `//build_defs/kotlin:junit5.bzl`) compiles `src/test/kotlin/**/*.kt` and creates one test

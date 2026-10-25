@@ -4,7 +4,10 @@ load("@rules_kotlin//kotlin:jvm.bzl", "kt_jvm_library")
 kt_jvm_library(
     name = "cli_lib",
     srcs = glob(["src/main/kotlin/**/*.kt"]),
-    deps = ["//compiler/ic10"],
+    deps = [
+        "//compiler/api",
+        "//compiler/ic10",
+    ],
 )
 
 java_binary(

@@ -70,7 +70,7 @@ object K2Frontend {
   fun <T> compile(
       source: String,
       classpath: List<File> = emptyList(),
-      use: (IrModuleFragment) -> T,
+      use: (FrontendIr) -> T,
   ): FrontendResult<T> {
     val workDir = Files.createTempDirectory("ktrapic-frontend").toFile()
     val disposable = Disposer.newDisposable("ktrapic-frontend")
@@ -104,7 +104,8 @@ object K2Frontend {
       if (captured !is CapturedIr || diagnostics.any { it.severity == Diagnostic.Severity.ERROR }) {
         return FrontendResult.Failure(diagnostics)
       }
-      return FrontendResult.Success(use(captured.fir2ir.result.irModuleFragment), diagnostics)
+      val ir = FrontendIr(captured.fir2ir.result.irModuleFragment, wrapped)
+      return FrontendResult.Success(use(ir), diagnostics)
     } finally {
       Disposer.dispose(disposable)
       workDir.deleteRecursively()
@@ -210,5 +211,25 @@ private class CollectingMessageCollector : MessageCollector {
         if (location == null || location.line <= 0) 0 to 0
         else wrapped.originalPosition(location.line, location.column)
     Diagnostic(severity, message.text, line, column)
+  }
+}
+
+/** A program's IR, and how to find where its elements are in the user's source. */
+class FrontendIr
+internal constructor(
+    val module: IrModuleFragment,
+    private val wrapped: WrappedSource,
+) {
+  /**
+   * The 1-based line and column, in the user's source, of an IR element's [offset] (its
+   * `startOffset`), or null for an offset that is not in the source.
+   */
+  fun position(offset: Int): Pair<Int, Int>? {
+    if (offset < 0) return null
+    val entry = module.files.single().fileEntry
+    return wrapped.originalPosition(
+        entry.getLineNumber(offset) + 1,
+        entry.getColumnNumber(offset) + 1,
+    )
   }
 }

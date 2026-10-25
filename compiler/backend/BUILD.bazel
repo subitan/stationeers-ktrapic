@@ -1,0 +1,13 @@
+load("@rules_kotlin//kotlin:jvm.bzl", "kt_jvm_library")
+
+# Kotlin IR → IC10. Tested through //compiler/api, which runs the whole pipeline.
+kt_jvm_library(
+    name = "backend",
+    srcs = glob(["src/main/kotlin/**/*.kt"]),
+    visibility = ["//visibility:public"],
+    deps = [
+        "//compiler/frontend",
+        "//compiler/ic10",
+        "@maven//:org_jetbrains_kotlin_kotlin_compiler_embeddable",
+    ],
+)

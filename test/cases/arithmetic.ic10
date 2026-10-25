@@ -1,0 +1,18 @@
+s d0 Setting 295.15
+l r0 d1 Setting
+trunc r0 r0
+l r1 d2 Setting
+trunc r1 r1
+div r2 r0 r1
+trunc r2 r2
+s db Setting r2
+div r2 r0 r1
+trunc r2 r2
+mul r2 r2 r1
+sub r0 r0 r2
+s db Ratio r0
+l r0 d1 Setting
+abs r0 r0
+sqrt r0 r0
+mul r0 r0 2
+s db Mode r0

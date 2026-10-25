@@ -44,4 +44,4 @@ jobs:
         run: |
           curl -sSfL -o ktfmt.jar "https://repo1.maven.org/maven2/com/facebook/ktfmt/${KTFMT_VERSION}/ktfmt-${KTFMT_VERSION}-with-dependencies.jar"
           echo "${KTFMT_SHA256}  ktfmt.jar" | sha256sum --check
-          git ls-files -z '*.kt' '*.kts' | xargs -0 --no-run-if-empty java -jar ktfmt.jar --dry-run --set-exit-if-changed
+          git ls-files -z '*.kt' '*.kts' ':!:test/cases/*' | xargs -0 --no-run-if-empty java -jar ktfmt.jar --dry-run --set-exit-if-changed
