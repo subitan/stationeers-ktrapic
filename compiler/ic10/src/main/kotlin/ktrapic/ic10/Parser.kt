@@ -9,7 +9,6 @@ internal object Parser {
   private val hex = Regex("""\$[0-9A-Fa-f_]+""")
   private val binary = Regex("""%[01_]+""")
   private val stringConstant = Regex("""(HASH|STR)\("([^"]*)"\)""")
-  private val label = Regex("""[A-Za-z_][A-Za-z0-9_]*""")
   /**
    * Constants parsed straight to a [Number], because [Number] prints them back as the same word.
    * The other built-in constants stay [Name]s so that printed text keeps them.
@@ -28,16 +27,7 @@ internal object Parser {
     val labels = mutableSetOf<String>()
     tokenized.forEachIndexed { index, (tokens, _) ->
       val name = tokens.firstOrNull()?.removeSuffixOrNull(":") ?: return@forEachIndexed
-      // A label sharing a name with a register, device, constant, define or alias could never be
-      // told apart from it where the name is used.
-      val clash =
-          when (name) {
-            in Register.NAMES -> "a register"
-            in Device.NAMES -> "a device"
-            in Constants.VALUES -> "a constant"
-            in declared -> "also a define or alias"
-            else -> null
-          }
+      val clash = labelClash(name, declared)
       if (clash != null) throw Ic10ParseException(index + 1, "label $name is $clash")
       if (!labels.add(name)) throw Ic10ParseException(index + 1, "label $name defined again")
     }
@@ -58,7 +48,7 @@ internal object Parser {
     val first = tokens.first()
     first.removeSuffixOrNull(":")?.let { name ->
       if (tokens.size > 1) throw Ic10ParseException(lineNumber, "text after label $first")
-      if (!label.matches(name)) throw Ic10ParseException(lineNumber, "bad label name: $name")
+      if (!identifier.matches(name)) throw Ic10ParseException(lineNumber, "bad label name: $name")
       return Line.Label(name, comment)
     }
     val opcode =
@@ -97,7 +87,7 @@ internal object Parser {
       hex.matches(token) -> integer(lineNumber, token, 16)
       binary.matches(token) -> integer(lineNumber, token, 2)
       token in labels -> LabelRef(token)
-      label.matches(token) -> Name(token)
+      identifier.matches(token) -> Name(token)
       else -> throw Ic10ParseException(lineNumber, "bad operand: $token")
     }
   }
