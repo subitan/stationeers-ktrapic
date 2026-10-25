@@ -28,16 +28,7 @@ internal object Parser {
     val labels = mutableSetOf<String>()
     tokenized.forEachIndexed { index, (tokens, _) ->
       val name = tokens.firstOrNull()?.removeSuffixOrNull(":") ?: return@forEachIndexed
-      // A label sharing a name with a register, device, constant, define or alias could never be
-      // told apart from it where the name is used.
-      val clash =
-          when (name) {
-            in Register.NAMES -> "a register"
-            in Device.NAMES -> "a device"
-            in Constants.VALUES -> "a constant"
-            in declared -> "also a define or alias"
-            else -> null
-          }
+      val clash = labelClash(name, declared)
       if (clash != null) throw Ic10ParseException(index + 1, "label $name is $clash")
       if (!labels.add(name)) throw Ic10ParseException(index + 1, "label $name defined again")
     }

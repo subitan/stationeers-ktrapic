@@ -36,6 +36,15 @@ data class Program(val lines: List<Line>) {
     val names = lines.filterIsInstance<Line.Label>().map { it.name }
     val duplicates = names.groupingBy { it }.eachCount().filterValues { it > 1 }.keys
     require(duplicates.isEmpty()) { "labels defined more than once: $duplicates" }
+    val declared =
+        lines
+            .filterIsInstance<Line.Instruction>()
+            .filter { it.op == "define" || it.op == "alias" }
+            .mapNotNullTo(mutableSetOf()) { (it.operands.firstOrNull() as? Name)?.name }
+    for (name in names) {
+      val clash = labelClash(name, declared)
+      require(clash == null) { "label $name is $clash" }
+    }
     val undefined =
         lines
             .filterIsInstance<Line.Instruction>()
@@ -128,3 +137,17 @@ data class Program(val lines: List<Line>) {
     }
   }
 }
+
+/**
+ * Why [name] can't be a label in a program that declares [declared] with `define` and `alias`, or
+ * null if it can. A label sharing a name with a register, device, constant, define or alias could
+ * never be told apart from it where the name is used.
+ */
+internal fun labelClash(name: String, declared: Set<String>): String? =
+    when (name) {
+      in Register.NAMES -> "a register"
+      in Device.NAMES -> "a device"
+      in Constants.VALUES -> "a constant"
+      in declared -> "also a define or alias"
+      else -> null
+    }

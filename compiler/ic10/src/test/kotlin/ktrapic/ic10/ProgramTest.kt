@@ -99,6 +99,19 @@ class ProgramTest {
   }
 
   @Test
+  fun rejectsLabelsThatClashWithOtherNames() {
+    for (name in listOf("r0", "sp", "d1", "db", "pi", "nan")) {
+      assertThrows<IllegalArgumentException>(name) { Program(Line.Label(name)) }
+    }
+    assertThrows<IllegalArgumentException> {
+      Program(Line.Instruction("define", Name("Limit"), Number(3.0)), Line.Label("Limit"))
+    }
+    assertThrows<IllegalArgumentException> {
+      Program(Line.Label("Sensor"), Line.Instruction("alias", Name("Sensor"), Device("d0")))
+    }
+  }
+
+  @Test
   fun rejectsDuplicateLabels() {
     assertThrows<IllegalArgumentException> { Program(Line.Label("a"), Line.Label("a")) }
   }
