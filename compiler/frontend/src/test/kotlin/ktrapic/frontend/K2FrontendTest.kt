@@ -51,4 +51,34 @@ class K2FrontendTest {
     assertThat(error.line).isEqualTo(2)
     assertThat(error.column).isEqualTo(3)
   }
+
+  @Test
+  fun `an error at the end of the program is reported within the user's source`() {
+    // The unclosed function swallows the wrapper's closing brace, so K2 reports the missing `}`
+    // after that brace, on a line past the end of the user's three lines.
+    val source = "val a = 1\nfun f() {\n"
+    val result = K2Frontend.compile(source) { it.dump() }
+
+    assertThat(result).isInstanceOf(FrontendResult.Failure::class.java)
+    val errors = result.diagnostics.filter { it.severity == Diagnostic.Severity.ERROR }
+    assertThat(errors).isNotEmpty()
+    assertThat(errors.map { it.line to it.column }).contains(3 to 1)
+    assertThat(errors.map { it.line }.max()).isAtMost(3)
+  }
+
+  @Test
+  fun `a top-level destructuring declaration is rejected in script terms`() {
+    val result = K2Frontend.compile("val (a, b) = Pair(1, 2)\nprintln(a + b)\n") { it.dump() }
+
+    assertThat(result).isInstanceOf(FrontendResult.Failure::class.java)
+    assertThat(result.diagnostics)
+        .containsExactly(
+            Diagnostic(
+                Diagnostic.Severity.ERROR,
+                "Top-level destructuring declarations are not supported.",
+                1,
+                1,
+            )
+        )
+  }
 }

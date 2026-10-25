@@ -70,7 +70,10 @@ object K2Frontend {
     val workDir = Files.createTempDirectory("ktrapic-frontend").toFile()
     val disposable = Disposer.newDisposable("ktrapic-frontend")
     try {
-      val wrapped = ScriptWrapper.wrap(parseScript(source, disposable))
+      val script = parseScript(source, disposable)
+      val unsupported = ScriptWrapper.unsupported(script)
+      if (unsupported.isNotEmpty()) return FrontendResult.Failure(unsupported)
+      val wrapped = ScriptWrapper.wrap(script)
       val sourceFile = File(workDir, "$PROGRAM_OBJECT.kt").apply { writeText(wrapped.text) }
       val messages = CollectingMessageCollector()
       val arguments =
@@ -97,7 +100,8 @@ object K2Frontend {
     }
   }
 
-  private fun parseScript(
+  /** Parses [source] as a Kotlin script; the PSI lives until [disposable] is disposed. */
+  internal fun parseScript(
       source: String,
       disposable: org.jetbrains.kotlin.com.intellij.openapi.Disposable,
   ) =
