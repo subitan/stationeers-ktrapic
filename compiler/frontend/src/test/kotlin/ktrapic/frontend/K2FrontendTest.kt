@@ -30,6 +30,32 @@ class K2FrontendTest {
   }
 
   @Test
+  fun `a script with Windows line endings compiles`() {
+    val result = K2Frontend.compile(script.replace("\n", "\r\n") + "\r\n") { it.dump() }
+
+    assertThat(result.diagnostics.filter { it.severity == Diagnostic.Severity.ERROR }).isEmpty()
+    assertThat(result).isInstanceOf(FrontendResult.Success::class.java)
+  }
+
+  @Test
+  fun `a type error in a script with Windows line endings is reported on the user's line`() {
+    val result = K2Frontend.compile("val ok = 1\r\nval bad: Int = \"text\"\r\n") { it.dump() }
+
+    assertThat(result).isInstanceOf(FrontendResult.Failure::class.java)
+    val error = result.diagnostics.single { it.severity == Diagnostic.Severity.ERROR }
+    assertThat(error.line).isEqualTo(2)
+    assertThat(error.message).doesNotContain("Syntax error")
+  }
+
+  @Test
+  fun `a script starting with a byte-order mark compiles`() {
+    val result = K2Frontend.compile(0xFEFF.toChar() + "println(1)\n") { it.dump() }
+
+    assertThat(result.diagnostics.filter { it.severity == Diagnostic.Severity.ERROR }).isEmpty()
+    assertThat(result).isInstanceOf(FrontendResult.Success::class.java)
+  }
+
+  @Test
   fun `a type error is reported on the user's line`() {
     val source = "val ok = 1\nval bad: Int = \"text\"\n"
     val result = K2Frontend.compile(source) { it.dump() }

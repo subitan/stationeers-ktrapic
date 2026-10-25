@@ -103,7 +103,13 @@ object K2Frontend {
     }
   }
 
-  /** Parses [source] as a Kotlin script; the PSI lives until [disposable] is disposed. */
+  /**
+   * Parses [source] as a Kotlin script; the PSI lives until [disposable] is disposed.
+   *
+   * The PSI parser expects `\n` line separators and no byte-order mark, so `\r\n` becomes `\n` and
+   * a leading BOM is dropped first. Neither moves a line, and positions on line 1 are counted
+   * without the BOM, as an editor shows them.
+   */
   internal fun parseScript(
       source: String,
       disposable: org.jetbrains.kotlin.com.intellij.openapi.Disposable,
@@ -116,7 +122,13 @@ object K2Frontend {
               },
               EnvironmentConfigFiles.JVM_CONFIG_FILES,
           )
-          .let { KtPsiFactory(it.project, false).createFile("$PROGRAM_OBJECT.kts", source) }
+          .let {
+            KtPsiFactory(it.project, false)
+                .createFile(
+                    "$PROGRAM_OBJECT.kts",
+                    source.removePrefix(0xFEFF.toChar().toString()).replace("\r\n", "\n"),
+                )
+          }
 
   /** The kotlin-stdlib jar this process runs with, which the program is compiled against. */
   private fun kotlinStdlibJar(): File =
