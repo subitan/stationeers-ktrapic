@@ -260,6 +260,40 @@ class CompilerTest {
   }
 
   @Test
+  fun `a math call's argument keeps its value when a later argument assigns it`() {
+    val db =
+        run(
+            """
+            var u = 1.0
+            db.Setting = max(u, if (true) { u = 7.0; 0.0 } else 0.0)
+            var c = 5
+            db.Ratio = c.coerceIn(c++, 10).toDouble()
+            """
+        )
+
+    assertThat(db["Setting"]).isEqualTo(1.0)
+    assertThat(db["Ratio"]).isEqualTo(5.0)
+  }
+
+  @Test
+  fun `a range's bounds keep their values when its step assigns them`() {
+    val db =
+        run(
+            """
+            var s = 1
+            var n = 0
+            var first = -1
+            for (i in s..10 step s++) { if (first < 0) first = i; n++ }
+            db.Setting = first.toDouble()
+            db.Ratio = n.toDouble()
+            """
+        )
+
+    assertThat(db["Setting"]).isEqualTo(1.0)
+    assertThat(db["Ratio"]).isEqualTo(10.0)
+  }
+
+  @Test
   fun `a for loop's step is evaluated once`() {
     val db =
         run(
@@ -291,6 +325,63 @@ class CompilerTest {
     assertThat(db["Setting"]).isEqualTo(2.0)
     assertThat(db["Ratio"]).isEqualTo(2.0)
     assertThat(db["Mode"]).isEqualTo(0.0)
+  }
+
+  @Test
+  fun `comparisons with an Int holding NaN are false in branches`() {
+    val db =
+        run(
+            """
+            val n = sqrt(-1.0).toInt()
+            db.Setting = if (n > 5) 1.0 else 2.0
+            db.Ratio = if (n <= 5) 1.0 else 2.0
+            var z = 0
+            val q = z / z
+            db.Mode = if (q > 0 || q <= 0) 1.0 else 2.0
+            """
+        )
+
+    assertThat(db["Setting"]).isEqualTo(2.0)
+    assertThat(db["Ratio"]).isEqualTo(2.0)
+    assertThat(db["Mode"]).isEqualTo(2.0)
+  }
+
+  @Test
+  fun `Double remainder folds to what the chip computes`() {
+    val db =
+        run(
+            """
+            val a = 10.0
+            var b = 10.0
+            db.Setting = b % 0.1
+            db.Ratio = a % 0.1
+            """
+        )
+
+    assertThat(db["Setting"]).isEqualTo(0.0)
+    assertThat(db["Ratio"]).isEqualTo(0.0)
+  }
+
+  @Test
+  fun `a step of a stepped range is rejected`() {
+    assertThat(error("for (i in 1..10 step 2 step 3) db.Setting = i.toDouble()").message)
+        .contains("step")
+  }
+
+  @Test
+  fun `a for loop with a NaN bound ends`() {
+    val db =
+        run(
+            """
+            val n = sqrt(-1.0).toInt()
+            var count = 0
+            for (i in 0..n) count++
+            for (i in n downTo 0) count++
+            db.Setting = count.toDouble()
+            """
+        )
+
+    assertThat(db["Setting"]).isEqualTo(0.0)
   }
 
   @Test

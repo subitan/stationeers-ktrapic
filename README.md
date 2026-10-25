@@ -28,7 +28,10 @@ constructs otherwise behave as on the JVM, but `Int` values are not limited to 3
 - Bitwise operations and shifts work on 64-bit integers, as IC10's do: `x ushr 28` with `x`
   holding -1 is 68719476735, and a shift count isn't reduced modulo 32.
 - `Double.toInt()` only truncates: a value outside the `Int` range stays as it is, and NaN stays
-  NaN.
+  NaN. An `Int` holding NaN compares as a `Double` NaN does: every ordered comparison is false.
+- `Double` `%` is computed as `a - truncate(a / b) * b`, which rounds at the division and the
+  multiplication, so it can differ from the JVM's exact remainder: `10.0 % 0.1` is 0.0 rather
+  than 0.09999999999999945, and `x % Double.POSITIVE_INFINITY` is NaN rather than `x`.
 
 Constant expressions fold to the same results the chip computes.
 

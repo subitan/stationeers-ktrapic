@@ -2,15 +2,17 @@ l r0 db Setting
 trunc r0 r0
 move r1 0
 move r2 1
-bgt r2 r0 8
+ble r2 r0 6
+j 9
 add r1 r1 r2
 add r2 r2 1
 j 4
 move r2 0
-blt r0 0 14
-beqz r0 14
+bge r0 0 12
+j 16
+beqz r0 16
 add r2 r2 1
 sub r0 r0 2
-j 9
+j 10
 s db Ratio r1
 s db Mode r2

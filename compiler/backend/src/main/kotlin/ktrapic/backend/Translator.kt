@@ -445,10 +445,16 @@ internal class Translator {
     return Reg(result)
   }
 
-  /** `a % b` takes the sign of `a`, as on the JVM, unlike IC10's `mod`. */
+  /**
+   * `a % b` is `a - truncate(a / b) * b`, which takes the sign of `a`, as on the JVM, unlike IC10's
+   * `mod`. It is exact for Ints; for Doubles the division and multiplication round, so it can
+   * differ from the JVM's exact remainder. A constant one folds with the same arithmetic.
+   */
   private fun remainder(call: IrCall, a: Value, b: Value, int: Boolean): Value {
     if (int && b is Const && b.number == 0.0) fail(call, "division by zero")
-    if (a is Const && b is Const) return Const(a.number % b.number)
+    if (a is Const && b is Const) {
+      return Const(a.number - truncate(a.number / b.number) * b.number)
+    }
     val quotient = newVReg()
     emit("div", quotient, operand(a), operand(b))
     emit("trunc", quotient, quotient)
@@ -529,8 +535,9 @@ internal class Translator {
   // Comparisons and conditions.
 
   /**
-   * [mayBeNaN] is true for an ordered comparison of Doubles: with a NaN operand both `a < b` and
-   * `a >= b` are false, so the opposite IC10 branch is not the negation.
+   * [mayBeNaN] is true for an ordered comparison of numbers: with a NaN operand both `a < b` and
+   * `a >= b` are false, so the opposite IC10 branch is not the negation. Ints count too, since
+   * `toInt()` keeps NaN and a run-time `0 / 0` gives it.
    */
   private class Comparison(val op: String, val a: Value, val b: Value, val mayBeNaN: Boolean)
 
@@ -556,13 +563,7 @@ internal class Translator {
     }
     val boolean = left.type.isBoolean()
     val (a, b) = operands(listOf(left, right)).map { if (boolean) truth(it) else it }
-    val ordered = condition != "eq"
-    return Comparison(
-        condition,
-        a,
-        b,
-        mayBeNaN = ordered && (left.type.isDouble() || right.type.isDouble()),
-    )
+    return Comparison(condition, a, b, mayBeNaN = condition != "eq" && !boolean)
   }
 
   /** A Boolean as exactly 0 or 1: a device may report any non-zero value for true. */
@@ -754,13 +755,31 @@ internal class Translator {
     val next = newLabel("next")
     val done = newLabel("endfor")
     label(top)
-    val exit =
-        when {
-          range.descending -> "blt"
-          range.inclusive -> "bgt"
-          else -> "bge"
-        }
-    emit(exit, counter, operand(end), Fixed(LabelRef(done)))
+    if (range.start is Const && end is Const) {
+      val exit =
+          when {
+            range.descending -> "blt"
+            range.inclusive -> "bgt"
+            else -> "bge"
+          }
+      emit(exit, counter, operand(end), Fixed(LabelRef(done)))
+    } else {
+      // A bound computed at run time may be NaN (an Int holding NaN), which every comparison
+      // fails: branch into the body only while the loop should go on, so NaN ends the loop
+      // instead of running it forever.
+      val stay =
+          when {
+            range.descending -> "bge"
+            range.inclusive -> "ble"
+            else -> "blt"
+          }
+      val body = newLabel("forbody")
+      lines +=
+          TirInstruction(stay, listOf(counter, operand(end), Fixed(LabelRef(body))))
+              .copy(negatable = false)
+      emit("j", Fixed(LabelRef(done)))
+      label(body)
+    }
     variables[loopVariable] = Reg(counter)
     loops[loop] = next to done
     for (statement in body.statements.drop(1)) statement(statement)
@@ -797,6 +816,10 @@ internal class Translator {
       "kotlin.ranges.downTo" -> bounds(inclusive = true, descending = true)
       "kotlin.ranges.step" -> {
         val inner = args[0] as? IrCall ?: fail(call, "This range is not supported")
+        // Kotlin rebuilds a stepped progression from the last value it reaches, not its end bound.
+        if (inner.symbol.owner.kotlinFqName.asString() == "kotlin.ranges.step") {
+          fail(call, "a step of a stepped range is not supported")
+        }
         val range = range(inner)
         val stepAssigns = args[1].mayAssign()
         val (start, end) =
