@@ -7,6 +7,11 @@ KTrapIC compiles a constrained subset of Kotlin to IC10, the assembly language o
 [Stationeers](https://store.steampowered.com/app/544550/Stationeers/)' programmable chips.
 It is at an early stage: the build is in place and the compiler is being written.
 
+- `compiler/frontend`: runs the Kotlin K2 front end on a script and returns its IR.
+- `compiler/ic10`: the IC10 program model, parser, and printer (normal, and compact with
+  labels resolved to line numbers), plus the chip's size limits.
+- `emu`: an IC10 emulator with fake devices, so tests can check what a program does.
+
 ## Building
 
 KTrapIC builds with [Bazel](https://bazel.build) (bzlmod), via
