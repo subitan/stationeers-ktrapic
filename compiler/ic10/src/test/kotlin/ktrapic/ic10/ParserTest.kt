@@ -73,6 +73,48 @@ class ParserTest {
   }
 
   @Test
+  fun labelsNeverStandInForDeclaredNamesLogicTypesOrBatchModes() {
+    val program = Program.parse("On:\nSum:\ns d0 On 1\nlb r0 1 On Sum\nj On")
+
+    assertThat((program.lines[2] as Line.Instruction).operands[1]).isEqualTo(Name("On"))
+    assertThat((program.lines[3] as Line.Instruction).operands.drop(2))
+        .containsExactly(Name("On"), Name("Sum"))
+        .inOrder()
+    assertThat((program.lines[4] as Line.Instruction).operands).containsExactly(LabelRef("On"))
+  }
+
+  @Test
+  fun rejectsLabelsThatClashWithOtherNames() {
+    for ((text, line) in
+        listOf(
+            "foo:\ndefine foo 5" to 1,
+            "alias x r1\nx:" to 2,
+            "yield\nr0:" to 2,
+            "db:" to 1,
+            "nan:" to 1,
+        )) {
+      val e = assertThrows<Ic10ParseException>(text) { Program.parse(text) }
+      assertThat(e.line).isEqualTo(line)
+    }
+  }
+
+  @Test
+  fun rejectsDefineOrAliasWithoutAName() {
+    val e = assertThrows<Ic10ParseException> { Program.parse("yield\ndefine r0 5") }
+    assertThat(e.line).isEqualTo(2)
+    assertThrows<Ic10ParseException> { Program.parse("alias 3 d0") }
+  }
+
+  @Test
+  fun rejectsMalformedHexAndBinary() {
+    for (token in listOf("\$FFFFFFFFFFFFFFFFF", "\$_", "%_")) {
+      val e = assertThrows<Ic10ParseException>(token) { Program.parse("yield\nmove r0 $token") }
+      assertThat(e.line).isEqualTo(2)
+      assertThat(e).hasMessageThat().contains("bad number")
+    }
+  }
+
+  @Test
   fun rejectsUnknownInstructions() {
     val e = assertThrows<Ic10ParseException> { Program.parse("yield\nfrob r0") }
     assertThat(e.line).isEqualTo(2)

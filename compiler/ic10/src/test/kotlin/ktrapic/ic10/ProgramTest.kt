@@ -85,6 +85,13 @@ class ProgramTest {
   }
 
   @Test
+  fun rejectsLabelReferenceInANameOperand() {
+    assertThrows<IllegalArgumentException> {
+      Program(Line.Label("On"), Line.Instruction("s", Device("d0"), LabelRef("On"), Number(1.0)))
+    }
+  }
+
+  @Test
   fun rejectsDuplicateLabels() {
     assertThrows<IllegalArgumentException> { Program(Line.Label("a"), Line.Label("a")) }
   }

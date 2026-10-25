@@ -24,6 +24,36 @@ data class Opcode(val name: String, val arity: Int, val jump: JumpKind = JumpKin
   /** Whether the instruction stores the next line number in `ra` when it jumps. */
   val links: Boolean
     get() = name == "jal" || (name.startsWith("b") && name.endsWith("al"))
+
+  /**
+   * Indices of the operands that are names rather than values: the name a `define` or `alias`
+   * declares, and logic types, slot logic types, reagent modes and batch modes, which the game
+   * looks up by name. A label never stands in for one of these.
+   */
+  val nameIndices: Set<Int>
+    get() = NAME_OPERANDS[name] ?: emptySet()
+
+  private companion object {
+    val NAME_OPERANDS =
+        mapOf(
+            "alias" to setOf(0),
+            "define" to setOf(0),
+            "bdnvl" to setOf(1),
+            "bdnvs" to setOf(1),
+            "l" to setOf(2),
+            "lb" to setOf(2, 3),
+            "lbn" to setOf(3, 4),
+            "lbns" to setOf(4, 5),
+            "lbs" to setOf(3, 4),
+            "lr" to setOf(2),
+            "ls" to setOf(3),
+            "s" to setOf(1),
+            "sb" to setOf(1),
+            "sbn" to setOf(2),
+            "sbs" to setOf(2),
+            "ss" to setOf(2),
+        )
+  }
 }
 
 /** The IC10 instruction set, by name. */

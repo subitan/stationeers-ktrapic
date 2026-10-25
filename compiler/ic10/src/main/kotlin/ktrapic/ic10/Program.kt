@@ -47,6 +47,11 @@ data class Program(val lines: List<Line>) {
     require(undefined.isEmpty()) { "references to undefined labels: $undefined" }
     for (line in lines.filterIsInstance<Line.Instruction>()) {
       val opcode = Opcodes[line.op] ?: continue
+      for (index in opcode.nameIndices) {
+        require(line.operands.getOrNull(index) !is LabelRef) {
+          "${line.op} takes a name, not a label, as operand ${index + 1}"
+        }
+      }
       if (opcode.jump == JumpKind.RELATIVE) {
         require(line.operands.getOrNull(opcode.targetIndex!!) !is LabelRef) {
           "${line.op} jumps by an offset, not to a label"
@@ -64,7 +69,10 @@ data class Program(val lines: List<Line>) {
    * dropped line goes to the next instruction after it.
    *
    * Jump targets computed at run time (`j r0`, a `define`d number) aren't renumbered, so they break
-   * here; the compiler only jumps through labels, `ra` and literal offsets.
+   * here; the compiler only jumps through labels, `ra` and literal offsets. That includes
+   * arithmetic on a label: a jump table read as `add r0 table r1` / `j r0` counts its entries from
+   * the label's own line, which compaction drops, so every index lands one entry later. A literal
+   * jump target that isn't a whole number is left as it is, so it may truncate to a different line.
    */
   fun compacted(): Program {
     // newIndex[i]: the compacted line that old line i falls to. newIndex[lines.size] is the end.

@@ -254,6 +254,34 @@ class EmulatorTest {
   }
 
   @Test
+  fun defineOfANonConstantFailsAtItsLine() {
+    val e = assertThrows<Ic10RuntimeException> { Emulator(Program.parse("yield\ndefine x r0")) }
+    assertThat(e.line).isEqualTo(1)
+  }
+
+  @Test
+  fun compactedProgramsKeepTheirRegisters() {
+    val programs =
+        listOf(
+            // A call through ra, and a label used as a value.
+            "move r0 3\njal sq\n# back\nmove r2 next\nj r2\nsq:\nmul r1 r0 r0\nj ra\nnext:\nmove r2 0\nadd r3 r1 1",
+            // Literal absolute and relative jumps over comments and blank lines.
+            "move r0 1\n\nbrgtz r0 3\n# skipped\nmove r1 1\nmove r2 2\nj 9\nmove r3 3\n# end\n",
+            // A define, an alias, and a loop.
+            "define N 4\nalias i r0\nloop:\nadd r1 r1 i\nadd i i 1\n\nblt i N loop",
+        )
+    fun registers(program: Program): List<Double> {
+      val emu = Emulator(program).runUntilHalt()
+      return (0..15).map { emu.register("r$it") } + emu.register("sp")
+    }
+
+    for (text in programs) {
+      val program = Program.parse(text)
+      assertThat(registers(program.compacted())).isEqualTo(registers(program))
+    }
+  }
+
+  @Test
   fun hcfHalts() {
     val emu = Emulator(Program.parse("hcf"))
     assertThrows<Ic10RuntimeException> { emu.tick() }

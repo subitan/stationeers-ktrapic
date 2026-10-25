@@ -26,7 +26,8 @@ class Ic10RuntimeException(val line: Int, message: String) : Exception("line $li
  *
  * The chip runs up to [instructionsPerTick] lines each game tick (half a second), stopping early at
  * `yield` or `sleep`. Every line counts, labels, comments and blank lines included. Running off the
- * end of the program halts the chip.
+ * end of the program halts the chip. A `define` whose value isn't a constant fails when the
+ * emulator is built, as an [Ic10RuntimeException] at that line.
  *
  * [pins] holds the devices on `d0`..`d5` and `db`; [network] is every device on the data network,
  * which batch instructions (`lb`, `sb`, ...) select from by prefab and name hash.
@@ -62,9 +63,15 @@ class Emulator(
   private var sleepUntilTick = 0
   private val aliases = mutableMapOf<String, Operand>()
   private val defines: Map<String, Double> = buildMap {
-    for (line in program.lines) {
+    program.lines.forEachIndexed { index, line ->
       if (line is Line.Instruction && line.op == "define") {
-        put((line.operands[0] as Name).name, constant(line.operands[1]))
+        try {
+          val name =
+              line.operands[0] as? Name ?: error("needs a name, not ${line.operands[0].text()}")
+          put(name.name, constant(line.operands[1]))
+        } catch (e: IllegalStateException) {
+          throw Ic10RuntimeException(index, "define: ${e.message}")
+        }
       }
     }
   }
@@ -337,8 +344,8 @@ class Emulator(
       when (operand) {
         is Number -> operand.value
         is StringConstant -> operand.numericValue
-        is Name -> BUILT_IN[operand.name] ?: error("define needs a constant, not ${operand.name}")
-        else -> error("define needs a constant, not ${operand.text()}")
+        is Name -> BUILT_IN[operand.name] ?: error("needs a constant, not ${operand.name}")
+        else -> error("needs a constant, not ${operand.text()}")
       }
 
   private fun resolveAlias(operand: Operand): Operand =

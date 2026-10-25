@@ -20,9 +20,26 @@ internal object Parser {
   fun parse(text: String): Program {
     val rawLines = text.replace("\r", "").split('\n')
     val tokenized = rawLines.mapIndexed { index, raw -> tokenize(index + 1, raw) }
+    val declared =
+        tokenized
+            .mapNotNull { (tokens, _) ->
+              tokens.getOrNull(1)?.takeIf { tokens[0] == "define" || tokens[0] == "alias" }
+            }
+            .toSet()
     val labels = mutableSetOf<String>()
     tokenized.forEachIndexed { index, (tokens, _) ->
       val name = tokens.firstOrNull()?.removeSuffixOrNull(":") ?: return@forEachIndexed
+      // A label sharing a name with a register, device, constant, define or alias could never be
+      // told apart from it where the name is used.
+      val clash =
+          when (name) {
+            in Register.NAMES -> "a register"
+            in Device.NAMES -> "a device"
+            in constants -> "a constant"
+            in declared -> "also a define or alias"
+            else -> null
+          }
+      if (clash != null) throw Ic10ParseException(index + 1, "label $name is $clash")
       if (!labels.add(name)) throw Ic10ParseException(index + 1, "label $name defined again")
     }
     return Program(
@@ -54,7 +71,12 @@ internal object Parser {
           "$first takes ${opcode.arity} operands, not ${operands.size}",
       )
     }
-    val parsed = operands.map { operand(lineNumber, it, labels) }
+    val parsed = operands.mapIndexed { index, token ->
+      operand(lineNumber, token, if (index in opcode.nameIndices) emptySet() else labels)
+    }
+    if ((first == "define" || first == "alias") && parsed[0] !is Name) {
+      throw Ic10ParseException(lineNumber, "$first needs a name, not ${operands[0]}")
+    }
     if (opcode.jump == JumpKind.RELATIVE && parsed[opcode.targetIndex!!] is LabelRef) {
       throw Ic10ParseException(lineNumber, "$first jumps by an offset, not to a label")
     }
@@ -70,12 +92,20 @@ internal object Parser {
       token in Device.NAMES -> Device(token)
       token in constants -> Number(constants.getValue(token))
       decimal.matches(token) -> Number(token.toDouble())
-      hex.matches(token) -> Number(token.drop(1).replace("_", "").toLong(16).toDouble())
-      binary.matches(token) -> Number(token.drop(1).replace("_", "").toLong(2).toDouble())
+      hex.matches(token) -> integer(lineNumber, token, 16)
+      binary.matches(token) -> integer(lineNumber, token, 2)
       token in labels -> LabelRef(token)
       label.matches(token) -> Name(token)
       else -> throw Ic10ParseException(lineNumber, "bad operand: $token")
     }
+  }
+
+  /** A `$` hex or `%` binary literal; `_` separates digits. */
+  private fun integer(lineNumber: Int, token: String, radix: Int): Number {
+    val value =
+        token.drop(1).replace("_", "").toLongOrNull(radix)
+            ?: throw Ic10ParseException(lineNumber, "bad number: $token")
+    return Number(value.toDouble())
   }
 
   /** Splits a line into whitespace-separated tokens and a comment, keeping quoted text whole. */
