@@ -853,6 +853,9 @@ class CompilerTest {
     val error =
         (Compiler.compile("package foo\n\nd0.On = 1.0") as CompileResult.Failure).errors.first()
     assertThat(error.line to error.column).isEqualTo(3 to 7)
+    val sameLineError =
+        (Compiler.compile("package p; d0.On = 1.0") as CompileResult.Failure).errors.first()
+    assertThat(sameLineError.line to sameLineError.column).isEqualTo(1 to 18)
   }
 
   @Test
