@@ -1,0 +1,21 @@
+load("@rules_kotlin//kotlin:jvm.bzl", "kt_jvm_library")
+load("//build_defs/kotlin:junit5.bzl", "kt_junit5_tests")
+
+kt_jvm_library(
+    name = "frontend",
+    srcs = glob(["src/main/kotlin/**/*.kt"]),
+    visibility = ["//visibility:public"],
+    deps = ["@maven//:org_jetbrains_kotlin_kotlin_compiler_embeddable"],
+)
+
+kt_junit5_tests(
+    name = "frontend_tests",
+    srcs = glob(["src/test/kotlin/**/*.kt"]),
+    associates = [":frontend"],
+    size = "medium",
+    deps = [
+        "@maven//:com_google_truth_truth",
+        "@maven//:org_jetbrains_kotlin_kotlin_compiler_embeddable",
+        "@maven//:org_junit_jupiter_junit_jupiter_api",
+    ],
+)

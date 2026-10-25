@@ -8,8 +8,8 @@ bazel_dep(name = "rules_java", version = "9.9.0")
 bazel_dep(name = "rules_jvm_external", version = "7.2")
 bazel_dep(name = "rules_kotlin", version = "2.4.21")
 
-# Kotlin is pinned to one exact version. When the front end adds kotlin-compiler-embeddable,
-# its version must match this one: the compiler's internal APIs change between releases.
+# Kotlin is pinned to one exact version, here and for kotlin-compiler-embeddable in the Maven
+# artifacts below: the front end uses compiler-internal APIs that change between releases.
 rules_kotlin_extensions = use_extension(
     "@rules_kotlin//src/main/starlark/core/repositories:bzlmod_setup.bzl",
     "rules_kotlin_extensions",
@@ -30,6 +30,8 @@ maven = use_extension("@rules_jvm_external//:extensions.bzl", "maven")
 maven.install(
     artifacts = [
         "com.google.truth:truth:1.4.4",
+        # The K2 front end (compiler/frontend). Must match kotlinc_version above.
+        "org.jetbrains.kotlin:kotlin-compiler-embeddable:2.4.21",
         # JUnit 5, run by the platform's ConsoleLauncher (build_defs/kotlin/junit5.bzl).
         "org.junit.jupiter:junit-jupiter-api:5.14.4",
         "org.junit.jupiter:junit-jupiter-engine:5.14.4",
