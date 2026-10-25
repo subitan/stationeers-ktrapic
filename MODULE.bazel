@@ -1,0 +1,47 @@
+module(
+    name = "ktrapic",
+    version = "0.0.0",
+)
+
+bazel_dep(name = "bazel_skylib", version = "1.9.2")
+bazel_dep(name = "contrib_rules_jvm", version = "0.34.0")
+bazel_dep(name = "rules_java", version = "9.9.0")
+bazel_dep(name = "rules_jvm_external", version = "7.2")
+bazel_dep(name = "rules_kotlin", version = "2.4.21")
+
+# Kotlin is pinned to one exact version everywhere: this kotlinc and the embedded
+# kotlin-compiler-embeddable the front end uses, whose internal APIs change between releases.
+rules_kotlin_extensions = use_extension(
+    "@rules_kotlin//src/main/starlark/core/repositories:bzlmod_setup.bzl",
+    "rules_kotlin_extensions",
+)
+rules_kotlin_extensions.kotlinc_version(
+    sha256 = "7cc140e76daf416a0424a5557f99afd7ca89ebd463ea1101261e3e01c33e75cd",
+    version = "2.4.21",
+)
+use_repo(rules_kotlin_extensions, "btapi_impl", "com_github_google_ksp", "com_github_jetbrains_kotlin", "com_github_jetbrains_kotlin_git", "com_github_pinterest_ktlint", "jarjar", "kotlin_build_tools_api", "kotlinx_coroutines_core_jvm", "kotlinx_serialization_core_jvm", "kotlinx_serialization_json", "kotlinx_serialization_json_jvm")
+
+register_toolchains("//:kotlin_toolchain")
+
+# The "maven" resolver (a Java program) rather than coursier, whose launcher is a shell script
+# that can't run on Windows. It requires a lock file; repin after changing artifacts with
+#   RULES_JVM_EXTERNAL_REPIN=1 bazel run @maven//:pin
+# (on Windows, see README: the pin launcher is a bash script that must be run under bash).
+maven = use_extension("@rules_jvm_external//:extensions.bzl", "maven")
+maven.install(
+    artifacts = [
+        "com.google.truth:truth:1.4.4",
+        # JUnit 5, run by contrib_rules_jvm's java_junit5_test.
+        "org.junit.jupiter:junit-jupiter-api:5.14.4",
+        "org.junit.jupiter:junit-jupiter-engine:5.14.4",
+        "org.junit.platform:junit-platform-launcher:1.14.4",
+        "org.junit.platform:junit-platform-reporting:1.14.4",
+    ],
+    known_contributing_modules = ["protobuf"],
+    lock_file = "//:maven_install.json",
+    repositories = [
+        "https://repo1.maven.org/maven2",
+    ],
+    resolver = "maven",
+)
+use_repo(maven, "maven")

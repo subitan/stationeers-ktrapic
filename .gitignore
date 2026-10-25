@@ -1,0 +1,9 @@
+# Bazel
+/bazel-*
+/user.bazelrc
+
+# IDEs
+.idea/
+.ijwb/
+*.iml
+out/

@@ -1,0 +1,8 @@
+# LF line endings in the repository and in every checkout, on every OS: ktfmt, Bazel and the
+# IC10 output all expect them, and it keeps diffs stable between Windows and Linux.
+* text=auto eol=lf
+
+*.bat text eol=crlf
+*.cmd text eol=crlf
+*.jar binary
+*.png binary

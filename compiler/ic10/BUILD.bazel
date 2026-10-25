@@ -1,0 +1,31 @@
+load("@contrib_rules_jvm//java:defs.bzl", "java_junit5_test")
+load("@rules_kotlin//kotlin:jvm.bzl", "kt_jvm_library")
+
+kt_jvm_library(
+    name = "ic10",
+    srcs = glob(["src/main/kotlin/**/*.kt"]),
+    visibility = ["//visibility:public"],
+)
+
+kt_jvm_library(
+    name = "ic10_tests",
+    testonly = True,
+    srcs = glob(["src/test/kotlin/**/*.kt"]),
+    associates = [":ic10"],
+    deps = [
+        "@maven//:com_google_truth_truth",
+        "@maven//:org_junit_jupiter_junit_jupiter_api",
+    ],
+)
+
+java_junit5_test(
+    name = "ProgramSizeTest",
+    size = "small",
+    test_class = "ktrapic.ic10.ProgramSizeTest",
+    runtime_deps = [
+        ":ic10_tests",
+        "@maven//:org_junit_jupiter_junit_jupiter_engine",
+        "@maven//:org_junit_platform_junit_platform_launcher",
+        "@maven//:org_junit_platform_junit_platform_reporting",
+    ],
+)
