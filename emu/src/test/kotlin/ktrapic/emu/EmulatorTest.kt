@@ -1,6 +1,8 @@
 package ktrapic.emu
 
 import com.google.common.truth.Truth.assertThat
+import com.google.common.truth.Truth.assertWithMessage
+import ktrapic.ic10.Constants
 import ktrapic.ic10.Line
 import ktrapic.ic10.Name
 import ktrapic.ic10.Program
@@ -269,10 +271,20 @@ class EmulatorTest {
   }
 
   @Test
+  fun defineOfAnOverlongStrFailsAtItsLine() {
+    val e =
+        assertThrows<Ic10RuntimeException> {
+          Emulator(Program.parse("yield\ndefine x STR(\"ABCDEFG\")"))
+        }
+    assertThat(e.line).isEqualTo(1)
+  }
+
+  @Test
   fun definesTakeEveryBuiltInConstant() {
-    val emu = run("define x deg2rad\nmove r0 x\nmove r1 epsilon")
-    assertThat(emu.register("r0")).isEqualTo(Math.PI / 180)
-    assertThat(emu.register("r1")).isEqualTo(Float.MIN_VALUE.toDouble())
+    for ((name, value) in Constants.VALUES) {
+      val emu = run("define x $name\nmove r0 x")
+      assertWithMessage(name).that(emu.register("r0")).isEqualTo(value)
+    }
   }
 
   @Test

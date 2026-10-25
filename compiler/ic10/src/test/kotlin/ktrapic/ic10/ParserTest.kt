@@ -125,7 +125,10 @@ class ParserTest {
 
   @Test
   fun nameOperandsMatchTheGameSignatures() {
-    // Operands as the game's instruction help names them; the name-typed ones are listed below.
+    // Every instruction with a name-typed operand (listed in nameTyped below), with its operands in
+    // order. The instructions, arities and name-typed positions follow the instruction list at
+    // https://stationeers-wiki.com/IC10/instructions, which spells some operands differently (for
+    // example deviceHash for prefabHash, logicSlotType for slotLogicType).
     val signatures =
         listOf(
             "alias name target",

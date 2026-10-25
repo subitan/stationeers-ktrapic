@@ -71,7 +71,7 @@ class Emulator(
           val name =
               line.operands[0] as? Name ?: error("needs a name, not ${line.operands[0].text()}")
           put(name.name, constant(line.operands[1]))
-        } catch (e: IllegalStateException) {
+        } catch (e: RuntimeException) {
           throw Ic10RuntimeException(index, "define: ${e.message}")
         }
       }
