@@ -9,7 +9,6 @@ internal object Parser {
   private val hex = Regex("""\$[0-9A-Fa-f_]+""")
   private val binary = Regex("""%[01_]+""")
   private val stringConstant = Regex("""(HASH|STR)\("([^"]*)"\)""")
-  private val label = Regex("""[A-Za-z_][A-Za-z0-9_]*""")
   /**
    * Constants parsed straight to a [Number], because [Number] prints them back as the same word.
    * The other built-in constants stay [Name]s so that printed text keeps them.
@@ -49,7 +48,7 @@ internal object Parser {
     val first = tokens.first()
     first.removeSuffixOrNull(":")?.let { name ->
       if (tokens.size > 1) throw Ic10ParseException(lineNumber, "text after label $first")
-      if (!label.matches(name)) throw Ic10ParseException(lineNumber, "bad label name: $name")
+      if (!identifier.matches(name)) throw Ic10ParseException(lineNumber, "bad label name: $name")
       return Line.Label(name, comment)
     }
     val opcode =
@@ -88,7 +87,7 @@ internal object Parser {
       hex.matches(token) -> integer(lineNumber, token, 16)
       binary.matches(token) -> integer(lineNumber, token, 2)
       token in labels -> LabelRef(token)
-      label.matches(token) -> Name(token)
+      identifier.matches(token) -> Name(token)
       else -> throw Ic10ParseException(lineNumber, "bad operand: $token")
     }
   }

@@ -112,6 +112,13 @@ class ProgramTest {
   }
 
   @Test
+  fun rejectsLabelNamesTheParserWouldNotRead() {
+    for (name in listOf("", "1x", "a b", "x:", "x#y", "x-y")) {
+      assertThrows<IllegalArgumentException>(name) { Program(Line.Label(name)) }
+    }
+  }
+
+  @Test
   fun rejectsDuplicateLabels() {
     assertThrows<IllegalArgumentException> { Program(Line.Label("a"), Line.Label("a")) }
   }

@@ -42,6 +42,7 @@ data class Program(val lines: List<Line>) {
             .filter { it.op == "define" || it.op == "alias" }
             .mapNotNullTo(mutableSetOf()) { (it.operands.firstOrNull() as? Name)?.name }
     for (name in names) {
+      require(identifier.matches(name)) { "bad label name: $name" }
       val clash = labelClash(name, declared)
       require(clash == null) { "label $name is $clash" }
     }
@@ -137,6 +138,9 @@ data class Program(val lines: List<Line>) {
     }
   }
 }
+
+/** A name as IC10 text spells it: a label, a `define` or `alias` name, or a [Name] operand. */
+internal val identifier = Regex("""[A-Za-z_][A-Za-z0-9_]*""")
 
 /**
  * Why [name] can't be a label in a program that declares [declared] with `define` and `alias`, or
