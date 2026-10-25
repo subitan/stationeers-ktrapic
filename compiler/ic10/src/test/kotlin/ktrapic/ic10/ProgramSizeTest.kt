@@ -5,51 +5,56 @@ import org.junit.jupiter.api.Test
 
 class ProgramSizeTest {
   @Test
-  fun `empty program has no lines`() {
-    assertThat(ProgramSize.of("")).isEqualTo(ProgramSize(lines = 0, bytes = 0, maxLineLength = 0))
+  fun `empty program is one empty line`() {
+    assertThat(ProgramSize.of("")).isEqualTo(ProgramSize(lines = 1, bytes = 0, maxLineLength = 0))
   }
 
   @Test
-  fun `trailing newline does not add a line`() {
-    assertThat(ProgramSize.of("yield\nj 0\n").lines).isEqualTo(2)
+  fun `trailing newline counts as an extra line`() {
     assertThat(ProgramSize.of("yield\nj 0").lines).isEqualTo(2)
+    assertThat(ProgramSize.of("yield\nj 0\n").lines).isEqualTo(3)
+  }
+
+  @Test
+  fun `carriage returns are not counted`() {
+    assertThat(ProgramSize.of("yield\r\nj 0"))
+        .isEqualTo(ProgramSize(lines = 2, bytes = 9, maxLineLength = 5))
   }
 
   @Test
   fun `bytes are counted as characters, not encoded bytes`() {
     // "°" is one UTF-16 code unit but two UTF-8 bytes; the game measures string length.
-    assertThat(ProgramSize.of("# °C\n").bytes).isEqualTo(5)
+    assertThat(ProgramSize.of("# °C").bytes).isEqualTo(4)
   }
 
   @Test
   fun `program at the line limit fits`() {
-    val program = "yield\n".repeat(Ic10Limits.MAX_LINES)
+    val program = List(Ic10Limits.MAX_LINES) { "yield" }.joinToString("\n")
+    assertThat(ProgramSize.of(program).lines).isEqualTo(Ic10Limits.MAX_LINES)
     assertThat(ProgramSize.of(program).fits).isTrue()
   }
 
   @Test
   fun `program over the line limit does not fit`() {
-    val program = "yield\n".repeat(Ic10Limits.MAX_LINES + 1)
+    val program = List(Ic10Limits.MAX_LINES + 1) { "yield" }.joinToString("\n")
     assertThat(ProgramSize.of(program).fits).isFalse()
   }
 
   @Test
   fun `program at the byte limit fits`() {
-    val line = "#" + "x".repeat(Ic10Limits.MAX_LINE_LENGTH - 2) + "\n"
-    val program =
-        line.repeat(Ic10Limits.MAX_BYTES / line.length).let {
-          it + "#".repeat(Ic10Limits.MAX_BYTES - it.length)
-        }
-    val size = ProgramSize.of(program)
+    val size = ProgramSize.of(programOfLength(Ic10Limits.MAX_BYTES))
     assertThat(size.bytes).isEqualTo(Ic10Limits.MAX_BYTES)
     assertThat(size.fits).isTrue()
   }
 
   @Test
   fun `program over the byte limit does not fit`() {
-    val program = "#\n".repeat(Ic10Limits.MAX_BYTES / 2) + "#"
-    assertThat(ProgramSize.of(program).bytes).isEqualTo(Ic10Limits.MAX_BYTES + 1)
-    assertThat(ProgramSize.of(program).fits).isFalse()
+    val size = ProgramSize.of(programOfLength(Ic10Limits.MAX_BYTES + 1))
+    // Only the byte limit is exceeded.
+    assertThat(size.lines).isAtMost(Ic10Limits.MAX_LINES)
+    assertThat(size.maxLineLength).isAtMost(Ic10Limits.MAX_LINE_LENGTH)
+    assertThat(size.bytes).isEqualTo(Ic10Limits.MAX_BYTES + 1)
+    assertThat(size.fits).isFalse()
   }
 
   @Test
@@ -64,5 +69,18 @@ class ProgramSizeTest {
     val program = "yield\n#" + "x".repeat(Ic10Limits.MAX_LINE_LENGTH) + "\nj 0"
     assertThat(ProgramSize.of(program).maxLineLength).isEqualTo(Ic10Limits.MAX_LINE_LENGTH + 1)
     assertThat(ProgramSize.of(program).fits).isFalse()
+  }
+
+  /** A comment-only program of exactly [length] characters, in lines of at most 89 characters. */
+  private fun programOfLength(length: Int): String {
+    val lines = mutableListOf<String>()
+    var remaining = length
+    while (remaining > 0) {
+      val separator = if (lines.isEmpty()) 0 else 1
+      val lineLength = minOf(89, remaining - separator)
+      lines += "#" + "x".repeat(lineLength - 1)
+      remaining -= lineLength + separator
+    }
+    return lines.joinToString("\n")
   }
 }

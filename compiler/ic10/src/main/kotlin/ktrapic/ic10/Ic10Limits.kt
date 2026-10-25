@@ -40,16 +40,19 @@ data class ProgramSize(val lines: Int, val bytes: Int, val maxLineLength: Int) {
 
   companion object {
     /**
-     * Measures IC10 source text. A trailing newline doesn't start another line. [bytes] and
-     * [maxLineLength] are lengths in UTF-16 code units, which is what Kotlin's [String.length]
-     * returns, matching the C# measure.
+     * Measures IC10 source text the way the IC10 Editor does: carriage returns are dropped, then
+     * the text is split on `\n` with nothing trimmed. A trailing newline therefore counts as an
+     * extra (empty) line, and an empty program as one line, so emitted code must not end with a
+     * newline. [bytes] and [maxLineLength] are lengths in UTF-16 code units (Kotlin's
+     * [String.length], matching C#'s).
      */
     fun of(code: String): ProgramSize {
-      val lines = if (code.isEmpty()) emptyList() else code.removeSuffix("\n").split('\n')
+      val text = code.replace("\r", "")
+      val lines = text.split('\n')
       return ProgramSize(
           lines = lines.size,
-          bytes = code.length,
-          maxLineLength = lines.maxOfOrNull { it.length } ?: 0,
+          bytes = text.length,
+          maxLineLength = lines.maxOf { it.length },
       )
     }
   }

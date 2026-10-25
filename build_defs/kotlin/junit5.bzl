@@ -1,14 +1,13 @@
-"""Kotlin JUnit 5 tests: one java_junit5_test per test source file."""
+"""Kotlin JUnit 5 tests: one test target per test source file."""
 
-load("@contrib_rules_jvm//java:defs.bzl", "java_junit5_test")
+load("@rules_java//java:java_test.bzl", "java_test")
 load("@rules_kotlin//kotlin:jvm.bzl", "kt_jvm_library")
 
 _TEST_ROOT = "src/test/kotlin/"
 
 _JUNIT5_RUNTIME = [
     "@maven//:org_junit_jupiter_junit_jupiter_engine",
-    "@maven//:org_junit_platform_junit_platform_launcher",
-    "@maven//:org_junit_platform_junit_platform_reporting",
+    "@maven//:org_junit_platform_junit_platform_console",
 ]
 
 def kt_junit5_tests(name, srcs, associates = [], deps = [], size = "small", **kwargs):
@@ -19,13 +18,17 @@ def kt_junit5_tests(name, srcs, associates = [], deps = [], size = "small", **kw
     file is picked up by the glob in `srcs` and run, instead of compiling but never being
     selected by a single hand-written `test_class`.
 
+    Tests run under JUnit's ConsoleLauncher with --fail-if-no-tests, so a target whose class
+    has no JUnit 5 tests (for example one written with JUnit 4's org.junit.Test) fails rather
+    than passing with zero tests run.
+
     Args:
       name: name of the compiled test library; test targets are named after their classes.
       srcs: Kotlin test sources.
       associates: libraries whose `internal` members the tests may use.
       deps: compile-time dependencies (Truth, the JUnit Jupiter API, ...).
       size: Bazel test size for every generated target.
-      **kwargs: passed to each java_junit5_test.
+      **kwargs: passed to each java_test.
     """
     kt_jvm_library(
         name = name,
@@ -38,10 +41,18 @@ def kt_junit5_tests(name, srcs, associates = [], deps = [], size = "small", **kw
         if not src.startswith(_TEST_ROOT) or not src.endswith(".kt"):
             fail("%s: test sources must be .kt files under %s, got %s" % (name, _TEST_ROOT, src))
         class_path = src[len(_TEST_ROOT):-len(".kt")]
-        java_junit5_test(
+        java_test(
             name = class_path.split("/")[-1],
             size = size,
-            test_class = class_path.replace("/", "."),
+            main_class = "org.junit.platform.console.ConsoleLauncher",
+            use_testrunner = False,
+            args = [
+                "execute",
+                "--select-class=" + class_path.replace("/", "."),
+                "--fail-if-no-tests",
+                "--disable-banner",
+                "--details=tree",
+            ],
             runtime_deps = [":" + name] + _JUNIT5_RUNTIME,
             **kwargs
         )

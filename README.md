@@ -61,8 +61,9 @@ java -jar ktfmt-0.64-with-dependencies.jar <files...>
 Kotlin tests use JUnit 5 + Truth. In a package's `BUILD.bazel`, `kt_junit5_tests` (from
 `//build_defs/kotlin:junit5.bzl`) compiles `src/test/kotlin/**/*.kt` and creates one test
 target per file, named after the file's class, so new test files run without editing the
-build. Use JUnit 5's `org.junit.jupiter.api.Test`; JUnit 4's `org.junit.Test` is on the
-classpath (through Truth) but its tests won't run.
+build. Tests run under JUnit's ConsoleLauncher with `--fail-if-no-tests`: use JUnit 5's
+`org.junit.jupiter.api.Test`. JUnit 4's `org.junit.Test` compiles (Truth brings JUnit 4 onto
+the classpath), but a class using it finds no tests and its target fails.
 
 ## License
 

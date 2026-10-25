@@ -9,8 +9,7 @@
     "com.google.truth:truth": -790731381,
     "org.junit.jupiter:junit-jupiter-api": 1286040600,
     "org.junit.jupiter:junit-jupiter-engine": -2136927876,
-    "org.junit.platform:junit-platform-launcher": 1767517906,
-    "org.junit.platform:junit-platform-reporting": -1845274752,
+    "org.junit.platform:junit-platform-console": 413295785,
     "repositories": -1949687017
   },
   "__RESOLVED_ARTIFACTS_HASH": {
@@ -31,6 +30,7 @@
     "org.junit.jupiter:junit-jupiter-api": -1937301098,
     "org.junit.jupiter:junit-jupiter-engine": 309846110,
     "org.junit.platform:junit-platform-commons": 129017872,
+    "org.junit.platform:junit-platform-console": -391075736,
     "org.junit.platform:junit-platform-engine": -1336696242,
     "org.junit.platform:junit-platform-launcher": -1649847802,
     "org.junit.platform:junit-platform-reporting": 1990069856,
@@ -141,6 +141,12 @@
       },
       "version": "1.14.4"
     },
+    "org.junit.platform:junit-platform-console": {
+      "shasums": {
+        "jar": "8fba295a9aaced613062b7a8486758b71418e1545a3775de8df9ed76cc062383"
+      },
+      "version": "1.14.4"
+    },
     "org.junit.platform:junit-platform-engine": {
       "shasums": {
         "jar": "3c7f3f84a6747aef0db6bd5fdd2a6c8fe37132e653c939bd67387377af66d91c"
@@ -210,6 +216,10 @@
     ],
     "org.junit.platform:junit-platform-commons": [
       "org.apiguardian:apiguardian-api"
+    ],
+    "org.junit.platform:junit-platform-console": [
+      "org.apiguardian:apiguardian-api",
+      "org.junit.platform:junit-platform-reporting"
     ],
     "org.junit.platform:junit-platform-engine": [
       "org.apiguardian:apiguardian-api",
@@ -392,6 +402,13 @@
       "org.junit.platform.commons.support.scanning",
       "org.junit.platform.commons.util"
     ],
+    "org.junit.platform:junit-platform-console": [
+      "org.junit.platform.console",
+      "org.junit.platform.console.command",
+      "org.junit.platform.console.options",
+      "org.junit.platform.console.output",
+      "org.junit.platform.console.shadow.picocli"
+    ],
     "org.junit.platform:junit-platform-engine": [
       "org.junit.platform.engine",
       "org.junit.platform.engine.discovery",
@@ -452,6 +469,7 @@
       "org.junit.jupiter:junit-jupiter-api",
       "org.junit.jupiter:junit-jupiter-engine",
       "org.junit.platform:junit-platform-commons",
+      "org.junit.platform:junit-platform-console",
       "org.junit.platform:junit-platform-engine",
       "org.junit.platform:junit-platform-launcher",
       "org.junit.platform:junit-platform-reporting",
@@ -464,6 +482,11 @@
     "org.junit.jupiter:junit-jupiter-engine": {
       "org.junit.platform.engine.TestEngine": [
         "org.junit.jupiter.engine.JupiterTestEngine"
+      ]
+    },
+    "org.junit.platform:junit-platform-console": {
+      "java.util.spi.ToolProvider": [
+        "org.junit.platform.console.ConsoleLauncherToolProvider"
       ]
     },
     "org.junit.platform:junit-platform-engine": {
