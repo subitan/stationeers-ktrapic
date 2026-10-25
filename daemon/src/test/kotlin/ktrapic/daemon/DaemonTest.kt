@@ -106,8 +106,10 @@ class DaemonTest {
     assertThat(responses[0]["code"].asString).isEqualTo("s db Setting 1")
     assertThat(responses[1].has("error")).isTrue()
     assertThat(responses[2].has("error")).isTrue()
-    assertThat(responses[3]["error"].asJsonObject["description"].asString)
-        .contains("StackOverflowError")
+    val overflow = responses[3]["error"].asJsonObject
+    assertThat(overflow["description"].asString)
+        .startsWith("Internal compiler error: java.lang.StackOverflowError")
+    assertThat(overflow.has("stack_trace")).isTrue()
     assertThat(responses[4]["code"].asString).isEqualTo("s db Setting 1")
   }
 }

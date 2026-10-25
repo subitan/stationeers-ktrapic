@@ -16,8 +16,10 @@ import ktrapic.api.Compiler
  * "num_registers", "warnings"}`; a failure is `{"error": {"description", "line", "column", ...}}`.
  *
  * Unlike PyTrapIC, `line` and `column` are both 1-based, and `line_end`/`column_end` repeat them
- * because the compiler reports only where a problem starts. A request that is not a compile request
- * gets `{"error": {"description"}}`, with an object rather than PyTrapIC's plain string.
+ * because the compiler reports only where a problem starts. All four are 0 when the compiler gives
+ * no position, as for a failure inside the compiler that it reports as an error. A request that is
+ * not a compile request gets `{"error": {"description"}}`, with an object rather than PyTrapIC's
+ * plain string.
  *
  * Every request line gets exactly one response line, whatever it holds, so a client can read one
  * line per line it writes.
