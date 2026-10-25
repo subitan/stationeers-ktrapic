@@ -1154,7 +1154,9 @@ internal class Translator {
     /**
      * Every register or device-pin shape, which a function label never takes: `r` or `d` and digits
      * (`r16` and `r17` are `sp` and `ra`; the game or a mod may add more registers or pins), and
-     * indirect registers and pins such as `rr0`, `rrr1`, `dr0` and `drr1`.
+     * indirect registers and pins such as `rr0`, `rrr1`, `dr0` and `drr1`. The game recognizes
+     * registers, pins, `sp` and `ra` by their lower-case spelling only, so `R0`, `DB` or `Sp` is an
+     * ordinary label and is kept as is.
      */
     val REGISTER_SPELLING = Regex("(d|d?r+)[0-9]+")
     val LABEL_CHARS = ('A'..'Z') + ('a'..'z') + ('0'..'9') + '_'
