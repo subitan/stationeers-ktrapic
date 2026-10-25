@@ -37,10 +37,20 @@ data class Program(val lines: List<Line>) {
     val duplicates = names.groupingBy { it }.eachCount().filterValues { it > 1 }.keys
     require(duplicates.isEmpty()) { "labels defined more than once: $duplicates" }
     val declared =
+        lines.filterIsInstance<Line.Instruction>().mapNotNullTo(mutableSetOf()) { line ->
+          val index = Opcodes[line.op]?.declaredIndex ?: return@mapNotNullTo null
+          (line.operands.getOrNull(index) as? Name)?.name
+        }
+    // The game refuses to run a program that defines a name twice.
+    val defined =
         lines
             .filterIsInstance<Line.Instruction>()
-            .filter { it.op == "define" || it.op == "alias" }
-            .mapNotNullTo(mutableSetOf()) { (it.operands.firstOrNull() as? Name)?.name }
+            .filter { it.op == "define" }
+            .mapNotNull {
+              (it.operands.firstOrNull() as? Name)?.name
+            }
+    val redefined = defined.groupingBy { it }.eachCount().filterValues { it > 1 }.keys
+    require(redefined.isEmpty()) { "names defined more than once: $redefined" }
     for (name in names) {
       require(identifier.matches(name)) { "bad label name: $name" }
       val clash = labelClash(name, declared)
@@ -145,13 +155,14 @@ internal val identifier = Regex("""[A-Za-z_][A-Za-z0-9_]*""")
 /**
  * Why [name] can't be a label in a program that declares [declared] with `define` and `alias`, or
  * null if it can. A label sharing a name with a register, device, constant, define or alias could
- * never be told apart from it where the name is used.
+ * never be told apart from it where the name is used. Constants match in any case, as the game
+ * matches them.
  */
 internal fun labelClash(name: String, declared: Set<String>): String? =
-    when (name) {
-      in Register.NAMES -> "a register"
-      in Device.NAMES -> "a device"
-      in Constants.VALUES -> "a constant"
-      in declared -> "also a define or alias"
+    when {
+      name in Register.NAMES -> "a register"
+      name in Device.NAMES -> "a device"
+      Constants.lookup(name) != null -> "a constant"
+      name in declared -> "also a define or alias"
       else -> null
     }

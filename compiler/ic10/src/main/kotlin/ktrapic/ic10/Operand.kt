@@ -80,7 +80,11 @@ data class StringConstant(val kind: Kind, val value: String) : Operand {
   }
 
   init {
-    require('"' !in value) { "string constants can't contain a double quote" }
+    require(value.isNotEmpty()) { "${kind.name}(\"\") is empty" }
+    // The game cuts a line at its first `#`, even inside quotes.
+    require('"' !in value && '#' !in value) {
+      "string constants can't contain a double quote or a #"
+    }
   }
 
   val numericValue: Double

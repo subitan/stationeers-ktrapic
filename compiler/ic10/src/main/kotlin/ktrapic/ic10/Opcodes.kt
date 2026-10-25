@@ -26,17 +26,33 @@ data class Opcode(val name: String, val arity: Int, val jump: JumpKind = JumpKin
     get() = name == "jal" || (name.startsWith("b") && name.endsWith("al"))
 
   /**
-   * Indices of the operands that are names rather than values: the name a `define` or `alias`
-   * declares, and logic types, slot logic types, reagent modes and batch modes, which the game
-   * looks up by name. A label never stands in for one of these.
+   * Indices of the operands that are names rather than values: the name a `define`, `alias` or
+   * `label` declares, and logic types, slot logic types, reagent modes and batch modes, which the
+   * game looks up by name. A label never stands in for one of these.
    */
   val nameIndices: Set<Int>
     get() = NAME_OPERANDS[name] ?: emptySet()
+
+  /**
+   * Index of the operand that declares a name, or null: the first for `define` and `alias`, the
+   * second for `label`, which takes the device first (`label d0 Sensor`).
+   */
+  val declaredIndex: Int?
+    get() =
+        when (name) {
+          "define",
+          "alias" -> 0
+          "label" -> 1
+          else -> null
+        }
 
   private companion object {
     val NAME_OPERANDS =
         mapOf(
             "alias" to setOf(0),
+            "label" to setOf(1),
+            "ld" to setOf(2),
+            "sd" to setOf(1),
             "define" to setOf(0),
             "bdnvl" to setOf(1),
             "bdnvs" to setOf(1),
@@ -63,6 +79,8 @@ object Opcodes {
           // Control.
           "alias" to 2,
           "define" to 2,
+          // An older spelling of alias, with its operands the other way round.
+          "label" to 2,
           "hcf" to 0,
           "sleep" to 1,
           "yield" to 0,
@@ -74,6 +92,7 @@ object Opcodes {
           "atan" to 2,
           "atan2" to 3,
           "ceil" to 2,
+          "clamp" to 4,
           "cos" to 2,
           "div" to 3,
           "exp" to 2,
@@ -88,6 +107,7 @@ object Opcodes {
           "pow" to 3,
           "rand" to 1,
           "round" to 2,
+          "sgn" to 2,
           "sin" to 2,
           "sqrt" to 2,
           "sub" to 3,
@@ -100,6 +120,8 @@ object Opcodes {
           "nor" to 3,
           "not" to 2,
           "or" to 3,
+          "rol" to 3,
+          "ror" to 3,
           "sla" to 3,
           "sll" to 3,
           "sra" to 3,
@@ -140,6 +162,7 @@ object Opcodes {
           "putd" to 3,
           // Devices.
           "l" to 3,
+          "ld" to 3,
           "lb" to 4,
           "lbn" to 5,
           "lbns" to 6,
@@ -148,6 +171,7 @@ object Opcodes {
           "ls" to 4,
           "rmap" to 3,
           "s" to 3,
+          "sd" to 3,
           "sb" to 3,
           "sbn" to 4,
           "sbs" to 4,

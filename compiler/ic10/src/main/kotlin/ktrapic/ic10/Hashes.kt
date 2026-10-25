@@ -14,12 +14,13 @@ object Hashes {
   /** The most characters `STR("...")` can pack into one value. */
   const val MAX_STR_LENGTH = 6
 
-  /** `STR("...")`: up to six characters packed one byte each, first character highest. */
+  /** `STR("...")`: one to six ASCII characters packed one byte each, first character highest. */
   fun str(text: String): Double {
     require(text.length <= MAX_STR_LENGTH) {
       "STR(\"$text\") is longer than $MAX_STR_LENGTH characters"
     }
-    require(text.all { it.code in 0..255 }) { "STR(\"$text\") has a character outside 0..255" }
+    require(text.isNotEmpty()) { "STR(\"\") is empty" }
+    require(text.all { it.code in 0..127 }) { "STR(\"$text\") has a character that isn't ASCII" }
     return text.fold(0L) { acc, c -> (acc shl 8) or c.code.toLong() }.toDouble()
   }
 }

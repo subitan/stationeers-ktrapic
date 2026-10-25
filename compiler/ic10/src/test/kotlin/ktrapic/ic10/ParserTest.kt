@@ -37,7 +37,9 @@ class ParserTest {
   @Test
   fun parsesNumberForms() {
     val program =
-        Program.parse("move r0 -1.5\nmove r1 \$FF\nmove r2 %101\nmove r3 nan\nmove r4 2e3")
+        Program.parse(
+            "move r0 -1.5\nmove r1 \$FF\nmove r2 %101\nmove r3 nan\nmove r4 \$FFFFFFFFFFFFFFFF"
+        )
 
     assertThat(program.lines.map { (it as Line.Instruction).operands[1] })
         .containsExactly(
@@ -45,9 +47,18 @@ class ParserTest {
             Number(255.0),
             Number(5.0),
             Number(Double.NaN),
-            Number(2000.0),
+            Number(-1.0),
         )
         .inOrder()
+  }
+
+  @Test
+  fun followsTheGameOnExponentsCommentsAndRedefinitions() {
+    // The game reads no exponent, and cuts a line at its first #, even inside quotes.
+    assertThrows<Ic10ParseException> { Program.parse("move r0 2e3") }
+    assertThrows<Ic10ParseException> { Program.parse("""move r0 HASH("a#b")""") }
+    val redefined = assertThrows<Ic10ParseException> { Program.parse("define A 1\ndefine A 2") }
+    assertThat(redefined.line).isEqualTo(2)
   }
 
   @Test
@@ -94,6 +105,9 @@ class ParserTest {
             "db:" to 1,
             "nan:" to 1,
             "yield\npi:" to 2,
+            "PI:" to 1,
+            "Tau:" to 1,
+            "NaN:" to 1,
             "deg2rad:" to 1,
             "rad2deg:" to 1,
             "epsilon:" to 1,
@@ -105,10 +119,10 @@ class ParserTest {
 
   @Test
   fun everyNameOperandIgnoresLabels() {
-    // define and alias are left out: a label sharing their declared name is rejected outright.
+    // define, alias and label are left out: a label sharing their declared name is rejected.
     val opcodes =
         Opcodes.all.values.filter {
-          it.nameIndices.isNotEmpty() && it.name != "define" && it.name != "alias"
+          it.nameIndices.isNotEmpty() && it.name !in setOf("define", "alias", "label")
         }
     assertThat(opcodes).isNotEmpty()
     for (opcode in opcodes) {
@@ -133,6 +147,9 @@ class ParserTest {
         listOf(
             "alias name target",
             "define name value",
+            "label device name",
+            "ld r referenceId logicType",
+            "sd referenceId logicType value",
             "bdnvl device logicType line",
             "bdnvs device logicType line",
             "l r device logicType",
@@ -183,6 +200,16 @@ class ParserTest {
     val e = assertThrows<Ic10ParseException> { Program.parse("yield\ndefine r0 5") }
     assertThat(e.line).isEqualTo(2)
     assertThrows<Ic10ParseException> { Program.parse("alias 3 d0") }
+  }
+
+  @Test
+  fun labelTakesTheDeviceFirstAndTheNameSecond() {
+    val line = Program.parse("label d0 Sensor").lines.single() as Line.Instruction
+    assertThat(line.operands).containsExactly(Device("d0"), Name("Sensor")).inOrder()
+
+    assertThrows<Ic10ParseException> { Program.parse("label Sensor d0") }
+    val e = assertThrows<Ic10ParseException> { Program.parse("label d0 Sensor\nSensor:") }
+    assertThat(e.line).isEqualTo(2)
   }
 
   @Test
