@@ -53,17 +53,34 @@ class K2FrontendTest {
   }
 
   @Test
-  fun `an error at the end of the program is reported within the user's source`() {
-    // The unclosed function swallows the wrapper's closing brace, so K2 reports the missing `}`
-    // after that brace, on a line past the end of the user's three lines.
-    val source = "val a = 1\nfun f() {\n"
-    val result = K2Frontend.compile(source) { it.dump() }
+  fun `a missing closing brace is reported in the user's source`() {
+    // The parser places the error after the last token, at the end of the unclosed line.
+    val result = K2Frontend.compile("val a = 1\nfun f() {\n") { it.dump() }
 
     assertThat(result).isInstanceOf(FrontendResult.Failure::class.java)
-    val errors = result.diagnostics.filter { it.severity == Diagnostic.Severity.ERROR }
-    assertThat(errors).isNotEmpty()
-    assertThat(errors.map { it.line to it.column }).contains(3 to 1)
-    assertThat(errors.map { it.line }.max()).isAtMost(3)
+    assertThat(result.diagnostics)
+        .containsExactly(
+            Diagnostic(Diagnostic.Severity.ERROR, "Syntax error: Expecting '}'", 2, 10)
+        )
+  }
+
+  @Test
+  fun `a stray closing brace is reported at the brace`() {
+    // The parser also flags the statements after the brace; the first error is the brace itself.
+    val result = K2Frontend.compile("val a = 1\n}\nprintln(a)\n") { it.dump() }
+
+    assertThat(result).isInstanceOf(FrontendResult.Failure::class.java)
+    assertThat(result.diagnostics.first())
+        .isEqualTo(Diagnostic(Diagnostic.Severity.ERROR, "Syntax error: Unexpected symbol", 2, 1))
+  }
+
+  @Test
+  fun `syntax errors are reported alongside unsupported constructs`() {
+    val result = K2Frontend.compile("val (a, b) = Pair(1, 2)\nfun f( {\n") { it.dump() }
+
+    assertThat(result).isInstanceOf(FrontendResult.Failure::class.java)
+    assertThat(result.diagnostics.map { it.line }).contains(1)
+    assertThat(result.diagnostics.map { it.line }).contains(2)
   }
 
   @Test

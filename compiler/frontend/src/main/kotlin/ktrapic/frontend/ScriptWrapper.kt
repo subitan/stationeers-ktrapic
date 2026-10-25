@@ -1,5 +1,7 @@
 package ktrapic.frontend
 
+import org.jetbrains.kotlin.com.intellij.psi.PsiErrorElement
+import org.jetbrains.kotlin.com.intellij.psi.util.PsiTreeUtil
 import org.jetbrains.kotlin.psi.KtDestructuringDeclaration
 import org.jetbrains.kotlin.psi.KtFile
 import org.jetbrains.kotlin.psi.KtScriptInitializer
@@ -57,6 +59,23 @@ class WrappedSource(
  * statements are declarations, with plain statements each held in a [KtScriptInitializer].
  */
 object ScriptWrapper {
+  /**
+   * The script's syntax errors, positioned in the user's source. Checking these before [wrap] keeps
+   * an unbalanced brace from being reported in terms of the wrapper it would otherwise close.
+   */
+  fun syntaxErrors(script: KtFile): List<Diagnostic> =
+      PsiTreeUtil.collectElementsOfType(script, PsiErrorElement::class.java)
+          .sortedBy { it.textRange.startOffset }
+          .map {
+            val (line, column) = lineAndColumn(script.text, it.textRange.startOffset)
+            Diagnostic(
+                Diagnostic.Severity.ERROR,
+                "Syntax error: ${it.errorDescription}",
+                line,
+                column + 1,
+            )
+          }
+
   /** Top-level constructs [wrap] cannot keep, as errors positioned in the user's source. */
   fun unsupported(script: KtFile): List<Diagnostic> =
       statements(script).filterIsInstance<KtDestructuringDeclaration>().map {
@@ -82,7 +101,8 @@ object ScriptWrapper {
       edits += statement.textRange.startOffset to "init { "
       edits += statement.textRange.endOffset to " }"
     }
-    // The newline before the brace keeps a final `// comment` from swallowing it.
+    // The newline before the brace keeps a final line comment from swallowing it. An unterminated
+    // block comment still swallows it, adding a "Missing '}'" error beside "Unclosed comment".
     val closing = if (statements != null) "\n}\n" else ""
 
     val text = StringBuilder()

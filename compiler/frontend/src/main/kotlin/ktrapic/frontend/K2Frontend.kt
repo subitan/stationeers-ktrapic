@@ -71,8 +71,11 @@ object K2Frontend {
     val disposable = Disposer.newDisposable("ktrapic-frontend")
     try {
       val script = parseScript(source, disposable)
-      val unsupported = ScriptWrapper.unsupported(script)
-      if (unsupported.isNotEmpty()) return FrontendResult.Failure(unsupported)
+      val rejected =
+          (ScriptWrapper.syntaxErrors(script) + ScriptWrapper.unsupported(script)).sortedWith(
+              compareBy({ it.line }, { it.column })
+          )
+      if (rejected.isNotEmpty()) return FrontendResult.Failure(rejected)
       val wrapped = ScriptWrapper.wrap(script)
       val sourceFile = File(workDir, "$PROGRAM_OBJECT.kt").apply { writeText(wrapped.text) }
       val messages = CollectingMessageCollector()
