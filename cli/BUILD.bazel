@@ -1,0 +1,14 @@
+load("@rules_java//java:java_binary.bzl", "java_binary")
+load("@rules_kotlin//kotlin:jvm.bzl", "kt_jvm_library")
+
+kt_jvm_library(
+    name = "cli_lib",
+    srcs = glob(["src/main/kotlin/**/*.kt"]),
+    deps = ["//compiler/ic10"],
+)
+
+java_binary(
+    name = "ktrapic",
+    main_class = "ktrapic.cli.MainKt",
+    runtime_deps = [":cli_lib"],
+)

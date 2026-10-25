@@ -1,0 +1,22 @@
+common --enable_platform_specific_config
+
+# JDK 21 for building and running (rules_kotlin's launcher rejects JDK 24+). The remote JDK
+# keeps builds independent of whatever JDK the machine has installed.
+common --java_language_version=21
+common --java_runtime_version=remotejdk_21
+common --tool_java_language_version=21
+common --tool_java_runtime_version=remotejdk_21
+
+test --test_output=errors
+
+# Windows: Bazel doesn't create runfiles trees by default there; the Kotlin/Java launchers
+# need them.
+common:windows --enable_runfiles
+
+# CI (GitHub Actions passes --config=ci). The lockfile must already be up to date.
+common:ci --color=yes
+common:ci --curses=no
+common:ci --lockfile_mode=error
+
+# Per-machine settings (output root, cache locations) live in an untracked user.bazelrc.
+try-import %workspace%/user.bazelrc
