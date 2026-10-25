@@ -39,8 +39,8 @@ class Ic10RuntimeException(val line: Int, message: String) : Exception("line $li
  * reach its own stack). Where it deliberately differs: a runtime error halts and throws (the game
  * retries the failing line every tick), `sleep` resumes after exactly `ceil(seconds / 0.5)` ticks
  * (the game's real tick lengths can make it one tick later at exact multiples of 0.5 s), and a
- * literal jump target, address or slot need only have a whole value (the game also wants it written
- * as an integer, so `j 2.0` is an error there).
+ * literal jump target, address, slot, device hash or batch mode need only have a whole value (the
+ * game also wants it written as an integer, so `j 2.0` is an error there).
  *
  * Not modelled yet: logic types given as numbers, device reference ids (`ld`, `sd`, `getd`, `lbns`,
  * `d?` from a register), reagents, other hosts (machines, suits, tablets), and indirect registers
@@ -301,22 +301,22 @@ class Emulator(
       "s" -> requireDevice(ops[0]).write(logicType(ops[1]), v(2))
       "ls" -> set(requireDevice(ops[1]).readSlot(integer(ops[2]), logicType(ops[3])))
       "ss" -> requireDevice(ops[0]).writeSlot(integer(ops[1]), logicType(ops[2]), v(3))
-      "lb" -> set(batch(matching(v(1), null), ops[3]) { it.read(logicType(ops[2])) })
+      "lb" -> set(batch(matching(ops[1]), ops[3]) { it.read(logicType(ops[2])) })
       // The game counts by prefab only for `lbn ... Count`, ignoring the name.
       "lbn" ->
           set(
-              batch(matching(v(1), v(2)), ops[4], count = matching(v(1), null).size) {
+              batch(matching(ops[1], ops[2]), ops[4], count = matching(ops[1]).size) {
                 it.read(logicType(ops[3]))
               }
           )
       "lbs" -> {
+        val devices = matching(ops[1])
         val slot = integer(ops[2])
-        set(batch(matching(v(1), null), ops[4]) { it.readSlot(slot, logicType(ops[3])) })
+        set(batch(devices, ops[4]) { it.readSlot(slot, logicType(ops[3])) })
       }
-      "sb" -> matching(v(0), null).forEach { it.write(logicType(ops[1]), v(2)) }
-      "sbn" -> matching(v(0), v(1)).forEach { it.write(logicType(ops[2]), v(3)) }
-      "sbs" ->
-          matching(v(0), null).forEach { it.writeSlot(integer(ops[1]), logicType(ops[2]), v(3)) }
+      "sb" -> matching(ops[0]).forEach { it.write(logicType(ops[1]), v(2)) }
+      "sbn" -> matching(ops[0], ops[1]).forEach { it.write(logicType(ops[2]), v(3)) }
+      "sbs" -> matching(ops[0]).forEach { it.writeSlot(integer(ops[1]), logicType(ops[2]), v(3)) }
 
       else -> error("not supported by the emulator yet")
     }
@@ -439,13 +439,43 @@ class Emulator(
       (operand as? Name)?.name?.takeIf { it !in aliases && it !in defines }
           ?: error("logic types must be named, not ${operand.text()}")
 
-  private fun matching(prefabHash: Double, nameHash: Double?) = network.filter {
-    it.prefabHash.toDouble() == prefabHash &&
-        (nameHash == null || it.nameHash.toDouble() == nameHash)
+  /**
+   * The devices on the network with the prefab hash [prefab] and, if given, the name hash [name].
+   * The game reads both hashes as integer operands (see [integer]).
+   */
+  private fun matching(prefab: Operand, name: Operand? = null): List<FakeDevice> {
+    val prefabHash = integer(prefab)
+    val nameHash = name?.let { integer(it) }
+    return network.filter {
+      it.prefabHash == prefabHash && (nameHash == null || it.nameHash == nameHash)
+    }
   }
 
+  /**
+   * A batch mode, read as the game reads it: an alias of a register, then a define, then a mode's
+   * name ([BATCH_METHODS]) or a built-in constant. A register's value, an alias's or a define's is
+   * truncated, and a literal must be a whole number.
+   */
   private fun batchMethod(mode: Operand): Int =
-      (if (mode is Name) BATCH_METHODS[mode.name] ?: value(mode) else value(mode)).toInt()
+      when (mode) {
+        is Register -> value(mode).toInt()
+        is Name -> {
+          val alias = aliases[mode.name]
+          if (alias is Register) {
+            registers[alias.index].toInt()
+          } else {
+            defines[mode.name]?.toInt()
+                ?: BATCH_METHODS[mode.name]
+                ?: Constants.lookup(mode.name)?.let { literal(it, mode.name).toInt() }
+                ?: if (alias != null) {
+                  error("${mode.name} is a device, not a value")
+                } else {
+                  error("unknown batch method ${mode.name}")
+                }
+          }
+        }
+        else -> integer(mode)
+      }
 
   /**
    * A batch read over [devices], as the game computes it: every device must be readable, whatever
@@ -485,11 +515,11 @@ class Emulator(
   private fun stackPointer() = Math.rint(registers[Register.SP.index]).toInt()
 
   /**
-   * An operand used as a whole number (a jump target, address or slot), converted as the game does:
-   * a register's value is rounded half to even, an alias's or define's truncated (an alias wins
-   * over a define of the same name), and a literal must be a whole number. A built-in constant
-   * isn't accepted here. `sp` and `ra` are aliases the chip sets up for `r16` and `r17`, so they
-   * truncate.
+   * An operand used as a whole number (a jump target, address, slot or device hash), converted as
+   * the game does: a register's value is rounded half to even, an alias's or define's truncated (an
+   * alias wins over a define of the same name), and a literal must be a whole number. A built-in
+   * constant isn't accepted here. `sp` and `ra` are aliases the chip sets up for `r16` and `r17`,
+   * so they truncate.
    */
   private fun integer(operand: Operand): Int =
       when (operand) {
@@ -500,18 +530,21 @@ class Emulator(
           val value = value(operand)
           value.toInt().also { require(it.toDouble() == value) { "not a whole number" } }
         }
-        is Name ->
-            when (val alias = aliases[operand.name]) {
-              is Register -> registers[alias.index].toInt()
-              null ->
-                  defines[operand.name]?.toInt()
-                      ?: if (Constants.lookup(operand.name) != null) {
-                        error("${operand.name} is a constant, not an integer")
-                      } else {
-                        error("unknown name ${operand.name}")
-                      }
-              else -> error("${operand.name} is a device, not a value")
-            }
+        is Name -> {
+          val alias = aliases[operand.name]
+          if (alias is Register) {
+            registers[alias.index].toInt()
+          } else {
+            // A name aliased to a device is passed over, so a define of the same name still counts.
+            defines[operand.name]?.toInt()
+                ?: when {
+                  alias != null -> error("${operand.name} is a device, not a value")
+                  Constants.lookup(operand.name) != null ->
+                      error("${operand.name} is a constant, not an integer")
+                  else -> error("unknown name ${operand.name}")
+                }
+          }
+        }
         else -> value(operand).toInt()
       }
 
@@ -525,11 +558,11 @@ class Emulator(
 
     val BATCH_METHODS =
         mapOf(
-            "Average" to 0.0,
-            "Sum" to 1.0,
-            "Minimum" to 2.0,
-            "Maximum" to 3.0,
-            "Count" to COUNT.toDouble(),
+            "Average" to 0,
+            "Sum" to 1,
+            "Minimum" to 2,
+            "Maximum" to 3,
+            "Count" to COUNT,
         )
   }
 }

@@ -478,6 +478,52 @@ class EmulatorTest {
   }
 
   @Test
+  fun batchHashesAreIntegerOperands() {
+    fun lb(text: String, vararg network: FakeDevice) =
+        Emulator(Program.parse(text), network = network.toList()).runUntilHalt().register("r1")
+    fun dev(hash: Int, charge: Double) = FakeDevice(hash).also { it["Charge"] = charge }
+
+    // An alias wins over a define of the same name.
+    assertThat(
+            lb("define h 3\nmove r0 5\nalias h r0\nlb r1 h Charge Sum", dev(3, 1.0), dev(5, 10.0))
+        )
+        .isEqualTo(10.0)
+    // A register rounds half to even; an alias of it truncates.
+    assertThat(lb("move r0 5.6\nlb r1 r0 Charge Sum", dev(6, 10.0))).isEqualTo(10.0)
+    assertThat(lb("move r0 5.6\nalias h r0\nlb r1 h Charge Sum", dev(5, 10.0), dev(6, 100.0)))
+        .isEqualTo(10.0)
+    // A built-in constant isn't an integer, for a read or a write.
+    for (text in listOf("lb r1 pi Charge Sum", "lb r1 PI Charge Sum", "sb pi Charge 7")) {
+      assertThrows<Ic10RuntimeException>(text) { lb(text, dev(3, 1.0)) }
+    }
+  }
+
+  @Test
+  fun aBatchModeReadsAnAliasBeforeADefine() {
+    val emu =
+        Emulator(
+                Program.parse("define m 1\nmove r0 3\nalias m r0\nlb r1 5 Charge m"),
+                network =
+                    listOf(
+                        FakeDevice(5).also { it["Charge"] = 1.0 },
+                        FakeDevice(5).also { it["Charge"] = 10.0 },
+                    ),
+            )
+            .runUntilHalt()
+
+    // 3 is Maximum; the define's 1 would be Sum.
+    assertThat(emu.register("r1")).isEqualTo(10.0)
+  }
+
+  @Test
+  fun anIntegerOperandPassesOverADeviceAliasToADefine() {
+    val emu = run("define x 4\nalias x d0\nj x\nmove r0 1\nmove r1 9", "d0" to FakeDevice())
+
+    assertThat(emu.register("r0")).isEqualTo(0.0)
+    assertThat(emu.register("r1")).isEqualTo(9.0)
+  }
+
+  @Test
   fun defineOfANonConstantFailsAtItsLine() {
     val e = assertThrows<Ic10RuntimeException> { Emulator(Program.parse("yield\ndefine x r0")) }
     assertThat(e.line).isEqualTo(1)
