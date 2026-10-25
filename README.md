@@ -11,6 +11,9 @@ It is at an early stage: the build is in place and the compiler is being written
 - `compiler/ic10`: the IC10 program model, parser, and printer (normal, and compact with
   labels resolved to line numbers), plus the chip's size limits.
 - `emu`: an IC10 emulator with fake devices, so tests can check what a program does.
+- `runtime`: the `ktrapic` API that programs compile against (devices, logic types, `sleep`,
+  `hash`, ...). Part of it is generated from the game data in `runtime/data` by
+  `tools/datagen`.
 
 ## Building
 
@@ -49,6 +52,20 @@ RULES_JVM_EXTERNAL_REPIN=1 bazel run @maven//:pin
   common --repository_cache=D:/bazel-repo
   common --disk_cache=D:/bazel-disk
   ```
+
+### Game data
+
+`runtime/data/logic-enums.json` holds the game's logic enums; `runtime/data/typing.json` says
+how the API types them. After changing either, regenerate the runtime's sources (a test fails
+until they match):
+
+```
+bazel run //tools/datagen -- generate
+```
+
+The enums were imported from [PyTrapIC](https://github.com/aproposmath/stationeers-pytrapic)'s
+generated types (MIT License) with
+`bazel run //tools/datagen -- import-pytrapic <types_generated.py> <source description>`.
 
 ## Formatting
 

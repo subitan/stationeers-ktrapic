@@ -1,0 +1,25 @@
+{
+  "operandEnums": [
+    "LogicType",
+    "LogicSlotType",
+    "LogicReagentMode",
+    "LogicBatchMethod"
+  ],
+  "booleanLogicTypes": [
+    "Power",
+    "Open",
+    "Error",
+    "Activate",
+    "Lock",
+    "On",
+    "Idle",
+    "ClearMemory",
+    "ForceWrite",
+    "Combustion",
+    "Flush",
+    "AutoShutOff",
+    "AutoLand",
+    "NetworkFault",
+    "Reset"
+  ]
+}

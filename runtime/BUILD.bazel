@@ -1,0 +1,26 @@
+load("@rules_kotlin//kotlin:jvm.bzl", "kt_jvm_library")
+
+# The API programs compile against. Its declarations are recognized by the compiler, which
+# translates calls to them; their bodies only throw.
+kt_jvm_library(
+    name = "runtime",
+    srcs = glob(["src/main/kotlin/**/*.kt"]),
+    visibility = ["//visibility:public"],
+)
+
+# The game data the generated sources come from, and the generated sources themselves, for
+# //tools/datagen's check that they are up to date.
+filegroup(
+    name = "data",
+    srcs = glob(["data/*.json"]),
+    visibility = ["//tools/datagen:__pkg__"],
+)
+
+filegroup(
+    name = "generated_srcs",
+    srcs = [
+        "src/main/kotlin/ktrapic/GeneratedEnums.kt",
+        "src/main/kotlin/ktrapic/GenericDevice.kt",
+    ],
+    visibility = ["//tools/datagen:__pkg__"],
+)

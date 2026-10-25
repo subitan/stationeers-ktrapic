@@ -63,10 +63,15 @@ sealed interface FrontendResult<out T> {
  */
 object K2Frontend {
   /**
-   * Compiles [source] and, if it has no errors, calls [use] with its IR. The IR is only valid
-   * inside [use]: the compiler environment behind it is disposed afterwards.
+   * Compiles [source] against kotlin-stdlib and the jars in [classpath] and, if it has no errors,
+   * calls [use] with its IR. The IR is only valid inside [use]: the compiler environment behind it
+   * is disposed afterwards.
    */
-  fun <T> compile(source: String, use: (IrModuleFragment) -> T): FrontendResult<T> {
+  fun <T> compile(
+      source: String,
+      classpath: List<File> = emptyList(),
+      use: (IrModuleFragment) -> T,
+  ): FrontendResult<T> {
     val workDir = Files.createTempDirectory("ktrapic-frontend").toFile()
     val disposable = Disposer.newDisposable("ktrapic-frontend")
     try {
@@ -82,7 +87,10 @@ object K2Frontend {
       val arguments =
           K2JVMCompilerArguments().apply {
             freeArgs = listOf(sourceFile.absolutePath)
-            classpath = kotlinStdlibJar().absolutePath
+            this.classpath =
+                (listOf(kotlinStdlibJar()) + classpath).joinToString(File.pathSeparator) {
+                  it.absolutePath
+                }
             noStdlib = true
             noReflect = true
             jdkHome = System.getProperty("java.home")

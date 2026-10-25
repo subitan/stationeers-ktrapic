@@ -1,0 +1,30 @@
+load("@rules_java//java:java_binary.bzl", "java_binary")
+load("@rules_kotlin//kotlin:jvm.bzl", "kt_jvm_library")
+load("//build_defs/kotlin:junit5.bzl", "kt_junit5_tests")
+
+kt_jvm_library(
+    name = "datagen_lib",
+    srcs = glob(["src/main/kotlin/**/*.kt"]),
+    deps = ["@maven//:com_google_code_gson_gson"],
+)
+
+# bazel run //tools/datagen -- generate
+java_binary(
+    name = "datagen",
+    main_class = "ktrapic.datagen.MainKt",
+    runtime_deps = [":datagen_lib"],
+)
+
+kt_junit5_tests(
+    name = "datagen_tests",
+    srcs = glob(["src/test/kotlin/**/*.kt"]),
+    associates = [":datagen_lib"],
+    data = [
+        "//runtime:data",
+        "//runtime:generated_srcs",
+    ],
+    deps = [
+        "@maven//:com_google_truth_truth",
+        "@maven//:org_junit_jupiter_junit_jupiter_api",
+    ],
+)
