@@ -12,13 +12,8 @@ game); batch operations and the IC10 Editor plugin are next.
 Programs are Kotlin scripts named `*.ic10.kts`. The `ktrapic` API needs no import, since
 `import ktrapic.*` is implied; writing it anyway is fine.
 
-A function called once, or marked `inline`, is compiled into the place it is called. Any other
-function gets one body, called with `jal`; its arguments and result travel in registers, and it
-saves `ra` on the stack only if it calls another function. Recursion, default arguments, and
-extension, generic and local functions are not supported, and only an inlined function can
-take a `Device`. A call made before a property the function reads is declared is an error when
-the call is inlined; a function called with `jal` compiles, and reads the property before its
-initializer has run.
+The [language guide](docs/LANGUAGE.md) describes what programs can use: values, control flow,
+functions, devices, the maths and numeric rules, and the chip's size limits.
 
 - `compiler/api`: `Compiler.compile(source, options)`, the whole pipeline from source to IC10.
 - `compiler/frontend`: runs the Kotlin K2 front end on a script and returns its IR.
@@ -70,41 +65,9 @@ limits) come from the compiler, the playground or the CLI.
 
 ## Numbers
 
-IC10 has one kind of number, a 64-bit floating-point number, and Kotlin's `Double` is exactly
-that: arithmetic, comparisons, NaN and infinity behave on the chip as they do on the JVM. Use
-`Double` for measurements, settings and anything a device reports.
-
-`Int` is for counting and whole numbers within the `Int` range. It compiles to the same kind of
-number, and behaves as on the JVM while it stays in that range: `/` truncates, `%` takes the
-dividend's sign, and `toInt()` truncates, limits the result to the `Int` range and turns NaN
-into 0. `roundToInt()` limits its result the same way. Where the chip can't match the JVM:
-
-- Arithmetic past the `Int` range doesn't wrap: an `Int` holding 2147483647 becomes 2147483648
-  when incremented. A constant expression that would overflow is a compile error instead.
-- Bitwise operations and shifts work on 53-bit integers with a sign: a value wraps modulo 2^53,
-  a result keeps bits 0–52 with bit 53 as its sign, and `ushr` shifts the value as an unsigned
-  54-bit number (`-1 ushr 1` is 2^53 - 1). They match the JVM for non-negative values whose
-  results stay in the `Int` range, with shift counts between 0 and 31. At run time a count
-  outside that range isn't reduced modulo 32 (`5 shr 32` is 0, not 5). A constant shift count
-  outside 0..31, or a constant bitwise expression whose result differs from the JVM's (such as
-  `-1 ushr 28`), is a compile error.
-- `roundToInt()` of NaN gives 0, where the JVM throws.
-- An `Int` product or quotient that is zero can be a negative zero (`0 * -1`, `0 / -5`). It
-  equals 0, but the sign shows once it becomes a `Double`: `1.0 / n.toDouble()` is negative
-  infinity.
-- Dividing an `Int` by zero at run time gives NaN or infinity, where the JVM throws. An `Int`
-  holding NaN compares as a `Double` NaN does: every ordered comparison is false, and a `for`
-  loop with a NaN bound runs no iterations. (Dividing by a constant zero is a compile error.)
-- `Double` `%` is computed as `a - truncate(a / b) * b`, which rounds at the division and the
-  multiplication, so it can differ from the JVM's exact remainder: `10.0 % 0.1` is 0.0 rather
-  than 0.09999999999999945, and `x % Double.POSITIVE_INFINITY` is NaN rather than `x`.
-
-Constant expressions fold to the same results the chip computes. A NaN constant is computed as
-`0 / 0` in the output, since the chip rejects `nan` written as an operand.
-
-The line and byte counts the compiler reports are measured as the game's code editor
-measures them: each line break counts as two characters toward the 4096 limit, so a 128-line
-program has 3842 characters for its text.
+The chip has one kind of number, and KTrapIC's `Double` is exactly it. `Int` behaves as on the JVM
+within the `Int` range; the [language guide](docs/LANGUAGE.md#numbers) lists the few places
+where the chip differs, and how the line and byte counts are measured.
 
 ## Building
 

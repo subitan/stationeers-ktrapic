@@ -1,0 +1,6 @@
+# The language guide, whose Kotlin examples //compiler/api:LanguageGuideTest compiles.
+filegroup(
+    name = "docs",
+    srcs = glob(["*.md"]),
+    visibility = ["//compiler/api:__pkg__"],
+)
