@@ -538,10 +538,151 @@ class CompilerTest {
 
   @Test
   fun `unsupported constructs are reported where they are`() {
-    val error = error("val a = 1\nfun f() = 2\ndb.Setting = f().toDouble()")
+    val error = error("val a = 1\nclass Box(val x: Int)\ndb.Setting = 1.0")
 
-    assertThat(error.line).isEqualTo(5)
-    assertThat(error.message).contains("f")
+    assertThat(error.line).isEqualTo(4)
+    assertThat(error.message).contains("Classes")
+  }
+
+  @Test
+  fun `a function called once is inlined`() {
+    val result = compiled("fun twice(x: Double) = x * 2.0\ndb.Setting = twice(db.Ratio)")
+
+    assertThat(result.code).doesNotContain("jal")
+    val db = run("fun twice(x: Double) = x * 2.0\ndb.Setting = twice(21.0)")
+    assertThat(db["Setting"]).isEqualTo(42.0)
+  }
+
+  @Test
+  fun `a function called more than once has one body, called with jal`() {
+    val source =
+        """
+        fun step(x: Double, by: Double): Double {
+          if (x > 10.0) return x
+          return x + by
+        }
+        db.Setting = step(step(1.0, 2.0), 3.0)
+        db.Ratio = step(11.0, 1.0)
+        """
+    val result = compiled(source)
+
+    assertThat(result.code.lines().count { it.startsWith("jal ") }).isEqualTo(3)
+    assertThat(result.code).doesNotContain("push ra")
+    val db = run(source)
+    assertThat(db["Setting"]).isEqualTo(6.0)
+    assertThat(db["Ratio"]).isEqualTo(11.0)
+  }
+
+  @Test
+  fun `values needed after a call keep their registers`() {
+    val db =
+        run(
+            """
+            fun noisy(x: Int): Int {
+              var a = x * 3
+              var b = a + 1
+              var c = b * b
+              return a + b + c
+            }
+            var total = 0
+            for (i in 1..4) {
+              val before = i * 100
+              total += noisy(i) + before
+            }
+            db.Setting = total.toDouble()
+            """
+        )
+
+    // noisy(i) = 3i + (3i + 1) + (3i + 1)^2; summed over 1..4, plus 1000.
+    val expected = (1..4).sumOf { 3 * it + (3 * it + 1) + (3 * it + 1) * (3 * it + 1) } + 1000
+    assertThat(db["Setting"]).isEqualTo(expected.toDouble())
+  }
+
+  @Test
+  fun `a function that calls another saves ra on the stack`() {
+    val source =
+        """
+        var calls = 0
+        fun inner(x: Double): Double { calls++; return x + 1.0 }
+        fun outer(x: Double): Double = inner(x) * inner(x + 10.0)
+        db.Setting = outer(1.0) + outer(2.0)
+        db.Ratio = calls.toDouble()
+        """
+    val result = compiled(source)
+
+    assertThat(result.code).contains("push ra")
+    assertThat(result.code).contains("pop ra")
+    val db = run(source)
+    assertThat(db["Setting"]).isEqualTo(2.0 * 12.0 + 3.0 * 13.0)
+    assertThat(db["Ratio"]).isEqualTo(4.0)
+  }
+
+  @Test
+  fun `functions read and write top-level properties`() {
+    val db =
+        run(
+            """
+            var count = 0
+            fun bump() { count += 2 }
+            fun show() { db.Setting = count.toDouble() }
+            bump()
+            bump()
+            show()
+            bump()
+            show()
+            """
+        )
+
+    assertThat(db["Setting"]).isEqualTo(6.0)
+  }
+
+  @Test
+  fun `an inlined function keeps its parameter when the argument changes`() {
+    val db =
+        run(
+            """
+            var x = 5
+            fun f(p: Int): Int { x = 100; return p + x }
+            db.Setting = f(x).toDouble()
+            """
+        )
+
+    assertThat(db["Setting"]).isEqualTo(105.0)
+  }
+
+  @Test
+  fun `an inline function can take a device`() {
+    val d1 = FakeDevice()
+    val d2 = FakeDevice()
+    run(
+        """
+        inline fun light(device: Device, on: Boolean) { device.On = on }
+        light(d1, true)
+        light(d2, false)
+        """,
+        FakeDevice(),
+        "d1" to d1,
+        "d2" to d2,
+    )
+
+    assertThat(d1["On"]).isEqualTo(1.0)
+    assertThat(d2["On"]).isEqualTo(0.0)
+  }
+
+  @Test
+  fun `unsupported function forms are reported`() {
+    assertThat(
+            error("fun f(n: Int): Int = if (n < 1) 0 else f(n - 1)\ndb.Setting = f(3).toDouble()")
+                .message
+        )
+        .contains("Recursive")
+    assertThat(error("fun f(n: Int = 2) = n\ndb.Setting = f().toDouble()").message)
+        .contains("Default")
+    assertThat(error("fun f(d: Device) { d.On = true }\nf(d0)\nf(d1)").message).contains("device")
+    assertThat(error("fun Int.twice() = this * 2\ndb.Setting = 3.twice().toDouble()").message)
+        .contains("Extension")
+    assertThat(error("fun f() {\n  fun g() = 1\n  db.Setting = g().toDouble()\n}\nf()").message)
+        .contains("Local functions")
   }
 
   @Test

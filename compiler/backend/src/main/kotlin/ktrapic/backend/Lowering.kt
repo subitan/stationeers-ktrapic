@@ -76,7 +76,7 @@ object Lowering {
       val branch = result[index] as? TirInstruction
       val jump = result[index + 1] as? TirInstruction
       val negated = branch?.takeIf { it.negatable }?.op?.let { NEGATED_BRANCHES[it] }
-      if (negated != null && jump != null && jump.isUnconditionalJump) {
+      if (negated != null && jump != null && jump.isUnconditionalJump && jump.target != null) {
         val following =
             result.drop(index + 2).takeWhile { it is TirLabel }.map { (it as TirLabel).name }
         if (branch.target in following) {

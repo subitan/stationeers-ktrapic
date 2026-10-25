@@ -6,11 +6,13 @@ package ktrapic.backend
 import kotlin.math.floor
 import kotlin.math.truncate
 import ktrapic.frontend.PROGRAM_OBJECT
+import ktrapic.ic10.Constants
 import ktrapic.ic10.Device
 import ktrapic.ic10.LabelRef
 import ktrapic.ic10.Name
 import ktrapic.ic10.Number
 import ktrapic.ic10.Operand
+import ktrapic.ic10.Register
 import ktrapic.ic10.StringConstant
 import org.jetbrains.kotlin.ir.IrElement
 import org.jetbrains.kotlin.ir.declarations.IrAnonymousInitializer
@@ -18,9 +20,11 @@ import org.jetbrains.kotlin.ir.declarations.IrClass
 import org.jetbrains.kotlin.ir.declarations.IrConstructor
 import org.jetbrains.kotlin.ir.declarations.IrDeclarationOrigin
 import org.jetbrains.kotlin.ir.declarations.IrModuleFragment
+import org.jetbrains.kotlin.ir.declarations.IrParameterKind
 import org.jetbrains.kotlin.ir.declarations.IrProperty
 import org.jetbrains.kotlin.ir.declarations.IrSimpleFunction
 import org.jetbrains.kotlin.ir.declarations.IrValueDeclaration
+import org.jetbrains.kotlin.ir.declarations.IrValueParameter
 import org.jetbrains.kotlin.ir.declarations.IrVariable
 import org.jetbrains.kotlin.ir.expressions.IrBlock
 import org.jetbrains.kotlin.ir.expressions.IrBlockBody
@@ -32,10 +36,13 @@ import org.jetbrains.kotlin.ir.expressions.IrContainerExpression
 import org.jetbrains.kotlin.ir.expressions.IrContinue
 import org.jetbrains.kotlin.ir.expressions.IrDoWhileLoop
 import org.jetbrains.kotlin.ir.expressions.IrExpression
+import org.jetbrains.kotlin.ir.expressions.IrExpressionBody
 import org.jetbrains.kotlin.ir.expressions.IrGetEnumValue
 import org.jetbrains.kotlin.ir.expressions.IrGetField
+import org.jetbrains.kotlin.ir.expressions.IrGetObjectValue
 import org.jetbrains.kotlin.ir.expressions.IrGetValue
 import org.jetbrains.kotlin.ir.expressions.IrLoop
+import org.jetbrains.kotlin.ir.expressions.IrReturn
 import org.jetbrains.kotlin.ir.expressions.IrSetField
 import org.jetbrains.kotlin.ir.expressions.IrSetValue
 import org.jetbrains.kotlin.ir.expressions.IrStatementOrigin
@@ -88,6 +95,18 @@ internal class Translator {
   private val variables = mutableMapOf<IrValueDeclaration, Value>()
   private val properties = mutableMapOf<IrPropertySymbol, Value>()
   private val loops = mutableMapOf<IrLoop, Pair<String, String>>()
+  private lateinit var graph: CallGraph
+  private val takenLabels = mutableSetOf<String>()
+  private val functionLabels = mutableMapOf<IrSimpleFunction, String>()
+  /** The functions whose bodies are being translated, and where their `return`s go. */
+  private val exits = mutableMapOf<IrSimpleFunction, FunctionExit>()
+  /** Functions that have a body of their own, called with `jal`, in the order first called. */
+  private val called = linkedMapOf<IrSimpleFunction, CalledFunction>()
+
+  private class FunctionExit(val label: String, val result: VReg?)
+
+  /** Where a called function's arguments and result travel: registers of its own. */
+  private class CalledFunction(val label: String, val parameters: List<VReg>, val result: VReg?)
 
   fun translate(module: IrModuleFragment) {
     val program =
@@ -95,17 +114,165 @@ internal class Translator {
             .flatMap { it.declarations }
             .filterIsInstance<IrClass>()
             .singleOrNull { it.name.asString() == PROGRAM_OBJECT } ?: return
+    graph = CallGraph(program)
+    graph.recursiveCall()?.let { fail(it, "Recursive calls are not supported") }
+    takenLabels += END_LABEL
+    for (function in graph.functions) {
+      var label = function.name.asString()
+      while (label in RESERVED_NAMES || label in takenLabels) label += "_"
+      takenLabels += label
+      functionLabels[function] = label
+    }
     for (declaration in program.declarations) {
       when (declaration) {
         is IrProperty -> property(declaration)
         is IrAnonymousInitializer -> statement(declaration.body)
         is IrConstructor -> {}
-        // Functions cost nothing until called; calls to them are reported where they are made.
+        // A function is translated where it is inlined, or after the program if it is called.
         is IrSimpleFunction -> {}
         is IrClass -> fail(declaration, "Classes, interfaces and objects are not supported")
         else -> fail(declaration, "This declaration is not supported")
       }
     }
+    if (called.isNotEmpty()) {
+      // The functions' bodies follow the program, which must not run on into them.
+      emit("j", Fixed(LabelRef(END_LABEL)))
+      var translated = 0
+      while (translated < called.size) {
+        functionBody(called.keys.elementAt(translated))
+        translated++
+      }
+      label(END_LABEL)
+    }
+  }
+
+  // Functions.
+
+  private fun userCall(call: IrCall, function: IrSimpleFunction): Value {
+    checkSignature(function)
+    val parameters =
+        function.parameters.withIndex().filter { it.value.kind == IrParameterKind.Regular }
+    val arguments = parameters.map { (index, _) ->
+      call.arguments[index] ?: fail(call, "Default arguments are not supported")
+    }
+    val values = operands(arguments)
+    return if (function.isInline || graph.callCount(function) == 1) {
+      inlineCall(function, parameters.map { it.value }, values)
+    } else {
+      jalCall(call, function, parameters.map { it.value }, values)
+    }
+  }
+
+  private fun checkSignature(function: IrSimpleFunction) {
+    if (function.parameters.any { it.kind == IrParameterKind.ExtensionReceiver }) {
+      fail(function, "Extension functions are not supported")
+    }
+    if (function.typeParameters.isNotEmpty()) {
+      fail(function, "Generic functions are not supported")
+    }
+    for (parameter in function.parameters.filter { it.kind == IrParameterKind.Regular }) {
+      val type = parameter.type
+      if (parameter.varargElementType != null)
+          fail(parameter, "vararg parameters are not supported")
+      if (!type.isInt() && !type.isDouble() && !type.isBoolean() && !type.isDevice()) {
+        fail(parameter, "Parameters of type ${type.render()} are not supported")
+      }
+    }
+    val result = function.returnType
+    if (
+        !result.isUnit() &&
+            !result.isNothing() &&
+            !result.isInt() &&
+            !result.isDouble() &&
+            !result.isBoolean()
+    ) {
+      fail(function, "Functions returning ${result.render()} are not supported")
+    }
+  }
+
+  private fun resultRegister(function: IrSimpleFunction): VReg? =
+      function.returnType.let { if (it.isUnit() || it.isNothing()) null else newVReg() }
+
+  /** The function's body, in place, with its parameters bound to the arguments' values. */
+  private fun inlineCall(
+      function: IrSimpleFunction,
+      parameters: List<IrValueParameter>,
+      values: List<Value>,
+  ): Value {
+    for ((parameter, value) in parameters.zip(values)) {
+      // A copy, as the body may change a variable passed in while the parameter keeps its value.
+      variables[parameter] = if (value is Reg) snapshot(value) else value
+    }
+    val exit = FunctionExit(newLabel("return"), resultRegister(function))
+    body(function, exit)
+    return exit.result?.let { Reg(it) } ?: NoValue
+  }
+
+  private fun jalCall(
+      call: IrCall,
+      function: IrSimpleFunction,
+      parameters: List<IrValueParameter>,
+      values: List<Value>,
+  ): Value {
+    if (parameters.any { it.type.isDevice() }) {
+      fail(call, "A function with a device parameter must be inline, or called only once")
+    }
+    val target =
+        called.getOrPut(function) {
+          CalledFunction(
+              functionLabels.getValue(function),
+              parameters.map { newVReg(it.name.asString()) },
+              resultRegister(function),
+          )
+        }
+    for ((parameter, value) in target.parameters.zip(values)) move(parameter, value)
+    emit("jal", Fixed(LabelRef(target.label)))
+    // A copy, as the next call to the function overwrites its result register.
+    return target.result?.let { snapshot(Reg(it)) } ?: NoValue
+  }
+
+  /** A called function: its label, its body, and `j ra`, saving `ra` if it calls others. */
+  private fun functionBody(function: IrSimpleFunction) {
+    val target = called.getValue(function)
+    label(target.label)
+    val start = lines.size
+    function.parameters
+        .filter { it.kind == IrParameterKind.Regular }
+        .zip(target.parameters)
+        .forEach { (parameter, register) -> variables[parameter] = Reg(register) }
+    body(function, FunctionExit(newLabel("return"), target.result))
+    val callsOthers = lines.subList(start, lines.size).any { (it as? TirInstruction)?.op == "jal" }
+    if (callsOthers) {
+      lines.add(start, TirInstruction("push", Fixed(Register.RA)))
+      emit("pop", Fixed(Register.RA))
+    }
+    lines += TirInstruction("j", listOf(Fixed(Register.RA)), returnFrom = target.label)
+  }
+
+  private fun body(function: IrSimpleFunction, exit: FunctionExit) {
+    exits[function] = exit
+    when (val body = function.body) {
+      is IrBlockBody -> statement(body)
+      is IrExpressionBody -> returnValue(exit, body.expression)
+      else -> fail(function, "This function has no body")
+    }
+    exits.remove(function)
+    label(exit.label)
+  }
+
+  private fun returnValue(exit: FunctionExit, expression: IrExpression) {
+    if (expression is IrGetObjectValue && expression.type.isUnit()) return
+    val value = value(expression)
+    if (exit.result != null && value != NoValue) move(exit.result, value)
+  }
+
+  private fun returnFrom(expression: IrReturn): Value {
+    val exit =
+        (expression.returnTargetSymbol.owner as? IrSimpleFunction)?.let { exits[it] }
+            ?: fail(expression, "return is only supported in a function")
+    returnValue(exit, expression.value)
+    emit("j", Fixed(LabelRef(exit.label)))
+    return NoValue
   }
 
   private fun property(property: IrProperty) {
@@ -138,6 +305,7 @@ internal class Translator {
       is IrBlockBody -> element.statements.forEach { statement(it) }
       is IrVariable -> variable(element)
       is IrExpression -> value(element)
+      is IrSimpleFunction -> fail(element, "Local functions are not supported")
       else -> fail(element, "This statement is not supported")
     }
   }
@@ -181,6 +349,7 @@ internal class Translator {
           NoValue
         }
         is IrCall -> call(expression)
+        is IrReturn -> returnFrom(expression)
         is IrWhen -> whenExpression(expression)
         is IrWhileLoop -> whileLoop(expression)
         is IrDoWhileLoop -> doWhileLoop(expression)
@@ -208,6 +377,7 @@ internal class Translator {
       when (statement) {
         is IrVariable -> variable(statement)
         is IrExpression -> result = value(statement)
+        is IrSimpleFunction -> fail(statement, "Local functions are not supported")
         else -> fail(statement, "This statement is not supported")
       }
     }
@@ -237,6 +407,7 @@ internal class Translator {
 
   private fun call(call: IrCall): Value {
     val function = call.symbol.owner
+    if (function in graph.functions) return userCall(call, function)
     val name = function.name.asString()
     val owner = function.parentClassOrNull?.kotlinFqName?.asString()
     val property = function.correspondingPropertySymbol
@@ -901,8 +1072,10 @@ internal class Translator {
   private fun newVReg(name: String? = null) = VReg(vregs++, name)
 
   private fun newLabel(base: String): String {
-    val count = labelCounts.merge(base, 1, Int::plus)!!
-    return "$base$count"
+    while (true) {
+      val label = base + labelCounts.merge(base, 1, Int::plus)!!
+      if (takenLabels.add(label)) return label
+    }
   }
 
   private fun label(name: String) {
@@ -928,6 +1101,8 @@ internal class Translator {
 
   private fun IrType.isAny() = classFqName?.asString() == "kotlin.Any"
 
+  private fun IrType.isDevice() = classFqName?.asString() == "ktrapic.Device"
+
   private fun IrType.render() = classFqName?.shortName()?.asString() ?: "these"
 
   private fun fail(element: IrElement, message: String): Nothing =
@@ -938,5 +1113,7 @@ internal class Translator {
     val PIN_GETTERS =
         listOf("d0", "d1", "d2", "d3", "d4", "d5", "db").associateBy { "ktrapic.<get-$it>" }
     val INT_RANGE = Int.MIN_VALUE.toDouble()..Int.MAX_VALUE.toDouble()
+    const val END_LABEL = "end"
+    val RESERVED_NAMES = Register.NAMES + Device.NAMES + Constants.VALUES.keys
   }
 }

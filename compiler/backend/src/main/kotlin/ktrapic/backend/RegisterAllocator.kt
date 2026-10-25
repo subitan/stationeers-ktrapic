@@ -61,14 +61,26 @@ object Liveness {
         is TirInstruction -> instructions += line
       }
     }
+    // A call continues in the function, and the function's return continues after every call to
+    // it, so a value needed after any call is live throughout the function it calls.
+    val returnSites = mutableMapOf<String, MutableList<Int>>()
+    instructions.forEachIndexed { index, instruction ->
+      if (instruction.op == "jal") {
+        returnSites.getOrPut(instruction.target!!) { mutableListOf() } += index + 1
+      }
+    }
     val successors = instructions.mapIndexed { index, instruction ->
       buildList {
-        if (!instruction.isUnconditionalJump && index + 1 < instructions.size) add(index + 1)
+        val falls = !instruction.isUnconditionalJump && instruction.op != "jal"
+        if (falls && index + 1 < instructions.size) add(index + 1)
         instruction.target
             ?.let { labelIndex.getValue(it) }
             ?.let {
               if (it < instructions.size) add(it)
             }
+        instruction.returnFrom?.let { function ->
+          returnSites[function].orEmpty().filter { it < instructions.size }.forEach(::add)
+        }
       }
     }
     val liveIn = Array(instructions.size) { BitSet() }

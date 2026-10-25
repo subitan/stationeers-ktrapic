@@ -5,8 +5,15 @@ A system to allow IC10 programming using a constrained Kotlin (inspired by
 
 KTrapIC compiles a constrained subset of Kotlin to IC10, the assembly language of
 [Stationeers](https://store.steampowered.com/app/544550/Stationeers/)' programmable chips.
-It is at an early stage: programs using values, loops, conditions and the devices on a
-chip's pins compile; functions, batch operations and the IC10 Editor plugin are next.
+It is at an early stage: programs using values, loops, conditions, functions and the devices
+on a chip's pins compile (see `test/cases/satellite_tracker.kts`, a port of a chip from the
+game); batch operations and the IC10 Editor plugin are next.
+
+A function called once, or marked `inline`, is compiled into the place it is called. Any other
+function gets one body, called with `jal`; its arguments and result travel in registers, and it
+saves `ra` on the stack only if it calls another function. Recursion, default arguments, and
+extension, generic and local functions are not supported, and only an inlined function can
+take a `Device`.
 
 - `compiler/api`: `Compiler.compile(source, options)`, the whole pipeline from source to IC10.
 - `compiler/frontend`: runs the Kotlin K2 front end on a script and returns its IR.
