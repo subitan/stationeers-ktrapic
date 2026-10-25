@@ -29,6 +29,7 @@ register_toolchains("//:kotlin_toolchain")
 maven = use_extension("@rules_jvm_external//:extensions.bzl", "maven")
 maven.install(
     artifacts = [
+        "com.google.code.gson:gson:2.8.9",
         "com.google.truth:truth:1.4.4",
         # The K2 front end (compiler/frontend). Must match kotlinc_version above.
         "org.jetbrains.kotlin:kotlin-compiler-embeddable:2.4.21",
