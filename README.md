@@ -20,12 +20,31 @@ initializer has run.
 - `compiler/api`: `Compiler.compile(source, options)`, the whole pipeline from source to IC10.
 - `compiler/frontend`: runs the Kotlin K2 front end on a script and returns its IR.
 - `compiler/backend`: translates that IR to IC10, allocating registers r0–r15.
+- `daemon`: the compile daemon, which reads requests on stdin and writes results on stdout.
 - `compiler/ic10`: the IC10 program model, parser, and printer (normal, and compact with
   labels resolved to line numbers), plus the chip's size limits.
 - `emu`: an IC10 emulator with fake devices, so tests can check what a program does.
+- `playground`: a Kotlin script serving a local editor page backed by the daemon.
 - `runtime`: the `ktrapic` API that programs compile against (devices, logic types, `sleep`,
   `hash`, ...). Part of it is generated from the game data in `runtime/data` by
   `tools/datagen`.
+
+## Playground
+
+A local editor page that compiles as you type, showing the IC10 next to the source with its line,
+byte and register counts, and errors at their line. It needs the Kotlin command-line compiler
+(`kotlin`) and a JDK; from the repository root:
+
+```
+bazel build //daemon:ktrapic-daemon_deploy.jar
+kotlin playground/playground.main.kts
+```
+
+then open http://127.0.0.1:8765/. The Open menu lists the programs in `test/cases`; pass
+`--source-dir` (repeatable) to list others, and `--port` to use another port. The script starts
+the compile daemon (`daemon/`) and sends it each compile; the daemon speaks PyTrapIC's protocol
+(one base64 JSON line per request and per response), which the IC10 Editor plugin will use too.
+The first compile after starting takes a few seconds while the compiler warms up.
 
 ## Numbers
 
