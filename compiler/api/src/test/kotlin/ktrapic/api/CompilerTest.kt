@@ -541,6 +541,66 @@ class CompilerTest {
   }
 
   @Test
+  fun `negating a Double zero gives negative zero, folded or not`() {
+    val db =
+        run(
+            """
+            var x = 0.0
+            var w = -0.0
+            db.Setting = 1.0 / -x
+            db.Ratio = 1.0 / -0.0
+            db.Mode = 1.0 / w
+            """
+        )
+
+    assertThat(db["Setting"]).isEqualTo(Double.NEGATIVE_INFINITY)
+    assertThat(db["Ratio"]).isEqualTo(Double.NEGATIVE_INFINITY)
+    assertThat(db["Mode"]).isEqualTo(Double.NEGATIVE_INFINITY)
+  }
+
+  @Test
+  fun `an Int zero stays positive when negated or folded`() {
+    val db =
+        run(
+            """
+            var n = 0
+            var m = 0 * -1
+            db.Setting = 1.0 / (-n).toDouble()
+            db.Ratio = 1.0 / m.toDouble()
+            """
+        )
+
+    assertThat(db["Setting"]).isEqualTo(Double.POSITIVE_INFINITY)
+    assertThat(db["Ratio"]).isEqualTo(Double.POSITIVE_INFINITY)
+  }
+
+  @Test
+  fun `kotlin math constants are folded`() {
+    val result = compiled("db.Setting = PI\ndb.Ratio = E")
+
+    assertThat(result.code).isEqualTo("s db Setting ${Math.PI}\ns db Ratio ${Math.E}")
+  }
+
+  @Test
+  fun `str text the game can't take is reported where it is`() {
+    for (text in listOf("1234567", "é")) {
+      val error = error("db.Setting = str(\"$text\")")
+
+      assertWithMessage(text).that(error.line).isEqualTo(3)
+      assertWithMessage(text).that(error.column).isEqualTo(14)
+    }
+  }
+
+  @Test
+  fun `ordered Boolean comparisons, in outside a for, and coerceIn with a range are rejected`() {
+    assertThat(error("db.Setting = if (d0.Open > d0.On) 1.0 else 0.0").line).isEqualTo(3)
+    assertThat(error("var n = 3\ndb.Setting = if (n in 0..5) 1.0 else 0.0").line).isEqualTo(4)
+    assertThat(error("var n = 3\ndb.Setting = when (n) { in 0..5 -> 1.0; else -> 2.0 }").line)
+        .isEqualTo(4)
+    assertThat(error("var x = 0.5\ndb.Setting = x.coerceIn(0.0..1.0)").line).isEqualTo(4)
+  }
+
+  @Test
   fun `custom setters and delegated properties are rejected`() {
     assertThat(error("var x = 0\n  set(v) { field = v * 2 }\nx = 5").message).contains("setter")
     assertThat(error("val x by lazy { 3 }\ndb.Setting = x.toDouble()").message)

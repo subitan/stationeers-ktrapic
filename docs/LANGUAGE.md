@@ -3,7 +3,8 @@
 KTrapIC programs are a constrained subset of Kotlin, compiled to IC10 for Stationeers'
 programmable chips. This guide lists what you can write and what it means on the chip. Anything
 not described here is either rejected with an error at its line and column, or noted under
-[Not supported yet](#not-supported-yet).
+[Not supported yet](#not-supported-yet). The one error without a position is a program that
+needs too many registers (see [Size and registers](#size-and-registers)).
 
 - [Programs](#programs)
 - [Values and variables](#values-and-variables)
@@ -43,8 +44,9 @@ There are three types of value:
 - `Double`: the chip's own number type (a 64-bit floating-point number). Use it for
   measurements, settings and anything a device reports.
 - `Int`: whole numbers, for counting. See [Numbers](#numbers) for how it differs from the JVM.
-- `Boolean`: `true` and `false`, stored as 1 and 0. A Boolean read from a device is true when
-  the device reports any value other than 0.
+- `Boolean`: `true` and `false`, stored as 1 and 0. A Boolean read from a device keeps the value
+  the device reported, and is true when that value isn't 0; conditions, `!`, `&&`, `||`, `==`
+  and `!=` treat it so, but writing it to another device writes the value as it was read.
 
 Other types (`Long`, `Float`, `String`, nullable types, collections, arrays, objects) are not
 supported. Kotlin converts nothing implicitly: write `1.0`, not `1`, where a `Double` is needed,
@@ -59,7 +61,7 @@ register. A `val` may also hold a device, as an alias: `val sensor = d0`.
 - Arithmetic on `Int` and `Double`: `+`, `-`, `*`, `/`, `%`, unary `-`, `++`, `--`, and the
   compound assignments (`+=` and so on). Int `/` truncates and `%` takes the dividend's sign,
   as on the JVM.
-- Comparisons: `<`, `<=`, `>`, `>=`, `==`, `!=` on numbers and Booleans.
+- Comparisons: `<`, `<=`, `>`, `>=` on numbers; `==` and `!=` on numbers and Booleans.
 - Booleans: `&&`, `||` (both short-circuit) and `!`. The non-short-circuit `and`, `or` and `xor`
   on Booleans are not supported.
 - Bitwise operations on `Int`: `and`, `or`, `xor`, `inv()`, `shl`, `shr`, `ushr` (see
@@ -69,7 +71,8 @@ register. A `val` may also hold a device, as an alias: `val sensor = d0`.
 An operand keeps the value it had when it was evaluated, as in Kotlin: in `x + x++`, the first
 `x` is the old value, even when a later operand (or a function it calls) changes a variable.
 
-Constant expressions are computed at compile time, to the result the chip would compute.
+Constant arithmetic is computed at compile time, to the result the chip would compute; calls to
+the maths functions are not, even with constant arguments.
 
 ## Control flow
 
@@ -78,7 +81,9 @@ Constant expressions are computed at compile time, to the result the chip would 
 - `while` and `do`/`while`.
 - `for` over `Int` ranges: `a..b`, `a..<b`, `a until b`, `a downTo b`, each optionally with
   `step n`. The bounds and the step are evaluated once, before the loop. A constant step must be
-  positive; a step applied to a stepped range is not supported.
+  positive; a step computed at run time isn't checked, and one of 0 or less loops forever where
+  the JVM throws. A step applied to a stepped range is not supported.
+- `in` and ranges work only in a `for`: `x in a..b` in an `if` or a `when` branch is rejected.
 - `break` and `continue`, including labelled ones (`break@outer`).
 
 ## Functions
@@ -95,8 +100,9 @@ properties.
   functions.
 
 A call made before a property the function reads has been declared is an error when the call is
-inlined; when it is called with `jal`, it compiles and reads the property before its initializer
-has run.
+inlined, reported where the function reads the property. When it is called with `jal`, it
+compiles and reads the property before its initializer has run, unless the property is a `val`
+with a constant initializer, whose value is used directly.
 
 ## Devices
 
@@ -132,8 +138,9 @@ supported yet; see [Not supported yet](#not-supported-yet).
   contain `"` or `#`.
 - From `kotlin.math`: `abs`, `sqrt`, `floor`, `ceil`, `round` (halves to even), `truncate`,
   `sin`, `cos`, `tan`, `asin`, `acos`, `atan`, `atan2`, `exp`, `ln`, `max`, `min`, `pow`,
-  `absoluteValue` and `roundToInt` (halves up). From `kotlin.ranges`: `coerceAtLeast`,
-  `coerceAtMost` and `coerceIn`.
+  `absoluteValue` and `roundToInt` (halves up), and the constants `PI` and `E`. From
+  `kotlin.ranges`: `coerceAtLeast`, `coerceAtMost` and `coerceIn(min, max)` (not the overload
+  taking a range).
 
 Other library calls are rejected.
 
@@ -175,10 +182,12 @@ output as `0 / 0`, since the chip rejects `nan` written as an operand.
 A chip holds at most 128 lines of at most 90 characters, and 4096 characters in all. The
 compiler measures programs as the game's code editor does: every line counts, and each line
 break counts as two characters, so a 128-line program has 3842 characters for its text.
-Compact output (resolving labels to line numbers and dropping them) saves lines.
+Compact output (resolving labels to line numbers and dropping them) saves lines. The compiler
+reports these counts but does not reject a program over the limits.
 
 Values live in the registers `r0` to `r15`; the compiler reuses a register once its value is no
-longer needed. A program that needs more than 16 values at once is rejected.
+longer needed. A program that needs more than 16 values at once is rejected, with an error that
+has no line or column.
 
 ## Not supported yet
 

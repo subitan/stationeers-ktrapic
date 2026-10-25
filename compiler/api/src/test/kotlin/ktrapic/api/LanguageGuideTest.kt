@@ -5,12 +5,26 @@ import com.google.common.truth.Truth.assertWithMessage
 import java.io.File
 import org.junit.jupiter.api.Test
 
-/** Compiles every ```kotlin example in docs/LANGUAGE.md, so the guide stays true. */
+/**
+ * Compiles every example in docs/LANGUAGE.md, so the guide's examples keep compiling. Its prose
+ * claims are not checked here.
+ */
 class LanguageGuideTest {
   private val guide =
       File(System.getenv("TEST_SRCDIR"), System.getenv("TEST_WORKSPACE") + "/docs/LANGUAGE.md")
           .readText()
           .replace("\r\n", "\n")
+
+  @Test
+  fun `every code block in the language guide is a kotlin example`() {
+    // Fences alternate opening and closing; an opening fence spelled otherwise (```kt) would be
+    // skipped by the test below.
+    val openingFences =
+        guide.lines().filter { it.startsWith("```") }.filterIndexed { i, _ -> i % 2 == 0 }
+
+    assertThat(openingFences).isNotEmpty()
+    assertThat(openingFences.distinct()).containsExactly("```kotlin")
+  }
 
   @Test
   fun `every example in the language guide compiles`() {

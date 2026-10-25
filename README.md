@@ -67,7 +67,8 @@ limits) come from the compiler, the playground or the CLI.
 
 The chip has one kind of number, and KTrapIC's `Double` is exactly it. `Int` behaves as on the JVM
 within the `Int` range; the [language guide](docs/LANGUAGE.md#numbers) lists the few places
-where the chip differs, and how the line and byte counts are measured.
+where the chip differs, and
+[how the line and byte counts are measured](docs/LANGUAGE.md#size-and-registers).
 
 ## Building
 
