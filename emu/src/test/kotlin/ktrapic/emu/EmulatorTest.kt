@@ -508,6 +508,47 @@ class EmulatorTest {
   }
 
   @Test
+  fun constantsAreNotIntegers() {
+    for (text in
+        listOf(
+            "j pi\nmove r0 1",
+            "j PI\nmove r0 1",
+            "beqz 0 Tau\nmove r0 1",
+            "poke Pi 7",
+            "get r0 db pi",
+            "ls r0 d0 PI Occupied",
+        )) {
+      val e = assertThrows<Ic10RuntimeException>(text) { run(text, "d0" to FakeDevice()) }
+      assertWithMessage(text).that(e.line).isEqualTo(0)
+    }
+  }
+
+  @Test
+  fun aValueReadsADefineBeforeAnAliasOfTheSameName() {
+    val emu = run("define x 5\nalias x r0\nmove r1 x\nmove x 7")
+    assertThat(emu.register("r1")).isEqualTo(5.0)
+    assertThat(emu.register("r0")).isEqualTo(7.0)
+  }
+
+  @Test
+  fun anIntegerReadsAnAliasBeforeADefineOfTheSameName() {
+    val emu = run("define x 5\nmove r0 1\nalias x r0\npoke x 9\nget r1 db 1\nget r2 db 5")
+    assertThat(emu.register("r1")).isEqualTo(9.0)
+    assertThat(emu.register("r2")).isEqualTo(0.0)
+  }
+
+  @Test
+  fun selectReadsBothArms() {
+    for (text in listOf("select r0 0 nan 3", "select r0 1 3 NaN", "select r0 0 bogus 3")) {
+      val e = assertThrows<Ic10RuntimeException>(text) { run(text) }
+      assertWithMessage(text).that(e.line).isEqualTo(0)
+    }
+    val emu = run("select r0 0 1 2\nselect r1 7 1 2")
+    assertThat(emu.register("r0")).isEqualTo(2.0)
+    assertThat(emu.register("r1")).isEqualTo(1.0)
+  }
+
+  @Test
   fun compactedProgramsKeepTheirRegisters() {
     val programs =
         listOf(

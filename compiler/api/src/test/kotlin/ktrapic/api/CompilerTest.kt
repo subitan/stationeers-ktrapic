@@ -770,6 +770,17 @@ class CompilerTest {
   }
 
   @Test
+  fun `function names spelled like constants get other labels`() {
+    for (name in listOf("pi", "PI", "Tau", "nan", "Epsilon")) {
+      val source = "fun $name(x: Int) = x + 1\n" + "db.Setting = ($name(1) + $name(2)).toDouble()"
+      val result = compiled(source)
+
+      assertWithMessage(name).that(result.code).contains("jal ${name}_\n")
+      assertWithMessage(name).that(run(source)["Setting"]).isEqualTo(5.0)
+    }
+  }
+
+  @Test
   fun `function names only resembling registers keep their names`() {
     for (name in listOf("r", "rx", "d", "dr", "r0x", "rd0", "dd0")) {
       val source = "fun $name(x: Int) = x + 1\n" + "db.Setting = ($name(1) + $name(2)).toDouble()"

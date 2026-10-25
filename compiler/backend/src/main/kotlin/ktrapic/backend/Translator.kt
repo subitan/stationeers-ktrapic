@@ -120,7 +120,12 @@ internal class Translator {
     takenLabels += END_LABEL
     for (function in graph.functions) {
       var label = labelName(function.name.asString())
-      while (label in RESERVED_NAMES || REGISTER_SPELLING.matches(label) || label in takenLabels) {
+      while (
+          label in RESERVED_NAMES ||
+              Constants.lookup(label) != null ||
+              REGISTER_SPELLING.matches(label) ||
+              label in takenLabels
+      ) {
         label += "_"
       }
       takenLabels += label
@@ -1174,7 +1179,11 @@ internal class Translator {
         listOf("d0", "d1", "d2", "d3", "d4", "d5", "db").associateBy { "ktrapic.<get-$it>" }
     val INT_RANGE = Int.MIN_VALUE.toDouble()..Int.MAX_VALUE.toDouble()
     const val END_LABEL = "end"
-    val RESERVED_NAMES = Register.NAMES + Device.NAMES + Constants.VALUES.keys
+    /**
+     * Register and pin names, which a function label never takes. Nor does it take a constant's
+     * name in any case, which [Constants.lookup] checks.
+     */
+    val RESERVED_NAMES = Register.NAMES + Device.NAMES
     /**
      * Every register or device-pin shape, which a function label never takes: `r` or `d` and digits
      * (`r16` and `r17` are `sp` and `ra`; the game or a mod may add more registers or pins), and

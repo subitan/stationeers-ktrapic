@@ -246,7 +246,13 @@ class Emulator(
       "ext" -> set(Ic10Math.extract(v(1), v(2), v(3)))
       "ins" -> set(Ic10Math.insert(registers[destination(ops[0]).index], v(1), v(2), v(3)))
 
-      "select" -> set(if (v(1) != 0.0) v(2) else v(3))
+      "select" -> {
+        // The game reads all three operands before it picks one, so either arm can fail.
+        val condition = v(1)
+        val ifTrue = v(2)
+        val ifFalse = v(3)
+        set(if (condition != 0.0) ifTrue else ifFalse)
+      }
       "sdns" -> setBool(device(ops[1]) == null)
       "sdse" -> setBool(device(ops[1]) != null)
       "sap" -> setBool(approximately(v(1), v(2), v(3)))
@@ -366,15 +372,17 @@ class Emulator(
         is Number -> literal(operand.value, operand.text())
         is LabelRef -> program.labels.getValue(operand.name).toDouble()
         is StringConstant -> operand.numericValue
+        // A value operand reads a define before an alias of the same name (an integer operand reads
+        // them the other way round; see [integer]), and a built-in constant last.
         is Name ->
-            when (val alias = aliases[operand.name]) {
-              is Register -> registers[alias.index]
-              null ->
-                  defines[operand.name]
-                      ?: Constants.lookup(operand.name)?.let { literal(it, operand.name) }
-                      ?: error("unknown name ${operand.name}")
-              else -> error("${operand.name} is a device, not a value")
-            }
+            defines[operand.name]
+                ?: when (val alias = aliases[operand.name]) {
+                  is Register -> registers[alias.index]
+                  null ->
+                      Constants.lookup(operand.name)?.let { literal(it, operand.name) }
+                          ?: error("unknown name ${operand.name}")
+                  else -> error("${operand.name} is a device, not a value")
+                }
         is Device -> error("${operand.name} is a device, not a value")
       }
 
@@ -478,20 +486,34 @@ class Emulator(
 
   /**
    * An operand used as a whole number (a jump target, address or slot), converted as the game does:
-   * a register's value is rounded half to even, an alias's or define's truncated, and a literal
-   * must be a whole number. `sp` and `ra` are aliases the chip sets up for `r16` and `r17`, so they
+   * a register's value is rounded half to even, an alias's or define's truncated (an alias wins
+   * over a define of the same name), and a literal must be a whole number. A built-in constant
+   * isn't accepted here. `sp` and `ra` are aliases the chip sets up for `r16` and `r17`, so they
    * truncate.
    */
-  private fun integer(operand: Operand): Int {
-    val value = value(operand)
-    return when (operand) {
-      Register.SP,
-      Register.RA -> value.toInt()
-      is Register -> Math.rint(value).toInt()
-      is Number -> value.toInt().also { require(it.toDouble() == value) { "not a whole number" } }
-      else -> value.toInt()
-    }
-  }
+  private fun integer(operand: Operand): Int =
+      when (operand) {
+        Register.SP,
+        Register.RA -> value(operand).toInt()
+        is Register -> Math.rint(value(operand)).toInt()
+        is Number -> {
+          val value = value(operand)
+          value.toInt().also { require(it.toDouble() == value) { "not a whole number" } }
+        }
+        is Name ->
+            when (val alias = aliases[operand.name]) {
+              is Register -> registers[alias.index].toInt()
+              null ->
+                  defines[operand.name]?.toInt()
+                      ?: if (Constants.lookup(operand.name) != null) {
+                        error("${operand.name} is a constant, not an integer")
+                      } else {
+                        error("unknown name ${operand.name}")
+                      }
+              else -> error("${operand.name} is a device, not a value")
+            }
+        else -> value(operand).toInt()
+      }
 
   private fun address(operand: Operand): Int =
       integer(operand).also { require(it in stack.indices) { "address $it is out of range" } }
