@@ -37,7 +37,9 @@ class ParserTest {
   @Test
   fun parsesNumberForms() {
     val program =
-        Program.parse("move r0 -1.5\nmove r1 \$FF\nmove r2 %101\nmove r3 nan\nmove r4 2e3")
+        Program.parse(
+            "move r0 -1.5\nmove r1 \$FF\nmove r2 %101\nmove r3 nan\nmove r4 \$FFFFFFFFFFFFFFFF"
+        )
 
     assertThat(program.lines.map { (it as Line.Instruction).operands[1] })
         .containsExactly(
@@ -45,9 +47,18 @@ class ParserTest {
             Number(255.0),
             Number(5.0),
             Number(Double.NaN),
-            Number(2000.0),
+            Number(-1.0),
         )
         .inOrder()
+  }
+
+  @Test
+  fun followsTheGameOnExponentsCommentsAndRedefinitions() {
+    // The game reads no exponent, and cuts a line at its first #, even inside quotes.
+    assertThrows<Ic10ParseException> { Program.parse("move r0 2e3") }
+    assertThrows<Ic10ParseException> { Program.parse("""move r0 HASH("a#b")""") }
+    val redefined = assertThrows<Ic10ParseException> { Program.parse("define A 1\ndefine A 2") }
+    assertThat(redefined.line).isEqualTo(2)
   }
 
   @Test
@@ -105,10 +116,10 @@ class ParserTest {
 
   @Test
   fun everyNameOperandIgnoresLabels() {
-    // define and alias are left out: a label sharing their declared name is rejected outright.
+    // define, alias and label are left out: a label sharing their declared name is rejected.
     val opcodes =
         Opcodes.all.values.filter {
-          it.nameIndices.isNotEmpty() && it.name != "define" && it.name != "alias"
+          it.nameIndices.isNotEmpty() && it.name !in setOf("define", "alias", "label")
         }
     assertThat(opcodes).isNotEmpty()
     for (opcode in opcodes) {
@@ -133,6 +144,9 @@ class ParserTest {
         listOf(
             "alias name target",
             "define name value",
+            "label name target",
+            "ld r referenceId logicType",
+            "sd referenceId logicType value",
             "bdnvl device logicType line",
             "bdnvs device logicType line",
             "l r device logicType",

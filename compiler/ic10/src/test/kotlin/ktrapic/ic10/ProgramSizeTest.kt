@@ -16,9 +16,16 @@ class ProgramSizeTest {
   }
 
   @Test
-  fun `carriage returns are not counted`() {
-    assertThat(ProgramSize.of("yield\r\nj 0"))
-        .isEqualTo(ProgramSize(lines = 2, bytes = 9, maxLineLength = 5))
+  fun `a line break counts as two characters, as the game's editor joins lines with CRLF`() {
+    assertThat(ProgramSize.of("yield\nj 0"))
+        .isEqualTo(ProgramSize(lines = 2, bytes = 10, maxLineLength = 5))
+    assertThat(ProgramSize.of("yield\r\nj 0")).isEqualTo(ProgramSize.of("yield\nj 0"))
+  }
+
+  @Test
+  fun `trailing empty lines cost no characters`() {
+    assertThat(ProgramSize.of("yield\n\n").bytes).isEqualTo(5)
+    assertThat(ProgramSize.of("\nyield").bytes).isEqualTo(7)
   }
 
   @Test
@@ -71,12 +78,15 @@ class ProgramSizeTest {
     assertThat(ProgramSize.of(program).fits).isFalse()
   }
 
-  /** A comment-only program of exactly [length] characters, in lines of at most 89 characters. */
+  /**
+   * A comment-only program measuring exactly [length], in lines of at most 89 characters, each line
+   * break counting 2.
+   */
   private fun programOfLength(length: Int): String {
     val lines = mutableListOf<String>()
     var remaining = length
     while (remaining > 0) {
-      val separator = if (lines.isEmpty()) 0 else 1
+      val separator = if (lines.isEmpty()) 0 else 2
       val lineLength = minOf(89, remaining - separator)
       lines += "#" + "x".repeat(lineLength - 1)
       remaining -= lineLength + separator

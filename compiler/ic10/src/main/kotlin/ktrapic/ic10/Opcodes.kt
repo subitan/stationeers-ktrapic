@@ -37,6 +37,9 @@ data class Opcode(val name: String, val arity: Int, val jump: JumpKind = JumpKin
     val NAME_OPERANDS =
         mapOf(
             "alias" to setOf(0),
+            "label" to setOf(0),
+            "ld" to setOf(2),
+            "sd" to setOf(1),
             "define" to setOf(0),
             "bdnvl" to setOf(1),
             "bdnvs" to setOf(1),
@@ -63,6 +66,8 @@ object Opcodes {
           // Control.
           "alias" to 2,
           "define" to 2,
+          // An older spelling of alias.
+          "label" to 2,
           "hcf" to 0,
           "sleep" to 1,
           "yield" to 0,
@@ -74,6 +79,7 @@ object Opcodes {
           "atan" to 2,
           "atan2" to 3,
           "ceil" to 2,
+          "clamp" to 4,
           "cos" to 2,
           "div" to 3,
           "exp" to 2,
@@ -88,6 +94,7 @@ object Opcodes {
           "pow" to 3,
           "rand" to 1,
           "round" to 2,
+          "sgn" to 2,
           "sin" to 2,
           "sqrt" to 2,
           "sub" to 3,
@@ -100,6 +107,8 @@ object Opcodes {
           "nor" to 3,
           "not" to 2,
           "or" to 3,
+          "rol" to 3,
+          "ror" to 3,
           "sla" to 3,
           "sll" to 3,
           "sra" to 3,
@@ -140,6 +149,7 @@ object Opcodes {
           "putd" to 3,
           // Devices.
           "l" to 3,
+          "ld" to 3,
           "lb" to 4,
           "lbn" to 5,
           "lbns" to 6,
@@ -148,6 +158,7 @@ object Opcodes {
           "ls" to 4,
           "rmap" to 3,
           "s" to 3,
+          "sd" to 3,
           "sb" to 3,
           "sbn" to 4,
           "sbs" to 4,

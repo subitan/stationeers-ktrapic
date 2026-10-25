@@ -59,10 +59,13 @@ into 0. `roundToInt()` limits its result the same way. Where the chip can't matc
 
 - Arithmetic past the `Int` range doesn't wrap: an `Int` holding 2147483647 becomes 2147483648
   when incremented. A constant expression that would overflow is a compile error instead.
-- Bitwise operations and shifts work on 64-bit integers, so they match the JVM only while the
-  result stays in the `Int` range and the shift count is between 0 and 31. At run time a count
-  outside that range isn't reduced modulo 32 (`5 shr 32` is 0, not 5); a constant one is a
-  compile error.
+- Bitwise operations and shifts work on 53-bit integers with a sign: a value wraps modulo 2^53,
+  a result keeps bits 0–52 with bit 53 as its sign, and `ushr` shifts the value as an unsigned
+  54-bit number (`-1 ushr 1` is 2^53 - 1). They match the JVM for non-negative values whose
+  results stay in the `Int` range, with shift counts between 0 and 31. At run time a count
+  outside that range isn't reduced modulo 32 (`5 shr 32` is 0, not 5). A constant shift count
+  outside 0..31, or a constant bitwise expression whose result differs from the JVM's (such as
+  `-1 ushr 28`), is a compile error.
 - `roundToInt()` of NaN gives 0, where the JVM throws.
 - An `Int` product or quotient that is zero can be a negative zero (`0 * -1`, `0 / -5`). It
   equals 0, but the sign shows once it becomes a `Double`: `1.0 / n.toDouble()` is negative
@@ -74,7 +77,12 @@ into 0. `roundToInt()` limits its result the same way. Where the chip can't matc
   multiplication, so it can differ from the JVM's exact remainder: `10.0 % 0.1` is 0.0 rather
   than 0.09999999999999945, and `x % Double.POSITIVE_INFINITY` is NaN rather than `x`.
 
-Constant expressions fold to the same results the chip computes.
+Constant expressions fold to the same results the chip computes. A NaN constant is computed as
+`0 / 0` in the output, since the chip rejects `nan` written as an operand.
+
+The line, byte and register counts the compiler reports are measured as the game's code editor
+measures them: each line break counts as two characters toward the 4096 limit, so a 128-line
+program has 3842 characters for its text.
 
 ## Building
 

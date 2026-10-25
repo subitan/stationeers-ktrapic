@@ -434,11 +434,28 @@ class CompilerTest {
   }
 
   @Test
+  fun `a NaN constant is computed, since the chip rejects a nan operand`() {
+    val source = "db.Setting = Double.NaN\ndb.Ratio = 0.0 / 0.0"
+    val result = compiled(source)
+
+    assertThat(result.code).doesNotContain("nan")
+    val db = run(source)
+    assertThat(db["Setting"]).isNaN()
+    assertThat(db["Ratio"]).isNaN()
+  }
+
+  @Test
   fun `a constant Int expression that overflows is an error`() {
-    for (expression in listOf("2147483647 + 1", "-1 ushr 28", "1 shl 31", "-2147483647 - 2")) {
+    for (expression in listOf("2147483647 + 1", "-2147483647 - 2")) {
       assertWithMessage(expression)
           .that(error("val x = $expression\ndb.Setting = x.toDouble()").message)
           .contains("overflows")
+    }
+    // Bitwise results the chip computes differently from the JVM, in range or not.
+    for (expression in listOf("-1 ushr 28", "1 shl 31", "-8 ushr 1")) {
+      assertWithMessage(expression)
+          .that(error("val x = $expression\ndb.Setting = x.toDouble()").message)
+          .contains("on the chip but")
     }
     assertThat(error("val x = 1 shl 32\ndb.Setting = x.toDouble()").message).contains("shift")
   }

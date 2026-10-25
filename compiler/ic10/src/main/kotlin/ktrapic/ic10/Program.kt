@@ -39,8 +39,18 @@ data class Program(val lines: List<Line>) {
     val declared =
         lines
             .filterIsInstance<Line.Instruction>()
-            .filter { it.op == "define" || it.op == "alias" }
+            .filter { it.op == "define" || it.op == "alias" || it.op == "label" }
             .mapNotNullTo(mutableSetOf()) { (it.operands.firstOrNull() as? Name)?.name }
+    // The game refuses to run a program that defines a name twice.
+    val defined =
+        lines
+            .filterIsInstance<Line.Instruction>()
+            .filter { it.op == "define" }
+            .mapNotNull {
+              (it.operands.firstOrNull() as? Name)?.name
+            }
+    val redefined = defined.groupingBy { it }.eachCount().filterValues { it > 1 }.keys
+    require(redefined.isEmpty()) { "names defined more than once: $redefined" }
     for (name in names) {
       require(identifier.matches(name)) { "bad label name: $name" }
       val clash = labelClash(name, declared)

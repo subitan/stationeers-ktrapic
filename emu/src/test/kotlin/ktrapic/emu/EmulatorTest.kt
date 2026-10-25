@@ -258,6 +258,153 @@ class EmulatorTest {
   }
 
   @Test
+  fun modAddsTheDivisorOnceToANegativeRemainder() {
+    val emu = run("mod r0 5 -3\nmod r1 -1 -3\nmod r2 -1 pinf\nmod r3 7 3")
+
+    assertThat(emu.register("r0")).isEqualTo(2.0)
+    assertThat(emu.register("r1")).isEqualTo(-4.0)
+    assertThat(emu.register("r2")).isEqualTo(Double.POSITIVE_INFINITY)
+    assertThat(emu.register("r3")).isEqualTo(1.0)
+  }
+
+  @Test
+  fun bitwiseOperationsWorkOn53BitIntegers() {
+    val emu =
+        run(
+            """
+            |srl r0 -1 1
+            |sll r1 1 53
+            |sll r2 1 63
+            |not r3 0
+            |rol r4 1 1
+            |ror r5 1 1
+            |ins r6 5 0 3
+            |move r7 -1
+            |ins r7 0 0 4
+            |clamp r8 15 0 10
+            |sgn r9 -2.5
+            """
+                .trimMargin()
+        )
+
+    assertThat(emu.register("r0")).isEqualTo(9007199254740991.0)
+    assertThat(emu.register("r1")).isEqualTo(-9007199254740992.0)
+    assertThat(emu.register("r2")).isEqualTo(0.0)
+    assertThat(emu.register("r3")).isEqualTo(-1.0)
+    assertThat(emu.register("r4")).isEqualTo(2.0)
+    assertThat(emu.register("r5")).isEqualTo(Math.pow(2.0, 53.0) * -1)
+    assertThat(emu.register("r6")).isEqualTo(5.0)
+    // ins works on the unsigned 53-bit value, so the result is never negative.
+    assertThat(emu.register("r7")).isEqualTo(9007199254740976.0)
+    assertThat(emu.register("r8")).isEqualTo(10.0)
+    assertThat(emu.register("r9")).isEqualTo(-1.0)
+    assertThrows<Ic10RuntimeException> { run("and r0 pinf 1") }
+    assertThrows<Ic10RuntimeException> { run("ext r0 1 0 54") }
+  }
+
+  @Test
+  fun notApproximatelyIsFalseForNaN() {
+    val emu = run("div r9 0 0\nsna r0 r9 1 0.1\nsap r1 r9 1 0.1\nsnaz r2 r9 0.1")
+
+    assertThat(emu.register("r0")).isEqualTo(0.0)
+    assertThat(emu.register("r1")).isEqualTo(0.0)
+    assertThat(emu.register("r2")).isEqualTo(0.0)
+  }
+
+  @Test
+  fun emptyBatchesReadAsTheGameComputesThem() {
+    val battery = FakeDevice(prefab = "StructureBattery", name = null).also { it["Charge"] = 5.0 }
+    val emu =
+        Emulator(
+                Program.parse(
+                    """
+                    |define Missing HASH("Nothing")
+                    |lb r0 Missing Charge Average
+                    |lb r1 Missing Charge Sum
+                    |lb r2 Missing Charge Minimum
+                    |lb r3 Missing Charge Maximum
+                    |lb r4 HASH("StructureBattery") Charge Count
+                    |lbn r5 HASH("StructureBattery") HASH("Other") Charge Count
+                    """
+                        .trimMargin()
+                ),
+                network = listOf(battery),
+            )
+            .runUntilHalt()
+
+    assertThat(emu.register("r0")).isNaN()
+    assertThat(emu.register("r1")).isEqualTo(0.0)
+    assertThat(emu.register("r2")).isEqualTo(0.0)
+    assertThat(emu.register("r3")).isEqualTo(Double.NEGATIVE_INFINITY)
+    assertThat(emu.register("r4")).isEqualTo(1.0)
+    // The game counts by prefab alone for lbn ... Count.
+    assertThat(emu.register("r5")).isEqualTo(1.0)
+  }
+
+  @Test
+  fun aNegativeJumpTargetPausesThenContinuesThere() {
+    val emu = Emulator(Program.parse("move r0 1\nj -3\nmove r0 2\nmove r1 3"))
+
+    emu.tick()
+    assertThat(emu.register("r1")).isEqualTo(0.0)
+    emu.tick()
+    assertThat(emu.register("r0")).isEqualTo(1.0)
+    assertThat(emu.register("r1")).isEqualTo(3.0)
+  }
+
+  @Test
+  fun aJumpTargetInARegisterIsRoundedHalfToEven() {
+    // 3.5 rounds to 4 (the move of 7); truncating would give 3, which also sets r2.
+    val emu = run("move r1 3.5\nj r1\nmove r0 1\nmove r2 2\nmove r0 7")
+
+    assertThat(emu.register("r0")).isEqualTo(7.0)
+    assertThat(emu.register("r2")).isEqualTo(0.0)
+  }
+
+  @Test
+  fun branchAndLinkReadsItsTargetBeforeSettingRa() {
+    val emu = run("move ra 4\nbeqal 0 0 ra\nhcf\nhcf\nmove r0 1")
+
+    assertThat(emu.register("r0")).isEqualTo(1.0)
+    assertThat(emu.register("ra")).isEqualTo(2.0)
+  }
+
+  @Test
+  fun aFailedPopStillLowersSp() {
+    val emu = Emulator(Program.parse("pop r0"))
+    assertThrows<Ic10RuntimeException> { emu.tick() }
+    assertThat(emu.register("sp")).isEqualTo(-1.0)
+  }
+
+  @Test
+  fun sleepingForNaNNeverEnds() {
+    val emu = Emulator(Program.parse("div r0 0 0\nsleep r0\nmove r1 1")).runTicks(50)
+
+    assertThat(emu.halted).isFalse()
+    assertThat(emu.register("r1")).isEqualTo(0.0)
+  }
+
+  @Test
+  fun deviceValidityBranchesNeedADevice() {
+    assertThrows<Ic10RuntimeException> { run("bdnvl d0 Setting 0") }
+    val d0 = FakeDevice().also { it["Setting"] = 1.0 }
+    assertThat(run("bdnvl d0 Setting 2\nmove r0 1", "d0" to d0).register("r0")).isEqualTo(1.0)
+  }
+
+  @Test
+  fun labelIsAnOlderSpellingOfAlias() {
+    val d0 = FakeDevice()
+    run("label Sensor d0\ns Sensor Setting 3", "d0" to d0)
+
+    assertThat(d0["Setting"]).isEqualTo(3.0)
+  }
+
+  @Test
+  fun defineOfAnotherNameIsNaN() {
+    assertThat(run("define x y\nmove r0 x").register("r0")).isNaN()
+  }
+
+  @Test
   fun defineOfANonConstantFailsAtItsLine() {
     val e = assertThrows<Ic10RuntimeException> { Emulator(Program.parse("yield\ndefine x r0")) }
     assertThat(e.line).isEqualTo(1)

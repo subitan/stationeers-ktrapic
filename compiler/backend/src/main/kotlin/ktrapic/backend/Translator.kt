@@ -8,6 +8,7 @@ import kotlin.math.truncate
 import ktrapic.frontend.PROGRAM_OBJECT
 import ktrapic.ic10.Constants
 import ktrapic.ic10.Device
+import ktrapic.ic10.Ic10Math
 import ktrapic.ic10.LabelRef
 import ktrapic.ic10.Name
 import ktrapic.ic10.Number
@@ -544,13 +545,13 @@ internal class Translator {
         "toDouble" -> a()
         "toInt" -> if (args[0].type.isInt()) a() else toInt(a())
         "not" -> unary("seqz", a()) { x -> if (x == 0.0) 1.0 else 0.0 }
-        "and" -> bitwise(call, "and", a(), b()) { x, y -> x and y }
-        "or" -> bitwise(call, "or", a(), b()) { x, y -> x or y }
-        "xor" -> bitwise(call, "xor", a(), b()) { x, y -> x xor y }
-        "shl" -> shift(call, "sll", a(), b()) { x, y -> x shl y }
-        "shr" -> shift(call, "sra", a(), b()) { x, y -> x shr y }
-        "ushr" -> shift(call, "srl", a(), b()) { x, y -> x ushr y }
-        "inv" -> unary("not", a()) { x -> x.toLong().inv().toDouble() }
+        "and" -> bitwise(call, "and", a(), b(), Ic10Math::and) { x, y -> x and y }
+        "or" -> bitwise(call, "or", a(), b(), Ic10Math::or) { x, y -> x or y }
+        "xor" -> bitwise(call, "xor", a(), b(), Ic10Math::xor) { x, y -> x xor y }
+        "shl" -> shift(call, "sll", a(), b(), Ic10Math::shiftLeft) { x, y -> x shl y }
+        "shr" -> shift(call, "sra", a(), b(), Ic10Math::shiftRightArithmetic) { x, y -> x shr y }
+        "ushr" -> shift(call, "srl", a(), b(), Ic10Math::shiftRightLogical) { x, y -> x ushr y }
+        "inv" -> bitwise(call, "not", a(), null, { x, _ -> Ic10Math.not(x) }) { x, _ -> x.inv() }
         else -> fail(call, "${call.symbol.owner.kotlinFqName} is not supported")
       }
 
@@ -563,12 +564,13 @@ internal class Translator {
       op: String,
       a: Value,
       b: Value,
-      fold: (Long, Int) -> Long,
+      chip: (Double, Double) -> Double,
+      jvm: (Int, Int) -> Int,
   ): Value {
     if (b is Const && (b.number < 0 || b.number > 31)) {
       fail(call, "A shift count must be between 0 and 31")
     }
-    return bitwise(call, op, a, b) { x, y -> fold(x, y.toInt()) }
+    return bitwise(call, op, a, b, chip, jvm)
   }
 
   /**
@@ -669,19 +671,35 @@ internal class Translator {
     return Reg(result)
   }
 
+  /**
+   * A bitwise operation on Ints ([b] is null for `inv`). Constants fold as the chip computes them
+   * ([chip], see [Ic10Math]); where that differs from the JVM's 32-bit result ([jvm]), as with `-1
+   * ushr 28`, it is an error rather than a silent difference.
+   */
   private fun bitwise(
       call: IrCall,
       op: String,
       a: Value,
-      b: Value,
-      fold: (Long, Long) -> Long,
+      b: Value?,
+      chip: (Double, Double) -> Double,
+      jvm: (Int, Int) -> Int,
   ): Value {
     if (!call.type.isInt()) fail(call, "Boolean and, or and xor are not supported (use && and ||)")
-    if (a is Const && b is Const) {
-      return Const(fold(a.number.toLong(), b.number.toLong()).toDouble())
+    if (a is Const && (b == null || b is Const)) {
+      val y = (b as Const?)?.number ?: 0.0
+      val onChip = chip(a.number, y)
+      val onJvm = jvm(a.number.toInt(), y.toInt()).toDouble()
+      if (onChip != onJvm) {
+        fail(
+            call,
+            "This constant Int expression gives ${Number.format(onChip)} on the chip but " +
+                "${Number.format(onJvm)} on the JVM",
+        )
+      }
+      return Const(onChip)
     }
     val result = newVReg()
-    emit(op, result, operand(a), operand(b))
+    if (b == null) emit(op, result, operand(a)) else emit(op, result, operand(a), operand(b))
     return Reg(result)
   }
 
@@ -1129,7 +1147,13 @@ internal class Translator {
 
   private fun operand(value: Value): TirOperand =
       when (value) {
-        is Const -> Fixed(value.operand)
+        // The chip rejects `nan` written as an operand, so NaN is computed as 0 / 0 instead.
+        is Const ->
+            if (value.number.isNaN()) {
+              newVReg().also { emit("div", it, Fixed(Number(0.0)), Fixed(Number(0.0))) }
+            } else {
+              Fixed(value.operand)
+            }
         is Reg -> value.reg
         is Dev -> Fixed(value.device)
         NoValue -> error("no value")

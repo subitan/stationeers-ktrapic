@@ -8,6 +8,7 @@ import kotlin.random.Random
 import ktrapic.ic10.Constants
 import ktrapic.ic10.Device
 import ktrapic.ic10.Ic10Limits
+import ktrapic.ic10.Ic10Math
 import ktrapic.ic10.JumpKind
 import ktrapic.ic10.LabelRef
 import ktrapic.ic10.Line
@@ -33,8 +34,15 @@ class Ic10RuntimeException(val line: Int, message: String) : Exception("line $li
  * [pins] holds the devices on `d0`..`d5` and `db`; [network] is every device on the data network,
  * which batch instructions (`lb`, `sb`, ...) select from by prefab and name hash.
  *
- * Not modelled yet: logic types given as numbers, device reference ids (`getd`, `lbns`, `d?` from a
- * register), reagents, and indirect registers (`rr0`).
+ * Its arithmetic, bitwise operations (see [ktrapic.ic10.Ic10Math]), batch reads, jumps and stack
+ * follow the game's IC10 interpreter, with the chip in a circuit housing (so `get`/`put` on `db`
+ * reach its own stack). Where it deliberately differs: a runtime error halts and throws (the game
+ * retries the failing line every tick), and `sleep` resumes after exactly `ceil(seconds / 0.5)`
+ * ticks (the game's real tick lengths can make it one tick later at exact multiples of 0.5 s).
+ *
+ * Not modelled yet: logic types given as numbers, device reference ids (`ld`, `sd`, `getd`, `lbns`,
+ * `d?` from a register), reagents, other hosts (machines, suits, tablets), and indirect registers
+ * (`rr0`).
  */
 class Emulator(
     val program: Program,
@@ -151,20 +159,28 @@ class Emulator(
       registers[destination(ops[0]).index] = value
     }
     fun setBool(condition: Boolean) = set(if (condition) 1.0 else 0.0)
-    fun long(i: Int) = v(i).toLong()
 
     if (opcode.jump != JumpKind.NONE) {
+      // `jal` sets ra before reading its target; the branch-and-link ops read the target, and
+      // set ra only when they branch.
+      if (line.op == "jal") registers[Register.RA.index] = (pc + 1).toDouble()
       if (branchTaken(line.op, ops)) {
-        if (opcode.links) registers[Register.RA.index] = (pc + 1).toDouble()
-        val target = v(opcode.targetIndex!!).toInt()
+        val target = integer(ops[opcode.targetIndex!!])
+        if (opcode.links && line.op != "jal") registers[Register.RA.index] = (pc + 1).toDouble()
         next = if (opcode.jump == JumpKind.RELATIVE) pc + target else target
+      }
+      // A negative line -k pauses until the next tick, then carries on at line k.
+      if (next < 0) {
+        pc = -next
+        return Pause.END_TICK
       }
       pc = next
       return Pause.CONTINUE
     }
 
     when (line.op) {
-      "alias" -> aliases[(ops[0] as Name).name] = resolveAlias(ops[1])
+      "alias",
+      "label" -> aliases[(ops[0] as Name).name] = resolveAlias(ops[1])
       "define" -> {}
       "hcf" -> {
         halted = true
@@ -175,7 +191,11 @@ class Emulator(
         return Pause.END_TICK
       }
       "sleep" -> {
-        sleepUntilTick = ticks + ceil(v(0) / SECONDS_PER_TICK).toInt() - 1
+        val seconds = v(0)
+        // The game counts the time left down each tick; NaN never runs out.
+        sleepUntilTick =
+            if (seconds.isNaN()) Int.MAX_VALUE
+            else ticks + ceil(seconds / SECONDS_PER_TICK).toInt() - 1
         pc = next
         return Pause.END_TICK
       }
@@ -195,7 +215,9 @@ class Emulator(
       "log" -> set(kotlin.math.ln(v(1)))
       "max" -> set(max(v(1), v(2)))
       "min" -> set(min(v(1), v(2)))
-      "mod" -> set(((v(1) % v(2)) + v(2)) % v(2))
+      "clamp" -> set(min(max(v(1), v(2)), v(3)))
+      "sgn" -> set(Ic10Math.sign(v(1)))
+      "mod" -> set(Ic10Math.mod(v(1), v(2)))
       "move" -> set(v(1))
       "mul" -> set(v(1) * v(2))
       "pow" -> set(Math.pow(v(1), v(2)))
@@ -208,30 +230,27 @@ class Emulator(
       "tan" -> set(kotlin.math.tan(v(1)))
       "trunc" -> set(kotlin.math.truncate(v(1)))
 
-      "and" -> set((long(1) and long(2)).toDouble())
-      "or" -> set((long(1) or long(2)).toDouble())
-      "xor" -> set((long(1) xor long(2)).toDouble())
-      "nor" -> set((long(1) or long(2)).inv().toDouble())
-      "not" -> set(long(1).inv().toDouble())
+      "and" -> set(Ic10Math.and(v(1), v(2)))
+      "or" -> set(Ic10Math.or(v(1), v(2)))
+      "xor" -> set(Ic10Math.xor(v(1), v(2)))
+      "nor" -> set(Ic10Math.nor(v(1), v(2)))
+      "not" -> set(Ic10Math.not(v(1)))
       "sll",
-      "sla" -> set((long(1) shl long(2).toInt()).toDouble())
-      "srl" -> set((long(1) ushr long(2).toInt()).toDouble())
-      "sra" -> set((long(1) shr long(2).toInt()).toDouble())
-      "ext" -> set(((long(1) shr long(2).toInt()) and mask(long(3))).toDouble())
-      "ins" -> {
-        val offset = long(2).toInt()
-        val mask = mask(long(3)) shl offset
-        val current = registers[destination(ops[0]).index].toLong()
-        set(((current and mask.inv()) or ((long(1) shl offset) and mask)).toDouble())
-      }
+      "sla" -> set(Ic10Math.shiftLeft(v(1), v(2)))
+      "srl" -> set(Ic10Math.shiftRightLogical(v(1), v(2)))
+      "sra" -> set(Ic10Math.shiftRightArithmetic(v(1), v(2)))
+      "rol" -> set(Ic10Math.rotate(v(1), v(2), left = true))
+      "ror" -> set(Ic10Math.rotate(v(1), v(2), left = false))
+      "ext" -> set(Ic10Math.extract(v(1), v(2), v(3)))
+      "ins" -> set(Ic10Math.insert(registers[destination(ops[0]).index], v(1), v(2), v(3)))
 
       "select" -> set(if (v(1) != 0.0) v(2) else v(3))
       "sdns" -> setBool(device(ops[1]) == null)
       "sdse" -> setBool(device(ops[1]) != null)
       "sap" -> setBool(approximately(v(1), v(2), v(3)))
       "sapz" -> setBool(approximately(v(1), 0.0, v(2)))
-      "sna" -> setBool(!approximately(v(1), v(2), v(3)))
-      "snaz" -> setBool(!approximately(v(1), 0.0, v(2)))
+      "sna" -> setBool(notApproximately(v(1), v(2), v(3)))
+      "snaz" -> setBool(notApproximately(v(1), 0.0, v(2)))
       "seq" -> setBool(v(1) == v(2))
       "seqz" -> setBool(v(1) == 0.0)
       "sge" -> setBool(v(1) >= v(2))
@@ -254,34 +273,41 @@ class Emulator(
         registers[Register.SP.index] = (sp + 1).toDouble()
       }
       "pop" -> {
+        // sp moves down before the check, so a failed pop still lowers it.
         val sp = stackPointer() - 1
-        require(sp >= 0) { "stack underflow" }
-        set(stack[sp])
         registers[Register.SP.index] = sp.toDouble()
+        require(sp in stack.indices) { "stack underflow" }
+        set(stack[sp])
       }
       "peek" -> {
         val sp = stackPointer() - 1
         require(sp in stack.indices) { "stack underflow" }
         set(stack[sp])
       }
-      "poke" -> stack[address(v(0))] = v(1)
-      "get" -> set(memoryOf(ops[1])[address(v(2))])
-      "put" -> memoryOf(ops[0])[address(v(1))] = v(2)
+      "poke" -> stack[address(ops[0])] = v(1)
+      "get" -> set(memoryOf(ops[1])[address(ops[2])])
+      "put" -> memoryOf(ops[0])[address(ops[1])] = v(2)
       "clr" -> memoryOf(ops[0]).fill(0.0)
 
       "l" -> set(requireDevice(ops[1]).read(logicType(ops[2])))
       "s" -> requireDevice(ops[0]).write(logicType(ops[1]), v(2))
-      "ls" -> set(requireDevice(ops[1]).readSlot(v(2).toInt(), logicType(ops[3])))
-      "ss" -> requireDevice(ops[0]).writeSlot(v(1).toInt(), logicType(ops[2]), v(3))
-      "lb" -> set(batch(matching(v(1), null).map { it.read(logicType(ops[2])) }, ops[3]))
-      "lbn" -> set(batch(matching(v(1), v(2)).map { it.read(logicType(ops[3])) }, ops[4]))
+      "ls" -> set(requireDevice(ops[1]).readSlot(integer(ops[2]), logicType(ops[3])))
+      "ss" -> requireDevice(ops[0]).writeSlot(integer(ops[1]), logicType(ops[2]), v(3))
+      "lb" -> set(batch(matching(v(1), null), ops[3]) { it.read(logicType(ops[2])) })
+      // The game counts by prefab only for `lbn ... Count`, ignoring the name.
+      "lbn" ->
+          set(
+              if (batchMethod(ops[4]) == COUNT) matching(v(1), null).size.toDouble()
+              else batch(matching(v(1), v(2)), ops[4]) { it.read(logicType(ops[3])) }
+          )
       "lbs" -> {
-        val slot = v(2).toInt()
-        set(batch(matching(v(1), null).map { it.readSlot(slot, logicType(ops[3])) }, ops[4]))
+        val slot = integer(ops[2])
+        set(batch(matching(v(1), null), ops[4]) { it.readSlot(slot, logicType(ops[3])) })
       }
       "sb" -> matching(v(0), null).forEach { it.write(logicType(ops[1]), v(2)) }
       "sbn" -> matching(v(0), v(1)).forEach { it.write(logicType(ops[2]), v(3)) }
-      "sbs" -> matching(v(0), null).forEach { it.writeSlot(v(1).toInt(), logicType(ops[2]), v(3)) }
+      "sbs" ->
+          matching(v(0), null).forEach { it.writeSlot(integer(ops[1]), logicType(ops[2]), v(3)) }
 
       else -> error("not supported by the emulator yet")
     }
@@ -308,14 +334,15 @@ class Emulator(
       "nez" -> v(0) != 0.0
       "ap" -> approximately(v(0), v(1), v(2))
       "apz" -> approximately(v(0), 0.0, v(1))
-      "na" -> !approximately(v(0), v(1), v(2))
-      "naz" -> !approximately(v(0), 0.0, v(1))
+      "na" -> notApproximately(v(0), v(1), v(2))
+      "naz" -> notApproximately(v(0), 0.0, v(1))
       "nan" -> v(0).isNaN()
       "dns" -> device(ops[0]) == null
       "dse" -> device(ops[0]) != null
-      // "branch if device not valid load/store": a missing logic type, or no device at all.
-      "dnvl" -> device(ops[0])?.logic?.containsKey(logicType(ops[1])) != true
-      "dnvs" -> device(ops[0])?.logic?.containsKey(logicType(ops[1])) != true
+      // "branch if device not valid load/store": the device lacks the logic type. No device at all
+      // is an error, as in the game.
+      "dnvl",
+      "dnvs" -> !requireDevice(ops[0]).logic.containsKey(logicType(ops[1]))
       else -> error("unknown branch")
     }
   }
@@ -323,6 +350,12 @@ class Emulator(
   /** The game's approximate equality: `|a - b| <= max(c * max(|a|, |b|), epsilon * 8)`. */
   private fun approximately(a: Double, b: Double, c: Double) =
       abs(a - b) <= max(c * max(abs(a), abs(b)), Float.MIN_VALUE.toDouble() * 8)
+
+  /**
+   * The game's `sna`: the same comparison with `>`, so NaN is neither approximately equal nor not.
+   */
+  private fun notApproximately(a: Double, b: Double, c: Double) =
+      abs(a - b) > max(c * max(abs(a), abs(b)), Float.MIN_VALUE.toDouble() * 8)
 
   private fun value(operand: Operand): Double =
       when (operand) {
@@ -346,7 +379,8 @@ class Emulator(
       when (operand) {
         is Number -> operand.value
         is StringConstant -> operand.numericValue
-        is Name -> Constants.VALUES[operand.name] ?: error("needs a constant, not ${operand.name}")
+        // The game gives a define whose value is another name NaN.
+        is Name -> Constants.VALUES[operand.name] ?: Double.NaN
         else -> error("needs a constant, not ${operand.text()}")
       }
 
@@ -390,32 +424,76 @@ class Emulator(
         (nameHash == null || it.nameHash.toDouble() == nameHash)
   }
 
-  private fun batch(values: List<Double>, mode: Operand): Double {
-    val method =
-        when (mode) {
-          is Name -> BATCH_METHODS[mode.name] ?: value(mode)
-          else -> value(mode)
+  private fun batchMethod(mode: Operand): Int =
+      (if (mode is Name) BATCH_METHODS[mode.name] ?: value(mode) else value(mode)).toInt()
+
+  /**
+   * A batch read over [devices], as the game computes it: devices are visited last to first, an
+   * empty Average is NaN (0/0), an empty Minimum is 0 and an empty Maximum is negative infinity.
+   */
+  private fun batch(
+      devices: List<FakeDevice>,
+      mode: Operand,
+      read: (FakeDevice) -> Double,
+  ): Double =
+      when (val method = batchMethod(mode)) {
+        COUNT -> devices.size.toDouble()
+        0,
+        1 -> {
+          val sum = devices.asReversed().sumOf(read)
+          if (method == 0) sum / devices.size else sum
         }
-    if (values.isEmpty()) return 0.0
-    return when (method.toInt()) {
-      0 -> values.average()
-      1 -> values.sum()
-      2 -> values.min()
-      3 -> values.max()
-      else -> error("unknown batch method $method")
+        2 -> {
+          var minimum = Double.POSITIVE_INFINITY
+          for (device in devices.asReversed()) {
+            val value = read(device)
+            if (!(value >= minimum)) minimum = value
+          }
+          if (minimum >= Double.POSITIVE_INFINITY) 0.0 else minimum
+        }
+        3 -> {
+          var maximum = Double.NEGATIVE_INFINITY
+          for (device in devices.asReversed()) {
+            val value = read(device)
+            if (!(value <= maximum)) maximum = value
+          }
+          maximum
+        }
+        else -> error("unknown batch method $method")
+      }
+
+  /** The stack index `sp` points at, rounded as the game rounds it. */
+  private fun stackPointer() = Math.rint(registers[Register.SP.index]).toInt()
+
+  /**
+   * An operand used as a whole number (a jump target, address or slot), converted as the game does:
+   * a register's value is rounded half to even, an alias's or define's truncated, and a literal
+   * must already be whole.
+   */
+  private fun integer(operand: Operand): Int {
+    val value = value(operand)
+    return when (operand) {
+      is Register -> Math.rint(value).toInt()
+      is Number -> value.toInt().also { require(it.toDouble() == value) { "not a whole number" } }
+      else -> value.toInt()
     }
   }
 
-  private fun stackPointer() = registers[Register.SP.index].toInt()
-
-  private fun address(value: Double): Int =
-      value.toInt().also { require(it in stack.indices) { "address $it is out of range" } }
-
-  private fun mask(length: Long): Long = if (length >= 64) -1L else (1L shl length.toInt()) - 1
+  private fun address(operand: Operand): Int =
+      integer(operand).also { require(it in stack.indices) { "address $it is out of range" } }
 
   companion object {
     const val SECONDS_PER_TICK = 0.5
 
-    val BATCH_METHODS = mapOf("Average" to 0.0, "Sum" to 1.0, "Minimum" to 2.0, "Maximum" to 3.0)
+    private const val COUNT = 4
+
+    val BATCH_METHODS =
+        mapOf(
+            "Average" to 0.0,
+            "Sum" to 1.0,
+            "Minimum" to 2.0,
+            "Maximum" to 3.0,
+            "Count" to COUNT.toDouble(),
+        )
   }
 }

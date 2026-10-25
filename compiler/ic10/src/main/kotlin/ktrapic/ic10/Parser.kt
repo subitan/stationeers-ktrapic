@@ -5,7 +5,8 @@ class Ic10ParseException(val line: Int, message: String) : Exception("line $line
 
 /** Parses IC10 text into a [Program]. */
 internal object Parser {
-  private val decimal = Regex("""[-+]?(\d+\.?\d*|\.\d+)([eE][-+]?\d+)?""")
+  // The game reads decimals without an exponent: `1e5` is not a number.
+  private val decimal = Regex("""[-+]?(\d+\.?\d*|\.\d+)""")
   private val hex = Regex("""\$[0-9A-Fa-f_]+""")
   private val binary = Regex("""%[01_]+""")
   private val stringConstant = Regex("""(HASH|STR)\("([^"]*)"\)""")
@@ -21,9 +22,14 @@ internal object Parser {
     val declared =
         tokenized
             .mapNotNull { (tokens, _) ->
-              tokens.getOrNull(1)?.takeIf { tokens[0] == "define" || tokens[0] == "alias" }
+              tokens.getOrNull(1)?.takeIf { tokens[0] in DECLARING }
             }
             .toSet()
+    val defined = mutableSetOf<String>()
+    tokenized.forEachIndexed { index, (tokens, _) ->
+      val name = tokens.getOrNull(1)?.takeIf { tokens[0] == "define" } ?: return@forEachIndexed
+      if (!defined.add(name)) throw Ic10ParseException(index + 1, "$name is defined again")
+    }
     val labels = mutableSetOf<String>()
     tokenized.forEachIndexed { index, (tokens, _) ->
       val name = tokens.firstOrNull()?.removeSuffixOrNull(":") ?: return@forEachIndexed
@@ -63,7 +69,7 @@ internal object Parser {
     val parsed = operands.mapIndexed { index, token ->
       operand(lineNumber, token, if (index in opcode.nameIndices) emptySet() else labels)
     }
-    if ((first == "define" || first == "alias") && parsed[0] !is Name) {
+    if (first in DECLARING && parsed[0] !is Name) {
       throw Ic10ParseException(lineNumber, "$first needs a name, not ${operands[0]}")
     }
     if (first == "define" && parsed[1] is LabelRef) {
@@ -92,15 +98,21 @@ internal object Parser {
     }
   }
 
-  /** A `$` hex or `%` binary literal; `_` separates digits. */
+  /**
+   * A `$` hex or `%` binary literal of up to 64 bits, read as two's complement; `_` separates
+   * digits.
+   */
   private fun integer(lineNumber: Int, token: String, radix: Int): Number {
     val value =
-        token.drop(1).replace("_", "").toLongOrNull(radix)
+        token.drop(1).replace("_", "").toULongOrNull(radix)?.toLong()
             ?: throw Ic10ParseException(lineNumber, "bad number: $token")
     return Number(value.toDouble())
   }
 
-  /** Splits a line into whitespace-separated tokens and a comment, keeping quoted text whole. */
+  /**
+   * Splits a line into whitespace-separated tokens and a comment, keeping quoted text whole. As in
+   * the game, the first `#` starts the comment even inside quotes.
+   */
   private fun tokenize(lineNumber: Int, raw: String): Pair<List<String>, String?> {
     val tokens = mutableListOf<String>()
     val current = StringBuilder()
@@ -111,11 +123,12 @@ internal object Parser {
           quoted = !quoted
           current.append(c)
         }
-        quoted -> current.append(c)
         c == '#' -> {
+          if (quoted) throw Ic10ParseException(lineNumber, "unterminated string")
           if (current.isNotEmpty()) tokens += current.toString()
           return tokens to raw.substring(index + 1).trim()
         }
+        quoted -> current.append(c)
         c.isWhitespace() -> {
           if (current.isNotEmpty()) tokens += current.toString()
           current.clear()
@@ -127,6 +140,9 @@ internal object Parser {
     if (current.isNotEmpty()) tokens += current.toString()
     return tokens to null
   }
+
+  /** Instructions whose first operand declares a name. */
+  private val DECLARING = setOf("define", "alias", "label")
 
   private fun String.removeSuffixOrNull(suffix: String) =
       if (endsWith(suffix)) dropLast(suffix.length) else null

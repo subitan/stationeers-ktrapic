@@ -3,17 +3,17 @@ package ktrapic.ic10
 /**
  * The hard limits of a Stationeers IC10 chip that every compiled program must fit within.
  *
- * The size limits are the ones the IC10 Editor mod enforces on export
- * (aproposmath/StationeersIC10Editor, `Editor.ExportLimitExceeded` and
- * `ICodeFormatter.UpdateCodeSize`).
+ * The chip itself enforces none of the size limits; the game's code editor does (128 lines of up to
+ * 90 characters, 4096 characters in all), and so does the IC10 Editor mod on export
+ * (aproposmath/StationeersIC10Editor, `Editor.ExportLimitExceeded`).
  */
 object Ic10Limits {
   /** Maximum number of lines in a program. */
   const val MAX_LINES = 128
 
   /**
-   * Maximum program size. Called "bytes" in the game and the IC10 Editor, but measured as the
-   * length of the program string in UTF-16 code units (C# `string.Length`), not encoded bytes.
+   * Maximum program size. Called "bytes" in the game, but measured in characters (UTF-16 code
+   * units, C# `string.Length`), not encoded bytes; see [ProgramSize.bytes] for how lines count.
    */
   const val MAX_BYTES = 4096
 
@@ -30,7 +30,11 @@ object Ic10Limits {
   const val DEVICE_PINS = 6
 }
 
-/** How much of the chip's size budget a program uses, measured as the IC10 Editor does. */
+/**
+ * How much of the chip's size budget a program uses. [bytes] is counted as the game's editor counts
+ * it, which is stricter than the IC10 Editor mod (which counts a line break as one character), so a
+ * program that fits here fits both.
+ */
 data class ProgramSize(val lines: Int, val bytes: Int, val maxLineLength: Int) {
   val fits: Boolean
     get() =
@@ -40,18 +44,21 @@ data class ProgramSize(val lines: Int, val bytes: Int, val maxLineLength: Int) {
 
   companion object {
     /**
-     * Measures IC10 source text the way the IC10 Editor does: carriage returns are dropped, then
-     * the text is split on `\n` with nothing trimmed. A trailing newline therefore counts as an
-     * extra (empty) line, and an empty program as one line, so emitted code must not end with a
-     * newline. [bytes] and [maxLineLength] are lengths in UTF-16 code units (Kotlin's
-     * [String.length], matching C#'s).
+     * Measures IC10 source text. Carriage returns are dropped and the text is split on `\n` with
+     * nothing trimmed, so a trailing newline counts as an extra (empty) line and an empty program
+     * as one line: emitted code must not end with a newline. [bytes] is the game editor's count:
+     * every line's length, plus 2 for each line break before the last non-empty line (the editor
+     * joins lines with CRLF; trailing empty lines are free). Lengths are UTF-16 code units
+     * (Kotlin's [String.length], matching C#'s).
      */
     fun of(code: String): ProgramSize {
       val text = code.replace("\r", "")
       val lines = text.split('\n')
       return ProgramSize(
           lines = lines.size,
-          bytes = text.length,
+          bytes =
+              lines.sumOf { it.length } +
+                  2 * lines.indexOfLast { it.isNotEmpty() }.coerceAtLeast(0),
           maxLineLength = lines.maxOf { it.length },
       )
     }
