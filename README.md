@@ -47,8 +47,22 @@ RULES_JVM_EXTERNAL_REPIN=1 bazel run @maven//:pin
 
 ## Formatting
 
-Kotlin sources are formatted with [ktfmt](https://github.com/facebook/ktfmt) (default
-style); CI fails on unformatted code.
+Kotlin sources are formatted with [ktfmt](https://github.com/facebook/ktfmt) 0.64 (default
+style); CI fails on unformatted code. With the
+[`ktfmt-0.64-with-dependencies.jar`](https://repo1.maven.org/maven2/com/facebook/ktfmt/0.64/)
+from Maven Central:
+
+```
+java -jar ktfmt-0.64-with-dependencies.jar <files...>
+```
+
+## Tests
+
+Kotlin tests use JUnit 5 + Truth. In a package's `BUILD.bazel`, `kt_junit5_tests` (from
+`//build_defs/kotlin:junit5.bzl`) compiles `src/test/kotlin/**/*.kt` and creates one test
+target per file, named after the file's class, so new test files run without editing the
+build. Use JUnit 5's `org.junit.jupiter.api.Test`; JUnit 4's `org.junit.Test` is on the
+classpath (through Truth) but its tests won't run.
 
 ## License
 

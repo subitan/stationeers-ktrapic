@@ -1,12 +1,24 @@
 package ktrapic.ic10
 
-/** The hard limits of a Stationeers IC10 chip that every compiled program must fit within. */
+/**
+ * The hard limits of a Stationeers IC10 chip that every compiled program must fit within.
+ *
+ * The size limits are the ones the IC10 Editor mod enforces on export
+ * (aproposmath/StationeersIC10Editor, `Editor.ExportLimitExceeded` and
+ * `ICodeFormatter.UpdateCodeSize`).
+ */
 object Ic10Limits {
   /** Maximum number of lines in a program. */
   const val MAX_LINES = 128
 
-  /** Maximum program size in bytes. */
+  /**
+   * Maximum program size. Called "bytes" in the game and the IC10 Editor, but measured as the
+   * length of the program string in UTF-16 code units (C# `string.Length`), not encoded bytes.
+   */
   const val MAX_BYTES = 4096
+
+  /** Maximum length of a single line, in UTF-16 code units. */
+  const val MAX_LINE_LENGTH = 90
 
   /** General-purpose registers `r0`..`r15`; `sp` and `ra` are separate. */
   const val REGISTERS = 16
@@ -18,19 +30,27 @@ object Ic10Limits {
   const val DEVICE_PINS = 6
 }
 
-/** How much of the chip's line and byte budget a program uses. */
-data class ProgramSize(val lines: Int, val bytes: Int) {
+/** How much of the chip's size budget a program uses, measured as the IC10 Editor does. */
+data class ProgramSize(val lines: Int, val bytes: Int, val maxLineLength: Int) {
   val fits: Boolean
-    get() = lines <= Ic10Limits.MAX_LINES && bytes <= Ic10Limits.MAX_BYTES
+    get() =
+        lines <= Ic10Limits.MAX_LINES &&
+            bytes <= Ic10Limits.MAX_BYTES &&
+            maxLineLength <= Ic10Limits.MAX_LINE_LENGTH
 
   companion object {
     /**
-     * Measures IC10 source text. A trailing newline doesn't start another line; bytes are counted
-     * as UTF-8, as the game stores them.
+     * Measures IC10 source text. A trailing newline doesn't start another line. [bytes] and
+     * [maxLineLength] are lengths in UTF-16 code units, which is what Kotlin's [String.length]
+     * returns, matching the C# measure.
      */
     fun of(code: String): ProgramSize {
-      val lines = if (code.isEmpty()) 0 else code.removeSuffix("\n").count { it == '\n' } + 1
-      return ProgramSize(lines, code.toByteArray(Charsets.UTF_8).size)
+      val lines = if (code.isEmpty()) emptyList() else code.removeSuffix("\n").split('\n')
+      return ProgramSize(
+          lines = lines.size,
+          bytes = code.length,
+          maxLineLength = lines.maxOfOrNull { it.length } ?: 0,
+      )
     }
   }
 }

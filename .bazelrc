@@ -13,9 +13,10 @@ test --test_output=errors
 # need them.
 common:windows --enable_runfiles
 
-# CI (GitHub Actions passes --config=ci).
+# CI (GitHub Actions passes --config=ci). The lockfile must already be up to date.
 common:ci --color=yes
 common:ci --curses=no
+common:ci --lockfile_mode=error
 
 # Per-machine settings (output root, cache locations) live in an untracked user.bazelrc.
 try-import %workspace%/user.bazelrc

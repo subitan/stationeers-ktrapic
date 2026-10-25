@@ -9,8 +9,8 @@ bazel_dep(name = "rules_java", version = "9.9.0")
 bazel_dep(name = "rules_jvm_external", version = "7.2")
 bazel_dep(name = "rules_kotlin", version = "2.4.21")
 
-# Kotlin is pinned to one exact version everywhere: this kotlinc and the embedded
-# kotlin-compiler-embeddable the front end uses, whose internal APIs change between releases.
+# Kotlin is pinned to one exact version. When the front end adds kotlin-compiler-embeddable,
+# its version must match this one: the compiler's internal APIs change between releases.
 rules_kotlin_extensions = use_extension(
     "@rules_kotlin//src/main/starlark/core/repositories:bzlmod_setup.bzl",
     "rules_kotlin_extensions",
