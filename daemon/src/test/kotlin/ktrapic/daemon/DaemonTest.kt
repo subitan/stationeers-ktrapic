@@ -76,8 +76,11 @@ class DaemonTest {
   fun `answers every request line and keeps running`() {
     fun encode(json: String) = Base64.getEncoder().encodeToString(json.toByteArray())
     val good = encode("""{"action": "compile", "code": "import ktrapic.*\ndb.Setting = 1.0\n"}""")
+    val nested = "(".repeat(20_000) + "1.0" + ")".repeat(20_000)
+    val overflowing =
+        encode("""{"action": "compile", "code": "import ktrapic.*\ndb.Setting = $nested\n"}""")
     val requests =
-        listOf(good, "", encode("""{"action": "compile", "code": {"": null}}"""), good)
+        listOf(good, "", encode("""{"action": "compile", "code": {"": null}}"""), overflowing, good)
             .joinToString("\n", postfix = "\n")
     val stdin = System.`in`
     val stdout = System.out
@@ -99,10 +102,12 @@ class DaemonTest {
             .map {
               JsonParser.parseString(String(Base64.getDecoder().decode(it))).asJsonObject
             }
-    assertThat(responses).hasSize(4)
+    assertThat(responses).hasSize(5)
     assertThat(responses[0]["code"].asString).isEqualTo("s db Setting 1")
     assertThat(responses[1].has("error")).isTrue()
     assertThat(responses[2].has("error")).isTrue()
-    assertThat(responses[3]["code"].asString).isEqualTo("s db Setting 1")
+    assertThat(responses[3]["error"].asJsonObject["description"].asString)
+        .contains("StackOverflowError")
+    assertThat(responses[4]["code"].asString).isEqualTo("s db Setting 1")
   }
 }

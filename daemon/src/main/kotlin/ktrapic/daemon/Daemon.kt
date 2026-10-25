@@ -33,7 +33,12 @@ object Daemon {
         else
             try {
               respond(request)
-            } catch (e: Exception) {
+            } catch (e: Throwable) {
+              // The compiler can fail with an Error as well as an Exception: its recursive-descent
+              // parser overflows the stack on deeply nested source, and its internal checks throw
+              // AssertionError. A stack overflow has unwound by the time it is caught, so the
+              // daemon can answer and carry on; other VirtualMachineErrors mean it cannot.
+              if (e is VirtualMachineError && e !is StackOverflowError) throw e
               error("Internal compiler error: $e", e.stackTraceToString())
             }
     return Base64.getEncoder().encodeToString(gson.toJson(response).toByteArray())
