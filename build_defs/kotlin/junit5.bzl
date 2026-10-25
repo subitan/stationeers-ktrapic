@@ -20,7 +20,9 @@ def kt_junit5_tests(name, srcs, associates = [], deps = [], size = "small", **kw
 
     Tests run under JUnit's ConsoleLauncher with --fail-if-no-tests, so a target whose class
     has no JUnit 5 tests (for example one written with JUnit 4's org.junit.Test) fails rather
-    than passing with zero tests run.
+    than passing with zero tests run. Results appear in the target's test.log; Bazel records
+    one pass/fail per target (no per-method XML), and --test_filter is not applied, so a
+    filtered run executes the whole class.
 
     Args:
       name: name of the compiled test library; test targets are named after their classes.

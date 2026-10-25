@@ -63,7 +63,8 @@ Kotlin tests use JUnit 5 + Truth. In a package's `BUILD.bazel`, `kt_junit5_tests
 target per file, named after the file's class, so new test files run without editing the
 build. Tests run under JUnit's ConsoleLauncher with `--fail-if-no-tests`: use JUnit 5's
 `org.junit.jupiter.api.Test`. JUnit 4's `org.junit.Test` compiles (Truth brings JUnit 4 onto
-the classpath), but a class using it finds no tests and its target fails.
+the classpath) but never runs: a class with only JUnit 4 tests finds none and its target
+fails, while JUnit 4 tests mixed into a class with JUnit 5 tests are silently skipped.
 
 ## License
 
