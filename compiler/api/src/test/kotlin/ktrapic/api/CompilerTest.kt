@@ -386,6 +386,39 @@ class CompilerTest {
   }
 
   @Test
+  fun `for loops with run-time bounds`() {
+    val db =
+        run(
+            """
+            var e = 5
+            var a = 0
+            for (i in 0 until e) { if (i == 2) continue; a += i }
+            var b = 0
+            for (i in 0..<e) b += i
+            var c = 0
+            for (i in e downTo 1 step 2) c = c * 10 + i
+            var d = 0
+            for (i in 1..e step 2) d += i
+            var g = 0
+            for (i in e until e) g++
+            for (i in e..0) g++
+            for (i in 0 downTo e) g++
+            db.Setting = a.toDouble()
+            db.Ratio = b.toDouble()
+            db.Mode = c.toDouble()
+            db.Charge = d.toDouble()
+            db.Pressure = g.toDouble()
+            """
+        )
+
+    assertThat(db["Setting"]).isEqualTo(8.0)
+    assertThat(db["Ratio"]).isEqualTo(10.0)
+    assertThat(db["Mode"]).isEqualTo(531.0)
+    assertThat(db["Charge"]).isEqualTo(9.0)
+    assertThat(db["Pressure"]).isEqualTo(0.0)
+  }
+
+  @Test
   fun `Int arithmetic past the Int range does not wrap at run time`() {
     val db =
         run(
@@ -429,6 +462,43 @@ class CompilerTest {
     assertThat(db["Ratio"]).isEqualTo(2.0 * Int.MIN_VALUE)
     assertThat(db["Mode"]).isEqualTo(0.0)
     assertThat(db["Charge"]).isEqualTo(-4.0)
+  }
+
+  @Test
+  fun `roundToInt saturates and maps NaN to 0, folded or not`() {
+    val db =
+        run(
+            """
+            var big = 3e10
+            var nan = sqrt(-1.0)
+            var x = -2.5
+            db.Setting = big.roundToInt().toDouble() + 3e10.roundToInt().toDouble()
+            db.Ratio = (-big).roundToInt().toDouble() + (-3e10).roundToInt().toDouble()
+            db.Mode = nan.roundToInt().toDouble() + sqrt(-1.0).roundToInt().toDouble()
+            db.Charge = x.roundToInt().toDouble() + (-2.5).roundToInt().toDouble()
+            """
+        )
+
+    assertThat(db["Setting"]).isEqualTo(2.0 * Int.MAX_VALUE)
+    assertThat(db["Ratio"]).isEqualTo(2.0 * Int.MIN_VALUE)
+    assertThat(db["Mode"]).isEqualTo(0.0)
+    assertThat(db["Charge"]).isEqualTo(-4.0)
+  }
+
+  @Test
+  fun `toInt of a negative fraction is a positive zero, folded or not`() {
+    val db =
+        run(
+            """
+            var h = -0.5
+            val c = -0.5
+            db.Setting = 1.0 / h.toInt().toDouble()
+            db.Ratio = 1.0 / c.toInt().toDouble()
+            """
+        )
+
+    assertThat(db["Setting"]).isEqualTo(Double.POSITIVE_INFINITY)
+    assertThat(db["Ratio"]).isEqualTo(Double.POSITIVE_INFINITY)
   }
 
   @Test

@@ -3,6 +3,7 @@
 
 package ktrapic.backend
 
+import kotlin.math.floor
 import kotlin.math.truncate
 import ktrapic.frontend.PROGRAM_OBJECT
 import ktrapic.ic10.Device
@@ -397,7 +398,11 @@ internal class Translator {
     return bitwise(call, op, a, b) { x, y -> fold(x, y.toInt()) }
   }
 
-  /** `toInt()` as on the JVM: truncated, limited to the Int range, and 0 for NaN. */
+  /**
+   * `toInt()` as on the JVM: truncated, limited to the Int range, and 0 for NaN. The final `add 0`
+   * turns the -0.0 that truncating a value in (-1, 0) gives into the Int 0 (-0 + 0 is +0), which
+   * would otherwise show once the Int becomes a Double again (`1.0 / n.toDouble()`).
+   */
   private fun toInt(a: Value): Value {
     if (a is Const) return Const(a.number.toInt().toDouble())
     val nan = newVReg()
@@ -407,6 +412,7 @@ internal class Translator {
     emit("max", result, result, Fixed(Number(Int.MIN_VALUE.toDouble())))
     emit("min", result, result, Fixed(Number(Int.MAX_VALUE.toDouble())))
     emit("select", result, nan, Fixed(Number(0.0)), result)
+    emit("add", result, result, Fixed(Number(0.0)))
     return Reg(result)
   }
 
@@ -549,10 +555,9 @@ internal class Translator {
       }
       name == "roundToInt" -> {
         // Kotlin rounds halves up here (Math.round), unlike round(), which rounds them to even.
-        val result = newVReg()
-        emit("add", result, values[0], Fixed(Number(0.5)))
-        emit("floor", result, result)
-        Reg(result)
+        // It saturates like toInt(); the JVM throws for NaN, which gives 0 here, as toInt() does.
+        val half = arithmetic("add", operands(args)[0], Const(0.5)) { x, y -> x + y }
+        toInt(unary("floor", half) { x -> floor(x) })
       }
       name in setOf("atan2", "max", "min", "pow") && args.size == 2 -> {
         val result = newVReg()
@@ -583,8 +588,8 @@ internal class Translator {
 
   /**
    * [mayBeNaN] is true for an ordered comparison of numbers: with a NaN operand both `a < b` and
-   * `a >= b` are false, so the opposite IC10 branch is not the negation. Ints count too, since
-   * `toInt()` keeps NaN and a run-time `0 / 0` gives it.
+   * `a >= b` are false, so the opposite IC10 branch is not the negation. Ints count too, since a
+   * run-time `0 / 0` gives NaN.
    */
   private class Comparison(val op: String, val a: Value, val b: Value, val mayBeNaN: Boolean)
 

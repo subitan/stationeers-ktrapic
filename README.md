@@ -27,12 +27,18 @@ that: arithmetic, comparisons, NaN and infinity behave on the chip as they do on
 `Int` is for counting and whole numbers within the `Int` range. It compiles to the same kind of
 number, and behaves as on the JVM while it stays in that range: `/` truncates, `%` takes the
 dividend's sign, and `toInt()` truncates, limits the result to the `Int` range and turns NaN
-into 0. Where the chip can't match the JVM:
+into 0. `roundToInt()` limits its result the same way. Where the chip can't match the JVM:
 
 - Arithmetic past the `Int` range doesn't wrap: an `Int` holding 2147483647 becomes 2147483648
   when incremented. A constant expression that would overflow is a compile error instead.
 - Bitwise operations and shifts work on 64-bit integers, so they match the JVM only while the
-  result stays in the `Int` range. A constant shift count must be between 0 and 31.
+  result stays in the `Int` range and the shift count is between 0 and 31. At run time a count
+  outside that range isn't reduced modulo 32 (`x shr 32` is 0, not `x`); a constant one is a
+  compile error.
+- `roundToInt()` of NaN gives 0, where the JVM throws.
+- An `Int` product or quotient that is zero can be a negative zero (`0 * -1`, `0 / -5`). It
+  equals 0, but the sign shows once it becomes a `Double`: `1.0 / n.toDouble()` is negative
+  infinity.
 - Dividing an `Int` by zero at run time gives NaN or infinity, where the JVM throws. An `Int`
   holding NaN compares as a `Double` NaN does: every ordered comparison is false, and a `for`
   loop with a NaN bound runs no iterations. (Dividing by a constant zero is a compile error.)
