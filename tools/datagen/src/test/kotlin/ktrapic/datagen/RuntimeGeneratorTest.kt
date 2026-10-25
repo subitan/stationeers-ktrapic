@@ -38,6 +38,19 @@ class RuntimeGeneratorTest {
   }
 
   @Test
+  fun `rejects enum contents it does not recognize`() {
+    for (bad in
+        listOf(
+            "class A(_IntEnum):\n    X = 0\n    # a comment\n    Y = 1\n",
+            "class A(_IntEnum):  # a comment\n    X = 0\n",
+            "class A(_IntEnum):\n    \"\"\"doc\"\"\"\n    X = 0\n",
+            "class A(_IntEnum):\n\nclass B(_IntEnum):\n    X = 0\n",
+        )) {
+      assertThrows<IllegalArgumentException>(bad) { PyTrapicImport.enums(bad, "test") }
+    }
+  }
+
+  @Test
   fun `json round-trips`() {
     assertThat(LogicEnums.fromJson(enums.toJson())).isEqualTo(enums)
   }

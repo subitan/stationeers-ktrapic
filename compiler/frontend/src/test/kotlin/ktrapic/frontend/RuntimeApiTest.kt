@@ -51,6 +51,9 @@ class RuntimeApiTest {
 
   @Test
   fun `a program cannot make its own devices`() {
-    assertThat(errors(compile("val d = Device()\n"))).isNotEmpty()
+    for (source in listOf("val d = Device()\n", "class Mine : GenericDevice()\n")) {
+      val error = errors(compile(source)).single()
+      assertThat(error.message).contains("it is internal in")
+    }
   }
 }

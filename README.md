@@ -64,8 +64,9 @@ bazel run //tools/datagen -- generate
 ```
 
 The enums were imported from [PyTrapIC](https://github.com/aproposmath/stationeers-pytrapic)'s
-generated types (MIT License) with
+generated types with
 `bazel run //tools/datagen -- import-pytrapic <types_generated.py> <source description>`.
+PyTrapIC is under the MIT License; its notice is in `runtime/data/PYTRAPIC-LICENSE`.
 
 ## Formatting
 
