@@ -63,13 +63,14 @@ sealed interface FrontendResult<out T> {
  */
 object K2Frontend {
   /**
-   * Compiles [source] against kotlin-stdlib and the jars in [classpath] and, if it has no errors,
-   * calls [use] with its IR. The IR is only valid inside [use]: the compiler environment behind it
-   * is disposed afterwards.
+   * Compiles [source] against kotlin-stdlib and the jars in [classpath], with [defaultImports]
+   * imported as if written at its start, and, if it has no errors, calls [use] with its IR. The IR
+   * is only valid inside [use]: the compiler environment behind it is disposed afterwards.
    */
   fun <T> compile(
       source: String,
       classpath: List<File> = emptyList(),
+      defaultImports: List<String> = emptyList(),
       use: (FrontendIr) -> T,
   ): FrontendResult<T> {
     val workDir = Files.createTempDirectory("ktrapic-frontend").toFile()
@@ -81,7 +82,7 @@ object K2Frontend {
               compareBy({ it.line }, { it.column })
           )
       if (rejected.isNotEmpty()) return FrontendResult.Failure(rejected)
-      val wrapped = ScriptWrapper.wrap(script)
+      val wrapped = ScriptWrapper.wrap(script, defaultImports)
       val sourceFile = File(workDir, "$PROGRAM_OBJECT.kt").apply { writeText(wrapped.text) }
       val messages = CollectingMessageCollector()
       val arguments =

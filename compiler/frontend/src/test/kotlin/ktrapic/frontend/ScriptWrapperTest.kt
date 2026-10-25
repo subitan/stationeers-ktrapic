@@ -47,6 +47,22 @@ class ScriptWrapperTest {
   }
 
   @Test
+  fun `default imports go at the start of the first line, moving no line`() {
+    val wrapped =
+        withScript("import kotlin.math.max\nval a = max(1, 2)\n") {
+          ScriptWrapper.wrap(it, listOf("ktrapic.*"))
+        }
+
+    assertThat(wrapped.text)
+        .isEqualTo(
+            "import ktrapic.*; import kotlin.math.max\nobject Program { val a = max(1, 2)\n\n}\n"
+        )
+    // Column 22 of the generated first line is the user's column 4 ("ort kotlin...").
+    assertThat(wrapped.originalPosition(1, 22)).isEqualTo(1 to 4)
+    assertThat(wrapped.originalPosition(2, 18)).isEqualTo(2 to 1)
+  }
+
+  @Test
   fun `a script with only declarations is still wrapped`() {
     val wrapped = withScript("val a = 1\n") { ScriptWrapper.wrap(it) }
 

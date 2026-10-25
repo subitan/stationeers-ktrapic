@@ -41,7 +41,7 @@ sealed interface CompileResult {
 object Compiler {
   fun compile(source: String, options: CompileOptions = CompileOptions()): CompileResult {
     val result =
-        K2Frontend.compile(source, listOf(runtimeJar())) { ir ->
+        K2Frontend.compile(source, listOf(runtimeJar()), listOf("ktrapic.*")) { ir ->
           try {
             Result.success(Backend.compile(ir.module))
           } catch (e: CompileException) {

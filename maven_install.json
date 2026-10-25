@@ -8,6 +8,8 @@
     "com.google.j2objc:j2objc-annotations": 2003271689,
     "com.google.truth:truth": -790731381,
     "org.jetbrains.kotlin:kotlin-compiler-embeddable": -1264626339,
+    "org.jetbrains.kotlin:kotlin-scripting-common": -466649011,
+    "org.jetbrains.kotlin:kotlin-scripting-jvm": 587076917,
     "org.junit.jupiter:junit-jupiter-api": 1286040600,
     "org.junit.jupiter:junit-jupiter-engine": -2136927876,
     "org.junit.platform:junit-platform-console": 413295785,
@@ -32,6 +34,8 @@
     "org.jetbrains.kotlin:kotlin-daemon-embeddable": -74622461,
     "org.jetbrains.kotlin:kotlin-reflect": 1459798757,
     "org.jetbrains.kotlin:kotlin-script-runtime": -1961419408,
+    "org.jetbrains.kotlin:kotlin-scripting-common": -1089215657,
+    "org.jetbrains.kotlin:kotlin-scripting-jvm": -1357044093,
     "org.jetbrains.kotlin:kotlin-stdlib": -563031295,
     "org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm": 1142574308,
     "org.jetbrains:annotations": 554168982,
@@ -156,6 +160,18 @@
       },
       "version": "2.4.21"
     },
+    "org.jetbrains.kotlin:kotlin-scripting-common": {
+      "shasums": {
+        "jar": "67817eeee13da1f827f7ab9b961e300c2a6c612c290dfebb12db2eafcf0813b3"
+      },
+      "version": "2.4.21"
+    },
+    "org.jetbrains.kotlin:kotlin-scripting-jvm": {
+      "shasums": {
+        "jar": "f00bc053865d7c2864e26087ce50b60ee8bdd30f9a252890d21a34e35d398f17"
+      },
+      "version": "2.4.21"
+    },
     "org.jetbrains.kotlin:kotlin-stdlib": {
       "shasums": {
         "jar": "bd8250210584cb659847dce9cda660f8e9906e5def7fbebcea93dc6dcb6a88a3"
@@ -268,6 +284,14 @@
       "org.jetbrains.kotlin:kotlin-script-runtime",
       "org.jetbrains.kotlin:kotlin-stdlib",
       "org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm"
+    ],
+    "org.jetbrains.kotlin:kotlin-scripting-common": [
+      "org.jetbrains.kotlin:kotlin-stdlib"
+    ],
+    "org.jetbrains.kotlin:kotlin-scripting-jvm": [
+      "org.jetbrains.kotlin:kotlin-script-runtime",
+      "org.jetbrains.kotlin:kotlin-scripting-common",
+      "org.jetbrains.kotlin:kotlin-stdlib"
     ],
     "org.jetbrains.kotlin:kotlin-stdlib": [
       "org.jetbrains:annotations"
@@ -1403,6 +1427,19 @@
       "kotlin.script.templates",
       "kotlin.script.templates.standard"
     ],
+    "org.jetbrains.kotlin:kotlin-scripting-common": [
+      "kotlin.script.experimental.annotations",
+      "kotlin.script.experimental.api",
+      "kotlin.script.experimental.host",
+      "kotlin.script.experimental.impl",
+      "kotlin.script.experimental.util"
+    ],
+    "org.jetbrains.kotlin:kotlin-scripting-jvm": [
+      "kotlin.script.experimental.jvm",
+      "kotlin.script.experimental.jvm.compat",
+      "kotlin.script.experimental.jvm.impl",
+      "kotlin.script.experimental.jvm.util"
+    ],
     "org.jetbrains.kotlin:kotlin-stdlib": [
       "kotlin",
       "kotlin.annotation",
@@ -1574,6 +1611,8 @@
       "org.jetbrains.kotlin:kotlin-daemon-embeddable",
       "org.jetbrains.kotlin:kotlin-reflect",
       "org.jetbrains.kotlin:kotlin-script-runtime",
+      "org.jetbrains.kotlin:kotlin-scripting-common",
+      "org.jetbrains.kotlin:kotlin-scripting-jvm",
       "org.jetbrains.kotlin:kotlin-stdlib",
       "org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm",
       "org.jetbrains:annotations",

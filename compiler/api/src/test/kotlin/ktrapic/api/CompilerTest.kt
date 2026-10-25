@@ -824,6 +824,17 @@ class CompilerTest {
   }
 
   @Test
+  fun `the ktrapic API needs no import, and an explicit one is still fine`() {
+    for (source in listOf("db.Setting = 1.0", "import ktrapic.*\ndb.Setting = 1.0")) {
+      val result = Compiler.compile(source)
+      assertWithMessage(source).that(result).isInstanceOf(CompileResult.Success::class.java)
+    }
+    val error = (Compiler.compile("val x = 1\nd0.On = 1.0") as CompileResult.Failure).errors.first()
+    assertThat(error.line).isEqualTo(2)
+    assertThat(error.column).isEqualTo(7)
+  }
+
+  @Test
   fun `kotlin errors are reported`() {
     assertThat(error("db.On = 1.0").line).isEqualTo(3)
   }

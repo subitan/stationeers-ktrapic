@@ -8,7 +8,7 @@
 //
 // The script starts the daemon (a separate JVM, so this script needs no compiler of its own),
 // serves playground/index.html, and forwards each compile request to the daemon unchanged. The
-// Open menu lists the .kts programs in the source directories (default: test/cases).
+// Open menu lists the .ic10.kts programs in the source directories (default: test/cases).
 
 import com.sun.net.httpserver.HttpExchange
 import com.sun.net.httpserver.HttpServer
@@ -112,18 +112,18 @@ fun sources(): Map<String, List<String>> =
         .filter { it.isDirectory }
         .associate { dir ->
           dir.path.replace('\\', '/') to
-              dir.listFiles { file -> file.name.endsWith(".kts") }
+              dir.listFiles { file -> file.name.endsWith(".ic10.kts") }
                   .orEmpty()
                   .map { it.name }
                   .sorted()
         }
 
-/** The file the page asked for, if it is a .kts program directly inside a listed directory. */
+/** The file the page asked for, if it is a .ic10.kts program directly inside a listed directory. */
 fun source(group: String, name: String): File? {
   val dir = sourceDirs.firstOrNull { it.path.replace('\\', '/') == group } ?: return null
   val file = dir.resolve(name)
   return file.takeIf {
-    it.isFile && it.name.endsWith(".kts") && it.canonicalFile.parentFile == dir.canonicalFile
+    it.isFile && it.name.endsWith(".ic10.kts") && it.canonicalFile.parentFile == dir.canonicalFile
   }
 }
 

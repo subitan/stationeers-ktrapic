@@ -10,7 +10,7 @@ import ktrapic.ic10.Ic10Limits
 const val VERSION = "0.0.0-dev"
 
 /**
- * `ktrapic [--compact] <program.kts>` prints the program's IC10 code, or its errors (as
+ * `ktrapic [--compact] <program.ic10.kts>` prints the program's IC10 code, or its errors (as
  * `file:line:column: message`) with exit status 1. With no arguments it prints what it is.
  */
 fun main(args: Array<String>) {
@@ -20,7 +20,7 @@ fun main(args: Array<String>) {
         "Target chip: ${Ic10Limits.MAX_LINES} lines, ${Ic10Limits.MAX_BYTES} bytes, " +
             "${Ic10Limits.REGISTERS} registers"
     )
-    println("Usage: ktrapic [--compact] <program.kts>")
+    println("Usage: ktrapic [--compact] <program.ic10.kts>")
     return
   }
   val compact = "--compact" in args
@@ -44,6 +44,6 @@ fun main(args: Array<String>) {
 }
 
 private fun usage(): Nothing {
-  System.err.println("Usage: ktrapic [--compact] <program.kts>")
+  System.err.println("Usage: ktrapic [--compact] <program.ic10.kts>")
   exitProcess(2)
 }

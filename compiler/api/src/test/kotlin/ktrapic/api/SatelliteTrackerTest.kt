@@ -12,7 +12,7 @@ import ktrapic.ic10.Ic10Limits
 import org.junit.jupiter.api.Test
 
 /**
- * Runs `test/cases/satellite_tracker.kts`, a port of a chip from the game, against a simulated
+ * Runs `test/cases/satellite_tracker.ic10.kts`, a port of a chip from the game, against a simulated
  * dish: its signal strength falls off with the angle between where it points and the satellite, and
  * reads -1 from each move until the end of the next tick, as a moving dish does.
  */
@@ -20,7 +20,7 @@ class SatelliteTrackerTest {
   private val source =
       File(
               System.getenv("TEST_SRCDIR"),
-              System.getenv("TEST_WORKSPACE") + "/test/cases/satellite_tracker.kts",
+              System.getenv("TEST_WORKSPACE") + "/test/cases/satellite_tracker.ic10.kts",
           )
           .readText()
 

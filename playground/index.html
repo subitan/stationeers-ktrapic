@@ -95,11 +95,11 @@
     <label title="Resolve labels to line numbers and drop them, saving lines on the chip"><input type="checkbox" data-opt="compact" checked> Compact</label>
   </div>
   <span class="spacer"></span>
-  <button id="download" title="Save the Kotlin source to a file">Save .kts</button>
+  <button id="download" title="Save the KTrapIC program to a file">Save .ic10.kts</button>
 </header>
 <main>
   <section class="pane">
-    <div class="pane-head"><strong>Kotlin</strong><span id="filename">untitled.kts</span>
+    <div class="pane-head"><strong>Kotlin</strong><span id="filename">untitled.ic10.kts</span>
       <span class="stats">Ctrl+S saves · Tab indents</span></div>
     <div class="code">
       <div class="gutter" id="src-gutter"></div>
@@ -302,7 +302,7 @@ $("open").onchange = async (e) => {
 
 (async function init() {
   src.value = load(DRAFT_KEY) ?? DEFAULT_CODE;
-  $("filename").textContent = load(NAME_KEY) ?? "untitled.kts";
+  $("filename").textContent = load(NAME_KEY) ?? "untitled.ic10.kts";
   try {
     const info = await (await fetch("/api/info")).json();
     $("version").textContent = "compiler v" + info.version;

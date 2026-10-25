@@ -88,9 +88,17 @@ object ScriptWrapper {
         )
       }
 
-  fun wrap(script: KtFile): WrappedSource {
+  /**
+   * The script as a file. Each of [defaultImports] (such as `ktrapic.*`) is imported as if the
+   * script began with it: the imports go at the start of the first line, before anything else, so
+   * no line moves.
+   */
+  fun wrap(script: KtFile, defaultImports: List<String> = emptyList()): WrappedSource {
     val source = script.text
     val edits = mutableListOf<Pair<Int, String>>()
+    if (defaultImports.isNotEmpty()) {
+      edits += 0 to defaultImports.joinToString("") { "import $it; " }
+    }
     val statements = statements(script).ifEmpty { null }
     if (statements != null) {
       edits += statements.first().textRange.startOffset to "object $PROGRAM_OBJECT { "
