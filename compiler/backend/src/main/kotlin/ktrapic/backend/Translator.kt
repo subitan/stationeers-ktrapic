@@ -118,7 +118,7 @@ internal class Translator {
     graph.recursiveCall()?.let { fail(it, "Recursive calls are not supported") }
     takenLabels += END_LABEL
     for (function in graph.functions) {
-      var label = function.name.asString()
+      var label = labelName(function.name.asString())
       while (label in RESERVED_NAMES || label in takenLabels) label += "_"
       takenLabels += label
       functionLabels[function] = label
@@ -602,17 +602,31 @@ internal class Translator {
   private fun snapshot(value: Value): Value =
       if (value is Reg) Reg(newVReg()).also { move(it.reg, value) } else value
 
-  /** True if evaluating this expression may assign a variable or property. */
-  private fun IrExpression.mayAssign(): Boolean {
+  /**
+   * True if evaluating this expression may assign a variable or property, including a property
+   * assigned by one of the program's functions it calls.
+   */
+  private fun IrExpression.mayAssign(): Boolean = assigns(this, variables = true, mutableSetOf())
+
+  /**
+   * True if [element] assigns a property, or a variable when [variables] is set. A call to one of
+   * the program's functions assigns the properties its body does; the variables its body assigns
+   * are its own, so they do not count. [visited] holds the functions already looked into.
+   */
+  private fun assigns(
+      element: IrElement,
+      variables: Boolean,
+      visited: MutableSet<IrSimpleFunction>,
+  ): Boolean {
     var assigns = false
-    acceptVoid(
+    element.acceptVoid(
         object : IrVisitorVoid() {
           override fun visitElement(element: IrElement) {
             if (!assigns) element.acceptChildrenVoid(this)
           }
 
           override fun visitSetValue(expression: IrSetValue) {
-            assigns = true
+            if (variables) assigns = true else super.visitSetValue(expression)
           }
 
           override fun visitSetField(expression: IrSetField) {
@@ -621,8 +635,18 @@ internal class Translator {
 
           override fun visitCall(expression: IrCall) {
             val function = expression.symbol.owner
-            if (function == function.correspondingPropertySymbol?.owner?.setter) assigns = true
-            else super.visitCall(expression)
+            if (function == function.correspondingPropertySymbol?.owner?.setter) {
+              assigns = true
+              return
+            }
+            if (function in graph.functions && visited.add(function)) {
+              val body = function.body
+              if (body != null && assigns(body, variables = false, visited)) {
+                assigns = true
+                return
+              }
+            }
+            super.visitCall(expression)
           }
         }
     )
@@ -1071,6 +1095,16 @@ internal class Translator {
 
   private fun newVReg(name: String? = null) = VReg(vregs++, name)
 
+  /**
+   * [name] as an IC10 label, which is `[A-Za-z_][A-Za-z0-9_]*`: any other character becomes `_`,
+   * and a leading digit gets a `_` in front. Kotlin also allows non-ASCII letters, and in backticks
+   * spaces and a leading digit.
+   */
+  private fun labelName(name: String): String {
+    val label = name.map { if (it in LABEL_CHARS) it else '_' }.joinToString("")
+    return if (label.first().isDigit()) "_$label" else label
+  }
+
   private fun newLabel(base: String): String {
     while (true) {
       val label = base + labelCounts.merge(base, 1, Int::plus)!!
@@ -1115,5 +1149,6 @@ internal class Translator {
     val INT_RANGE = Int.MIN_VALUE.toDouble()..Int.MAX_VALUE.toDouble()
     const val END_LABEL = "end"
     val RESERVED_NAMES = Register.NAMES + Device.NAMES + Constants.VALUES.keys
+    val LABEL_CHARS = ('A'..'Z') + ('a'..'z') + ('0'..'9') + '_'
   }
 }

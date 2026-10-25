@@ -43,9 +43,6 @@ internal class CallGraph(program: IrClass) {
   fun callCount(function: IrSimpleFunction): Int =
       calls.values.sumOf { list -> list.count { it.symbol.owner == function } }
 
-  /** True if [function]'s body calls any of the program's own functions. */
-  fun callsOthers(function: IrSimpleFunction): Boolean = calls[function].orEmpty().isNotEmpty()
-
   /** A call that makes a function call itself, directly or through others, if there is one. */
   fun recursiveCall(): IrCall? {
     val done = mutableSetOf<IrSimpleFunction>()

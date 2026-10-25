@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Test
 /**
  * Runs `test/cases/satellite_tracker.kts`, a port of a chip from the game, against a simulated
  * dish: its signal strength falls off with the angle between where it points and the satellite, and
- * reads -1 for a tick after each move, as a moving dish does.
+ * reads -1 from each move until the end of the next tick, as a moving dish does.
  */
 class SatelliteTrackerTest {
   private val source =
@@ -26,7 +26,16 @@ class SatelliteTrackerTest {
 
   private class Dish(val satelliteH: Double, val satelliteV: Double) {
     val device = FakeDevice()
-    private var seenWrites = 0
+    private var movedThisTick = false
+
+    init {
+      device.onWrite = { type, _ ->
+        if (type == "Horizontal" || type == "Vertical") {
+          movedThisTick = true
+          device["SignalStrength"] = -1.0
+        }
+      }
+    }
 
     fun strength(): Double {
       val dh = device["Horizontal"]!! - satelliteH
@@ -34,11 +43,10 @@ class SatelliteTrackerTest {
       return max(0.0, 100.0 - 3.0 * sqrt(dh * dh + dv * dv))
     }
 
-    /** Called between ticks: a dish the program just turned reports -1 for one tick. */
+    /** Called between ticks: a dish the program turned this tick still reads -1 for the next. */
     fun update() {
-      val moved = device.writes.size > seenWrites
-      seenWrites = device.writes.size
-      device["SignalStrength"] = if (moved) -1.0 else strength()
+      device["SignalStrength"] = if (movedThisTick) -1.0 else strength()
+      movedThisTick = false
     }
   }
 
@@ -74,6 +82,8 @@ class SatelliteTrackerTest {
       assertThat(dish.strength()).isAtLeast(97.0)
       assertThat(console["Setting"]).isEqualTo(Hashes.str("Done!"))
       assertThat(console["Mode"]).isEqualTo(10.0)
+      // moveDish waited for at least one move to finish.
+      assertThat(console.writes).contains("Setting" to Hashes.str("move."))
     }
   }
 }

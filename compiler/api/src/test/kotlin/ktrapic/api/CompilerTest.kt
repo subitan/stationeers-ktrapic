@@ -4,6 +4,7 @@ import com.google.common.truth.Truth.assertThat
 import com.google.common.truth.Truth.assertWithMessage
 import ktrapic.emu.Emulator
 import ktrapic.emu.FakeDevice
+import ktrapic.ic10.Program
 import org.junit.jupiter.api.Test
 
 class CompilerTest {
@@ -670,19 +671,106 @@ class CompilerTest {
   }
 
   @Test
-  fun `unsupported function forms are reported`() {
-    assertThat(
-            error("fun f(n: Int): Int = if (n < 1) 0 else f(n - 1)\ndb.Setting = f(3).toDouble()")
-                .message
+  fun `an operand keeps its value when a later call assigns it`() {
+    val inlined =
+        run(
+            """
+            var count = 0
+            fun bump(): Int { count += 1; return 10 }
+            db.Setting = (count + bump()).toDouble()
+            """
         )
-        .contains("Recursive")
-    assertThat(error("fun f(n: Int = 2) = n\ndb.Setting = f().toDouble()").message)
-        .contains("Default")
-    assertThat(error("fun f(d: Device) { d.On = true }\nf(d0)\nf(d1)").message).contains("device")
-    assertThat(error("fun Int.twice() = this * 2\ndb.Setting = 3.twice().toDouble()").message)
-        .contains("Extension")
-    assertThat(error("fun f() {\n  fun g() = 1\n  db.Setting = g().toDouble()\n}\nf()").message)
-        .contains("Local functions")
+    assertThat(inlined["Setting"]).isEqualTo(10.0)
+
+    val called =
+        run(
+            """
+            var count = 0
+            fun bump(): Int { count += 1; return 10 }
+            db.Setting = (count + bump()).toDouble()
+            db.Ratio = (count + bump()).toDouble()
+            """
+        )
+    assertThat(called["Setting"]).isEqualTo(10.0)
+    assertThat(called["Ratio"]).isEqualTo(11.0)
+
+    val argument =
+        run(
+            """
+            var x = 5
+            fun change(): Int { x = 100; return 1 }
+            fun pair(a: Int, b: Int): Int = a * 1000 + b
+            db.Setting = pair(x, change()).toDouble()
+            """
+        )
+    assertThat(argument["Setting"]).isEqualTo(5001.0)
+
+    val nested =
+        run(
+            """
+            var n = 1
+            fun inc(): Int { n += 1; return 0 }
+            fun viaInc(): Int = inc() + 2
+            db.Setting = (n + viaInc()).toDouble()
+            db.Ratio = (n + viaInc()).toDouble()
+            """
+        )
+    assertThat(nested["Setting"]).isEqualTo(3.0)
+    assertThat(nested["Ratio"]).isEqualTo(4.0)
+  }
+
+  @Test
+  fun `function names that are not IC10 labels get labels that are`() {
+    val source =
+        "fun größe(x: Int) = x + 1\n" +
+            "fun `two words`(x: Int) = x * 10\n" +
+            "fun `2x`(x: Int) = x * 2\n" +
+            "db.Setting = (größe(1) + größe(2)).toDouble()\n" +
+            "db.Ratio = (`two words`(1) + `two words`(2)).toDouble()\n" +
+            "db.Mode = (`2x`(1) + `2x`(2)).toDouble()"
+    val result = compiled(source)
+
+    Program.parse(result.code) // Throws if a label is not one IC10 accepts.
+    assertThat(result.code).contains("jal _2x")
+    val db = run(source)
+    assertThat(db["Setting"]).isEqualTo(5.0)
+    assertThat(db["Ratio"]).isEqualTo(30.0)
+    assertThat(db["Mode"]).isEqualTo(6.0)
+  }
+
+  private fun assertError(source: String, message: String, line: Int, column: Int) {
+    val error = error(source)
+    assertWithMessage(source).that(error.message).contains(message)
+    assertWithMessage(source).that(error.line to error.column).isEqualTo(line to column)
+  }
+
+  @Test
+  fun `unsupported function forms are reported where they are`() {
+    // Source line N is reported as N + 2, after the two imports compile() adds.
+    assertError(
+        "fun f(n: Int): Int = if (n < 1) 0 else f(n - 1)\ndb.Setting = f(3).toDouble()",
+        "Recursive",
+        3,
+        40,
+    )
+    assertError("fun f(n: Int = 2) = n\ndb.Setting = f().toDouble()", "Default", 4, 14)
+    assertError("fun f(d: Device) { d.On = true }\nf(d0)\nf(d1)", "device", 4, 1)
+    assertError("fun Int.twice() = this * 2\ndb.Setting = 3.twice().toDouble()", "Extension", 3, 1)
+    assertError(
+        "fun f() {\n  fun g() = 1\n  db.Setting = g().toDouble()\n}\nf()",
+        "Local functions",
+        4,
+        3,
+    )
+    assertError("fun <T> f(x: T): Int = 1\ndb.Setting = f(1).toDouble()", "Generic", 3, 1)
+    assertError("fun f(vararg x: Int): Int = 1\ndb.Setting = f(1).toDouble()", "vararg", 3, 7)
+    assertError(
+        "fun f(x: String): Int = 1\ndb.Setting = f(\"a\").toDouble()",
+        "Parameters of type String",
+        3,
+        7,
+    )
+    assertError("fun f(): String = \"a\"\nf()", "Functions returning String", 3, 1)
   }
 
   @Test

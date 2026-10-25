@@ -13,7 +13,9 @@ A function called once, or marked `inline`, is compiled into the place it is cal
 function gets one body, called with `jal`; its arguments and result travel in registers, and it
 saves `ra` on the stack only if it calls another function. Recursion, default arguments, and
 extension, generic and local functions are not supported, and only an inlined function can
-take a `Device`.
+take a `Device`. A call made before a property the function reads is declared is an error when
+the call is inlined; a function called with `jal` compiles, and reads the property before its
+initializer has run.
 
 - `compiler/api`: `Compiler.compile(source, options)`, the whole pipeline from source to IC10.
 - `compiler/frontend`: runs the Kotlin K2 front end on a script and returns its IR.

@@ -67,7 +67,9 @@ object Lowering {
 
   /**
    * Turns `bX a b skip; j far; skip:` into `bY a b far` (Y the negation of X), as `if (c) break`
-   * and similar produce. A branch that is not [TirInstruction.negatable] is left as it is.
+   * and similar produce. A branch that is not [TirInstruction.negatable] is left as it is, and so
+   * is a branch over `j ra`, which has no label for the branch to take (the translator puts no
+   * branch target right after a `j ra`, so this only guards against one).
    */
   private fun invertBranchesOverJumps(lines: List<TirLine>): List<TirLine> {
     val result = lines.toMutableList()
