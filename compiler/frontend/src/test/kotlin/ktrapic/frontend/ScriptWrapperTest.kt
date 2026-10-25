@@ -1,0 +1,63 @@
+package ktrapic.frontend
+
+import com.google.common.truth.Truth.assertThat
+import org.jetbrains.kotlin.com.intellij.openapi.util.Disposer
+import org.jetbrains.kotlin.psi.KtFile
+import org.junit.jupiter.api.Test
+
+class ScriptWrapperTest {
+  private fun <T> withScript(source: String, use: (KtFile) -> T): T {
+    val disposable = Disposer.newDisposable("ScriptWrapperTest")
+    try {
+      return use(K2Frontend.parseScript(source, disposable))
+    } finally {
+      Disposer.dispose(disposable)
+    }
+  }
+
+  @Test
+  fun `declarations stay members and statements become init blocks`() {
+    val source =
+        """
+        import kotlin.math.max
+        val limit = 10
+        fun twice(x: Int) = x * 2
+        println(twice(limit))
+        var best = 0
+        best = max(best, limit)
+        """
+            .trimIndent()
+
+    val wrapped = withScript(source) { ScriptWrapper.wrap(it) }
+
+    assertThat(wrapped.text)
+        .isEqualTo(
+            """
+            import kotlin.math.max
+            object Program { val limit = 10
+            fun twice(x: Int) = x * 2
+            init { println(twice(limit)) }
+            var best = 0
+            init { best = max(best, limit) }
+            }
+
+            """
+                .trimIndent()
+        )
+  }
+
+  @Test
+  fun `a script with only declarations is still wrapped`() {
+    val wrapped = withScript("val a = 1\n") { ScriptWrapper.wrap(it) }
+
+    assertThat(wrapped.text).isEqualTo("object Program { val a = 1\n\n}\n")
+  }
+
+  @Test
+  fun `a top-level destructuring declaration is reported at its position`() {
+    val diagnostics =
+        withScript("val a = 1\n  val (b, c) = Pair(a, a)\n") { ScriptWrapper.unsupported(it) }
+
+    assertThat(diagnostics.map { it.line to it.column }).containsExactly(2 to 3)
+  }
+}
