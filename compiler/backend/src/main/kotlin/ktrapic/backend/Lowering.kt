@@ -67,7 +67,7 @@ object Lowering {
 
   /**
    * Turns `bX a b skip; j far; skip:` into `bY a b far` (Y the negation of X), as `if (c) break`
-   * and similar produce.
+   * and similar produce. A branch that is not [TirInstruction.negatable] is left as it is.
    */
   private fun invertBranchesOverJumps(lines: List<TirLine>): List<TirLine> {
     val result = lines.toMutableList()
@@ -75,7 +75,7 @@ object Lowering {
     while (index < result.size - 1) {
       val branch = result[index] as? TirInstruction
       val jump = result[index + 1] as? TirInstruction
-      val negated = branch?.op?.let { NEGATED_BRANCHES[it] }
+      val negated = branch?.takeIf { it.negatable }?.op?.let { NEGATED_BRANCHES[it] }
       if (negated != null && jump != null && jump.isUnconditionalJump) {
         val following =
             result.drop(index + 2).takeWhile { it is TirLabel }.map { (it as TirLabel).name }

@@ -18,6 +18,20 @@ chip's pins compile; functions, batch operations and the IC10 Editor plugin are 
   `hash`, ...). Part of it is generated from the game data in `runtime/data` by
   `tools/datagen`.
 
+## Numbers
+
+IC10 has one kind of number, a double, and KTrapIC compiles `Int` to it too. Supported
+constructs otherwise behave as on the JVM, but `Int` values are not limited to 32 bits:
+
+- Arithmetic doesn't wrap on overflow: an `Int` holding 2147483647 becomes 2147483648 when
+  incremented.
+- Bitwise operations and shifts work on 64-bit integers, as IC10's do: `x ushr 28` with `x`
+  holding -1 is 68719476735, and a shift count isn't reduced modulo 32.
+- `Double.toInt()` only truncates: a value outside the `Int` range stays as it is, and NaN stays
+  NaN.
+
+Constant expressions fold to the same results the chip computes.
+
 ## Building
 
 KTrapIC builds with [Bazel](https://bazel.build) (bzlmod), via
@@ -92,6 +106,9 @@ Golden programs live in `test/cases`: each `X.kts` must compile to `X.ic10`, and
 ```
 bazel test //compiler/api:GoldenTest --test_env=KTRAPIC_UPDATE_GOLDENS=$PWD/test/cases
 ```
+
+In Git Bash with `MSYS_NO_PATHCONV=1`, `$PWD` is a `/d/...` path the JVM can't open: use
+`$(pwd -W)/test/cases` instead.
 
 Kotlin tests use JUnit 5 + Truth. In a package's `BUILD.bazel`, `kt_junit5_tests` (from
 `//build_defs/kotlin:junit5.bzl`) compiles `src/test/kotlin/**/*.kt` and creates one test

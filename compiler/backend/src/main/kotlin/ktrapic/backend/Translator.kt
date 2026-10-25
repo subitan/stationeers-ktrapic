@@ -3,6 +3,7 @@
 
 package ktrapic.backend
 
+import kotlin.math.truncate
 import ktrapic.frontend.PROGRAM_OBJECT
 import ktrapic.ic10.Device
 import ktrapic.ic10.LabelRef
@@ -51,6 +52,9 @@ import org.jetbrains.kotlin.ir.types.isNothing
 import org.jetbrains.kotlin.ir.types.isUnit
 import org.jetbrains.kotlin.ir.util.kotlinFqName
 import org.jetbrains.kotlin.ir.util.parentClassOrNull
+import org.jetbrains.kotlin.ir.visitors.IrVisitorVoid
+import org.jetbrains.kotlin.ir.visitors.acceptChildrenVoid
+import org.jetbrains.kotlin.ir.visitors.acceptVoid
 
 /** A construct the backend cannot compile, at [offset] in the wrapped source (-1 if unknown). */
 class CompileException(val offset: Int, message: String) : Exception(message) {
@@ -97,20 +101,25 @@ internal class Translator {
         is IrConstructor -> {}
         // Functions cost nothing until called; calls to them are reported where they are made.
         is IrSimpleFunction -> {}
-        is IrClass -> unsupported(declaration, "classes, interfaces and objects")
-        else -> unsupported(declaration, "this declaration")
+        is IrClass -> fail(declaration, "Classes, interfaces and objects are not supported")
+        else -> fail(declaration, "This declaration is not supported")
       }
     }
   }
 
   private fun property(property: IrProperty) {
-    val getter = property.getter
-    if (getter != null && getter.origin != IrDeclarationOrigin.DEFAULT_PROPERTY_ACCESSOR) {
-      unsupported(property, "properties with custom accessors")
+    if (property.isDelegated) fail(property, "Delegated properties are not supported")
+    // Reads and writes use the backing register directly, so accessor bodies would never run.
+    if (
+        listOfNotNull(property.getter, property.setter).any {
+          it.origin != IrDeclarationOrigin.DEFAULT_PROPERTY_ACCESSOR
+        }
+    ) {
+      fail(property, "Properties with a custom getter or setter are not supported")
     }
     val initializer =
         property.backingField?.initializer?.expression
-            ?: unsupported(property, "properties without an initializer")
+            ?: fail(property, "Properties without an initializer are not supported")
     val value = value(initializer)
     properties[property.symbol] =
         when {
@@ -128,7 +137,7 @@ internal class Translator {
       is IrBlockBody -> element.statements.forEach { statement(it) }
       is IrVariable -> variable(element)
       is IrExpression -> value(element)
-      else -> unsupported(element, "this statement")
+      else -> fail(element, "This statement is not supported")
     }
   }
 
@@ -186,9 +195,9 @@ internal class Translator {
                 value(expression.argument)
                 NoValue
               }
-              else -> unsupported(expression, "casts and type checks")
+              else -> fail(expression, "Casts and type checks are not supported")
             }
-        else -> unsupported(expression, "this expression")
+        else -> fail(expression, "This expression is not supported")
       }
 
   private fun container(container: IrContainerExpression): Value {
@@ -198,7 +207,7 @@ internal class Translator {
       when (statement) {
         is IrVariable -> variable(statement)
         is IrExpression -> result = value(statement)
-        else -> unsupported(statement, "this statement")
+        else -> fail(statement, "This statement is not supported")
       }
     }
     return if (container.type.isUnit()) NoValue else result
@@ -210,7 +219,7 @@ internal class Translator {
         IrConstKind.Double -> Const(constant.value as Double)
         IrConstKind.Boolean -> Const(if (constant.value as Boolean) 1.0 else 0.0)
         IrConstKind.String -> fail(constant, "text can only be used in hash(...) or str(...)")
-        else -> unsupported(constant, "${constant.type.render()} values")
+        else -> fail(constant, "${constant.type.render()} values are not supported")
       }
 
   private fun propertyValue(element: IrElement, symbol: IrPropertySymbol?): Value =
@@ -284,6 +293,9 @@ internal class Translator {
       else ->
           when {
             owner in setOf("kotlin.Int", "kotlin.Double", "kotlin.Boolean") -> operator(call, name)
+            // The implicit `else` K2 gives an exhaustive `when` without one.
+            fqName == "kotlin.internal.ir.noWhenBranchMatchedException" ->
+                fail(call, "A when used as a value needs an else branch")
             // The front end's comparison intrinsics (less, EQEQ, ...) are top-level functions.
             fqName.startsWith("kotlin.internal.ir.") -> comparisonValue(call)
             else -> math(call, fqName) ?: fail(call, "calls to $fqName are not supported")
@@ -314,50 +326,87 @@ internal class Translator {
     return Const(constant.numericValue, constant)
   }
 
-  /** Arithmetic and logic on Int, Double and Boolean. */
+  /**
+   * Arithmetic and logic on Int, Double and Boolean. Ints are IC10 numbers, not 32-bit values:
+   * nothing wraps, and bitwise ops and shifts work on 64-bit integers, as IC10's do. Constant
+   * operands fold to the result the chip would compute.
+   */
   private fun operator(call: IrCall, name: String): Value {
     val args = call.arguments.map { it ?: fail(call, "missing operand") }
     val int = call.type.isInt()
-    fun a() = value(args[0])
-    fun b() = value(args[1])
+    val values by lazy { operands(args) }
+    fun a() = values[0]
+    fun b() = values[1]
     return when (name) {
-      "plus" -> arithmetic("add", a(), b(), int) { x, y -> x + y }
-      "minus" -> arithmetic("sub", a(), b(), int) { x, y -> x - y }
-      "times" -> arithmetic("mul", a(), b(), int) { x, y -> x * y }
+      "plus" -> arithmetic("add", a(), b()) { x, y -> x + y }
+      "minus" -> arithmetic("sub", a(), b()) { x, y -> x - y }
+      "times" -> arithmetic("mul", a(), b()) { x, y -> x * y }
       "div" ->
-          if (int) intDivision(call, a(), b())
-          else arithmetic("div", a(), b(), false) { x, y -> x / y }
+          if (int) intDivision(call, a(), b()) else arithmetic("div", a(), b()) { x, y -> x / y }
       "rem" -> remainder(call, a(), b(), int)
-      "unaryMinus" -> arithmetic("sub", Const(0.0), a(), int) { x, y -> x - y }
+      "unaryMinus" -> arithmetic("sub", Const(0.0), a()) { x, y -> x - y }
       "unaryPlus" -> a()
-      "inc" -> arithmetic("add", a(), Const(1.0), int) { x, y -> x + y }
-      "dec" -> arithmetic("sub", a(), Const(1.0), int) { x, y -> x - y }
+      "inc" -> arithmetic("add", a(), Const(1.0)) { x, y -> x + y }
+      "dec" -> arithmetic("sub", a(), Const(1.0)) { x, y -> x - y }
       "toDouble" -> a()
-      "toInt" ->
-          if (args[0].type.isInt()) a() else unary("trunc", a()) { x -> x.toInt().toDouble() }
+      // Truncation only: unlike the JVM, a value outside the Int range or NaN is kept as it is.
+      "toInt" -> if (args[0].type.isInt()) a() else unary("trunc", a()) { x -> truncate(x) }
       "not" -> unary("seqz", a()) { x -> if (x == 0.0) 1.0 else 0.0 }
       "and" -> bitwise(call, "and", a(), b()) { x, y -> x and y }
       "or" -> bitwise(call, "or", a(), b()) { x, y -> x or y }
       "xor" -> bitwise(call, "xor", a(), b()) { x, y -> x xor y }
-      "shl" -> bitwise(call, "sll", a(), b()) { x, y -> x shl y }
-      "shr" -> bitwise(call, "sra", a(), b()) { x, y -> x shr y }
-      "ushr" -> bitwise(call, "srl", a(), b()) { x, y -> x ushr y }
-      "inv" -> unary("not", a()) { x -> x.toInt().inv().toDouble() }
+      "shl" -> bitwise(call, "sll", a(), b()) { x, y -> x shl y.toInt() }
+      "shr" -> bitwise(call, "sra", a(), b()) { x, y -> x shr y.toInt() }
+      "ushr" -> bitwise(call, "srl", a(), b()) { x, y -> x ushr y.toInt() }
+      "inv" -> unary("not", a()) { x -> x.toLong().inv().toDouble() }
       else -> fail(call, "${call.symbol.owner.kotlinFqName} is not supported")
     }
   }
 
-  private fun arithmetic(
-      op: String,
-      a: Value,
-      b: Value,
-      int: Boolean,
-      fold: (Double, Double) -> Double,
-  ): Value {
-    if (a is Const && b is Const) {
-      val result = fold(a.number, b.number)
-      return Const(if (int) result.toLong().toInt().toDouble() else result)
-    }
+  /**
+   * Evaluates [expressions] in order. A register one of them yields is copied first if a later one
+   * may assign it, since Kotlin uses the value an operand had when it was evaluated (`x + x++` adds
+   * the old `x`).
+   */
+  private fun operands(expressions: List<IrExpression>): List<Value> =
+      expressions.mapIndexed { index, expression ->
+        val value = value(expression)
+        if (expressions.drop(index + 1).any { it.mayAssign() }) snapshot(value) else value
+      }
+
+  /** [value] in a register of its own if it is in one, so later assignments leave it alone. */
+  private fun snapshot(value: Value): Value =
+      if (value is Reg) Reg(newVReg()).also { move(it.reg, value) } else value
+
+  /** True if evaluating this expression may assign a variable or property. */
+  private fun IrExpression.mayAssign(): Boolean {
+    var assigns = false
+    acceptVoid(
+        object : IrVisitorVoid() {
+          override fun visitElement(element: IrElement) {
+            if (!assigns) element.acceptChildrenVoid(this)
+          }
+
+          override fun visitSetValue(expression: IrSetValue) {
+            assigns = true
+          }
+
+          override fun visitSetField(expression: IrSetField) {
+            assigns = true
+          }
+
+          override fun visitCall(expression: IrCall) {
+            val function = expression.symbol.owner
+            if (function == function.correspondingPropertySymbol?.owner?.setter) assigns = true
+            else super.visitCall(expression)
+          }
+        }
+    )
+    return assigns
+  }
+
+  private fun arithmetic(op: String, a: Value, b: Value, fold: (Double, Double) -> Double): Value {
+    if (a is Const && b is Const) return Const(fold(a.number, b.number))
     val result = newVReg()
     emit(op, result, operand(a), operand(b))
     return Reg(result)
@@ -375,10 +424,12 @@ internal class Translator {
       op: String,
       a: Value,
       b: Value,
-      fold: (Int, Int) -> Int,
+      fold: (Long, Long) -> Long,
   ): Value {
-    if (!call.type.isInt()) unsupported(call, "Boolean and, or and xor (use && and ||)")
-    if (a is Const && b is Const) return Const(fold(a.number.toInt(), b.number.toInt()).toDouble())
+    if (!call.type.isInt()) fail(call, "Boolean and, or and xor are not supported (use && and ||)")
+    if (a is Const && b is Const) {
+      return Const(fold(a.number.toLong(), b.number.toLong()).toDouble())
+    }
     val result = newVReg()
     emit(op, result, operand(a), operand(b))
     return Reg(result)
@@ -387,7 +438,7 @@ internal class Translator {
   /** Int division truncates towards zero, as on the JVM. */
   private fun intDivision(call: IrCall, a: Value, b: Value): Value {
     if (b is Const && b.number == 0.0) fail(call, "division by zero")
-    if (a is Const && b is Const) return Const((a.number.toInt() / b.number.toInt()).toDouble())
+    if (a is Const && b is Const) return Const(truncate(a.number / b.number))
     val result = newVReg()
     emit("div", result, operand(a), operand(b))
     emit("trunc", result, result)
@@ -397,11 +448,7 @@ internal class Translator {
   /** `a % b` takes the sign of `a`, as on the JVM, unlike IC10's `mod`. */
   private fun remainder(call: IrCall, a: Value, b: Value, int: Boolean): Value {
     if (int && b is Const && b.number == 0.0) fail(call, "division by zero")
-    if (a is Const && b is Const) {
-      return Const(
-          if (int) (a.number.toInt() % b.number.toInt()).toDouble() else a.number % b.number
-      )
-    }
+    if (a is Const && b is Const) return Const(a.number % b.number)
     val quotient = newVReg()
     emit("div", quotient, operand(a), operand(b))
     emit("trunc", quotient, quotient)
@@ -435,43 +482,44 @@ internal class Translator {
       return null
     }
     val op = unaryOps[name]
+    val values by lazy { operands(args).map { operand(it) } }
     return when {
       op != null && args.size == 1 -> {
         val result = newVReg()
-        emit(op, result, operand(value(args[0])))
+        emit(op, result, values[0])
         Reg(result)
       }
       name == "<get-absoluteValue>" -> {
         val result = newVReg()
-        emit("abs", result, operand(value(args[0])))
+        emit("abs", result, values[0])
         Reg(result)
       }
       name == "roundToInt" -> {
         // Kotlin rounds halves up here (Math.round), unlike round(), which rounds them to even.
         val result = newVReg()
-        emit("add", result, operand(value(args[0])), Fixed(Number(0.5)))
+        emit("add", result, values[0], Fixed(Number(0.5)))
         emit("floor", result, result)
         Reg(result)
       }
       name in setOf("atan2", "max", "min", "pow") && args.size == 2 -> {
         val result = newVReg()
-        emit(name, result, operand(value(args[0])), operand(value(args[1])))
+        emit(name, result, values[0], values[1])
         Reg(result)
       }
       fqName == "kotlin.ranges.coerceAtLeast" -> {
         val result = newVReg()
-        emit("max", result, operand(value(args[0])), operand(value(args[1])))
+        emit("max", result, values[0], values[1])
         Reg(result)
       }
       fqName == "kotlin.ranges.coerceAtMost" -> {
         val result = newVReg()
-        emit("min", result, operand(value(args[0])), operand(value(args[1])))
+        emit("min", result, values[0], values[1])
         Reg(result)
       }
       fqName == "kotlin.ranges.coerceIn" && args.size == 3 -> {
         val result = newVReg()
-        emit("max", result, operand(value(args[0])), operand(value(args[1])))
-        emit("min", result, result, operand(value(args[2])))
+        emit("max", result, values[0], values[1])
+        emit("min", result, result, values[2])
         Reg(result)
       }
       else -> null
@@ -480,7 +528,11 @@ internal class Translator {
 
   // Comparisons and conditions.
 
-  private class Comparison(val op: String, val a: Value, val b: Value)
+  /**
+   * [mayBeNaN] is true for an ordered comparison of Doubles: with a NaN operand both `a < b` and
+   * `a >= b` are false, so the opposite IC10 branch is not the negation.
+   */
+  private class Comparison(val op: String, val a: Value, val b: Value, val mayBeNaN: Boolean)
 
   /** A comparison call (`a < b`, `a == b`) as an IC10 condition, such as `lt` or `eq`. */
   private fun comparison(call: IrCall): Comparison? {
@@ -499,14 +551,17 @@ internal class Translator {
     for (side in listOf(left, right)) {
       val type = side.type
       if (!type.isInt() && !type.isDouble() && !type.isBoolean()) {
-        unsupported(call, "comparing ${type.render()} values")
+        fail(call, "Comparing ${type.render()} values is not supported")
       }
     }
     val boolean = left.type.isBoolean()
+    val (a, b) = operands(listOf(left, right)).map { if (boolean) truth(it) else it }
+    val ordered = condition != "eq"
     return Comparison(
         condition,
-        value(left).let { if (boolean) truth(it) else it },
-        value(right).let { if (boolean) truth(it) else it },
+        a,
+        b,
+        mayBeNaN = ordered && (left.type.isDouble() || right.type.isDouble()),
     )
   }
 
@@ -558,14 +613,22 @@ internal class Translator {
       ) {
         val comparison = comparison(condition)
         if (comparison != null) {
-          val op = if (whenTrue) comparison.op else NEGATED.getValue(comparison.op)
           val (a, b) = comparison.a to comparison.b
-          if (a is Const && b is Const) {
-            if (holds(op, a.number, b.number)) emit("j", Fixed(LabelRef(target)))
-          } else if (b == Const(0.0)) {
-            emit("b${op}z", operand(a), Fixed(LabelRef(target)))
-          } else {
-            emit("b$op", operand(a), operand(b), Fixed(LabelRef(target)))
+          when {
+            a is Const && b is Const ->
+                if (holds(comparison.op, a.number, b.number) == whenTrue) {
+                  emit("j", Fixed(LabelRef(target)))
+                }
+            whenTrue -> compareAndBranch(comparison, comparison.op, target)
+            !comparison.mayBeNaN ->
+                compareAndBranch(comparison, NEGATED.getValue(comparison.op), target)
+            else -> {
+              // Branch over the jump: the negated branch would not be taken for NaN.
+              val skip = newLabel("skip")
+              compareAndBranch(comparison, comparison.op, skip)
+              emit("j", Fixed(LabelRef(target)))
+              label(skip)
+            }
           }
           return
         }
@@ -604,6 +667,18 @@ internal class Translator {
       is Const -> if ((value.number != 0.0) == whenTrue) emit("j", Fixed(LabelRef(target)))
       else -> emit(if (whenTrue) "bnez" else "beqz", operand(value), Fixed(LabelRef(target)))
     }
+  }
+
+  /** Emits `b[op]` (or `b[op]z` against zero) on [comparison]'s operands, jumping to [target]. */
+  private fun compareAndBranch(comparison: Comparison, op: String, target: String) {
+    val (a, b) = comparison.a to comparison.b
+    val instruction =
+        if (b == Const(0.0)) {
+          TirInstruction("b${op}z", listOf(operand(a), Fixed(LabelRef(target))))
+        } else {
+          TirInstruction("b$op", listOf(operand(a), operand(b), Fixed(LabelRef(target))))
+        }
+    lines += instruction.copy(negatable = !comparison.mayBeNaN)
   }
 
   // Control flow.
@@ -656,7 +731,9 @@ internal class Translator {
 
   /**
    * `for (i in range)` over an Int range: `a..b`, `a..<b`, `a until b`, `a downTo b`, each
-   * optionally with `step`. Kotlin evaluates the range's bounds once, before the loop.
+   * optionally with `step`. Kotlin evaluates the range's bounds and step once, before the loop. A
+   * step that is not a constant is not checked: IC10 has no exceptions to throw for one that is not
+   * positive.
    */
   private fun forLoop(block: IrBlock): Value {
     val iterator = block.statements.getOrNull(0) as? IrVariable
@@ -666,16 +743,13 @@ internal class Translator {
     val iteratorCall = iterator?.initializer as? IrCall
     val rangeExpression = iteratorCall?.arguments?.getOrNull(0)
     if (loop == null || loopVariable == null || rangeExpression !is IrCall) {
-      unsupported(block, "this kind of for loop (only Int ranges are supported)")
+      fail(block, "Only for loops over Int ranges are supported")
     }
     val range = range(rangeExpression)
     val counter = newVReg(loopVariable.name.asString())
     move(counter, range.start)
-    val end =
-        when (val last = range.end) {
-          is Const -> last
-          else -> Reg(newVReg()).also { move(it.reg, last) }
-        }
+    val end = snapshot(range.end)
+    val step = snapshot(range.step)
     val top = newLabel("for")
     val next = newLabel("next")
     val done = newLabel("endfor")
@@ -691,7 +765,7 @@ internal class Translator {
     loops[loop] = next to done
     for (statement in body.statements.drop(1)) statement(statement)
     label(next)
-    emit(if (range.descending) "sub" else "add", counter, counter, operand(range.step))
+    emit(if (range.descending) "sub" else "add", counter, counter, operand(step))
     emit("j", Fixed(LabelRef(top)))
     label(done)
     return NoValue
@@ -710,21 +784,28 @@ internal class Translator {
     val fqName = function.kotlinFqName.asString()
     val args = call.arguments.map { it ?: fail(call, "missing range bound") }
     if (fqName != "kotlin.ranges.step" && args.any { !it.type.isInt() }) {
-      unsupported(call, "ranges of anything but Int")
+      fail(call, "Only Int ranges are supported")
+    }
+    fun bounds(inclusive: Boolean, descending: Boolean): Range {
+      val (start, end) = operands(args)
+      return Range(start, end, Const(1.0), inclusive, descending)
     }
     return when (fqName) {
-      "kotlin.Int.rangeTo" -> Range(value(args[0]), value(args[1]), Const(1.0), true, false)
+      "kotlin.Int.rangeTo" -> bounds(inclusive = true, descending = false)
       "kotlin.Int.rangeUntil",
-      "kotlin.ranges.until" -> Range(value(args[0]), value(args[1]), Const(1.0), false, false)
-      "kotlin.ranges.downTo" -> Range(value(args[0]), value(args[1]), Const(1.0), true, true)
+      "kotlin.ranges.until" -> bounds(inclusive = false, descending = false)
+      "kotlin.ranges.downTo" -> bounds(inclusive = true, descending = true)
       "kotlin.ranges.step" -> {
-        val inner = args[0] as? IrCall ?: unsupported(call, "this range")
+        val inner = args[0] as? IrCall ?: fail(call, "This range is not supported")
         val range = range(inner)
+        val stepAssigns = args[1].mayAssign()
+        val (start, end) =
+            listOf(range.start, range.end).map { if (stepAssigns) snapshot(it) else it }
         val step = value(args[1])
         if (step is Const && step.number <= 0.0) fail(args[1], "a range's step must be positive")
-        Range(range.start, range.end, step, range.inclusive, range.descending)
+        Range(start, end, step, range.inclusive, range.descending)
       }
-      else -> unsupported(call, "this range (use .., ..<, until, downTo and step)")
+      else -> fail(call, "This range is not supported (use .., ..<, until, downTo and step)")
     }
   }
 
@@ -771,12 +852,6 @@ internal class Translator {
 
   private fun fail(element: IrElement, message: String): Nothing =
       throw CompileException(element, message)
-
-  private fun unsupported(element: IrElement, what: String): Nothing =
-      fail(
-          element,
-          "${what.replaceFirstChar { it.uppercase() }} ${if (what.endsWith("s")) "are" else "is"} not supported",
-      )
 
   private companion object {
     val DEVICE_CLASSES = setOf("ktrapic.Device", "ktrapic.GenericDevice")

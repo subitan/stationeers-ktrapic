@@ -16,21 +16,31 @@ class CompilerTest {
         is CompileResult.Failure -> throw AssertionError("compile failed: ${result.errors}")
       }
 
-  /** Compiles [source], runs it to the end with [db] as the housing, and returns [db]. */
+  /**
+   * Compiles [source], runs it to the end with [db] as the housing, and returns [db]. The compact
+   * program runs too, on copies of the devices as they were before, and must leave them the same.
+   */
   private fun run(
       source: String,
       db: FakeDevice = FakeDevice(),
       vararg pins: Pair<String, FakeDevice>,
   ): FakeDevice {
-    for (compact in listOf(false, true)) {
+    val devices = mapOf("db" to db) + pins
+    val copies = devices.mapValues { (_, device) -> device.copy() }
+    for ((compact, runDevices) in listOf(false to devices, true to copies)) {
       val result = compiled(source, CompileOptions(compact = compact))
-      val device = if (compact) FakeDevice().also { it.logic.putAll(db.logic) } else db
-      val emulator = Emulator(result.program, mapOf("db" to device) + pins).runUntilHalt()
+      val emulator = Emulator(result.program, runDevices).runUntilHalt()
       assertWithMessage("halted (compact=$compact)\n${result.code}").that(emulator.halted).isTrue()
-      if (compact) assertThat(device.logic).isEqualTo(db.logic)
+    }
+    for ((pin, device) in devices) {
+      assertWithMessage("$pin after the compact program")
+          .that(copies.getValue(pin).logic)
+          .isEqualTo(device.logic)
     }
     return db
   }
+
+  private fun FakeDevice.copy() = FakeDevice(prefabHash, nameHash).also { it.logic.putAll(logic) }
 
   private fun error(source: String): CompileError =
       (compile(source) as? CompileResult.Failure)?.errors?.first()
@@ -225,6 +235,113 @@ class CompilerTest {
             (1..17).joinToString(" + ") { "v$it" }
 
     assertThat(error(source).message).contains("16")
+  }
+
+  @Test
+  fun `an operand keeps its value when a later operand assigns it`() {
+    val db =
+        run(
+            """
+            var x = 1
+            val y = x + x++
+            var z = 1
+            var c = true
+            val w = z + if (c) { z = 10; 1 } else 2
+            var a = 1
+            db.Setting = y.toDouble()
+            db.Ratio = (x * 10 + w).toDouble()
+            db.On = a > a++
+            """
+        )
+
+    assertThat(db["Setting"]).isEqualTo(2.0)
+    assertThat(db["Ratio"]).isEqualTo(22.0)
+    assertThat(db["On"]).isEqualTo(0.0)
+  }
+
+  @Test
+  fun `a for loop's step is evaluated once`() {
+    val db =
+        run(
+            """
+            var s = 2
+            var n = 0
+            for (i in 0..10 step s) { n++; s = 5 }
+            db.Setting = n.toDouble()
+            """
+        )
+
+    assertThat(db["Setting"]).isEqualTo(6.0)
+  }
+
+  @Test
+  fun `comparisons with NaN are false in branches`() {
+    val db =
+        run(
+            """
+            val x = sqrt(-1.0)
+            if (x > 5.0) db.Setting = 1.0 else db.Setting = 2.0
+            db.Ratio = if (x <= 5.0) 1.0 else 2.0
+            var n = 0
+            while (x < 1.0) { n++; if (n > 3) break }
+            db.Mode = n.toDouble()
+            """
+        )
+
+    assertThat(db["Setting"]).isEqualTo(2.0)
+    assertThat(db["Ratio"]).isEqualTo(2.0)
+    assertThat(db["Mode"]).isEqualTo(0.0)
+  }
+
+  @Test
+  fun `Int arithmetic does not wrap, folded or not`() {
+    val db =
+        run(
+            """
+            val max = 2147483647
+            var a = max
+            a += 1
+            db.Setting = a.toDouble()
+            db.Ratio = (max + 1).toDouble()
+            """
+        )
+
+    assertThat(db["Setting"]).isEqualTo(2147483648.0)
+    assertThat(db["Ratio"]).isEqualTo(2147483648.0)
+  }
+
+  @Test
+  fun `shifts and toInt fold to what the chip computes`() {
+    val db =
+        run(
+            """
+            val minusOne = -1
+            val big = 3e10
+            var m = minusOne
+            var d = big
+            db.Setting = ((m ushr 28) - (minusOne ushr 28)).toDouble()
+            db.Ratio = ((m shl 40) - (minusOne shl 40)).toDouble()
+            db.Mode = d.toInt().toDouble() - big.toInt().toDouble()
+            """
+        )
+
+    assertThat(db["Setting"]).isEqualTo(0.0)
+    assertThat(db["Ratio"]).isEqualTo(0.0)
+    assertThat(db["Mode"]).isEqualTo(0.0)
+  }
+
+  @Test
+  fun `custom setters and delegated properties are rejected`() {
+    assertThat(error("var x = 0\n  set(v) { field = v * 2 }\nx = 5").message).contains("setter")
+    assertThat(error("val x by lazy { 3 }\ndb.Setting = x.toDouble()").message)
+        .contains("Delegated")
+  }
+
+  @Test
+  fun `a when used as a value without else is reported`() {
+    val error = error("db.Setting = when (d0.On) { true -> 1.0; false -> 2.0 }")
+
+    assertThat(error.message).contains("else")
   }
 
   @Test
