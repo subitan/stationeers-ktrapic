@@ -856,6 +856,26 @@ class CompilerTest {
   }
 
   @Test
+  fun `the implied import comes before semicolons and comments ahead of the first statement`() {
+    val sources =
+        listOf(
+            "; db.Setting = 1.0",
+            ";\ndb.Setting = 1.0",
+            "/* c */ ;\n;\ndb.Setting = 1.0",
+            "package foo;\n;\ndb.Setting = 1.0",
+            "#!/usr/bin/env kotlin\n;\ndb.Setting = 1.0",
+            "import kotlin.math.max;\n;\ndb.Setting = max(1.0, 2.0)",
+        )
+    for (source in sources) {
+      assertWithMessage(source)
+          .that(Compiler.compile(source))
+          .isInstanceOf(CompileResult.Success::class.java)
+    }
+    val error = (Compiler.compile("; d0.On = 1.0") as CompileResult.Failure).errors.first()
+    assertThat(error.line to error.column).isEqualTo(1 to 9)
+  }
+
+  @Test
   fun `kotlin errors are reported`() {
     assertThat(error("db.On = 1.0").line).isEqualTo(3)
   }

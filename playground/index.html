@@ -302,7 +302,9 @@ $("open").onchange = async (e) => {
 
 (async function init() {
   src.value = load(DRAFT_KEY) ?? DEFAULT_CODE;
-  $("filename").textContent = load(NAME_KEY) ?? "untitled.ic10.kts";
+  // Programs are named *.ic10.kts; a stored name without that suffix gets it.
+  const name = load(NAME_KEY) ?? "untitled.ic10.kts";
+  $("filename").textContent = name.endsWith(".ic10.kts") ? name : name.replace(/\.kts$/, "") + ".ic10.kts";
   try {
     const info = await (await fetch("/api/info")).json();
     $("version").textContent = "compiler v" + info.version;
