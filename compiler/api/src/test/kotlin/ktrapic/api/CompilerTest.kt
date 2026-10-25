@@ -332,10 +332,10 @@ class CompilerTest {
     val db =
         run(
             """
-            val n = sqrt(-1.0).toInt()
+            var z = 0
+            val n = z / z
             db.Setting = if (n > 5) 1.0 else 2.0
             db.Ratio = if (n <= 5) 1.0 else 2.0
-            var z = 0
             val q = z / z
             db.Mode = if (q > 0 || q <= 0) 1.0 else 2.0
             """
@@ -373,7 +373,8 @@ class CompilerTest {
     val db =
         run(
             """
-            val n = sqrt(-1.0).toInt()
+            var z = 0
+            val n = z / z
             var count = 0
             for (i in 0..n) count++
             for (i in n downTo 0) count++
@@ -385,40 +386,49 @@ class CompilerTest {
   }
 
   @Test
-  fun `Int arithmetic does not wrap, folded or not`() {
+  fun `Int arithmetic past the Int range does not wrap at run time`() {
     val db =
         run(
             """
-            val max = 2147483647
-            var a = max
+            var a = 2147483647
             a += 1
             db.Setting = a.toDouble()
-            db.Ratio = (max + 1).toDouble()
             """
         )
 
     assertThat(db["Setting"]).isEqualTo(2147483648.0)
-    assertThat(db["Ratio"]).isEqualTo(2147483648.0)
   }
 
   @Test
-  fun `shifts and toInt fold to what the chip computes`() {
+  fun `a constant Int expression that overflows is an error`() {
+    for (expression in listOf("2147483647 + 1", "-1 ushr 28", "1 shl 31", "-2147483647 - 2")) {
+      assertWithMessage(expression)
+          .that(error("val x = $expression\ndb.Setting = x.toDouble()").message)
+          .contains("overflows")
+    }
+    assertThat(error("val x = 1 shl 32\ndb.Setting = x.toDouble()").message).contains("shift")
+  }
+
+  @Test
+  fun `toInt saturates and maps NaN to 0, folded or not`() {
     val db =
         run(
             """
-            val minusOne = -1
-            val big = 3e10
-            var m = minusOne
-            var d = big
-            db.Setting = ((m ushr 28) - (minusOne ushr 28)).toDouble()
-            db.Ratio = ((m shl 40) - (minusOne shl 40)).toDouble()
-            db.Mode = d.toInt().toDouble() - big.toInt().toDouble()
+            var big = 3e10
+            var small = -3e10
+            var nan = sqrt(-1.0)
+            var x = -2.7
+            db.Setting = big.toInt().toDouble() + 3e10.toInt().toDouble()
+            db.Ratio = small.toInt().toDouble() + (-3e10).toInt().toDouble()
+            db.Mode = nan.toInt().toDouble() + sqrt(-1.0).toInt().toDouble()
+            db.Charge = x.toInt().toDouble() + (-2.7).toInt().toDouble()
             """
         )
 
-    assertThat(db["Setting"]).isEqualTo(0.0)
-    assertThat(db["Ratio"]).isEqualTo(0.0)
+    assertThat(db["Setting"]).isEqualTo(2.0 * Int.MAX_VALUE)
+    assertThat(db["Ratio"]).isEqualTo(2.0 * Int.MIN_VALUE)
     assertThat(db["Mode"]).isEqualTo(0.0)
+    assertThat(db["Charge"]).isEqualTo(-4.0)
   }
 
   @Test

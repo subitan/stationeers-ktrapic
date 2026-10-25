@@ -327,40 +327,87 @@ internal class Translator {
   }
 
   /**
-   * Arithmetic and logic on Int, Double and Boolean. Ints are IC10 numbers, not 32-bit values:
-   * nothing wraps, and bitwise ops and shifts work on 64-bit integers, as IC10's do. Constant
-   * operands fold to the result the chip would compute.
+   * Arithmetic and logic on Int, Double and Boolean. IC10 has only doubles, so an Int behaves as on
+   * the JVM only while it stays within the Int range: the chip doesn't wrap, and its bitwise ops
+   * and shifts work on 64-bit integers. Constant operands fold to what the chip computes, and a
+   * constant Int result outside the Int range, where the chip and the JVM would differ, is an
+   * error.
    */
   private fun operator(call: IrCall, name: String): Value {
     val args = call.arguments.map { it ?: fail(call, "missing operand") }
     val int = call.type.isInt()
     val values by lazy { operands(args) }
-    fun a() = values[0]
-    fun b() = values[1]
-    return when (name) {
-      "plus" -> arithmetic("add", a(), b()) { x, y -> x + y }
-      "minus" -> arithmetic("sub", a(), b()) { x, y -> x - y }
-      "times" -> arithmetic("mul", a(), b()) { x, y -> x * y }
-      "div" ->
-          if (int) intDivision(call, a(), b()) else arithmetic("div", a(), b()) { x, y -> x / y }
-      "rem" -> remainder(call, a(), b(), int)
-      "unaryMinus" -> arithmetic("sub", Const(0.0), a()) { x, y -> x - y }
-      "unaryPlus" -> a()
-      "inc" -> arithmetic("add", a(), Const(1.0)) { x, y -> x + y }
-      "dec" -> arithmetic("sub", a(), Const(1.0)) { x, y -> x - y }
-      "toDouble" -> a()
-      // Truncation only: unlike the JVM, a value outside the Int range or NaN is kept as it is.
-      "toInt" -> if (args[0].type.isInt()) a() else unary("trunc", a()) { x -> truncate(x) }
-      "not" -> unary("seqz", a()) { x -> if (x == 0.0) 1.0 else 0.0 }
-      "and" -> bitwise(call, "and", a(), b()) { x, y -> x and y }
-      "or" -> bitwise(call, "or", a(), b()) { x, y -> x or y }
-      "xor" -> bitwise(call, "xor", a(), b()) { x, y -> x xor y }
-      "shl" -> bitwise(call, "sll", a(), b()) { x, y -> x shl y.toInt() }
-      "shr" -> bitwise(call, "sra", a(), b()) { x, y -> x shr y.toInt() }
-      "ushr" -> bitwise(call, "srl", a(), b()) { x, y -> x ushr y.toInt() }
-      "inv" -> unary("not", a()) { x -> x.toLong().inv().toDouble() }
-      else -> fail(call, "${call.symbol.owner.kotlinFqName} is not supported")
+    val result = operation(call, name, int, args, { values[0] }, { values[1] })
+    if (int && result is Const && result.number.isFinite() && result.number !in INT_RANGE) {
+      fail(
+          call,
+          "This constant Int expression overflows: the chip would give " +
+              "${result.operand.text()}, where the JVM wraps",
+      )
     }
+    return result
+  }
+
+  private fun operation(
+      call: IrCall,
+      name: String,
+      int: Boolean,
+      args: List<IrExpression>,
+      a: () -> Value,
+      b: () -> Value,
+  ): Value =
+      when (name) {
+        "plus" -> arithmetic("add", a(), b()) { x, y -> x + y }
+        "minus" -> arithmetic("sub", a(), b()) { x, y -> x - y }
+        "times" -> arithmetic("mul", a(), b()) { x, y -> x * y }
+        "div" ->
+            if (int) intDivision(call, a(), b()) else arithmetic("div", a(), b()) { x, y -> x / y }
+        "rem" -> remainder(call, a(), b(), int)
+        "unaryMinus" -> arithmetic("sub", Const(0.0), a()) { x, y -> x - y }
+        "unaryPlus" -> a()
+        "inc" -> arithmetic("add", a(), Const(1.0)) { x, y -> x + y }
+        "dec" -> arithmetic("sub", a(), Const(1.0)) { x, y -> x - y }
+        "toDouble" -> a()
+        "toInt" -> if (args[0].type.isInt()) a() else toInt(a())
+        "not" -> unary("seqz", a()) { x -> if (x == 0.0) 1.0 else 0.0 }
+        "and" -> bitwise(call, "and", a(), b()) { x, y -> x and y }
+        "or" -> bitwise(call, "or", a(), b()) { x, y -> x or y }
+        "xor" -> bitwise(call, "xor", a(), b()) { x, y -> x xor y }
+        "shl" -> shift(call, "sll", a(), b()) { x, y -> x shl y }
+        "shr" -> shift(call, "sra", a(), b()) { x, y -> x shr y }
+        "ushr" -> shift(call, "srl", a(), b()) { x, y -> x ushr y }
+        "inv" -> unary("not", a()) { x -> x.toLong().inv().toDouble() }
+        else -> fail(call, "${call.symbol.owner.kotlinFqName} is not supported")
+      }
+
+  /**
+   * A shift; a constant count outside 0..31, which the chip and the JVM treat differently, is an
+   * error.
+   */
+  private fun shift(
+      call: IrCall,
+      op: String,
+      a: Value,
+      b: Value,
+      fold: (Long, Int) -> Long,
+  ): Value {
+    if (b is Const && (b.number < 0 || b.number > 31)) {
+      fail(call, "A shift count must be between 0 and 31")
+    }
+    return bitwise(call, op, a, b) { x, y -> fold(x, y.toInt()) }
+  }
+
+  /** `toInt()` as on the JVM: truncated, limited to the Int range, and 0 for NaN. */
+  private fun toInt(a: Value): Value {
+    if (a is Const) return Const(a.number.toInt().toDouble())
+    val nan = newVReg()
+    val result = newVReg()
+    emit("snan", nan, operand(a))
+    emit("trunc", result, operand(a))
+    emit("max", result, result, Fixed(Number(Int.MIN_VALUE.toDouble())))
+    emit("min", result, result, Fixed(Number(Int.MAX_VALUE.toDouble())))
+    emit("select", result, nan, Fixed(Number(0.0)), result)
+    return Reg(result)
   }
 
   /**
@@ -880,5 +927,6 @@ internal class Translator {
     val DEVICE_CLASSES = setOf("ktrapic.Device", "ktrapic.GenericDevice")
     val PIN_GETTERS =
         listOf("d0", "d1", "d2", "d3", "d4", "d5", "db").associateBy { "ktrapic.<get-$it>" }
+    val INT_RANGE = Int.MIN_VALUE.toDouble()..Int.MAX_VALUE.toDouble()
   }
 }

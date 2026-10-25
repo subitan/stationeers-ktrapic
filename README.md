@@ -20,15 +20,22 @@ chip's pins compile; functions, batch operations and the IC10 Editor plugin are 
 
 ## Numbers
 
-IC10 has one kind of number, a double, and KTrapIC compiles `Int` to it too. Supported
-constructs otherwise behave as on the JVM, but `Int` values are not limited to 32 bits:
+IC10 has one kind of number, a 64-bit floating-point number, and Kotlin's `Double` is exactly
+that: arithmetic, comparisons, NaN and infinity behave on the chip as they do on the JVM. Use
+`Double` for measurements, settings and anything a device reports.
 
-- Arithmetic doesn't wrap on overflow: an `Int` holding 2147483647 becomes 2147483648 when
-  incremented.
-- Bitwise operations and shifts work on 64-bit integers, as IC10's do: `x ushr 28` with `x`
-  holding -1 is 68719476735, and a shift count isn't reduced modulo 32.
-- `Double.toInt()` only truncates: a value outside the `Int` range stays as it is, and NaN stays
-  NaN. An `Int` holding NaN compares as a `Double` NaN does: every ordered comparison is false.
+`Int` is for counting and whole numbers within the `Int` range. It compiles to the same kind of
+number, and behaves as on the JVM while it stays in that range: `/` truncates, `%` takes the
+dividend's sign, and `toInt()` truncates, limits the result to the `Int` range and turns NaN
+into 0. Where the chip can't match the JVM:
+
+- Arithmetic past the `Int` range doesn't wrap: an `Int` holding 2147483647 becomes 2147483648
+  when incremented. A constant expression that would overflow is a compile error instead.
+- Bitwise operations and shifts work on 64-bit integers, so they match the JVM only while the
+  result stays in the `Int` range. A constant shift count must be between 0 and 31.
+- Dividing an `Int` by zero at run time gives NaN or infinity, where the JVM throws. An `Int`
+  holding NaN compares as a `Double` NaN does: every ordered comparison is false, and a `for`
+  loop with a NaN bound runs no iterations. (Dividing by a constant zero is a compile error.)
 - `Double` `%` is computed as `a - truncate(a / b) * b`, which rounds at the division and the
   multiplication, so it can differ from the JVM's exact remainder: `10.0 % 0.1` is 0.0 rather
   than 0.09999999999999945, and `x % Double.POSITIVE_INFINITY` is NaN rather than `x`.

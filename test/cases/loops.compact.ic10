@@ -1,18 +1,22 @@
 l r0 db Setting
+snan r1 r0
 trunc r0 r0
+max r0 r0 -2147483648
+min r0 r0 2147483647
+select r0 r1 0 r0
 move r1 0
 move r2 1
-ble r2 r0 6
-j 9
+ble r2 r0 10
+j 13
 add r1 r1 r2
 add r2 r2 1
-j 4
+j 8
 move r2 0
-bge r0 0 12
-j 16
-beqz r0 16
+bge r0 0 16
+j 20
+beqz r0 20
 add r2 r2 1
 sub r0 r0 2
-j 10
+j 14
 s db Ratio r1
 s db Mode r2

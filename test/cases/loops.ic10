@@ -1,5 +1,9 @@
 l r0 db Setting
+snan r1 r0
 trunc r0 r0
+max r0 r0 -2147483648
+min r0 r0 2147483647
+select r0 r1 0 r0
 move r1 0
 move r2 1
 for1:
