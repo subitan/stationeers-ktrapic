@@ -20,6 +20,12 @@ class FakeDevice(val prefabHash: Int = 0, val nameHash: Int = 0) {
   /** Every logic write the program made, in order, as `type` to `value`. */
   val writes = mutableListOf<Pair<String, Double>>()
 
+  /**
+   * Called after each logic write the program makes, with its type and value, so a test can model a
+   * device whose other values change at once.
+   */
+  var onWrite: (type: String, value: Double) -> Unit = { _, _ -> }
+
   operator fun get(type: String): Double? = logic[type]
 
   operator fun set(type: String, value: Double) {
@@ -34,6 +40,7 @@ class FakeDevice(val prefabHash: Int = 0, val nameHash: Int = 0) {
   internal fun write(type: String, value: Double) {
     logic[type] = value
     writes += type to value
+    onWrite(type, value)
   }
 
   internal fun readSlot(index: Int, type: String): Double =

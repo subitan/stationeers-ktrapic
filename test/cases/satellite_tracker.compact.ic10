@@ -1,0 +1,87 @@
+s d0 Vertical 45
+s d0 Horizontal 0
+l r0 d0 SignalStrength
+bne r0 -1 11
+move r0 STR("init.")
+jal 42
+sleep 0.25
+move r0 STR("init ")
+jal 42
+jal 46
+j 2
+l r0 d0 SignalStrength
+blt r0 2 14
+j 20
+move r0 STR("Scan")
+jal 42
+move r0 20
+move r1 0
+jal 51
+j 11
+l r0 d0 SignalStrength
+blt r0 97 23
+j 39
+move r0 STR("Fine")
+jal 42
+move r2 0
+move r3 1
+jal 73
+move r2 0
+move r3 -1
+jal 73
+move r2 1
+move r3 0
+jal 73
+move r2 -1
+move r3 0
+jal 73
+jal 46
+j 20
+move r0 STR("Done!")
+jal 42
+j 87
+s d5 Mode 10
+s d5 Setting r0
+sleep 2
+j ra
+l r0 d0 SignalStrength
+s d2 Setting r0
+l r0 d0 Horizontal
+s d3 Setting r0
+j ra
+push ra
+l r4 d0 Horizontal
+add r0 r4 r0
+s d0 Horizontal r0
+l r0 d0 Vertical
+add r0 r0 r1
+s d0 Vertical r0
+l r0 d0 SignalStrength
+bne r0 -1 67
+jal 46
+move r0 STR("move.")
+jal 42
+sleep 0.25
+move r0 STR("move ")
+jal 42
+j 58
+move r0 STR("stop")
+jal 42
+sleep 1
+jal 46
+pop ra
+j ra
+push ra
+l r0 d0 SignalStrength
+move r5 r0
+move r0 r2
+move r1 r3
+jal 51
+l r0 d0 SignalStrength
+blt r0 r5 82
+j 85
+sub r0 0 r2
+sub r1 0 r3
+jal 51
+pop ra
+j ra
