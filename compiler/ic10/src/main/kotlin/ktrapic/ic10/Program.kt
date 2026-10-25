@@ -52,6 +52,9 @@ data class Program(val lines: List<Line>) {
           "${line.op} takes a name, not a label, as operand ${index + 1}"
         }
       }
+      if (line.op == "define") {
+        require(line.operands.getOrNull(1) !is LabelRef) { "define takes a constant, not a label" }
+      }
       if (opcode.jump == JumpKind.RELATIVE) {
         require(line.operands.getOrNull(opcode.targetIndex!!) !is LabelRef) {
           "${line.op} jumps by an offset, not to a label"

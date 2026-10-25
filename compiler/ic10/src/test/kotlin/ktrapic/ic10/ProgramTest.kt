@@ -92,6 +92,13 @@ class ProgramTest {
   }
 
   @Test
+  fun rejectsLabelReferenceAsADefinedValue() {
+    assertThrows<IllegalArgumentException> {
+      Program(Line.Label("foo"), Line.Instruction("define", Name("T"), LabelRef("foo")))
+    }
+  }
+
+  @Test
   fun rejectsDuplicateLabels() {
     assertThrows<IllegalArgumentException> { Program(Line.Label("a"), Line.Label("a")) }
   }

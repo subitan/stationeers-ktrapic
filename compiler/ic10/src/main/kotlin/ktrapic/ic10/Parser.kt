@@ -10,12 +10,11 @@ internal object Parser {
   private val binary = Regex("""%[01_]+""")
   private val stringConstant = Regex("""(HASH|STR)\("([^"]*)"\)""")
   private val label = Regex("""[A-Za-z_][A-Za-z0-9_]*""")
-  private val constants =
-      mapOf(
-          "nan" to Double.NaN,
-          "pinf" to Double.POSITIVE_INFINITY,
-          "ninf" to Double.NEGATIVE_INFINITY,
-      )
+  /**
+   * Constants parsed straight to a [Number], because [Number] prints them back as the same word.
+   * The other built-in constants stay [Name]s so that printed text keeps them.
+   */
+  private val numericConstants = setOf("nan", "pinf", "ninf")
 
   fun parse(text: String): Program {
     val rawLines = text.replace("\r", "").split('\n')
@@ -35,7 +34,7 @@ internal object Parser {
           when (name) {
             in Register.NAMES -> "a register"
             in Device.NAMES -> "a device"
-            in constants -> "a constant"
+            in Constants.VALUES -> "a constant"
             in declared -> "also a define or alias"
             else -> null
           }
@@ -77,6 +76,9 @@ internal object Parser {
     if ((first == "define" || first == "alias") && parsed[0] !is Name) {
       throw Ic10ParseException(lineNumber, "$first needs a name, not ${operands[0]}")
     }
+    if (first == "define" && parsed[1] is LabelRef) {
+      throw Ic10ParseException(lineNumber, "define needs a constant, not label ${operands[1]}")
+    }
     if (opcode.jump == JumpKind.RELATIVE && parsed[opcode.targetIndex!!] is LabelRef) {
       throw Ic10ParseException(lineNumber, "$first jumps by an offset, not to a label")
     }
@@ -90,7 +92,7 @@ internal object Parser {
     return when {
       token in Register.NAMES -> Register(token)
       token in Device.NAMES -> Device(token)
-      token in constants -> Number(constants.getValue(token))
+      token in numericConstants -> Number(Constants.VALUES.getValue(token))
       decimal.matches(token) -> Number(token.toDouble())
       hex.matches(token) -> integer(lineNumber, token, 16)
       binary.matches(token) -> integer(lineNumber, token, 2)

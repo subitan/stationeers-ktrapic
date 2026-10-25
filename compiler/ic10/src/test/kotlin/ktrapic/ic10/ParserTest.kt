@@ -1,6 +1,7 @@
 package ktrapic.ic10
 
 import com.google.common.truth.Truth.assertThat
+import com.google.common.truth.Truth.assertWithMessage
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 
@@ -92,10 +93,86 @@ class ParserTest {
             "yield\nr0:" to 2,
             "db:" to 1,
             "nan:" to 1,
+            "yield\npi:" to 2,
+            "deg2rad:" to 1,
+            "rad2deg:" to 1,
+            "epsilon:" to 1,
         )) {
       val e = assertThrows<Ic10ParseException>(text) { Program.parse(text) }
       assertThat(e.line).isEqualTo(line)
     }
+  }
+
+  @Test
+  fun everyNameOperandIgnoresLabels() {
+    // define and alias are left out: a label sharing their declared name is rejected outright.
+    val opcodes =
+        Opcodes.all.values.filter {
+          it.nameIndices.isNotEmpty() && it.name != "define" && it.name != "alias"
+        }
+    assertThat(opcodes).isNotEmpty()
+    for (opcode in opcodes) {
+      val operands = List(opcode.arity) { if (it in opcode.nameIndices) "foo" else "r0" }
+      val text = "foo:\n${opcode.name} ${operands.joinToString(" ")}"
+
+      val parsed = (Program.parse(text).lines[1] as Line.Instruction).operands
+
+      for (index in opcode.nameIndices) {
+        assertWithMessage("$text, operand $index").that(parsed[index]).isEqualTo(Name("foo"))
+      }
+    }
+  }
+
+  @Test
+  fun nameOperandsMatchTheGameSignatures() {
+    // Operands as the game's instruction help names them; the name-typed ones are listed below.
+    val signatures =
+        listOf(
+            "alias name target",
+            "define name value",
+            "bdnvl device logicType line",
+            "bdnvs device logicType line",
+            "l r device logicType",
+            "lb r prefabHash logicType batchMode",
+            "lbn r prefabHash nameHash logicType batchMode",
+            "lbns r prefabHash nameHash slot slotLogicType batchMode",
+            "lbs r prefabHash slot slotLogicType batchMode",
+            "lr r device reagentMode reagent",
+            "ls r device slot slotLogicType",
+            "s device logicType value",
+            "sb prefabHash logicType value",
+            "sbn prefabHash nameHash logicType value",
+            "sbs prefabHash slot slotLogicType value",
+            "ss device slot slotLogicType value",
+        )
+    val nameTyped = setOf("name", "logicType", "slotLogicType", "batchMode", "reagentMode")
+    val expected = signatures.associate { signature ->
+      val words = signature.split(" ")
+      words[0] to words.drop(1).indices.filter { words[it + 1] in nameTyped }.toSet()
+    }
+
+    val actual =
+        Opcodes.all.values
+            .filter { it.nameIndices.isNotEmpty() }
+            .associate { it.name to it.nameIndices }
+    assertThat(actual).isEqualTo(expected)
+    for ((name, signature) in expected.keys.zip(signatures)) {
+      assertWithMessage(signature)
+          .that(Opcodes[name]!!.arity)
+          .isEqualTo(signature.split(" ").size - 1)
+    }
+  }
+
+  @Test
+  fun builtInConstantsOtherThanNumbersStayNames() {
+    val line = Program.parse("move r0 pi").lines.single() as Line.Instruction
+    assertThat(line.operands[1]).isEqualTo(Name("pi"))
+  }
+
+  @Test
+  fun rejectsLabelAsADefinedValue() {
+    val e = assertThrows<Ic10ParseException> { Program.parse("foo:\ndefine T foo") }
+    assertThat(e.line).isEqualTo(2)
   }
 
   @Test

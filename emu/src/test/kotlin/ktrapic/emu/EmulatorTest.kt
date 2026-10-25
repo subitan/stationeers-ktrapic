@@ -1,6 +1,8 @@
 package ktrapic.emu
 
 import com.google.common.truth.Truth.assertThat
+import ktrapic.ic10.Line
+import ktrapic.ic10.Name
 import ktrapic.ic10.Program
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -257,6 +259,20 @@ class EmulatorTest {
   fun defineOfANonConstantFailsAtItsLine() {
     val e = assertThrows<Ic10RuntimeException> { Emulator(Program.parse("yield\ndefine x r0")) }
     assertThat(e.line).isEqualTo(1)
+  }
+
+  @Test
+  fun defineWithoutAValueFailsAtItsLine() {
+    val program = Program(Line.Comment(null), Line.Instruction("define", Name("x")))
+    val e = assertThrows<Ic10RuntimeException> { Emulator(program) }
+    assertThat(e.line).isEqualTo(1)
+  }
+
+  @Test
+  fun definesTakeEveryBuiltInConstant() {
+    val emu = run("define x deg2rad\nmove r0 x\nmove r1 epsilon")
+    assertThat(emu.register("r0")).isEqualTo(Math.PI / 180)
+    assertThat(emu.register("r1")).isEqualTo(Float.MIN_VALUE.toDouble())
   }
 
   @Test

@@ -5,6 +5,7 @@ import kotlin.math.ceil
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.random.Random
+import ktrapic.ic10.Constants
 import ktrapic.ic10.Device
 import ktrapic.ic10.Ic10Limits
 import ktrapic.ic10.JumpKind
@@ -66,6 +67,7 @@ class Emulator(
     program.lines.forEachIndexed { index, line ->
       if (line is Line.Instruction && line.op == "define") {
         try {
+          check(line.operands.size == 2) { "takes 2 operands, not ${line.operands.size}" }
           val name =
               line.operands[0] as? Name ?: error("needs a name, not ${line.operands[0].text()}")
           put(name.name, constant(line.operands[1]))
@@ -333,7 +335,7 @@ class Emulator(
               is Register -> registers[alias.index]
               null ->
                   defines[operand.name]
-                      ?: BUILT_IN[operand.name]
+                      ?: Constants.VALUES[operand.name]
                       ?: error("unknown name ${operand.name}")
               else -> error("${operand.name} is a device, not a value")
             }
@@ -344,7 +346,7 @@ class Emulator(
       when (operand) {
         is Number -> operand.value
         is StringConstant -> operand.numericValue
-        is Name -> BUILT_IN[operand.name] ?: error("needs a constant, not ${operand.name}")
+        is Name -> Constants.VALUES[operand.name] ?: error("needs a constant, not ${operand.name}")
         else -> error("needs a constant, not ${operand.text()}")
       }
 
@@ -413,17 +415,6 @@ class Emulator(
 
   companion object {
     const val SECONDS_PER_TICK = 0.5
-
-    val BUILT_IN =
-        mapOf(
-            "pi" to Math.PI,
-            "deg2rad" to Math.PI / 180,
-            "rad2deg" to 180 / Math.PI,
-            "epsilon" to Float.MIN_VALUE.toDouble(),
-            "nan" to Double.NaN,
-            "pinf" to Double.POSITIVE_INFINITY,
-            "ninf" to Double.NEGATIVE_INFINITY,
-        )
 
     val BATCH_METHODS = mapOf("Average" to 0.0, "Sum" to 1.0, "Minimum" to 2.0, "Maximum" to 3.0)
   }
