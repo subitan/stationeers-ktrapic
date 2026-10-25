@@ -144,7 +144,7 @@ class ParserTest {
         listOf(
             "alias name target",
             "define name value",
-            "label name target",
+            "label device name",
             "ld r referenceId logicType",
             "sd referenceId logicType value",
             "bdnvl device logicType line",
@@ -197,6 +197,16 @@ class ParserTest {
     val e = assertThrows<Ic10ParseException> { Program.parse("yield\ndefine r0 5") }
     assertThat(e.line).isEqualTo(2)
     assertThrows<Ic10ParseException> { Program.parse("alias 3 d0") }
+  }
+
+  @Test
+  fun labelTakesTheDeviceFirstAndTheNameSecond() {
+    val line = Program.parse("label d0 Sensor").lines.single() as Line.Instruction
+    assertThat(line.operands).containsExactly(Device("d0"), Name("Sensor")).inOrder()
+
+    assertThrows<Ic10ParseException> { Program.parse("label Sensor d0") }
+    val e = assertThrows<Ic10ParseException> { Program.parse("label d0 Sensor\nSensor:") }
+    assertThat(e.line).isEqualTo(2)
   }
 
   @Test

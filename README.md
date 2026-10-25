@@ -80,7 +80,7 @@ into 0. `roundToInt()` limits its result the same way. Where the chip can't matc
 Constant expressions fold to the same results the chip computes. A NaN constant is computed as
 `0 / 0` in the output, since the chip rejects `nan` written as an operand.
 
-The line, byte and register counts the compiler reports are measured as the game's code editor
+The line and byte counts the compiler reports are measured as the game's code editor
 measures them: each line break counts as two characters toward the 4096 limit, so a 128-line
 program has 3842 characters for its text.
 

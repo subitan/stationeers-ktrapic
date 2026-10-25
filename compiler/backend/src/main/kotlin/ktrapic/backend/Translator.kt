@@ -504,9 +504,9 @@ internal class Translator {
   /**
    * Arithmetic and logic on Int, Double and Boolean. IC10 has only doubles, so an Int behaves as on
    * the JVM only while it stays within the Int range: the chip doesn't wrap, and its bitwise ops
-   * and shifts work on 64-bit integers. Constant operands fold to what the chip computes, and a
-   * constant Int result outside the Int range, where the chip and the JVM would differ, is an
-   * error.
+   * and shifts work on integers of 53 bits plus sign. Constant operands fold to what the chip
+   * computes, and a constant Int result outside the Int range, where the chip and the JVM would
+   * differ, is an error.
    */
   private fun operator(call: IrCall, name: String): Value {
     val args = call.arguments.map { it ?: fail(call, "missing operand") }

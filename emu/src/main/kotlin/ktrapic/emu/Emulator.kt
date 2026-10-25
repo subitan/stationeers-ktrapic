@@ -37,8 +37,10 @@ class Ic10RuntimeException(val line: Int, message: String) : Exception("line $li
  * Its arithmetic, bitwise operations (see [ktrapic.ic10.Ic10Math]), batch reads, jumps and stack
  * follow the game's IC10 interpreter, with the chip in a circuit housing (so `get`/`put` on `db`
  * reach its own stack). Where it deliberately differs: a runtime error halts and throws (the game
- * retries the failing line every tick), and `sleep` resumes after exactly `ceil(seconds / 0.5)`
- * ticks (the game's real tick lengths can make it one tick later at exact multiples of 0.5 s).
+ * retries the failing line every tick), `sleep` resumes after exactly `ceil(seconds / 0.5)` ticks
+ * (the game's real tick lengths can make it one tick later at exact multiples of 0.5 s), and a
+ * literal jump target, address or slot need only have a whole value (the game also wants it written
+ * as an integer, so `j 2.0` is an error there).
  *
  * Not modelled yet: logic types given as numbers, device reference ids (`ld`, `sd`, `getd`, `lbns`,
  * `d?` from a register), reagents, other hosts (machines, suits, tablets), and indirect registers
@@ -179,8 +181,8 @@ class Emulator(
     }
 
     when (line.op) {
-      "alias",
-      "label" -> aliases[(ops[0] as Name).name] = resolveAlias(ops[1])
+      "alias" -> aliases[(ops[0] as Name).name] = resolveAlias(ops[1])
+      "label" -> aliases[(ops[1] as Name).name] = resolveAlias(ops[0])
       "define" -> {}
       "hcf" -> {
         halted = true
@@ -297,8 +299,9 @@ class Emulator(
       // The game counts by prefab only for `lbn ... Count`, ignoring the name.
       "lbn" ->
           set(
-              if (batchMethod(ops[4]) == COUNT) matching(v(1), null).size.toDouble()
-              else batch(matching(v(1), v(2)), ops[4]) { it.read(logicType(ops[3])) }
+              batch(matching(v(1), v(2)), ops[4], count = matching(v(1), null).size) {
+                it.read(logicType(ops[3]))
+              }
           )
       "lbs" -> {
         val slot = integer(ops[2])
@@ -360,7 +363,7 @@ class Emulator(
   private fun value(operand: Operand): Double =
       when (operand) {
         is Register -> registers[operand.index]
-        is Number -> operand.value
+        is Number -> literal(operand.value, operand.text())
         is LabelRef -> program.labels.getValue(operand.name).toDouble()
         is StringConstant -> operand.numericValue
         is Name ->
@@ -368,19 +371,28 @@ class Emulator(
               is Register -> registers[alias.index]
               null ->
                   defines[operand.name]
-                      ?: Constants.VALUES[operand.name]
+                      ?: Constants.lookup(operand.name)?.let { literal(it, operand.name) }
                       ?: error("unknown name ${operand.name}")
               else -> error("${operand.name} is a device, not a value")
             }
         is Device -> error("${operand.name} is a device, not a value")
       }
 
+  /**
+   * A number written in an operand. The game rejects one that is NaN (`nan` itself, or a constant
+   * spelled in another case); only a `define` can hold NaN.
+   */
+  private fun literal(value: Double, text: String): Double {
+    require(!value.isNaN()) { "$text is NaN, which only a define can hold" }
+    return value
+  }
+
   private fun constant(operand: Operand): Double =
       when (operand) {
         is Number -> operand.value
         is StringConstant -> operand.numericValue
         // The game gives a define whose value is another name NaN.
-        is Name -> Constants.VALUES[operand.name] ?: Double.NaN
+        is Name -> Constants.lookup(operand.name) ?: Double.NaN
         else -> error("needs a constant, not ${operand.text()}")
       }
 
@@ -428,39 +440,38 @@ class Emulator(
       (if (mode is Name) BATCH_METHODS[mode.name] ?: value(mode) else value(mode)).toInt()
 
   /**
-   * A batch read over [devices], as the game computes it: devices are visited last to first, an
-   * empty Average is NaN (0/0), an empty Minimum is 0 and an empty Maximum is negative infinity.
+   * A batch read over [devices], as the game computes it: every device must be readable, whatever
+   * the mode (Count, which gives [count], included); devices are visited last to first; an empty
+   * Average is NaN (0/0), an empty Minimum is 0 and an empty Maximum is negative infinity.
    */
   private fun batch(
       devices: List<FakeDevice>,
       mode: Operand,
+      count: Int = devices.size,
       read: (FakeDevice) -> Double,
-  ): Double =
-      when (val method = batchMethod(mode)) {
-        COUNT -> devices.size.toDouble()
-        0,
-        1 -> {
-          val sum = devices.asReversed().sumOf(read)
-          if (method == 0) sum / devices.size else sum
-        }
-        2 -> {
-          var minimum = Double.POSITIVE_INFINITY
-          for (device in devices.asReversed()) {
-            val value = read(device)
-            if (!(value >= minimum)) minimum = value
-          }
-          if (minimum >= Double.POSITIVE_INFINITY) 0.0 else minimum
-        }
-        3 -> {
-          var maximum = Double.NEGATIVE_INFINITY
-          for (device in devices.asReversed()) {
-            val value = read(device)
-            if (!(value <= maximum)) maximum = value
-          }
-          maximum
-        }
-        else -> error("unknown batch method $method")
+  ): Double {
+    val method = batchMethod(mode)
+    val values = devices.asReversed().map(read)
+    return when (method) {
+      COUNT -> count.toDouble()
+      0,
+      1 -> {
+        val sum = values.sum()
+        if (method == 0) sum / values.size else sum
       }
+      2 -> {
+        var minimum = Double.POSITIVE_INFINITY
+        for (value in values) if (!(value >= minimum)) minimum = value
+        if (minimum >= Double.POSITIVE_INFINITY) 0.0 else minimum
+      }
+      3 -> {
+        var maximum = Double.NEGATIVE_INFINITY
+        for (value in values) if (!(value <= maximum)) maximum = value
+        maximum
+      }
+      else -> error("unknown batch method $method")
+    }
+  }
 
   /** The stack index `sp` points at, rounded as the game rounds it. */
   private fun stackPointer() = Math.rint(registers[Register.SP.index]).toInt()
@@ -468,11 +479,14 @@ class Emulator(
   /**
    * An operand used as a whole number (a jump target, address or slot), converted as the game does:
    * a register's value is rounded half to even, an alias's or define's truncated, and a literal
-   * must already be whole.
+   * must be a whole number. `sp` and `ra` are aliases the chip sets up for `r16` and `r17`, so they
+   * truncate.
    */
   private fun integer(operand: Operand): Int {
     val value = value(operand)
     return when (operand) {
+      Register.SP,
+      Register.RA -> value.toInt()
       is Register -> Math.rint(value).toInt()
       is Number -> value.toInt().also { require(it.toDouble() == value) { "not a whole number" } }
       else -> value.toInt()

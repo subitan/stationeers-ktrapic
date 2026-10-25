@@ -392,9 +392,9 @@ class EmulatorTest {
   }
 
   @Test
-  fun labelIsAnOlderSpellingOfAlias() {
+  fun labelIsAnOlderSpellingOfAliasWithTheDeviceFirst() {
     val d0 = FakeDevice()
-    run("label Sensor d0\ns Sensor Setting 3", "d0" to d0)
+    run("label d0 Sensor\ns Sensor Setting 3", "d0" to d0)
 
     assertThat(d0["Setting"]).isEqualTo(3.0)
   }
@@ -402,6 +402,79 @@ class EmulatorTest {
   @Test
   fun defineOfAnotherNameIsNaN() {
     assertThat(run("define x y\nmove r0 x").register("r0")).isNaN()
+  }
+
+  @Test
+  fun constantsIgnoreCase() {
+    val emu = run("define x PI\nmove r0 x\nmove r1 Tau\nmove r2 PINF")
+
+    assertThat(emu.register("r0")).isEqualTo(Math.PI)
+    assertThat(emu.register("r1")).isEqualTo(Math.PI * 2.0)
+    assertThat(emu.register("r2")).isEqualTo(Double.POSITIVE_INFINITY)
+  }
+
+  @Test
+  fun nanIsAnErrorAsAnOperandButNotAsADefine() {
+    for (text in listOf("yield\nmove r0 nan", "yield\nmove r0 NaN", "yield\nbeq r0 nan 0")) {
+      val e = assertThrows<Ic10RuntimeException>(text) { run(text) }
+      assertThat(e.line).isEqualTo(1)
+    }
+    assertThat(run("define x nan\nmove r0 x").register("r0")).isNaN()
+    assertThat(run("define x NaN\nmove r0 x").register("r0")).isNaN()
+  }
+
+  @Test
+  fun raAndSpTruncateAsJumpTargetsAndAddresses() {
+    // ra and sp are aliases in the game, so 3.5 truncates to 3, where a plain register rounds to 4.
+    val jump = run("move ra 3.5\nj ra\nmove r0 1\nmove r0 2\nmove r1 9")
+    assertThat(jump.register("r0")).isEqualTo(2.0)
+    assertThat(jump.register("r1")).isEqualTo(9.0)
+
+    val poke = run("move sp 3.5\npoke sp 7\nmove sp 0\nget r0 db 3\nget r1 db 4")
+    assertThat(poke.register("r0")).isEqualTo(7.0)
+    assertThat(poke.register("r1")).isEqualTo(0.0)
+  }
+
+  @Test
+  fun aNaNShiftCountCountsAsZero() {
+    val emu = run("div r9 0 0\nsll r0 3 r9\nsra r1 -8 r9\nrol r2 5 r9")
+
+    assertThat(emu.register("r0")).isEqualTo(3.0)
+    assertThat(emu.register("r1")).isEqualTo(-8.0)
+    assertThat(emu.register("r2")).isEqualTo(5.0)
+  }
+
+  @Test
+  fun batchReadsVisitDevicesLastToFirst() {
+    val nan = FakeDevice("StructureBattery").also { it["Charge"] = Double.NaN }
+    val three = FakeDevice("StructureBattery").also { it["Charge"] = 3.0 }
+    fun read(mode: String, vararg network: FakeDevice) =
+        Emulator(
+                Program.parse("lb r0 HASH(\"StructureBattery\") Charge $mode"),
+                network = network.toList(),
+            )
+            .runUntilHalt()
+            .register("r0")
+
+    // A NaN reading replaces the running minimum or maximum, and a later number replaces NaN.
+    assertThat(read("Minimum", nan, three)).isNaN()
+    assertThat(read("Minimum", three, nan)).isEqualTo(3.0)
+    assertThat(read("Maximum", nan, three)).isNaN()
+    assertThat(read("Maximum", three, nan)).isEqualTo(3.0)
+  }
+
+  @Test
+  fun batchReadsCheckEveryDeviceCanBeReadEvenForCount() {
+    val battery = FakeDevice("StructureBattery").also { it["Charge"] = 5.0 }
+    for (text in
+        listOf(
+            "lb r0 HASH(\"StructureBattery\") Bogus Count",
+            "lbn r0 HASH(\"StructureBattery\") 0 Bogus Count",
+        )) {
+      assertThrows<Ic10RuntimeException>(text) {
+        Emulator(Program.parse(text), network = listOf(battery)).runUntilHalt()
+      }
+    }
   }
 
   @Test

@@ -22,7 +22,8 @@ internal object Parser {
     val declared =
         tokenized
             .mapNotNull { (tokens, _) ->
-              tokens.getOrNull(1)?.takeIf { tokens[0] in DECLARING }
+              val index = tokens.firstOrNull()?.let { Opcodes[it]?.declaredIndex }
+              index?.let { tokens.getOrNull(it + 1) }
             }
             .toSet()
     val defined = mutableSetOf<String>()
@@ -69,8 +70,10 @@ internal object Parser {
     val parsed = operands.mapIndexed { index, token ->
       operand(lineNumber, token, if (index in opcode.nameIndices) emptySet() else labels)
     }
-    if (first in DECLARING && parsed[0] !is Name) {
-      throw Ic10ParseException(lineNumber, "$first needs a name, not ${operands[0]}")
+    opcode.declaredIndex?.let { index ->
+      if (parsed[index] !is Name) {
+        throw Ic10ParseException(lineNumber, "$first needs a name, not ${operands[index]}")
+      }
     }
     if (first == "define" && parsed[1] is LabelRef) {
       throw Ic10ParseException(lineNumber, "define needs a constant, not label ${operands[1]}")
@@ -140,9 +143,6 @@ internal object Parser {
     if (current.isNotEmpty()) tokens += current.toString()
     return tokens to null
   }
-
-  /** Instructions whose first operand declares a name. */
-  private val DECLARING = setOf("define", "alias", "label")
 
   private fun String.removeSuffixOrNull(suffix: String) =
       if (endsWith(suffix)) dropLast(suffix.length) else null

@@ -19,4 +19,8 @@ object Constants {
           "epsilon" to Double.MIN_VALUE,
           "rgas" to 8.31446261815324,
       )
+
+  /** The value of the built-in constant [name] spells, ignoring case as the game does, or null. */
+  fun lookup(name: String): Double? =
+      VALUES[name] ?: VALUES.entries.firstOrNull { it.key.equals(name, ignoreCase = true) }?.value
 }

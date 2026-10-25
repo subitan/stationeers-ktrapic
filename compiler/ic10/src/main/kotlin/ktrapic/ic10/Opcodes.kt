@@ -26,18 +26,31 @@ data class Opcode(val name: String, val arity: Int, val jump: JumpKind = JumpKin
     get() = name == "jal" || (name.startsWith("b") && name.endsWith("al"))
 
   /**
-   * Indices of the operands that are names rather than values: the name a `define` or `alias`
-   * declares, and logic types, slot logic types, reagent modes and batch modes, which the game
-   * looks up by name. A label never stands in for one of these.
+   * Indices of the operands that are names rather than values: the name a `define`, `alias` or
+   * `label` declares, and logic types, slot logic types, reagent modes and batch modes, which the
+   * game looks up by name. A label never stands in for one of these.
    */
   val nameIndices: Set<Int>
     get() = NAME_OPERANDS[name] ?: emptySet()
+
+  /**
+   * Index of the operand that declares a name, or null: the first for `define` and `alias`, the
+   * second for `label`, which takes the device first (`label d0 Sensor`).
+   */
+  val declaredIndex: Int?
+    get() =
+        when (name) {
+          "define",
+          "alias" -> 0
+          "label" -> 1
+          else -> null
+        }
 
   private companion object {
     val NAME_OPERANDS =
         mapOf(
             "alias" to setOf(0),
-            "label" to setOf(0),
+            "label" to setOf(1),
             "ld" to setOf(2),
             "sd" to setOf(1),
             "define" to setOf(0),
@@ -66,7 +79,7 @@ object Opcodes {
           // Control.
           "alias" to 2,
           "define" to 2,
-          // An older spelling of alias.
+          // An older spelling of alias, with its operands the other way round.
           "label" to 2,
           "hcf" to 0,
           "sleep" to 1,

@@ -37,10 +37,10 @@ data class Program(val lines: List<Line>) {
     val duplicates = names.groupingBy { it }.eachCount().filterValues { it > 1 }.keys
     require(duplicates.isEmpty()) { "labels defined more than once: $duplicates" }
     val declared =
-        lines
-            .filterIsInstance<Line.Instruction>()
-            .filter { it.op == "define" || it.op == "alias" || it.op == "label" }
-            .mapNotNullTo(mutableSetOf()) { (it.operands.firstOrNull() as? Name)?.name }
+        lines.filterIsInstance<Line.Instruction>().mapNotNullTo(mutableSetOf()) { line ->
+          val index = Opcodes[line.op]?.declaredIndex ?: return@mapNotNullTo null
+          (line.operands.getOrNull(index) as? Name)?.name
+        }
     // The game refuses to run a program that defines a name twice.
     val defined =
         lines

@@ -109,6 +109,57 @@ class ProgramTest {
     assertThrows<IllegalArgumentException> {
       Program(Line.Label("Sensor"), Line.Instruction("alias", Name("Sensor"), Device("d0")))
     }
+    assertThrows<IllegalArgumentException> {
+      Program(Line.Label("Sensor"), Line.Instruction("label", Device("d0"), Name("Sensor")))
+    }
+  }
+
+  @Test
+  fun rejectsANameDefinedTwice() {
+    assertThrows<IllegalArgumentException> {
+      Program(
+          Line.Instruction("define", Name("x"), Number(1.0)),
+          Line.Instruction("define", Name("x"), Number(2.0)),
+      )
+    }
+  }
+
+  @Test
+  fun stringConstantsAreNonEmptyAscii() {
+    assertThat(Hashes.str("A")).isEqualTo(65.0)
+    assertThat(Hashes.str("ABCDEF")).isEqualTo(0x414243444546L.toDouble())
+    assertThrows<IllegalArgumentException> { Hashes.str("") }
+    assertThrows<IllegalArgumentException> { Hashes.str("é") }
+    assertThrows<IllegalArgumentException> { StringConstant(StringConstant.Kind.HASH, "") }
+    assertThrows<IllegalArgumentException> { StringConstant(StringConstant.Kind.STR, "a#b") }
+  }
+
+  @Test
+  fun builtInConstantsHaveTheGameValues() {
+    assertThat(Constants.VALUES)
+        .containsExactly(
+            "nan",
+            Double.NaN,
+            "pinf",
+            Double.POSITIVE_INFINITY,
+            "ninf",
+            Double.NEGATIVE_INFINITY,
+            "pi",
+            3.141592653589793,
+            "tau",
+            6.283185307179586,
+            "deg2rad",
+            0.01745329238474369,
+            "rad2deg",
+            57.295780181884766,
+            "epsilon",
+            4.9E-324,
+            "rgas",
+            8.31446261815324,
+        )
+    assertThat(Constants.lookup("PI")).isEqualTo(Math.PI)
+    assertThat(Constants.lookup("Tau")).isEqualTo(Math.PI * 2.0)
+    assertThat(Constants.lookup("pie")).isNull()
   }
 
   @Test

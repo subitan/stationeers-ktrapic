@@ -14,7 +14,11 @@ object Ic10Math {
   private const val LOW_54_BITS = 0x3FFFFFFFFFFFFFL
   private const val BIT_53 = 0x20000000000000L
 
-  /** An operand of a bitwise operation as the integer the chip uses. NaN counts as 0. */
+  /**
+   * An operand of a bitwise operation as the integer the chip uses. NaN counts as 0: the game
+   * converts it with a C# cast whose result for NaN is unspecified (`long.MinValue` on x64, which
+   * differs from 0 only for `sra` by 10 or more), so this takes the JVM's conversion.
+   */
   fun toBits(value: Double, signed: Boolean = true): Long {
     require(value >= -9.223372036854776E18 || value.isNaN()) { "bitwise operand underflow" }
     require(value <= 9.223372036854776E18 || value.isNaN()) { "bitwise operand overflow" }
@@ -28,10 +32,15 @@ object Ic10Math {
     return (if (bits and BIT_53 != 0L) low or -TWO_TO_53.toLong() else low).toDouble()
   }
 
-  /** A shift or field operand, which must fit an Int; Long shifts then use its low 6 bits. */
+  /**
+   * A shift or field operand, which must fit an Int; Long shifts then use its low 6 bits. The
+   * game's range check lets NaN through to a C# cast whose result is unspecified; it counts as 0
+   * here, as in [toBits].
+   */
   fun toCount(value: Double): Int {
-    require(value >= Int.MIN_VALUE && value <= Int.MAX_VALUE) { "shift count out of range" }
-    return value.toInt()
+    require(!(value < Int.MIN_VALUE)) { "shift count underflow" }
+    require(!(value > Int.MAX_VALUE)) { "shift count overflow" }
+    return if (value.isNaN()) 0 else value.toInt()
   }
 
   fun and(a: Double, b: Double) = fromBits(toBits(a) and toBits(b))
