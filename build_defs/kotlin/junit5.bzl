@@ -16,7 +16,8 @@ def kt_junit5_tests(name, srcs, associates = [], deps = [], size = "small", **kw
     Every file in `srcs` must live under `src/test/kotlin/` and declare one test class named
     after the file, in the package matching its directory. A target per file means a new test
     file is picked up by the glob in `srcs` and run, instead of compiling but never being
-    selected by a single hand-written `test_class`.
+    selected by a single hand-written `test_class`. Only the class named after the file is
+    selected: a second test class in the same file compiles but never runs, and nothing reports it.
 
     Tests run under JUnit's ConsoleLauncher with --fail-if-no-tests, so a target whose class
     has no JUnit 5 tests (for example one written with JUnit 4's org.junit.Test) fails rather
