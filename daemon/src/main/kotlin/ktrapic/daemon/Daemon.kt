@@ -14,37 +14,49 @@ import ktrapic.api.Compiler
  * gets one line of base64-encoded JSON back. `code` is the source, or a map of module names to
  * sources whose `""` entry is the program. A success is `{"code", "num_lines", "num_bytes",
  * "num_registers", "warnings"}`; a failure is `{"error": {"description", "line", "column", ...}}`.
+ *
+ * Unlike PyTrapIC, `line` and `column` are both 1-based, and `line_end`/`column_end` repeat them
+ * because the compiler reports only where a problem starts. A request that is not a compile request
+ * gets `{"error": {"description"}}`, with an object rather than PyTrapIC's plain string.
+ *
+ * Every request line gets exactly one response line, whatever it holds, so a client can read one
+ * line per line it writes.
  */
 object Daemon {
   private val gson = Gson()
 
   /** The response line for one request line. */
   fun handle(line: String): String {
+    val request = decode(line)
     val response =
-        try {
-          respond(
-              JsonParser.parseString(String(Base64.getDecoder().decode(line.trim()))).asJsonObject
-          )
-        } catch (e: IllegalArgumentException) {
-          error("Requests must be base64-encoded JSON objects")
-        } catch (e: IllegalStateException) {
-          error("Requests must be base64-encoded JSON objects")
-        } catch (e: com.google.gson.JsonParseException) {
-          error("Requests must be base64-encoded JSON objects")
-        }
+        if (request == null) error("Requests must be base64-encoded JSON objects")
+        else
+            try {
+              respond(request)
+            } catch (e: Exception) {
+              error("Internal compiler error: $e", e.stackTraceToString())
+            }
     return Base64.getEncoder().encodeToString(gson.toJson(response).toByteArray())
   }
+
+  private fun decode(line: String): JsonObject? =
+      try {
+        JsonParser.parseString(String(Base64.getDecoder().decode(line.trim())))
+            .takeIf { it.isJsonObject }
+            ?.asJsonObject
+      } catch (e: IllegalArgumentException) {
+        null
+      } catch (e: com.google.gson.JsonParseException) {
+        null
+      }
 
   private fun respond(request: JsonObject): JsonObject {
     val action = request["action"]?.takeIf { it.isJsonPrimitive }?.asString
     if (action != "compile") return error("Invalid action '$action'")
     val code = request["code"] ?: return error("No code provided")
+    val program = if (code.isJsonObject) code.asJsonObject[""] else code
     val source =
-        when {
-          code.isJsonPrimitive -> code.asString
-          code.isJsonObject -> code.asJsonObject[""]?.asString ?: return error("No code provided")
-          else -> return error("No code provided")
-        }
+        program?.takeIf { it.isJsonPrimitive }?.asString ?: return error("No code provided")
     val options = request["options"]?.takeIf { it.isJsonObject }?.asJsonObject
     val compact = options?.get("compact")?.takeIf { it.isJsonPrimitive }?.asBoolean ?: false
     return when (val result = Compiler.compile(source, CompileOptions(compact = compact))) {
@@ -78,9 +90,15 @@ object Daemon {
   private fun describe(error: ktrapic.api.CompileError) =
       mapOf("description" to error.message, "line" to error.line, "column" to error.column)
 
-  private fun error(description: String) =
+  private fun error(description: String, stackTrace: String? = null) =
       JsonObject().apply {
-        add("error", JsonObject().apply { addProperty("description", description) })
+        add(
+            "error",
+            JsonObject().apply {
+              addProperty("description", description)
+              if (stackTrace != null) addProperty("stack_trace", stackTrace)
+            },
+        )
       }
 }
 
@@ -90,7 +108,6 @@ fun main() {
   while (true) {
     val line = readlnOrNull()?.trim() ?: break
     if (line == "EXIT") break
-    if (line.isEmpty()) continue
     println(Daemon.handle(line))
     System.out.flush()
   }

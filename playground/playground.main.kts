@@ -18,6 +18,7 @@ import java.io.File
 import java.net.InetSocketAddress
 import java.net.URLDecoder
 import java.util.Base64
+import java.util.concurrent.Executors
 import kotlin.system.exitProcess
 
 val usage =
@@ -158,12 +159,29 @@ val version =
 
 val daemon = Daemon(daemonJar)
 
+val hosts = setOf("127.0.0.1:$port", "localhost:$port")
+
+/**
+ * Whether the request comes from this playground's own page. Listening on 127.0.0.1 keeps other
+ * machines out but not other pages in the user's browser: checking `Host` defeats DNS rebinding,
+ * and checking `Origin` refuses requests that other sites send.
+ */
+fun isLocal(exchange: HttpExchange): Boolean {
+  val origin = exchange.requestHeaders.getFirst("Origin")
+  return exchange.requestHeaders.getFirst("Host") in hosts &&
+      (origin == null || origin.removePrefix("http://") in hosts)
+}
+
 val server = HttpServer.create(InetSocketAddress("127.0.0.1", port), 0)
+
+// A thread per request, so a slow compile does not hold up loading the page.
+server.executor = Executors.newCachedThreadPool()
 
 server.createContext("/") { exchange ->
   try {
     val path = exchange.requestURI.path
     when {
+      !isLocal(exchange) -> send(exchange, 403, """{"error":"forbidden"}""")
       exchange.requestMethod == "GET" && (path == "/" || path == "/index.html") ->
           send(exchange, 200, page.readText(), "text/html")
       exchange.requestMethod == "GET" && path == "/api/info" -> {
@@ -180,8 +198,15 @@ server.createContext("/") { exchange ->
         else send(exchange, 200, """{"code":${jsonString(file.readText())}}""")
       }
       exchange.requestMethod == "POST" && path == "/api/compile" -> {
+        // Requiring JSON makes a cross-site request need a CORS preflight, which this server fails.
+        val type = exchange.requestHeaders.getFirst("Content-Type").orEmpty()
         val request = exchange.requestBody.use { it.readBytes().decodeToString() }
-        send(exchange, 200, daemon.request(request))
+        when {
+          !type.startsWith("application/json") ->
+              send(exchange, 415, """{"error":{"description":"Send application/json"}}""")
+          request.isBlank() -> send(exchange, 400, """{"error":{"description":"No request"}}""")
+          else -> send(exchange, 200, daemon.request(request))
+        }
       }
       else -> send(exchange, 404, """{"error":"not found"}""")
     }
