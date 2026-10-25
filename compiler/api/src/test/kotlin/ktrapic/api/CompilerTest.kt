@@ -738,6 +738,28 @@ class CompilerTest {
     assertThat(db["Mode"]).isEqualTo(6.0)
   }
 
+  @Test
+  fun `function names shaped like registers or devices get other labels`() {
+    val names =
+        listOf("r0", "r16", "r99", "rr0", "rrr1", "d0", "d7", "dr0", "drr1", "sp", "ra", "db")
+    for (name in names) {
+      val source = "fun $name(x: Int) = x + 1\n" + "db.Setting = ($name(1) + $name(2)).toDouble()"
+      val result = compiled(source)
+
+      assertWithMessage(name).that(result.code).contains("jal ${name}_\n")
+      assertWithMessage(name).that(result.code).contains("\n${name}_:")
+      assertWithMessage(name).that(run(source)["Setting"]).isEqualTo(5.0)
+    }
+  }
+
+  @Test
+  fun `function names only resembling registers keep their names`() {
+    for (name in listOf("r", "rx", "d", "dr", "r0x", "rd0", "dd0")) {
+      val source = "fun $name(x: Int) = x + 1\n" + "db.Setting = ($name(1) + $name(2)).toDouble()"
+      assertWithMessage(name).that(compiled(source).code).contains("jal $name\n")
+    }
+  }
+
   private fun assertError(source: String, message: String, line: Int, column: Int) {
     val error = error(source)
     assertWithMessage(source).that(error.message).contains(message)

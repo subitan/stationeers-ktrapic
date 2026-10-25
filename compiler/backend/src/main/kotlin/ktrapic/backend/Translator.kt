@@ -119,7 +119,9 @@ internal class Translator {
     takenLabels += END_LABEL
     for (function in graph.functions) {
       var label = labelName(function.name.asString())
-      while (label in RESERVED_NAMES || label in takenLabels) label += "_"
+      while (label in RESERVED_NAMES || REGISTER_SPELLING.matches(label) || label in takenLabels) {
+        label += "_"
+      }
       takenLabels += label
       functionLabels[function] = label
     }
@@ -1149,6 +1151,12 @@ internal class Translator {
     val INT_RANGE = Int.MIN_VALUE.toDouble()..Int.MAX_VALUE.toDouble()
     const val END_LABEL = "end"
     val RESERVED_NAMES = Register.NAMES + Device.NAMES + Constants.VALUES.keys
+    /**
+     * Every register or device-pin shape, which a function label never takes: `r` or `d` and digits
+     * (`r16` and `r17` are `sp` and `ra`; the game or a mod may add more registers or pins), and
+     * indirect registers and pins such as `rr0`, `rrr1`, `dr0` and `drr1`.
+     */
+    val REGISTER_SPELLING = Regex("(d|d?r+)[0-9]+")
     val LABEL_CHARS = ('A'..'Z') + ('a'..'z') + ('0'..'9') + '_'
   }
 }
