@@ -555,9 +555,14 @@ internal class Translator {
       }
       name == "roundToInt" -> {
         // Kotlin rounds halves up here (Math.round), unlike round(), which rounds them to even.
+        // floor(x + 0.5) would round x + 0.5 first, taking 0.49999999999999994 to 1, so this
+        // compares the fraction x - floor(x), which is exact, with 0.5 instead.
         // It saturates like toInt(); the JVM throws for NaN, which gives 0 here, as toInt() does.
-        val half = arithmetic("add", operands(args)[0], Const(0.5)) { x, y -> x + y }
-        toInt(unary("floor", half) { x -> floor(x) })
+        val x = operands(args)[0]
+        val whole = unary("floor", x) { floor(it) }
+        val fraction = arithmetic("sub", x, whole) { a, b -> a - b }
+        val up = arithmetic("sge", fraction, Const(0.5)) { a, b -> if (a >= b) 1.0 else 0.0 }
+        toInt(arithmetic("add", whole, up) { a, b -> a + b })
       }
       name in setOf("atan2", "max", "min", "pow") && args.size == 2 -> {
         val result = newVReg()

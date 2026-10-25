@@ -33,7 +33,7 @@ into 0. `roundToInt()` limits its result the same way. Where the chip can't matc
   when incremented. A constant expression that would overflow is a compile error instead.
 - Bitwise operations and shifts work on 64-bit integers, so they match the JVM only while the
   result stays in the `Int` range and the shift count is between 0 and 31. At run time a count
-  outside that range isn't reduced modulo 32 (`x shr 32` is 0, not `x`); a constant one is a
+  outside that range isn't reduced modulo 32 (`5 shr 32` is 0, not 5); a constant one is a
   compile error.
 - `roundToInt()` of NaN gives 0, where the JVM throws.
 - An `Int` product or quotient that is zero can be a negative zero (`0 * -1`, `0 / -5`). It

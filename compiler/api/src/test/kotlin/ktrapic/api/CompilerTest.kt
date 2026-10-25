@@ -486,6 +486,27 @@ class CompilerTest {
   }
 
   @Test
+  fun `roundToInt rounds just below a half down, folded or not`() {
+    val db =
+        run(
+            """
+            var a = 0.49999999999999994
+            var b = -0.49999999999999994
+            var c = -0.7
+            db.Setting = a.roundToInt().toDouble() + 0.49999999999999994.roundToInt().toDouble()
+            db.Ratio = b.roundToInt().toDouble() + (-0.49999999999999994).roundToInt().toDouble()
+            db.Mode = c.roundToInt().toDouble() + (-0.7).roundToInt().toDouble()
+            db.Charge = 1.0 / a.roundToInt().toDouble()
+            """
+        )
+
+    assertThat(db["Setting"]).isEqualTo(0.0)
+    assertThat(db["Ratio"]).isEqualTo(0.0)
+    assertThat(db["Mode"]).isEqualTo(-2.0)
+    assertThat(db["Charge"]).isEqualTo(Double.POSITIVE_INFINITY)
+  }
+
+  @Test
   fun `toInt of a negative fraction is a positive zero, folded or not`() {
     val db =
         run(
