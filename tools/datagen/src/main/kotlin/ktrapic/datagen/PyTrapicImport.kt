@@ -5,12 +5,14 @@ package ktrapic.datagen
  * as `class Name(_IntEnum):` followed by an `Entry = number` line, indented four spaces, per entry.
  * PyTrapIC appends `_` to entry names that are Python keywords (`None_`); that is dropped.
  *
- * An enum ends at the next unindented line; other unindented code is skipped. Anything else in an
- * enum's header or body is an error rather than skipped, so that no entry is lost unnoticed.
+ * An enum ends at the next unindented line other than a comment, which Python allows at column 0
+ * inside a class body; other unindented code is skipped. Any other class whose bases mention
+ * `IntEnum`, and anything else in an enum's header or body, is an error rather than skipped, so
+ * that no entry is lost unnoticed.
  */
 object PyTrapicImport {
   private val ENUM_START = Regex("""^class (\w+)\(_IntEnum\):\s*$""")
-  private val ENUM_START_PREFIX = Regex("""^class \w+\(_IntEnum\)""")
+  private val ENUM_START_PREFIX = Regex("""^class \w+\(.*IntEnum""")
   private val ENTRY = Regex("""^ {4}(\w+) = (-?\d+)\s*$""")
 
   fun enums(typesGenerated: String, source: String): LogicEnums {
@@ -33,7 +35,7 @@ object PyTrapicImport {
           require(name !in current) { "$where: entry $name declared twice" }
           current[name] = entry.groupValues[2].toInt()
         }
-        line.isBlank() -> {}
+        line.isBlank() || line.startsWith("#") -> {}
         line[0].isWhitespace() ->
             require(current == null) { "$where: unrecognized line in an enum: $line" }
         else -> current = null

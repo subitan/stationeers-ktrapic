@@ -45,9 +45,17 @@ class RuntimeGeneratorTest {
             "class A(_IntEnum):  # a comment\n    X = 0\n",
             "class A(_IntEnum):\n    \"\"\"doc\"\"\"\n    X = 0\n",
             "class A(_IntEnum):\n\nclass B(_IntEnum):\n    X = 0\n",
+            "class A(IntEnum):\n    X = 0\n\nclass B(_IntEnum):\n    Z = 0\n",
+            "class A(_IntEnum, metaclass=M):\n    X = 0\n\nclass B(_IntEnum):\n    Z = 0\n",
         )) {
       assertThrows<IllegalArgumentException>(bad) { PyTrapicImport.enums(bad, "test") }
     }
+  }
+
+  @Test
+  fun `a comment at column 0 does not end an enum`() {
+    val imported = PyTrapicImport.enums("class A(_IntEnum):\n    X = 0\n# c\n    Y = 1\n", "test")
+    assertThat(imported.enums["A"]).containsExactly("X", 0, "Y", 1).inOrder()
   }
 
   @Test
