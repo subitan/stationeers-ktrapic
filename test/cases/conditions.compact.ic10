@@ -1,0 +1,19 @@
+l r0 d0 Temperature
+slt r1 r0 290
+sgt r0 r0 300
+s d1 On r1
+s d2 On r0
+beqz r1 8
+move r2 4
+j 12
+beqz r0 11
+move r2 0
+j 12
+move r2 2
+s db Color r2
+beqz r1 16
+move r0 1
+j 16
+s db On r0
+yield
+j 0

@@ -10,7 +10,7 @@ class RuntimeApiTest {
   private val runtimeJar = File(Device::class.java.protectionDomain.codeSource.location.toURI())
 
   private fun compile(source: String) =
-      K2Frontend.compile("import ktrapic.*\n" + source, listOf(runtimeJar)) { it.dump() }
+      K2Frontend.compile("import ktrapic.*\n" + source, listOf(runtimeJar)) { it.module.dump() }
 
   private fun errors(result: FrontendResult<*>) =
       result.diagnostics.filter { it.severity == Diagnostic.Severity.ERROR }

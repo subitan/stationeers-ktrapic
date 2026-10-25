@@ -1,0 +1,25 @@
+while1:
+l r0 d0 Temperature
+slt r1 r0 290
+sgt r0 r0 300
+s d1 On r1
+s d2 On r0
+beqz r1 else1
+move r2 4
+j endif1
+else1:
+beqz r0 else2
+move r2 0
+j endif1
+else2:
+move r2 2
+endif1:
+s db Color r2
+beqz r1 else3
+move r0 1
+j endif2
+else3:
+endif2:
+s db On r0
+yield
+j while1

@@ -1,0 +1,7 @@
+# Golden programs: each X.kts compiles to X.ic10, and to X.compact.ic10 with compact output.
+# //compiler/api:GoldenTest checks them.
+filegroup(
+    name = "cases",
+    srcs = glob(["*.kts", "*.ic10"]),
+    visibility = ["//compiler/api:__pkg__"],
+)

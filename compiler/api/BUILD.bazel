@@ -1,0 +1,28 @@
+load("@rules_kotlin//kotlin:jvm.bzl", "kt_jvm_library")
+load("//build_defs/kotlin:junit5.bzl", "kt_junit5_tests")
+
+kt_jvm_library(
+    name = "api",
+    srcs = glob(["src/main/kotlin/**/*.kt"]),
+    visibility = ["//visibility:public"],
+    deps = [
+        "//compiler/backend",
+        "//compiler/frontend",
+        "//compiler/ic10",
+        "//runtime",
+    ],
+)
+
+kt_junit5_tests(
+    name = "api_tests",
+    srcs = glob(["src/test/kotlin/**/*.kt"]),
+    associates = [":api"],
+    size = "medium",
+    data = ["//test/cases"],
+    deps = [
+        "//compiler/ic10",
+        "//emu",
+        "@maven//:com_google_truth_truth",
+        "@maven//:org_junit_jupiter_junit_jupiter_api",
+    ],
+)

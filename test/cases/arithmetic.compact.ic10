@@ -1,0 +1,28 @@
+s d0 Setting 295.15
+l r0 d1 Setting
+snan r1 r0
+trunc r0 r0
+max r0 r0 -2147483648
+min r0 r0 2147483647
+select r0 r1 0 r0
+add r0 r0 0
+l r1 d2 Setting
+snan r2 r1
+trunc r1 r1
+max r1 r1 -2147483648
+min r1 r1 2147483647
+select r1 r2 0 r1
+add r1 r1 0
+div r2 r0 r1
+trunc r2 r2
+s db Setting r2
+div r2 r0 r1
+trunc r2 r2
+mul r2 r2 r1
+sub r0 r0 r2
+s db Ratio r0
+l r0 d1 Setting
+abs r0 r0
+sqrt r0 r0
+mul r0 r0 2
+s db Mode r0
