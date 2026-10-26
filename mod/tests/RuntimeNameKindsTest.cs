@@ -8,6 +8,12 @@ public class RuntimeNameKindsTest
     [InlineData("Batteries", "Small", NameKind.Type)]
     [InlineData("Battery", "Large", NameKind.Type)]
     [InlineData("Color", "Red", NameKind.EnumValue)]
+    // Idle, Fuel and Maximum are values of an enum and logic types; after an enum, they're values.
+    [InlineData("PowerMode", "Idle", NameKind.EnumValue)]
+    [InlineData("GasType", "Fuel", NameKind.EnumValue)]
+    [InlineData("LogicBatchMethod", "Maximum", NameKind.EnumValue)]
+    [InlineData("RobotMode", "None", NameKind.EnumValue)]
+    [InlineData("LogicType", "Temperature", NameKind.LogicType)]
     // Color is an enum and a logic type.
     [InlineData("db", "Color", NameKind.LogicType)]
     [InlineData("d0", "Temperature", NameKind.LogicType)]
