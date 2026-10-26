@@ -1,0 +1,121 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    The KTrapIC plugin for the IC10 Editor mod: a BepInEx plugin, built with the .NET SDK (see
+    mod/README.md). It compiles against the game's DLLs, found from Local.Developer.props, the
+    STATIONEERS_DIR environment variable or the default Steam paths; a CI build, with no game,
+    uses the stand-in DLLs of the Template submodule instead.
+  -->
+  <PropertyGroup>
+    <TargetFramework>net48</TargetFramework>
+    <AssemblyName>KTrapIC</AssemblyName>
+    <RootNamespace>KTrapIC</RootNamespace>
+    <LangVersion>latest</LangVersion>
+    <Deterministic>true</Deterministic>
+    <PathMap>$(MSBuildProjectDirectory)=.</PathMap>
+    <!--
+      Only the items listed below. The SDK's default None items would take in every DLL under
+      this directory (Template/libs, tests/bin), and references resolve to those before their
+      HintPath, so they'd be compiled against in place of the game's.
+    -->
+    <EnableDefaultItems>false</EnableDefaultItems>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <!-- The IC10 Editor release compiled against; the plugin runs with the Workshop copy. -->
+    <IC10EditorVersion>v1.0.2</IC10EditorVersion>
+    <DependenciesDir>$(MSBuildProjectDirectory)/deps/IC10Editor-$(IC10EditorVersion)</DependenciesDir>
+    <DistDir>$(MSBuildProjectDirectory)/dist</DistDir>
+  </PropertyGroup>
+
+  <Import Project="Local.Developer.props" Condition="Exists('Local.Developer.props')" />
+
+  <PropertyGroup>
+    <ManagedSubDir>rocketstation_Data/Managed</ManagedSubDir>
+    <SteamGameSubDir>steamapps/common/Stationeers</SteamGameSubDir>
+    <StationeersDirectory Condition="'$(StationeersDirectory)' == '' And '$(STATIONEERS_DIR)' != ''">$(STATIONEERS_DIR)</StationeersDirectory>
+    <StationeersDirectory Condition="'$(StationeersDirectory)' == '' And Exists('C:/Program Files (x86)/Steam/$(SteamGameSubDir)/$(ManagedSubDir)')">C:/Program Files (x86)/Steam/$(SteamGameSubDir)</StationeersDirectory>
+    <StationeersDirectory Condition="'$(StationeersDirectory)' == '' And Exists('$(HOME)/.steam/steam/$(SteamGameSubDir)/$(ManagedSubDir)')">$(HOME)/.steam/steam/$(SteamGameSubDir)</StationeersDirectory>
+    <StationeersDllDir Condition="'$(StationeersDllDir)' == '' And '$(StationeersDirectory)' != ''">$(StationeersDirectory)/$(ManagedSubDir)</StationeersDllDir>
+    <StationeersDllDir Condition="'$(GITHUB_ACTIONS)' == 'true'">$(MSBuildProjectDirectory)/Template/libs</StationeersDllDir>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="src/**/*.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3" PrivateAssets="all" />
+    <PackageReference Include="BepInEx.Core" Version="5.4.21" />
+    <PackageReference Include="UnityEngine.Modules" Version="2021.2.3" IncludeAssets="compile" />
+    <!-- Lets the plugin register its console command in the game's private command table. -->
+    <PackageReference Include="Krafs.Publicizer" Version="2.3.0">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <Publicize Include="Assembly-CSharp" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Assembly-CSharp" HintPath="$(StationeersDllDir)/Assembly-CSharp.dll" Private="false" />
+    <Reference Include="UniTask" HintPath="$(StationeersDllDir)/UniTask.dll" Private="false" />
+    <Reference Include="Newtonsoft.Json" HintPath="$(StationeersDllDir)/Newtonsoft.Json.dll" Private="false" />
+    <Reference Include="RG.ImGui" HintPath="$(StationeersDllDir)/RG.ImGui.dll" Private="false" />
+    <Reference Include="netstandard" HintPath="$(StationeersDllDir)/netstandard.dll" Private="false" />
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="IC10Editor" HintPath="$(DependenciesDir)/IC10Editor.dll" Private="false" />
+  </ItemGroup>
+
+  <Target Name="CheckGameDlls" BeforeTargets="ResolveAssemblyReferences">
+    <Error
+      Condition="!Exists('$(StationeersDllDir)/Assembly-CSharp.dll')"
+      Text="Stationeers' DLLs weren't found (looked in '$(StationeersDllDir)'). Set StationeersDirectory in mod/Local.Developer.props, or the STATIONEERS_DIR environment variable, to the game's install directory." />
+  </Target>
+
+  <!-- The IC10 Editor's release zip, downloaded once into deps/. -->
+  <Target Name="FetchIC10Editor" BeforeTargets="ResolveAssemblyReferences" Condition="!Exists('$(DependenciesDir)/IC10Editor.dll')">
+    <DownloadFile
+      SourceUrl="https://github.com/aproposmath/StationeersIC10Editor/releases/download/$(IC10EditorVersion)/IC10Editor-$(IC10EditorVersion).zip"
+      DestinationFolder="$(DependenciesDir)" />
+    <Unzip SourceFiles="$(DependenciesDir)/IC10Editor-$(IC10EditorVersion).zip" DestinationFolder="$(DependenciesDir)" />
+  </Target>
+
+  <!-- The mod's ID and version, from About/About.xml, for the code. -->
+  <Target Name="GenerateModInfo" BeforeTargets="CoreCompile">
+    <XmlPeek XmlInputPath="About/About.xml" Query="/ModMetadata/Version/text()">
+      <Output TaskParameter="Result" PropertyName="ModVersion" />
+    </XmlPeek>
+    <XmlPeek XmlInputPath="About/About.xml" Query="/ModMetadata/ModID/text()">
+      <Output TaskParameter="Result" PropertyName="ModId" />
+    </XmlPeek>
+    <PropertyGroup>
+      <ModInfoFile>$(IntermediateOutputPath)ModInfo.g.cs</ModInfoFile>
+    </PropertyGroup>
+    <WriteLinesToFile
+      File="$(ModInfoFile)"
+      Overwrite="true"
+      WriteOnlyWhenDifferent="true"
+      Lines="// Generated from About/About.xml by KTrapIC.csproj.;internal static class ModInfo;{;    public const string Id = &quot;$(ModId)&quot;%3B;    public const string Version = &quot;$(ModVersion)&quot;%3B;}" />
+    <ItemGroup>
+      <Compile Include="$(ModInfoFile)" />
+      <FileWrites Include="$(ModInfoFile)" />
+    </ItemGroup>
+  </Target>
+
+  <!-- Copies the plugin into StationeersLaunchPad's local mods directory (set StationeersModDir). -->
+  <Target Name="Install" DependsOnTargets="Build">
+    <Error Condition="'$(StationeersModDir)' == ''" Text="Set StationeersModDir in mod/Local.Developer.props to StationeersLaunchPad's local mods directory." />
+    <ItemGroup>
+      <AboutFiles Include="About/**/*" />
+    </ItemGroup>
+    <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(StationeersModDir)/KTrapIC" SkipUnchangedFiles="true" />
+    <Copy SourceFiles="@(AboutFiles)" DestinationFolder="$(StationeersModDir)/KTrapIC/About/%(RecursiveDir)" SkipUnchangedFiles="true" />
+  </Target>
+
+  <!-- The release layout, dist/KTrapIC/{KTrapIC.dll, About/}, which release.yml zips. -->
+  <Target Name="Dist" DependsOnTargets="Build">
+    <ItemGroup>
+      <AboutFiles Include="About/**/*" />
+    </ItemGroup>
+    <RemoveDir Directories="$(DistDir)/KTrapIC" />
+    <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(DistDir)/KTrapIC" />
+    <Copy SourceFiles="@(AboutFiles)" DestinationFolder="$(DistDir)/KTrapIC/About/%(RecursiveDir)" />
+  </Target>
+</Project>

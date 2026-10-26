@@ -7,8 +7,8 @@ KTrapIC compiles a constrained subset of Kotlin to IC10, the assembly language o
 [Stationeers](https://store.steampowered.com/app/544550/Stationeers/)' programmable chips.
 It is at an early stage: programs using values, loops, conditions, functions, the devices on a
 chip's pins, typed devices, slots and batch operations on the network compile (see
-`test/cases/satellite_tracker.ic10.kts`, a port of a chip from the game); the IC10 Editor plugin
-is next.
+`test/cases/satellite_tracker.ic10.kts`, a port of a chip from the game), and a plugin for the
+IC10 Editor mod compiles them in game.
 
 Programs are Kotlin scripts named `*.ic10.kts`. The `ktrapic` API needs no import, since
 `import ktrapic.*` is implied; writing it anyway is fine.
@@ -20,6 +20,7 @@ functions, devices, the maths and numeric rules, and the chip's size limits.
 - `compiler/frontend`: runs the Kotlin K2 front end on a script and returns its IR.
 - `compiler/backend`: translates that IR to IC10, allocating registers r0–r15.
 - `daemon`: the compile daemon, which reads requests on stdin and writes results on stdout.
+- `mod`: the plugin for the IC10 Editor mod (C#), which runs the daemon in game.
 - `compiler/ic10`: the IC10 program model, parser, and printer (normal, and compact with
   labels resolved to line numbers), plus the chip's size limits.
 - `emu`: an IC10 emulator with fake devices, so tests can check what a program does.
@@ -44,8 +45,17 @@ kotlin playground/playground.main.kts
 then open http://127.0.0.1:8765/. The Open menu lists the programs in `test/cases`; pass
 `--source-dir` (repeatable) to list others, and `--port` to use another port. The script starts
 the compile daemon (`daemon/`) and sends it each compile; the daemon speaks PyTrapIC's protocol
-(one base64 JSON line per request and per response), which the IC10 Editor plugin will use too.
+(one base64 JSON line per request and per response), which the IC10 Editor plugin uses too.
 The first compile after starting takes a few seconds while the compiler warms up.
+
+## In game
+
+The plugin in `mod/` adds a "Kotlin" language to the
+[IC10 Editor](https://github.com/aproposmath/StationeersIC10Editor) mod: programs are compiled as
+you type, with the IC10 shown beside them, and exported to the chip as IC10 with the Kotlin
+source kept alongside, so the chip opens as Kotlin again. On first use it downloads the compiler
+and a Java runtime for it from this repository's GitHub release. See [mod/README.md](mod/README.md)
+for installing, using and building it.
 
 ## Editing in IntelliJ
 

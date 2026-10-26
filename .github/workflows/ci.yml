@@ -45,3 +45,39 @@ jobs:
           curl -sSfL -o ktfmt.jar "https://repo1.maven.org/maven2/com/facebook/ktfmt/${KTFMT_VERSION}/ktfmt-${KTFMT_VERSION}-with-dependencies.jar"
           echo "${KTFMT_SHA256}  ktfmt.jar" | sha256sum --check
           git ls-files -z '*.kt' '*.kts' ':!:test/cases/*' | xargs -0 --no-run-if-empty java -jar ktfmt.jar --dry-run --set-exit-if-changed
+
+  mod:
+    name: Mod (build, and test on the packaged runtime)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          submodules: true
+      - name: Fetch the stand-in game DLLs (Git LFS, in the Template submodule)
+        run: git submodule foreach git lfs pull
+      - uses: bazel-contrib/setup-bazel@0.19.1
+        with:
+          bazelisk-cache: true
+          disk-cache: ${{ github.workflow }}-mod
+          repository-cache: true
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: "21"
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "10.0.x"
+      - name: Build the daemon jar
+        run: bazel build --config=ci //daemon:ktrapic-daemon_deploy.jar
+      - name: Package the Java runtime
+        run: |
+          mod/package-runtime.sh "$RUNNER_TEMP/runtime.zip"
+          mkdir "$RUNNER_TEMP/runtime" && unzip -q "$RUNNER_TEMP/runtime.zip" -d "$RUNNER_TEMP/runtime"
+          chmod +x "$RUNNER_TEMP"/runtime/bin/*
+      - name: Build the mod
+        run: dotnet build -c Release mod/KTrapIC.csproj
+      - name: Test the daemon client, running the daemon on the packaged runtime
+        run: |
+          JAVA_HOME="$RUNNER_TEMP/runtime" \
+          KTRAPIC_DAEMON_JAR="$PWD/$(bazel cquery --config=ci --output=files //daemon:ktrapic-daemon_deploy.jar 2>/dev/null)" \
+          dotnet test mod/tests/KTrapIC.Tests.csproj
