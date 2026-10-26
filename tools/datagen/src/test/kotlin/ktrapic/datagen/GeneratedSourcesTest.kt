@@ -27,4 +27,15 @@ class GeneratedSourcesTest {
         .that(DataFiles.modNames(workspace).readText().replace("\r\n", "\n"))
         .isEqualTo(expected)
   }
+
+  @Test
+  fun `the device reference matches the generated sources`() {
+    val expected = DataFiles.generateDeviceReference(workspace, DataFiles.generate(workspace))
+    assertWithMessage(
+            "%s is stale; regenerate with: bazel run //tools/datagen -- generate",
+            DeviceReferenceGenerator.PATH,
+        )
+        .that(DataFiles.deviceReference(workspace).readText().replace("\r\n", "\n"))
+        .isEqualTo(expected)
+  }
 }

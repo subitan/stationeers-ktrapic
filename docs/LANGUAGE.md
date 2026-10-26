@@ -131,7 +131,8 @@ writing a logic type a device doesn't have is an error on the chip.
 Each prefab with logic types has an entry point named after it in the plural, without the
 game's `Structure` or `Item` prefix: `StructureGrowLight` is `GrowLights`. Where two prefabs
 would get the same name that way, both keep their full names, as `ItemBeacons` and
-`StructureBeacons` do. Through an entry point:
+`StructureBeacons` do. The [device reference](DEVICES.md) lists every prefab with its entry
+point, type and logic types, and the game's value enums. Through an entry point:
 
 - `GrowLights.at(d0)` is the device on `d0` as a `GrowLight`, which has only the logic types a
   grow light has, as `val` where they can only be read. Using one it lacks is a compile error.
