@@ -27,12 +27,15 @@ data class TirLabel(val name: String) : TirLine
  * [negatable] is false for a branch whose opposite branch is not its negation (an ordered
  * comparison that may see NaN), which must not be inverted. [returnFrom] marks a function's `j ra`
  * with the function's label, so control flow can follow it back to each `jal` to that label.
+ * [offset] is the IR start offset of the source statement the instruction comes from, if any, for
+ * the source map.
  */
 data class TirInstruction(
     val op: String,
     val operands: List<TirOperand>,
     val negatable: Boolean = true,
     val returnFrom: String? = null,
+    val offset: Int? = null,
 ) : TirLine {
   constructor(op: String, vararg operands: TirOperand) : this(op, operands.toList())
 

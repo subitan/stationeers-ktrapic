@@ -158,7 +158,7 @@ internal class Translator {
     }
     for (declaration in program.declarations) {
       when (declaration) {
-        is IrProperty -> property(declaration)
+        is IrProperty -> at(declaration) { property(declaration) }
         is IrAnonymousInitializer -> statement(declaration.body)
         is IrConstructor -> {}
         // A function is translated where it is inlined, or after the program if it is called.
@@ -341,12 +341,31 @@ internal class Translator {
   // Statements and expressions.
 
   private fun statement(element: IrElement) {
-    when (element) {
-      is IrBlockBody -> element.statements.forEach { statement(it) }
-      is IrVariable -> variable(element)
-      is IrExpression -> aliasOrValue(element)
-      is IrSimpleFunction -> fail(element, "Local functions are not supported")
-      else -> fail(element, "This statement is not supported")
+    at(element) {
+      when (element) {
+        is IrBlockBody -> element.statements.forEach { statement(it) }
+        is IrVariable -> variable(element)
+        is IrExpression -> aliasOrValue(element)
+        is IrSimpleFunction -> fail(element, "Local functions are not supported")
+        else -> fail(element, "This statement is not supported")
+      }
+    }
+  }
+
+  /**
+   * Runs [translate] for [element], then gives the instructions it emitted [element]'s start offset
+   * where a statement inside [element] hasn't already given them its own, so each instruction is
+   * attributed to the innermost statement it comes from.
+   */
+  private inline fun <T> at(element: IrElement, translate: () -> T): T {
+    val start = lines.size
+    return translate().also {
+      for (index in start until lines.size) {
+        val line = lines[index]
+        if (line is TirInstruction && line.offset == null) {
+          lines[index] = line.copy(offset = element.startOffset)
+        }
+      }
     }
   }
 
@@ -444,11 +463,13 @@ internal class Translator {
     var result: Value = NoValue
     for (statement in container.statements) {
       result = NoValue
-      when (statement) {
-        is IrVariable -> variable(statement)
-        is IrExpression -> result = aliasOrValue(statement)
-        is IrSimpleFunction -> fail(statement, "Local functions are not supported")
-        else -> fail(statement, "This statement is not supported")
+      at(statement) {
+        when (statement) {
+          is IrVariable -> variable(statement)
+          is IrExpression -> result = aliasOrValue(statement)
+          is IrSimpleFunction -> fail(statement, "Local functions are not supported")
+          else -> fail(statement, "This statement is not supported")
+        }
       }
     }
     return if (container.type.isUnit()) NoValue else result

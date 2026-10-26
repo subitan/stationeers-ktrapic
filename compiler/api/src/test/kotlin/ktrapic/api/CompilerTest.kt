@@ -692,6 +692,40 @@ class CompilerTest {
   }
 
   @Test
+  fun `the source map points each source line at the code it compiled to`() {
+    val source =
+        """
+        var total = 0.0
+        for (i in 0..<3) {
+          total += d0.Setting
+        }
+        fun bump(x: Double): Double {
+          return x + 7.0
+        }
+        db.Setting = bump(total)
+        db.Ratio = bump(2.0)
+        """
+    for (compact in listOf(false, true)) {
+      val result = compiled(source, CompileOptions(compact = compact))
+      val code = result.code.lines()
+      // compile() puts two import lines before the source.
+      fun at(line: Int) = result.sourceMap[line + 2].orEmpty().map { code[it] }
+
+      assertWithMessage("compact=$compact\n${result.code}").apply {
+        that(result.sourceMap.values.flatten().map { code[it] })
+            .containsNoneIn(code.filter { it.endsWith(":") })
+        that(at(1).count { it.startsWith("bge ") }).isEqualTo(1)
+        that(at(2).single { it.startsWith("l ") }).endsWith("d0 Setting")
+        that(at(5).single { it.startsWith("add ") }).endsWith(" 7")
+        that(at(7).count { it.startsWith("jal ") }).isEqualTo(1)
+        that(at(7).last()).startsWith("s db Setting ")
+        that(at(8).last()).startsWith("s db Ratio ")
+        that(result.sourceMap.keys).containsNoneOf(3 + 2, 6 + 2)
+      }
+    }
+  }
+
+  @Test
   fun `a function called more than once has one body, called with jal`() {
     val source =
         """
