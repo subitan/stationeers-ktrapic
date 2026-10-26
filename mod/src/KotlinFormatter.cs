@@ -84,11 +84,18 @@ namespace KTrapIC
 
             public readonly CompileResponse Response;
 
-            public Compiled(int version, bool? compact, CompileResponse response)
+            /// <summary>
+            /// Why the compiler couldn't compile <see cref="Version"/>, when IC10 read back from a
+            /// chip was kept in place of that answer.
+            /// </summary>
+            public readonly string Unavailable;
+
+            public Compiled(int version, bool? compact, CompileResponse response, string unavailable = null)
             {
                 Version = version;
                 Compact = compact;
                 Response = response;
+                Unavailable = unavailable;
             }
         }
 
@@ -236,7 +243,9 @@ namespace KTrapIC
             var response = compiled?.Response;
             // IC10 read back from a chip doesn't say how many registers it uses.
             if (response == null || compiled.Compact == null)
-                return Daemon.StartError ?? "Compiling...";
+                return Daemon.StartError
+                    ?? (compiled?.Version == _version ? compiled.Unavailable : null)
+                    ?? "Compiling...";
             if (response.error != null)
                 return "Doesn't compile";
             return $"{response.num_lines} lines, {response.num_bytes} bytes, {response.num_registers} registers";
@@ -264,10 +273,14 @@ namespace KTrapIC
             if (version != _version)
                 return;
             // IC10 read back from a chip stands until the compiler can say something about the
-            // program, so an unchanged chip still exports as it is while the compiler is down.
+            // program, so an unchanged chip still exports as it is while the compiler is down; the
+            // toolbar says why it's down.
             var kept = _compiled;
             if (response.Unavailable && kept != null && kept.Version == version && kept.Compact == null)
+            {
+                _compiled = new Compiled(kept.Version, null, kept.Response, response.error?.description);
                 return;
+            }
             _compiled = new Compiled(version, compact, response);
             await UniTask.SwitchToMainThread();
             if (version == _version)

@@ -12,7 +12,12 @@
     <LangVersion>latest</LangVersion>
     <Deterministic>true</Deterministic>
     <PathMap>$(MSBuildProjectDirectory)=.</PathMap>
-    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <!--
+      Only the items listed below. The SDK's default None items would take in every DLL under
+      this directory (Template/libs, tests/bin), and references resolve to those before their
+      HintPath, so they'd be compiled against in place of the game's.
+    -->
+    <EnableDefaultItems>false</EnableDefaultItems>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <!-- The IC10 Editor release compiled against; the plugin runs with the Workshop copy. -->
     <IC10EditorVersion>v1.0.2</IC10EditorVersion>
