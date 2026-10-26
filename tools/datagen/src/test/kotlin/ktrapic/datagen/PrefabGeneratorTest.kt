@@ -159,8 +159,14 @@ class PrefabGeneratorTest {
     // The grow light's slots are of two kinds, so slots[n] has what every slot reads.
     assertThat(code).contains("  val slots: Slots<CommonSlot>\n")
     assertThat(code).contains("  @SlotNumber(0)\n  val Tray: PlantSlot\n")
-    assertThat(code).contains("    val slots: Slots<CommonSlot.Batch>\n")
-    assertThat(code).contains("    val slots: Slots<CommonSlot.Reading>\n")
+    // A batch of grow lights has its own type, to give it slots.
+    assertThat(code).contains("  val all: Batch\n")
+    assertThat(code)
+        .contains(
+            "  class Batch internal constructor() : DeviceBatch<GrowLight>() {\n" +
+                "    /** A slot of every one in the batch, by number. */\n" +
+                "    val slots: Slots<SlotBatch<CommonSlot>>\n"
+        )
   }
 
   @Test
@@ -229,16 +235,10 @@ class PrefabGeneratorTest {
     assertThat(code).contains("  var On: Boolean\n    get() = intrinsic()\n")
     assertThat(code).contains("  companion object : Prefab()\n")
     assertThat(code).contains("@PrefabName(\"StructureGrowLight\")\nobject GrowLights {")
-    // A batch only writes; reading goes through a batch method, all as Double.
-    assertThat(code)
-        .contains(
-            "    var On: Boolean\n" +
-                "      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) " +
-                "get() = intrinsic()\n"
-        )
-    assertThat(code).contains("    val average: Reading\n")
-    assertThat(code)
-        .contains("  class Reading internal constructor() : BatchReading() {\n    val On: Double\n")
+    // A batch is a collection of the prefab's typed devices; a prefab without slots needs no
+    // batch type of its own.
+    assertThat(code).contains("    val all: DeviceBatch<Battery.Small>\n")
+    assertThat(code).doesNotContain("Reading")
   }
 
   @Test

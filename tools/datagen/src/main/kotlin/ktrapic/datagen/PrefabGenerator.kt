@@ -2,8 +2,8 @@ package ktrapic.datagen
 
 /**
  * Generates the typed device API: per prefab, a device class whose companion object is the prefab
- * as a value, and a plural entry point with `at(pin)`, `all` and `named(name)`, whose batch view
- * writes logic types and whose readings (`average`, `sum`, `minimum`, `maximum`) read them.
+ * as a value, and a plural entry point with `at(pin)`, `all` and `named(name)`, whose batches
+ * (`Batch` in `Batches.kt`) hold the prefab's typed devices.
  *
  * A prefab in one of the [Grouping.families] is generated inside it: `Battery.Small` is the device
  * class, nested in the `Battery` interface that holds the logic types every member can read, and
@@ -14,7 +14,6 @@ package ktrapic.datagen
 object PrefabGenerator {
   private const val FILE = "GeneratedPrefabs.kt"
   private val PREFIXES = listOf("Structure", "Item")
-  private val BATCH_METHODS = listOf("average", "sum", "minimum", "maximum")
   private const val CONSOLE_SLOT_KIND = "Circuitboard"
 
   /** Names declared elsewhere in the `ktrapic` package, which no prefab may take. */
@@ -25,14 +24,14 @@ object PrefabGenerator {
           "TypedDevice",
           "Prefab",
           "DeviceBatch",
-          "BatchReading",
+          "Batch",
+          "Mapped",
           "Ic10Script",
           "PrefabName",
           "Slot",
           "Slots",
           "DeviceSlot",
           "SlotBatch",
-          "SlotReading",
           "SlotNumber",
       )
 
@@ -256,8 +255,8 @@ object PrefabGenerator {
     }
 
     fun entryPoint(header: String, deviceType: String, prefab: Prefab) {
-      val readable = logic(prefab).filterValues { it.read }.keys
-      val writable = logic(prefab).filterValues { it.write }.keys
+      // A prefab with slots has its own batch type, to give a batch of its devices `slots`.
+      val batch = if (prefab.slots.isEmpty()) "DeviceBatch<$deviceType>" else "Batch"
       line("/** The ${prefab.name} devices on the chip's network. */")
       line("@PrefabName(\"${prefab.name}\")")
       block(header) {
@@ -265,52 +264,18 @@ object PrefabGenerator {
         line("fun at(pin: Device): $deviceType = intrinsic()")
         line()
         line("/** Every one on the network. */")
-        line("val all: Batch")
+        line("val all: $batch")
         line("  get() = intrinsic()")
         line()
         line("/** Every one on the network named [name], which must be a constant. */")
-        line("fun named(name: String): Batch = intrinsic()")
-        line()
-        block("class Batch internal constructor() : DeviceBatch()") {
-          for (method in BATCH_METHODS) {
-            line("val $method: Reading")
+        line("fun named(name: String): $batch = intrinsic()")
+        if (prefab.slots.isNotEmpty()) {
+          line()
+          block("class Batch internal constructor() : DeviceBatch<$deviceType>()") {
+            line("/** A slot of every one in the batch, by number. */")
+            line("val slots: Slots<SlotBatch<${slotClass(slotsKind(prefab))}>>")
             line("  get() = intrinsic()")
-            line()
           }
-          for (logicType in writable) {
-            property(
-                logicType,
-                type(logicType),
-                Access(read = false, write = true),
-                writeOnlyMessage = "PICK_A_BATCH_METHOD",
-            )
-            line()
-          }
-          if (prefab.slots.isNotEmpty()) {
-            line("val slots: Slots<${slotClass(slotsKind(prefab))}.Batch>")
-            line("  get() = intrinsic()")
-            line()
-          }
-          // No batch method reads Text, so it is only written, as on a single display.
-          if (prefab.name in textDisplays) {
-            property("Text", "String", Access(read = false, write = true))
-            line()
-          }
-          trimBlankLine()
-        }
-        line()
-        block("class Reading internal constructor() : BatchReading()") {
-          for (logicType in readable) {
-            line("val $logicType: Double")
-            line("  get() = intrinsic()")
-            line()
-          }
-          if (prefab.slots.isNotEmpty()) {
-            line("val slots: Slots<${slotClass(slotsKind(prefab))}.Reading>")
-            line("  get() = intrinsic()")
-            line()
-          }
-          trimBlankLine()
         }
       }
     }
@@ -361,10 +326,7 @@ object PrefabGenerator {
 
     fun slotWrites(kind: String) = typing.slotWrites[kind].orEmpty().toSet()
 
-    /**
-     * A kind of slot: its logic types, read with `ls` and written with `ss`, and nested in it the
-     * batch view (writes, `sbs`) and the batch reading (reads, `lbs`/`lbns`, all `Double`).
-     */
+    /** A kind of slot: its logic types, read with `ls` and written with `ss`. */
     fun slotKind(kind: String) {
       val reads = slotReads(kind)
       val writes = slotWrites(kind)
@@ -375,31 +337,7 @@ object PrefabGenerator {
           property(logicType, slotType(logicType), Access(logicType in reads, logicType in writes))
           line()
         }
-        if (writes.isEmpty()) {
-          line("class Batch internal constructor() : SlotBatch() {}")
-        } else {
-          block("class Batch internal constructor() : SlotBatch()") {
-            for (logicType in writes.sorted()) {
-              property(
-                  logicType,
-                  slotType(logicType),
-                  Access(read = false, write = true),
-                  writeOnlyMessage = "PICK_A_BATCH_METHOD",
-              )
-              line()
-            }
-            trimBlankLine()
-          }
-        }
-        line()
-        block("class Reading internal constructor() : SlotReading()") {
-          for (logicType in reads) {
-            line("val $logicType: Double")
-            line("  get() = intrinsic()")
-            line()
-          }
-          trimBlankLine()
-        }
+        trimBlankLine()
       }
     }
 

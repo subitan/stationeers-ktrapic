@@ -42,49 +42,6 @@ class AirTankSlot internal constructor() : DeviceSlot() {
 
   val TotalSlots: Double
     get() = intrinsic()
-
-  class Batch internal constructor() : SlotBatch() {}
-
-  class Reading internal constructor() : SlotReading() {
-    val Class: Double
-      get() = intrinsic()
-
-    val Damage: Double
-      get() = intrinsic()
-
-    val FreeSlots: Double
-      get() = intrinsic()
-
-    val MaxQuantity: Double
-      get() = intrinsic()
-
-    val OccupantHash: Double
-      get() = intrinsic()
-
-    val Occupied: Double
-      get() = intrinsic()
-
-    val PrefabHash: Double
-      get() = intrinsic()
-
-    val Pressure: Double
-      get() = intrinsic()
-
-    val Quantity: Double
-      get() = intrinsic()
-
-    val ReferenceId: Double
-      get() = intrinsic()
-
-    val SortingClass: Double
-      get() = intrinsic()
-
-    val Temperature: Double
-      get() = intrinsic()
-
-    val TotalSlots: Double
-      get() = intrinsic()
-  }
 }
 
 /** A Appliance slot. */
@@ -125,50 +82,6 @@ class ApplianceSlot internal constructor() : DeviceSlot() {
 
   val TotalSlots: Double
     get() = intrinsic()
-
-  class Batch internal constructor() : SlotBatch() {
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : SlotReading() {
-    val Class: Double
-      get() = intrinsic()
-
-    val Damage: Double
-      get() = intrinsic()
-
-    val FreeSlots: Double
-      get() = intrinsic()
-
-    val MaxQuantity: Double
-      get() = intrinsic()
-
-    val OccupantHash: Double
-      get() = intrinsic()
-
-    val Occupied: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val PrefabHash: Double
-      get() = intrinsic()
-
-    val Quantity: Double
-      get() = intrinsic()
-
-    val ReferenceId: Double
-      get() = intrinsic()
-
-    val SortingClass: Double
-      get() = intrinsic()
-
-    val TotalSlots: Double
-      get() = intrinsic()
-  }
 }
 
 /** A Back slot. */
@@ -214,52 +127,6 @@ class BackSlot internal constructor() : DeviceSlot() {
 
   val TotalSlots: Double
     get() = intrinsic()
-
-  class Batch internal constructor() : SlotBatch() {}
-
-  class Reading internal constructor() : SlotReading() {
-    val Charge: Double
-      get() = intrinsic()
-
-    val ChargeRatio: Double
-      get() = intrinsic()
-
-    val Class: Double
-      get() = intrinsic()
-
-    val Damage: Double
-      get() = intrinsic()
-
-    val FreeSlots: Double
-      get() = intrinsic()
-
-    val MaxQuantity: Double
-      get() = intrinsic()
-
-    val OccupantHash: Double
-      get() = intrinsic()
-
-    val Occupied: Double
-      get() = intrinsic()
-
-    val PrefabHash: Double
-      get() = intrinsic()
-
-    val Pressure: Double
-      get() = intrinsic()
-
-    val Quantity: Double
-      get() = intrinsic()
-
-    val ReferenceId: Double
-      get() = intrinsic()
-
-    val SortingClass: Double
-      get() = intrinsic()
-
-    val TotalSlots: Double
-      get() = intrinsic()
-  }
 }
 
 /** A Battery slot. */
@@ -302,49 +169,6 @@ class BatterySlot internal constructor() : DeviceSlot() {
 
   val TotalSlots: Double
     get() = intrinsic()
-
-  class Batch internal constructor() : SlotBatch() {}
-
-  class Reading internal constructor() : SlotReading() {
-    val Charge: Double
-      get() = intrinsic()
-
-    val ChargeRatio: Double
-      get() = intrinsic()
-
-    val Class: Double
-      get() = intrinsic()
-
-    val Damage: Double
-      get() = intrinsic()
-
-    val FreeSlots: Double
-      get() = intrinsic()
-
-    val MaxQuantity: Double
-      get() = intrinsic()
-
-    val OccupantHash: Double
-      get() = intrinsic()
-
-    val Occupied: Double
-      get() = intrinsic()
-
-    val PrefabHash: Double
-      get() = intrinsic()
-
-    val Quantity: Double
-      get() = intrinsic()
-
-    val ReferenceId: Double
-      get() = intrinsic()
-
-    val SortingClass: Double
-      get() = intrinsic()
-
-    val TotalSlots: Double
-      get() = intrinsic()
-  }
 }
 
 /** A Circuitboard slot. */
@@ -385,50 +209,6 @@ class CircuitboardSlot internal constructor() : DeviceSlot() {
 
   val TotalSlots: Double
     get() = intrinsic()
-
-  class Batch internal constructor() : SlotBatch() {
-    var Mode: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : SlotReading() {
-    val Class: Double
-      get() = intrinsic()
-
-    val Damage: Double
-      get() = intrinsic()
-
-    val FreeSlots: Double
-      get() = intrinsic()
-
-    val MaxQuantity: Double
-      get() = intrinsic()
-
-    val Mode: Double
-      get() = intrinsic()
-
-    val OccupantHash: Double
-      get() = intrinsic()
-
-    val Occupied: Double
-      get() = intrinsic()
-
-    val PrefabHash: Double
-      get() = intrinsic()
-
-    val Quantity: Double
-      get() = intrinsic()
-
-    val ReferenceId: Double
-      get() = intrinsic()
-
-    val SortingClass: Double
-      get() = intrinsic()
-
-    val TotalSlots: Double
-      get() = intrinsic()
-  }
 }
 
 /** A Common slot. */
@@ -465,43 +245,6 @@ class CommonSlot internal constructor() : DeviceSlot() {
 
   val TotalSlots: Double
     get() = intrinsic()
-
-  class Batch internal constructor() : SlotBatch() {}
-
-  class Reading internal constructor() : SlotReading() {
-    val Class: Double
-      get() = intrinsic()
-
-    val Damage: Double
-      get() = intrinsic()
-
-    val FreeSlots: Double
-      get() = intrinsic()
-
-    val MaxQuantity: Double
-      get() = intrinsic()
-
-    val OccupantHash: Double
-      get() = intrinsic()
-
-    val Occupied: Double
-      get() = intrinsic()
-
-    val PrefabHash: Double
-      get() = intrinsic()
-
-    val Quantity: Double
-      get() = intrinsic()
-
-    val ReferenceId: Double
-      get() = intrinsic()
-
-    val SortingClass: Double
-      get() = intrinsic()
-
-    val TotalSlots: Double
-      get() = intrinsic()
-  }
 }
 
 /** A DataDisk slot. */
@@ -538,43 +281,6 @@ class DataDiskSlot internal constructor() : DeviceSlot() {
 
   val TotalSlots: Double
     get() = intrinsic()
-
-  class Batch internal constructor() : SlotBatch() {}
-
-  class Reading internal constructor() : SlotReading() {
-    val Class: Double
-      get() = intrinsic()
-
-    val Damage: Double
-      get() = intrinsic()
-
-    val FreeSlots: Double
-      get() = intrinsic()
-
-    val MaxQuantity: Double
-      get() = intrinsic()
-
-    val OccupantHash: Double
-      get() = intrinsic()
-
-    val Occupied: Double
-      get() = intrinsic()
-
-    val PrefabHash: Double
-      get() = intrinsic()
-
-    val Quantity: Double
-      get() = intrinsic()
-
-    val ReferenceId: Double
-      get() = intrinsic()
-
-    val SortingClass: Double
-      get() = intrinsic()
-
-    val TotalSlots: Double
-      get() = intrinsic()
-  }
 }
 
 /** A Filter slot. */
@@ -614,46 +320,6 @@ class FilterSlot internal constructor() : DeviceSlot() {
 
   val TotalSlots: Double
     get() = intrinsic()
-
-  class Batch internal constructor() : SlotBatch() {}
-
-  class Reading internal constructor() : SlotReading() {
-    val Class: Double
-      get() = intrinsic()
-
-    val Damage: Double
-      get() = intrinsic()
-
-    val FilterType: Double
-      get() = intrinsic()
-
-    val FreeSlots: Double
-      get() = intrinsic()
-
-    val MaxQuantity: Double
-      get() = intrinsic()
-
-    val OccupantHash: Double
-      get() = intrinsic()
-
-    val Occupied: Double
-      get() = intrinsic()
-
-    val PrefabHash: Double
-      get() = intrinsic()
-
-    val Quantity: Double
-      get() = intrinsic()
-
-    val ReferenceId: Double
-      get() = intrinsic()
-
-    val SortingClass: Double
-      get() = intrinsic()
-
-    val TotalSlots: Double
-      get() = intrinsic()
-  }
 }
 
 /** A Filtered slot. */
@@ -693,46 +359,6 @@ class FilteredSlot internal constructor() : DeviceSlot() {
 
   val TotalSlots: Double
     get() = intrinsic()
-
-  class Batch internal constructor() : SlotBatch() {}
-
-  class Reading internal constructor() : SlotReading() {
-    val Class: Double
-      get() = intrinsic()
-
-    val Damage: Double
-      get() = intrinsic()
-
-    val FilterType: Double
-      get() = intrinsic()
-
-    val FreeSlots: Double
-      get() = intrinsic()
-
-    val MaxQuantity: Double
-      get() = intrinsic()
-
-    val OccupantHash: Double
-      get() = intrinsic()
-
-    val Occupied: Double
-      get() = intrinsic()
-
-    val PrefabHash: Double
-      get() = intrinsic()
-
-    val Quantity: Double
-      get() = intrinsic()
-
-    val ReferenceId: Double
-      get() = intrinsic()
-
-    val SortingClass: Double
-      get() = intrinsic()
-
-    val TotalSlots: Double
-      get() = intrinsic()
-  }
 }
 
 /** A GasCanister slot. */
@@ -782,59 +408,6 @@ class GasCanisterSlot internal constructor() : DeviceSlot() {
 
   val Volume: Double
     get() = intrinsic()
-
-  class Batch internal constructor() : SlotBatch() {
-    var Open: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : SlotReading() {
-    val Class: Double
-      get() = intrinsic()
-
-    val Damage: Double
-      get() = intrinsic()
-
-    val FreeSlots: Double
-      get() = intrinsic()
-
-    val MaxQuantity: Double
-      get() = intrinsic()
-
-    val OccupantHash: Double
-      get() = intrinsic()
-
-    val Occupied: Double
-      get() = intrinsic()
-
-    val Open: Double
-      get() = intrinsic()
-
-    val PrefabHash: Double
-      get() = intrinsic()
-
-    val Pressure: Double
-      get() = intrinsic()
-
-    val Quantity: Double
-      get() = intrinsic()
-
-    val ReferenceId: Double
-      get() = intrinsic()
-
-    val SortingClass: Double
-      get() = intrinsic()
-
-    val Temperature: Double
-      get() = intrinsic()
-
-    val TotalSlots: Double
-      get() = intrinsic()
-
-    val Volume: Double
-      get() = intrinsic()
-  }
 }
 
 /** A Helmet slot. */
@@ -892,73 +465,6 @@ class HelmetSlot internal constructor() : DeviceSlot() {
 
   val TotalSlots: Double
     get() = intrinsic()
-
-  class Batch internal constructor() : SlotBatch() {
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Open: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : SlotReading() {
-    val Charge: Double
-      get() = intrinsic()
-
-    val ChargeRatio: Double
-      get() = intrinsic()
-
-    val Class: Double
-      get() = intrinsic()
-
-    val Damage: Double
-      get() = intrinsic()
-
-    val FreeSlots: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val MaxQuantity: Double
-      get() = intrinsic()
-
-    val OccupantHash: Double
-      get() = intrinsic()
-
-    val Occupied: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Open: Double
-      get() = intrinsic()
-
-    val PrefabHash: Double
-      get() = intrinsic()
-
-    val Pressure: Double
-      get() = intrinsic()
-
-    val Quantity: Double
-      get() = intrinsic()
-
-    val ReferenceId: Double
-      get() = intrinsic()
-
-    val SortingClass: Double
-      get() = intrinsic()
-
-    val TotalSlots: Double
-      get() = intrinsic()
-  }
 }
 
 /** A Mask slot. */
@@ -1004,52 +510,6 @@ class MaskSlot internal constructor() : DeviceSlot() {
 
   val TotalSlots: Double
     get() = intrinsic()
-
-  class Batch internal constructor() : SlotBatch() {}
-
-  class Reading internal constructor() : SlotReading() {
-    val Class: Double
-      get() = intrinsic()
-
-    val Damage: Double
-      get() = intrinsic()
-
-    val FreeSlots: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val MaxQuantity: Double
-      get() = intrinsic()
-
-    val OccupantHash: Double
-      get() = intrinsic()
-
-    val Occupied: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Open: Double
-      get() = intrinsic()
-
-    val PrefabHash: Double
-      get() = intrinsic()
-
-    val Quantity: Double
-      get() = intrinsic()
-
-    val ReferenceId: Double
-      get() = intrinsic()
-
-    val SortingClass: Double
-      get() = intrinsic()
-
-    val TotalSlots: Double
-      get() = intrinsic()
-  }
 }
 
 /** A Plant slot. */
@@ -1107,64 +567,6 @@ class PlantSlot internal constructor() : DeviceSlot() {
 
   val TotalSlots: Double
     get() = intrinsic()
-
-  class Batch internal constructor() : SlotBatch() {}
-
-  class Reading internal constructor() : SlotReading() {
-    val Class: Double
-      get() = intrinsic()
-
-    val Damage: Double
-      get() = intrinsic()
-
-    val Efficiency: Double
-      get() = intrinsic()
-
-    val FreeSlots: Double
-      get() = intrinsic()
-
-    val Growth: Double
-      get() = intrinsic()
-
-    val Health: Double
-      get() = intrinsic()
-
-    val Mature: Double
-      get() = intrinsic()
-
-    val MaturityRatio: Double
-      get() = intrinsic()
-
-    val MaxQuantity: Double
-      get() = intrinsic()
-
-    val OccupantHash: Double
-      get() = intrinsic()
-
-    val Occupied: Double
-      get() = intrinsic()
-
-    val PrefabHash: Double
-      get() = intrinsic()
-
-    val Quantity: Double
-      get() = intrinsic()
-
-    val ReferenceId: Double
-      get() = intrinsic()
-
-    val Seeding: Double
-      get() = intrinsic()
-
-    val SeedingRatio: Double
-      get() = intrinsic()
-
-    val SortingClass: Double
-      get() = intrinsic()
-
-    val TotalSlots: Double
-      get() = intrinsic()
-  }
 }
 
 /** A ProgrammableChip slot. */
@@ -1204,46 +606,6 @@ class ProgrammableChipSlot internal constructor() : DeviceSlot() {
 
   val TotalSlots: Double
     get() = intrinsic()
-
-  class Batch internal constructor() : SlotBatch() {}
-
-  class Reading internal constructor() : SlotReading() {
-    val Class: Double
-      get() = intrinsic()
-
-    val Damage: Double
-      get() = intrinsic()
-
-    val FreeSlots: Double
-      get() = intrinsic()
-
-    val LineNumber: Double
-      get() = intrinsic()
-
-    val MaxQuantity: Double
-      get() = intrinsic()
-
-    val OccupantHash: Double
-      get() = intrinsic()
-
-    val Occupied: Double
-      get() = intrinsic()
-
-    val PrefabHash: Double
-      get() = intrinsic()
-
-    val Quantity: Double
-      get() = intrinsic()
-
-    val ReferenceId: Double
-      get() = intrinsic()
-
-    val SortingClass: Double
-      get() = intrinsic()
-
-    val TotalSlots: Double
-      get() = intrinsic()
-  }
 }
 
 /** A Suit slot. */
@@ -1295,58 +657,6 @@ class SuitSlot internal constructor() : DeviceSlot() {
 
   val TotalSlots: Double
     get() = intrinsic()
-
-  class Batch internal constructor() : SlotBatch() {}
-
-  class Reading internal constructor() : SlotReading() {
-    val Charge: Double
-      get() = intrinsic()
-
-    val ChargeRatio: Double
-      get() = intrinsic()
-
-    val Class: Double
-      get() = intrinsic()
-
-    val Damage: Double
-      get() = intrinsic()
-
-    val FreeSlots: Double
-      get() = intrinsic()
-
-    val MaxQuantity: Double
-      get() = intrinsic()
-
-    val OccupantHash: Double
-      get() = intrinsic()
-
-    val Occupied: Double
-      get() = intrinsic()
-
-    val PrefabHash: Double
-      get() = intrinsic()
-
-    val Pressure: Double
-      get() = intrinsic()
-
-    val PressureAir: Double
-      get() = intrinsic()
-
-    val PressureWaste: Double
-      get() = intrinsic()
-
-    val Quantity: Double
-      get() = intrinsic()
-
-    val ReferenceId: Double
-      get() = intrinsic()
-
-    val SortingClass: Double
-      get() = intrinsic()
-
-    val TotalSlots: Double
-      get() = intrinsic()
-  }
 }
 
 /** A device that comes as several prefabs, each a nested class. */
@@ -1519,65 +829,11 @@ object Batteries {
     fun at(pin: Device): Battery.Station = intrinsic()
 
     /** Every one on the network. */
-    val all: Batch
+    val all: DeviceBatch<Battery.Station>
       get() = intrinsic()
 
     /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): Batch = intrinsic()
-
-    class Batch internal constructor() : DeviceBatch() {
-      val average: Reading
-        get() = intrinsic()
-
-      val sum: Reading
-        get() = intrinsic()
-
-      val minimum: Reading
-        get() = intrinsic()
-
-      val maximum: Reading
-        get() = intrinsic()
-
-      var Lock: Boolean
-        @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-        set(value) = intrinsic()
-
-      var On: Boolean
-        @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-        set(value) = intrinsic()
-    }
-
-    class Reading internal constructor() : BatchReading() {
-      val Charge: Double
-        get() = intrinsic()
-
-      val Error: Double
-        get() = intrinsic()
-
-      val Lock: Double
-        get() = intrinsic()
-
-      val Maximum: Double
-        get() = intrinsic()
-
-      val Mode: Double
-        get() = intrinsic()
-
-      val On: Double
-        get() = intrinsic()
-
-      val Power: Double
-        get() = intrinsic()
-
-      val PowerActual: Double
-        get() = intrinsic()
-
-      val PowerPotential: Double
-        get() = intrinsic()
-
-      val Ratio: Double
-        get() = intrinsic()
-    }
+    fun named(name: String): DeviceBatch<Battery.Station> = intrinsic()
   }
 
   /** The StructureBatteryLarge devices on the chip's network. */
@@ -1587,65 +843,11 @@ object Batteries {
     fun at(pin: Device): Battery.Large = intrinsic()
 
     /** Every one on the network. */
-    val all: Batch
+    val all: DeviceBatch<Battery.Large>
       get() = intrinsic()
 
     /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): Batch = intrinsic()
-
-    class Batch internal constructor() : DeviceBatch() {
-      val average: Reading
-        get() = intrinsic()
-
-      val sum: Reading
-        get() = intrinsic()
-
-      val minimum: Reading
-        get() = intrinsic()
-
-      val maximum: Reading
-        get() = intrinsic()
-
-      var Lock: Boolean
-        @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-        set(value) = intrinsic()
-
-      var On: Boolean
-        @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-        set(value) = intrinsic()
-    }
-
-    class Reading internal constructor() : BatchReading() {
-      val Charge: Double
-        get() = intrinsic()
-
-      val Error: Double
-        get() = intrinsic()
-
-      val Lock: Double
-        get() = intrinsic()
-
-      val Maximum: Double
-        get() = intrinsic()
-
-      val Mode: Double
-        get() = intrinsic()
-
-      val On: Double
-        get() = intrinsic()
-
-      val Power: Double
-        get() = intrinsic()
-
-      val PowerActual: Double
-        get() = intrinsic()
-
-      val PowerPotential: Double
-        get() = intrinsic()
-
-      val Ratio: Double
-        get() = intrinsic()
-    }
+    fun named(name: String): DeviceBatch<Battery.Large> = intrinsic()
   }
 
   /** The StructureBatteryMedium devices on the chip's network. */
@@ -1655,55 +857,11 @@ object Batteries {
     fun at(pin: Device): Battery.Medium = intrinsic()
 
     /** Every one on the network. */
-    val all: Batch
+    val all: DeviceBatch<Battery.Medium>
       get() = intrinsic()
 
     /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): Batch = intrinsic()
-
-    class Batch internal constructor() : DeviceBatch() {
-      val average: Reading
-        get() = intrinsic()
-
-      val sum: Reading
-        get() = intrinsic()
-
-      val minimum: Reading
-        get() = intrinsic()
-
-      val maximum: Reading
-        get() = intrinsic()
-
-      var On: Boolean
-        @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-        set(value) = intrinsic()
-    }
-
-    class Reading internal constructor() : BatchReading() {
-      val Charge: Double
-        get() = intrinsic()
-
-      val Maximum: Double
-        get() = intrinsic()
-
-      val Mode: Double
-        get() = intrinsic()
-
-      val On: Double
-        get() = intrinsic()
-
-      val Power: Double
-        get() = intrinsic()
-
-      val PowerActual: Double
-        get() = intrinsic()
-
-      val PowerPotential: Double
-        get() = intrinsic()
-
-      val Ratio: Double
-        get() = intrinsic()
-    }
+    fun named(name: String): DeviceBatch<Battery.Medium> = intrinsic()
   }
 
   /** The StructureBatterySmall devices on the chip's network. */
@@ -1713,55 +871,11 @@ object Batteries {
     fun at(pin: Device): Battery.Small = intrinsic()
 
     /** Every one on the network. */
-    val all: Batch
+    val all: DeviceBatch<Battery.Small>
       get() = intrinsic()
 
     /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): Batch = intrinsic()
-
-    class Batch internal constructor() : DeviceBatch() {
-      val average: Reading
-        get() = intrinsic()
-
-      val sum: Reading
-        get() = intrinsic()
-
-      val minimum: Reading
-        get() = intrinsic()
-
-      val maximum: Reading
-        get() = intrinsic()
-
-      var On: Boolean
-        @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-        set(value) = intrinsic()
-    }
-
-    class Reading internal constructor() : BatchReading() {
-      val Charge: Double
-        get() = intrinsic()
-
-      val Maximum: Double
-        get() = intrinsic()
-
-      val Mode: Double
-        get() = intrinsic()
-
-      val On: Double
-        get() = intrinsic()
-
-      val Power: Double
-        get() = intrinsic()
-
-      val PowerActual: Double
-        get() = intrinsic()
-
-      val PowerPotential: Double
-        get() = intrinsic()
-
-      val Ratio: Double
-        get() = intrinsic()
-    }
+    fun named(name: String): DeviceBatch<Battery.Small> = intrinsic()
   }
 }
 
@@ -1902,68 +1016,11 @@ object LedDisplays {
     fun at(pin: Device): LedDisplay.Small = intrinsic()
 
     /** Every one on the network. */
-    val all: Batch
+    val all: DeviceBatch<LedDisplay.Small>
       get() = intrinsic()
 
     /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): Batch = intrinsic()
-
-    class Batch internal constructor() : DeviceBatch() {
-      val average: Reading
-        get() = intrinsic()
-
-      val sum: Reading
-        get() = intrinsic()
-
-      val minimum: Reading
-        get() = intrinsic()
-
-      val maximum: Reading
-        get() = intrinsic()
-
-      var Color: Double
-        @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-        set(value) = intrinsic()
-
-      var Mode: Double
-        @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-        set(value) = intrinsic()
-
-      var On: Boolean
-        @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-        set(value) = intrinsic()
-
-      var Setting: Double
-        @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-        set(value) = intrinsic()
-
-      var Text: String
-        @Deprecated(WRITE_ONLY, level = DeprecationLevel.ERROR) get() = intrinsic()
-        set(value) = intrinsic()
-    }
-
-    class Reading internal constructor() : BatchReading() {
-      val Color: Double
-        get() = intrinsic()
-
-      val Error: Double
-        get() = intrinsic()
-
-      val Mode: Double
-        get() = intrinsic()
-
-      val On: Double
-        get() = intrinsic()
-
-      val Power: Double
-        get() = intrinsic()
-
-      val RequiredPower: Double
-        get() = intrinsic()
-
-      val Setting: Double
-        get() = intrinsic()
-    }
+    fun named(name: String): DeviceBatch<LedDisplay.Small> = intrinsic()
   }
 
   /** The StructureConsoleLED1x2 devices on the chip's network. */
@@ -1973,68 +1030,11 @@ object LedDisplays {
     fun at(pin: Device): LedDisplay.Medium = intrinsic()
 
     /** Every one on the network. */
-    val all: Batch
+    val all: DeviceBatch<LedDisplay.Medium>
       get() = intrinsic()
 
     /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): Batch = intrinsic()
-
-    class Batch internal constructor() : DeviceBatch() {
-      val average: Reading
-        get() = intrinsic()
-
-      val sum: Reading
-        get() = intrinsic()
-
-      val minimum: Reading
-        get() = intrinsic()
-
-      val maximum: Reading
-        get() = intrinsic()
-
-      var Color: Double
-        @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-        set(value) = intrinsic()
-
-      var Mode: Double
-        @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-        set(value) = intrinsic()
-
-      var On: Boolean
-        @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-        set(value) = intrinsic()
-
-      var Setting: Double
-        @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-        set(value) = intrinsic()
-
-      var Text: String
-        @Deprecated(WRITE_ONLY, level = DeprecationLevel.ERROR) get() = intrinsic()
-        set(value) = intrinsic()
-    }
-
-    class Reading internal constructor() : BatchReading() {
-      val Color: Double
-        get() = intrinsic()
-
-      val Error: Double
-        get() = intrinsic()
-
-      val Mode: Double
-        get() = intrinsic()
-
-      val On: Double
-        get() = intrinsic()
-
-      val Power: Double
-        get() = intrinsic()
-
-      val RequiredPower: Double
-        get() = intrinsic()
-
-      val Setting: Double
-        get() = intrinsic()
-    }
+    fun named(name: String): DeviceBatch<LedDisplay.Medium> = intrinsic()
   }
 
   /** The StructureConsoleLED1x3 devices on the chip's network. */
@@ -2044,68 +1044,11 @@ object LedDisplays {
     fun at(pin: Device): LedDisplay.Large = intrinsic()
 
     /** Every one on the network. */
-    val all: Batch
+    val all: DeviceBatch<LedDisplay.Large>
       get() = intrinsic()
 
     /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): Batch = intrinsic()
-
-    class Batch internal constructor() : DeviceBatch() {
-      val average: Reading
-        get() = intrinsic()
-
-      val sum: Reading
-        get() = intrinsic()
-
-      val minimum: Reading
-        get() = intrinsic()
-
-      val maximum: Reading
-        get() = intrinsic()
-
-      var Color: Double
-        @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-        set(value) = intrinsic()
-
-      var Mode: Double
-        @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-        set(value) = intrinsic()
-
-      var On: Boolean
-        @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-        set(value) = intrinsic()
-
-      var Setting: Double
-        @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-        set(value) = intrinsic()
-
-      var Text: String
-        @Deprecated(WRITE_ONLY, level = DeprecationLevel.ERROR) get() = intrinsic()
-        set(value) = intrinsic()
-    }
-
-    class Reading internal constructor() : BatchReading() {
-      val Color: Double
-        get() = intrinsic()
-
-      val Error: Double
-        get() = intrinsic()
-
-      val Mode: Double
-        get() = intrinsic()
-
-      val On: Double
-        get() = intrinsic()
-
-      val Power: Double
-        get() = intrinsic()
-
-      val RequiredPower: Double
-        get() = intrinsic()
-
-      val Setting: Double
-        get() = intrinsic()
-    }
+    fun named(name: String): DeviceBatch<LedDisplay.Large> = intrinsic()
   }
 }
 
@@ -2127,34 +1070,11 @@ object Battery_Wireless_cells {
   fun at(pin: Device): Battery_Wireless_cell = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<Battery_Wireless_cell>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Mode: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Mode: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<Battery_Wireless_cell> = intrinsic()
 }
 
 /** A Battery_Wireless_cell_Big. */
@@ -2175,34 +1095,11 @@ object Battery_Wireless_cell_Bigs {
   fun at(pin: Device): Battery_Wireless_cell_Big = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<Battery_Wireless_cell_Big>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Mode: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Mode: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<Battery_Wireless_cell_Big> = intrinsic()
 }
 
 /** A CompositeRollCover. */
@@ -2242,65 +1139,11 @@ object CompositeRollCovers {
   fun at(pin: Device): CompositeRollCover = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<CompositeRollCover>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Mode: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Open: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Idle: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val Mode: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Open: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<CompositeRollCover> = intrinsic()
 }
 
 /** A DeviceLfoVolume. */
@@ -2346,71 +1189,11 @@ object DeviceLfoVolumes {
   fun at(pin: Device): DeviceLfoVolume = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<DeviceLfoVolume>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Activate: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Bpm: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Mode: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Time: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Activate: Double
-      get() = intrinsic()
-
-    val Bpm: Double
-      get() = intrinsic()
-
-    val Error: Double
-      get() = intrinsic()
-
-    val Mode: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val Time: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<DeviceLfoVolume> = intrinsic()
 }
 
 /** A DeviceStepUnit. */
@@ -2452,64 +1235,11 @@ object DeviceStepUnits {
   fun at(pin: Device): DeviceStepUnit = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<DeviceStepUnit>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Activate: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Mode: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Volume: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Activate: Double
-      get() = intrinsic()
-
-    val Error: Double
-      get() = intrinsic()
-
-    val Mode: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val Volume: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<DeviceStepUnit> = intrinsic()
 }
 
 /** A DynamicGPR. */
@@ -2552,42 +1282,9 @@ object DynamicGPRs {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Activate: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<BatterySlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Activate: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val slots: Slots<BatterySlot.Reading>
+  class Batch internal constructor() : DeviceBatch<DynamicGPR>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<BatterySlot>>
       get() = intrinsic()
   }
 }
@@ -2636,49 +1333,9 @@ object DynamicLights {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Open: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<BatterySlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Lock: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Open: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val slots: Slots<BatterySlot.Reading>
+  class Batch internal constructor() : DeviceBatch<DynamicLight>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<BatterySlot>>
       get() = intrinsic()
   }
 }
@@ -3039,370 +1696,9 @@ object H2Combustors {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Activate: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Mode: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Open: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Activate: Double
-      get() = intrinsic()
-
-    val Combustion: Double
-      get() = intrinsic()
-
-    val CombustionInput: Double
-      get() = intrinsic()
-
-    val CombustionOutput: Double
-      get() = intrinsic()
-
-    val Error: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val Maximum: Double
-      get() = intrinsic()
-
-    val Mode: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Open: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val Pressure: Double
-      get() = intrinsic()
-
-    val PressureInput: Double
-      get() = intrinsic()
-
-    val PressureOutput: Double
-      get() = intrinsic()
-
-    val Ratio: Double
-      get() = intrinsic()
-
-    val RatioCarbonDioxide: Double
-      get() = intrinsic()
-
-    val RatioCarbonDioxideInput: Double
-      get() = intrinsic()
-
-    val RatioCarbonDioxideOutput: Double
-      get() = intrinsic()
-
-    val RatioHelium: Double
-      get() = intrinsic()
-
-    val RatioHeliumInput: Double
-      get() = intrinsic()
-
-    val RatioHeliumOutput: Double
-      get() = intrinsic()
-
-    val RatioHydrazine: Double
-      get() = intrinsic()
-
-    val RatioHydrazineInput: Double
-      get() = intrinsic()
-
-    val RatioHydrazineOutput: Double
-      get() = intrinsic()
-
-    val RatioHydrochloricAcid: Double
-      get() = intrinsic()
-
-    val RatioHydrochloricAcidInput: Double
-      get() = intrinsic()
-
-    val RatioHydrochloricAcidOutput: Double
-      get() = intrinsic()
-
-    val RatioHydrogen: Double
-      get() = intrinsic()
-
-    val RatioHydrogenInput: Double
-      get() = intrinsic()
-
-    val RatioHydrogenOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidAlcohol: Double
-      get() = intrinsic()
-
-    val RatioLiquidAlcoholInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidAlcoholOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidCarbonDioxide: Double
-      get() = intrinsic()
-
-    val RatioLiquidCarbonDioxideInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidCarbonDioxideOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrazine: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrazineInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrazineOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrochloricAcid: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrochloricAcidInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrochloricAcidOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrogenInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrogenOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidMethane: Double
-      get() = intrinsic()
-
-    val RatioLiquidMethaneInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidMethaneOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrogenInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrogenOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrousOxide: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrousOxideInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrousOxideOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidOxygen: Double
-      get() = intrinsic()
-
-    val RatioLiquidOxygenInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidOxygenOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidOzone: Double
-      get() = intrinsic()
-
-    val RatioLiquidOzoneInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidOzoneOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidPollutant: Double
-      get() = intrinsic()
-
-    val RatioLiquidPollutantInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidPollutantOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidSilanol: Double
-      get() = intrinsic()
-
-    val RatioLiquidSilanolInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidSilanolOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidSodiumChloride: Double
-      get() = intrinsic()
-
-    val RatioLiquidSodiumChlorideInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidSodiumChlorideOutput: Double
-      get() = intrinsic()
-
-    val RatioMethane: Double
-      get() = intrinsic()
-
-    val RatioMethaneInput: Double
-      get() = intrinsic()
-
-    val RatioMethaneOutput: Double
-      get() = intrinsic()
-
-    val RatioNitrogen: Double
-      get() = intrinsic()
-
-    val RatioNitrogenInput: Double
-      get() = intrinsic()
-
-    val RatioNitrogenOutput: Double
-      get() = intrinsic()
-
-    val RatioNitrousOxide: Double
-      get() = intrinsic()
-
-    val RatioNitrousOxideInput: Double
-      get() = intrinsic()
-
-    val RatioNitrousOxideOutput: Double
-      get() = intrinsic()
-
-    val RatioOxygen: Double
-      get() = intrinsic()
-
-    val RatioOxygenInput: Double
-      get() = intrinsic()
-
-    val RatioOxygenOutput: Double
-      get() = intrinsic()
-
-    val RatioOzone: Double
-      get() = intrinsic()
-
-    val RatioOzoneInput: Double
-      get() = intrinsic()
-
-    val RatioOzoneOutput: Double
-      get() = intrinsic()
-
-    val RatioPollutant: Double
-      get() = intrinsic()
-
-    val RatioPollutantInput: Double
-      get() = intrinsic()
-
-    val RatioPollutantOutput: Double
-      get() = intrinsic()
-
-    val RatioPollutedWater: Double
-      get() = intrinsic()
-
-    val RatioPollutedWaterInput: Double
-      get() = intrinsic()
-
-    val RatioPollutedWaterOutput: Double
-      get() = intrinsic()
-
-    val RatioSilanol: Double
-      get() = intrinsic()
-
-    val RatioSilanolInput: Double
-      get() = intrinsic()
-
-    val RatioSilanolOutput: Double
-      get() = intrinsic()
-
-    val RatioSteam: Double
-      get() = intrinsic()
-
-    val RatioSteamInput: Double
-      get() = intrinsic()
-
-    val RatioSteamOutput: Double
-      get() = intrinsic()
-
-    val RatioWater: Double
-      get() = intrinsic()
-
-    val RatioWaterInput: Double
-      get() = intrinsic()
-
-    val RatioWaterOutput: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-
-    val Temperature: Double
-      get() = intrinsic()
-
-    val TemperatureInput: Double
-      get() = intrinsic()
-
-    val TemperatureOutput: Double
-      get() = intrinsic()
-
-    val TotalMoles: Double
-      get() = intrinsic()
-
-    val TotalMolesInput: Double
-      get() = intrinsic()
-
-    val TotalMolesOutput: Double
-      get() = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Reading>
+  class Batch internal constructor() : DeviceBatch<H2Combustor>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<DataDiskSlot>>
       get() = intrinsic()
   }
 }
@@ -3477,66 +1773,9 @@ object AdvancedTablets {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Activate: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Mode: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var SoundAlert: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Volume: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<CommonSlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Activate: Double
-      get() = intrinsic()
-
-    val Error: Double
-      get() = intrinsic()
-
-    val Mode: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val SoundAlert: Double
-      get() = intrinsic()
-
-    val Volume: Double
-      get() = intrinsic()
-
-    val slots: Slots<CommonSlot.Reading>
+  class Batch internal constructor() : DeviceBatch<AdvancedTablet>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<CommonSlot>>
       get() = intrinsic()
   }
 }
@@ -3577,35 +1816,9 @@ object AngleGrinders {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Activate: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<BatterySlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Activate: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val slots: Slots<BatterySlot.Reading>
+  class Batch internal constructor() : DeviceBatch<AngleGrinder>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<BatterySlot>>
       get() = intrinsic()
   }
 }
@@ -3646,35 +1859,9 @@ object ArcWelders {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Activate: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<BatterySlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Activate: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val slots: Slots<BatterySlot.Reading>
+  class Batch internal constructor() : DeviceBatch<ArcWelder>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<BatterySlot>>
       get() = intrinsic()
   }
 }
@@ -3697,34 +1884,11 @@ object BatteryCells {
   fun at(pin: Device): BatteryCell = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<BatteryCell>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Mode: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Mode: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<BatteryCell> = intrinsic()
 }
 
 /** A ItemBatteryCellLarge. */
@@ -3745,34 +1909,11 @@ object BatteryCellLarges {
   fun at(pin: Device): BatteryCellLarge = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<BatteryCellLarge>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Mode: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Mode: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<BatteryCellLarge> = intrinsic()
 }
 
 /** A ItemBatteryCellNuclear. */
@@ -3793,34 +1934,11 @@ object BatteryCellNuclears {
   fun at(pin: Device): BatteryCellNuclear = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<BatteryCellNuclear>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Mode: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Mode: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<BatteryCellNuclear> = intrinsic()
 }
 
 /** A ItemBeacon. */
@@ -3862,38 +1980,9 @@ object ItemBeacons {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<BatterySlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Error: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val slots: Slots<BatterySlot.Reading>
+  class Batch internal constructor() : DeviceBatch<ItemBeacon>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<BatterySlot>>
       get() = intrinsic()
   }
 }
@@ -3934,35 +2023,9 @@ object Drills {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Activate: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<BatterySlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Activate: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val slots: Slots<BatterySlot.Reading>
+  class Batch internal constructor() : DeviceBatch<Drill>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<BatterySlot>>
       get() = intrinsic()
   }
 }
@@ -4003,35 +2066,9 @@ object EmergencyAngleGrinders {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Activate: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<BatterySlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Activate: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val slots: Slots<BatterySlot.Reading>
+  class Batch internal constructor() : DeviceBatch<EmergencyAngleGrinder>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<BatterySlot>>
       get() = intrinsic()
   }
 }
@@ -4072,35 +2109,9 @@ object EmergencyArcWelders {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Activate: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<BatterySlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Activate: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val slots: Slots<BatterySlot.Reading>
+  class Batch internal constructor() : DeviceBatch<EmergencyArcWelder>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<BatterySlot>>
       get() = intrinsic()
   }
 }
@@ -4141,35 +2152,9 @@ object EmergencyDrills {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Activate: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<BatterySlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Activate: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val slots: Slots<BatterySlot.Reading>
+  class Batch internal constructor() : DeviceBatch<EmergencyDrill>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<BatterySlot>>
       get() = intrinsic()
   }
 }
@@ -4311,168 +2296,11 @@ object EmergencySpaceHelmets {
   fun at(pin: Device): EmergencySpaceHelmet = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<EmergencySpaceHelmet>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Flush: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Open: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var SoundAlert: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Volume: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Combustion: Double
-      get() = intrinsic()
-
-    val Flush: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Open: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val Pressure: Double
-      get() = intrinsic()
-
-    val RatioCarbonDioxide: Double
-      get() = intrinsic()
-
-    val RatioHelium: Double
-      get() = intrinsic()
-
-    val RatioHydrazine: Double
-      get() = intrinsic()
-
-    val RatioHydrochloricAcid: Double
-      get() = intrinsic()
-
-    val RatioHydrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidAlcohol: Double
-      get() = intrinsic()
-
-    val RatioLiquidCarbonDioxide: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrazine: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrochloricAcid: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidMethane: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrousOxide: Double
-      get() = intrinsic()
-
-    val RatioLiquidOxygen: Double
-      get() = intrinsic()
-
-    val RatioLiquidOzone: Double
-      get() = intrinsic()
-
-    val RatioLiquidPollutant: Double
-      get() = intrinsic()
-
-    val RatioLiquidSilanol: Double
-      get() = intrinsic()
-
-    val RatioLiquidSodiumChloride: Double
-      get() = intrinsic()
-
-    val RatioMethane: Double
-      get() = intrinsic()
-
-    val RatioNitrogen: Double
-      get() = intrinsic()
-
-    val RatioNitrousOxide: Double
-      get() = intrinsic()
-
-    val RatioOxygen: Double
-      get() = intrinsic()
-
-    val RatioOzone: Double
-      get() = intrinsic()
-
-    val RatioPollutant: Double
-      get() = intrinsic()
-
-    val RatioPollutedWater: Double
-      get() = intrinsic()
-
-    val RatioSilanol: Double
-      get() = intrinsic()
-
-    val RatioSteam: Double
-      get() = intrinsic()
-
-    val RatioWater: Double
-      get() = intrinsic()
-
-    val SoundAlert: Double
-      get() = intrinsic()
-
-    val Temperature: Double
-      get() = intrinsic()
-
-    val TotalMoles: Double
-      get() = intrinsic()
-
-    val Volume: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<EmergencySpaceHelmet> = intrinsic()
 }
 
 /** A ItemFlashlight. */
@@ -4515,42 +2343,9 @@ object Flashlights {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Mode: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<BatterySlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Mode: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val slots: Slots<BatterySlot.Reading>
+  class Batch internal constructor() : DeviceBatch<Flashlight>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<BatterySlot>>
       get() = intrinsic()
   }
 }
@@ -4687,142 +2482,9 @@ object GasMasks {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Flush: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var SoundAlert: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Volume: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<FilteredSlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Combustion: Double
-      get() = intrinsic()
-
-    val Flush: Double
-      get() = intrinsic()
-
-    val Pressure: Double
-      get() = intrinsic()
-
-    val RatioCarbonDioxide: Double
-      get() = intrinsic()
-
-    val RatioHelium: Double
-      get() = intrinsic()
-
-    val RatioHydrazine: Double
-      get() = intrinsic()
-
-    val RatioHydrochloricAcid: Double
-      get() = intrinsic()
-
-    val RatioHydrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidAlcohol: Double
-      get() = intrinsic()
-
-    val RatioLiquidCarbonDioxide: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrazine: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrochloricAcid: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidMethane: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrousOxide: Double
-      get() = intrinsic()
-
-    val RatioLiquidOxygen: Double
-      get() = intrinsic()
-
-    val RatioLiquidOzone: Double
-      get() = intrinsic()
-
-    val RatioLiquidPollutant: Double
-      get() = intrinsic()
-
-    val RatioLiquidSilanol: Double
-      get() = intrinsic()
-
-    val RatioLiquidSodiumChloride: Double
-      get() = intrinsic()
-
-    val RatioMethane: Double
-      get() = intrinsic()
-
-    val RatioNitrogen: Double
-      get() = intrinsic()
-
-    val RatioNitrousOxide: Double
-      get() = intrinsic()
-
-    val RatioOxygen: Double
-      get() = intrinsic()
-
-    val RatioOzone: Double
-      get() = intrinsic()
-
-    val RatioPollutant: Double
-      get() = intrinsic()
-
-    val RatioPollutedWater: Double
-      get() = intrinsic()
-
-    val RatioSilanol: Double
-      get() = intrinsic()
-
-    val RatioSteam: Double
-      get() = intrinsic()
-
-    val RatioWater: Double
-      get() = intrinsic()
-
-    val SoundAlert: Double
-      get() = intrinsic()
-
-    val Temperature: Double
-      get() = intrinsic()
-
-    val TotalMoles: Double
-      get() = intrinsic()
-
-    val Volume: Double
-      get() = intrinsic()
-
-    val slots: Slots<FilteredSlot.Reading>
+  class Batch internal constructor() : DeviceBatch<GasMask>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<FilteredSlot>>
       get() = intrinsic()
   }
 }
@@ -4863,35 +2525,9 @@ object HardHats {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<BatterySlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val slots: Slots<BatterySlot.Reading>
+  class Batch internal constructor() : DeviceBatch<HardHat>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<BatterySlot>>
       get() = intrinsic()
   }
 }
@@ -4933,39 +2569,9 @@ object HardJetpacks {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Activate: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<CommonSlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Activate: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val slots: Slots<CommonSlot.Reading>
+  class Batch internal constructor() : DeviceBatch<HardJetpack>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<CommonSlot>>
       get() = intrinsic()
   }
 }
@@ -5208,252 +2814,9 @@ object HardSuits {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Activate: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var AirRelease: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Error: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Filtration: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var PressureSetting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var SoundAlert: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var TemperatureSetting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Volume: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<CommonSlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Activate: Double
-      get() = intrinsic()
-
-    val AirRelease: Double
-      get() = intrinsic()
-
-    val Combustion: Double
-      get() = intrinsic()
-
-    val EntityState: Double
-      get() = intrinsic()
-
-    val Error: Double
-      get() = intrinsic()
-
-    val Filtration: Double
-      get() = intrinsic()
-
-    val ForwardX: Double
-      get() = intrinsic()
-
-    val ForwardY: Double
-      get() = intrinsic()
-
-    val ForwardZ: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Orientation: Double
-      get() = intrinsic()
-
-    val PositionX: Double
-      get() = intrinsic()
-
-    val PositionY: Double
-      get() = intrinsic()
-
-    val PositionZ: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val Pressure: Double
-      get() = intrinsic()
-
-    val PressureExternal: Double
-      get() = intrinsic()
-
-    val PressureSetting: Double
-      get() = intrinsic()
-
-    val RatioCarbonDioxide: Double
-      get() = intrinsic()
-
-    val RatioHelium: Double
-      get() = intrinsic()
-
-    val RatioHydrazine: Double
-      get() = intrinsic()
-
-    val RatioHydrochloricAcid: Double
-      get() = intrinsic()
-
-    val RatioHydrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidAlcohol: Double
-      get() = intrinsic()
-
-    val RatioLiquidCarbonDioxide: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrazine: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrochloricAcid: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidMethane: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrousOxide: Double
-      get() = intrinsic()
-
-    val RatioLiquidOxygen: Double
-      get() = intrinsic()
-
-    val RatioLiquidOzone: Double
-      get() = intrinsic()
-
-    val RatioLiquidPollutant: Double
-      get() = intrinsic()
-
-    val RatioLiquidSilanol: Double
-      get() = intrinsic()
-
-    val RatioLiquidSodiumChloride: Double
-      get() = intrinsic()
-
-    val RatioMethane: Double
-      get() = intrinsic()
-
-    val RatioNitrogen: Double
-      get() = intrinsic()
-
-    val RatioNitrousOxide: Double
-      get() = intrinsic()
-
-    val RatioOxygen: Double
-      get() = intrinsic()
-
-    val RatioOzone: Double
-      get() = intrinsic()
-
-    val RatioPollutant: Double
-      get() = intrinsic()
-
-    val RatioPollutedWater: Double
-      get() = intrinsic()
-
-    val RatioSilanol: Double
-      get() = intrinsic()
-
-    val RatioSteam: Double
-      get() = intrinsic()
-
-    val RatioWater: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-
-    val SoundAlert: Double
-      get() = intrinsic()
-
-    val Temperature: Double
-      get() = intrinsic()
-
-    val TemperatureExternal: Double
-      get() = intrinsic()
-
-    val TemperatureSetting: Double
-      get() = intrinsic()
-
-    val TotalMoles: Double
-      get() = intrinsic()
-
-    val VelocityMagnitude: Double
-      get() = intrinsic()
-
-    val VelocityRelativeX: Double
-      get() = intrinsic()
-
-    val VelocityRelativeY: Double
-      get() = intrinsic()
-
-    val VelocityRelativeZ: Double
-      get() = intrinsic()
-
-    val VelocityX: Double
-      get() = intrinsic()
-
-    val VelocityY: Double
-      get() = intrinsic()
-
-    val VelocityZ: Double
-      get() = intrinsic()
-
-    val Volume: Double
-      get() = intrinsic()
-
-    val slots: Slots<CommonSlot.Reading>
+  class Batch internal constructor() : DeviceBatch<HardSuit>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<CommonSlot>>
       get() = intrinsic()
   }
 }
@@ -5595,168 +2958,11 @@ object HardsuitHelmets {
   fun at(pin: Device): HardsuitHelmet = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<HardsuitHelmet>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Flush: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Open: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var SoundAlert: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Volume: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Combustion: Double
-      get() = intrinsic()
-
-    val Flush: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Open: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val Pressure: Double
-      get() = intrinsic()
-
-    val RatioCarbonDioxide: Double
-      get() = intrinsic()
-
-    val RatioHelium: Double
-      get() = intrinsic()
-
-    val RatioHydrazine: Double
-      get() = intrinsic()
-
-    val RatioHydrochloricAcid: Double
-      get() = intrinsic()
-
-    val RatioHydrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidAlcohol: Double
-      get() = intrinsic()
-
-    val RatioLiquidCarbonDioxide: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrazine: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrochloricAcid: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidMethane: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrousOxide: Double
-      get() = intrinsic()
-
-    val RatioLiquidOxygen: Double
-      get() = intrinsic()
-
-    val RatioLiquidOzone: Double
-      get() = intrinsic()
-
-    val RatioLiquidPollutant: Double
-      get() = intrinsic()
-
-    val RatioLiquidSilanol: Double
-      get() = intrinsic()
-
-    val RatioLiquidSodiumChloride: Double
-      get() = intrinsic()
-
-    val RatioMethane: Double
-      get() = intrinsic()
-
-    val RatioNitrogen: Double
-      get() = intrinsic()
-
-    val RatioNitrousOxide: Double
-      get() = intrinsic()
-
-    val RatioOxygen: Double
-      get() = intrinsic()
-
-    val RatioOzone: Double
-      get() = intrinsic()
-
-    val RatioPollutant: Double
-      get() = intrinsic()
-
-    val RatioPollutedWater: Double
-      get() = intrinsic()
-
-    val RatioSilanol: Double
-      get() = intrinsic()
-
-    val RatioSteam: Double
-      get() = intrinsic()
-
-    val RatioWater: Double
-      get() = intrinsic()
-
-    val SoundAlert: Double
-      get() = intrinsic()
-
-    val Temperature: Double
-      get() = intrinsic()
-
-    val TotalMoles: Double
-      get() = intrinsic()
-
-    val Volume: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<HardsuitHelmet> = intrinsic()
 }
 
 /** A ItemIcarusHelmet. */
@@ -5896,168 +3102,11 @@ object IcarusHelmets {
   fun at(pin: Device): IcarusHelmet = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<IcarusHelmet>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Flush: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Open: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var SoundAlert: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Volume: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Combustion: Double
-      get() = intrinsic()
-
-    val Flush: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Open: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val Pressure: Double
-      get() = intrinsic()
-
-    val RatioCarbonDioxide: Double
-      get() = intrinsic()
-
-    val RatioHelium: Double
-      get() = intrinsic()
-
-    val RatioHydrazine: Double
-      get() = intrinsic()
-
-    val RatioHydrochloricAcid: Double
-      get() = intrinsic()
-
-    val RatioHydrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidAlcohol: Double
-      get() = intrinsic()
-
-    val RatioLiquidCarbonDioxide: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrazine: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrochloricAcid: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidMethane: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrousOxide: Double
-      get() = intrinsic()
-
-    val RatioLiquidOxygen: Double
-      get() = intrinsic()
-
-    val RatioLiquidOzone: Double
-      get() = intrinsic()
-
-    val RatioLiquidPollutant: Double
-      get() = intrinsic()
-
-    val RatioLiquidSilanol: Double
-      get() = intrinsic()
-
-    val RatioLiquidSodiumChloride: Double
-      get() = intrinsic()
-
-    val RatioMethane: Double
-      get() = intrinsic()
-
-    val RatioNitrogen: Double
-      get() = intrinsic()
-
-    val RatioNitrousOxide: Double
-      get() = intrinsic()
-
-    val RatioOxygen: Double
-      get() = intrinsic()
-
-    val RatioOzone: Double
-      get() = intrinsic()
-
-    val RatioPollutant: Double
-      get() = intrinsic()
-
-    val RatioPollutedWater: Double
-      get() = intrinsic()
-
-    val RatioSilanol: Double
-      get() = intrinsic()
-
-    val RatioSteam: Double
-      get() = intrinsic()
-
-    val RatioWater: Double
-      get() = intrinsic()
-
-    val SoundAlert: Double
-      get() = intrinsic()
-
-    val Temperature: Double
-      get() = intrinsic()
-
-    val TotalMoles: Double
-      get() = intrinsic()
-
-    val Volume: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<IcarusHelmet> = intrinsic()
 }
 
 /** A ItemIntegratedCircuit10. */
@@ -6077,30 +3126,11 @@ object IntegratedCircuit10s {
   fun at(pin: Device): IntegratedCircuit10 = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<IntegratedCircuit10>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val LineNumber: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<IntegratedCircuit10> = intrinsic()
 }
 
 /** A ItemJetpackBasic. */
@@ -6140,39 +3170,9 @@ object JetpackBasics {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Activate: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<CommonSlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Activate: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val slots: Slots<CommonSlot.Reading>
+  class Batch internal constructor() : DeviceBatch<JetpackBasic>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<CommonSlot>>
       get() = intrinsic()
   }
 }
@@ -6216,38 +3216,9 @@ object Labellers {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<BatterySlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Error: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val slots: Slots<BatterySlot.Reading>
+  class Batch internal constructor() : DeviceBatch<Labeller>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<BatterySlot>>
       get() = intrinsic()
   }
 }
@@ -6316,53 +3287,9 @@ object Laptops {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<CommonSlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Error: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val PositionX: Double
-      get() = intrinsic()
-
-    val PositionY: Double
-      get() = intrinsic()
-
-    val PositionZ: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val PressureExternal: Double
-      get() = intrinsic()
-
-    val TemperatureExternal: Double
-      get() = intrinsic()
-
-    val slots: Slots<CommonSlot.Reading>
+  class Batch internal constructor() : DeviceBatch<Laptop>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<CommonSlot>>
       get() = intrinsic()
   }
 }
@@ -6414,52 +3341,9 @@ object LiquidVacuums {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Activate: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Mode: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<BatterySlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Activate: Double
-      get() = intrinsic()
-
-    val Error: Double
-      get() = intrinsic()
-
-    val Mode: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val slots: Slots<BatterySlot.Reading>
+  class Batch internal constructor() : DeviceBatch<LiquidVacuum>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<BatterySlot>>
       get() = intrinsic()
   }
 }
@@ -6500,35 +3384,9 @@ object MKIIAngleGrinders {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Activate: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<BatterySlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Activate: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val slots: Slots<BatterySlot.Reading>
+  class Batch internal constructor() : DeviceBatch<MKIIAngleGrinder>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<BatterySlot>>
       get() = intrinsic()
   }
 }
@@ -6569,35 +3427,9 @@ object MKIIArcWelders {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Activate: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<BatterySlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Activate: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val slots: Slots<BatterySlot.Reading>
+  class Batch internal constructor() : DeviceBatch<MKIIArcWelder>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<BatterySlot>>
       get() = intrinsic()
   }
 }
@@ -6638,35 +3470,9 @@ object MKIIDrills {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Activate: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<BatterySlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Activate: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val slots: Slots<BatterySlot.Reading>
+  class Batch internal constructor() : DeviceBatch<MKIIDrill>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<BatterySlot>>
       get() = intrinsic()
   }
 }
@@ -6718,52 +3524,9 @@ object MKIIMiningDrills {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Activate: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Mode: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<BatterySlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Activate: Double
-      get() = intrinsic()
-
-    val Error: Double
-      get() = intrinsic()
-
-    val Mode: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val slots: Slots<BatterySlot.Reading>
+  class Batch internal constructor() : DeviceBatch<MKIIMiningDrill>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<BatterySlot>>
       get() = intrinsic()
   }
 }
@@ -6815,52 +3578,9 @@ object MiningDrills {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Activate: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Mode: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<BatterySlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Activate: Double
-      get() = intrinsic()
-
-    val Error: Double
-      get() = intrinsic()
-
-    val Mode: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val slots: Slots<BatterySlot.Reading>
+  class Batch internal constructor() : DeviceBatch<MiningDrill>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<BatterySlot>>
       get() = intrinsic()
   }
 }
@@ -6912,52 +3632,9 @@ object MiningDrillHeavies {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Activate: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Mode: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<BatterySlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Activate: Double
-      get() = intrinsic()
-
-    val Error: Double
-      get() = intrinsic()
-
-    val Mode: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val slots: Slots<BatterySlot.Reading>
+  class Batch internal constructor() : DeviceBatch<MiningDrillHeavy>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<BatterySlot>>
       get() = intrinsic()
   }
 }
@@ -7002,42 +3679,9 @@ object NVGs {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<BatterySlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Lock: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val slots: Slots<BatterySlot.Reading>
+  class Batch internal constructor() : DeviceBatch<NVG>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<BatterySlot>>
       get() = intrinsic()
   }
 }
@@ -7085,45 +3729,9 @@ object OreDetectors {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Mode: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<BatterySlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Error: Double
-      get() = intrinsic()
-
-    val Mode: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val slots: Slots<BatterySlot.Reading>
+  class Batch internal constructor() : DeviceBatch<OreDetector>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<BatterySlot>>
       get() = intrinsic()
   }
 }
@@ -7172,49 +3780,9 @@ object PlantSamplers {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Activate: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Mode: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<BatterySlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Activate: Double
-      get() = intrinsic()
-
-    val Mode: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val slots: Slots<BatterySlot.Reading>
+  class Batch internal constructor() : DeviceBatch<PlantSampler>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<BatterySlot>>
       get() = intrinsic()
   }
 }
@@ -7270,59 +3838,9 @@ object RemoteDetonators {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Activate: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Mode: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<BatterySlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Activate: Double
-      get() = intrinsic()
-
-    val Error: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val Mode: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val slots: Slots<BatterySlot.Reading>
+  class Batch internal constructor() : DeviceBatch<RemoteDetonator>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<BatterySlot>>
       get() = intrinsic()
   }
 }
@@ -7368,35 +3886,9 @@ object SensorLenseses {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<CommonSlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val slots: Slots<CommonSlot.Reading>
+  class Batch internal constructor() : DeviceBatch<SensorLenses>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<CommonSlot>>
       get() = intrinsic()
   }
 }
@@ -7538,168 +4030,11 @@ object SpaceHelmets {
   fun at(pin: Device): SpaceHelmet = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<SpaceHelmet>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Flush: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Open: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var SoundAlert: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Volume: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Combustion: Double
-      get() = intrinsic()
-
-    val Flush: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Open: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val Pressure: Double
-      get() = intrinsic()
-
-    val RatioCarbonDioxide: Double
-      get() = intrinsic()
-
-    val RatioHelium: Double
-      get() = intrinsic()
-
-    val RatioHydrazine: Double
-      get() = intrinsic()
-
-    val RatioHydrochloricAcid: Double
-      get() = intrinsic()
-
-    val RatioHydrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidAlcohol: Double
-      get() = intrinsic()
-
-    val RatioLiquidCarbonDioxide: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrazine: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrochloricAcid: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidMethane: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrousOxide: Double
-      get() = intrinsic()
-
-    val RatioLiquidOxygen: Double
-      get() = intrinsic()
-
-    val RatioLiquidOzone: Double
-      get() = intrinsic()
-
-    val RatioLiquidPollutant: Double
-      get() = intrinsic()
-
-    val RatioLiquidSilanol: Double
-      get() = intrinsic()
-
-    val RatioLiquidSodiumChloride: Double
-      get() = intrinsic()
-
-    val RatioMethane: Double
-      get() = intrinsic()
-
-    val RatioNitrogen: Double
-      get() = intrinsic()
-
-    val RatioNitrousOxide: Double
-      get() = intrinsic()
-
-    val RatioOxygen: Double
-      get() = intrinsic()
-
-    val RatioOzone: Double
-      get() = intrinsic()
-
-    val RatioPollutant: Double
-      get() = intrinsic()
-
-    val RatioPollutedWater: Double
-      get() = intrinsic()
-
-    val RatioSilanol: Double
-      get() = intrinsic()
-
-    val RatioSteam: Double
-      get() = intrinsic()
-
-    val RatioWater: Double
-      get() = intrinsic()
-
-    val SoundAlert: Double
-      get() = intrinsic()
-
-    val Temperature: Double
-      get() = intrinsic()
-
-    val TotalMoles: Double
-      get() = intrinsic()
-
-    val Volume: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<SpaceHelmet> = intrinsic()
 }
 
 /** A ItemSpacepack. */
@@ -7739,39 +4074,9 @@ object Spacepacks {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Activate: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<CommonSlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Activate: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val slots: Slots<CommonSlot.Reading>
+  class Batch internal constructor() : DeviceBatch<Spacepack>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<CommonSlot>>
       get() = intrinsic()
   }
 }
@@ -8044,252 +4349,9 @@ object SuitHARMs {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Activate: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var AirRelease: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Error: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Filtration: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var PressureSetting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var SoundAlert: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var TemperatureSetting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Volume: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<CommonSlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Activate: Double
-      get() = intrinsic()
-
-    val AirRelease: Double
-      get() = intrinsic()
-
-    val Combustion: Double
-      get() = intrinsic()
-
-    val EntityState: Double
-      get() = intrinsic()
-
-    val Error: Double
-      get() = intrinsic()
-
-    val Filtration: Double
-      get() = intrinsic()
-
-    val ForwardX: Double
-      get() = intrinsic()
-
-    val ForwardY: Double
-      get() = intrinsic()
-
-    val ForwardZ: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Orientation: Double
-      get() = intrinsic()
-
-    val PositionX: Double
-      get() = intrinsic()
-
-    val PositionY: Double
-      get() = intrinsic()
-
-    val PositionZ: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val Pressure: Double
-      get() = intrinsic()
-
-    val PressureExternal: Double
-      get() = intrinsic()
-
-    val PressureSetting: Double
-      get() = intrinsic()
-
-    val RatioCarbonDioxide: Double
-      get() = intrinsic()
-
-    val RatioHelium: Double
-      get() = intrinsic()
-
-    val RatioHydrazine: Double
-      get() = intrinsic()
-
-    val RatioHydrochloricAcid: Double
-      get() = intrinsic()
-
-    val RatioHydrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidAlcohol: Double
-      get() = intrinsic()
-
-    val RatioLiquidCarbonDioxide: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrazine: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrochloricAcid: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidMethane: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrousOxide: Double
-      get() = intrinsic()
-
-    val RatioLiquidOxygen: Double
-      get() = intrinsic()
-
-    val RatioLiquidOzone: Double
-      get() = intrinsic()
-
-    val RatioLiquidPollutant: Double
-      get() = intrinsic()
-
-    val RatioLiquidSilanol: Double
-      get() = intrinsic()
-
-    val RatioLiquidSodiumChloride: Double
-      get() = intrinsic()
-
-    val RatioMethane: Double
-      get() = intrinsic()
-
-    val RatioNitrogen: Double
-      get() = intrinsic()
-
-    val RatioNitrousOxide: Double
-      get() = intrinsic()
-
-    val RatioOxygen: Double
-      get() = intrinsic()
-
-    val RatioOzone: Double
-      get() = intrinsic()
-
-    val RatioPollutant: Double
-      get() = intrinsic()
-
-    val RatioPollutedWater: Double
-      get() = intrinsic()
-
-    val RatioSilanol: Double
-      get() = intrinsic()
-
-    val RatioSteam: Double
-      get() = intrinsic()
-
-    val RatioWater: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-
-    val SoundAlert: Double
-      get() = intrinsic()
-
-    val Temperature: Double
-      get() = intrinsic()
-
-    val TemperatureExternal: Double
-      get() = intrinsic()
-
-    val TemperatureSetting: Double
-      get() = intrinsic()
-
-    val TotalMoles: Double
-      get() = intrinsic()
-
-    val VelocityMagnitude: Double
-      get() = intrinsic()
-
-    val VelocityRelativeX: Double
-      get() = intrinsic()
-
-    val VelocityRelativeY: Double
-      get() = intrinsic()
-
-    val VelocityRelativeZ: Double
-      get() = intrinsic()
-
-    val VelocityX: Double
-      get() = intrinsic()
-
-    val VelocityY: Double
-      get() = intrinsic()
-
-    val VelocityZ: Double
-      get() = intrinsic()
-
-    val Volume: Double
-      get() = intrinsic()
-
-    val slots: Slots<CommonSlot.Reading>
+  class Batch internal constructor() : DeviceBatch<SuitHARM>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<CommonSlot>>
       get() = intrinsic()
   }
 }
@@ -8431,168 +4493,11 @@ object SuitHelmetHARMs {
   fun at(pin: Device): SuitHelmetHARM = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<SuitHelmetHARM>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Flush: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Open: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var SoundAlert: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Volume: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Combustion: Double
-      get() = intrinsic()
-
-    val Flush: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Open: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val Pressure: Double
-      get() = intrinsic()
-
-    val RatioCarbonDioxide: Double
-      get() = intrinsic()
-
-    val RatioHelium: Double
-      get() = intrinsic()
-
-    val RatioHydrazine: Double
-      get() = intrinsic()
-
-    val RatioHydrochloricAcid: Double
-      get() = intrinsic()
-
-    val RatioHydrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidAlcohol: Double
-      get() = intrinsic()
-
-    val RatioLiquidCarbonDioxide: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrazine: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrochloricAcid: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidMethane: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrousOxide: Double
-      get() = intrinsic()
-
-    val RatioLiquidOxygen: Double
-      get() = intrinsic()
-
-    val RatioLiquidOzone: Double
-      get() = intrinsic()
-
-    val RatioLiquidPollutant: Double
-      get() = intrinsic()
-
-    val RatioLiquidSilanol: Double
-      get() = intrinsic()
-
-    val RatioLiquidSodiumChloride: Double
-      get() = intrinsic()
-
-    val RatioMethane: Double
-      get() = intrinsic()
-
-    val RatioNitrogen: Double
-      get() = intrinsic()
-
-    val RatioNitrousOxide: Double
-      get() = intrinsic()
-
-    val RatioOxygen: Double
-      get() = intrinsic()
-
-    val RatioOzone: Double
-      get() = intrinsic()
-
-    val RatioPollutant: Double
-      get() = intrinsic()
-
-    val RatioPollutedWater: Double
-      get() = intrinsic()
-
-    val RatioSilanol: Double
-      get() = intrinsic()
-
-    val RatioSteam: Double
-      get() = intrinsic()
-
-    val RatioWater: Double
-      get() = intrinsic()
-
-    val SoundAlert: Double
-      get() = intrinsic()
-
-    val Temperature: Double
-      get() = intrinsic()
-
-    val TotalMoles: Double
-      get() = intrinsic()
-
-    val Volume: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<SuitHelmetHARM> = intrinsic()
 }
 
 /** A ItemTablet. */
@@ -8639,38 +4544,9 @@ object Tablets {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<CommonSlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Error: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val slots: Slots<CommonSlot.Reading>
+  class Batch internal constructor() : DeviceBatch<Tablet>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<CommonSlot>>
       get() = intrinsic()
   }
 }
@@ -8727,52 +4603,9 @@ object TerrainManipulators {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Activate: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Mode: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<CommonSlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Activate: Double
-      get() = intrinsic()
-
-    val Error: Double
-      get() = intrinsic()
-
-    val Mode: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val slots: Slots<CommonSlot.Reading>
+  class Batch internal constructor() : DeviceBatch<TerrainManipulator>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<CommonSlot>>
       get() = intrinsic()
   }
 }
@@ -8813,35 +4646,9 @@ object WearLamps {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<BatterySlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val slots: Slots<BatterySlot.Reading>
+  class Batch internal constructor() : DeviceBatch<WearLamp>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<BatterySlot>>
       get() = intrinsic()
   }
 }
@@ -8864,34 +4671,11 @@ object WirelessBatteryCellExtraLarges {
   fun at(pin: Device): WirelessBatteryCellExtraLarge = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<WirelessBatteryCellExtraLarge>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Mode: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Mode: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<WirelessBatteryCellExtraLarge> = intrinsic()
 }
 
 /** A Landingpad_DataConnectionPiece. */
@@ -9031,159 +4815,11 @@ object Landingpad_DataConnectionPieces {
   fun at(pin: Device): Landingpad_DataConnectionPiece = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<Landingpad_DataConnectionPiece>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Activate: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Vertical: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Activate: Double
-      get() = intrinsic()
-
-    val Combustion: Double
-      get() = intrinsic()
-
-    val ContactTypeId: Double
-      get() = intrinsic()
-
-    val Error: Double
-      get() = intrinsic()
-
-    val Mode: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val Pressure: Double
-      get() = intrinsic()
-
-    val RatioCarbonDioxide: Double
-      get() = intrinsic()
-
-    val RatioHelium: Double
-      get() = intrinsic()
-
-    val RatioHydrazine: Double
-      get() = intrinsic()
-
-    val RatioHydrochloricAcid: Double
-      get() = intrinsic()
-
-    val RatioHydrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidAlcohol: Double
-      get() = intrinsic()
-
-    val RatioLiquidCarbonDioxide: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrazine: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrochloricAcid: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidMethane: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrousOxide: Double
-      get() = intrinsic()
-
-    val RatioLiquidOxygen: Double
-      get() = intrinsic()
-
-    val RatioLiquidOzone: Double
-      get() = intrinsic()
-
-    val RatioLiquidPollutant: Double
-      get() = intrinsic()
-
-    val RatioLiquidSilanol: Double
-      get() = intrinsic()
-
-    val RatioLiquidSodiumChloride: Double
-      get() = intrinsic()
-
-    val RatioMethane: Double
-      get() = intrinsic()
-
-    val RatioNitrogen: Double
-      get() = intrinsic()
-
-    val RatioNitrousOxide: Double
-      get() = intrinsic()
-
-    val RatioOxygen: Double
-      get() = intrinsic()
-
-    val RatioOzone: Double
-      get() = intrinsic()
-
-    val RatioPollutant: Double
-      get() = intrinsic()
-
-    val RatioPollutedWater: Double
-      get() = intrinsic()
-
-    val RatioSilanol: Double
-      get() = intrinsic()
-
-    val RatioSteam: Double
-      get() = intrinsic()
-
-    val RatioWater: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val Temperature: Double
-      get() = intrinsic()
-
-    val TotalMoles: Double
-      get() = intrinsic()
-
-    val Vertical: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<Landingpad_DataConnectionPiece> = intrinsic()
 }
 
 /** A Landingpad_GasConnectorInwardPiece. */
@@ -9319,152 +4955,11 @@ object Landingpad_GasConnectorInwardPieces {
   fun at(pin: Device): Landingpad_GasConnectorInwardPiece = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<Landingpad_GasConnectorInwardPiece>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Combustion: Double
-      get() = intrinsic()
-
-    val Error: Double
-      get() = intrinsic()
-
-    val Maximum: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val Pressure: Double
-      get() = intrinsic()
-
-    val Ratio: Double
-      get() = intrinsic()
-
-    val RatioCarbonDioxide: Double
-      get() = intrinsic()
-
-    val RatioHelium: Double
-      get() = intrinsic()
-
-    val RatioHydrazine: Double
-      get() = intrinsic()
-
-    val RatioHydrochloricAcid: Double
-      get() = intrinsic()
-
-    val RatioHydrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidAlcohol: Double
-      get() = intrinsic()
-
-    val RatioLiquidCarbonDioxide: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrazine: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrochloricAcid: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidMethane: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrousOxide: Double
-      get() = intrinsic()
-
-    val RatioLiquidOxygen: Double
-      get() = intrinsic()
-
-    val RatioLiquidOzone: Double
-      get() = intrinsic()
-
-    val RatioLiquidPollutant: Double
-      get() = intrinsic()
-
-    val RatioLiquidSilanol: Double
-      get() = intrinsic()
-
-    val RatioLiquidSodiumChloride: Double
-      get() = intrinsic()
-
-    val RatioMethane: Double
-      get() = intrinsic()
-
-    val RatioNitrogen: Double
-      get() = intrinsic()
-
-    val RatioNitrousOxide: Double
-      get() = intrinsic()
-
-    val RatioOxygen: Double
-      get() = intrinsic()
-
-    val RatioOzone: Double
-      get() = intrinsic()
-
-    val RatioPollutant: Double
-      get() = intrinsic()
-
-    val RatioPollutedWater: Double
-      get() = intrinsic()
-
-    val RatioSilanol: Double
-      get() = intrinsic()
-
-    val RatioSteam: Double
-      get() = intrinsic()
-
-    val RatioWater: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-
-    val Temperature: Double
-      get() = intrinsic()
-
-    val TotalMoles: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<Landingpad_GasConnectorInwardPiece> = intrinsic()
 }
 
 /** A Landingpad_GasConnectorOutwardPiece. */
@@ -9600,152 +5095,11 @@ object Landingpad_GasConnectorOutwardPieces {
   fun at(pin: Device): Landingpad_GasConnectorOutwardPiece = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<Landingpad_GasConnectorOutwardPiece>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Combustion: Double
-      get() = intrinsic()
-
-    val Error: Double
-      get() = intrinsic()
-
-    val Maximum: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val Pressure: Double
-      get() = intrinsic()
-
-    val Ratio: Double
-      get() = intrinsic()
-
-    val RatioCarbonDioxide: Double
-      get() = intrinsic()
-
-    val RatioHelium: Double
-      get() = intrinsic()
-
-    val RatioHydrazine: Double
-      get() = intrinsic()
-
-    val RatioHydrochloricAcid: Double
-      get() = intrinsic()
-
-    val RatioHydrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidAlcohol: Double
-      get() = intrinsic()
-
-    val RatioLiquidCarbonDioxide: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrazine: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrochloricAcid: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidMethane: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrousOxide: Double
-      get() = intrinsic()
-
-    val RatioLiquidOxygen: Double
-      get() = intrinsic()
-
-    val RatioLiquidOzone: Double
-      get() = intrinsic()
-
-    val RatioLiquidPollutant: Double
-      get() = intrinsic()
-
-    val RatioLiquidSilanol: Double
-      get() = intrinsic()
-
-    val RatioLiquidSodiumChloride: Double
-      get() = intrinsic()
-
-    val RatioMethane: Double
-      get() = intrinsic()
-
-    val RatioNitrogen: Double
-      get() = intrinsic()
-
-    val RatioNitrousOxide: Double
-      get() = intrinsic()
-
-    val RatioOxygen: Double
-      get() = intrinsic()
-
-    val RatioOzone: Double
-      get() = intrinsic()
-
-    val RatioPollutant: Double
-      get() = intrinsic()
-
-    val RatioPollutedWater: Double
-      get() = intrinsic()
-
-    val RatioSilanol: Double
-      get() = intrinsic()
-
-    val RatioSteam: Double
-      get() = intrinsic()
-
-    val RatioWater: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-
-    val Temperature: Double
-      get() = intrinsic()
-
-    val TotalMoles: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<Landingpad_GasConnectorOutwardPiece> = intrinsic()
 }
 
 /** A Landingpad_GasTankConnectorPiece. */
@@ -9794,48 +5148,9 @@ object Landingpad_GasTankConnectorPieces {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Mode: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Error: Double
-      get() = intrinsic()
-
-    val Mode: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Reading>
+  class Batch internal constructor() : DeviceBatch<Landingpad_GasTankConnectorPiece>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<DataDiskSlot>>
       get() = intrinsic()
   }
 }
@@ -9973,152 +5288,11 @@ object Landingpad_LiquidConnectorInwardPieces {
   fun at(pin: Device): Landingpad_LiquidConnectorInwardPiece = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<Landingpad_LiquidConnectorInwardPiece>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Combustion: Double
-      get() = intrinsic()
-
-    val Error: Double
-      get() = intrinsic()
-
-    val Maximum: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val Pressure: Double
-      get() = intrinsic()
-
-    val Ratio: Double
-      get() = intrinsic()
-
-    val RatioCarbonDioxide: Double
-      get() = intrinsic()
-
-    val RatioHelium: Double
-      get() = intrinsic()
-
-    val RatioHydrazine: Double
-      get() = intrinsic()
-
-    val RatioHydrochloricAcid: Double
-      get() = intrinsic()
-
-    val RatioHydrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidAlcohol: Double
-      get() = intrinsic()
-
-    val RatioLiquidCarbonDioxide: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrazine: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrochloricAcid: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidMethane: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrousOxide: Double
-      get() = intrinsic()
-
-    val RatioLiquidOxygen: Double
-      get() = intrinsic()
-
-    val RatioLiquidOzone: Double
-      get() = intrinsic()
-
-    val RatioLiquidPollutant: Double
-      get() = intrinsic()
-
-    val RatioLiquidSilanol: Double
-      get() = intrinsic()
-
-    val RatioLiquidSodiumChloride: Double
-      get() = intrinsic()
-
-    val RatioMethane: Double
-      get() = intrinsic()
-
-    val RatioNitrogen: Double
-      get() = intrinsic()
-
-    val RatioNitrousOxide: Double
-      get() = intrinsic()
-
-    val RatioOxygen: Double
-      get() = intrinsic()
-
-    val RatioOzone: Double
-      get() = intrinsic()
-
-    val RatioPollutant: Double
-      get() = intrinsic()
-
-    val RatioPollutedWater: Double
-      get() = intrinsic()
-
-    val RatioSilanol: Double
-      get() = intrinsic()
-
-    val RatioSteam: Double
-      get() = intrinsic()
-
-    val RatioWater: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-
-    val Temperature: Double
-      get() = intrinsic()
-
-    val TotalMoles: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<Landingpad_LiquidConnectorInwardPiece> = intrinsic()
 }
 
 /** A Landingpad_LiquidConnectorOutwardPiece. */
@@ -10254,152 +5428,11 @@ object Landingpad_LiquidConnectorOutwardPieces {
   fun at(pin: Device): Landingpad_LiquidConnectorOutwardPiece = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<Landingpad_LiquidConnectorOutwardPiece>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Combustion: Double
-      get() = intrinsic()
-
-    val Error: Double
-      get() = intrinsic()
-
-    val Maximum: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val Pressure: Double
-      get() = intrinsic()
-
-    val Ratio: Double
-      get() = intrinsic()
-
-    val RatioCarbonDioxide: Double
-      get() = intrinsic()
-
-    val RatioHelium: Double
-      get() = intrinsic()
-
-    val RatioHydrazine: Double
-      get() = intrinsic()
-
-    val RatioHydrochloricAcid: Double
-      get() = intrinsic()
-
-    val RatioHydrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidAlcohol: Double
-      get() = intrinsic()
-
-    val RatioLiquidCarbonDioxide: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrazine: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrochloricAcid: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidMethane: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrousOxide: Double
-      get() = intrinsic()
-
-    val RatioLiquidOxygen: Double
-      get() = intrinsic()
-
-    val RatioLiquidOzone: Double
-      get() = intrinsic()
-
-    val RatioLiquidPollutant: Double
-      get() = intrinsic()
-
-    val RatioLiquidSilanol: Double
-      get() = intrinsic()
-
-    val RatioLiquidSodiumChloride: Double
-      get() = intrinsic()
-
-    val RatioMethane: Double
-      get() = intrinsic()
-
-    val RatioNitrogen: Double
-      get() = intrinsic()
-
-    val RatioNitrousOxide: Double
-      get() = intrinsic()
-
-    val RatioOxygen: Double
-      get() = intrinsic()
-
-    val RatioOzone: Double
-      get() = intrinsic()
-
-    val RatioPollutant: Double
-      get() = intrinsic()
-
-    val RatioPollutedWater: Double
-      get() = intrinsic()
-
-    val RatioSilanol: Double
-      get() = intrinsic()
-
-    val RatioSteam: Double
-      get() = intrinsic()
-
-    val RatioWater: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-
-    val Temperature: Double
-      get() = intrinsic()
-
-    val TotalMoles: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<Landingpad_LiquidConnectorOutwardPiece> = intrinsic()
 }
 
 /** A Landingpad_LiquidTankConnectorPiece. */
@@ -10448,48 +5481,9 @@ object Landingpad_LiquidTankConnectorPieces {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Mode: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Error: Double
-      get() = intrinsic()
-
-    val Mode: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Reading>
+  class Batch internal constructor() : DeviceBatch<Landingpad_LiquidTankConnectorPiece>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<DataDiskSlot>>
       get() = intrinsic()
   }
 }
@@ -10518,40 +5512,11 @@ object Landingpad_ThreshholdPieces {
   fun at(pin: Device): Landingpad_ThreshholdPiece = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<Landingpad_ThreshholdPiece>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<Landingpad_ThreshholdPiece> = intrinsic()
 }
 
 /** A LogicStepSequencer8. */
@@ -10612,69 +5577,9 @@ object LogicStepSequencer8s {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Activate: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Bpm: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Mode: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Time: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Activate: Double
-      get() = intrinsic()
-
-    val Bpm: Double
-      get() = intrinsic()
-
-    val Error: Double
-      get() = intrinsic()
-
-    val Mode: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val Time: Double
-      get() = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Reading>
+  class Batch internal constructor() : DeviceBatch<LogicStepSequencer8>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<DataDiskSlot>>
       get() = intrinsic()
   }
 }
@@ -10701,41 +5606,11 @@ object PassiveSpeakers {
   fun at(pin: Device): PassiveSpeaker = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<PassiveSpeaker>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var SoundAlert: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Volume: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val SoundAlert: Double
-      get() = intrinsic()
-
-    val Volume: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<PassiveSpeaker> = intrinsic()
 }
 
 /** A PortableSolarPanel. */
@@ -10771,32 +5646,9 @@ object PortableSolarPanels {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Open: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<BatterySlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Open: Double
-      get() = intrinsic()
-
-    val slots: Slots<BatterySlot.Reading>
+  class Batch internal constructor() : DeviceBatch<PortableSolarPanel>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<BatterySlot>>
       get() = intrinsic()
   }
 }
@@ -10915,120 +5767,9 @@ object Robots {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Mode: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var TargetX: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var TargetY: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var TargetZ: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<CommonSlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Error: Double
-      get() = intrinsic()
-
-    val ForwardX: Double
-      get() = intrinsic()
-
-    val ForwardY: Double
-      get() = intrinsic()
-
-    val ForwardZ: Double
-      get() = intrinsic()
-
-    val MineablesInQueue: Double
-      get() = intrinsic()
-
-    val MineablesInVicinity: Double
-      get() = intrinsic()
-
-    val Mode: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Orientation: Double
-      get() = intrinsic()
-
-    val PositionX: Double
-      get() = intrinsic()
-
-    val PositionY: Double
-      get() = intrinsic()
-
-    val PositionZ: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val PressureExternal: Double
-      get() = intrinsic()
-
-    val TargetX: Double
-      get() = intrinsic()
-
-    val TargetY: Double
-      get() = intrinsic()
-
-    val TargetZ: Double
-      get() = intrinsic()
-
-    val TemperatureExternal: Double
-      get() = intrinsic()
-
-    val VelocityMagnitude: Double
-      get() = intrinsic()
-
-    val VelocityRelativeX: Double
-      get() = intrinsic()
-
-    val VelocityRelativeY: Double
-      get() = intrinsic()
-
-    val VelocityRelativeZ: Double
-      get() = intrinsic()
-
-    val VelocityX: Double
-      get() = intrinsic()
-
-    val VelocityY: Double
-      get() = intrinsic()
-
-    val VelocityZ: Double
-      get() = intrinsic()
-
-    val slots: Slots<CommonSlot.Reading>
+  class Batch internal constructor() : DeviceBatch<Robot>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<CommonSlot>>
       get() = intrinsic()
   }
 }
@@ -11064,35 +5805,9 @@ object Rover_MkIs {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<CommonSlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val slots: Slots<CommonSlot.Reading>
+  class Batch internal constructor() : DeviceBatch<Rover_MkI>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<CommonSlot>>
       get() = intrinsic()
   }
 }
@@ -11131,53 +5846,11 @@ object StopWatches {
   fun at(pin: Device): StopWatch = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<StopWatch>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Activate: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Activate: Double
-      get() = intrinsic()
-
-    val Error: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val Time: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<StopWatch> = intrinsic()
 }
 
 /** A StructureAccessBridge. */
@@ -11216,61 +5889,11 @@ object AccessBridges {
   fun at(pin: Device): AccessBridge = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<AccessBridge>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Activate: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Open: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Activate: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Open: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<AccessBridge> = intrinsic()
 }
 
 /** A StructureActiveVent. */
@@ -11420,164 +6043,9 @@ object ActiveVents {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Mode: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Open: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var PressureExternal: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var PressureInternal: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val CombustionOutput: Double
-      get() = intrinsic()
-
-    val Error: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val Maximum: Double
-      get() = intrinsic()
-
-    val Mode: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Open: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val PressureExternal: Double
-      get() = intrinsic()
-
-    val PressureInternal: Double
-      get() = intrinsic()
-
-    val PressureOutput: Double
-      get() = intrinsic()
-
-    val Ratio: Double
-      get() = intrinsic()
-
-    val RatioCarbonDioxideOutput: Double
-      get() = intrinsic()
-
-    val RatioHeliumOutput: Double
-      get() = intrinsic()
-
-    val RatioHydrazineOutput: Double
-      get() = intrinsic()
-
-    val RatioHydrochloricAcidOutput: Double
-      get() = intrinsic()
-
-    val RatioHydrogenOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidAlcoholOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrazineOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrochloricAcidOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrogenOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidOzoneOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidSilanolOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidSodiumChlorideOutput: Double
-      get() = intrinsic()
-
-    val RatioMethaneOutput: Double
-      get() = intrinsic()
-
-    val RatioNitrogenOutput: Double
-      get() = intrinsic()
-
-    val RatioNitrousOxideOutput: Double
-      get() = intrinsic()
-
-    val RatioOxygenOutput: Double
-      get() = intrinsic()
-
-    val RatioOzoneOutput: Double
-      get() = intrinsic()
-
-    val RatioPollutantOutput: Double
-      get() = intrinsic()
-
-    val RatioPollutedWaterOutput: Double
-      get() = intrinsic()
-
-    val RatioSilanolOutput: Double
-      get() = intrinsic()
-
-    val RatioWaterOutput: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-
-    val TemperatureOutput: Double
-      get() = intrinsic()
-
-    val TotalMolesOutput: Double
-      get() = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Reading>
+  class Batch internal constructor() : DeviceBatch<ActiveVent>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<DataDiskSlot>>
       get() = intrinsic()
   }
 }
@@ -11668,98 +6136,9 @@ object AdvancedComposters {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Activate: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var ClearMemory: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Mode: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Open: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Activate: Double
-      get() = intrinsic()
-
-    val ClearMemory: Double
-      get() = intrinsic()
-
-    val Error: Double
-      get() = intrinsic()
-
-    val ExportCount: Double
-      get() = intrinsic()
-
-    val ImportCount: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val Maximum: Double
-      get() = intrinsic()
-
-    val Mode: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Open: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val Quantity: Double
-      get() = intrinsic()
-
-    val Ratio: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Reading>
+  class Batch internal constructor() : DeviceBatch<AdvancedComposter>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<DataDiskSlot>>
       get() = intrinsic()
   }
 }
@@ -11957,211 +6336,9 @@ object AdvancedFurnaces {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Activate: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var ClearMemory: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Mode: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Open: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var SettingInput: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var SettingOutput: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Activate: Double
-      get() = intrinsic()
-
-    val ClearMemory: Double
-      get() = intrinsic()
-
-    val Combustion: Double
-      get() = intrinsic()
-
-    val Error: Double
-      get() = intrinsic()
-
-    val ExportCount: Double
-      get() = intrinsic()
-
-    val ImportCount: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val Maximum: Double
-      get() = intrinsic()
-
-    val Mode: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Open: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val Pressure: Double
-      get() = intrinsic()
-
-    val Ratio: Double
-      get() = intrinsic()
-
-    val RatioCarbonDioxide: Double
-      get() = intrinsic()
-
-    val RatioHelium: Double
-      get() = intrinsic()
-
-    val RatioHydrazine: Double
-      get() = intrinsic()
-
-    val RatioHydrochloricAcid: Double
-      get() = intrinsic()
-
-    val RatioHydrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidAlcohol: Double
-      get() = intrinsic()
-
-    val RatioLiquidCarbonDioxide: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrazine: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrochloricAcid: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidMethane: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrousOxide: Double
-      get() = intrinsic()
-
-    val RatioLiquidOxygen: Double
-      get() = intrinsic()
-
-    val RatioLiquidOzone: Double
-      get() = intrinsic()
-
-    val RatioLiquidPollutant: Double
-      get() = intrinsic()
-
-    val RatioLiquidSilanol: Double
-      get() = intrinsic()
-
-    val RatioLiquidSodiumChloride: Double
-      get() = intrinsic()
-
-    val RatioMethane: Double
-      get() = intrinsic()
-
-    val RatioNitrogen: Double
-      get() = intrinsic()
-
-    val RatioNitrousOxide: Double
-      get() = intrinsic()
-
-    val RatioOxygen: Double
-      get() = intrinsic()
-
-    val RatioOzone: Double
-      get() = intrinsic()
-
-    val RatioPollutant: Double
-      get() = intrinsic()
-
-    val RatioPollutedWater: Double
-      get() = intrinsic()
-
-    val RatioSilanol: Double
-      get() = intrinsic()
-
-    val RatioSteam: Double
-      get() = intrinsic()
-
-    val RatioWater: Double
-      get() = intrinsic()
-
-    val Reagents: Double
-      get() = intrinsic()
-
-    val RecipeHash: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-
-    val SettingInput: Double
-      get() = intrinsic()
-
-    val SettingOutput: Double
-      get() = intrinsic()
-
-    val Temperature: Double
-      get() = intrinsic()
-
-    val TotalMoles: Double
-      get() = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Reading>
+  class Batch internal constructor() : DeviceBatch<AdvancedFurnace>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<DataDiskSlot>>
       get() = intrinsic()
   }
 }
@@ -12248,91 +6425,9 @@ object AdvancedPackagingMachines {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Activate: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var ClearMemory: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Open: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var RecipeHash: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Activate: Double
-      get() = intrinsic()
-
-    val ClearMemory: Double
-      get() = intrinsic()
-
-    val CompletionRatio: Double
-      get() = intrinsic()
-
-    val Error: Double
-      get() = intrinsic()
-
-    val ExportCount: Double
-      get() = intrinsic()
-
-    val ImportCount: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Open: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val Reagents: Double
-      get() = intrinsic()
-
-    val RecipeHash: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val StackSize: Double
-      get() = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Reading>
+  class Batch internal constructor() : DeviceBatch<AdvancedPackagingMachine>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<DataDiskSlot>>
       get() = intrinsic()
   }
 }
@@ -12698,372 +6793,9 @@ object AirConditioners {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Mode: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Open: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val CombustionInput: Double
-      get() = intrinsic()
-
-    val CombustionOutput: Double
-      get() = intrinsic()
-
-    val CombustionOutput2: Double
-      get() = intrinsic()
-
-    val Error: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val Maximum: Double
-      get() = intrinsic()
-
-    val Mode: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Open: Double
-      get() = intrinsic()
-
-    val OperationalTemperatureEfficiency: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val PressureEfficiency: Double
-      get() = intrinsic()
-
-    val PressureInput: Double
-      get() = intrinsic()
-
-    val PressureOutput: Double
-      get() = intrinsic()
-
-    val PressureOutput2: Double
-      get() = intrinsic()
-
-    val Ratio: Double
-      get() = intrinsic()
-
-    val RatioCarbonDioxideInput: Double
-      get() = intrinsic()
-
-    val RatioCarbonDioxideOutput: Double
-      get() = intrinsic()
-
-    val RatioCarbonDioxideOutput2: Double
-      get() = intrinsic()
-
-    val RatioHeliumInput: Double
-      get() = intrinsic()
-
-    val RatioHeliumOutput: Double
-      get() = intrinsic()
-
-    val RatioHeliumOutput2: Double
-      get() = intrinsic()
-
-    val RatioHydrazineInput: Double
-      get() = intrinsic()
-
-    val RatioHydrazineOutput: Double
-      get() = intrinsic()
-
-    val RatioHydrazineOutput2: Double
-      get() = intrinsic()
-
-    val RatioHydrochloricAcidInput: Double
-      get() = intrinsic()
-
-    val RatioHydrochloricAcidOutput: Double
-      get() = intrinsic()
-
-    val RatioHydrochloricAcidOutput2: Double
-      get() = intrinsic()
-
-    val RatioHydrogenInput: Double
-      get() = intrinsic()
-
-    val RatioHydrogenOutput: Double
-      get() = intrinsic()
-
-    val RatioHydrogenOutput2: Double
-      get() = intrinsic()
-
-    val RatioLiquidAlcoholInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidAlcoholOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidAlcoholOutput2: Double
-      get() = intrinsic()
-
-    val RatioLiquidCarbonDioxideInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidCarbonDioxideOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidCarbonDioxideOutput2: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrazineInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrazineOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrazineOutput2: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrochloricAcidInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrochloricAcidOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrochloricAcidOutput2: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrogenInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrogenOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrogenOutput2: Double
-      get() = intrinsic()
-
-    val RatioLiquidMethaneInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidMethaneOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidMethaneOutput2: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrogenInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrogenOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrogenOutput2: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrousOxideInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrousOxideOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrousOxideOutput2: Double
-      get() = intrinsic()
-
-    val RatioLiquidOxygenInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidOxygenOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidOxygenOutput2: Double
-      get() = intrinsic()
-
-    val RatioLiquidOzoneInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidOzoneOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidOzoneOutput2: Double
-      get() = intrinsic()
-
-    val RatioLiquidPollutantInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidPollutantOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidPollutantOutput2: Double
-      get() = intrinsic()
-
-    val RatioLiquidSilanolInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidSilanolOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidSilanolOutput2: Double
-      get() = intrinsic()
-
-    val RatioLiquidSodiumChlorideInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidSodiumChlorideOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidSodiumChlorideOutput2: Double
-      get() = intrinsic()
-
-    val RatioMethaneInput: Double
-      get() = intrinsic()
-
-    val RatioMethaneOutput: Double
-      get() = intrinsic()
-
-    val RatioMethaneOutput2: Double
-      get() = intrinsic()
-
-    val RatioNitrogenInput: Double
-      get() = intrinsic()
-
-    val RatioNitrogenOutput: Double
-      get() = intrinsic()
-
-    val RatioNitrogenOutput2: Double
-      get() = intrinsic()
-
-    val RatioNitrousOxideInput: Double
-      get() = intrinsic()
-
-    val RatioNitrousOxideOutput: Double
-      get() = intrinsic()
-
-    val RatioNitrousOxideOutput2: Double
-      get() = intrinsic()
-
-    val RatioOxygenInput: Double
-      get() = intrinsic()
-
-    val RatioOxygenOutput: Double
-      get() = intrinsic()
-
-    val RatioOxygenOutput2: Double
-      get() = intrinsic()
-
-    val RatioOzoneInput: Double
-      get() = intrinsic()
-
-    val RatioOzoneOutput: Double
-      get() = intrinsic()
-
-    val RatioOzoneOutput2: Double
-      get() = intrinsic()
-
-    val RatioPollutantInput: Double
-      get() = intrinsic()
-
-    val RatioPollutantOutput: Double
-      get() = intrinsic()
-
-    val RatioPollutantOutput2: Double
-      get() = intrinsic()
-
-    val RatioPollutedWaterInput: Double
-      get() = intrinsic()
-
-    val RatioPollutedWaterOutput: Double
-      get() = intrinsic()
-
-    val RatioPollutedWaterOutput2: Double
-      get() = intrinsic()
-
-    val RatioSilanolInput: Double
-      get() = intrinsic()
-
-    val RatioSilanolOutput: Double
-      get() = intrinsic()
-
-    val RatioSilanolOutput2: Double
-      get() = intrinsic()
-
-    val RatioSteamInput: Double
-      get() = intrinsic()
-
-    val RatioSteamOutput: Double
-      get() = intrinsic()
-
-    val RatioSteamOutput2: Double
-      get() = intrinsic()
-
-    val RatioWaterInput: Double
-      get() = intrinsic()
-
-    val RatioWaterOutput: Double
-      get() = intrinsic()
-
-    val RatioWaterOutput2: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-
-    val TemperatureDifferentialEfficiency: Double
-      get() = intrinsic()
-
-    val TemperatureInput: Double
-      get() = intrinsic()
-
-    val TemperatureOutput: Double
-      get() = intrinsic()
-
-    val TemperatureOutput2: Double
-      get() = intrinsic()
-
-    val TotalMolesInput: Double
-      get() = intrinsic()
-
-    val TotalMolesOutput: Double
-      get() = intrinsic()
-
-    val TotalMolesOutput2: Double
-      get() = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Reading>
+  class Batch internal constructor() : DeviceBatch<AirConditioner>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<DataDiskSlot>>
       get() = intrinsic()
   }
 }
@@ -13111,71 +6843,11 @@ object Airlocks {
   fun at(pin: Device): Airlock = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<Airlock>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Mode: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Open: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Idle: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val Mode: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Open: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<Airlock> = intrinsic()
 }
 
 /** A StructureAirlockGate. */
@@ -13221,71 +6893,11 @@ object AirlockGates {
   fun at(pin: Device): AirlockGate = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<AirlockGate>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Mode: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Open: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Idle: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val Mode: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Open: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<AirlockGate> = intrinsic()
 }
 
 /** A StructureAirlockWide. */
@@ -13331,71 +6943,11 @@ object AirlockWides {
   fun at(pin: Device): AirlockWide = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<AirlockWide>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Mode: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Open: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Idle: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val Mode: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Open: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<AirlockWide> = intrinsic()
 }
 
 /** A StructureArcFurnace. */
@@ -13472,77 +7024,9 @@ object ArcFurnaces {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Activate: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var ClearMemory: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Activate: Double
-      get() = intrinsic()
-
-    val ClearMemory: Double
-      get() = intrinsic()
-
-    val Error: Double
-      get() = intrinsic()
-
-    val ExportCount: Double
-      get() = intrinsic()
-
-    val Idle: Double
-      get() = intrinsic()
-
-    val ImportCount: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val Reagents: Double
-      get() = intrinsic()
-
-    val RecipeHash: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Reading>
+  class Batch internal constructor() : DeviceBatch<ArcFurnace>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<DataDiskSlot>>
       get() = intrinsic()
   }
 }
@@ -13621,77 +7105,9 @@ object AreaPowerControls {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Mode: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Open: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<CommonSlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Charge: Double
-      get() = intrinsic()
-
-    val Error: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val Maximum: Double
-      get() = intrinsic()
-
-    val Mode: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Open: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val PowerActual: Double
-      get() = intrinsic()
-
-    val PowerPotential: Double
-      get() = intrinsic()
-
-    val Ratio: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val slots: Slots<CommonSlot.Reading>
+  class Batch internal constructor() : DeviceBatch<AreaPowerControl>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<CommonSlot>>
       get() = intrinsic()
   }
 }
@@ -13770,77 +7186,9 @@ object AreaPowerControlReverseds {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Mode: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Open: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<CommonSlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Charge: Double
-      get() = intrinsic()
-
-    val Error: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val Maximum: Double
-      get() = intrinsic()
-
-    val Mode: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Open: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val PowerActual: Double
-      get() = intrinsic()
-
-    val PowerPotential: Double
-      get() = intrinsic()
-
-    val Ratio: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val slots: Slots<CommonSlot.Reading>
+  class Batch internal constructor() : DeviceBatch<AreaPowerControlReversed>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<CommonSlot>>
       get() = intrinsic()
   }
 }
@@ -13910,68 +7258,9 @@ object AutoMinerSmalls {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Activate: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var ClearMemory: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Open: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Activate: Double
-      get() = intrinsic()
-
-    val ClearMemory: Double
-      get() = intrinsic()
-
-    val Error: Double
-      get() = intrinsic()
-
-    val ExportCount: Double
-      get() = intrinsic()
-
-    val ImportCount: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Open: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Reading>
+  class Batch internal constructor() : DeviceBatch<AutoMinerSmall>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<DataDiskSlot>>
       get() = intrinsic()
   }
 }
@@ -14058,91 +7347,9 @@ object Autolathes {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Activate: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var ClearMemory: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Open: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var RecipeHash: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Activate: Double
-      get() = intrinsic()
-
-    val ClearMemory: Double
-      get() = intrinsic()
-
-    val CompletionRatio: Double
-      get() = intrinsic()
-
-    val Error: Double
-      get() = intrinsic()
-
-    val ExportCount: Double
-      get() = intrinsic()
-
-    val ImportCount: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Open: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val Reagents: Double
-      get() = intrinsic()
-
-    val RecipeHash: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val StackSize: Double
-      get() = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Reading>
+  class Batch internal constructor() : DeviceBatch<Autolathe>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<DataDiskSlot>>
       get() = intrinsic()
   }
 }
@@ -14229,91 +7436,9 @@ object AutomatedOvens {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Activate: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var ClearMemory: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Open: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var RecipeHash: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Activate: Double
-      get() = intrinsic()
-
-    val ClearMemory: Double
-      get() = intrinsic()
-
-    val CompletionRatio: Double
-      get() = intrinsic()
-
-    val Error: Double
-      get() = intrinsic()
-
-    val ExportCount: Double
-      get() = intrinsic()
-
-    val ImportCount: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Open: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val Reagents: Double
-      get() = intrinsic()
-
-    val RecipeHash: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val StackSize: Double
-      get() = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Reading>
+  class Batch internal constructor() : DeviceBatch<AutomatedOven>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<DataDiskSlot>>
       get() = intrinsic()
   }
 }
@@ -14359,63 +7484,11 @@ object BackLiquidPressureRegulators {
   fun at(pin: Device): BackLiquidPressureRegulator = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<BackLiquidPressureRegulator>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Error: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val Maximum: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val Ratio: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<BackLiquidPressureRegulator> = intrinsic()
 }
 
 /** A StructureBackPressureRegulator. */
@@ -14459,63 +7532,11 @@ object BackPressureRegulators {
   fun at(pin: Device): BackPressureRegulator = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<BackPressureRegulator>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Error: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val Maximum: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val Ratio: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<BackPressureRegulator> = intrinsic()
 }
 
 /** A StructureBasketHoop. */
@@ -14550,54 +7571,11 @@ object BasketHoops {
   fun at(pin: Device): BasketHoop = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<BasketHoop>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Lock: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<BasketHoop> = intrinsic()
 }
 
 /** A StructureBatteryCharger. */
@@ -14641,48 +7619,9 @@ object BatteryChargers {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Activate: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<BatterySlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Activate: Double
-      get() = intrinsic()
-
-    val Error: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val slots: Slots<BatterySlot.Reading>
+  class Batch internal constructor() : DeviceBatch<BatteryCharger>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<BatterySlot>>
       get() = intrinsic()
   }
 }
@@ -14728,48 +7667,9 @@ object BatteryChargerSmalls {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Activate: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<BatterySlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Activate: Double
-      get() = intrinsic()
-
-    val Error: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val slots: Slots<BatterySlot.Reading>
+  class Batch internal constructor() : DeviceBatch<BatteryChargerSmall>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<BatterySlot>>
       get() = intrinsic()
   }
 }
@@ -14818,66 +7718,11 @@ object StructureBeacons {
   fun at(pin: Device): StructureBeacon = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<StructureBeacon>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Color: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Color: Double
-      get() = intrinsic()
-
-    val Error: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val PositionX: Double
-      get() = intrinsic()
-
-    val PositionY: Double
-      get() = intrinsic()
-
-    val PositionZ: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<StructureBeacon> = intrinsic()
 }
 
 /** A StructureBench. */
@@ -14927,41 +7772,9 @@ object Benches {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<ApplianceSlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Error: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val slots: Slots<ApplianceSlot.Reading>
+  class Batch internal constructor() : DeviceBatch<Bench>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<ApplianceSlot>>
       get() = intrinsic()
   }
 }
@@ -15013,41 +7826,9 @@ object Bench1s {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<ApplianceSlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Error: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val slots: Slots<ApplianceSlot.Reading>
+  class Batch internal constructor() : DeviceBatch<Bench1>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<ApplianceSlot>>
       get() = intrinsic()
   }
 }
@@ -15099,41 +7880,9 @@ object Bench2s {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<ApplianceSlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Error: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val slots: Slots<ApplianceSlot.Reading>
+  class Batch internal constructor() : DeviceBatch<Bench2>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<ApplianceSlot>>
       get() = intrinsic()
   }
 }
@@ -15185,41 +7934,9 @@ object Bench3s {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<ApplianceSlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Error: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val slots: Slots<ApplianceSlot.Reading>
+  class Batch internal constructor() : DeviceBatch<Bench3>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<ApplianceSlot>>
       get() = intrinsic()
   }
 }
@@ -15271,41 +7988,9 @@ object Bench4s {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<ApplianceSlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Error: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val slots: Slots<ApplianceSlot.Reading>
+  class Batch internal constructor() : DeviceBatch<Bench4>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<ApplianceSlot>>
       get() = intrinsic()
   }
 }
@@ -15353,71 +8038,11 @@ object BlastDoors {
   fun at(pin: Device): BlastDoor = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<BlastDoor>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Mode: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Open: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Idle: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val Mode: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Open: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<BlastDoor> = intrinsic()
 }
 
 /** A StructureBlockBed. */
@@ -15466,48 +8091,9 @@ object BlockBeds {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Activate: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Activate: Double
-      get() = intrinsic()
-
-    val Error: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Reading>
+  class Batch internal constructor() : DeviceBatch<BlockBed>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<DataDiskSlot>>
       get() = intrinsic()
   }
 }
@@ -15535,36 +8121,11 @@ object CableAnalysizers {
   fun at(pin: Device): CableAnalysizer = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<CableAnalysizer>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val PowerActual: Double
-      get() = intrinsic()
-
-    val PowerPotential: Double
-      get() = intrinsic()
-
-    val PowerRequired: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<CableAnalysizer> = intrinsic()
 }
 
 /** A StructureCamera. */
@@ -15589,41 +8150,11 @@ object Cameras {
   fun at(pin: Device): Camera = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<Camera>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Mode: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Mode: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<Camera> = intrinsic()
 }
 
 /** A StructureCapsuleTankGas. */
@@ -15827,217 +8358,11 @@ object CapsuleTankGases {
   fun at(pin: Device): CapsuleTankGas = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<CapsuleTankGas>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Combustion: Double
-      get() = intrinsic()
-
-    val CombustionOutput: Double
-      get() = intrinsic()
-
-    val Maximum: Double
-      get() = intrinsic()
-
-    val Pressure: Double
-      get() = intrinsic()
-
-    val PressureOutput: Double
-      get() = intrinsic()
-
-    val Ratio: Double
-      get() = intrinsic()
-
-    val RatioCarbonDioxide: Double
-      get() = intrinsic()
-
-    val RatioCarbonDioxideOutput: Double
-      get() = intrinsic()
-
-    val RatioHelium: Double
-      get() = intrinsic()
-
-    val RatioHeliumOutput: Double
-      get() = intrinsic()
-
-    val RatioHydrazine: Double
-      get() = intrinsic()
-
-    val RatioHydrazineOutput: Double
-      get() = intrinsic()
-
-    val RatioHydrochloricAcid: Double
-      get() = intrinsic()
-
-    val RatioHydrochloricAcidOutput: Double
-      get() = intrinsic()
-
-    val RatioHydrogen: Double
-      get() = intrinsic()
-
-    val RatioHydrogenOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidAlcohol: Double
-      get() = intrinsic()
-
-    val RatioLiquidAlcoholOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidCarbonDioxide: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrazine: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrazineOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrochloricAcid: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrochloricAcidOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrogenOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidMethane: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrousOxide: Double
-      get() = intrinsic()
-
-    val RatioLiquidOxygen: Double
-      get() = intrinsic()
-
-    val RatioLiquidOzone: Double
-      get() = intrinsic()
-
-    val RatioLiquidOzoneOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidPollutant: Double
-      get() = intrinsic()
-
-    val RatioLiquidSilanol: Double
-      get() = intrinsic()
-
-    val RatioLiquidSilanolOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidSodiumChloride: Double
-      get() = intrinsic()
-
-    val RatioLiquidSodiumChlorideOutput: Double
-      get() = intrinsic()
-
-    val RatioMethane: Double
-      get() = intrinsic()
-
-    val RatioMethaneOutput: Double
-      get() = intrinsic()
-
-    val RatioNitrogen: Double
-      get() = intrinsic()
-
-    val RatioNitrogenOutput: Double
-      get() = intrinsic()
-
-    val RatioNitrousOxide: Double
-      get() = intrinsic()
-
-    val RatioNitrousOxideOutput: Double
-      get() = intrinsic()
-
-    val RatioOxygen: Double
-      get() = intrinsic()
-
-    val RatioOxygenOutput: Double
-      get() = intrinsic()
-
-    val RatioOzone: Double
-      get() = intrinsic()
-
-    val RatioOzoneOutput: Double
-      get() = intrinsic()
-
-    val RatioPollutant: Double
-      get() = intrinsic()
-
-    val RatioPollutantOutput: Double
-      get() = intrinsic()
-
-    val RatioPollutedWater: Double
-      get() = intrinsic()
-
-    val RatioPollutedWaterOutput: Double
-      get() = intrinsic()
-
-    val RatioSilanol: Double
-      get() = intrinsic()
-
-    val RatioSilanolOutput: Double
-      get() = intrinsic()
-
-    val RatioSteam: Double
-      get() = intrinsic()
-
-    val RatioWater: Double
-      get() = intrinsic()
-
-    val RatioWaterOutput: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-
-    val Temperature: Double
-      get() = intrinsic()
-
-    val TemperatureOutput: Double
-      get() = intrinsic()
-
-    val TotalMoles: Double
-      get() = intrinsic()
-
-    val TotalMolesOutput: Double
-      get() = intrinsic()
-
-    val Volume: Double
-      get() = intrinsic()
-
-    val VolumeOfLiquid: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<CapsuleTankGas> = intrinsic()
 }
 
 /** A StructureCapsuleTankLiquid. */
@@ -16241,217 +8566,11 @@ object CapsuleTankLiquids {
   fun at(pin: Device): CapsuleTankLiquid = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<CapsuleTankLiquid>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Combustion: Double
-      get() = intrinsic()
-
-    val CombustionOutput: Double
-      get() = intrinsic()
-
-    val Maximum: Double
-      get() = intrinsic()
-
-    val Pressure: Double
-      get() = intrinsic()
-
-    val PressureOutput: Double
-      get() = intrinsic()
-
-    val Ratio: Double
-      get() = intrinsic()
-
-    val RatioCarbonDioxide: Double
-      get() = intrinsic()
-
-    val RatioCarbonDioxideOutput: Double
-      get() = intrinsic()
-
-    val RatioHelium: Double
-      get() = intrinsic()
-
-    val RatioHeliumOutput: Double
-      get() = intrinsic()
-
-    val RatioHydrazine: Double
-      get() = intrinsic()
-
-    val RatioHydrazineOutput: Double
-      get() = intrinsic()
-
-    val RatioHydrochloricAcid: Double
-      get() = intrinsic()
-
-    val RatioHydrochloricAcidOutput: Double
-      get() = intrinsic()
-
-    val RatioHydrogen: Double
-      get() = intrinsic()
-
-    val RatioHydrogenOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidAlcohol: Double
-      get() = intrinsic()
-
-    val RatioLiquidAlcoholOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidCarbonDioxide: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrazine: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrazineOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrochloricAcid: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrochloricAcidOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrogenOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidMethane: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrousOxide: Double
-      get() = intrinsic()
-
-    val RatioLiquidOxygen: Double
-      get() = intrinsic()
-
-    val RatioLiquidOzone: Double
-      get() = intrinsic()
-
-    val RatioLiquidOzoneOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidPollutant: Double
-      get() = intrinsic()
-
-    val RatioLiquidSilanol: Double
-      get() = intrinsic()
-
-    val RatioLiquidSilanolOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidSodiumChloride: Double
-      get() = intrinsic()
-
-    val RatioLiquidSodiumChlorideOutput: Double
-      get() = intrinsic()
-
-    val RatioMethane: Double
-      get() = intrinsic()
-
-    val RatioMethaneOutput: Double
-      get() = intrinsic()
-
-    val RatioNitrogen: Double
-      get() = intrinsic()
-
-    val RatioNitrogenOutput: Double
-      get() = intrinsic()
-
-    val RatioNitrousOxide: Double
-      get() = intrinsic()
-
-    val RatioNitrousOxideOutput: Double
-      get() = intrinsic()
-
-    val RatioOxygen: Double
-      get() = intrinsic()
-
-    val RatioOxygenOutput: Double
-      get() = intrinsic()
-
-    val RatioOzone: Double
-      get() = intrinsic()
-
-    val RatioOzoneOutput: Double
-      get() = intrinsic()
-
-    val RatioPollutant: Double
-      get() = intrinsic()
-
-    val RatioPollutantOutput: Double
-      get() = intrinsic()
-
-    val RatioPollutedWater: Double
-      get() = intrinsic()
-
-    val RatioPollutedWaterOutput: Double
-      get() = intrinsic()
-
-    val RatioSilanol: Double
-      get() = intrinsic()
-
-    val RatioSilanolOutput: Double
-      get() = intrinsic()
-
-    val RatioSteam: Double
-      get() = intrinsic()
-
-    val RatioWater: Double
-      get() = intrinsic()
-
-    val RatioWaterOutput: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-
-    val Temperature: Double
-      get() = intrinsic()
-
-    val TemperatureOutput: Double
-      get() = intrinsic()
-
-    val TotalMoles: Double
-      get() = intrinsic()
-
-    val TotalMolesOutput: Double
-      get() = intrinsic()
-
-    val Volume: Double
-      get() = intrinsic()
-
-    val VolumeOfLiquid: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<CapsuleTankLiquid> = intrinsic()
 }
 
 /** A StructureCargoStorageMedium. */
@@ -16525,74 +8644,9 @@ object CargoStorageMediums {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var ClearMemory: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Open: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val ClearMemory: Double
-      get() = intrinsic()
-
-    val Error: Double
-      get() = intrinsic()
-
-    val ExportCount: Double
-      get() = intrinsic()
-
-    val ImportCount: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Open: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val Quantity: Double
-      get() = intrinsic()
-
-    val Ratio: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Reading>
+  class Batch internal constructor() : DeviceBatch<CargoStorageMedium>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<DataDiskSlot>>
       get() = intrinsic()
   }
 }
@@ -16668,74 +8722,9 @@ object CargoStorageSmalls {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var ClearMemory: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Open: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val ClearMemory: Double
-      get() = intrinsic()
-
-    val Error: Double
-      get() = intrinsic()
-
-    val ExportCount: Double
-      get() = intrinsic()
-
-    val ImportCount: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Open: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val Quantity: Double
-      get() = intrinsic()
-
-    val Ratio: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Reading>
+  class Batch internal constructor() : DeviceBatch<CargoStorageSmall>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<DataDiskSlot>>
       get() = intrinsic()
   }
 }
@@ -16804,64 +8793,9 @@ object Centrifuges {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var ClearMemory: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Open: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val ClearMemory: Double
-      get() = intrinsic()
-
-    val Error: Double
-      get() = intrinsic()
-
-    val ExportCount: Double
-      get() = intrinsic()
-
-    val ImportCount: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Open: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val Reagents: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Reading>
+  class Batch internal constructor() : DeviceBatch<Centrifuge>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<DataDiskSlot>>
       get() = intrinsic()
   }
 }
@@ -16916,55 +8850,9 @@ object ChuteBins {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Open: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Error: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Open: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Reading>
+  class Batch internal constructor() : DeviceBatch<ChuteBin>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<DataDiskSlot>>
       get() = intrinsic()
   }
 }
@@ -17024,66 +8912,9 @@ object ChuteDigitalFlipFlopSplitterLefts {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Mode: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Quantity: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var SettingOutput: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Mode: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val Quantity: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-
-    val SettingOutput: Double
-      get() = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Reading>
+  class Batch internal constructor() : DeviceBatch<ChuteDigitalFlipFlopSplitterLeft>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<DataDiskSlot>>
       get() = intrinsic()
   }
 }
@@ -17143,66 +8974,9 @@ object ChuteDigitalFlipFlopSplitterRights {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Mode: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Quantity: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var SettingOutput: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Mode: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val Quantity: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-
-    val SettingOutput: Double
-      get() = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Reading>
+  class Batch internal constructor() : DeviceBatch<ChuteDigitalFlipFlopSplitterRight>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<DataDiskSlot>>
       get() = intrinsic()
   }
 }
@@ -17262,66 +9036,9 @@ object ChuteDigitalValveLefts {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Open: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Quantity: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Lock: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Open: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val Quantity: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Reading>
+  class Batch internal constructor() : DeviceBatch<ChuteDigitalValveLeft>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<DataDiskSlot>>
       get() = intrinsic()
   }
 }
@@ -17381,66 +9098,9 @@ object ChuteDigitalValveRights {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Open: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Quantity: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Lock: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Open: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val Quantity: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Reading>
+  class Batch internal constructor() : DeviceBatch<ChuteDigitalValveRight>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<DataDiskSlot>>
       get() = intrinsic()
   }
 }
@@ -17495,55 +9155,9 @@ object ChuteExportBins {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Open: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Error: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Open: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Reading>
+  class Batch internal constructor() : DeviceBatch<ChuteExportBin>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<DataDiskSlot>>
       get() = intrinsic()
   }
 }
@@ -17588,42 +9202,9 @@ object ChuteInlets {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var ClearMemory: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val ClearMemory: Double
-      get() = intrinsic()
-
-    val ImportCount: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Reading>
+  class Batch internal constructor() : DeviceBatch<ChuteInlet>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<DataDiskSlot>>
       get() = intrinsic()
   }
 }
@@ -17671,45 +9252,9 @@ object ChuteOutlets {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var ClearMemory: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val ClearMemory: Double
-      get() = intrinsic()
-
-    val ExportCount: Double
-      get() = intrinsic()
-
-    val ImportCount: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Reading>
+  class Batch internal constructor() : DeviceBatch<ChuteOutlet>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<DataDiskSlot>>
       get() = intrinsic()
   }
 }
@@ -17767,58 +9312,9 @@ object ChuteUmbilicalMales {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Open: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Error: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val Mode: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Open: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Reading>
+  class Batch internal constructor() : DeviceBatch<ChuteUmbilicalMale>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<DataDiskSlot>>
       get() = intrinsic()
   }
 }
@@ -17880,65 +9376,9 @@ object CircuitHousings {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var LineNumber: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Mode: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<CommonSlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Error: Double
-      get() = intrinsic()
-
-    val LineNumber: Double
-      get() = intrinsic()
-
-    val Mode: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-
-    val StackSize: Double
-      get() = intrinsic()
-
-    val slots: Slots<CommonSlot.Reading>
+  class Batch internal constructor() : DeviceBatch<CircuitHousing>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<CommonSlot>>
       get() = intrinsic()
   }
 }
@@ -18000,65 +9440,9 @@ object CircuitHousingCompacts {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var LineNumber: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Mode: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<ProgrammableChipSlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Error: Double
-      get() = intrinsic()
-
-    val LineNumber: Double
-      get() = intrinsic()
-
-    val Mode: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-
-    val StackSize: Double
-      get() = intrinsic()
-
-    val slots: Slots<ProgrammableChipSlot.Reading>
+  class Batch internal constructor() : DeviceBatch<CircuitHousingCompact>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<ProgrammableChipSlot>>
       get() = intrinsic()
   }
 }
@@ -18438,379 +9822,9 @@ object CombustionCentrifuges {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var ClearMemory: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var CombustionLimiter: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Open: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Throttle: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val ClearMemory: Double
-      get() = intrinsic()
-
-    val Combustion: Double
-      get() = intrinsic()
-
-    val CombustionInput: Double
-      get() = intrinsic()
-
-    val CombustionLimiter: Double
-      get() = intrinsic()
-
-    val CombustionOutput: Double
-      get() = intrinsic()
-
-    val Error: Double
-      get() = intrinsic()
-
-    val ExportCount: Double
-      get() = intrinsic()
-
-    val ImportCount: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Open: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val Pressure: Double
-      get() = intrinsic()
-
-    val PressureInput: Double
-      get() = intrinsic()
-
-    val PressureOutput: Double
-      get() = intrinsic()
-
-    val RatioCarbonDioxide: Double
-      get() = intrinsic()
-
-    val RatioCarbonDioxideInput: Double
-      get() = intrinsic()
-
-    val RatioCarbonDioxideOutput: Double
-      get() = intrinsic()
-
-    val RatioHelium: Double
-      get() = intrinsic()
-
-    val RatioHeliumInput: Double
-      get() = intrinsic()
-
-    val RatioHeliumOutput: Double
-      get() = intrinsic()
-
-    val RatioHydrazine: Double
-      get() = intrinsic()
-
-    val RatioHydrazineInput: Double
-      get() = intrinsic()
-
-    val RatioHydrazineOutput: Double
-      get() = intrinsic()
-
-    val RatioHydrochloricAcid: Double
-      get() = intrinsic()
-
-    val RatioHydrochloricAcidInput: Double
-      get() = intrinsic()
-
-    val RatioHydrochloricAcidOutput: Double
-      get() = intrinsic()
-
-    val RatioHydrogen: Double
-      get() = intrinsic()
-
-    val RatioHydrogenInput: Double
-      get() = intrinsic()
-
-    val RatioHydrogenOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidAlcohol: Double
-      get() = intrinsic()
-
-    val RatioLiquidAlcoholInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidAlcoholOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidCarbonDioxide: Double
-      get() = intrinsic()
-
-    val RatioLiquidCarbonDioxideInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidCarbonDioxideOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrazine: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrazineInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrazineOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrochloricAcid: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrochloricAcidInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrochloricAcidOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrogenInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrogenOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidMethane: Double
-      get() = intrinsic()
-
-    val RatioLiquidMethaneInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidMethaneOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrogenInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrogenOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrousOxide: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrousOxideInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrousOxideOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidOxygen: Double
-      get() = intrinsic()
-
-    val RatioLiquidOxygenInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidOxygenOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidOzone: Double
-      get() = intrinsic()
-
-    val RatioLiquidOzoneInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidOzoneOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidPollutant: Double
-      get() = intrinsic()
-
-    val RatioLiquidPollutantInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidPollutantOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidSilanol: Double
-      get() = intrinsic()
-
-    val RatioLiquidSilanolInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidSilanolOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidSodiumChloride: Double
-      get() = intrinsic()
-
-    val RatioLiquidSodiumChlorideInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidSodiumChlorideOutput: Double
-      get() = intrinsic()
-
-    val RatioMethane: Double
-      get() = intrinsic()
-
-    val RatioMethaneInput: Double
-      get() = intrinsic()
-
-    val RatioMethaneOutput: Double
-      get() = intrinsic()
-
-    val RatioNitrogen: Double
-      get() = intrinsic()
-
-    val RatioNitrogenInput: Double
-      get() = intrinsic()
-
-    val RatioNitrogenOutput: Double
-      get() = intrinsic()
-
-    val RatioNitrousOxide: Double
-      get() = intrinsic()
-
-    val RatioNitrousOxideInput: Double
-      get() = intrinsic()
-
-    val RatioNitrousOxideOutput: Double
-      get() = intrinsic()
-
-    val RatioOxygen: Double
-      get() = intrinsic()
-
-    val RatioOxygenInput: Double
-      get() = intrinsic()
-
-    val RatioOxygenOutput: Double
-      get() = intrinsic()
-
-    val RatioOzone: Double
-      get() = intrinsic()
-
-    val RatioOzoneInput: Double
-      get() = intrinsic()
-
-    val RatioOzoneOutput: Double
-      get() = intrinsic()
-
-    val RatioPollutant: Double
-      get() = intrinsic()
-
-    val RatioPollutantInput: Double
-      get() = intrinsic()
-
-    val RatioPollutantOutput: Double
-      get() = intrinsic()
-
-    val RatioPollutedWater: Double
-      get() = intrinsic()
-
-    val RatioPollutedWaterInput: Double
-      get() = intrinsic()
-
-    val RatioPollutedWaterOutput: Double
-      get() = intrinsic()
-
-    val RatioSilanol: Double
-      get() = intrinsic()
-
-    val RatioSilanolInput: Double
-      get() = intrinsic()
-
-    val RatioSilanolOutput: Double
-      get() = intrinsic()
-
-    val RatioSteam: Double
-      get() = intrinsic()
-
-    val RatioSteamInput: Double
-      get() = intrinsic()
-
-    val RatioSteamOutput: Double
-      get() = intrinsic()
-
-    val RatioWater: Double
-      get() = intrinsic()
-
-    val RatioWaterInput: Double
-      get() = intrinsic()
-
-    val RatioWaterOutput: Double
-      get() = intrinsic()
-
-    val Reagents: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val Rpm: Double
-      get() = intrinsic()
-
-    val Stress: Double
-      get() = intrinsic()
-
-    val Temperature: Double
-      get() = intrinsic()
-
-    val TemperatureInput: Double
-      get() = intrinsic()
-
-    val TemperatureOutput: Double
-      get() = intrinsic()
-
-    val Throttle: Double
-      get() = intrinsic()
-
-    val TotalMoles: Double
-      get() = intrinsic()
-
-    val TotalMolesInput: Double
-      get() = intrinsic()
-
-    val TotalMolesOutput: Double
-      get() = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Reading>
+  class Batch internal constructor() : DeviceBatch<CombustionCentrifuge>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<DataDiskSlot>>
       get() = intrinsic()
   }
 }
@@ -19182,376 +10196,9 @@ object CombustionDeepMiners {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var ClearMemory: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var CombustionLimiter: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Open: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Throttle: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val ClearMemory: Double
-      get() = intrinsic()
-
-    val Combustion: Double
-      get() = intrinsic()
-
-    val CombustionInput: Double
-      get() = intrinsic()
-
-    val CombustionLimiter: Double
-      get() = intrinsic()
-
-    val CombustionOutput: Double
-      get() = intrinsic()
-
-    val Error: Double
-      get() = intrinsic()
-
-    val ExportCount: Double
-      get() = intrinsic()
-
-    val ImportCount: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Open: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val Pressure: Double
-      get() = intrinsic()
-
-    val PressureInput: Double
-      get() = intrinsic()
-
-    val PressureOutput: Double
-      get() = intrinsic()
-
-    val RatioCarbonDioxide: Double
-      get() = intrinsic()
-
-    val RatioCarbonDioxideInput: Double
-      get() = intrinsic()
-
-    val RatioCarbonDioxideOutput: Double
-      get() = intrinsic()
-
-    val RatioHelium: Double
-      get() = intrinsic()
-
-    val RatioHeliumInput: Double
-      get() = intrinsic()
-
-    val RatioHeliumOutput: Double
-      get() = intrinsic()
-
-    val RatioHydrazine: Double
-      get() = intrinsic()
-
-    val RatioHydrazineInput: Double
-      get() = intrinsic()
-
-    val RatioHydrazineOutput: Double
-      get() = intrinsic()
-
-    val RatioHydrochloricAcid: Double
-      get() = intrinsic()
-
-    val RatioHydrochloricAcidInput: Double
-      get() = intrinsic()
-
-    val RatioHydrochloricAcidOutput: Double
-      get() = intrinsic()
-
-    val RatioHydrogen: Double
-      get() = intrinsic()
-
-    val RatioHydrogenInput: Double
-      get() = intrinsic()
-
-    val RatioHydrogenOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidAlcohol: Double
-      get() = intrinsic()
-
-    val RatioLiquidAlcoholInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidAlcoholOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidCarbonDioxide: Double
-      get() = intrinsic()
-
-    val RatioLiquidCarbonDioxideInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidCarbonDioxideOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrazine: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrazineInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrazineOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrochloricAcid: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrochloricAcidInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrochloricAcidOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrogenInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrogenOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidMethane: Double
-      get() = intrinsic()
-
-    val RatioLiquidMethaneInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidMethaneOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrogenInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrogenOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrousOxide: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrousOxideInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrousOxideOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidOxygen: Double
-      get() = intrinsic()
-
-    val RatioLiquidOxygenInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidOxygenOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidOzone: Double
-      get() = intrinsic()
-
-    val RatioLiquidOzoneInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidOzoneOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidPollutant: Double
-      get() = intrinsic()
-
-    val RatioLiquidPollutantInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidPollutantOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidSilanol: Double
-      get() = intrinsic()
-
-    val RatioLiquidSilanolInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidSilanolOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidSodiumChloride: Double
-      get() = intrinsic()
-
-    val RatioLiquidSodiumChlorideInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidSodiumChlorideOutput: Double
-      get() = intrinsic()
-
-    val RatioMethane: Double
-      get() = intrinsic()
-
-    val RatioMethaneInput: Double
-      get() = intrinsic()
-
-    val RatioMethaneOutput: Double
-      get() = intrinsic()
-
-    val RatioNitrogen: Double
-      get() = intrinsic()
-
-    val RatioNitrogenInput: Double
-      get() = intrinsic()
-
-    val RatioNitrogenOutput: Double
-      get() = intrinsic()
-
-    val RatioNitrousOxide: Double
-      get() = intrinsic()
-
-    val RatioNitrousOxideInput: Double
-      get() = intrinsic()
-
-    val RatioNitrousOxideOutput: Double
-      get() = intrinsic()
-
-    val RatioOxygen: Double
-      get() = intrinsic()
-
-    val RatioOxygenInput: Double
-      get() = intrinsic()
-
-    val RatioOxygenOutput: Double
-      get() = intrinsic()
-
-    val RatioOzone: Double
-      get() = intrinsic()
-
-    val RatioOzoneInput: Double
-      get() = intrinsic()
-
-    val RatioOzoneOutput: Double
-      get() = intrinsic()
-
-    val RatioPollutant: Double
-      get() = intrinsic()
-
-    val RatioPollutantInput: Double
-      get() = intrinsic()
-
-    val RatioPollutantOutput: Double
-      get() = intrinsic()
-
-    val RatioPollutedWater: Double
-      get() = intrinsic()
-
-    val RatioPollutedWaterInput: Double
-      get() = intrinsic()
-
-    val RatioPollutedWaterOutput: Double
-      get() = intrinsic()
-
-    val RatioSilanol: Double
-      get() = intrinsic()
-
-    val RatioSilanolInput: Double
-      get() = intrinsic()
-
-    val RatioSilanolOutput: Double
-      get() = intrinsic()
-
-    val RatioSteam: Double
-      get() = intrinsic()
-
-    val RatioSteamInput: Double
-      get() = intrinsic()
-
-    val RatioSteamOutput: Double
-      get() = intrinsic()
-
-    val RatioWater: Double
-      get() = intrinsic()
-
-    val RatioWaterInput: Double
-      get() = intrinsic()
-
-    val RatioWaterOutput: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val Rpm: Double
-      get() = intrinsic()
-
-    val Stress: Double
-      get() = intrinsic()
-
-    val Temperature: Double
-      get() = intrinsic()
-
-    val TemperatureInput: Double
-      get() = intrinsic()
-
-    val TemperatureOutput: Double
-      get() = intrinsic()
-
-    val Throttle: Double
-      get() = intrinsic()
-
-    val TotalMoles: Double
-      get() = intrinsic()
-
-    val TotalMolesInput: Double
-      get() = intrinsic()
-
-    val TotalMolesOutput: Double
-      get() = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Reading>
+  class Batch internal constructor() : DeviceBatch<CombustionDeepMiner>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<DataDiskSlot>>
       get() = intrinsic()
   }
 }
@@ -19599,71 +10246,11 @@ object CompositeDoors {
   fun at(pin: Device): CompositeDoor = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<CompositeDoor>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Mode: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Open: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Idle: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val Mode: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Open: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<CompositeDoor> = intrinsic()
 }
 
 /** A StructureCompositeWindowShutterController. */
@@ -19701,57 +10288,11 @@ object CompositeWindowShutterControllers {
   fun at(pin: Device): CompositeWindowShutterController = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<CompositeWindowShutterController>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Open: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Error: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Open: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<CompositeWindowShutterController> = intrinsic()
 }
 
 /** A StructureComputer. */
@@ -19804,55 +10345,9 @@ object Computers {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Open: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Error: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Open: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Reading>
+  class Batch internal constructor() : DeviceBatch<Computer>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<DataDiskSlot>>
       get() = intrinsic()
   }
 }
@@ -19907,55 +10402,9 @@ object ComputerBigScreens {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Open: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Error: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Open: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Reading>
+  class Batch internal constructor() : DeviceBatch<ComputerBigScreen>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<DataDiskSlot>>
       get() = intrinsic()
   }
 }
@@ -20010,55 +10459,9 @@ object ComputerBigScreenWallMounteds {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Open: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Error: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Open: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Reading>
+  class Batch internal constructor() : DeviceBatch<ComputerBigScreenWallMounted>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<DataDiskSlot>>
       get() = intrinsic()
   }
 }
@@ -20113,55 +10516,9 @@ object ComputerUprights {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Open: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Error: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Open: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Reading>
+  class Batch internal constructor() : DeviceBatch<ComputerUpright>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<DataDiskSlot>>
       get() = intrinsic()
   }
 }
@@ -20307,166 +10664,11 @@ object CondensationChambers {
   fun at(pin: Device): CondensationChamber = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<CondensationChamber>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Open: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Combustion: Double
-      get() = intrinsic()
-
-    val Error: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val Maximum: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Open: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val Pressure: Double
-      get() = intrinsic()
-
-    val Ratio: Double
-      get() = intrinsic()
-
-    val RatioCarbonDioxide: Double
-      get() = intrinsic()
-
-    val RatioHelium: Double
-      get() = intrinsic()
-
-    val RatioHydrazine: Double
-      get() = intrinsic()
-
-    val RatioHydrochloricAcid: Double
-      get() = intrinsic()
-
-    val RatioHydrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidAlcohol: Double
-      get() = intrinsic()
-
-    val RatioLiquidCarbonDioxide: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrazine: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrochloricAcid: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidMethane: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrousOxide: Double
-      get() = intrinsic()
-
-    val RatioLiquidOxygen: Double
-      get() = intrinsic()
-
-    val RatioLiquidOzone: Double
-      get() = intrinsic()
-
-    val RatioLiquidPollutant: Double
-      get() = intrinsic()
-
-    val RatioLiquidSilanol: Double
-      get() = intrinsic()
-
-    val RatioLiquidSodiumChloride: Double
-      get() = intrinsic()
-
-    val RatioMethane: Double
-      get() = intrinsic()
-
-    val RatioNitrogen: Double
-      get() = intrinsic()
-
-    val RatioNitrousOxide: Double
-      get() = intrinsic()
-
-    val RatioOxygen: Double
-      get() = intrinsic()
-
-    val RatioOzone: Double
-      get() = intrinsic()
-
-    val RatioPollutant: Double
-      get() = intrinsic()
-
-    val RatioPollutedWater: Double
-      get() = intrinsic()
-
-    val RatioSilanol: Double
-      get() = intrinsic()
-
-    val RatioSteam: Double
-      get() = intrinsic()
-
-    val RatioWater: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-
-    val Temperature: Double
-      get() = intrinsic()
-
-    val TotalMoles: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<CondensationChamber> = intrinsic()
 }
 
 /** A StructureCondensationValve. */
@@ -20497,47 +10699,11 @@ object CondensationValves {
   fun at(pin: Device): CondensationValve = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<CondensationValve>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Maximum: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Ratio: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<CondensationValve> = intrinsic()
 }
 
 /** A StructureConsole. */
@@ -20593,58 +10759,9 @@ object Consoles {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Activate: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Open: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<CircuitboardSlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Activate: Double
-      get() = intrinsic()
-
-    val Error: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Open: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-
-    val slots: Slots<CircuitboardSlot.Reading>
+  class Batch internal constructor() : DeviceBatch<Console>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<CircuitboardSlot>>
       get() = intrinsic()
   }
 }
@@ -20702,58 +10819,9 @@ object ConsoleDuals {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Activate: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Open: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<CircuitboardSlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Activate: Double
-      get() = intrinsic()
-
-    val Error: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Open: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-
-    val slots: Slots<CircuitboardSlot.Reading>
+  class Batch internal constructor() : DeviceBatch<ConsoleDual>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<CircuitboardSlot>>
       get() = intrinsic()
   }
 }
@@ -20811,58 +10879,9 @@ object ConsoleMonitors {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Activate: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Open: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<CircuitboardSlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Activate: Double
-      get() = intrinsic()
-
-    val Error: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Open: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-
-    val slots: Slots<CircuitboardSlot.Reading>
+  class Batch internal constructor() : DeviceBatch<ConsoleMonitor>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<CircuitboardSlot>>
       get() = intrinsic()
   }
 }
@@ -20899,39 +10918,9 @@ object CornerLockers {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Open: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Lock: Double
-      get() = intrinsic()
-
-    val Open: Double
-      get() = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Reading>
+  class Batch internal constructor() : DeviceBatch<CornerLocker>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<DataDiskSlot>>
       get() = intrinsic()
   }
 }
@@ -20975,64 +10964,11 @@ object CrewUmbilicals {
   fun at(pin: Device): CrewUmbilical = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<CrewUmbilical>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Mode: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Open: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Error: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val Mode: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Open: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<CrewUmbilical> = intrinsic()
 }
 
 /** A StructureCryoTubeHorizontal. */
@@ -21117,91 +11053,9 @@ object CryoTubeHorizontals {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Activate: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Mode: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Open: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<CommonSlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Activate: Double
-      get() = intrinsic()
-
-    val EntityState: Double
-      get() = intrinsic()
-
-    val Error: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val Maximum: Double
-      get() = intrinsic()
-
-    val Mode: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Open: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val Pressure: Double
-      get() = intrinsic()
-
-    val Ratio: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-
-    val Temperature: Double
-      get() = intrinsic()
-
-    val slots: Slots<CommonSlot.Reading>
+  class Batch internal constructor() : DeviceBatch<CryoTubeHorizontal>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<CommonSlot>>
       get() = intrinsic()
   }
 }
@@ -21288,91 +11142,9 @@ object CryoTubeVerticals {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Activate: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Mode: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Open: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<CommonSlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Activate: Double
-      get() = intrinsic()
-
-    val EntityState: Double
-      get() = intrinsic()
-
-    val Error: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val Maximum: Double
-      get() = intrinsic()
-
-    val Mode: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Open: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val Pressure: Double
-      get() = intrinsic()
-
-    val Ratio: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-
-    val Temperature: Double
-      get() = intrinsic()
-
-    val slots: Slots<CommonSlot.Reading>
+  class Batch internal constructor() : DeviceBatch<CryoTubeVertical>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<CommonSlot>>
       get() = intrinsic()
   }
 }
@@ -21415,60 +11187,11 @@ object DaylightSensors {
   fun at(pin: Device): DaylightSensor = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<DaylightSensor>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Activate: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Mode: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Activate: Double
-      get() = intrinsic()
-
-    val Horizontal: Double
-      get() = intrinsic()
-
-    val Mode: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val SolarAngle: Double
-      get() = intrinsic()
-
-    val SolarIrradiance: Double
-      get() = intrinsic()
-
-    val Vertical: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<DaylightSensor> = intrinsic()
 }
 
 /** A StructureDeepMiner. */
@@ -21533,67 +11256,9 @@ object DeepMiners {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var ClearMemory: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val ClearMemory: Double
-      get() = intrinsic()
-
-    val Error: Double
-      get() = intrinsic()
-
-    val ExportCount: Double
-      get() = intrinsic()
-
-    val ImportCount: Double
-      get() = intrinsic()
-
-    val Maximum: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val Ratio: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Reading>
+  class Batch internal constructor() : DeviceBatch<DeepMiner>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<DataDiskSlot>>
       get() = intrinsic()
   }
 }
@@ -21639,63 +11304,11 @@ object DigitalValves {
   fun at(pin: Device): DigitalValve = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<DigitalValve>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Error: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val Maximum: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val Ratio: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<DigitalValve> = intrinsic()
 }
 
 /** A StructureDiode. */
@@ -21730,54 +11343,11 @@ object Diodes {
   fun at(pin: Device): Diode = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<Diode>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Color: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Color: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<Diode> = intrinsic()
 }
 
 /** A StructureDiodeSlide. */
@@ -21812,54 +11382,11 @@ object DiodeSlides {
   fun at(pin: Device): DiodeSlide = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<DiodeSlide>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Lock: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<DiodeSlide> = intrinsic()
 }
 
 /** A StructureDrinkingFountain2x1. */
@@ -21889,43 +11416,11 @@ object DrinkingFountain2x1s {
   fun at(pin: Device): DrinkingFountain2x1 = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<DrinkingFountain2x1>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Error: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<DrinkingFountain2x1> = intrinsic()
 }
 
 /** A StructureElectrolyzer. */
@@ -22188,274 +11683,9 @@ object Electrolyzers {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Activate: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Mode: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Open: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Activate: Double
-      get() = intrinsic()
-
-    val CombustionInput: Double
-      get() = intrinsic()
-
-    val CombustionOutput: Double
-      get() = intrinsic()
-
-    val Error: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val Maximum: Double
-      get() = intrinsic()
-
-    val Mode: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Open: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val PressureInput: Double
-      get() = intrinsic()
-
-    val PressureOutput: Double
-      get() = intrinsic()
-
-    val Ratio: Double
-      get() = intrinsic()
-
-    val RatioCarbonDioxideInput: Double
-      get() = intrinsic()
-
-    val RatioCarbonDioxideOutput: Double
-      get() = intrinsic()
-
-    val RatioHeliumInput: Double
-      get() = intrinsic()
-
-    val RatioHeliumOutput: Double
-      get() = intrinsic()
-
-    val RatioHydrazineInput: Double
-      get() = intrinsic()
-
-    val RatioHydrazineOutput: Double
-      get() = intrinsic()
-
-    val RatioHydrochloricAcidInput: Double
-      get() = intrinsic()
-
-    val RatioHydrochloricAcidOutput: Double
-      get() = intrinsic()
-
-    val RatioHydrogenInput: Double
-      get() = intrinsic()
-
-    val RatioHydrogenOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidAlcoholInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidAlcoholOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidCarbonDioxideInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidCarbonDioxideOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrazineInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrazineOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrochloricAcidInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrochloricAcidOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrogenInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrogenOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidMethaneInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidMethaneOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrogenInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrogenOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrousOxideInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrousOxideOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidOxygenInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidOxygenOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidOzoneInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidOzoneOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidPollutantInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidPollutantOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidSilanolInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidSilanolOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidSodiumChlorideInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidSodiumChlorideOutput: Double
-      get() = intrinsic()
-
-    val RatioMethaneInput: Double
-      get() = intrinsic()
-
-    val RatioMethaneOutput: Double
-      get() = intrinsic()
-
-    val RatioNitrogenInput: Double
-      get() = intrinsic()
-
-    val RatioNitrogenOutput: Double
-      get() = intrinsic()
-
-    val RatioNitrousOxideInput: Double
-      get() = intrinsic()
-
-    val RatioNitrousOxideOutput: Double
-      get() = intrinsic()
-
-    val RatioOxygenInput: Double
-      get() = intrinsic()
-
-    val RatioOxygenOutput: Double
-      get() = intrinsic()
-
-    val RatioOzoneInput: Double
-      get() = intrinsic()
-
-    val RatioOzoneOutput: Double
-      get() = intrinsic()
-
-    val RatioPollutantInput: Double
-      get() = intrinsic()
-
-    val RatioPollutantOutput: Double
-      get() = intrinsic()
-
-    val RatioPollutedWaterInput: Double
-      get() = intrinsic()
-
-    val RatioPollutedWaterOutput: Double
-      get() = intrinsic()
-
-    val RatioSilanolInput: Double
-      get() = intrinsic()
-
-    val RatioSilanolOutput: Double
-      get() = intrinsic()
-
-    val RatioSteamInput: Double
-      get() = intrinsic()
-
-    val RatioSteamOutput: Double
-      get() = intrinsic()
-
-    val RatioWaterInput: Double
-      get() = intrinsic()
-
-    val RatioWaterOutput: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-
-    val TemperatureInput: Double
-      get() = intrinsic()
-
-    val TemperatureOutput: Double
-      get() = intrinsic()
-
-    val TotalMolesInput: Double
-      get() = intrinsic()
-
-    val TotalMolesOutput: Double
-      get() = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Reading>
+  class Batch internal constructor() : DeviceBatch<Electrolyzer>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<DataDiskSlot>>
       get() = intrinsic()
   }
 }
@@ -22542,91 +11772,9 @@ object ElectronicsPrinters {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Activate: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var ClearMemory: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Open: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var RecipeHash: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Activate: Double
-      get() = intrinsic()
-
-    val ClearMemory: Double
-      get() = intrinsic()
-
-    val CompletionRatio: Double
-      get() = intrinsic()
-
-    val Error: Double
-      get() = intrinsic()
-
-    val ExportCount: Double
-      get() = intrinsic()
-
-    val ImportCount: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Open: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val Reagents: Double
-      get() = intrinsic()
-
-    val RecipeHash: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val StackSize: Double
-      get() = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Reading>
+  class Batch internal constructor() : DeviceBatch<ElectronicsPrinter>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<DataDiskSlot>>
       get() = intrinsic()
   }
 }
@@ -22678,78 +11826,11 @@ object ElevatorLevelFronts {
   fun at(pin: Device): ElevatorLevelFront = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<ElevatorLevelFront>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Activate: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var ElevatorLevel: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var ElevatorSpeed: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Open: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Activate: Double
-      get() = intrinsic()
-
-    val ElevatorLevel: Double
-      get() = intrinsic()
-
-    val ElevatorSpeed: Double
-      get() = intrinsic()
-
-    val Error: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Open: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<ElevatorLevelFront> = intrinsic()
 }
 
 /** A StructureElevatorLevelIndustrial. */
@@ -22799,78 +11880,11 @@ object ElevatorLevelIndustrials {
   fun at(pin: Device): ElevatorLevelIndustrial = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<ElevatorLevelIndustrial>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Activate: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var ElevatorLevel: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var ElevatorSpeed: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Open: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Activate: Double
-      get() = intrinsic()
-
-    val ElevatorLevel: Double
-      get() = intrinsic()
-
-    val ElevatorSpeed: Double
-      get() = intrinsic()
-
-    val Error: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Open: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<ElevatorLevelIndustrial> = intrinsic()
 }
 
 /** A StructureElevatorShaft. */
@@ -22905,54 +11919,11 @@ object ElevatorShafts {
   fun at(pin: Device): ElevatorShaft = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<ElevatorShaft>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var ElevatorLevel: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var ElevatorSpeed: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val ElevatorLevel: Double
-      get() = intrinsic()
-
-    val ElevatorSpeed: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<ElevatorShaft> = intrinsic()
 }
 
 /** A StructureElevatorShaftIndustrial. */
@@ -22977,41 +11948,11 @@ object ElevatorShaftIndustrials {
   fun at(pin: Device): ElevatorShaftIndustrial = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<ElevatorShaftIndustrial>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var ElevatorLevel: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var ElevatorSpeed: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val ElevatorLevel: Double
-      get() = intrinsic()
-
-    val ElevatorSpeed: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<ElevatorShaftIndustrial> = intrinsic()
 }
 
 /** A StructureEmergencyButton. */
@@ -23056,67 +11997,11 @@ object EmergencyButtons {
   fun at(pin: Device): EmergencyButton = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<EmergencyButton>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Activate: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Open: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Activate: Double
-      get() = intrinsic()
-
-    val Error: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Open: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<EmergencyButton> = intrinsic()
 }
 
 /** A StructureEvaporationChamber. */
@@ -23260,166 +12145,11 @@ object EvaporationChambers {
   fun at(pin: Device): EvaporationChamber = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<EvaporationChamber>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Open: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Combustion: Double
-      get() = intrinsic()
-
-    val Error: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val Maximum: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Open: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val Pressure: Double
-      get() = intrinsic()
-
-    val Ratio: Double
-      get() = intrinsic()
-
-    val RatioCarbonDioxide: Double
-      get() = intrinsic()
-
-    val RatioHelium: Double
-      get() = intrinsic()
-
-    val RatioHydrazine: Double
-      get() = intrinsic()
-
-    val RatioHydrochloricAcid: Double
-      get() = intrinsic()
-
-    val RatioHydrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidAlcohol: Double
-      get() = intrinsic()
-
-    val RatioLiquidCarbonDioxide: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrazine: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrochloricAcid: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidMethane: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrousOxide: Double
-      get() = intrinsic()
-
-    val RatioLiquidOxygen: Double
-      get() = intrinsic()
-
-    val RatioLiquidOzone: Double
-      get() = intrinsic()
-
-    val RatioLiquidPollutant: Double
-      get() = intrinsic()
-
-    val RatioLiquidSilanol: Double
-      get() = intrinsic()
-
-    val RatioLiquidSodiumChloride: Double
-      get() = intrinsic()
-
-    val RatioMethane: Double
-      get() = intrinsic()
-
-    val RatioNitrogen: Double
-      get() = intrinsic()
-
-    val RatioNitrousOxide: Double
-      get() = intrinsic()
-
-    val RatioOxygen: Double
-      get() = intrinsic()
-
-    val RatioOzone: Double
-      get() = intrinsic()
-
-    val RatioPollutant: Double
-      get() = intrinsic()
-
-    val RatioPollutedWater: Double
-      get() = intrinsic()
-
-    val RatioSilanol: Double
-      get() = intrinsic()
-
-    val RatioSteam: Double
-      get() = intrinsic()
-
-    val RatioWater: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-
-    val Temperature: Double
-      get() = intrinsic()
-
-    val TotalMoles: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<EvaporationChamber> = intrinsic()
 }
 
 /** A StructureExpansionValve. */
@@ -23450,47 +12180,11 @@ object ExpansionValves {
   fun at(pin: Device): ExpansionValve = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<ExpansionValve>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Maximum: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Ratio: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<ExpansionValve> = intrinsic()
 }
 
 /** A StructureFermenter. */
@@ -23860,376 +12554,9 @@ object Fermenters {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var ClearMemory: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Mode: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Open: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val ClearMemory: Double
-      get() = intrinsic()
-
-    val CombustionInput: Double
-      get() = intrinsic()
-
-    val CombustionInput2: Double
-      get() = intrinsic()
-
-    val CombustionOutput: Double
-      get() = intrinsic()
-
-    val CompletionRatio: Double
-      get() = intrinsic()
-
-    val Error: Double
-      get() = intrinsic()
-
-    val ImportCount: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val Maximum: Double
-      get() = intrinsic()
-
-    val Mode: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Open: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val PressureInput: Double
-      get() = intrinsic()
-
-    val PressureInput2: Double
-      get() = intrinsic()
-
-    val PressureOutput: Double
-      get() = intrinsic()
-
-    val Ratio: Double
-      get() = intrinsic()
-
-    val RatioCarbonDioxideInput: Double
-      get() = intrinsic()
-
-    val RatioCarbonDioxideInput2: Double
-      get() = intrinsic()
-
-    val RatioCarbonDioxideOutput: Double
-      get() = intrinsic()
-
-    val RatioHeliumInput: Double
-      get() = intrinsic()
-
-    val RatioHeliumInput2: Double
-      get() = intrinsic()
-
-    val RatioHeliumOutput: Double
-      get() = intrinsic()
-
-    val RatioHydrazineInput: Double
-      get() = intrinsic()
-
-    val RatioHydrazineInput2: Double
-      get() = intrinsic()
-
-    val RatioHydrazineOutput: Double
-      get() = intrinsic()
-
-    val RatioHydrochloricAcidInput: Double
-      get() = intrinsic()
-
-    val RatioHydrochloricAcidInput2: Double
-      get() = intrinsic()
-
-    val RatioHydrochloricAcidOutput: Double
-      get() = intrinsic()
-
-    val RatioHydrogenInput: Double
-      get() = intrinsic()
-
-    val RatioHydrogenInput2: Double
-      get() = intrinsic()
-
-    val RatioHydrogenOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidAlcoholInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidAlcoholInput2: Double
-      get() = intrinsic()
-
-    val RatioLiquidAlcoholOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidCarbonDioxideInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidCarbonDioxideInput2: Double
-      get() = intrinsic()
-
-    val RatioLiquidCarbonDioxideOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrazineInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrazineInput2: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrazineOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrochloricAcidInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrochloricAcidInput2: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrochloricAcidOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrogenInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrogenInput2: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrogenOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidMethaneInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidMethaneInput2: Double
-      get() = intrinsic()
-
-    val RatioLiquidMethaneOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrogenInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrogenInput2: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrogenOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrousOxideInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrousOxideInput2: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrousOxideOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidOxygenInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidOxygenInput2: Double
-      get() = intrinsic()
-
-    val RatioLiquidOxygenOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidOzoneInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidOzoneInput2: Double
-      get() = intrinsic()
-
-    val RatioLiquidOzoneOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidPollutantInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidPollutantInput2: Double
-      get() = intrinsic()
-
-    val RatioLiquidPollutantOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidSilanolInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidSilanolInput2: Double
-      get() = intrinsic()
-
-    val RatioLiquidSilanolOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidSodiumChlorideInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidSodiumChlorideInput2: Double
-      get() = intrinsic()
-
-    val RatioLiquidSodiumChlorideOutput: Double
-      get() = intrinsic()
-
-    val RatioMethaneInput: Double
-      get() = intrinsic()
-
-    val RatioMethaneInput2: Double
-      get() = intrinsic()
-
-    val RatioMethaneOutput: Double
-      get() = intrinsic()
-
-    val RatioNitrogenInput: Double
-      get() = intrinsic()
-
-    val RatioNitrogenInput2: Double
-      get() = intrinsic()
-
-    val RatioNitrogenOutput: Double
-      get() = intrinsic()
-
-    val RatioNitrousOxideInput: Double
-      get() = intrinsic()
-
-    val RatioNitrousOxideInput2: Double
-      get() = intrinsic()
-
-    val RatioNitrousOxideOutput: Double
-      get() = intrinsic()
-
-    val RatioOxygenInput: Double
-      get() = intrinsic()
-
-    val RatioOxygenInput2: Double
-      get() = intrinsic()
-
-    val RatioOxygenOutput: Double
-      get() = intrinsic()
-
-    val RatioOzoneInput: Double
-      get() = intrinsic()
-
-    val RatioOzoneInput2: Double
-      get() = intrinsic()
-
-    val RatioOzoneOutput: Double
-      get() = intrinsic()
-
-    val RatioPollutantInput: Double
-      get() = intrinsic()
-
-    val RatioPollutantInput2: Double
-      get() = intrinsic()
-
-    val RatioPollutantOutput: Double
-      get() = intrinsic()
-
-    val RatioPollutedWaterInput: Double
-      get() = intrinsic()
-
-    val RatioPollutedWaterInput2: Double
-      get() = intrinsic()
-
-    val RatioPollutedWaterOutput: Double
-      get() = intrinsic()
-
-    val RatioSilanolInput: Double
-      get() = intrinsic()
-
-    val RatioSilanolInput2: Double
-      get() = intrinsic()
-
-    val RatioSilanolOutput: Double
-      get() = intrinsic()
-
-    val RatioSteamInput: Double
-      get() = intrinsic()
-
-    val RatioSteamInput2: Double
-      get() = intrinsic()
-
-    val RatioSteamOutput: Double
-      get() = intrinsic()
-
-    val RatioWaterInput: Double
-      get() = intrinsic()
-
-    val RatioWaterInput2: Double
-      get() = intrinsic()
-
-    val RatioWaterOutput: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-
-    val TemperatureInput: Double
-      get() = intrinsic()
-
-    val TemperatureInput2: Double
-      get() = intrinsic()
-
-    val TemperatureOutput: Double
-      get() = intrinsic()
-
-    val TotalMolesInput: Double
-      get() = intrinsic()
-
-    val TotalMolesInput2: Double
-      get() = intrinsic()
-
-    val TotalMolesOutput: Double
-      get() = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Reading>
+  class Batch internal constructor() : DeviceBatch<Fermenter>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<DataDiskSlot>>
       get() = intrinsic()
   }
 }
@@ -24586,363 +12913,9 @@ object Filtrations {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Mode: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Open: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<CommonSlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val CombustionInput: Double
-      get() = intrinsic()
-
-    val CombustionOutput: Double
-      get() = intrinsic()
-
-    val CombustionOutput2: Double
-      get() = intrinsic()
-
-    val Error: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val Maximum: Double
-      get() = intrinsic()
-
-    val Mode: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Open: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val PressureInput: Double
-      get() = intrinsic()
-
-    val PressureOutput: Double
-      get() = intrinsic()
-
-    val PressureOutput2: Double
-      get() = intrinsic()
-
-    val Ratio: Double
-      get() = intrinsic()
-
-    val RatioCarbonDioxideInput: Double
-      get() = intrinsic()
-
-    val RatioCarbonDioxideOutput: Double
-      get() = intrinsic()
-
-    val RatioCarbonDioxideOutput2: Double
-      get() = intrinsic()
-
-    val RatioHeliumInput: Double
-      get() = intrinsic()
-
-    val RatioHeliumOutput: Double
-      get() = intrinsic()
-
-    val RatioHeliumOutput2: Double
-      get() = intrinsic()
-
-    val RatioHydrazineInput: Double
-      get() = intrinsic()
-
-    val RatioHydrazineOutput: Double
-      get() = intrinsic()
-
-    val RatioHydrazineOutput2: Double
-      get() = intrinsic()
-
-    val RatioHydrochloricAcidInput: Double
-      get() = intrinsic()
-
-    val RatioHydrochloricAcidOutput: Double
-      get() = intrinsic()
-
-    val RatioHydrochloricAcidOutput2: Double
-      get() = intrinsic()
-
-    val RatioHydrogenInput: Double
-      get() = intrinsic()
-
-    val RatioHydrogenOutput: Double
-      get() = intrinsic()
-
-    val RatioHydrogenOutput2: Double
-      get() = intrinsic()
-
-    val RatioLiquidAlcoholInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidAlcoholOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidAlcoholOutput2: Double
-      get() = intrinsic()
-
-    val RatioLiquidCarbonDioxideInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidCarbonDioxideOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidCarbonDioxideOutput2: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrazineInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrazineOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrazineOutput2: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrochloricAcidInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrochloricAcidOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrochloricAcidOutput2: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrogenInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrogenOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrogenOutput2: Double
-      get() = intrinsic()
-
-    val RatioLiquidMethaneInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidMethaneOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidMethaneOutput2: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrogenInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrogenOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrogenOutput2: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrousOxideInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrousOxideOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrousOxideOutput2: Double
-      get() = intrinsic()
-
-    val RatioLiquidOxygenInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidOxygenOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidOxygenOutput2: Double
-      get() = intrinsic()
-
-    val RatioLiquidOzoneInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidOzoneOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidOzoneOutput2: Double
-      get() = intrinsic()
-
-    val RatioLiquidPollutantInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidPollutantOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidPollutantOutput2: Double
-      get() = intrinsic()
-
-    val RatioLiquidSilanolInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidSilanolOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidSilanolOutput2: Double
-      get() = intrinsic()
-
-    val RatioLiquidSodiumChlorideInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidSodiumChlorideOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidSodiumChlorideOutput2: Double
-      get() = intrinsic()
-
-    val RatioMethaneInput: Double
-      get() = intrinsic()
-
-    val RatioMethaneOutput: Double
-      get() = intrinsic()
-
-    val RatioMethaneOutput2: Double
-      get() = intrinsic()
-
-    val RatioNitrogenInput: Double
-      get() = intrinsic()
-
-    val RatioNitrogenOutput: Double
-      get() = intrinsic()
-
-    val RatioNitrogenOutput2: Double
-      get() = intrinsic()
-
-    val RatioNitrousOxideInput: Double
-      get() = intrinsic()
-
-    val RatioNitrousOxideOutput: Double
-      get() = intrinsic()
-
-    val RatioNitrousOxideOutput2: Double
-      get() = intrinsic()
-
-    val RatioOxygenInput: Double
-      get() = intrinsic()
-
-    val RatioOxygenOutput: Double
-      get() = intrinsic()
-
-    val RatioOxygenOutput2: Double
-      get() = intrinsic()
-
-    val RatioOzoneInput: Double
-      get() = intrinsic()
-
-    val RatioOzoneOutput: Double
-      get() = intrinsic()
-
-    val RatioOzoneOutput2: Double
-      get() = intrinsic()
-
-    val RatioPollutantInput: Double
-      get() = intrinsic()
-
-    val RatioPollutantOutput: Double
-      get() = intrinsic()
-
-    val RatioPollutantOutput2: Double
-      get() = intrinsic()
-
-    val RatioPollutedWaterInput: Double
-      get() = intrinsic()
-
-    val RatioPollutedWaterOutput: Double
-      get() = intrinsic()
-
-    val RatioPollutedWaterOutput2: Double
-      get() = intrinsic()
-
-    val RatioSilanolInput: Double
-      get() = intrinsic()
-
-    val RatioSilanolOutput: Double
-      get() = intrinsic()
-
-    val RatioSilanolOutput2: Double
-      get() = intrinsic()
-
-    val RatioSteamInput: Double
-      get() = intrinsic()
-
-    val RatioSteamOutput: Double
-      get() = intrinsic()
-
-    val RatioSteamOutput2: Double
-      get() = intrinsic()
-
-    val RatioWaterInput: Double
-      get() = intrinsic()
-
-    val RatioWaterOutput: Double
-      get() = intrinsic()
-
-    val RatioWaterOutput2: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-
-    val TemperatureInput: Double
-      get() = intrinsic()
-
-    val TemperatureOutput: Double
-      get() = intrinsic()
-
-    val TemperatureOutput2: Double
-      get() = intrinsic()
-
-    val TotalMolesInput: Double
-      get() = intrinsic()
-
-    val TotalMolesOutput: Double
-      get() = intrinsic()
-
-    val TotalMolesOutput2: Double
-      get() = intrinsic()
-
-    val slots: Slots<CommonSlot.Reading>
+  class Batch internal constructor() : DeviceBatch<Filtration>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<CommonSlot>>
       get() = intrinsic()
   }
 }
@@ -25299,363 +13272,9 @@ object FiltrationLiquids {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Mode: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Open: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<CommonSlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val CombustionInput: Double
-      get() = intrinsic()
-
-    val CombustionOutput: Double
-      get() = intrinsic()
-
-    val CombustionOutput2: Double
-      get() = intrinsic()
-
-    val Error: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val Maximum: Double
-      get() = intrinsic()
-
-    val Mode: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Open: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val PressureInput: Double
-      get() = intrinsic()
-
-    val PressureOutput: Double
-      get() = intrinsic()
-
-    val PressureOutput2: Double
-      get() = intrinsic()
-
-    val Ratio: Double
-      get() = intrinsic()
-
-    val RatioCarbonDioxideInput: Double
-      get() = intrinsic()
-
-    val RatioCarbonDioxideOutput: Double
-      get() = intrinsic()
-
-    val RatioCarbonDioxideOutput2: Double
-      get() = intrinsic()
-
-    val RatioHeliumInput: Double
-      get() = intrinsic()
-
-    val RatioHeliumOutput: Double
-      get() = intrinsic()
-
-    val RatioHeliumOutput2: Double
-      get() = intrinsic()
-
-    val RatioHydrazineInput: Double
-      get() = intrinsic()
-
-    val RatioHydrazineOutput: Double
-      get() = intrinsic()
-
-    val RatioHydrazineOutput2: Double
-      get() = intrinsic()
-
-    val RatioHydrochloricAcidInput: Double
-      get() = intrinsic()
-
-    val RatioHydrochloricAcidOutput: Double
-      get() = intrinsic()
-
-    val RatioHydrochloricAcidOutput2: Double
-      get() = intrinsic()
-
-    val RatioHydrogenInput: Double
-      get() = intrinsic()
-
-    val RatioHydrogenOutput: Double
-      get() = intrinsic()
-
-    val RatioHydrogenOutput2: Double
-      get() = intrinsic()
-
-    val RatioLiquidAlcoholInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidAlcoholOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidAlcoholOutput2: Double
-      get() = intrinsic()
-
-    val RatioLiquidCarbonDioxideInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidCarbonDioxideOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidCarbonDioxideOutput2: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrazineInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrazineOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrazineOutput2: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrochloricAcidInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrochloricAcidOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrochloricAcidOutput2: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrogenInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrogenOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrogenOutput2: Double
-      get() = intrinsic()
-
-    val RatioLiquidMethaneInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidMethaneOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidMethaneOutput2: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrogenInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrogenOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrogenOutput2: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrousOxideInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrousOxideOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrousOxideOutput2: Double
-      get() = intrinsic()
-
-    val RatioLiquidOxygenInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidOxygenOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidOxygenOutput2: Double
-      get() = intrinsic()
-
-    val RatioLiquidOzoneInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidOzoneOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidOzoneOutput2: Double
-      get() = intrinsic()
-
-    val RatioLiquidPollutantInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidPollutantOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidPollutantOutput2: Double
-      get() = intrinsic()
-
-    val RatioLiquidSilanolInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidSilanolOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidSilanolOutput2: Double
-      get() = intrinsic()
-
-    val RatioLiquidSodiumChlorideInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidSodiumChlorideOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidSodiumChlorideOutput2: Double
-      get() = intrinsic()
-
-    val RatioMethaneInput: Double
-      get() = intrinsic()
-
-    val RatioMethaneOutput: Double
-      get() = intrinsic()
-
-    val RatioMethaneOutput2: Double
-      get() = intrinsic()
-
-    val RatioNitrogenInput: Double
-      get() = intrinsic()
-
-    val RatioNitrogenOutput: Double
-      get() = intrinsic()
-
-    val RatioNitrogenOutput2: Double
-      get() = intrinsic()
-
-    val RatioNitrousOxideInput: Double
-      get() = intrinsic()
-
-    val RatioNitrousOxideOutput: Double
-      get() = intrinsic()
-
-    val RatioNitrousOxideOutput2: Double
-      get() = intrinsic()
-
-    val RatioOxygenInput: Double
-      get() = intrinsic()
-
-    val RatioOxygenOutput: Double
-      get() = intrinsic()
-
-    val RatioOxygenOutput2: Double
-      get() = intrinsic()
-
-    val RatioOzoneInput: Double
-      get() = intrinsic()
-
-    val RatioOzoneOutput: Double
-      get() = intrinsic()
-
-    val RatioOzoneOutput2: Double
-      get() = intrinsic()
-
-    val RatioPollutantInput: Double
-      get() = intrinsic()
-
-    val RatioPollutantOutput: Double
-      get() = intrinsic()
-
-    val RatioPollutantOutput2: Double
-      get() = intrinsic()
-
-    val RatioPollutedWaterInput: Double
-      get() = intrinsic()
-
-    val RatioPollutedWaterOutput: Double
-      get() = intrinsic()
-
-    val RatioPollutedWaterOutput2: Double
-      get() = intrinsic()
-
-    val RatioSilanolInput: Double
-      get() = intrinsic()
-
-    val RatioSilanolOutput: Double
-      get() = intrinsic()
-
-    val RatioSilanolOutput2: Double
-      get() = intrinsic()
-
-    val RatioSteamInput: Double
-      get() = intrinsic()
-
-    val RatioSteamOutput: Double
-      get() = intrinsic()
-
-    val RatioSteamOutput2: Double
-      get() = intrinsic()
-
-    val RatioWaterInput: Double
-      get() = intrinsic()
-
-    val RatioWaterOutput: Double
-      get() = intrinsic()
-
-    val RatioWaterOutput2: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-
-    val TemperatureInput: Double
-      get() = intrinsic()
-
-    val TemperatureOutput: Double
-      get() = intrinsic()
-
-    val TemperatureOutput2: Double
-      get() = intrinsic()
-
-    val TotalMolesInput: Double
-      get() = intrinsic()
-
-    val TotalMolesOutput: Double
-      get() = intrinsic()
-
-    val TotalMolesOutput2: Double
-      get() = intrinsic()
-
-    val slots: Slots<CommonSlot.Reading>
+  class Batch internal constructor() : DeviceBatch<FiltrationLiquid>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<CommonSlot>>
       get() = intrinsic()
   }
 }
@@ -25688,47 +13307,11 @@ object FlashingLights {
   fun at(pin: Device): FlashingLight = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<FlashingLight>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Lock: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<FlashingLight> = intrinsic()
 }
 
 /** A StructureFridgeBig. */
@@ -25953,232 +13536,9 @@ object FridgeBigs {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Open: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Combustion: Double
-      get() = intrinsic()
-
-    val CombustionOutput: Double
-      get() = intrinsic()
-
-    val Error: Double
-      get() = intrinsic()
-
-    val Maximum: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Open: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val Pressure: Double
-      get() = intrinsic()
-
-    val PressureOutput: Double
-      get() = intrinsic()
-
-    val Ratio: Double
-      get() = intrinsic()
-
-    val RatioCarbonDioxide: Double
-      get() = intrinsic()
-
-    val RatioCarbonDioxideOutput: Double
-      get() = intrinsic()
-
-    val RatioHelium: Double
-      get() = intrinsic()
-
-    val RatioHeliumOutput: Double
-      get() = intrinsic()
-
-    val RatioHydrazine: Double
-      get() = intrinsic()
-
-    val RatioHydrazineOutput: Double
-      get() = intrinsic()
-
-    val RatioHydrochloricAcid: Double
-      get() = intrinsic()
-
-    val RatioHydrochloricAcidOutput: Double
-      get() = intrinsic()
-
-    val RatioHydrogen: Double
-      get() = intrinsic()
-
-    val RatioHydrogenOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidAlcohol: Double
-      get() = intrinsic()
-
-    val RatioLiquidAlcoholOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidCarbonDioxide: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrazine: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrazineOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrochloricAcid: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrochloricAcidOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrogenOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidMethane: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrousOxide: Double
-      get() = intrinsic()
-
-    val RatioLiquidOxygen: Double
-      get() = intrinsic()
-
-    val RatioLiquidOzone: Double
-      get() = intrinsic()
-
-    val RatioLiquidOzoneOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidPollutant: Double
-      get() = intrinsic()
-
-    val RatioLiquidSilanol: Double
-      get() = intrinsic()
-
-    val RatioLiquidSilanolOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidSodiumChloride: Double
-      get() = intrinsic()
-
-    val RatioLiquidSodiumChlorideOutput: Double
-      get() = intrinsic()
-
-    val RatioMethane: Double
-      get() = intrinsic()
-
-    val RatioMethaneOutput: Double
-      get() = intrinsic()
-
-    val RatioNitrogen: Double
-      get() = intrinsic()
-
-    val RatioNitrogenOutput: Double
-      get() = intrinsic()
-
-    val RatioNitrousOxide: Double
-      get() = intrinsic()
-
-    val RatioNitrousOxideOutput: Double
-      get() = intrinsic()
-
-    val RatioOxygen: Double
-      get() = intrinsic()
-
-    val RatioOxygenOutput: Double
-      get() = intrinsic()
-
-    val RatioOzone: Double
-      get() = intrinsic()
-
-    val RatioOzoneOutput: Double
-      get() = intrinsic()
-
-    val RatioPollutant: Double
-      get() = intrinsic()
-
-    val RatioPollutantOutput: Double
-      get() = intrinsic()
-
-    val RatioPollutedWater: Double
-      get() = intrinsic()
-
-    val RatioPollutedWaterOutput: Double
-      get() = intrinsic()
-
-    val RatioSilanol: Double
-      get() = intrinsic()
-
-    val RatioSilanolOutput: Double
-      get() = intrinsic()
-
-    val RatioSteam: Double
-      get() = intrinsic()
-
-    val RatioWater: Double
-      get() = intrinsic()
-
-    val RatioWaterOutput: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-
-    val Temperature: Double
-      get() = intrinsic()
-
-    val TemperatureOutput: Double
-      get() = intrinsic()
-
-    val TotalMoles: Double
-      get() = intrinsic()
-
-    val TotalMolesOutput: Double
-      get() = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Reading>
+  class Batch internal constructor() : DeviceBatch<FridgeBig>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<DataDiskSlot>>
       get() = intrinsic()
   }
 }
@@ -26392,216 +13752,9 @@ object FridgeSmalls {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Open: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Combustion: Double
-      get() = intrinsic()
-
-    val CombustionOutput: Double
-      get() = intrinsic()
-
-    val Maximum: Double
-      get() = intrinsic()
-
-    val Open: Double
-      get() = intrinsic()
-
-    val Pressure: Double
-      get() = intrinsic()
-
-    val PressureOutput: Double
-      get() = intrinsic()
-
-    val Ratio: Double
-      get() = intrinsic()
-
-    val RatioCarbonDioxide: Double
-      get() = intrinsic()
-
-    val RatioCarbonDioxideOutput: Double
-      get() = intrinsic()
-
-    val RatioHelium: Double
-      get() = intrinsic()
-
-    val RatioHeliumOutput: Double
-      get() = intrinsic()
-
-    val RatioHydrazine: Double
-      get() = intrinsic()
-
-    val RatioHydrazineOutput: Double
-      get() = intrinsic()
-
-    val RatioHydrochloricAcid: Double
-      get() = intrinsic()
-
-    val RatioHydrochloricAcidOutput: Double
-      get() = intrinsic()
-
-    val RatioHydrogen: Double
-      get() = intrinsic()
-
-    val RatioHydrogenOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidAlcohol: Double
-      get() = intrinsic()
-
-    val RatioLiquidAlcoholOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidCarbonDioxide: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrazine: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrazineOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrochloricAcid: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrochloricAcidOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrogenOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidMethane: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrousOxide: Double
-      get() = intrinsic()
-
-    val RatioLiquidOxygen: Double
-      get() = intrinsic()
-
-    val RatioLiquidOzone: Double
-      get() = intrinsic()
-
-    val RatioLiquidOzoneOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidPollutant: Double
-      get() = intrinsic()
-
-    val RatioLiquidSilanol: Double
-      get() = intrinsic()
-
-    val RatioLiquidSilanolOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidSodiumChloride: Double
-      get() = intrinsic()
-
-    val RatioLiquidSodiumChlorideOutput: Double
-      get() = intrinsic()
-
-    val RatioMethane: Double
-      get() = intrinsic()
-
-    val RatioMethaneOutput: Double
-      get() = intrinsic()
-
-    val RatioNitrogen: Double
-      get() = intrinsic()
-
-    val RatioNitrogenOutput: Double
-      get() = intrinsic()
-
-    val RatioNitrousOxide: Double
-      get() = intrinsic()
-
-    val RatioNitrousOxideOutput: Double
-      get() = intrinsic()
-
-    val RatioOxygen: Double
-      get() = intrinsic()
-
-    val RatioOxygenOutput: Double
-      get() = intrinsic()
-
-    val RatioOzone: Double
-      get() = intrinsic()
-
-    val RatioOzoneOutput: Double
-      get() = intrinsic()
-
-    val RatioPollutant: Double
-      get() = intrinsic()
-
-    val RatioPollutantOutput: Double
-      get() = intrinsic()
-
-    val RatioPollutedWater: Double
-      get() = intrinsic()
-
-    val RatioPollutedWaterOutput: Double
-      get() = intrinsic()
-
-    val RatioSilanol: Double
-      get() = intrinsic()
-
-    val RatioSilanolOutput: Double
-      get() = intrinsic()
-
-    val RatioSteam: Double
-      get() = intrinsic()
-
-    val RatioWater: Double
-      get() = intrinsic()
-
-    val RatioWaterOutput: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-
-    val Temperature: Double
-      get() = intrinsic()
-
-    val TemperatureOutput: Double
-      get() = intrinsic()
-
-    val TotalMoles: Double
-      get() = intrinsic()
-
-    val TotalMolesOutput: Double
-      get() = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Reading>
+  class Batch internal constructor() : DeviceBatch<FridgeSmall>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<DataDiskSlot>>
       get() = intrinsic()
   }
 }
@@ -26778,181 +13931,9 @@ object Furnaces {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Activate: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var ClearMemory: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Mode: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Open: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Activate: Double
-      get() = intrinsic()
-
-    val ClearMemory: Double
-      get() = intrinsic()
-
-    val Combustion: Double
-      get() = intrinsic()
-
-    val ExportCount: Double
-      get() = intrinsic()
-
-    val ImportCount: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val Maximum: Double
-      get() = intrinsic()
-
-    val Mode: Double
-      get() = intrinsic()
-
-    val Open: Double
-      get() = intrinsic()
-
-    val Pressure: Double
-      get() = intrinsic()
-
-    val Ratio: Double
-      get() = intrinsic()
-
-    val RatioCarbonDioxide: Double
-      get() = intrinsic()
-
-    val RatioHelium: Double
-      get() = intrinsic()
-
-    val RatioHydrazine: Double
-      get() = intrinsic()
-
-    val RatioHydrochloricAcid: Double
-      get() = intrinsic()
-
-    val RatioHydrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidAlcohol: Double
-      get() = intrinsic()
-
-    val RatioLiquidCarbonDioxide: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrazine: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrochloricAcid: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidMethane: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrousOxide: Double
-      get() = intrinsic()
-
-    val RatioLiquidOxygen: Double
-      get() = intrinsic()
-
-    val RatioLiquidOzone: Double
-      get() = intrinsic()
-
-    val RatioLiquidPollutant: Double
-      get() = intrinsic()
-
-    val RatioLiquidSilanol: Double
-      get() = intrinsic()
-
-    val RatioLiquidSodiumChloride: Double
-      get() = intrinsic()
-
-    val RatioMethane: Double
-      get() = intrinsic()
-
-    val RatioNitrogen: Double
-      get() = intrinsic()
-
-    val RatioNitrousOxide: Double
-      get() = intrinsic()
-
-    val RatioOxygen: Double
-      get() = intrinsic()
-
-    val RatioOzone: Double
-      get() = intrinsic()
-
-    val RatioPollutant: Double
-      get() = intrinsic()
-
-    val RatioPollutedWater: Double
-      get() = intrinsic()
-
-    val RatioSilanol: Double
-      get() = intrinsic()
-
-    val RatioSteam: Double
-      get() = intrinsic()
-
-    val RatioWater: Double
-      get() = intrinsic()
-
-    val Reagents: Double
-      get() = intrinsic()
-
-    val RecipeHash: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-
-    val Temperature: Double
-      get() = intrinsic()
-
-    val TotalMoles: Double
-      get() = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Reading>
+  class Batch internal constructor() : DeviceBatch<Furnace>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<DataDiskSlot>>
       get() = intrinsic()
   }
 }
@@ -27093,155 +14074,11 @@ object GasGenerators {
   fun at(pin: Device): GasGenerator = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<GasGenerator>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Combustion: Double
-      get() = intrinsic()
-
-    val Error: Double
-      get() = intrinsic()
-
-    val Maximum: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val PowerGeneration: Double
-      get() = intrinsic()
-
-    val Pressure: Double
-      get() = intrinsic()
-
-    val Ratio: Double
-      get() = intrinsic()
-
-    val RatioCarbonDioxide: Double
-      get() = intrinsic()
-
-    val RatioHelium: Double
-      get() = intrinsic()
-
-    val RatioHydrazine: Double
-      get() = intrinsic()
-
-    val RatioHydrochloricAcid: Double
-      get() = intrinsic()
-
-    val RatioHydrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidAlcohol: Double
-      get() = intrinsic()
-
-    val RatioLiquidCarbonDioxide: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrazine: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrochloricAcid: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidMethane: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrousOxide: Double
-      get() = intrinsic()
-
-    val RatioLiquidOxygen: Double
-      get() = intrinsic()
-
-    val RatioLiquidOzone: Double
-      get() = intrinsic()
-
-    val RatioLiquidPollutant: Double
-      get() = intrinsic()
-
-    val RatioLiquidSilanol: Double
-      get() = intrinsic()
-
-    val RatioLiquidSodiumChloride: Double
-      get() = intrinsic()
-
-    val RatioMethane: Double
-      get() = intrinsic()
-
-    val RatioNitrogen: Double
-      get() = intrinsic()
-
-    val RatioNitrousOxide: Double
-      get() = intrinsic()
-
-    val RatioOxygen: Double
-      get() = intrinsic()
-
-    val RatioOzone: Double
-      get() = intrinsic()
-
-    val RatioPollutant: Double
-      get() = intrinsic()
-
-    val RatioPollutedWater: Double
-      get() = intrinsic()
-
-    val RatioSilanol: Double
-      get() = intrinsic()
-
-    val RatioSteam: Double
-      get() = intrinsic()
-
-    val RatioWater: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-
-    val Temperature: Double
-      get() = intrinsic()
-
-    val TotalMoles: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<GasGenerator> = intrinsic()
 }
 
 /** A StructureGasMixer. */
@@ -27285,63 +14122,11 @@ object GasMixers {
   fun at(pin: Device): GasMixer = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<GasMixer>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Error: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val Maximum: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val Ratio: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<GasMixer> = intrinsic()
 }
 
 /** A StructureGasSensor. */
@@ -27457,126 +14242,11 @@ object GasSensors {
   fun at(pin: Device): GasSensor = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<GasSensor>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Combustion: Double
-      get() = intrinsic()
-
-    val Pressure: Double
-      get() = intrinsic()
-
-    val RatioCarbonDioxide: Double
-      get() = intrinsic()
-
-    val RatioHelium: Double
-      get() = intrinsic()
-
-    val RatioHydrazine: Double
-      get() = intrinsic()
-
-    val RatioHydrochloricAcid: Double
-      get() = intrinsic()
-
-    val RatioHydrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidAlcohol: Double
-      get() = intrinsic()
-
-    val RatioLiquidCarbonDioxide: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrazine: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrochloricAcid: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidMethane: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrousOxide: Double
-      get() = intrinsic()
-
-    val RatioLiquidOxygen: Double
-      get() = intrinsic()
-
-    val RatioLiquidOzone: Double
-      get() = intrinsic()
-
-    val RatioLiquidPollutant: Double
-      get() = intrinsic()
-
-    val RatioLiquidSilanol: Double
-      get() = intrinsic()
-
-    val RatioLiquidSodiumChloride: Double
-      get() = intrinsic()
-
-    val RatioMethane: Double
-      get() = intrinsic()
-
-    val RatioNitrogen: Double
-      get() = intrinsic()
-
-    val RatioNitrousOxide: Double
-      get() = intrinsic()
-
-    val RatioOxygen: Double
-      get() = intrinsic()
-
-    val RatioOzone: Double
-      get() = intrinsic()
-
-    val RatioPollutant: Double
-      get() = intrinsic()
-
-    val RatioPollutedWater: Double
-      get() = intrinsic()
-
-    val RatioSilanol: Double
-      get() = intrinsic()
-
-    val RatioSteam: Double
-      get() = intrinsic()
-
-    val RatioWater: Double
-      get() = intrinsic()
-
-    val Temperature: Double
-      get() = intrinsic()
-
-    val TotalMoles: Double
-      get() = intrinsic()
-
-    val VolumeOfLiquid: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<GasSensor> = intrinsic()
 }
 
 /** A StructureGasTankStorage. */
@@ -27701,118 +14371,9 @@ object GasTankStorages {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    val slots: Slots<GasCanisterSlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Pressure: Double
-      get() = intrinsic()
-
-    val Quantity: Double
-      get() = intrinsic()
-
-    val RatioCarbonDioxide: Double
-      get() = intrinsic()
-
-    val RatioHelium: Double
-      get() = intrinsic()
-
-    val RatioHydrazine: Double
-      get() = intrinsic()
-
-    val RatioHydrochloricAcid: Double
-      get() = intrinsic()
-
-    val RatioHydrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidAlcohol: Double
-      get() = intrinsic()
-
-    val RatioLiquidCarbonDioxide: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrazine: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrochloricAcid: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidMethane: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrousOxide: Double
-      get() = intrinsic()
-
-    val RatioLiquidOxygen: Double
-      get() = intrinsic()
-
-    val RatioLiquidOzone: Double
-      get() = intrinsic()
-
-    val RatioLiquidPollutant: Double
-      get() = intrinsic()
-
-    val RatioLiquidSilanol: Double
-      get() = intrinsic()
-
-    val RatioLiquidSodiumChloride: Double
-      get() = intrinsic()
-
-    val RatioMethane: Double
-      get() = intrinsic()
-
-    val RatioNitrogen: Double
-      get() = intrinsic()
-
-    val RatioNitrousOxide: Double
-      get() = intrinsic()
-
-    val RatioOxygen: Double
-      get() = intrinsic()
-
-    val RatioOzone: Double
-      get() = intrinsic()
-
-    val RatioPollutant: Double
-      get() = intrinsic()
-
-    val RatioPollutedWater: Double
-      get() = intrinsic()
-
-    val RatioSilanol: Double
-      get() = intrinsic()
-
-    val RatioSteam: Double
-      get() = intrinsic()
-
-    val RatioWater: Double
-      get() = intrinsic()
-
-    val Temperature: Double
-      get() = intrinsic()
-
-    val slots: Slots<GasCanisterSlot.Reading>
+  class Batch internal constructor() : DeviceBatch<GasTankStorage>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<GasCanisterSlot>>
       get() = intrinsic()
   }
 }
@@ -27841,40 +14402,11 @@ object GasUmbilicalFemales {
   fun at(pin: Device): GasUmbilicalFemale = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<GasUmbilicalFemale>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Maximum: Double
-      get() = intrinsic()
-
-    val Ratio: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<GasUmbilicalFemale> = intrinsic()
 }
 
 /** A StructureGasUmbilicalFemaleSide. */
@@ -27901,40 +14433,11 @@ object GasUmbilicalFemaleSides {
   fun at(pin: Device): GasUmbilicalFemaleSide = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<GasUmbilicalFemaleSide>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Maximum: Double
-      get() = intrinsic()
-
-    val Ratio: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<GasUmbilicalFemaleSide> = intrinsic()
 }
 
 /** A StructureGasUmbilicalMale. */
@@ -27985,73 +14488,11 @@ object GasUmbilicalMales {
   fun at(pin: Device): GasUmbilicalMale = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<GasUmbilicalMale>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Open: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Error: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val Maximum: Double
-      get() = intrinsic()
-
-    val Mode: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Open: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val Ratio: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<GasUmbilicalMale> = intrinsic()
 }
 
 /** A StructureGlassDoor. */
@@ -28097,71 +14538,11 @@ object GlassDoors {
   fun at(pin: Device): GlassDoor = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<GlassDoor>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Mode: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Open: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Idle: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val Mode: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Open: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<GlassDoor> = intrinsic()
 }
 
 /** A StructureGovernedGasEngine. */
@@ -28294,149 +14675,11 @@ object GovernedGasEngines {
   fun at(pin: Device): GovernedGasEngine = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<GovernedGasEngine>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Throttle: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Combustion: Double
-      get() = intrinsic()
-
-    val Error: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val PassedMoles: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val Pressure: Double
-      get() = intrinsic()
-
-    val RatioCarbonDioxide: Double
-      get() = intrinsic()
-
-    val RatioHelium: Double
-      get() = intrinsic()
-
-    val RatioHydrazine: Double
-      get() = intrinsic()
-
-    val RatioHydrochloricAcid: Double
-      get() = intrinsic()
-
-    val RatioHydrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidAlcohol: Double
-      get() = intrinsic()
-
-    val RatioLiquidCarbonDioxide: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrazine: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrochloricAcid: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidMethane: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrousOxide: Double
-      get() = intrinsic()
-
-    val RatioLiquidOxygen: Double
-      get() = intrinsic()
-
-    val RatioLiquidOzone: Double
-      get() = intrinsic()
-
-    val RatioLiquidPollutant: Double
-      get() = intrinsic()
-
-    val RatioLiquidSilanol: Double
-      get() = intrinsic()
-
-    val RatioLiquidSodiumChloride: Double
-      get() = intrinsic()
-
-    val RatioMethane: Double
-      get() = intrinsic()
-
-    val RatioNitrogen: Double
-      get() = intrinsic()
-
-    val RatioNitrousOxide: Double
-      get() = intrinsic()
-
-    val RatioOxygen: Double
-      get() = intrinsic()
-
-    val RatioOzone: Double
-      get() = intrinsic()
-
-    val RatioPollutant: Double
-      get() = intrinsic()
-
-    val RatioPollutedWater: Double
-      get() = intrinsic()
-
-    val RatioSilanol: Double
-      get() = intrinsic()
-
-    val RatioSteam: Double
-      get() = intrinsic()
-
-    val RatioWater: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val Temperature: Double
-      get() = intrinsic()
-
-    val Throttle: Double
-      get() = intrinsic()
-
-    val TotalMoles: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<GovernedGasEngine> = intrinsic()
 }
 
 /** A StructureGroundBasedTelescope. */
@@ -28524,122 +14767,11 @@ object GroundBasedTelescopes {
   fun at(pin: Device): GroundBasedTelescope = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<GroundBasedTelescope>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Activate: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Horizontal: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var HorizontalRatio: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Open: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Vertical: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var VerticalRatio: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Activate: Double
-      get() = intrinsic()
-
-    val AlignmentError: Double
-      get() = intrinsic()
-
-    val CelestialHash: Double
-      get() = intrinsic()
-
-    val CelestialParentHash: Double
-      get() = intrinsic()
-
-    val DistanceAu: Double
-      get() = intrinsic()
-
-    val DistanceKm: Double
-      get() = intrinsic()
-
-    val Eccentricity: Double
-      get() = intrinsic()
-
-    val Error: Double
-      get() = intrinsic()
-
-    val Horizontal: Double
-      get() = intrinsic()
-
-    val HorizontalRatio: Double
-      get() = intrinsic()
-
-    val Inclination: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Open: Double
-      get() = intrinsic()
-
-    val OrbitPeriod: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val SemiMajorAxis: Double
-      get() = intrinsic()
-
-    val TrueAnomaly: Double
-      get() = intrinsic()
-
-    val Vertical: Double
-      get() = intrinsic()
-
-    val VerticalRatio: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<GroundBasedTelescope> = intrinsic()
 }
 
 /** A StructureGrowLight. */
@@ -28670,47 +14802,11 @@ object GrowLights {
   fun at(pin: Device): GrowLight = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<GrowLight>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Lock: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<GrowLight> = intrinsic()
 }
 
 /** A StructureHarvie. */
@@ -28795,89 +14891,9 @@ object Harvies {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Activate: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var ClearMemory: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Harvest: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Mode: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Plant: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Activate: Double
-      get() = intrinsic()
-
-    val ClearMemory: Double
-      get() = intrinsic()
-
-    val Error: Double
-      get() = intrinsic()
-
-    val ExportCount: Double
-      get() = intrinsic()
-
-    val Harvest: Double
-      get() = intrinsic()
-
-    val ImportCount: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val Mode: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Plant: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Reading>
+  class Batch internal constructor() : DeviceBatch<Harvie>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<DataDiskSlot>>
       get() = intrinsic()
   }
 }
@@ -28951,75 +14967,9 @@ object HorizontalAutoMiners {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Activate: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var ClearMemory: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Mode: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Open: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Activate: Double
-      get() = intrinsic()
-
-    val ClearMemory: Double
-      get() = intrinsic()
-
-    val Error: Double
-      get() = intrinsic()
-
-    val ExportCount: Double
-      get() = intrinsic()
-
-    val ImportCount: Double
-      get() = intrinsic()
-
-    val Mode: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Open: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Reading>
+  class Batch internal constructor() : DeviceBatch<HorizontalAutoMiner>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<DataDiskSlot>>
       get() = intrinsic()
   }
 }
@@ -29106,91 +15056,9 @@ object HydraulicPipeBenders {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Activate: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var ClearMemory: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Open: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var RecipeHash: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Activate: Double
-      get() = intrinsic()
-
-    val ClearMemory: Double
-      get() = intrinsic()
-
-    val CompletionRatio: Double
-      get() = intrinsic()
-
-    val Error: Double
-      get() = intrinsic()
-
-    val ExportCount: Double
-      get() = intrinsic()
-
-    val ImportCount: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Open: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val Reagents: Double
-      get() = intrinsic()
-
-    val RecipeHash: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val StackSize: Double
-      get() = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Reading>
+  class Batch internal constructor() : DeviceBatch<HydraulicPipeBender>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<DataDiskSlot>>
       get() = intrinsic()
   }
 }
@@ -29413,225 +15281,9 @@ object HydroponicsStations {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<PlantSlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Combustion: Double
-      get() = intrinsic()
-
-    val CombustionOutput: Double
-      get() = intrinsic()
-
-    val Error: Double
-      get() = intrinsic()
-
-    val Maximum: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val Pressure: Double
-      get() = intrinsic()
-
-    val PressureOutput: Double
-      get() = intrinsic()
-
-    val Ratio: Double
-      get() = intrinsic()
-
-    val RatioCarbonDioxide: Double
-      get() = intrinsic()
-
-    val RatioCarbonDioxideOutput: Double
-      get() = intrinsic()
-
-    val RatioHelium: Double
-      get() = intrinsic()
-
-    val RatioHeliumOutput: Double
-      get() = intrinsic()
-
-    val RatioHydrazine: Double
-      get() = intrinsic()
-
-    val RatioHydrazineOutput: Double
-      get() = intrinsic()
-
-    val RatioHydrochloricAcid: Double
-      get() = intrinsic()
-
-    val RatioHydrochloricAcidOutput: Double
-      get() = intrinsic()
-
-    val RatioHydrogen: Double
-      get() = intrinsic()
-
-    val RatioHydrogenOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidAlcohol: Double
-      get() = intrinsic()
-
-    val RatioLiquidAlcoholOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidCarbonDioxide: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrazine: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrazineOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrochloricAcid: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrochloricAcidOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrogenOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidMethane: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrousOxide: Double
-      get() = intrinsic()
-
-    val RatioLiquidOxygen: Double
-      get() = intrinsic()
-
-    val RatioLiquidOzone: Double
-      get() = intrinsic()
-
-    val RatioLiquidOzoneOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidPollutant: Double
-      get() = intrinsic()
-
-    val RatioLiquidSilanol: Double
-      get() = intrinsic()
-
-    val RatioLiquidSilanolOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidSodiumChloride: Double
-      get() = intrinsic()
-
-    val RatioLiquidSodiumChlorideOutput: Double
-      get() = intrinsic()
-
-    val RatioMethane: Double
-      get() = intrinsic()
-
-    val RatioMethaneOutput: Double
-      get() = intrinsic()
-
-    val RatioNitrogen: Double
-      get() = intrinsic()
-
-    val RatioNitrogenOutput: Double
-      get() = intrinsic()
-
-    val RatioNitrousOxide: Double
-      get() = intrinsic()
-
-    val RatioNitrousOxideOutput: Double
-      get() = intrinsic()
-
-    val RatioOxygen: Double
-      get() = intrinsic()
-
-    val RatioOxygenOutput: Double
-      get() = intrinsic()
-
-    val RatioOzone: Double
-      get() = intrinsic()
-
-    val RatioOzoneOutput: Double
-      get() = intrinsic()
-
-    val RatioPollutant: Double
-      get() = intrinsic()
-
-    val RatioPollutantOutput: Double
-      get() = intrinsic()
-
-    val RatioPollutedWater: Double
-      get() = intrinsic()
-
-    val RatioPollutedWaterOutput: Double
-      get() = intrinsic()
-
-    val RatioSilanol: Double
-      get() = intrinsic()
-
-    val RatioSilanolOutput: Double
-      get() = intrinsic()
-
-    val RatioSteam: Double
-      get() = intrinsic()
-
-    val RatioWater: Double
-      get() = intrinsic()
-
-    val RatioWaterOutput: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-
-    val Temperature: Double
-      get() = intrinsic()
-
-    val TemperatureOutput: Double
-      get() = intrinsic()
-
-    val TotalMoles: Double
-      get() = intrinsic()
-
-    val TotalMolesOutput: Double
-      get() = intrinsic()
-
-    val slots: Slots<PlantSlot.Reading>
+  class Batch internal constructor() : DeviceBatch<HydroponicsStation>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<PlantSlot>>
       get() = intrinsic()
   }
 }
@@ -29766,121 +15418,9 @@ object HydroponicsTrayDatas {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    val slots: Slots<CommonSlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Combustion: Double
-      get() = intrinsic()
-
-    val Pressure: Double
-      get() = intrinsic()
-
-    val RatioCarbonDioxide: Double
-      get() = intrinsic()
-
-    val RatioHelium: Double
-      get() = intrinsic()
-
-    val RatioHydrazine: Double
-      get() = intrinsic()
-
-    val RatioHydrochloricAcid: Double
-      get() = intrinsic()
-
-    val RatioHydrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidAlcohol: Double
-      get() = intrinsic()
-
-    val RatioLiquidCarbonDioxide: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrazine: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrochloricAcid: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidMethane: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrousOxide: Double
-      get() = intrinsic()
-
-    val RatioLiquidOxygen: Double
-      get() = intrinsic()
-
-    val RatioLiquidOzone: Double
-      get() = intrinsic()
-
-    val RatioLiquidPollutant: Double
-      get() = intrinsic()
-
-    val RatioLiquidSilanol: Double
-      get() = intrinsic()
-
-    val RatioLiquidSodiumChloride: Double
-      get() = intrinsic()
-
-    val RatioMethane: Double
-      get() = intrinsic()
-
-    val RatioNitrogen: Double
-      get() = intrinsic()
-
-    val RatioNitrousOxide: Double
-      get() = intrinsic()
-
-    val RatioOxygen: Double
-      get() = intrinsic()
-
-    val RatioOzone: Double
-      get() = intrinsic()
-
-    val RatioPollutant: Double
-      get() = intrinsic()
-
-    val RatioPollutedWater: Double
-      get() = intrinsic()
-
-    val RatioSilanol: Double
-      get() = intrinsic()
-
-    val RatioSteam: Double
-      get() = intrinsic()
-
-    val RatioWater: Double
-      get() = intrinsic()
-
-    val Temperature: Double
-      get() = intrinsic()
-
-    val TotalMoles: Double
-      get() = intrinsic()
-
-    val slots: Slots<CommonSlot.Reading>
+  class Batch internal constructor() : DeviceBatch<HydroponicsTrayData>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<CommonSlot>>
       get() = intrinsic()
   }
 }
@@ -29952,78 +15492,9 @@ object IceCrushers {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Activate: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var ClearMemory: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Activate: Double
-      get() = intrinsic()
-
-    val ClearMemory: Double
-      get() = intrinsic()
-
-    val Error: Double
-      get() = intrinsic()
-
-    val ImportCount: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val Maximum: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val Ratio: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Reading>
+  class Batch internal constructor() : DeviceBatch<IceCrusher>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<DataDiskSlot>>
       get() = intrinsic()
   }
 }
@@ -30046,34 +15517,11 @@ object Igniters {
   fun at(pin: Device): Igniter = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<Igniter>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val On: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<Igniter> = intrinsic()
 }
 
 /** A StructureInteriorDoorGlass. */
@@ -30119,71 +15567,11 @@ object InteriorDoorGlasses {
   fun at(pin: Device): InteriorDoorGlass = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<InteriorDoorGlass>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Mode: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Open: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Idle: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val Mode: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Open: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<InteriorDoorGlass> = intrinsic()
 }
 
 /** A StructureInteriorDoorPadded. */
@@ -30229,71 +15617,11 @@ object InteriorDoorPaddeds {
   fun at(pin: Device): InteriorDoorPadded = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<InteriorDoorPadded>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Mode: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Open: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Idle: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val Mode: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Open: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<InteriorDoorPadded> = intrinsic()
 }
 
 /** A StructureInteriorDoorPaddedThin. */
@@ -30339,71 +15667,11 @@ object InteriorDoorPaddedThins {
   fun at(pin: Device): InteriorDoorPaddedThin = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<InteriorDoorPaddedThin>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Mode: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Open: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Idle: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val Mode: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Open: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<InteriorDoorPaddedThin> = intrinsic()
 }
 
 /** A StructureInteriorDoorTriangle. */
@@ -30449,71 +15717,11 @@ object InteriorDoorTriangles {
   fun at(pin: Device): InteriorDoorTriangle = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<InteriorDoorTriangle>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Mode: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Open: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Idle: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val Mode: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Open: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<InteriorDoorTriangle> = intrinsic()
 }
 
 /** A StructureKlaxon. */
@@ -30552,61 +15760,11 @@ object Klaxons {
   fun at(pin: Device): Klaxon = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<Klaxon>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Mode: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var SoundAlert: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Volume: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Mode: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val SoundAlert: Double
-      get() = intrinsic()
-
-    val Volume: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<Klaxon> = intrinsic()
 }
 
 /** A StructureLargeDirectHeatExchangeGastoGas. */
@@ -30633,40 +15791,11 @@ object LargeDirectHeatExchangeGastoGases {
   fun at(pin: Device): LargeDirectHeatExchangeGastoGas = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<LargeDirectHeatExchangeGastoGas>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Maximum: Double
-      get() = intrinsic()
-
-    val Ratio: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<LargeDirectHeatExchangeGastoGas> = intrinsic()
 }
 
 /** A StructureLargeDirectHeatExchangeGastoLiquid. */
@@ -30693,40 +15822,11 @@ object LargeDirectHeatExchangeGastoLiquids {
   fun at(pin: Device): LargeDirectHeatExchangeGastoLiquid = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<LargeDirectHeatExchangeGastoLiquid>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Maximum: Double
-      get() = intrinsic()
-
-    val Ratio: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<LargeDirectHeatExchangeGastoLiquid> = intrinsic()
 }
 
 /** A StructureLargeDirectHeatExchangeLiquidtoLiquid. */
@@ -30753,40 +15853,11 @@ object LargeDirectHeatExchangeLiquidtoLiquids {
   fun at(pin: Device): LargeDirectHeatExchangeLiquidtoLiquid = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<LargeDirectHeatExchangeLiquidtoLiquid>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Maximum: Double
-      get() = intrinsic()
-
-    val Ratio: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<LargeDirectHeatExchangeLiquidtoLiquid> = intrinsic()
 }
 
 /** A StructureLargeExtendableRadiator. */
@@ -30825,61 +15896,11 @@ object LargeExtendableRadiators {
   fun at(pin: Device): LargeExtendableRadiator = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<LargeExtendableRadiator>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Horizontal: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Open: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Horizontal: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val Maximum: Double
-      get() = intrinsic()
-
-    val Open: Double
-      get() = intrinsic()
-
-    val Ratio: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<LargeExtendableRadiator> = intrinsic()
 }
 
 /** A StructureLargeHangerDoor. */
@@ -30925,71 +15946,11 @@ object LargeHangerDoors {
   fun at(pin: Device): LargeHangerDoor = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<LargeHangerDoor>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Mode: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Open: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Idle: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val Mode: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Open: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<LargeHangerDoor> = intrinsic()
 }
 
 /** A StructureLargeRocketGasFuelTank. */
@@ -31193,217 +16154,11 @@ object LargeRocketGasFuelTanks {
   fun at(pin: Device): LargeRocketGasFuelTank = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<LargeRocketGasFuelTank>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Combustion: Double
-      get() = intrinsic()
-
-    val CombustionOutput: Double
-      get() = intrinsic()
-
-    val Maximum: Double
-      get() = intrinsic()
-
-    val Pressure: Double
-      get() = intrinsic()
-
-    val PressureOutput: Double
-      get() = intrinsic()
-
-    val Ratio: Double
-      get() = intrinsic()
-
-    val RatioCarbonDioxide: Double
-      get() = intrinsic()
-
-    val RatioCarbonDioxideOutput: Double
-      get() = intrinsic()
-
-    val RatioHelium: Double
-      get() = intrinsic()
-
-    val RatioHeliumOutput: Double
-      get() = intrinsic()
-
-    val RatioHydrazine: Double
-      get() = intrinsic()
-
-    val RatioHydrazineOutput: Double
-      get() = intrinsic()
-
-    val RatioHydrochloricAcid: Double
-      get() = intrinsic()
-
-    val RatioHydrochloricAcidOutput: Double
-      get() = intrinsic()
-
-    val RatioHydrogen: Double
-      get() = intrinsic()
-
-    val RatioHydrogenOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidAlcohol: Double
-      get() = intrinsic()
-
-    val RatioLiquidAlcoholOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidCarbonDioxide: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrazine: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrazineOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrochloricAcid: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrochloricAcidOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrogenOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidMethane: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrousOxide: Double
-      get() = intrinsic()
-
-    val RatioLiquidOxygen: Double
-      get() = intrinsic()
-
-    val RatioLiquidOzone: Double
-      get() = intrinsic()
-
-    val RatioLiquidOzoneOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidPollutant: Double
-      get() = intrinsic()
-
-    val RatioLiquidSilanol: Double
-      get() = intrinsic()
-
-    val RatioLiquidSilanolOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidSodiumChloride: Double
-      get() = intrinsic()
-
-    val RatioLiquidSodiumChlorideOutput: Double
-      get() = intrinsic()
-
-    val RatioMethane: Double
-      get() = intrinsic()
-
-    val RatioMethaneOutput: Double
-      get() = intrinsic()
-
-    val RatioNitrogen: Double
-      get() = intrinsic()
-
-    val RatioNitrogenOutput: Double
-      get() = intrinsic()
-
-    val RatioNitrousOxide: Double
-      get() = intrinsic()
-
-    val RatioNitrousOxideOutput: Double
-      get() = intrinsic()
-
-    val RatioOxygen: Double
-      get() = intrinsic()
-
-    val RatioOxygenOutput: Double
-      get() = intrinsic()
-
-    val RatioOzone: Double
-      get() = intrinsic()
-
-    val RatioOzoneOutput: Double
-      get() = intrinsic()
-
-    val RatioPollutant: Double
-      get() = intrinsic()
-
-    val RatioPollutantOutput: Double
-      get() = intrinsic()
-
-    val RatioPollutedWater: Double
-      get() = intrinsic()
-
-    val RatioPollutedWaterOutput: Double
-      get() = intrinsic()
-
-    val RatioSilanol: Double
-      get() = intrinsic()
-
-    val RatioSilanolOutput: Double
-      get() = intrinsic()
-
-    val RatioSteam: Double
-      get() = intrinsic()
-
-    val RatioWater: Double
-      get() = intrinsic()
-
-    val RatioWaterOutput: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-
-    val Temperature: Double
-      get() = intrinsic()
-
-    val TemperatureOutput: Double
-      get() = intrinsic()
-
-    val TotalMoles: Double
-      get() = intrinsic()
-
-    val TotalMolesOutput: Double
-      get() = intrinsic()
-
-    val Volume: Double
-      get() = intrinsic()
-
-    val VolumeOfLiquid: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<LargeRocketGasFuelTank> = intrinsic()
 }
 
 /** A StructureLargeRocketLiquidFuelTank. */
@@ -31607,217 +16362,11 @@ object LargeRocketLiquidFuelTanks {
   fun at(pin: Device): LargeRocketLiquidFuelTank = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<LargeRocketLiquidFuelTank>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Combustion: Double
-      get() = intrinsic()
-
-    val CombustionOutput: Double
-      get() = intrinsic()
-
-    val Maximum: Double
-      get() = intrinsic()
-
-    val Pressure: Double
-      get() = intrinsic()
-
-    val PressureOutput: Double
-      get() = intrinsic()
-
-    val Ratio: Double
-      get() = intrinsic()
-
-    val RatioCarbonDioxide: Double
-      get() = intrinsic()
-
-    val RatioCarbonDioxideOutput: Double
-      get() = intrinsic()
-
-    val RatioHelium: Double
-      get() = intrinsic()
-
-    val RatioHeliumOutput: Double
-      get() = intrinsic()
-
-    val RatioHydrazine: Double
-      get() = intrinsic()
-
-    val RatioHydrazineOutput: Double
-      get() = intrinsic()
-
-    val RatioHydrochloricAcid: Double
-      get() = intrinsic()
-
-    val RatioHydrochloricAcidOutput: Double
-      get() = intrinsic()
-
-    val RatioHydrogen: Double
-      get() = intrinsic()
-
-    val RatioHydrogenOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidAlcohol: Double
-      get() = intrinsic()
-
-    val RatioLiquidAlcoholOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidCarbonDioxide: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrazine: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrazineOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrochloricAcid: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrochloricAcidOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrogenOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidMethane: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrousOxide: Double
-      get() = intrinsic()
-
-    val RatioLiquidOxygen: Double
-      get() = intrinsic()
-
-    val RatioLiquidOzone: Double
-      get() = intrinsic()
-
-    val RatioLiquidOzoneOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidPollutant: Double
-      get() = intrinsic()
-
-    val RatioLiquidSilanol: Double
-      get() = intrinsic()
-
-    val RatioLiquidSilanolOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidSodiumChloride: Double
-      get() = intrinsic()
-
-    val RatioLiquidSodiumChlorideOutput: Double
-      get() = intrinsic()
-
-    val RatioMethane: Double
-      get() = intrinsic()
-
-    val RatioMethaneOutput: Double
-      get() = intrinsic()
-
-    val RatioNitrogen: Double
-      get() = intrinsic()
-
-    val RatioNitrogenOutput: Double
-      get() = intrinsic()
-
-    val RatioNitrousOxide: Double
-      get() = intrinsic()
-
-    val RatioNitrousOxideOutput: Double
-      get() = intrinsic()
-
-    val RatioOxygen: Double
-      get() = intrinsic()
-
-    val RatioOxygenOutput: Double
-      get() = intrinsic()
-
-    val RatioOzone: Double
-      get() = intrinsic()
-
-    val RatioOzoneOutput: Double
-      get() = intrinsic()
-
-    val RatioPollutant: Double
-      get() = intrinsic()
-
-    val RatioPollutantOutput: Double
-      get() = intrinsic()
-
-    val RatioPollutedWater: Double
-      get() = intrinsic()
-
-    val RatioPollutedWaterOutput: Double
-      get() = intrinsic()
-
-    val RatioSilanol: Double
-      get() = intrinsic()
-
-    val RatioSilanolOutput: Double
-      get() = intrinsic()
-
-    val RatioSteam: Double
-      get() = intrinsic()
-
-    val RatioWater: Double
-      get() = intrinsic()
-
-    val RatioWaterOutput: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-
-    val Temperature: Double
-      get() = intrinsic()
-
-    val TemperatureOutput: Double
-      get() = intrinsic()
-
-    val TotalMoles: Double
-      get() = intrinsic()
-
-    val TotalMolesOutput: Double
-      get() = intrinsic()
-
-    val Volume: Double
-      get() = intrinsic()
-
-    val VolumeOfLiquid: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<LargeRocketLiquidFuelTank> = intrinsic()
 }
 
 /** A StructureLargeSatelliteDish. */
@@ -31901,115 +16450,11 @@ object LargeSatelliteDishes {
   fun at(pin: Device): LargeSatelliteDish = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<LargeSatelliteDish>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Activate: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var BestContactFilter: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Horizontal: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var TargetPadIndex: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Vertical: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Activate: Double
-      get() = intrinsic()
-
-    val BestContactFilter: Double
-      get() = intrinsic()
-
-    val ContactSlotIndex: Double
-      get() = intrinsic()
-
-    val ContactTypeId: Double
-      get() = intrinsic()
-
-    val Error: Double
-      get() = intrinsic()
-
-    val Horizontal: Double
-      get() = intrinsic()
-
-    val Idle: Double
-      get() = intrinsic()
-
-    val InterrogationProgress: Double
-      get() = intrinsic()
-
-    val MinimumWattsToContact: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-
-    val SignalID: Double
-      get() = intrinsic()
-
-    val SignalStrength: Double
-      get() = intrinsic()
-
-    val SizeX: Double
-      get() = intrinsic()
-
-    val SizeZ: Double
-      get() = intrinsic()
-
-    val TargetPadIndex: Double
-      get() = intrinsic()
-
-    val Vertical: Double
-      get() = intrinsic()
-
-    val WattsReachingContact: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<LargeSatelliteDish> = intrinsic()
 }
 
 /** A StructureLarreDockAtmos. */
@@ -32237,242 +16682,9 @@ object LarreDockAtmoses {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Activate: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Mode: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Open: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var PressureExternal: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var PressureInternal: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<FilterSlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Activate: Double
-      get() = intrinsic()
-
-    val Combustion: Double
-      get() = intrinsic()
-
-    val CombustionInput: Double
-      get() = intrinsic()
-
-    val Error: Double
-      get() = intrinsic()
-
-    val Extended: Double
-      get() = intrinsic()
-
-    val Idle: Double
-      get() = intrinsic()
-
-    val Mode: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Open: Double
-      get() = intrinsic()
-
-    val PositionX: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val Pressure: Double
-      get() = intrinsic()
-
-    val PressureExternal: Double
-      get() = intrinsic()
-
-    val PressureInput: Double
-      get() = intrinsic()
-
-    val PressureInternal: Double
-      get() = intrinsic()
-
-    val RatioCarbonDioxide: Double
-      get() = intrinsic()
-
-    val RatioCarbonDioxideInput: Double
-      get() = intrinsic()
-
-    val RatioHelium: Double
-      get() = intrinsic()
-
-    val RatioHydrazine: Double
-      get() = intrinsic()
-
-    val RatioHydrochloricAcid: Double
-      get() = intrinsic()
-
-    val RatioHydrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidAlcohol: Double
-      get() = intrinsic()
-
-    val RatioLiquidCarbonDioxide: Double
-      get() = intrinsic()
-
-    val RatioLiquidCarbonDioxideInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrazine: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrochloricAcid: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidMethane: Double
-      get() = intrinsic()
-
-    val RatioLiquidMethaneInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrogenInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrousOxide: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrousOxideInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidOxygen: Double
-      get() = intrinsic()
-
-    val RatioLiquidOxygenInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidOzone: Double
-      get() = intrinsic()
-
-    val RatioLiquidPollutant: Double
-      get() = intrinsic()
-
-    val RatioLiquidPollutantInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidSilanol: Double
-      get() = intrinsic()
-
-    val RatioLiquidSodiumChloride: Double
-      get() = intrinsic()
-
-    val RatioMethane: Double
-      get() = intrinsic()
-
-    val RatioMethaneInput: Double
-      get() = intrinsic()
-
-    val RatioNitrogen: Double
-      get() = intrinsic()
-
-    val RatioNitrogenInput: Double
-      get() = intrinsic()
-
-    val RatioNitrousOxide: Double
-      get() = intrinsic()
-
-    val RatioNitrousOxideInput: Double
-      get() = intrinsic()
-
-    val RatioOxygen: Double
-      get() = intrinsic()
-
-    val RatioOxygenInput: Double
-      get() = intrinsic()
-
-    val RatioOzone: Double
-      get() = intrinsic()
-
-    val RatioPollutant: Double
-      get() = intrinsic()
-
-    val RatioPollutantInput: Double
-      get() = intrinsic()
-
-    val RatioPollutedWater: Double
-      get() = intrinsic()
-
-    val RatioSilanol: Double
-      get() = intrinsic()
-
-    val RatioSteam: Double
-      get() = intrinsic()
-
-    val RatioSteamInput: Double
-      get() = intrinsic()
-
-    val RatioWater: Double
-      get() = intrinsic()
-
-    val RatioWaterInput: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-
-    val Temperature: Double
-      get() = intrinsic()
-
-    val TemperatureInput: Double
-      get() = intrinsic()
-
-    val TotalMoles: Double
-      get() = intrinsic()
-
-    val TotalMolesInput: Double
-      get() = intrinsic()
-
-    val slots: Slots<FilterSlot.Reading>
+  class Batch internal constructor() : DeviceBatch<LarreDockAtmos>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<FilterSlot>>
       get() = intrinsic()
   }
 }
@@ -32505,47 +16717,11 @@ object LarreDockBypasses {
   fun at(pin: Device): LarreDockBypass = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<LarreDockBypass>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Open: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val On: Double
-      get() = intrinsic()
-
-    val Open: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<LarreDockBypass> = intrinsic()
 }
 
 /** A StructureLarreDockCargo. */
@@ -32623,81 +16799,9 @@ object LarreDockCargos {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Activate: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Open: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var TargetSlotIndex: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<CommonSlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Activate: Double
-      get() = intrinsic()
-
-    val Error: Double
-      get() = intrinsic()
-
-    val Extended: Double
-      get() = intrinsic()
-
-    val Idle: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Open: Double
-      get() = intrinsic()
-
-    val PositionX: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-
-    val TargetPrefabHash: Double
-      get() = intrinsic()
-
-    val TargetSlotIndex: Double
-      get() = intrinsic()
-
-    val slots: Slots<CommonSlot.Reading>
+  class Batch internal constructor() : DeviceBatch<LarreDockCargo>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<CommonSlot>>
       get() = intrinsic()
   }
 }
@@ -32770,84 +16874,9 @@ object LarreDockCollectors {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Activate: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Mode: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Open: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Activate: Double
-      get() = intrinsic()
-
-    val Error: Double
-      get() = intrinsic()
-
-    val Extended: Double
-      get() = intrinsic()
-
-    val Idle: Double
-      get() = intrinsic()
-
-    val Mode: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Open: Double
-      get() = intrinsic()
-
-    val PositionX: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val Quantity: Double
-      get() = intrinsic()
-
-    val Ratio: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Reading>
+  class Batch internal constructor() : DeviceBatch<LarreDockCollector>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<DataDiskSlot>>
       get() = intrinsic()
   }
 }
@@ -32931,77 +16960,9 @@ object LarreDockHydroponicses {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Activate: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Open: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<CommonSlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Activate: Double
-      get() = intrinsic()
-
-    val Error: Double
-      get() = intrinsic()
-
-    val Extended: Double
-      get() = intrinsic()
-
-    val Idle: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Open: Double
-      get() = intrinsic()
-
-    val PositionX: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-
-    val TargetPrefabHash: Double
-      get() = intrinsic()
-
-    val TargetSlotIndex: Double
-      get() = intrinsic()
-
-    val slots: Slots<CommonSlot.Reading>
+  class Batch internal constructor() : DeviceBatch<LarreDockHydroponics>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<CommonSlot>>
       get() = intrinsic()
   }
 }
@@ -33034,47 +16995,11 @@ object LightLongs {
   fun at(pin: Device): LightLong = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<LightLong>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Lock: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<LightLong> = intrinsic()
 }
 
 /** A StructureLightLongAngled. */
@@ -33105,47 +17030,11 @@ object LightLongAngleds {
   fun at(pin: Device): LightLongAngled = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<LightLongAngled>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Lock: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<LightLongAngled> = intrinsic()
 }
 
 /** A StructureLightLongWide. */
@@ -33176,47 +17065,11 @@ object LightLongWides {
   fun at(pin: Device): LightLongWide = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<LightLongWide>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Lock: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<LightLongWide> = intrinsic()
 }
 
 /** A StructureLightRound. */
@@ -33247,47 +17100,11 @@ object LightRounds {
   fun at(pin: Device): LightRound = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<LightRound>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Lock: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<LightRound> = intrinsic()
 }
 
 /** A StructureLightRoundAngled. */
@@ -33318,47 +17135,11 @@ object LightRoundAngleds {
   fun at(pin: Device): LightRoundAngled = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<LightRoundAngled>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Lock: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<LightRoundAngled> = intrinsic()
 }
 
 /** A StructureLightRoundSmall. */
@@ -33389,47 +17170,11 @@ object LightRoundSmalls {
   fun at(pin: Device): LightRoundSmall = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<LightRoundSmall>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Lock: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<LightRoundSmall> = intrinsic()
 }
 
 /** A StructureLiquidDrain. */
@@ -33548,138 +17293,11 @@ object LiquidDrains {
   fun at(pin: Device): LiquidDrain = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<LiquidDrain>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val CombustionOutput: Double
-      get() = intrinsic()
-
-    val Error: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val Maximum: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val PressureOutput: Double
-      get() = intrinsic()
-
-    val Ratio: Double
-      get() = intrinsic()
-
-    val RatioCarbonDioxideOutput: Double
-      get() = intrinsic()
-
-    val RatioHeliumOutput: Double
-      get() = intrinsic()
-
-    val RatioHydrazineOutput: Double
-      get() = intrinsic()
-
-    val RatioHydrochloricAcidOutput: Double
-      get() = intrinsic()
-
-    val RatioHydrogenOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidAlcoholOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrazineOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrochloricAcidOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrogenOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidOzoneOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidSilanolOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidSodiumChlorideOutput: Double
-      get() = intrinsic()
-
-    val RatioMethaneOutput: Double
-      get() = intrinsic()
-
-    val RatioNitrogenOutput: Double
-      get() = intrinsic()
-
-    val RatioNitrousOxideOutput: Double
-      get() = intrinsic()
-
-    val RatioOxygenOutput: Double
-      get() = intrinsic()
-
-    val RatioOzoneOutput: Double
-      get() = intrinsic()
-
-    val RatioPollutantOutput: Double
-      get() = intrinsic()
-
-    val RatioPollutedWaterOutput: Double
-      get() = intrinsic()
-
-    val RatioSilanolOutput: Double
-      get() = intrinsic()
-
-    val RatioWaterOutput: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-
-    val TemperatureOutput: Double
-      get() = intrinsic()
-
-    val TotalMolesOutput: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<LiquidDrain> = intrinsic()
 }
 
 /** A StructureLiquidPipeAnalyzer. */
@@ -33818,155 +17436,11 @@ object LiquidPipeAnalyzers {
   fun at(pin: Device): LiquidPipeAnalyzer = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<LiquidPipeAnalyzer>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Combustion: Double
-      get() = intrinsic()
-
-    val Error: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val NetworkFault: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val Pressure: Double
-      get() = intrinsic()
-
-    val RatioCarbonDioxide: Double
-      get() = intrinsic()
-
-    val RatioHelium: Double
-      get() = intrinsic()
-
-    val RatioHydrazine: Double
-      get() = intrinsic()
-
-    val RatioHydrochloricAcid: Double
-      get() = intrinsic()
-
-    val RatioHydrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidAlcohol: Double
-      get() = intrinsic()
-
-    val RatioLiquidCarbonDioxide: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrazine: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrochloricAcid: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidMethane: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrousOxide: Double
-      get() = intrinsic()
-
-    val RatioLiquidOxygen: Double
-      get() = intrinsic()
-
-    val RatioLiquidOzone: Double
-      get() = intrinsic()
-
-    val RatioLiquidPollutant: Double
-      get() = intrinsic()
-
-    val RatioLiquidSilanol: Double
-      get() = intrinsic()
-
-    val RatioLiquidSodiumChloride: Double
-      get() = intrinsic()
-
-    val RatioMethane: Double
-      get() = intrinsic()
-
-    val RatioNitrogen: Double
-      get() = intrinsic()
-
-    val RatioNitrousOxide: Double
-      get() = intrinsic()
-
-    val RatioOxygen: Double
-      get() = intrinsic()
-
-    val RatioOzone: Double
-      get() = intrinsic()
-
-    val RatioPollutant: Double
-      get() = intrinsic()
-
-    val RatioPollutedWater: Double
-      get() = intrinsic()
-
-    val RatioSilanol: Double
-      get() = intrinsic()
-
-    val RatioSteam: Double
-      get() = intrinsic()
-
-    val RatioWater: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val Temperature: Double
-      get() = intrinsic()
-
-    val TotalMoles: Double
-      get() = intrinsic()
-
-    val Volume: Double
-      get() = intrinsic()
-
-    val VolumeOfLiquid: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<LiquidPipeAnalyzer> = intrinsic()
 }
 
 /** A StructureLiquidPipeHeater. */
@@ -34000,50 +17474,11 @@ object LiquidPipeHeaters {
   fun at(pin: Device): LiquidPipeHeater = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<LiquidPipeHeater>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Error: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<LiquidPipeHeater> = intrinsic()
 }
 
 /** A StructureLiquidPressureRegulator. */
@@ -34087,63 +17522,11 @@ object LiquidPressureRegulators {
   fun at(pin: Device): LiquidPressureRegulator = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<LiquidPressureRegulator>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Error: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val Maximum: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val Ratio: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<LiquidPressureRegulator> = intrinsic()
 }
 
 /** A StructureLiquidTankStorage. */
@@ -34268,118 +17651,9 @@ object LiquidTankStorages {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    val slots: Slots<GasCanisterSlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Pressure: Double
-      get() = intrinsic()
-
-    val Quantity: Double
-      get() = intrinsic()
-
-    val RatioCarbonDioxide: Double
-      get() = intrinsic()
-
-    val RatioHelium: Double
-      get() = intrinsic()
-
-    val RatioHydrazine: Double
-      get() = intrinsic()
-
-    val RatioHydrochloricAcid: Double
-      get() = intrinsic()
-
-    val RatioHydrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidAlcohol: Double
-      get() = intrinsic()
-
-    val RatioLiquidCarbonDioxide: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrazine: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrochloricAcid: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidMethane: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrousOxide: Double
-      get() = intrinsic()
-
-    val RatioLiquidOxygen: Double
-      get() = intrinsic()
-
-    val RatioLiquidOzone: Double
-      get() = intrinsic()
-
-    val RatioLiquidPollutant: Double
-      get() = intrinsic()
-
-    val RatioLiquidSilanol: Double
-      get() = intrinsic()
-
-    val RatioLiquidSodiumChloride: Double
-      get() = intrinsic()
-
-    val RatioMethane: Double
-      get() = intrinsic()
-
-    val RatioNitrogen: Double
-      get() = intrinsic()
-
-    val RatioNitrousOxide: Double
-      get() = intrinsic()
-
-    val RatioOxygen: Double
-      get() = intrinsic()
-
-    val RatioOzone: Double
-      get() = intrinsic()
-
-    val RatioPollutant: Double
-      get() = intrinsic()
-
-    val RatioPollutedWater: Double
-      get() = intrinsic()
-
-    val RatioSilanol: Double
-      get() = intrinsic()
-
-    val RatioSteam: Double
-      get() = intrinsic()
-
-    val RatioWater: Double
-      get() = intrinsic()
-
-    val Temperature: Double
-      get() = intrinsic()
-
-    val slots: Slots<GasCanisterSlot.Reading>
+  class Batch internal constructor() : DeviceBatch<LiquidTankStorage>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<GasCanisterSlot>>
       get() = intrinsic()
   }
 }
@@ -34429,70 +17703,11 @@ object LiquidTurboVolumePumps {
   fun at(pin: Device): LiquidTurboVolumePump = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<LiquidTurboVolumePump>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Mode: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Error: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val Maximum: Double
-      get() = intrinsic()
-
-    val Mode: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val Ratio: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<LiquidTurboVolumePump> = intrinsic()
 }
 
 /** A StructureLiquidUmbilicalFemale. */
@@ -34519,40 +17734,11 @@ object LiquidUmbilicalFemales {
   fun at(pin: Device): LiquidUmbilicalFemale = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<LiquidUmbilicalFemale>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Maximum: Double
-      get() = intrinsic()
-
-    val Ratio: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<LiquidUmbilicalFemale> = intrinsic()
 }
 
 /** A StructureLiquidUmbilicalFemaleSide. */
@@ -34579,40 +17765,11 @@ object LiquidUmbilicalFemaleSides {
   fun at(pin: Device): LiquidUmbilicalFemaleSide = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<LiquidUmbilicalFemaleSide>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Maximum: Double
-      get() = intrinsic()
-
-    val Ratio: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<LiquidUmbilicalFemaleSide> = intrinsic()
 }
 
 /** A StructureLiquidUmbilicalMale. */
@@ -34663,73 +17820,11 @@ object LiquidUmbilicalMales {
   fun at(pin: Device): LiquidUmbilicalMale = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<LiquidUmbilicalMale>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Open: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Error: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val Maximum: Double
-      get() = intrinsic()
-
-    val Mode: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Open: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val Ratio: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<LiquidUmbilicalMale> = intrinsic()
 }
 
 /** A StructureLiquidValve. */
@@ -34760,47 +17855,11 @@ object LiquidValves {
   fun at(pin: Device): LiquidValve = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<LiquidValve>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Maximum: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Ratio: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<LiquidValve> = intrinsic()
 }
 
 /** A StructureLiquidVolumePump. */
@@ -34844,63 +17903,11 @@ object LiquidVolumePumps {
   fun at(pin: Device): LiquidVolumePump = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<LiquidVolumePump>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Error: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val Maximum: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val Ratio: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<LiquidVolumePump> = intrinsic()
 }
 
 /** A StructureLockerSmall. */
@@ -34935,39 +17942,9 @@ object LockerSmalls {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Open: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Lock: Double
-      get() = intrinsic()
-
-    val Open: Double
-      get() = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Reading>
+  class Batch internal constructor() : DeviceBatch<LockerSmall>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<DataDiskSlot>>
       get() = intrinsic()
   }
 }
@@ -35002,46 +17979,11 @@ object LogicBatchReaders {
   fun at(pin: Device): LogicBatchReader = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<LogicBatchReader>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Error: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<LogicBatchReader> = intrinsic()
 }
 
 /** A StructureLogicBatchSlotReader. */
@@ -35074,46 +18016,11 @@ object LogicBatchSlotReaders {
   fun at(pin: Device): LogicBatchSlotReader = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<LogicBatchSlotReader>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Error: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<LogicBatchSlotReader> = intrinsic()
 }
 
 /** A StructureLogicBatchWriter. */
@@ -35147,50 +18054,11 @@ object LogicBatchWriters {
   fun at(pin: Device): LogicBatchWriter = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<LogicBatchWriter>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var ForceWrite: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Error: Double
-      get() = intrinsic()
-
-    val ForceWrite: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<LogicBatchWriter> = intrinsic()
 }
 
 /** A StructureLogicButton. */
@@ -35218,44 +18086,11 @@ object LogicButtons {
   fun at(pin: Device): LogicButton = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<LogicButton>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Activate: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Activate: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<LogicButton> = intrinsic()
 }
 
 /** A StructureLogicCompare. */
@@ -35292,53 +18127,11 @@ object LogicCompares {
   fun at(pin: Device): LogicCompare = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<LogicCompare>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Mode: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Error: Double
-      get() = intrinsic()
-
-    val Mode: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<LogicCompare> = intrinsic()
 }
 
 /** A StructureLogicDial. */
@@ -35366,44 +18159,11 @@ object LogicDials {
   fun at(pin: Device): LogicDial = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<LogicDial>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Mode: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Mode: Double
-      get() = intrinsic()
-
-    val Ratio: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<LogicDial> = intrinsic()
 }
 
 /** A StructureLogicGate. */
@@ -35440,53 +18200,11 @@ object LogicGates {
   fun at(pin: Device): LogicGate = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<LogicGate>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Mode: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Error: Double
-      get() = intrinsic()
-
-    val Mode: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<LogicGate> = intrinsic()
 }
 
 /** A StructureLogicHashGen. */
@@ -35506,30 +18224,11 @@ object LogicHashGens {
   fun at(pin: Device): LogicHashGen = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<LogicHashGen>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Setting: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<LogicHashGen> = intrinsic()
 }
 
 /** A StructureLogicMath. */
@@ -35566,53 +18265,11 @@ object LogicMaths {
   fun at(pin: Device): LogicMath = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<LogicMath>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Mode: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Error: Double
-      get() = intrinsic()
-
-    val Mode: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<LogicMath> = intrinsic()
 }
 
 /** A StructureLogicMathUnary. */
@@ -35649,53 +18306,11 @@ object LogicMathUnaries {
   fun at(pin: Device): LogicMathUnary = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<LogicMathUnary>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Mode: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Error: Double
-      get() = intrinsic()
-
-    val Mode: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<LogicMathUnary> = intrinsic()
 }
 
 /** A StructureLogicMemory. */
@@ -35716,34 +18331,11 @@ object LogicMemories {
   fun at(pin: Device): LogicMemory = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<LogicMemory>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Setting: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<LogicMemory> = intrinsic()
 }
 
 /** A StructureLogicMinMax. */
@@ -35780,53 +18372,11 @@ object LogicMinMaxes {
   fun at(pin: Device): LogicMinMax = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<LogicMinMax>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Mode: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Error: Double
-      get() = intrinsic()
-
-    val Mode: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<LogicMinMax> = intrinsic()
 }
 
 /** A StructureLogicPidController. */
@@ -35887,95 +18437,11 @@ object LogicPidControllers {
   fun at(pin: Device): LogicPidController = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<LogicPidController>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var DerivativeGain: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var IntegralGain: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Maximum: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Minimum: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var ProportionalGain: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Reset: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Setpoint: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val DerivativeGain: Double
-      get() = intrinsic()
-
-    val Error: Double
-      get() = intrinsic()
-
-    val IntegralGain: Double
-      get() = intrinsic()
-
-    val Maximum: Double
-      get() = intrinsic()
-
-    val Minimum: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val ProportionalGain: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val Reset: Double
-      get() = intrinsic()
-
-    val Setpoint: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<LogicPidController> = intrinsic()
 }
 
 /** A StructureLogicReader. */
@@ -36008,46 +18474,11 @@ object LogicReaders {
   fun at(pin: Device): LogicReader = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<LogicReader>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Error: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<LogicReader> = intrinsic()
 }
 
 /** A StructureLogicReagentReader. */
@@ -36080,46 +18511,11 @@ object LogicReagentReaders {
   fun at(pin: Device): LogicReagentReader = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<LogicReagentReader>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Error: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<LogicReagentReader> = intrinsic()
 }
 
 /** A StructureLogicRocketDownlink. */
@@ -36142,33 +18538,11 @@ object LogicRocketDownlinks {
   fun at(pin: Device): LogicRocketDownlink = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<LogicRocketDownlink>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Power: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<LogicRocketDownlink> = intrinsic()
 }
 
 /** A StructureLogicRocketUplink. */
@@ -36198,43 +18572,11 @@ object LogicRocketUplinks {
   fun at(pin: Device): LogicRocketUplink = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<LogicRocketUplink>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Error: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<LogicRocketUplink> = intrinsic()
 }
 
 /** A StructureLogicSelect. */
@@ -36271,53 +18613,11 @@ object LogicSelects {
   fun at(pin: Device): LogicSelect = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<LogicSelect>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Mode: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Error: Double
-      get() = intrinsic()
-
-    val Mode: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<LogicSelect> = intrinsic()
 }
 
 /** A StructureLogicSlotReader. */
@@ -36350,46 +18650,11 @@ object LogicSlotReaders {
   fun at(pin: Device): LogicSlotReader = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<LogicSlotReader>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Error: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<LogicSlotReader> = intrinsic()
 }
 
 /** A StructureLogicSorter. */
@@ -36465,71 +18730,9 @@ object LogicSorters {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var ClearMemory: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Mode: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val ClearMemory: Double
-      get() = intrinsic()
-
-    val Error: Double
-      get() = intrinsic()
-
-    val ExportCount: Double
-      get() = intrinsic()
-
-    val ImportCount: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val Mode: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val StackSize: Double
-      get() = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Reading>
+  class Batch internal constructor() : DeviceBatch<LogicSorter>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<DataDiskSlot>>
       get() = intrinsic()
   }
 }
@@ -36559,44 +18762,11 @@ object LogicSwitches {
   fun at(pin: Device): LogicSwitch = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<LogicSwitch>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Open: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Lock: Double
-      get() = intrinsic()
-
-    val Open: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<LogicSwitch> = intrinsic()
 }
 
 /** A StructureLogicSwitch2. */
@@ -36624,44 +18794,11 @@ object LogicSwitch2s {
   fun at(pin: Device): LogicSwitch2 = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<LogicSwitch2>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Open: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Lock: Double
-      get() = intrinsic()
-
-    val Open: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<LogicSwitch2> = intrinsic()
 }
 
 /** A StructureLogicWriter. */
@@ -36695,50 +18832,11 @@ object LogicWriters {
   fun at(pin: Device): LogicWriter = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<LogicWriter>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var ForceWrite: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Error: Double
-      get() = intrinsic()
-
-    val ForceWrite: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<LogicWriter> = intrinsic()
 }
 
 /** A StructureLogicWriterSwitch. */
@@ -36776,57 +18874,11 @@ object LogicWriterSwitches {
   fun at(pin: Device): LogicWriterSwitch = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<LogicWriterSwitch>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Activate: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var ForceWrite: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Activate: Double
-      get() = intrinsic()
-
-    val Error: Double
-      get() = intrinsic()
-
-    val ForceWrite: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<LogicWriterSwitch> = intrinsic()
 }
 
 /** A StructureManualFloorHatch. */
@@ -36858,51 +18910,11 @@ object ManualFloorHatches {
   fun at(pin: Device): ManualFloorHatch = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<ManualFloorHatch>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Open: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Idle: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val Open: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<ManualFloorHatch> = intrinsic()
 }
 
 /** A StructureManualHatch. */
@@ -36948,71 +18960,11 @@ object ManualHatches {
   fun at(pin: Device): ManualHatch = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<ManualHatch>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Mode: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Open: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Idle: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val Mode: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Open: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<ManualHatch> = intrinsic()
 }
 
 /** A StructureMediumConvectionRadiator. */
@@ -37039,40 +18991,11 @@ object MediumConvectionRadiators {
   fun at(pin: Device): MediumConvectionRadiator = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<MediumConvectionRadiator>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Maximum: Double
-      get() = intrinsic()
-
-    val Ratio: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<MediumConvectionRadiator> = intrinsic()
 }
 
 /** A StructureMediumConvectionRadiatorLiquid. */
@@ -37099,40 +19022,11 @@ object MediumConvectionRadiatorLiquids {
   fun at(pin: Device): MediumConvectionRadiatorLiquid = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<MediumConvectionRadiatorLiquid>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Maximum: Double
-      get() = intrinsic()
-
-    val Ratio: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<MediumConvectionRadiatorLiquid> = intrinsic()
 }
 
 /** A StructureMediumHangerDoor. */
@@ -37178,71 +19072,11 @@ object MediumHangerDoors {
   fun at(pin: Device): MediumHangerDoor = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<MediumHangerDoor>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Mode: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Open: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Idle: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val Mode: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Open: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<MediumHangerDoor> = intrinsic()
 }
 
 /** A StructureMediumRadiator. */
@@ -37269,40 +19103,11 @@ object MediumRadiators {
   fun at(pin: Device): MediumRadiator = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<MediumRadiator>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Maximum: Double
-      get() = intrinsic()
-
-    val Ratio: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<MediumRadiator> = intrinsic()
 }
 
 /** A StructureMediumRadiatorLiquid. */
@@ -37329,40 +19134,11 @@ object MediumRadiatorLiquids {
   fun at(pin: Device): MediumRadiatorLiquid = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<MediumRadiatorLiquid>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Maximum: Double
-      get() = intrinsic()
-
-    val Ratio: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<MediumRadiatorLiquid> = intrinsic()
 }
 
 /** A StructureMediumRocketGasFuelTank. */
@@ -37566,217 +19342,11 @@ object MediumRocketGasFuelTanks {
   fun at(pin: Device): MediumRocketGasFuelTank = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<MediumRocketGasFuelTank>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Combustion: Double
-      get() = intrinsic()
-
-    val CombustionOutput: Double
-      get() = intrinsic()
-
-    val Maximum: Double
-      get() = intrinsic()
-
-    val Pressure: Double
-      get() = intrinsic()
-
-    val PressureOutput: Double
-      get() = intrinsic()
-
-    val Ratio: Double
-      get() = intrinsic()
-
-    val RatioCarbonDioxide: Double
-      get() = intrinsic()
-
-    val RatioCarbonDioxideOutput: Double
-      get() = intrinsic()
-
-    val RatioHelium: Double
-      get() = intrinsic()
-
-    val RatioHeliumOutput: Double
-      get() = intrinsic()
-
-    val RatioHydrazine: Double
-      get() = intrinsic()
-
-    val RatioHydrazineOutput: Double
-      get() = intrinsic()
-
-    val RatioHydrochloricAcid: Double
-      get() = intrinsic()
-
-    val RatioHydrochloricAcidOutput: Double
-      get() = intrinsic()
-
-    val RatioHydrogen: Double
-      get() = intrinsic()
-
-    val RatioHydrogenOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidAlcohol: Double
-      get() = intrinsic()
-
-    val RatioLiquidAlcoholOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidCarbonDioxide: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrazine: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrazineOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrochloricAcid: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrochloricAcidOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrogenOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidMethane: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrousOxide: Double
-      get() = intrinsic()
-
-    val RatioLiquidOxygen: Double
-      get() = intrinsic()
-
-    val RatioLiquidOzone: Double
-      get() = intrinsic()
-
-    val RatioLiquidOzoneOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidPollutant: Double
-      get() = intrinsic()
-
-    val RatioLiquidSilanol: Double
-      get() = intrinsic()
-
-    val RatioLiquidSilanolOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidSodiumChloride: Double
-      get() = intrinsic()
-
-    val RatioLiquidSodiumChlorideOutput: Double
-      get() = intrinsic()
-
-    val RatioMethane: Double
-      get() = intrinsic()
-
-    val RatioMethaneOutput: Double
-      get() = intrinsic()
-
-    val RatioNitrogen: Double
-      get() = intrinsic()
-
-    val RatioNitrogenOutput: Double
-      get() = intrinsic()
-
-    val RatioNitrousOxide: Double
-      get() = intrinsic()
-
-    val RatioNitrousOxideOutput: Double
-      get() = intrinsic()
-
-    val RatioOxygen: Double
-      get() = intrinsic()
-
-    val RatioOxygenOutput: Double
-      get() = intrinsic()
-
-    val RatioOzone: Double
-      get() = intrinsic()
-
-    val RatioOzoneOutput: Double
-      get() = intrinsic()
-
-    val RatioPollutant: Double
-      get() = intrinsic()
-
-    val RatioPollutantOutput: Double
-      get() = intrinsic()
-
-    val RatioPollutedWater: Double
-      get() = intrinsic()
-
-    val RatioPollutedWaterOutput: Double
-      get() = intrinsic()
-
-    val RatioSilanol: Double
-      get() = intrinsic()
-
-    val RatioSilanolOutput: Double
-      get() = intrinsic()
-
-    val RatioSteam: Double
-      get() = intrinsic()
-
-    val RatioWater: Double
-      get() = intrinsic()
-
-    val RatioWaterOutput: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-
-    val Temperature: Double
-      get() = intrinsic()
-
-    val TemperatureOutput: Double
-      get() = intrinsic()
-
-    val TotalMoles: Double
-      get() = intrinsic()
-
-    val TotalMolesOutput: Double
-      get() = intrinsic()
-
-    val Volume: Double
-      get() = intrinsic()
-
-    val VolumeOfLiquid: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<MediumRocketGasFuelTank> = intrinsic()
 }
 
 /** A StructureMediumRocketLiquidFuelTank. */
@@ -37980,217 +19550,11 @@ object MediumRocketLiquidFuelTanks {
   fun at(pin: Device): MediumRocketLiquidFuelTank = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<MediumRocketLiquidFuelTank>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Combustion: Double
-      get() = intrinsic()
-
-    val CombustionOutput: Double
-      get() = intrinsic()
-
-    val Maximum: Double
-      get() = intrinsic()
-
-    val Pressure: Double
-      get() = intrinsic()
-
-    val PressureOutput: Double
-      get() = intrinsic()
-
-    val Ratio: Double
-      get() = intrinsic()
-
-    val RatioCarbonDioxide: Double
-      get() = intrinsic()
-
-    val RatioCarbonDioxideOutput: Double
-      get() = intrinsic()
-
-    val RatioHelium: Double
-      get() = intrinsic()
-
-    val RatioHeliumOutput: Double
-      get() = intrinsic()
-
-    val RatioHydrazine: Double
-      get() = intrinsic()
-
-    val RatioHydrazineOutput: Double
-      get() = intrinsic()
-
-    val RatioHydrochloricAcid: Double
-      get() = intrinsic()
-
-    val RatioHydrochloricAcidOutput: Double
-      get() = intrinsic()
-
-    val RatioHydrogen: Double
-      get() = intrinsic()
-
-    val RatioHydrogenOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidAlcohol: Double
-      get() = intrinsic()
-
-    val RatioLiquidAlcoholOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidCarbonDioxide: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrazine: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrazineOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrochloricAcid: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrochloricAcidOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrogenOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidMethane: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrousOxide: Double
-      get() = intrinsic()
-
-    val RatioLiquidOxygen: Double
-      get() = intrinsic()
-
-    val RatioLiquidOzone: Double
-      get() = intrinsic()
-
-    val RatioLiquidOzoneOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidPollutant: Double
-      get() = intrinsic()
-
-    val RatioLiquidSilanol: Double
-      get() = intrinsic()
-
-    val RatioLiquidSilanolOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidSodiumChloride: Double
-      get() = intrinsic()
-
-    val RatioLiquidSodiumChlorideOutput: Double
-      get() = intrinsic()
-
-    val RatioMethane: Double
-      get() = intrinsic()
-
-    val RatioMethaneOutput: Double
-      get() = intrinsic()
-
-    val RatioNitrogen: Double
-      get() = intrinsic()
-
-    val RatioNitrogenOutput: Double
-      get() = intrinsic()
-
-    val RatioNitrousOxide: Double
-      get() = intrinsic()
-
-    val RatioNitrousOxideOutput: Double
-      get() = intrinsic()
-
-    val RatioOxygen: Double
-      get() = intrinsic()
-
-    val RatioOxygenOutput: Double
-      get() = intrinsic()
-
-    val RatioOzone: Double
-      get() = intrinsic()
-
-    val RatioOzoneOutput: Double
-      get() = intrinsic()
-
-    val RatioPollutant: Double
-      get() = intrinsic()
-
-    val RatioPollutantOutput: Double
-      get() = intrinsic()
-
-    val RatioPollutedWater: Double
-      get() = intrinsic()
-
-    val RatioPollutedWaterOutput: Double
-      get() = intrinsic()
-
-    val RatioSilanol: Double
-      get() = intrinsic()
-
-    val RatioSilanolOutput: Double
-      get() = intrinsic()
-
-    val RatioSteam: Double
-      get() = intrinsic()
-
-    val RatioWater: Double
-      get() = intrinsic()
-
-    val RatioWaterOutput: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-
-    val Temperature: Double
-      get() = intrinsic()
-
-    val TemperatureOutput: Double
-      get() = intrinsic()
-
-    val TotalMoles: Double
-      get() = intrinsic()
-
-    val TotalMolesOutput: Double
-      get() = intrinsic()
-
-    val Volume: Double
-      get() = intrinsic()
-
-    val VolumeOfLiquid: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<MediumRocketLiquidFuelTank> = intrinsic()
 }
 
 /** A StructureMotionSensor. */
@@ -38218,44 +19582,11 @@ object MotionSensors {
   fun at(pin: Device): MotionSensor = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<MotionSensor>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Activate: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Activate: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Quantity: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<MotionSensor> = intrinsic()
 }
 
 /** A StructureNitrolyzer. */
@@ -38706,459 +20037,9 @@ object Nitrolyzers {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Activate: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Mode: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Open: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Activate: Double
-      get() = intrinsic()
-
-    val Combustion: Double
-      get() = intrinsic()
-
-    val CombustionInput: Double
-      get() = intrinsic()
-
-    val CombustionInput2: Double
-      get() = intrinsic()
-
-    val CombustionOutput: Double
-      get() = intrinsic()
-
-    val Error: Double
-      get() = intrinsic()
-
-    val Maximum: Double
-      get() = intrinsic()
-
-    val Mode: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Open: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val Pressure: Double
-      get() = intrinsic()
-
-    val PressureInput: Double
-      get() = intrinsic()
-
-    val PressureInput2: Double
-      get() = intrinsic()
-
-    val PressureOutput: Double
-      get() = intrinsic()
-
-    val Ratio: Double
-      get() = intrinsic()
-
-    val RatioCarbonDioxide: Double
-      get() = intrinsic()
-
-    val RatioCarbonDioxideInput: Double
-      get() = intrinsic()
-
-    val RatioCarbonDioxideInput2: Double
-      get() = intrinsic()
-
-    val RatioCarbonDioxideOutput: Double
-      get() = intrinsic()
-
-    val RatioHelium: Double
-      get() = intrinsic()
-
-    val RatioHeliumInput: Double
-      get() = intrinsic()
-
-    val RatioHeliumInput2: Double
-      get() = intrinsic()
-
-    val RatioHeliumOutput: Double
-      get() = intrinsic()
-
-    val RatioHydrazine: Double
-      get() = intrinsic()
-
-    val RatioHydrazineInput: Double
-      get() = intrinsic()
-
-    val RatioHydrazineInput2: Double
-      get() = intrinsic()
-
-    val RatioHydrazineOutput: Double
-      get() = intrinsic()
-
-    val RatioHydrochloricAcid: Double
-      get() = intrinsic()
-
-    val RatioHydrochloricAcidInput: Double
-      get() = intrinsic()
-
-    val RatioHydrochloricAcidInput2: Double
-      get() = intrinsic()
-
-    val RatioHydrochloricAcidOutput: Double
-      get() = intrinsic()
-
-    val RatioHydrogen: Double
-      get() = intrinsic()
-
-    val RatioHydrogenInput: Double
-      get() = intrinsic()
-
-    val RatioHydrogenInput2: Double
-      get() = intrinsic()
-
-    val RatioHydrogenOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidAlcohol: Double
-      get() = intrinsic()
-
-    val RatioLiquidAlcoholInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidAlcoholInput2: Double
-      get() = intrinsic()
-
-    val RatioLiquidAlcoholOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidCarbonDioxide: Double
-      get() = intrinsic()
-
-    val RatioLiquidCarbonDioxideInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidCarbonDioxideInput2: Double
-      get() = intrinsic()
-
-    val RatioLiquidCarbonDioxideOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrazine: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrazineInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrazineInput2: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrazineOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrochloricAcid: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrochloricAcidInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrochloricAcidInput2: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrochloricAcidOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrogenInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrogenInput2: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrogenOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidMethane: Double
-      get() = intrinsic()
-
-    val RatioLiquidMethaneInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidMethaneInput2: Double
-      get() = intrinsic()
-
-    val RatioLiquidMethaneOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrogenInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrogenInput2: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrogenOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrousOxide: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrousOxideInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrousOxideInput2: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrousOxideOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidOxygen: Double
-      get() = intrinsic()
-
-    val RatioLiquidOxygenInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidOxygenInput2: Double
-      get() = intrinsic()
-
-    val RatioLiquidOxygenOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidOzone: Double
-      get() = intrinsic()
-
-    val RatioLiquidOzoneInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidOzoneInput2: Double
-      get() = intrinsic()
-
-    val RatioLiquidOzoneOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidPollutant: Double
-      get() = intrinsic()
-
-    val RatioLiquidPollutantInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidPollutantInput2: Double
-      get() = intrinsic()
-
-    val RatioLiquidPollutantOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidSilanol: Double
-      get() = intrinsic()
-
-    val RatioLiquidSilanolInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidSilanolInput2: Double
-      get() = intrinsic()
-
-    val RatioLiquidSilanolOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidSodiumChloride: Double
-      get() = intrinsic()
-
-    val RatioLiquidSodiumChlorideInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidSodiumChlorideInput2: Double
-      get() = intrinsic()
-
-    val RatioLiquidSodiumChlorideOutput: Double
-      get() = intrinsic()
-
-    val RatioMethane: Double
-      get() = intrinsic()
-
-    val RatioMethaneInput: Double
-      get() = intrinsic()
-
-    val RatioMethaneInput2: Double
-      get() = intrinsic()
-
-    val RatioMethaneOutput: Double
-      get() = intrinsic()
-
-    val RatioNitrogen: Double
-      get() = intrinsic()
-
-    val RatioNitrogenInput: Double
-      get() = intrinsic()
-
-    val RatioNitrogenInput2: Double
-      get() = intrinsic()
-
-    val RatioNitrogenOutput: Double
-      get() = intrinsic()
-
-    val RatioNitrousOxide: Double
-      get() = intrinsic()
-
-    val RatioNitrousOxideInput: Double
-      get() = intrinsic()
-
-    val RatioNitrousOxideInput2: Double
-      get() = intrinsic()
-
-    val RatioNitrousOxideOutput: Double
-      get() = intrinsic()
-
-    val RatioOxygen: Double
-      get() = intrinsic()
-
-    val RatioOxygenInput: Double
-      get() = intrinsic()
-
-    val RatioOxygenInput2: Double
-      get() = intrinsic()
-
-    val RatioOxygenOutput: Double
-      get() = intrinsic()
-
-    val RatioOzone: Double
-      get() = intrinsic()
-
-    val RatioOzoneInput: Double
-      get() = intrinsic()
-
-    val RatioOzoneInput2: Double
-      get() = intrinsic()
-
-    val RatioOzoneOutput: Double
-      get() = intrinsic()
-
-    val RatioPollutant: Double
-      get() = intrinsic()
-
-    val RatioPollutantInput: Double
-      get() = intrinsic()
-
-    val RatioPollutantInput2: Double
-      get() = intrinsic()
-
-    val RatioPollutantOutput: Double
-      get() = intrinsic()
-
-    val RatioPollutedWater: Double
-      get() = intrinsic()
-
-    val RatioPollutedWaterInput: Double
-      get() = intrinsic()
-
-    val RatioPollutedWaterInput2: Double
-      get() = intrinsic()
-
-    val RatioPollutedWaterOutput: Double
-      get() = intrinsic()
-
-    val RatioSilanol: Double
-      get() = intrinsic()
-
-    val RatioSilanolInput: Double
-      get() = intrinsic()
-
-    val RatioSilanolInput2: Double
-      get() = intrinsic()
-
-    val RatioSilanolOutput: Double
-      get() = intrinsic()
-
-    val RatioSteam: Double
-      get() = intrinsic()
-
-    val RatioSteamInput: Double
-      get() = intrinsic()
-
-    val RatioSteamInput2: Double
-      get() = intrinsic()
-
-    val RatioSteamOutput: Double
-      get() = intrinsic()
-
-    val RatioWater: Double
-      get() = intrinsic()
-
-    val RatioWaterInput: Double
-      get() = intrinsic()
-
-    val RatioWaterInput2: Double
-      get() = intrinsic()
-
-    val RatioWaterOutput: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-
-    val Temperature: Double
-      get() = intrinsic()
-
-    val TemperatureInput: Double
-      get() = intrinsic()
-
-    val TemperatureInput2: Double
-      get() = intrinsic()
-
-    val TemperatureOutput: Double
-      get() = intrinsic()
-
-    val TotalMoles: Double
-      get() = intrinsic()
-
-    val TotalMolesInput: Double
-      get() = intrinsic()
-
-    val TotalMolesInput2: Double
-      get() = intrinsic()
-
-    val TotalMolesOutput: Double
-      get() = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Reading>
+  class Batch internal constructor() : DeviceBatch<Nitrolyzer>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<DataDiskSlot>>
       get() = intrinsic()
   }
 }
@@ -39186,36 +20067,11 @@ object OccupancySensors {
   fun at(pin: Device): OccupancySensor = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<OccupancySensor>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Activate: Double
-      get() = intrinsic()
-
-    val Quantity: Double
-      get() = intrinsic()
-
-    val StackSize: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<OccupancySensor> = intrinsic()
 }
 
 /** A StructureOverheadShortCornerLocker. */
@@ -39250,39 +20106,9 @@ object OverheadShortCornerLockers {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Open: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Lock: Double
-      get() = intrinsic()
-
-    val Open: Double
-      get() = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Reading>
+  class Batch internal constructor() : DeviceBatch<OverheadShortCornerLocker>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<DataDiskSlot>>
       get() = intrinsic()
   }
 }
@@ -39319,39 +20145,9 @@ object OverheadShortLockers {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Open: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Lock: Double
-      get() = intrinsic()
-
-    val Open: Double
-      get() = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Reading>
+  class Batch internal constructor() : DeviceBatch<OverheadShortLocker>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<DataDiskSlot>>
       get() = intrinsic()
   }
 }
@@ -39420,62 +20216,9 @@ object Packers {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Mode: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Open: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Error: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val Mode: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Open: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Reading>
+  class Batch internal constructor() : DeviceBatch<Packer>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<DataDiskSlot>>
       get() = intrinsic()
   }
 }
@@ -39504,40 +20247,11 @@ object PassiveLargeRadiatorGases {
   fun at(pin: Device): PassiveLargeRadiatorGas = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<PassiveLargeRadiatorGas>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Maximum: Double
-      get() = intrinsic()
-
-    val Ratio: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<PassiveLargeRadiatorGas> = intrinsic()
 }
 
 /** A StructurePassiveLargeRadiatorLiquid. */
@@ -39564,40 +20278,11 @@ object PassiveLargeRadiatorLiquids {
   fun at(pin: Device): PassiveLargeRadiatorLiquid = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<PassiveLargeRadiatorLiquid>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Maximum: Double
-      get() = intrinsic()
-
-    val Ratio: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<PassiveLargeRadiatorLiquid> = intrinsic()
 }
 
 /** A StructurePassthroughHeatExchangerGasToGas. */
@@ -39624,40 +20309,11 @@ object PassthroughHeatExchangerGasToGases {
   fun at(pin: Device): PassthroughHeatExchangerGasToGas = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<PassthroughHeatExchangerGasToGas>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Maximum: Double
-      get() = intrinsic()
-
-    val Ratio: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<PassthroughHeatExchangerGasToGas> = intrinsic()
 }
 
 /** A StructurePassthroughHeatExchangerGasToLiquid. */
@@ -39684,40 +20340,11 @@ object PassthroughHeatExchangerGasToLiquids {
   fun at(pin: Device): PassthroughHeatExchangerGasToLiquid = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<PassthroughHeatExchangerGasToLiquid>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Maximum: Double
-      get() = intrinsic()
-
-    val Ratio: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<PassthroughHeatExchangerGasToLiquid> = intrinsic()
 }
 
 /** A StructurePassthroughHeatExchangerLiquidToLiquid. */
@@ -39744,40 +20371,11 @@ object PassthroughHeatExchangerLiquidToLiquids {
   fun at(pin: Device): PassthroughHeatExchangerLiquidToLiquid = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<PassthroughHeatExchangerLiquidToLiquid>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Maximum: Double
-      get() = intrinsic()
-
-    val Ratio: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<PassthroughHeatExchangerLiquidToLiquid> = intrinsic()
 }
 
 /** A StructurePipeAnalysizer. */
@@ -39916,155 +20514,11 @@ object PipeAnalysizers {
   fun at(pin: Device): PipeAnalysizer = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<PipeAnalysizer>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Combustion: Double
-      get() = intrinsic()
-
-    val Error: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val NetworkFault: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val Pressure: Double
-      get() = intrinsic()
-
-    val RatioCarbonDioxide: Double
-      get() = intrinsic()
-
-    val RatioHelium: Double
-      get() = intrinsic()
-
-    val RatioHydrazine: Double
-      get() = intrinsic()
-
-    val RatioHydrochloricAcid: Double
-      get() = intrinsic()
-
-    val RatioHydrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidAlcohol: Double
-      get() = intrinsic()
-
-    val RatioLiquidCarbonDioxide: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrazine: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrochloricAcid: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidMethane: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrousOxide: Double
-      get() = intrinsic()
-
-    val RatioLiquidOxygen: Double
-      get() = intrinsic()
-
-    val RatioLiquidOzone: Double
-      get() = intrinsic()
-
-    val RatioLiquidPollutant: Double
-      get() = intrinsic()
-
-    val RatioLiquidSilanol: Double
-      get() = intrinsic()
-
-    val RatioLiquidSodiumChloride: Double
-      get() = intrinsic()
-
-    val RatioMethane: Double
-      get() = intrinsic()
-
-    val RatioNitrogen: Double
-      get() = intrinsic()
-
-    val RatioNitrousOxide: Double
-      get() = intrinsic()
-
-    val RatioOxygen: Double
-      get() = intrinsic()
-
-    val RatioOzone: Double
-      get() = intrinsic()
-
-    val RatioPollutant: Double
-      get() = intrinsic()
-
-    val RatioPollutedWater: Double
-      get() = intrinsic()
-
-    val RatioSilanol: Double
-      get() = intrinsic()
-
-    val RatioSteam: Double
-      get() = intrinsic()
-
-    val RatioWater: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val Temperature: Double
-      get() = intrinsic()
-
-    val TotalMoles: Double
-      get() = intrinsic()
-
-    val Volume: Double
-      get() = intrinsic()
-
-    val VolumeOfLiquid: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<PipeAnalysizer> = intrinsic()
 }
 
 /** A StructurePipeHeater. */
@@ -40098,50 +20552,11 @@ object PipeHeaters {
   fun at(pin: Device): PipeHeater = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<PipeHeater>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Error: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<PipeHeater> = intrinsic()
 }
 
 /** A StructurePipeIgniter. */
@@ -40171,43 +20586,11 @@ object PipeIgniters {
   fun at(pin: Device): PipeIgniter = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<PipeIgniter>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Activate: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Activate: Double
-      get() = intrinsic()
-
-    val Error: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<PipeIgniter> = intrinsic()
 }
 
 /** A StructurePipeLiquidOneWayValveLever. */
@@ -40238,47 +20621,11 @@ object PipeLiquidOneWayValveLevers {
   fun at(pin: Device): PipeLiquidOneWayValveLever = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<PipeLiquidOneWayValveLever>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Maximum: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Ratio: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<PipeLiquidOneWayValveLever> = intrinsic()
 }
 
 /** A StructurePipeOneWayValveLever. */
@@ -40309,47 +20656,11 @@ object PipeOneWayValveLevers {
   fun at(pin: Device): PipeOneWayValveLever = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<PipeOneWayValveLever>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Maximum: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Ratio: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<PipeOneWayValveLever> = intrinsic()
 }
 
 /** A StructurePortablesConnector. */
@@ -40395,45 +20706,9 @@ object PortablesConnectors {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Open: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Maximum: Double
-      get() = intrinsic()
-
-    val Open: Double
-      get() = intrinsic()
-
-    val Ratio: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Reading>
+  class Batch internal constructor() : DeviceBatch<PortablesConnector>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<DataDiskSlot>>
       get() = intrinsic()
   }
 }
@@ -40471,32 +20746,9 @@ object PowerConnectors {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Open: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Open: Double
-      get() = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Reading>
+  class Batch internal constructor() : DeviceBatch<PowerConnector>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<DataDiskSlot>>
       get() = intrinsic()
   }
 }
@@ -40557,78 +20809,11 @@ object PowerTransmitters {
   fun at(pin: Device): PowerTransmitter = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<PowerTransmitter>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Horizontal: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Vertical: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Charge: Double
-      get() = intrinsic()
-
-    val Error: Double
-      get() = intrinsic()
-
-    val Horizontal: Double
-      get() = intrinsic()
-
-    val Mode: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val PositionX: Double
-      get() = intrinsic()
-
-    val PositionY: Double
-      get() = intrinsic()
-
-    val PositionZ: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val PowerActual: Double
-      get() = intrinsic()
-
-    val PowerPotential: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val Vertical: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<PowerTransmitter> = intrinsic()
 }
 
 /** A StructurePowerTransmitterOmni. */
@@ -40658,43 +20843,11 @@ object PowerTransmitterOmnis {
   fun at(pin: Device): PowerTransmitterOmni = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<PowerTransmitterOmni>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Error: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<PowerTransmitterOmni> = intrinsic()
 }
 
 /** A StructurePowerTransmitterReceiver. */
@@ -40753,78 +20906,11 @@ object PowerTransmitterReceivers {
   fun at(pin: Device): PowerTransmitterReceiver = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<PowerTransmitterReceiver>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Horizontal: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Vertical: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Charge: Double
-      get() = intrinsic()
-
-    val Error: Double
-      get() = intrinsic()
-
-    val Horizontal: Double
-      get() = intrinsic()
-
-    val Mode: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val PositionX: Double
-      get() = intrinsic()
-
-    val PositionY: Double
-      get() = intrinsic()
-
-    val PositionZ: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val PowerActual: Double
-      get() = intrinsic()
-
-    val PowerPotential: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val Vertical: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<PowerTransmitterReceiver> = intrinsic()
 }
 
 /** A StructurePowerUmbilicalMale. */
@@ -40865,60 +20951,11 @@ object PowerUmbilicalMales {
   fun at(pin: Device): PowerUmbilicalMale = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<PowerUmbilicalMale>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Open: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Error: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val Mode: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Open: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<PowerUmbilicalMale> = intrinsic()
 }
 
 /** A StructurePoweredVent. */
@@ -41035,139 +21072,11 @@ object PoweredVents {
   fun at(pin: Device): PoweredVent = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<PoweredVent>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Mode: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var PressureExternal: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val CombustionOutput: Double
-      get() = intrinsic()
-
-    val Error: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val Mode: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val PressureExternal: Double
-      get() = intrinsic()
-
-    val PressureOutput: Double
-      get() = intrinsic()
-
-    val RatioCarbonDioxideOutput: Double
-      get() = intrinsic()
-
-    val RatioHeliumOutput: Double
-      get() = intrinsic()
-
-    val RatioHydrazineOutput: Double
-      get() = intrinsic()
-
-    val RatioHydrochloricAcidOutput: Double
-      get() = intrinsic()
-
-    val RatioHydrogenOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidAlcoholOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrazineOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrochloricAcidOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrogenOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidOzoneOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidSilanolOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidSodiumChlorideOutput: Double
-      get() = intrinsic()
-
-    val RatioMethaneOutput: Double
-      get() = intrinsic()
-
-    val RatioNitrogenOutput: Double
-      get() = intrinsic()
-
-    val RatioNitrousOxideOutput: Double
-      get() = intrinsic()
-
-    val RatioOxygenOutput: Double
-      get() = intrinsic()
-
-    val RatioOzoneOutput: Double
-      get() = intrinsic()
-
-    val RatioPollutantOutput: Double
-      get() = intrinsic()
-
-    val RatioPollutedWaterOutput: Double
-      get() = intrinsic()
-
-    val RatioSilanolOutput: Double
-      get() = intrinsic()
-
-    val RatioWaterOutput: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val TemperatureOutput: Double
-      get() = intrinsic()
-
-    val TotalMolesOutput: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<PoweredVent> = intrinsic()
 }
 
 /** A StructurePoweredVentLarge. */
@@ -41284,139 +21193,11 @@ object PoweredVentLarges {
   fun at(pin: Device): PoweredVentLarge = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<PoweredVentLarge>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Mode: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var PressureExternal: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val CombustionOutput: Double
-      get() = intrinsic()
-
-    val Error: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val Mode: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val PressureExternal: Double
-      get() = intrinsic()
-
-    val PressureOutput: Double
-      get() = intrinsic()
-
-    val RatioCarbonDioxideOutput: Double
-      get() = intrinsic()
-
-    val RatioHeliumOutput: Double
-      get() = intrinsic()
-
-    val RatioHydrazineOutput: Double
-      get() = intrinsic()
-
-    val RatioHydrochloricAcidOutput: Double
-      get() = intrinsic()
-
-    val RatioHydrogenOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidAlcoholOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrazineOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrochloricAcidOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrogenOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidOzoneOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidSilanolOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidSodiumChlorideOutput: Double
-      get() = intrinsic()
-
-    val RatioMethaneOutput: Double
-      get() = intrinsic()
-
-    val RatioNitrogenOutput: Double
-      get() = intrinsic()
-
-    val RatioNitrousOxideOutput: Double
-      get() = intrinsic()
-
-    val RatioOxygenOutput: Double
-      get() = intrinsic()
-
-    val RatioOzoneOutput: Double
-      get() = intrinsic()
-
-    val RatioPollutantOutput: Double
-      get() = intrinsic()
-
-    val RatioPollutedWaterOutput: Double
-      get() = intrinsic()
-
-    val RatioSilanolOutput: Double
-      get() = intrinsic()
-
-    val RatioWaterOutput: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val TemperatureOutput: Double
-      get() = intrinsic()
-
-    val TotalMolesOutput: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<PoweredVentLarge> = intrinsic()
 }
 
 /** A StructurePressurantValve. */
@@ -41460,63 +21241,11 @@ object PressurantValves {
   fun at(pin: Device): PressurantValve = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<PressurantValve>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Error: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val Maximum: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val Ratio: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<PressurantValve> = intrinsic()
 }
 
 /** A StructurePressureFedGasEngine. */
@@ -41649,149 +21378,11 @@ object PressureFedGasEngines {
   fun at(pin: Device): PressureFedGasEngine = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<PressureFedGasEngine>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Throttle: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Combustion: Double
-      get() = intrinsic()
-
-    val Error: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val PassedMoles: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val Pressure: Double
-      get() = intrinsic()
-
-    val RatioCarbonDioxide: Double
-      get() = intrinsic()
-
-    val RatioHelium: Double
-      get() = intrinsic()
-
-    val RatioHydrazine: Double
-      get() = intrinsic()
-
-    val RatioHydrochloricAcid: Double
-      get() = intrinsic()
-
-    val RatioHydrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidAlcohol: Double
-      get() = intrinsic()
-
-    val RatioLiquidCarbonDioxide: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrazine: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrochloricAcid: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidMethane: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrousOxide: Double
-      get() = intrinsic()
-
-    val RatioLiquidOxygen: Double
-      get() = intrinsic()
-
-    val RatioLiquidOzone: Double
-      get() = intrinsic()
-
-    val RatioLiquidPollutant: Double
-      get() = intrinsic()
-
-    val RatioLiquidSilanol: Double
-      get() = intrinsic()
-
-    val RatioLiquidSodiumChloride: Double
-      get() = intrinsic()
-
-    val RatioMethane: Double
-      get() = intrinsic()
-
-    val RatioNitrogen: Double
-      get() = intrinsic()
-
-    val RatioNitrousOxide: Double
-      get() = intrinsic()
-
-    val RatioOxygen: Double
-      get() = intrinsic()
-
-    val RatioOzone: Double
-      get() = intrinsic()
-
-    val RatioPollutant: Double
-      get() = intrinsic()
-
-    val RatioPollutedWater: Double
-      get() = intrinsic()
-
-    val RatioSilanol: Double
-      get() = intrinsic()
-
-    val RatioSteam: Double
-      get() = intrinsic()
-
-    val RatioWater: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val Temperature: Double
-      get() = intrinsic()
-
-    val Throttle: Double
-      get() = intrinsic()
-
-    val TotalMoles: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<PressureFedGasEngine> = intrinsic()
 }
 
 /** A StructurePressureFedGasEngineHeavy. */
@@ -41924,149 +21515,11 @@ object PressureFedGasEngineHeavies {
   fun at(pin: Device): PressureFedGasEngineHeavy = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<PressureFedGasEngineHeavy>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Throttle: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Combustion: Double
-      get() = intrinsic()
-
-    val Error: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val PassedMoles: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val Pressure: Double
-      get() = intrinsic()
-
-    val RatioCarbonDioxide: Double
-      get() = intrinsic()
-
-    val RatioHelium: Double
-      get() = intrinsic()
-
-    val RatioHydrazine: Double
-      get() = intrinsic()
-
-    val RatioHydrochloricAcid: Double
-      get() = intrinsic()
-
-    val RatioHydrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidAlcohol: Double
-      get() = intrinsic()
-
-    val RatioLiquidCarbonDioxide: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrazine: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrochloricAcid: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidMethane: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrousOxide: Double
-      get() = intrinsic()
-
-    val RatioLiquidOxygen: Double
-      get() = intrinsic()
-
-    val RatioLiquidOzone: Double
-      get() = intrinsic()
-
-    val RatioLiquidPollutant: Double
-      get() = intrinsic()
-
-    val RatioLiquidSilanol: Double
-      get() = intrinsic()
-
-    val RatioLiquidSodiumChloride: Double
-      get() = intrinsic()
-
-    val RatioMethane: Double
-      get() = intrinsic()
-
-    val RatioNitrogen: Double
-      get() = intrinsic()
-
-    val RatioNitrousOxide: Double
-      get() = intrinsic()
-
-    val RatioOxygen: Double
-      get() = intrinsic()
-
-    val RatioOzone: Double
-      get() = intrinsic()
-
-    val RatioPollutant: Double
-      get() = intrinsic()
-
-    val RatioPollutedWater: Double
-      get() = intrinsic()
-
-    val RatioSilanol: Double
-      get() = intrinsic()
-
-    val RatioSteam: Double
-      get() = intrinsic()
-
-    val RatioWater: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val Temperature: Double
-      get() = intrinsic()
-
-    val Throttle: Double
-      get() = intrinsic()
-
-    val TotalMoles: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<PressureFedGasEngineHeavy> = intrinsic()
 }
 
 /** A StructurePressureFedLiquidEngine. */
@@ -42209,162 +21662,11 @@ object PressureFedLiquidEngines {
   fun at(pin: Device): PressureFedLiquidEngine = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<PressureFedLiquidEngine>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Throttle: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Combustion: Double
-      get() = intrinsic()
-
-    val Error: Double
-      get() = intrinsic()
-
-    val Maximum: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val PassedMoles: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val Pressure: Double
-      get() = intrinsic()
-
-    val Ratio: Double
-      get() = intrinsic()
-
-    val RatioCarbonDioxide: Double
-      get() = intrinsic()
-
-    val RatioHelium: Double
-      get() = intrinsic()
-
-    val RatioHydrazine: Double
-      get() = intrinsic()
-
-    val RatioHydrochloricAcid: Double
-      get() = intrinsic()
-
-    val RatioHydrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidAlcohol: Double
-      get() = intrinsic()
-
-    val RatioLiquidCarbonDioxide: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrazine: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrochloricAcid: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidMethane: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrousOxide: Double
-      get() = intrinsic()
-
-    val RatioLiquidOxygen: Double
-      get() = intrinsic()
-
-    val RatioLiquidOzone: Double
-      get() = intrinsic()
-
-    val RatioLiquidPollutant: Double
-      get() = intrinsic()
-
-    val RatioLiquidSilanol: Double
-      get() = intrinsic()
-
-    val RatioLiquidSodiumChloride: Double
-      get() = intrinsic()
-
-    val RatioMethane: Double
-      get() = intrinsic()
-
-    val RatioNitrogen: Double
-      get() = intrinsic()
-
-    val RatioNitrousOxide: Double
-      get() = intrinsic()
-
-    val RatioOxygen: Double
-      get() = intrinsic()
-
-    val RatioOzone: Double
-      get() = intrinsic()
-
-    val RatioPollutant: Double
-      get() = intrinsic()
-
-    val RatioPollutedWater: Double
-      get() = intrinsic()
-
-    val RatioSilanol: Double
-      get() = intrinsic()
-
-    val RatioSteam: Double
-      get() = intrinsic()
-
-    val RatioWater: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-
-    val Temperature: Double
-      get() = intrinsic()
-
-    val Throttle: Double
-      get() = intrinsic()
-
-    val TotalMoles: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<PressureFedLiquidEngine> = intrinsic()
 }
 
 /** A StructurePressureFedLiquidEngineHeavy. */
@@ -42507,162 +21809,11 @@ object PressureFedLiquidEngineHeavies {
   fun at(pin: Device): PressureFedLiquidEngineHeavy = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<PressureFedLiquidEngineHeavy>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Throttle: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Combustion: Double
-      get() = intrinsic()
-
-    val Error: Double
-      get() = intrinsic()
-
-    val Maximum: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val PassedMoles: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val Pressure: Double
-      get() = intrinsic()
-
-    val Ratio: Double
-      get() = intrinsic()
-
-    val RatioCarbonDioxide: Double
-      get() = intrinsic()
-
-    val RatioHelium: Double
-      get() = intrinsic()
-
-    val RatioHydrazine: Double
-      get() = intrinsic()
-
-    val RatioHydrochloricAcid: Double
-      get() = intrinsic()
-
-    val RatioHydrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidAlcohol: Double
-      get() = intrinsic()
-
-    val RatioLiquidCarbonDioxide: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrazine: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrochloricAcid: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidMethane: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrousOxide: Double
-      get() = intrinsic()
-
-    val RatioLiquidOxygen: Double
-      get() = intrinsic()
-
-    val RatioLiquidOzone: Double
-      get() = intrinsic()
-
-    val RatioLiquidPollutant: Double
-      get() = intrinsic()
-
-    val RatioLiquidSilanol: Double
-      get() = intrinsic()
-
-    val RatioLiquidSodiumChloride: Double
-      get() = intrinsic()
-
-    val RatioMethane: Double
-      get() = intrinsic()
-
-    val RatioNitrogen: Double
-      get() = intrinsic()
-
-    val RatioNitrousOxide: Double
-      get() = intrinsic()
-
-    val RatioOxygen: Double
-      get() = intrinsic()
-
-    val RatioOzone: Double
-      get() = intrinsic()
-
-    val RatioPollutant: Double
-      get() = intrinsic()
-
-    val RatioPollutedWater: Double
-      get() = intrinsic()
-
-    val RatioSilanol: Double
-      get() = intrinsic()
-
-    val RatioSteam: Double
-      get() = intrinsic()
-
-    val RatioWater: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-
-    val Temperature: Double
-      get() = intrinsic()
-
-    val Throttle: Double
-      get() = intrinsic()
-
-    val TotalMoles: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<PressureFedLiquidEngineHeavy> = intrinsic()
 }
 
 /** A StructurePressurePlateLarge. */
@@ -42682,30 +21833,11 @@ object PressurePlateLarges {
   fun at(pin: Device): PressurePlateLarge = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<PressurePlateLarge>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Setting: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<PressurePlateLarge> = intrinsic()
 }
 
 /** A StructurePressurePlateMedium. */
@@ -42725,30 +21857,11 @@ object PressurePlateMediums {
   fun at(pin: Device): PressurePlateMedium = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<PressurePlateMedium>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Setting: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<PressurePlateMedium> = intrinsic()
 }
 
 /** A StructurePressurePlateSmall. */
@@ -42768,30 +21881,11 @@ object PressurePlateSmalls {
   fun at(pin: Device): PressurePlateSmall = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<PressurePlateSmall>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Setting: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<PressurePlateSmall> = intrinsic()
 }
 
 /** A StructurePressureRegulator. */
@@ -42835,63 +21929,11 @@ object PressureRegulators {
   fun at(pin: Device): PressureRegulator = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<PressureRegulator>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Error: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val Maximum: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val Ratio: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<PressureRegulator> = intrinsic()
 }
 
 /** A StructureProximitySensor. */
@@ -42918,40 +21960,11 @@ object ProximitySensors {
   fun at(pin: Device): ProximitySensor = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<ProximitySensor>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Activate: Double
-      get() = intrinsic()
-
-    val Quantity: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<ProximitySensor> = intrinsic()
 }
 
 /** A StructurePumpedLiquidEngine. */
@@ -43094,162 +22107,11 @@ object PumpedLiquidEngines {
   fun at(pin: Device): PumpedLiquidEngine = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<PumpedLiquidEngine>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Throttle: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Combustion: Double
-      get() = intrinsic()
-
-    val Error: Double
-      get() = intrinsic()
-
-    val Maximum: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val PassedMoles: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val Pressure: Double
-      get() = intrinsic()
-
-    val Ratio: Double
-      get() = intrinsic()
-
-    val RatioCarbonDioxide: Double
-      get() = intrinsic()
-
-    val RatioHelium: Double
-      get() = intrinsic()
-
-    val RatioHydrazine: Double
-      get() = intrinsic()
-
-    val RatioHydrochloricAcid: Double
-      get() = intrinsic()
-
-    val RatioHydrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidAlcohol: Double
-      get() = intrinsic()
-
-    val RatioLiquidCarbonDioxide: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrazine: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrochloricAcid: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidMethane: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrousOxide: Double
-      get() = intrinsic()
-
-    val RatioLiquidOxygen: Double
-      get() = intrinsic()
-
-    val RatioLiquidOzone: Double
-      get() = intrinsic()
-
-    val RatioLiquidPollutant: Double
-      get() = intrinsic()
-
-    val RatioLiquidSilanol: Double
-      get() = intrinsic()
-
-    val RatioLiquidSodiumChloride: Double
-      get() = intrinsic()
-
-    val RatioMethane: Double
-      get() = intrinsic()
-
-    val RatioNitrogen: Double
-      get() = intrinsic()
-
-    val RatioNitrousOxide: Double
-      get() = intrinsic()
-
-    val RatioOxygen: Double
-      get() = intrinsic()
-
-    val RatioOzone: Double
-      get() = intrinsic()
-
-    val RatioPollutant: Double
-      get() = intrinsic()
-
-    val RatioPollutedWater: Double
-      get() = intrinsic()
-
-    val RatioSilanol: Double
-      get() = intrinsic()
-
-    val RatioSteam: Double
-      get() = intrinsic()
-
-    val RatioWater: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-
-    val Temperature: Double
-      get() = intrinsic()
-
-    val Throttle: Double
-      get() = intrinsic()
-
-    val TotalMoles: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<PumpedLiquidEngine> = intrinsic()
 }
 
 /** A StructurePurgeValve. */
@@ -43293,63 +22155,11 @@ object PurgeValves {
   fun at(pin: Device): PurgeValve = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<PurgeValve>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Error: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val Maximum: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val Ratio: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<PurgeValve> = intrinsic()
 }
 
 /** A StructureRecycler. */
@@ -43416,64 +22226,9 @@ object Recyclers {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Activate: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var ClearMemory: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Activate: Double
-      get() = intrinsic()
-
-    val ClearMemory: Double
-      get() = intrinsic()
-
-    val Error: Double
-      get() = intrinsic()
-
-    val ExportCount: Double
-      get() = intrinsic()
-
-    val ImportCount: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val Reagents: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Reading>
+  class Batch internal constructor() : DeviceBatch<Recycler>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<DataDiskSlot>>
       get() = intrinsic()
   }
 }
@@ -43659,190 +22414,9 @@ object RefrigeratedVendingMachines {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Activate: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var ClearMemory: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var RequestHash: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Activate: Double
-      get() = intrinsic()
-
-    val ClearMemory: Double
-      get() = intrinsic()
-
-    val Combustion: Double
-      get() = intrinsic()
-
-    val Error: Double
-      get() = intrinsic()
-
-    val ExportCount: Double
-      get() = intrinsic()
-
-    val ImportCount: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val Pressure: Double
-      get() = intrinsic()
-
-    val Quantity: Double
-      get() = intrinsic()
-
-    val Ratio: Double
-      get() = intrinsic()
-
-    val RatioCarbonDioxide: Double
-      get() = intrinsic()
-
-    val RatioHelium: Double
-      get() = intrinsic()
-
-    val RatioHydrazine: Double
-      get() = intrinsic()
-
-    val RatioHydrochloricAcid: Double
-      get() = intrinsic()
-
-    val RatioHydrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidAlcohol: Double
-      get() = intrinsic()
-
-    val RatioLiquidCarbonDioxide: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrazine: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrochloricAcid: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidMethane: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrousOxide: Double
-      get() = intrinsic()
-
-    val RatioLiquidOxygen: Double
-      get() = intrinsic()
-
-    val RatioLiquidOzone: Double
-      get() = intrinsic()
-
-    val RatioLiquidPollutant: Double
-      get() = intrinsic()
-
-    val RatioLiquidSilanol: Double
-      get() = intrinsic()
-
-    val RatioLiquidSodiumChloride: Double
-      get() = intrinsic()
-
-    val RatioMethane: Double
-      get() = intrinsic()
-
-    val RatioNitrogen: Double
-      get() = intrinsic()
-
-    val RatioNitrousOxide: Double
-      get() = intrinsic()
-
-    val RatioOxygen: Double
-      get() = intrinsic()
-
-    val RatioOzone: Double
-      get() = intrinsic()
-
-    val RatioPollutant: Double
-      get() = intrinsic()
-
-    val RatioPollutedWater: Double
-      get() = intrinsic()
-
-    val RatioSilanol: Double
-      get() = intrinsic()
-
-    val RatioSteam: Double
-      get() = intrinsic()
-
-    val RatioWater: Double
-      get() = intrinsic()
-
-    val RequestHash: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-
-    val TargetPrefabHash: Double
-      get() = intrinsic()
-
-    val TargetSlotIndex: Double
-      get() = intrinsic()
-
-    val Temperature: Double
-      get() = intrinsic()
-
-    val TotalMoles: Double
-      get() = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Reading>
+  class Batch internal constructor() : DeviceBatch<RefrigeratedVendingMachine>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<DataDiskSlot>>
       get() = intrinsic()
   }
 }
@@ -43871,40 +22445,11 @@ object RobotArmDoors {
   fun at(pin: Device): RobotArmDoor = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<RobotArmDoor>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Open: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Open: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<RobotArmDoor> = intrinsic()
 }
 
 /** A StructureRoboticArmDock. */
@@ -43966,64 +22511,9 @@ object RoboticArmDocks {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Activate: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Activate: Double
-      get() = intrinsic()
-
-    val Error: Double
-      get() = intrinsic()
-
-    val Extended: Double
-      get() = intrinsic()
-
-    val Idle: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val PositionX: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Reading>
+  class Batch internal constructor() : DeviceBatch<RoboticArmDock>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<DataDiskSlot>>
       get() = intrinsic()
   }
 }
@@ -44248,248 +22738,11 @@ object RocketAvionicses {
   fun at(pin: Device): RocketAvionics = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<RocketAvionics>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var AutoLand: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var AutoShutOff: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var DestinationCode: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Mode: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Acceleration: Double
-      get() = intrinsic()
-
-    val Altitude: Double
-      get() = intrinsic()
-
-    val Apex: Double
-      get() = intrinsic()
-
-    val AutoLand: Double
-      get() = intrinsic()
-
-    val AutoShutOff: Double
-      get() = intrinsic()
-
-    val BurnTimeRemaining: Double
-      get() = intrinsic()
-
-    val Chart: Double
-      get() = intrinsic()
-
-    val ChartedNavPoints: Double
-      get() = intrinsic()
-
-    val CurrentCode: Double
-      get() = intrinsic()
-
-    val Density: Double
-      get() = intrinsic()
-
-    val DestinationCode: Double
-      get() = intrinsic()
-
-    val Discover: Double
-      get() = intrinsic()
-
-    val DryMass: Double
-      get() = intrinsic()
-
-    val Error: Double
-      get() = intrinsic()
-
-    val FlightControlRule: Double
-      get() = intrinsic()
-
-    val Mass: Double
-      get() = intrinsic()
-
-    val MinedQuantity: Double
-      get() = intrinsic()
-
-    val Mode: Double
-      get() = intrinsic()
-
-    val NavPoints: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val Progress: Double
-      get() = intrinsic()
-
-    val Quantity: Double
-      get() = intrinsic()
-
-    val RatioCarbonDioxide: Double
-      get() = intrinsic()
-
-    val RatioHelium: Double
-      get() = intrinsic()
-
-    val RatioHydrazine: Double
-      get() = intrinsic()
-
-    val RatioHydrochloricAcid: Double
-      get() = intrinsic()
-
-    val RatioHydrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidAlcohol: Double
-      get() = intrinsic()
-
-    val RatioLiquidCarbonDioxide: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrazine: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrochloricAcid: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidMethane: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrousOxide: Double
-      get() = intrinsic()
-
-    val RatioLiquidOxygen: Double
-      get() = intrinsic()
-
-    val RatioLiquidOzone: Double
-      get() = intrinsic()
-
-    val RatioLiquidPollutant: Double
-      get() = intrinsic()
-
-    val RatioLiquidSilanol: Double
-      get() = intrinsic()
-
-    val RatioLiquidSodiumChloride: Double
-      get() = intrinsic()
-
-    val RatioMethane: Double
-      get() = intrinsic()
-
-    val RatioNitrogen: Double
-      get() = intrinsic()
-
-    val RatioNitrousOxide: Double
-      get() = intrinsic()
-
-    val RatioOxygen: Double
-      get() = intrinsic()
-
-    val RatioOzone: Double
-      get() = intrinsic()
-
-    val RatioPollutant: Double
-      get() = intrinsic()
-
-    val RatioPollutedWater: Double
-      get() = intrinsic()
-
-    val RatioSilanol: Double
-      get() = intrinsic()
-
-    val RatioSteam: Double
-      get() = intrinsic()
-
-    val RatioWater: Double
-      get() = intrinsic()
-
-    val ReEntryAltitude: Double
-      get() = intrinsic()
-
-    val Reagents: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val Richness: Double
-      get() = intrinsic()
-
-    val Sites: Double
-      get() = intrinsic()
-
-    val Size: Double
-      get() = intrinsic()
-
-    val StackSize: Double
-      get() = intrinsic()
-
-    val Survey: Double
-      get() = intrinsic()
-
-    val Temperature: Double
-      get() = intrinsic()
-
-    val Thrust: Double
-      get() = intrinsic()
-
-    val ThrustToWeight: Double
-      get() = intrinsic()
-
-    val TimeToDestination: Double
-      get() = intrinsic()
-
-    val TotalMoles: Double
-      get() = intrinsic()
-
-    val TotalQuantity: Double
-      get() = intrinsic()
-
-    val VelocityRelativeY: Double
-      get() = intrinsic()
-
-    val Weight: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<RocketAvionics> = intrinsic()
 }
 
 /** A StructureRocketCelestialTracker. */
@@ -44535,62 +22788,11 @@ object RocketCelestialTrackers {
   fun at(pin: Device): RocketCelestialTracker = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<RocketCelestialTracker>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Index: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val CelestialHash: Double
-      get() = intrinsic()
-
-    val Error: Double
-      get() = intrinsic()
-
-    val Horizontal: Double
-      get() = intrinsic()
-
-    val Index: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val StackSize: Double
-      get() = intrinsic()
-
-    val Vertical: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<RocketCelestialTracker> = intrinsic()
 }
 
 /** A StructureRocketCircuitHousing. */
@@ -44650,65 +22852,9 @@ object RocketCircuitHousings {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var LineNumber: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Mode: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<ProgrammableChipSlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Error: Double
-      get() = intrinsic()
-
-    val LineNumber: Double
-      get() = intrinsic()
-
-    val Mode: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-
-    val StackSize: Double
-      get() = intrinsic()
-
-    val slots: Slots<ProgrammableChipSlot.Reading>
+  class Batch internal constructor() : DeviceBatch<RocketCircuitHousing>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<ProgrammableChipSlot>>
       get() = intrinsic()
   }
 }
@@ -44829,138 +22975,11 @@ object RocketEngineTinies {
   fun at(pin: Device): RocketEngineTiny = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<RocketEngineTiny>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val CombustionOutput: Double
-      get() = intrinsic()
-
-    val Error: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val Maximum: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val PressureOutput: Double
-      get() = intrinsic()
-
-    val Ratio: Double
-      get() = intrinsic()
-
-    val RatioCarbonDioxideOutput: Double
-      get() = intrinsic()
-
-    val RatioHeliumOutput: Double
-      get() = intrinsic()
-
-    val RatioHydrazineOutput: Double
-      get() = intrinsic()
-
-    val RatioHydrochloricAcidOutput: Double
-      get() = intrinsic()
-
-    val RatioHydrogenOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidAlcoholOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrazineOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrochloricAcidOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrogenOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidOzoneOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidSilanolOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidSodiumChlorideOutput: Double
-      get() = intrinsic()
-
-    val RatioMethaneOutput: Double
-      get() = intrinsic()
-
-    val RatioNitrogenOutput: Double
-      get() = intrinsic()
-
-    val RatioNitrousOxideOutput: Double
-      get() = intrinsic()
-
-    val RatioOxygenOutput: Double
-      get() = intrinsic()
-
-    val RatioOzoneOutput: Double
-      get() = intrinsic()
-
-    val RatioPollutantOutput: Double
-      get() = intrinsic()
-
-    val RatioPollutedWaterOutput: Double
-      get() = intrinsic()
-
-    val RatioSilanolOutput: Double
-      get() = intrinsic()
-
-    val RatioWaterOutput: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-
-    val TemperatureOutput: Double
-      get() = intrinsic()
-
-    val TotalMolesOutput: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<RocketEngineTiny> = intrinsic()
 }
 
 /** A StructureRocketFiltrationGas. */
@@ -45311,356 +23330,9 @@ object RocketFiltrationGases {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Mode: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<FilterSlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val CombustionInput: Double
-      get() = intrinsic()
-
-    val CombustionOutput: Double
-      get() = intrinsic()
-
-    val CombustionOutput2: Double
-      get() = intrinsic()
-
-    val Error: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val Maximum: Double
-      get() = intrinsic()
-
-    val Mode: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val PressureInput: Double
-      get() = intrinsic()
-
-    val PressureOutput: Double
-      get() = intrinsic()
-
-    val PressureOutput2: Double
-      get() = intrinsic()
-
-    val Ratio: Double
-      get() = intrinsic()
-
-    val RatioCarbonDioxideInput: Double
-      get() = intrinsic()
-
-    val RatioCarbonDioxideOutput: Double
-      get() = intrinsic()
-
-    val RatioCarbonDioxideOutput2: Double
-      get() = intrinsic()
-
-    val RatioHeliumInput: Double
-      get() = intrinsic()
-
-    val RatioHeliumOutput: Double
-      get() = intrinsic()
-
-    val RatioHeliumOutput2: Double
-      get() = intrinsic()
-
-    val RatioHydrazineInput: Double
-      get() = intrinsic()
-
-    val RatioHydrazineOutput: Double
-      get() = intrinsic()
-
-    val RatioHydrazineOutput2: Double
-      get() = intrinsic()
-
-    val RatioHydrochloricAcidInput: Double
-      get() = intrinsic()
-
-    val RatioHydrochloricAcidOutput: Double
-      get() = intrinsic()
-
-    val RatioHydrochloricAcidOutput2: Double
-      get() = intrinsic()
-
-    val RatioHydrogenInput: Double
-      get() = intrinsic()
-
-    val RatioHydrogenOutput: Double
-      get() = intrinsic()
-
-    val RatioHydrogenOutput2: Double
-      get() = intrinsic()
-
-    val RatioLiquidAlcoholInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidAlcoholOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidAlcoholOutput2: Double
-      get() = intrinsic()
-
-    val RatioLiquidCarbonDioxideInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidCarbonDioxideOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidCarbonDioxideOutput2: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrazineInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrazineOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrazineOutput2: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrochloricAcidInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrochloricAcidOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrochloricAcidOutput2: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrogenInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrogenOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrogenOutput2: Double
-      get() = intrinsic()
-
-    val RatioLiquidMethaneInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidMethaneOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidMethaneOutput2: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrogenInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrogenOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrogenOutput2: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrousOxideInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrousOxideOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrousOxideOutput2: Double
-      get() = intrinsic()
-
-    val RatioLiquidOxygenInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidOxygenOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidOxygenOutput2: Double
-      get() = intrinsic()
-
-    val RatioLiquidOzoneInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidOzoneOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidOzoneOutput2: Double
-      get() = intrinsic()
-
-    val RatioLiquidPollutantInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidPollutantOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidPollutantOutput2: Double
-      get() = intrinsic()
-
-    val RatioLiquidSilanolInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidSilanolOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidSilanolOutput2: Double
-      get() = intrinsic()
-
-    val RatioLiquidSodiumChlorideInput: Double
-      get() = intrinsic()
-
-    val RatioLiquidSodiumChlorideOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidSodiumChlorideOutput2: Double
-      get() = intrinsic()
-
-    val RatioMethaneInput: Double
-      get() = intrinsic()
-
-    val RatioMethaneOutput: Double
-      get() = intrinsic()
-
-    val RatioMethaneOutput2: Double
-      get() = intrinsic()
-
-    val RatioNitrogenInput: Double
-      get() = intrinsic()
-
-    val RatioNitrogenOutput: Double
-      get() = intrinsic()
-
-    val RatioNitrogenOutput2: Double
-      get() = intrinsic()
-
-    val RatioNitrousOxideInput: Double
-      get() = intrinsic()
-
-    val RatioNitrousOxideOutput: Double
-      get() = intrinsic()
-
-    val RatioNitrousOxideOutput2: Double
-      get() = intrinsic()
-
-    val RatioOxygenInput: Double
-      get() = intrinsic()
-
-    val RatioOxygenOutput: Double
-      get() = intrinsic()
-
-    val RatioOxygenOutput2: Double
-      get() = intrinsic()
-
-    val RatioOzoneInput: Double
-      get() = intrinsic()
-
-    val RatioOzoneOutput: Double
-      get() = intrinsic()
-
-    val RatioOzoneOutput2: Double
-      get() = intrinsic()
-
-    val RatioPollutantInput: Double
-      get() = intrinsic()
-
-    val RatioPollutantOutput: Double
-      get() = intrinsic()
-
-    val RatioPollutantOutput2: Double
-      get() = intrinsic()
-
-    val RatioPollutedWaterInput: Double
-      get() = intrinsic()
-
-    val RatioPollutedWaterOutput: Double
-      get() = intrinsic()
-
-    val RatioPollutedWaterOutput2: Double
-      get() = intrinsic()
-
-    val RatioSilanolInput: Double
-      get() = intrinsic()
-
-    val RatioSilanolOutput: Double
-      get() = intrinsic()
-
-    val RatioSilanolOutput2: Double
-      get() = intrinsic()
-
-    val RatioSteamInput: Double
-      get() = intrinsic()
-
-    val RatioSteamOutput: Double
-      get() = intrinsic()
-
-    val RatioSteamOutput2: Double
-      get() = intrinsic()
-
-    val RatioWaterInput: Double
-      get() = intrinsic()
-
-    val RatioWaterOutput: Double
-      get() = intrinsic()
-
-    val RatioWaterOutput2: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-
-    val TemperatureInput: Double
-      get() = intrinsic()
-
-    val TemperatureOutput: Double
-      get() = intrinsic()
-
-    val TemperatureOutput2: Double
-      get() = intrinsic()
-
-    val TotalMolesInput: Double
-      get() = intrinsic()
-
-    val TotalMolesOutput: Double
-      get() = intrinsic()
-
-    val TotalMolesOutput2: Double
-      get() = intrinsic()
-
-    val slots: Slots<FilterSlot.Reading>
+  class Batch internal constructor() : DeviceBatch<RocketFiltrationGas>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<FilterSlot>>
       get() = intrinsic()
   }
 }
@@ -45789,143 +23461,11 @@ object RocketGasCollectors {
   fun at(pin: Device): RocketGasCollector = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<RocketGasCollector>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Combustion: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val Pressure: Double
-      get() = intrinsic()
-
-    val RatioCarbonDioxide: Double
-      get() = intrinsic()
-
-    val RatioHelium: Double
-      get() = intrinsic()
-
-    val RatioHydrazine: Double
-      get() = intrinsic()
-
-    val RatioHydrochloricAcid: Double
-      get() = intrinsic()
-
-    val RatioHydrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidAlcohol: Double
-      get() = intrinsic()
-
-    val RatioLiquidCarbonDioxide: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrazine: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrochloricAcid: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidMethane: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrousOxide: Double
-      get() = intrinsic()
-
-    val RatioLiquidOxygen: Double
-      get() = intrinsic()
-
-    val RatioLiquidOzone: Double
-      get() = intrinsic()
-
-    val RatioLiquidPollutant: Double
-      get() = intrinsic()
-
-    val RatioLiquidSilanol: Double
-      get() = intrinsic()
-
-    val RatioLiquidSodiumChloride: Double
-      get() = intrinsic()
-
-    val RatioMethane: Double
-      get() = intrinsic()
-
-    val RatioNitrogen: Double
-      get() = intrinsic()
-
-    val RatioNitrousOxide: Double
-      get() = intrinsic()
-
-    val RatioOxygen: Double
-      get() = intrinsic()
-
-    val RatioOzone: Double
-      get() = intrinsic()
-
-    val RatioPollutant: Double
-      get() = intrinsic()
-
-    val RatioPollutedWater: Double
-      get() = intrinsic()
-
-    val RatioSilanol: Double
-      get() = intrinsic()
-
-    val RatioSteam: Double
-      get() = intrinsic()
-
-    val RatioWater: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val Temperature: Double
-      get() = intrinsic()
-
-    val TotalMoles: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<RocketGasCollector> = intrinsic()
 }
 
 /** A StructureRocketManufactory. */
@@ -46010,91 +23550,9 @@ object RocketManufactories {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Activate: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var ClearMemory: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Open: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var RecipeHash: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Activate: Double
-      get() = intrinsic()
-
-    val ClearMemory: Double
-      get() = intrinsic()
-
-    val CompletionRatio: Double
-      get() = intrinsic()
-
-    val Error: Double
-      get() = intrinsic()
-
-    val ExportCount: Double
-      get() = intrinsic()
-
-    val ImportCount: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Open: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val Reagents: Double
-      get() = intrinsic()
-
-    val RecipeHash: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val StackSize: Double
-      get() = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Reading>
+  class Batch internal constructor() : DeviceBatch<RocketManufactory>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<DataDiskSlot>>
       get() = intrinsic()
   }
 }
@@ -46166,67 +23624,9 @@ object RocketMiners {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var ClearMemory: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val ClearMemory: Double
-      get() = intrinsic()
-
-    val DrillCondition: Double
-      get() = intrinsic()
-
-    val Error: Double
-      get() = intrinsic()
-
-    val ExportCount: Double
-      get() = intrinsic()
-
-    val ImportCount: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val Quantity: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Reading>
+  class Batch internal constructor() : DeviceBatch<RocketMiner>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<DataDiskSlot>>
       get() = intrinsic()
   }
 }
@@ -46277,48 +23677,9 @@ object RocketScanners {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Error: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Reading>
+  class Batch internal constructor() : DeviceBatch<RocketScanner>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<DataDiskSlot>>
       get() = intrinsic()
   }
 }
@@ -46364,63 +23725,11 @@ object RocketTransformerSmalls {
   fun at(pin: Device): RocketTransformerSmall = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<RocketTransformerSmall>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Error: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val Maximum: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val Ratio: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<RocketTransformerSmall> = intrinsic()
 }
 
 /** A StructureSDBHopper. */
@@ -46463,42 +23772,9 @@ object SDBHoppers {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var ClearMemory: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Open: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val ClearMemory: Double
-      get() = intrinsic()
-
-    val ImportCount: Double
-      get() = intrinsic()
-
-    val Open: Double
-      get() = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Reading>
+  class Batch internal constructor() : DeviceBatch<SDBHopper>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<DataDiskSlot>>
       get() = intrinsic()
   }
 }
@@ -46547,49 +23823,9 @@ object SDBHopperAdvanceds {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var ClearMemory: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Open: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val ClearMemory: Double
-      get() = intrinsic()
-
-    val ImportCount: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val Open: Double
-      get() = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Reading>
+  class Batch internal constructor() : DeviceBatch<SDBHopperAdvanced>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<DataDiskSlot>>
       get() = intrinsic()
   }
 }
@@ -46670,85 +23906,9 @@ object SDBSilos {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Activate: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var ClearMemory: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Mode: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Open: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Activate: Double
-      get() = intrinsic()
-
-    val ClearMemory: Double
-      get() = intrinsic()
-
-    val Error: Double
-      get() = intrinsic()
-
-    val ExportCount: Double
-      get() = intrinsic()
-
-    val ImportCount: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val Mode: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Open: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val Quantity: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Reading>
+  class Batch internal constructor() : DeviceBatch<SDBSilo>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<DataDiskSlot>>
       get() = intrinsic()
   }
 }
@@ -46837,118 +23997,11 @@ object SatelliteDishes {
   fun at(pin: Device): SatelliteDish = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<SatelliteDish>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Activate: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var BestContactFilter: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Horizontal: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var TargetPadIndex: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Vertical: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Activate: Double
-      get() = intrinsic()
-
-    val BestContactFilter: Double
-      get() = intrinsic()
-
-    val ContactSlotIndex: Double
-      get() = intrinsic()
-
-    val ContactTypeId: Double
-      get() = intrinsic()
-
-    val Error: Double
-      get() = intrinsic()
-
-    val Horizontal: Double
-      get() = intrinsic()
-
-    val Idle: Double
-      get() = intrinsic()
-
-    val InterrogationProgress: Double
-      get() = intrinsic()
-
-    val MinimumWattsToContact: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-
-    val SignalID: Double
-      get() = intrinsic()
-
-    val SignalStrength: Double
-      get() = intrinsic()
-
-    val SizeX: Double
-      get() = intrinsic()
-
-    val SizeZ: Double
-      get() = intrinsic()
-
-    val StackSize: Double
-      get() = intrinsic()
-
-    val TargetPadIndex: Double
-      get() = intrinsic()
-
-    val Vertical: Double
-      get() = intrinsic()
-
-    val WattsReachingContact: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<SatelliteDish> = intrinsic()
 }
 
 /** A StructureSecurityPrinter. */
@@ -47033,91 +24086,9 @@ object SecurityPrinters {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Activate: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var ClearMemory: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Open: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var RecipeHash: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Activate: Double
-      get() = intrinsic()
-
-    val ClearMemory: Double
-      get() = intrinsic()
-
-    val CompletionRatio: Double
-      get() = intrinsic()
-
-    val Error: Double
-      get() = intrinsic()
-
-    val ExportCount: Double
-      get() = intrinsic()
-
-    val ImportCount: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Open: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val Reagents: Double
-      get() = intrinsic()
-
-    val RecipeHash: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val StackSize: Double
-      get() = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Reading>
+  class Batch internal constructor() : DeviceBatch<SecurityPrinter>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<DataDiskSlot>>
       get() = intrinsic()
   }
 }
@@ -47150,32 +24121,9 @@ object ShelfMediums {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Open: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Open: Double
-      get() = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Reading>
+  class Batch internal constructor() : DeviceBatch<ShelfMedium>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<DataDiskSlot>>
       get() = intrinsic()
   }
 }
@@ -47212,39 +24160,9 @@ object ShortCornerLockers {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Open: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Lock: Double
-      get() = intrinsic()
-
-    val Open: Double
-      get() = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Reading>
+  class Batch internal constructor() : DeviceBatch<ShortCornerLocker>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<DataDiskSlot>>
       get() = intrinsic()
   }
 }
@@ -47281,39 +24199,9 @@ object ShortLockers {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Open: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Lock: Double
-      get() = intrinsic()
-
-    val Open: Double
-      get() = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Reading>
+  class Batch internal constructor() : DeviceBatch<ShortLocker>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<DataDiskSlot>>
       get() = intrinsic()
   }
 }
@@ -47350,54 +24238,11 @@ object Showers {
   fun at(pin: Device): Shower = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<Shower>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Activate: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Open: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Activate: Double
-      get() = intrinsic()
-
-    val Maximum: Double
-      get() = intrinsic()
-
-    val Open: Double
-      get() = intrinsic()
-
-    val Ratio: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<Shower> = intrinsic()
 }
 
 /** A StructureShowerPowered. */
@@ -47431,50 +24276,11 @@ object ShowerPowereds {
   fun at(pin: Device): ShowerPowered = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<ShowerPowered>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Open: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Error: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Open: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<ShowerPowered> = intrinsic()
 }
 
 /** A StructureSleeper. */
@@ -47544,78 +24350,9 @@ object Sleepers {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Activate: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Open: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Activate: Double
-      get() = intrinsic()
-
-    val EntityState: Double
-      get() = intrinsic()
-
-    val Error: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val Maximum: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Open: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val Ratio: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Reading>
+  class Batch internal constructor() : DeviceBatch<Sleeper>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<DataDiskSlot>>
       get() = intrinsic()
   }
 }
@@ -47691,85 +24428,9 @@ object SleeperLefts {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Activate: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Mode: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Open: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Activate: Double
-      get() = intrinsic()
-
-    val EntityState: Double
-      get() = intrinsic()
-
-    val Error: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val Maximum: Double
-      get() = intrinsic()
-
-    val Mode: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Open: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val Ratio: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Reading>
+  class Batch internal constructor() : DeviceBatch<SleeperLeft>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<DataDiskSlot>>
       get() = intrinsic()
   }
 }
@@ -47845,85 +24506,9 @@ object SleeperRights {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Activate: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Mode: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Open: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Activate: Double
-      get() = intrinsic()
-
-    val EntityState: Double
-      get() = intrinsic()
-
-    val Error: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val Maximum: Double
-      get() = intrinsic()
-
-    val Mode: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Open: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val Ratio: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Reading>
+  class Batch internal constructor() : DeviceBatch<SleeperRight>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<DataDiskSlot>>
       get() = intrinsic()
   }
 }
@@ -47999,85 +24584,9 @@ object SleeperVerticals {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Activate: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Mode: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Open: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Activate: Double
-      get() = intrinsic()
-
-    val EntityState: Double
-      get() = intrinsic()
-
-    val Error: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val Maximum: Double
-      get() = intrinsic()
-
-    val Mode: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Open: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val Ratio: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Reading>
+  class Batch internal constructor() : DeviceBatch<SleeperVertical>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<DataDiskSlot>>
       get() = intrinsic()
   }
 }
@@ -48136,62 +24645,9 @@ object SleeperVerticalDroids {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Activate: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Open: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Activate: Double
-      get() = intrinsic()
-
-    val Error: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Open: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Reading>
+  class Batch internal constructor() : DeviceBatch<SleeperVerticalDroid>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<DataDiskSlot>>
       get() = intrinsic()
   }
 }
@@ -48220,40 +24676,11 @@ object SmallDirectHeatExchangeGastoGases {
   fun at(pin: Device): SmallDirectHeatExchangeGastoGas = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<SmallDirectHeatExchangeGastoGas>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Maximum: Double
-      get() = intrinsic()
-
-    val Ratio: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<SmallDirectHeatExchangeGastoGas> = intrinsic()
 }
 
 /** A StructureSmallDirectHeatExchangeLiquidtoGas. */
@@ -48280,40 +24707,11 @@ object SmallDirectHeatExchangeLiquidtoGases {
   fun at(pin: Device): SmallDirectHeatExchangeLiquidtoGas = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<SmallDirectHeatExchangeLiquidtoGas>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Maximum: Double
-      get() = intrinsic()
-
-    val Ratio: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<SmallDirectHeatExchangeLiquidtoGas> = intrinsic()
 }
 
 /** A StructureSmallDirectHeatExchangeLiquidtoLiquid. */
@@ -48340,40 +24738,11 @@ object SmallDirectHeatExchangeLiquidtoLiquids {
   fun at(pin: Device): SmallDirectHeatExchangeLiquidtoLiquid = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<SmallDirectHeatExchangeLiquidtoLiquid>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Maximum: Double
-      get() = intrinsic()
-
-    val Ratio: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<SmallDirectHeatExchangeLiquidtoLiquid> = intrinsic()
 }
 
 /** A StructureSmallSatelliteDish. */
@@ -48457,115 +24826,11 @@ object SmallSatelliteDishes {
   fun at(pin: Device): SmallSatelliteDish = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<SmallSatelliteDish>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Activate: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var BestContactFilter: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Horizontal: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var TargetPadIndex: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Vertical: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Activate: Double
-      get() = intrinsic()
-
-    val BestContactFilter: Double
-      get() = intrinsic()
-
-    val ContactSlotIndex: Double
-      get() = intrinsic()
-
-    val ContactTypeId: Double
-      get() = intrinsic()
-
-    val Error: Double
-      get() = intrinsic()
-
-    val Horizontal: Double
-      get() = intrinsic()
-
-    val Idle: Double
-      get() = intrinsic()
-
-    val InterrogationProgress: Double
-      get() = intrinsic()
-
-    val MinimumWattsToContact: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-
-    val SignalID: Double
-      get() = intrinsic()
-
-    val SignalStrength: Double
-      get() = intrinsic()
-
-    val SizeX: Double
-      get() = intrinsic()
-
-    val SizeZ: Double
-      get() = intrinsic()
-
-    val TargetPadIndex: Double
-      get() = intrinsic()
-
-    val Vertical: Double
-      get() = intrinsic()
-
-    val WattsReachingContact: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<SmallSatelliteDish> = intrinsic()
 }
 
 /** A StructureSolarPanel. */
@@ -48599,50 +24864,11 @@ object SolarPanels {
   fun at(pin: Device): SolarPanel = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<SolarPanel>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Horizontal: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Vertical: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Charge: Double
-      get() = intrinsic()
-
-    val Horizontal: Double
-      get() = intrinsic()
-
-    val Maximum: Double
-      get() = intrinsic()
-
-    val Ratio: Double
-      get() = intrinsic()
-
-    val Vertical: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<SolarPanel> = intrinsic()
 }
 
 /** A StructureSolarPanel45. */
@@ -48676,50 +24902,11 @@ object SolarPanel45s {
   fun at(pin: Device): SolarPanel45 = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<SolarPanel45>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Horizontal: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Vertical: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Charge: Double
-      get() = intrinsic()
-
-    val Horizontal: Double
-      get() = intrinsic()
-
-    val Maximum: Double
-      get() = intrinsic()
-
-    val Ratio: Double
-      get() = intrinsic()
-
-    val Vertical: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<SolarPanel45> = intrinsic()
 }
 
 /** A StructureSolarPanel45Reinforced. */
@@ -48753,50 +24940,11 @@ object SolarPanel45Reinforceds {
   fun at(pin: Device): SolarPanel45Reinforced = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<SolarPanel45Reinforced>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Horizontal: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Vertical: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Charge: Double
-      get() = intrinsic()
-
-    val Horizontal: Double
-      get() = intrinsic()
-
-    val Maximum: Double
-      get() = intrinsic()
-
-    val Ratio: Double
-      get() = intrinsic()
-
-    val Vertical: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<SolarPanel45Reinforced> = intrinsic()
 }
 
 /** A StructureSolarPanelDual. */
@@ -48830,50 +24978,11 @@ object SolarPanelDuals {
   fun at(pin: Device): SolarPanelDual = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<SolarPanelDual>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Horizontal: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Vertical: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Charge: Double
-      get() = intrinsic()
-
-    val Horizontal: Double
-      get() = intrinsic()
-
-    val Maximum: Double
-      get() = intrinsic()
-
-    val Ratio: Double
-      get() = intrinsic()
-
-    val Vertical: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<SolarPanelDual> = intrinsic()
 }
 
 /** A StructureSolarPanelDualReinforced. */
@@ -48907,50 +25016,11 @@ object SolarPanelDualReinforceds {
   fun at(pin: Device): SolarPanelDualReinforced = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<SolarPanelDualReinforced>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Horizontal: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Vertical: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Charge: Double
-      get() = intrinsic()
-
-    val Horizontal: Double
-      get() = intrinsic()
-
-    val Maximum: Double
-      get() = intrinsic()
-
-    val Ratio: Double
-      get() = intrinsic()
-
-    val Vertical: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<SolarPanelDualReinforced> = intrinsic()
 }
 
 /** A StructureSolarPanelFlat. */
@@ -48984,50 +25054,11 @@ object SolarPanelFlats {
   fun at(pin: Device): SolarPanelFlat = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<SolarPanelFlat>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Horizontal: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Vertical: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Charge: Double
-      get() = intrinsic()
-
-    val Horizontal: Double
-      get() = intrinsic()
-
-    val Maximum: Double
-      get() = intrinsic()
-
-    val Ratio: Double
-      get() = intrinsic()
-
-    val Vertical: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<SolarPanelFlat> = intrinsic()
 }
 
 /** A StructureSolarPanelFlatReinforced. */
@@ -49061,50 +25092,11 @@ object SolarPanelFlatReinforceds {
   fun at(pin: Device): SolarPanelFlatReinforced = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<SolarPanelFlatReinforced>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Horizontal: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Vertical: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Charge: Double
-      get() = intrinsic()
-
-    val Horizontal: Double
-      get() = intrinsic()
-
-    val Maximum: Double
-      get() = intrinsic()
-
-    val Ratio: Double
-      get() = intrinsic()
-
-    val Vertical: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<SolarPanelFlatReinforced> = intrinsic()
 }
 
 /** A StructureSolarPanelReinforced. */
@@ -49138,50 +25130,11 @@ object SolarPanelReinforceds {
   fun at(pin: Device): SolarPanelReinforced = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<SolarPanelReinforced>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Horizontal: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Vertical: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Charge: Double
-      get() = intrinsic()
-
-    val Horizontal: Double
-      get() = intrinsic()
-
-    val Maximum: Double
-      get() = intrinsic()
-
-    val Ratio: Double
-      get() = intrinsic()
-
-    val Vertical: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<SolarPanelReinforced> = intrinsic()
 }
 
 /** A StructureSolidFuelGenerator. */
@@ -49231,52 +25184,9 @@ object SolidFuelGenerators {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var ClearMemory: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val ClearMemory: Double
-      get() = intrinsic()
-
-    val ImportCount: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val PowerGeneration: Double
-      get() = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Reading>
+  class Batch internal constructor() : DeviceBatch<SolidFuelGenerator>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<DataDiskSlot>>
       get() = intrinsic()
   }
 }
@@ -49355,75 +25265,9 @@ object Sorters {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var ClearMemory: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Mode: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Output: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val ClearMemory: Double
-      get() = intrinsic()
-
-    val Error: Double
-      get() = intrinsic()
-
-    val ExportCount: Double
-      get() = intrinsic()
-
-    val ImportCount: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val Mode: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Output: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Reading>
+  class Batch internal constructor() : DeviceBatch<Sorter>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<DataDiskSlot>>
       get() = intrinsic()
   }
 }
@@ -49510,89 +25354,9 @@ object Stackers {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Activate: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var ClearMemory: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Mode: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Output: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Activate: Double
-      get() = intrinsic()
-
-    val ClearMemory: Double
-      get() = intrinsic()
-
-    val Error: Double
-      get() = intrinsic()
-
-    val ExportCount: Double
-      get() = intrinsic()
-
-    val ImportCount: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val Mode: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Output: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Reading>
+  class Batch internal constructor() : DeviceBatch<Stacker>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<DataDiskSlot>>
       get() = intrinsic()
   }
 }
@@ -49679,89 +25443,9 @@ object StackerReverses {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Activate: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var ClearMemory: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Mode: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Output: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Activate: Double
-      get() = intrinsic()
-
-    val ClearMemory: Double
-      get() = intrinsic()
-
-    val Error: Double
-      get() = intrinsic()
-
-    val ExportCount: Double
-      get() = intrinsic()
-
-    val ImportCount: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val Mode: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Output: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Reading>
+  class Batch internal constructor() : DeviceBatch<StackerReverse>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<DataDiskSlot>>
       get() = intrinsic()
   }
 }
@@ -49929,165 +25613,9 @@ object StirlingEngines {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<GasCanisterSlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Combustion: Double
-      get() = intrinsic()
-
-    val EnvironmentEfficiency: Double
-      get() = intrinsic()
-
-    val Error: Double
-      get() = intrinsic()
-
-    val Maximum: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val PowerGeneration: Double
-      get() = intrinsic()
-
-    val Pressure: Double
-      get() = intrinsic()
-
-    val Quantity: Double
-      get() = intrinsic()
-
-    val Ratio: Double
-      get() = intrinsic()
-
-    val RatioCarbonDioxide: Double
-      get() = intrinsic()
-
-    val RatioHelium: Double
-      get() = intrinsic()
-
-    val RatioHydrazine: Double
-      get() = intrinsic()
-
-    val RatioHydrochloricAcid: Double
-      get() = intrinsic()
-
-    val RatioHydrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidAlcohol: Double
-      get() = intrinsic()
-
-    val RatioLiquidCarbonDioxide: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrazine: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrochloricAcid: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidMethane: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrogen: Double
-      get() = intrinsic()
-
-    val RatioLiquidNitrousOxide: Double
-      get() = intrinsic()
-
-    val RatioLiquidOxygen: Double
-      get() = intrinsic()
-
-    val RatioLiquidOzone: Double
-      get() = intrinsic()
-
-    val RatioLiquidPollutant: Double
-      get() = intrinsic()
-
-    val RatioLiquidSilanol: Double
-      get() = intrinsic()
-
-    val RatioLiquidSodiumChloride: Double
-      get() = intrinsic()
-
-    val RatioMethane: Double
-      get() = intrinsic()
-
-    val RatioNitrogen: Double
-      get() = intrinsic()
-
-    val RatioNitrousOxide: Double
-      get() = intrinsic()
-
-    val RatioOxygen: Double
-      get() = intrinsic()
-
-    val RatioOzone: Double
-      get() = intrinsic()
-
-    val RatioPollutant: Double
-      get() = intrinsic()
-
-    val RatioPollutedWater: Double
-      get() = intrinsic()
-
-    val RatioSilanol: Double
-      get() = intrinsic()
-
-    val RatioSteam: Double
-      get() = intrinsic()
-
-    val RatioWater: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-
-    val Temperature: Double
-      get() = intrinsic()
-
-    val TotalMoles: Double
-      get() = intrinsic()
-
-    val Volume: Double
-      get() = intrinsic()
-
-    val WorkingGasEfficiency: Double
-      get() = intrinsic()
-
-    val slots: Slots<GasCanisterSlot.Reading>
+  class Batch internal constructor() : DeviceBatch<StirlingEngine>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<GasCanisterSlot>>
       get() = intrinsic()
   }
 }
@@ -50124,39 +25652,9 @@ object StorageLockers {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Open: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Lock: Double
-      get() = intrinsic()
-
-    val Open: Double
-      get() = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Reading>
+  class Batch internal constructor() : DeviceBatch<StorageLocker>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<DataDiskSlot>>
       get() = intrinsic()
   }
 }
@@ -50223,54 +25721,9 @@ object SuitStorages {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<CommonSlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Error: Double
-      get() = intrinsic()
-
-    val Maximum: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val Ratio: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-
-    val slots: Slots<CommonSlot.Reading>
+  class Batch internal constructor() : DeviceBatch<SuitStorage>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<CommonSlot>>
       get() = intrinsic()
   }
 }
@@ -50337,54 +25790,9 @@ object SuitStorageFrames {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<CommonSlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Error: Double
-      get() = intrinsic()
-
-    val Maximum: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val Ratio: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-
-    val slots: Slots<CommonSlot.Reading>
+  class Batch internal constructor() : DeviceBatch<SuitStorageFrame>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<CommonSlot>>
       get() = intrinsic()
   }
 }
@@ -50451,54 +25859,9 @@ object SuitStorageLockers {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<CommonSlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Error: Double
-      get() = intrinsic()
-
-    val Maximum: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val Ratio: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-
-    val slots: Slots<CommonSlot.Reading>
+  class Batch internal constructor() : DeviceBatch<SuitStorageLocker>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<CommonSlot>>
       get() = intrinsic()
   }
 }
@@ -50527,40 +25890,11 @@ object SuperLargeDirectHeatExchangeGastoGases {
   fun at(pin: Device): SuperLargeDirectHeatExchangeGastoGas = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<SuperLargeDirectHeatExchangeGastoGas>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Maximum: Double
-      get() = intrinsic()
-
-    val Ratio: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<SuperLargeDirectHeatExchangeGastoGas> = intrinsic()
 }
 
 /** A StructureSuperLargeDirectHeatExchangeGastoLiquid. */
@@ -50587,40 +25921,11 @@ object SuperLargeDirectHeatExchangeGastoLiquids {
   fun at(pin: Device): SuperLargeDirectHeatExchangeGastoLiquid = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<SuperLargeDirectHeatExchangeGastoLiquid>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Maximum: Double
-      get() = intrinsic()
-
-    val Ratio: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<SuperLargeDirectHeatExchangeGastoLiquid> = intrinsic()
 }
 
 /** A StructureSuperLargeDirectHeatExchangeLiquidToLiquid. */
@@ -50647,40 +25952,11 @@ object SuperLargeDirectHeatExchangeLiquidToLiquids {
   fun at(pin: Device): SuperLargeDirectHeatExchangeLiquidToLiquid = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<SuperLargeDirectHeatExchangeLiquidToLiquid>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Maximum: Double
-      get() = intrinsic()
-
-    val Ratio: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<SuperLargeDirectHeatExchangeLiquidToLiquid> = intrinsic()
 }
 
 /** A StructureToolManufactory. */
@@ -50765,91 +26041,9 @@ object ToolManufactories {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Activate: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var ClearMemory: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Open: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var RecipeHash: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Activate: Double
-      get() = intrinsic()
-
-    val ClearMemory: Double
-      get() = intrinsic()
-
-    val CompletionRatio: Double
-      get() = intrinsic()
-
-    val Error: Double
-      get() = intrinsic()
-
-    val ExportCount: Double
-      get() = intrinsic()
-
-    val ImportCount: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Open: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val Reagents: Double
-      get() = intrinsic()
-
-    val RecipeHash: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val StackSize: Double
-      get() = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Reading>
+  class Batch internal constructor() : DeviceBatch<ToolManufactory>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<DataDiskSlot>>
       get() = intrinsic()
   }
 }
@@ -50881,43 +26075,11 @@ object TraderWaypoints {
   fun at(pin: Device): TraderWaypoint = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<TraderWaypoint>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Error: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<TraderWaypoint> = intrinsic()
 }
 
 /** A StructureTransformer. */
@@ -50961,63 +26123,11 @@ object Transformers {
   fun at(pin: Device): Transformer = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<Transformer>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Error: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val Maximum: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val Ratio: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<Transformer> = intrinsic()
 }
 
 /** A StructureTransformerMedium. */
@@ -51061,63 +26171,11 @@ object TransformerMediums {
   fun at(pin: Device): TransformerMedium = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<TransformerMedium>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Error: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val Maximum: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val Ratio: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<TransformerMedium> = intrinsic()
 }
 
 /** A StructureTransformerMedium(Reversed). */
@@ -51161,63 +26219,11 @@ object TransformerMedium_Reverseds {
   fun at(pin: Device): TransformerMedium_Reversed = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<TransformerMedium_Reversed>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Error: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val Maximum: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val Ratio: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<TransformerMedium_Reversed> = intrinsic()
 }
 
 /** A StructureTransformerSmall. */
@@ -51261,63 +26267,11 @@ object TransformerSmalls {
   fun at(pin: Device): TransformerSmall = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<TransformerSmall>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Error: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val Maximum: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val Ratio: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<TransformerSmall> = intrinsic()
 }
 
 /** A StructureTransformerSmallReversed. */
@@ -51361,63 +26315,11 @@ object TransformerSmallReverseds {
   fun at(pin: Device): TransformerSmallReversed = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<TransformerSmallReversed>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Error: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val Maximum: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val Ratio: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<TransformerSmallReversed> = intrinsic()
 }
 
 /** A StructureTurboVolumePump. */
@@ -51465,70 +26367,11 @@ object TurboVolumePumps {
   fun at(pin: Device): TurboVolumePump = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<TurboVolumePump>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Mode: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Error: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val Maximum: Double
-      get() = intrinsic()
-
-    val Mode: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val Ratio: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<TurboVolumePump> = intrinsic()
 }
 
 /** A StructureUnloader. */
@@ -51600,75 +26443,9 @@ object Unloaders {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var ClearMemory: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Mode: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Output: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val ClearMemory: Double
-      get() = intrinsic()
-
-    val Error: Double
-      get() = intrinsic()
-
-    val ExportCount: Double
-      get() = intrinsic()
-
-    val ImportCount: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val Mode: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Output: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Reading>
+  class Batch internal constructor() : DeviceBatch<Unloader>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<DataDiskSlot>>
       get() = intrinsic()
   }
 }
@@ -51690,30 +26467,11 @@ object UprightWindTurbines {
   fun at(pin: Device): UprightWindTurbine = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<UprightWindTurbine>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val PowerGeneration: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<UprightWindTurbine> = intrinsic()
 }
 
 /** A StructureValve. */
@@ -51744,47 +26502,11 @@ object Valves {
   fun at(pin: Device): Valve = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<Valve>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Maximum: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Ratio: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<Valve> = intrinsic()
 }
 
 /** A StructureVendingMachine. */
@@ -51868,87 +26590,9 @@ object VendingMachines {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Activate: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var ClearMemory: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var RequestHash: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Activate: Double
-      get() = intrinsic()
-
-    val ClearMemory: Double
-      get() = intrinsic()
-
-    val Error: Double
-      get() = intrinsic()
-
-    val ExportCount: Double
-      get() = intrinsic()
-
-    val ImportCount: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val Quantity: Double
-      get() = intrinsic()
-
-    val Ratio: Double
-      get() = intrinsic()
-
-    val RequestHash: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val TargetPrefabHash: Double
-      get() = intrinsic()
-
-    val TargetSlotIndex: Double
-      get() = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Reading>
+  class Batch internal constructor() : DeviceBatch<VendingMachine>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<DataDiskSlot>>
       get() = intrinsic()
   }
 }
@@ -52034,87 +26678,9 @@ object VendingMachineSmalls {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Activate: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var ClearMemory: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var RequestHash: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Activate: Double
-      get() = intrinsic()
-
-    val ClearMemory: Double
-      get() = intrinsic()
-
-    val Error: Double
-      get() = intrinsic()
-
-    val ExportCount: Double
-      get() = intrinsic()
-
-    val ImportCount: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val Quantity: Double
-      get() = intrinsic()
-
-    val Ratio: Double
-      get() = intrinsic()
-
-    val RequestHash: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val TargetPrefabHash: Double
-      get() = intrinsic()
-
-    val TargetSlotIndex: Double
-      get() = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Reading>
+  class Batch internal constructor() : DeviceBatch<VendingMachineSmall>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<DataDiskSlot>>
       get() = intrinsic()
   }
 }
@@ -52160,63 +26726,11 @@ object VolumePumps {
   fun at(pin: Device): VolumePump = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<VolumePump>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Error: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val Maximum: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val Ratio: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<VolumePump> = intrinsic()
 }
 
 /** A StructureWallCooler. */
@@ -52350,136 +26864,9 @@ object WallCoolers {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val CombustionOutput: Double
-      get() = intrinsic()
-
-    val Error: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val Maximum: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val PressureOutput: Double
-      get() = intrinsic()
-
-    val Ratio: Double
-      get() = intrinsic()
-
-    val RatioCarbonDioxideOutput: Double
-      get() = intrinsic()
-
-    val RatioHeliumOutput: Double
-      get() = intrinsic()
-
-    val RatioHydrazineOutput: Double
-      get() = intrinsic()
-
-    val RatioHydrochloricAcidOutput: Double
-      get() = intrinsic()
-
-    val RatioHydrogenOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidAlcoholOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrazineOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrochloricAcidOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrogenOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidOzoneOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidSilanolOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidSodiumChlorideOutput: Double
-      get() = intrinsic()
-
-    val RatioMethaneOutput: Double
-      get() = intrinsic()
-
-    val RatioNitrogenOutput: Double
-      get() = intrinsic()
-
-    val RatioNitrousOxideOutput: Double
-      get() = intrinsic()
-
-    val RatioOxygenOutput: Double
-      get() = intrinsic()
-
-    val RatioOzoneOutput: Double
-      get() = intrinsic()
-
-    val RatioPollutantOutput: Double
-      get() = intrinsic()
-
-    val RatioPollutedWaterOutput: Double
-      get() = intrinsic()
-
-    val RatioSilanolOutput: Double
-      get() = intrinsic()
-
-    val RatioWaterOutput: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-
-    val TemperatureOutput: Double
-      get() = intrinsic()
-
-    val TotalMolesOutput: Double
-      get() = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Reading>
+  class Batch internal constructor() : DeviceBatch<WallCooler>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<DataDiskSlot>>
       get() = intrinsic()
   }
 }
@@ -52530,48 +26917,9 @@ object WallHeaters {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Error: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Reading>
+  class Batch internal constructor() : DeviceBatch<WallHeater>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<DataDiskSlot>>
       get() = intrinsic()
   }
 }
@@ -52604,47 +26952,11 @@ object WallLights {
   fun at(pin: Device): WallLight = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<WallLight>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Lock: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<WallLight> = intrinsic()
 }
 
 /** A StructureWallLightBattery. */
@@ -52690,45 +27002,9 @@ object WallLightBatteries {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<BatterySlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Lock: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val slots: Slots<BatterySlot.Reading>
+  class Batch internal constructor() : DeviceBatch<WallLightBattery>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<BatterySlot>>
       get() = intrinsic()
   }
 }
@@ -52774,48 +27050,9 @@ object WaterBottleFillerPowereds {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Activate: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<GasCanisterSlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Activate: Double
-      get() = intrinsic()
-
-    val Error: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val slots: Slots<GasCanisterSlot.Reading>
+  class Batch internal constructor() : DeviceBatch<WaterBottleFillerPowered>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<GasCanisterSlot>>
       get() = intrinsic()
   }
 }
@@ -52861,48 +27098,9 @@ object WaterBottleFillerPoweredBottoms {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Activate: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<GasCanisterSlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Activate: Double
-      get() = intrinsic()
-
-    val Error: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val slots: Slots<GasCanisterSlot.Reading>
+  class Batch internal constructor() : DeviceBatch<WaterBottleFillerPoweredBottom>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<GasCanisterSlot>>
       get() = intrinsic()
   }
 }
@@ -52948,63 +27146,11 @@ object WaterDigitalValves {
   fun at(pin: Device): WaterDigitalValve = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<WaterDigitalValve>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Error: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val Maximum: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val Ratio: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<WaterDigitalValve> = intrinsic()
 }
 
 /** A StructureWaterPurifier. */
@@ -53060,58 +27206,9 @@ object WaterPurifiers {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var ClearMemory: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val ClearMemory: Double
-      get() = intrinsic()
-
-    val Error: Double
-      get() = intrinsic()
-
-    val ImportCount: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Reading>
+  class Batch internal constructor() : DeviceBatch<WaterPurifier>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<DataDiskSlot>>
       get() = intrinsic()
   }
 }
@@ -53247,136 +27344,9 @@ object WaterWallCoolers {
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): Batch = intrinsic()
 
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Setting: Double
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Batch>
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val CombustionOutput: Double
-      get() = intrinsic()
-
-    val Error: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val Maximum: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val PressureOutput: Double
-      get() = intrinsic()
-
-    val Ratio: Double
-      get() = intrinsic()
-
-    val RatioCarbonDioxideOutput: Double
-      get() = intrinsic()
-
-    val RatioHeliumOutput: Double
-      get() = intrinsic()
-
-    val RatioHydrazineOutput: Double
-      get() = intrinsic()
-
-    val RatioHydrochloricAcidOutput: Double
-      get() = intrinsic()
-
-    val RatioHydrogenOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidAlcoholOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrazineOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrochloricAcidOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidHydrogenOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidOzoneOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidSilanolOutput: Double
-      get() = intrinsic()
-
-    val RatioLiquidSodiumChlorideOutput: Double
-      get() = intrinsic()
-
-    val RatioMethaneOutput: Double
-      get() = intrinsic()
-
-    val RatioNitrogenOutput: Double
-      get() = intrinsic()
-
-    val RatioNitrousOxideOutput: Double
-      get() = intrinsic()
-
-    val RatioOxygenOutput: Double
-      get() = intrinsic()
-
-    val RatioOzoneOutput: Double
-      get() = intrinsic()
-
-    val RatioPollutantOutput: Double
-      get() = intrinsic()
-
-    val RatioPollutedWaterOutput: Double
-      get() = intrinsic()
-
-    val RatioSilanolOutput: Double
-      get() = intrinsic()
-
-    val RatioWaterOutput: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-
-    val Setting: Double
-      get() = intrinsic()
-
-    val TemperatureOutput: Double
-      get() = intrinsic()
-
-    val TotalMolesOutput: Double
-      get() = intrinsic()
-
-    val slots: Slots<DataDiskSlot.Reading>
+  class Batch internal constructor() : DeviceBatch<WaterWallCooler>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<DataDiskSlot>>
       get() = intrinsic()
   }
 }
@@ -53425,66 +27395,11 @@ object WeatherStations {
   fun at(pin: Device): WeatherStation = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<WeatherStation>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-
-    var Activate: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var Lock: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-
-    var On: Boolean
-      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
-      set(value) = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val Activate: Double
-      get() = intrinsic()
-
-    val Error: Double
-      get() = intrinsic()
-
-    val Lock: Double
-      get() = intrinsic()
-
-    val Mode: Double
-      get() = intrinsic()
-
-    val NextWeatherEventTime: Double
-      get() = intrinsic()
-
-    val NextWeatherHash: Double
-      get() = intrinsic()
-
-    val On: Double
-      get() = intrinsic()
-
-    val Power: Double
-      get() = intrinsic()
-
-    val RequiredPower: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<WeatherStation> = intrinsic()
 }
 
 /** A StructureWindTurbine. */
@@ -53504,28 +27419,9 @@ object WindTurbines {
   fun at(pin: Device): WindTurbine = intrinsic()
 
   /** Every one on the network. */
-  val all: Batch
+  val all: DeviceBatch<WindTurbine>
     get() = intrinsic()
 
   /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch() {
-    val average: Reading
-      get() = intrinsic()
-
-    val sum: Reading
-      get() = intrinsic()
-
-    val minimum: Reading
-      get() = intrinsic()
-
-    val maximum: Reading
-      get() = intrinsic()
-  }
-
-  class Reading internal constructor() : BatchReading() {
-    val PowerGeneration: Double
-      get() = intrinsic()
-  }
+  fun named(name: String): DeviceBatch<WindTurbine> = intrinsic()
 }

@@ -14,15 +14,6 @@ class Slots<out S> internal constructor() {
  */
 abstract class DeviceSlot internal constructor()
 
-/**
- * A slot of every device in a batch. Writing one of its logic types writes it to all of them
- * (`sbs`); reading goes through a batch method, as in `all.average.slots[0].Charge`.
- */
-abstract class SlotBatch internal constructor()
-
-/** A slot of a batch read through a batch method (`lbs`, `lbns`), all as `Double`. */
-abstract class SlotReading internal constructor()
-
 /** The number of the slot a generated named slot property, such as a charger's `Battery`, is. */
 @Target(AnnotationTarget.PROPERTY)
 @Retention(AnnotationRetention.BINARY)
