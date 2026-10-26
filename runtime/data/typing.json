@@ -36,7 +36,10 @@
     "Class",
     "MaxQuantity",
     "PrefabHash",
-    "ReferenceId"
+    "SortingClass",
+    "ReferenceId",
+    "FreeSlots",
+    "TotalSlots"
   ],
   "slotWrites": {
     "any": [
@@ -48,6 +51,9 @@
     "Appliance": [
       "On"
     ],
+    "Circuitboard": [
+      "Mode"
+    ],
     "GasCanister": [
       "Open"
     ],
@@ -55,6 +61,15 @@
       "On",
       "Lock",
       "Open"
+    ],
+    "LiquidBottle": [
+      "Open"
+    ],
+    "LiquidCanister": [
+      "Open"
+    ],
+    "Tool": [
+      "On"
     ]
   }
 }

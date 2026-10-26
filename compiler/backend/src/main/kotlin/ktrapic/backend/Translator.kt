@@ -319,7 +319,7 @@ internal class Translator {
     properties[property.symbol] =
         when {
           value.isAlias() && !property.isVar -> value
-          value.isAlias() -> fail(property, "a device or batch can only be held in a val")
+          value.isAlias() -> fail(property, "a device, batch or slot can only be held in a val")
           value is Const && !property.isVar -> value
           else -> Reg(newVReg(property.name.asString())).also { move(it.reg, value) }
         }
@@ -347,7 +347,7 @@ internal class Translator {
     variables[variable] =
         when {
           value.isAlias() && !variable.isVar -> value
-          value.isAlias() -> fail(variable, "a device or batch can only be held in a val")
+          value.isAlias() -> fail(variable, "a device, batch or slot can only be held in a val")
           value is Const && !variable.isVar -> value
           else -> Reg(newVReg(variable.name.asString())).also { move(it.reg, value) }
         }
@@ -600,16 +600,18 @@ internal class Translator {
         }
         Reg(result)
       }
-      cls.kotlinFqName.asString() == SLOTS_CLASS -> {
+      cls.kotlinFqName.asString() == SLOTS_CLASS && name == "get" -> {
         val owner =
             aliasOrValue(args[0]!!) as? SlotsOf
                 ?: fail(call, "these slots must be a device's or a batch's")
         // A copy of a computed number, so a later change to its variable doesn't move the slot.
-        SlotOf(owner.owner, operand(snapshot(value(args[1]!!))))
+        SlotOf(owner.owner, operand(snapshot(slotNumber(args[1]!!))))
       }
-      cls.isSubclassOf(DEVICE_SLOT) ||
-          cls.isSubclassOf(SLOT_BATCH) ||
-          cls.isSubclassOf(SLOT_READING) -> slotCall(call, name, isSetter)
+      // Only a slot's logic types: any other member (hashCode, ...) is left unsupported.
+      property != null &&
+          (cls.isSubclassOf(DEVICE_SLOT) ||
+              cls.isSubclassOf(SLOT_BATCH) ||
+              cls.isSubclassOf(SLOT_READING)) -> slotCall(call, name, isSetter)
       property != null && cls.isTypedDevice() && name == SLOTS -> SlotsOf(device(call, args[0]))
       property != null && cls.isTypedDevice() && property.slotNumber() != null ->
           SlotOf(device(call, args[0]), Fixed(Number(property.slotNumber()!!.toDouble())))
@@ -693,6 +695,17 @@ internal class Translator {
       else -> fail(call, "this slot must be a device's or a batch's")
     }
   }
+
+  /**
+   * A slot's number, which if constant must be one a device can have: the game has no slot below 0,
+   * and none above 255, the number of a robotic arm dock's target slot.
+   */
+  private fun slotNumber(expression: IrExpression): Value =
+      value(expression).also {
+        if (it is Const && it.number !in 0.0..MAX_SLOT.toDouble()) {
+          fail(expression, "slot numbers run from 0 to $MAX_SLOT")
+        }
+      }
 
   /** The number of the slot a generated named slot property stands for. */
   private fun IrProperty.slotNumber(): Int? =
@@ -1477,6 +1490,7 @@ internal class Translator {
     const val SLOT_BATCH = "ktrapic.SlotBatch"
     const val SLOT_READING = "ktrapic.SlotReading"
     const val SLOT_NUMBER = "ktrapic.SlotNumber"
+    const val MAX_SLOT = 255
     val BATCH_METHODS = setOf("average", "sum", "minimum", "maximum")
     val PIN_GETTERS =
         listOf("d0", "d1", "d2", "d3", "d4", "d5", "db").associateBy { "ktrapic.<get-$it>" }

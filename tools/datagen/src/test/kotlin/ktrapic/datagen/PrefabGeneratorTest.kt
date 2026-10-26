@@ -164,6 +164,39 @@ class PrefabGeneratorTest {
   }
 
   @Test
+  fun `a slot name that isn't an identifier, is given twice or clashes is left out`() {
+    val tray =
+        Prefab(
+            "StructureTray",
+            hash("StructureTray"),
+            mapOf("On" to Access(read = true, write = true)),
+            mapOf(
+                0 to SlotInfo("Plant", "Tray"),
+                1 to SlotInfo("Plant", "Spare"),
+                2 to SlotInfo("Plant", "Spare"),
+                3 to SlotInfo("Plant", "On"),
+                4 to SlotInfo("Plant", "slots"),
+                5 to SlotInfo("Plant", "Not a name"),
+            ),
+        )
+    val code =
+        PrefabGenerator.generate(
+                Prefabs("test", listOf(tray), prefabs.slotKinds),
+                Grouping(emptyMap(), emptyList()),
+                setOf("LogicType"),
+                typing,
+            )
+            .second
+
+    assertThat(code).contains("  @SlotNumber(0)\n  val Tray: PlantSlot\n")
+    assertThat(code).doesNotContain("val Spare")
+    assertThat(code).doesNotContain("val On: PlantSlot")
+    assertThat(code).doesNotContain("val slots: PlantSlot")
+    assertThat(code).doesNotContain("Not a name")
+    for (number in 1..5) assertThat(code).doesNotContain("@SlotNumber($number)")
+  }
+
+  @Test
   fun `imports prefabs with their own and inherited logic types`() {
     assertThat(prefabs.prefabs.map { it.name })
         .containsExactly("StructureBatteryLarge", "StructureBatterySmall", "StructureGrowLight")

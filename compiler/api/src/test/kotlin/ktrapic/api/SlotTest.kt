@@ -172,6 +172,53 @@ class SlotTest {
   }
 
   @Test
+  fun `a console writes Mode on its slots`() {
+    val source =
+        """
+        Consoles.at(d0).slots[0].Mode = 1.0
+        Consoles.at(d0).Circuitboard.Mode = 2.0
+        Consoles.all.slots[0].Mode = 3.0
+        """
+    val code = compiled(source).code
+
+    assertThat(code).contains("ss d0 0 Mode 1")
+    assertThat(code).contains("ss d0 0 Mode 2")
+    assertThat(code).contains("sbs ${Hashes.hash("StructureConsole")} 0 Mode 3")
+  }
+
+  @Test
+  fun `every structure slot reads SortingClass, FreeSlots and TotalSlots, up to slot 255`() {
+    val source =
+        """
+        val dock = LarreDockCargos.at(d0)
+        db.Setting = dock.slots[255].SortingClass + dock.TargetSlot.FreeSlots
+        db.Ratio = dock.slots[0].TotalSlots
+        """
+    val code = compiled(source).code
+
+    assertThat(code).contains("ls r0 d0 255 SortingClass")
+    assertThat(code).contains("ls r1 d0 255 FreeSlots")
+    assertThat(code).contains("d0 0 TotalSlots")
+  }
+
+  @Test
+  fun `only a slot's logic types compile, and a constant slot number must be one a slot has`() {
+    for ((source, at) in
+        listOf(
+            "val x = 1\ndb.Setting = d0.slots[0].hashCode().toDouble()" to (2 to 26),
+            "val x = 1\nval h = BatteryChargers.all.average.slots[0].hashCode()" to (2 to 46),
+            "val x = 1\nval h = BatteryChargers.all.slots[0].toString()" to (2 to 38),
+            "val x = 1\nval h = d0.slots.hashCode()" to (2 to 18),
+            "val x = 1\nval q = d0.slots[-1].Quantity" to (2 to 18),
+            "val x = 1\nval q = d0.slots[256].Quantity" to (2 to 18),
+        )) {
+      val error = error(source)
+      assertWithMessage(source).that(error.line to error.column).isEqualTo(at)
+    }
+    assertThat(error("var s = d0.slots[0]").message).contains("slot")
+  }
+
+  @Test
   fun `writes the game doesn't allow are compile errors`() {
     // A battery slot can't write Charge; a named batch has no slot writes; a slot has no value.
     for ((source, at) in

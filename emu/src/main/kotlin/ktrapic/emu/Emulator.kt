@@ -42,8 +42,8 @@ class Ic10RuntimeException(val line: Int, message: String) : Exception("line $li
  * literal jump target, address, slot, device hash or batch mode need only have a whole value (the
  * game also wants it written as an integer, so `j 2.0` is an error there).
  *
- * Not modelled yet: logic types given as numbers, device reference ids (`ld`, `sd`, `getd`, `lbns`,
- * `d?` from a register), reagents, other hosts (machines, suits, tablets), and indirect registers
+ * Not modelled yet: logic types given as numbers, device reference ids (`ld`, `sd`, `getd`, `d?`
+ * from a register), reagents, other hosts (machines, suits, tablets), and indirect registers
  * (`rr0`).
  */
 class Emulator(

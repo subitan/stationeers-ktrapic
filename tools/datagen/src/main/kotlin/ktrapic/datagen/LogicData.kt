@@ -41,11 +41,15 @@ data class LogicEnums(val source: String, val enums: Map<String, Map<String, Int
  *   becomes an object of `Double` constants.
  * @property booleanLogicTypes logic types declared `Boolean` on devices; the rest are `Double`.
  * @property booleanSlotLogicTypes slot logic types declared `Boolean` on slots.
- * @property slotReadsAlways the slot logic types the game lets a program read on any slot, added to
- *   each slot kind's reads from the data.
+ * @property slotReadsAlways the slot logic types the game lets a program read on any slot of a
+ *   structure, added to each slot kind's reads from the data. (On an item that runs a program, such
+ *   as a suit, the game reads only some of them; the typed API doesn't tell the two apart.)
  * @property slotWrites the slot logic types the game lets a program write, by slot kind; `any` is
  *   every one some slot can write, which an untyped slot allows. The game's rule, not PyTrapIC's
- *   data, which marks every slot logic type writable.
+ *   data, which marks every slot logic type writable. The game decides by the slot's class, whose
+ *   names the kinds here share; a kind with no prefab yet is listed so the table is the game's
+ *   whole rule. `Mode` on `Circuitboard` is a console's rule rather than the slot's: a console can
+ *   write `Mode` on any of its slots, and consoles' slots are the only `Circuitboard` slots.
  */
 data class Typing(
     val operandEnums: List<String>,

@@ -10,6 +10,9 @@ class AirTankSlot internal constructor() : DeviceSlot() {
   val Damage: Double
     get() = intrinsic()
 
+  val FreeSlots: Double
+    get() = intrinsic()
+
   val MaxQuantity: Double
     get() = intrinsic()
 
@@ -31,7 +34,13 @@ class AirTankSlot internal constructor() : DeviceSlot() {
   val ReferenceId: Double
     get() = intrinsic()
 
+  val SortingClass: Double
+    get() = intrinsic()
+
   val Temperature: Double
+    get() = intrinsic()
+
+  val TotalSlots: Double
     get() = intrinsic()
 
   class Batch internal constructor() : SlotBatch() {}
@@ -41,6 +50,9 @@ class AirTankSlot internal constructor() : DeviceSlot() {
       get() = intrinsic()
 
     val Damage: Double
+      get() = intrinsic()
+
+    val FreeSlots: Double
       get() = intrinsic()
 
     val MaxQuantity: Double
@@ -64,7 +76,13 @@ class AirTankSlot internal constructor() : DeviceSlot() {
     val ReferenceId: Double
       get() = intrinsic()
 
+    val SortingClass: Double
+      get() = intrinsic()
+
     val Temperature: Double
+      get() = intrinsic()
+
+    val TotalSlots: Double
       get() = intrinsic()
   }
 }
@@ -343,8 +361,9 @@ class CircuitboardSlot internal constructor() : DeviceSlot() {
   val MaxQuantity: Double
     get() = intrinsic()
 
-  val Mode: Double
+  var Mode: Double
     get() = intrinsic()
+    set(value) = intrinsic()
 
   val OccupantHash: Double
     get() = intrinsic()
@@ -367,7 +386,11 @@ class CircuitboardSlot internal constructor() : DeviceSlot() {
   val TotalSlots: Double
     get() = intrinsic()
 
-  class Batch internal constructor() : SlotBatch() {}
+  class Batch internal constructor() : SlotBatch() {
+    var Mode: Double
+      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
+      set(value) = intrinsic()
+  }
 
   class Reading internal constructor() : SlotReading() {
     val Class: Double
@@ -416,6 +439,9 @@ class CommonSlot internal constructor() : DeviceSlot() {
   val Damage: Double
     get() = intrinsic()
 
+  val FreeSlots: Double
+    get() = intrinsic()
+
   val MaxQuantity: Double
     get() = intrinsic()
 
@@ -434,6 +460,12 @@ class CommonSlot internal constructor() : DeviceSlot() {
   val ReferenceId: Double
     get() = intrinsic()
 
+  val SortingClass: Double
+    get() = intrinsic()
+
+  val TotalSlots: Double
+    get() = intrinsic()
+
   class Batch internal constructor() : SlotBatch() {}
 
   class Reading internal constructor() : SlotReading() {
@@ -441,6 +473,9 @@ class CommonSlot internal constructor() : DeviceSlot() {
       get() = intrinsic()
 
     val Damage: Double
+      get() = intrinsic()
+
+    val FreeSlots: Double
       get() = intrinsic()
 
     val MaxQuantity: Double
@@ -459,6 +494,12 @@ class CommonSlot internal constructor() : DeviceSlot() {
       get() = intrinsic()
 
     val ReferenceId: Double
+      get() = intrinsic()
+
+    val SortingClass: Double
+      get() = intrinsic()
+
+    val TotalSlots: Double
       get() = intrinsic()
   }
 }
@@ -626,6 +667,9 @@ class FilteredSlot internal constructor() : DeviceSlot() {
   val FilterType: Double
     get() = intrinsic()
 
+  val FreeSlots: Double
+    get() = intrinsic()
+
   val MaxQuantity: Double
     get() = intrinsic()
 
@@ -644,6 +688,12 @@ class FilteredSlot internal constructor() : DeviceSlot() {
   val ReferenceId: Double
     get() = intrinsic()
 
+  val SortingClass: Double
+    get() = intrinsic()
+
+  val TotalSlots: Double
+    get() = intrinsic()
+
   class Batch internal constructor() : SlotBatch() {}
 
   class Reading internal constructor() : SlotReading() {
@@ -654,6 +704,9 @@ class FilteredSlot internal constructor() : DeviceSlot() {
       get() = intrinsic()
 
     val FilterType: Double
+      get() = intrinsic()
+
+    val FreeSlots: Double
       get() = intrinsic()
 
     val MaxQuantity: Double
@@ -672,6 +725,12 @@ class FilteredSlot internal constructor() : DeviceSlot() {
       get() = intrinsic()
 
     val ReferenceId: Double
+      get() = intrinsic()
+
+    val SortingClass: Double
+      get() = intrinsic()
+
+    val TotalSlots: Double
       get() = intrinsic()
   }
 }
