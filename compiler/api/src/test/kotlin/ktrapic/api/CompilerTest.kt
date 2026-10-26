@@ -726,6 +726,57 @@ class CompilerTest {
   }
 
   @Test
+  fun `the source map points branches and loop conditions at their own lines`() {
+    val source =
+        """
+        val m = d0.Setting
+        when {
+          m > 5.0 -> db.Setting = 1.0
+          m > 2.0 -> db.Setting = 2.0
+          else -> db.Setting = 3.0
+        }
+        var x = d0.Ratio
+        if (x > 1.0)
+          x = x * 3.0
+        else
+          x = x + 5.0
+        db.Ratio = x
+        var n = 0
+        do {
+          n++
+        } while (
+          n < 4
+        )
+        while (true) {
+          n++
+          if (n == 9) break
+          val done = d0.On
+          if (done) break
+        }
+        db.Setting = n.toDouble()
+        """
+    for (compact in listOf(false, true)) {
+      val result = compiled(source, CompileOptions(compact = compact))
+      val code = result.code.lines()
+      // compile() puts two import lines before the source.
+      fun at(line: Int) = result.sourceMap[line + 2].orEmpty().map { code[it] }
+
+      assertWithMessage("compact=$compact\n${result.code}").apply {
+        that(at(2).single { it.startsWith("s ") }).isEqualTo("s db Setting 1")
+        that(at(3).single { it.startsWith("s ") }).isEqualTo("s db Setting 2")
+        that(at(4).single { it.startsWith("s ") }).isEqualTo("s db Setting 3")
+        that(at(1).none { it.startsWith("s ") }).isTrue()
+        that(at(8).single()).startsWith("mul ")
+        that(at(10).single()).startsWith("add ")
+        that(at(16).single()).startsWith("blt ")
+        // Each of these is a branch over a `j`, which lowering inverts into one branch.
+        that(at(20).single()).matches("b(eq|ne) .* 9 .*")
+        that(at(22).single()).matches("b(eq|ne)z .*")
+      }
+    }
+  }
+
+  @Test
   fun `a function called more than once has one body, called with jal`() {
     val source =
         """
