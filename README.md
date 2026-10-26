@@ -5,9 +5,10 @@ A system to allow IC10 programming using a constrained Kotlin (inspired by
 
 KTrapIC compiles a constrained subset of Kotlin to IC10, the assembly language of
 [Stationeers](https://store.steampowered.com/app/544550/Stationeers/)' programmable chips.
-It is at an early stage: programs using values, loops, conditions, functions and the devices
-on a chip's pins compile (see `test/cases/satellite_tracker.ic10.kts`, a port of a chip from the
-game); batch operations and the IC10 Editor plugin are next.
+It is at an early stage: programs using values, loops, conditions, functions, the devices on a
+chip's pins, typed devices and batch operations on the network compile (see
+`test/cases/satellite_tracker.ic10.kts`, a port of a chip from the game); slots and the IC10
+Editor plugin are next.
 
 Programs are Kotlin scripts named `*.ic10.kts`. The `ktrapic` API needs no import, since
 `import ktrapic.*` is implied; writing it anyway is fine.
@@ -110,17 +111,20 @@ RULES_JVM_EXTERNAL_REPIN=1 bazel run @maven//:pin
 
 ### Game data
 
-`runtime/data/logic-enums.json` holds the game's logic enums; `runtime/data/typing.json` says
-how the API types them. After changing either, regenerate the runtime's sources (a test fails
+`runtime/data/logic-enums.json` holds the game's logic enums and `runtime/data/prefabs.json` its
+prefabs with their logic types; `runtime/data/typing.json` says how the API types logic, and
+`runtime/data/grouping.json` which prefabs are grouped into kinds (`Battery.Small`) and which are
+text displays. After changing any of them, regenerate the runtime's sources (a test fails
 until they match):
 
 ```
 bazel run //tools/datagen -- generate
 ```
 
-The enums were imported from [PyTrapIC](https://github.com/aproposmath/stationeers-pytrapic)'s
-generated types with
-`bazel run //tools/datagen -- import-pytrapic <types_generated.py> <source description>`.
+The enums and prefabs were imported from
+[PyTrapIC](https://github.com/aproposmath/stationeers-pytrapic)'s generated types and structures
+with `bazel run //tools/datagen -- import-pytrapic <types_generated.py> <source description>`
+and `import-pytrapic-structures <structures_generated.py> <source description>`.
 PyTrapIC is under the MIT License; its notice is in `runtime/data/PYTRAPIC-LICENSE`.
 
 ## Formatting

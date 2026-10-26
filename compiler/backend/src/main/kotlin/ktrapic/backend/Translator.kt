@@ -8,6 +8,7 @@ import kotlin.math.truncate
 import ktrapic.frontend.PROGRAM_OBJECT
 import ktrapic.ic10.Constants
 import ktrapic.ic10.Device
+import ktrapic.ic10.Hashes
 import ktrapic.ic10.Ic10Math
 import ktrapic.ic10.LabelRef
 import ktrapic.ic10.Name
@@ -15,6 +16,7 @@ import ktrapic.ic10.Number
 import ktrapic.ic10.Operand
 import ktrapic.ic10.Register
 import ktrapic.ic10.StringConstant
+import org.jetbrains.kotlin.descriptors.ClassKind
 import org.jetbrains.kotlin.ir.IrElement
 import org.jetbrains.kotlin.ir.declarations.IrAnonymousInitializer
 import org.jetbrains.kotlin.ir.declarations.IrClass
@@ -54,12 +56,14 @@ import org.jetbrains.kotlin.ir.expressions.IrWhileLoop
 import org.jetbrains.kotlin.ir.symbols.IrPropertySymbol
 import org.jetbrains.kotlin.ir.types.IrType
 import org.jetbrains.kotlin.ir.types.classFqName
+import org.jetbrains.kotlin.ir.types.classOrNull
 import org.jetbrains.kotlin.ir.types.isBoolean
 import org.jetbrains.kotlin.ir.types.isDouble
 import org.jetbrains.kotlin.ir.types.isInt
 import org.jetbrains.kotlin.ir.types.isNothing
 import org.jetbrains.kotlin.ir.types.isUnit
 import org.jetbrains.kotlin.ir.util.kotlinFqName
+import org.jetbrains.kotlin.ir.util.parentAsClass
 import org.jetbrains.kotlin.ir.util.parentClassOrNull
 import org.jetbrains.kotlin.ir.visitors.IrVisitorVoid
 import org.jetbrains.kotlin.ir.visitors.acceptChildrenVoid
@@ -82,6 +86,15 @@ internal data class Const(val number: Double, val operand: Operand = Number(numb
 internal data class Reg(val reg: VReg) : Value
 
 internal data class Dev(val device: Device) : Value
+
+/**
+ * The devices of one prefab on the network, by the game's hash of the prefab's name ([prefab]): all
+ * of them, or those whose name hashes to [name].
+ */
+internal data class Batch(val prefab: Double, val name: Double?) : Value
+
+/** A [Batch] read through a batch method (`Average`, `Sum`, `Minimum` or `Maximum`). */
+internal data class BatchRead(val batch: Batch, val method: String) : Value
 
 internal data object NoValue : Value
 
@@ -299,8 +312,8 @@ internal class Translator {
     val value = value(initializer)
     properties[property.symbol] =
         when {
-          value is Dev && !property.isVar -> value
-          value is Dev -> fail(property, "a device can only be held in a val")
+          value.isAlias() && !property.isVar -> value
+          value.isAlias() -> fail(property, "a device or batch can only be held in a val")
           value is Const && !property.isVar -> value
           else -> Reg(newVReg(property.name.asString())).also { move(it.reg, value) }
         }
@@ -327,8 +340,8 @@ internal class Translator {
     val value = value(initializer)
     variables[variable] =
         when {
-          value is Dev && !variable.isVar -> value
-          value is Dev -> fail(variable, "a device can only be held in a val")
+          value.isAlias() && !variable.isVar -> value
+          value.isAlias() -> fail(variable, "a device or batch can only be held in a val")
           value is Const && !variable.isVar -> value
           else -> Reg(newVReg(variable.name.asString())).also { move(it.reg, value) }
         }
@@ -357,6 +370,7 @@ internal class Translator {
           NoValue
         }
         is IrCall -> call(expression)
+        is IrGetObjectValue -> prefab(expression)
         is IrReturn -> returnFrom(expression)
         is IrWhen -> whenExpression(expression)
         is IrWhileLoop -> whileLoop(expression)
@@ -429,6 +443,11 @@ internal class Translator {
         propertyValue(call, property)
       }
     }
+    function.parentClassOrNull?.let { cls ->
+      typedCall(call, cls, function)?.let {
+        return it
+      }
+    }
     if (property != null && owner in DEVICE_CLASSES) {
       val device = device(call, args[0])
       val logicType = Fixed(Name(property.owner.name.asString()))
@@ -487,6 +506,128 @@ internal class Translator {
       argument?.let { value(it) } as? Dev
           ?: fail(argument ?: call, "this device must be a pin, or a val holding one")
 
+  // The typed device API: typed devices, their entry points, batches and batch readings.
+
+  /**
+   * A call into the generated typed device API, or null if [cls] isn't part of it. An entry point
+   * (`GrowLights`) gives a typed device (`at(d0)`) or a [Batch] (`all`, `named("x")`); a typed
+   * device's logic types load and store like a pin's; a batch's store to every device in it (`sb`,
+   * `sbn`) and its batch methods give a [BatchRead], whose logic types load (`lb`, `lbn`).
+   */
+  private fun typedCall(call: IrCall, cls: IrClass, function: IrSimpleFunction): Value? {
+    val property = function.correspondingPropertySymbol?.owner
+    val name = property?.name?.asString() ?: function.name.asString()
+    val isSetter = property != null && function == property.setter
+    val args = call.arguments
+    return when {
+      cls.kind == ClassKind.OBJECT && !cls.isCompanion && cls.prefabName() != null -> {
+        val prefab = prefabHash(cls)
+        when (name) {
+          "at" -> device(call, args[1])
+          "all" -> Batch(prefab, null)
+          "named" ->
+              Batch(
+                  prefab,
+                  stringConstant(call, StringConstant.Kind.HASH, args[1], "named(...)").number,
+              )
+          else -> fail(call, "$name is not supported")
+        }
+      }
+      cls.isSubclassOf(DEVICE_BATCH) -> {
+        val batch =
+            value(args[0]!!) as? Batch
+                ?: fail(call, "this batch must be all, named(...), or a val holding one")
+        if (!isSetter) return BatchRead(batch, name.replaceFirstChar { it.uppercaseChar() })
+        val stored = storedValue(call, name, args.last()!!)
+        val logicType = Fixed(Name(storedLogicType(name)))
+        if (batch.name == null) {
+          emit("sb", Fixed(Number(batch.prefab)), logicType, stored)
+        } else {
+          emit("sbn", Fixed(Number(batch.prefab)), Fixed(Number(batch.name)), logicType, stored)
+        }
+        NoValue
+      }
+      cls.isSubclassOf(BATCH_READING) -> {
+        val read =
+            value(args[0]!!) as? BatchRead
+                ?: fail(call, "this batch reading must be a batch method's")
+        val batch = read.batch
+        val result = newVReg()
+        val logicType = Fixed(Name(name))
+        if (batch.name == null) {
+          emit("lb", result, Fixed(Number(batch.prefab)), logicType, Fixed(Name(read.method)))
+        } else {
+          emit(
+              "lbn",
+              result,
+              Fixed(Number(batch.prefab)),
+              Fixed(Number(batch.name)),
+              logicType,
+              Fixed(Name(read.method)),
+          )
+        }
+        Reg(result)
+      }
+      property != null && cls.isTypedDevice() -> {
+        val device = Fixed(device(call, args[0]).device)
+        if (isSetter) {
+          emit(
+              "s",
+              device,
+              Fixed(Name(storedLogicType(name))),
+              storedValue(call, name, args.last()!!),
+          )
+          NoValue
+        } else {
+          val result = newVReg()
+          emit("l", result, device, Fixed(Name(name)))
+          Reg(result)
+        }
+      }
+      else -> null
+    }
+  }
+
+  /** `Text` stores its string, packed by `STR`, to `Setting`. */
+  private fun storedLogicType(name: String) = if (name == TEXT) "Setting" else name
+
+  private fun storedValue(call: IrCall, name: String, argument: IrExpression): TirOperand =
+      if (name == TEXT) {
+        Fixed(stringConstant(call, StringConstant.Kind.STR, argument, TEXT).operand)
+      } else {
+        operand(value(argument))
+      }
+
+  /** A prefab used as a value (a typed device's companion object): its hash. */
+  private fun prefab(expression: IrGetObjectValue): Value {
+    val cls = expression.symbol.owner
+    if (!cls.isCompanion || !cls.isSubclassOf(PREFAB))
+        fail(expression, "This expression is not supported")
+    return Const(prefabHash(cls.parentAsClass))
+  }
+
+  private fun prefabHash(cls: IrClass): Double =
+      Hashes.hash(cls.prefabName() ?: error("${cls.name} has no prefab name")).toDouble()
+
+  private fun IrClass.prefabName(): String? =
+      annotations
+          .firstOrNull { it.type.classFqName?.asString() == PREFAB_NAME }
+          ?.let { (it.arguments[0] as? IrConst)?.value as? String }
+
+  private fun IrClass.isSubclassOf(fqName: String) = superTypes.any {
+    it.classFqName?.asString() == fqName
+  }
+
+  /** A generated typed device, a family's interface, or [TYPED_DEVICE] itself. */
+  private fun IrClass.isTypedDevice(): Boolean {
+    val fqName = kotlinFqName.asString()
+    return fqName == TYPED_DEVICE ||
+        isSubclassOf(TYPED_DEVICE) ||
+        (kind == ClassKind.INTERFACE && kotlinFqName.parent().asString() == "ktrapic")
+  }
+
+  private fun Value.isAlias() = this is Dev || this is Batch || this is BatchRead
+
   private fun logicType(call: IrCall, argument: IrExpression?): Fixed {
     if (argument !is IrGetEnumValue) {
       fail(argument ?: call, "the logic type must be written out, as LogicType.X")
@@ -494,15 +635,20 @@ internal class Translator {
     return Fixed(Name(argument.symbol.owner.name.asString()))
   }
 
-  private fun stringConstant(call: IrCall, kind: StringConstant.Kind): Value {
-    val text = (call.arguments[0] as? IrConst)?.value as? String
-    if (text == null) fail(call, "${kind.name.lowercase()}(...) needs a constant string")
+  private fun stringConstant(
+      call: IrCall,
+      kind: StringConstant.Kind,
+      argument: IrExpression? = call.arguments[0],
+      what: String = "${kind.name.lowercase()}(...)",
+  ): Const {
+    val text = (argument as? IrConst)?.value as? String
+    if (text == null) fail(call, "$what needs a constant string")
     // The game would take a tab or another control character other than a line break, but in
     // source text one is almost certainly a mistake.
     if (text.any { it.isISOControl() }) {
       fail(
           call,
-          "${kind.name.lowercase()}(...) text can't contain a line break or another control character",
+          "$what text can't contain a line break or another control character",
       )
     }
     // Both the constructor and numericValue reject text the game can't take (STR's length and
@@ -511,7 +657,7 @@ internal class Translator {
       val constant = StringConstant(kind, text)
       Const(constant.numericValue, constant)
     } catch (e: IllegalArgumentException) {
-      fail(call, e.message ?: "bad ${kind.name.lowercase()}(...) text")
+      fail(call, e.message ?: "bad $what text")
     }
   }
 
@@ -850,7 +996,8 @@ internal class Translator {
     val right = call.arguments[1] ?: return null
     for (side in listOf(left, right)) {
       val type = side.type
-      if (!type.isInt() && !type.isDouble() && !type.isBoolean()) {
+      // A prefab is its hash; Kotlin allows only == and != on one.
+      if (!type.isInt() && !type.isDouble() && !type.isBoolean() && !type.isPrefab()) {
         fail(call, "Comparing ${type.render()} values is not supported")
       }
     }
@@ -1190,12 +1337,19 @@ internal class Translator {
             }
         is Reg -> value.reg
         is Dev -> Fixed(value.device)
+        is Batch,
+        is BatchRead -> error("a batch has no value")
         NoValue -> error("no value")
       }
 
   private fun IrType.isAny() = classFqName?.asString() == "kotlin.Any"
 
-  private fun IrType.isDevice() = classFqName?.asString() == "ktrapic.Device"
+  private fun IrType.isDevice() =
+      classFqName?.asString() == "ktrapic.Device" || classOrNull?.owner?.isTypedDevice() == true
+
+  private fun IrType.isPrefab() =
+      classOrNull?.owner?.let { it.kotlinFqName.asString() == PREFAB || it.isSubclassOf(PREFAB) } ==
+          true
 
   private fun IrType.render() = classFqName?.shortName()?.asString() ?: "these"
 
@@ -1204,6 +1358,12 @@ internal class Translator {
 
   private companion object {
     val DEVICE_CLASSES = setOf("ktrapic.Device", "ktrapic.GenericDevice")
+    const val TYPED_DEVICE = "ktrapic.TypedDevice"
+    const val DEVICE_BATCH = "ktrapic.DeviceBatch"
+    const val BATCH_READING = "ktrapic.BatchReading"
+    const val PREFAB = "ktrapic.Prefab"
+    const val PREFAB_NAME = "ktrapic.PrefabName"
+    const val TEXT = "Text"
     val PIN_GETTERS =
         listOf("d0", "d1", "d2", "d3", "d4", "d5", "db").associateBy { "ktrapic.<get-$it>" }
     val INT_RANGE = Int.MIN_VALUE.toDouble()..Int.MAX_VALUE.toDouble()
