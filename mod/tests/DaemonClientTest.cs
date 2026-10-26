@@ -49,6 +49,7 @@ public class DaemonClientTest : IDisposable
         Assert.True(error.error != null, DaemonLog());
         Assert.Equal(1, error.error.line);
         Assert.Contains("nope", error.error.description);
+        Assert.False(error.Unavailable);
         AssertCompiled(compact);
         Assert.DoesNotContain(":", compact.code);
     }
@@ -62,6 +63,7 @@ public class DaemonClientTest : IDisposable
 
         Assert.NotNull(response.error);
         Assert.Null(response.code);
+        Assert.True(response.Unavailable);
     }
 
     [Fact]
@@ -83,6 +85,7 @@ public class DaemonClientTest : IDisposable
         var response = await compile;
         Assert.NotNull(response.error);
         Assert.Null(response.code);
+        Assert.True(response.Unavailable);
     }
 
     private void AssertCompiled(CompileResponse response) =>

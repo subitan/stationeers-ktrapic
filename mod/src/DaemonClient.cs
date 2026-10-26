@@ -31,8 +31,15 @@ namespace KTrapIC
         public Dictionary<int, List<int>> source_mapping;
         public Problem error;
 
+        /// <summary>
+        /// True for a response the compiler didn't give (it couldn't start, or stopped), which says
+        /// nothing about the program.
+        /// </summary>
+        [JsonIgnore]
+        public bool Unavailable;
+
         public static CompileResponse Failed(string description) =>
-            new CompileResponse { error = new Problem { description = description } };
+            new CompileResponse { error = new Problem { description = description }, Unavailable = true };
     }
 
     /// <summary>

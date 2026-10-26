@@ -263,6 +263,11 @@ namespace KTrapIC
             // Recorded before returning to the main thread, which Compile() may be blocking.
             if (version != _version)
                 return;
+            // IC10 read back from a chip stands until the compiler can say something about the
+            // program, so an unchanged chip still exports as it is while the compiler is down.
+            var kept = _compiled;
+            if (response.Unavailable && kept != null && kept.Version == version && kept.Compact == null)
+                return;
             _compiled = new Compiled(version, compact, response);
             await UniTask.SwitchToMainThread();
             if (version == _version)
