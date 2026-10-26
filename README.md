@@ -14,7 +14,8 @@ Programs are Kotlin scripts named `*.ic10.kts`. The `ktrapic` API needs no impor
 `import ktrapic.*` is implied; writing it anyway is fine.
 
 The [language guide](docs/LANGUAGE.md) describes what programs can use: values, control flow,
-functions, devices, the maths and numeric rules, and the chip's size limits.
+functions, devices, the maths and numeric rules, and the chip's size limits. The
+[device reference](docs/DEVICES.md) lists every prefab a program can name, with its logic types.
 
 - `compiler/api`: `Compiler.compile(source, options)`, the whole pipeline from source to IC10.
 - `compiler/frontend`: runs the Kotlin K2 front end on a script and returns its IR.
