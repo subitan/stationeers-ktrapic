@@ -308,6 +308,59 @@ class PrefabGeneratorTest {
   }
 
   @Test
+  fun `a thing's slots follow the game's rules for things, and every slotted non-structure is listed`() {
+    val tablet =
+        Prefab(
+            "ItemTablet",
+            hash("ItemTablet"),
+            mapOf("On" to Access(true, true)),
+            mapOf(0 to SlotInfo("Battery", "Battery"), 1 to SlotInfo("Common")),
+        )
+    val data =
+        Prefabs(
+            "test",
+            listOf(tablet),
+            mapOf("Battery" to listOf("Charge", "Quantity"), "Common" to listOf("Quantity")),
+        )
+    fun generate(things: List<String>, structures: List<String> = emptyList()) =
+        PrefabGenerator.generate(
+                data,
+                Grouping(emptyMap(), emptyList()),
+                setOf("LogicType"),
+                typing.copy(
+                    slotReadsAlways = listOf("Occupied", "SortingClass"),
+                    slotWrites = mapOf("Battery" to listOf("Open")),
+                    thingSlotReadsAlways = listOf("Occupied"),
+                    thingSlotReadsByKind = mapOf("Battery" to listOf("Charge")),
+                    slottedThings = things,
+                    slottedStructures = structures,
+                ),
+            )
+            .second
+
+    val code = generate(listOf("ItemTablet"))
+
+    // A thing's battery slot reads only the thing rules' types, and writes nothing.
+    assertThat(code)
+        .contains(
+            "class ItemBatterySlot internal constructor() : DeviceSlot() {\n" +
+                "  val Charge: Double\n    get() = intrinsic()\n\n" +
+                "  val Occupied: Boolean\n    get() = intrinsic()\n}\n"
+        )
+    assertThat(code).contains("  val slots: Slots<ItemCommonSlot>\n")
+    assertThat(code).contains("  @SlotNumber(0)\n  val Battery: ItemBatterySlot\n")
+    // Unlisted, listed twice, or listed without slots, the generator refuses.
+    for (bad in
+        listOf(
+            { generate(emptyList()) },
+            { generate(listOf("ItemTablet"), listOf("ItemTablet")) },
+            { generate(listOf("ItemTablet", "ItemMissing")) },
+        )) {
+      assertThrows<IllegalArgumentException> { bad() }
+    }
+  }
+
+  @Test
   fun `plurals`() {
     assertThat(PrefabGenerator.plural("Battery")).isEqualTo("Batteries")
     assertThat(PrefabGenerator.plural("Relay")).isEqualTo("Relays")

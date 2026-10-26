@@ -659,6 +659,129 @@ class SuitSlot internal constructor() : DeviceSlot() {
     get() = intrinsic()
 }
 
+/** A AirTank slot of a thing that isn't a structure, such as an item or a robot. */
+class ItemAirTankSlot internal constructor() : DeviceSlot() {
+  val Class: Double
+    get() = intrinsic()
+
+  val Damage: Double
+    get() = intrinsic()
+
+  val MaxQuantity: Double
+    get() = intrinsic()
+
+  val OccupantHash: Double
+    get() = intrinsic()
+
+  val Occupied: Boolean
+    get() = intrinsic()
+
+  val PrefabHash: Double
+    get() = intrinsic()
+
+  val Pressure: Double
+    get() = intrinsic()
+
+  val Quantity: Double
+    get() = intrinsic()
+
+  val ReferenceId: Double
+    get() = intrinsic()
+
+  val Temperature: Double
+    get() = intrinsic()
+}
+
+/** A Battery slot of a thing that isn't a structure, such as an item or a robot. */
+class ItemBatterySlot internal constructor() : DeviceSlot() {
+  val Charge: Double
+    get() = intrinsic()
+
+  val ChargeRatio: Double
+    get() = intrinsic()
+
+  val Class: Double
+    get() = intrinsic()
+
+  val Damage: Double
+    get() = intrinsic()
+
+  val MaxQuantity: Double
+    get() = intrinsic()
+
+  val OccupantHash: Double
+    get() = intrinsic()
+
+  val Occupied: Boolean
+    get() = intrinsic()
+
+  val PrefabHash: Double
+    get() = intrinsic()
+
+  val Quantity: Double
+    get() = intrinsic()
+
+  val ReferenceId: Double
+    get() = intrinsic()
+}
+
+/** A Common slot of a thing that isn't a structure, such as an item or a robot. */
+class ItemCommonSlot internal constructor() : DeviceSlot() {
+  val Class: Double
+    get() = intrinsic()
+
+  val Damage: Double
+    get() = intrinsic()
+
+  val MaxQuantity: Double
+    get() = intrinsic()
+
+  val OccupantHash: Double
+    get() = intrinsic()
+
+  val Occupied: Boolean
+    get() = intrinsic()
+
+  val PrefabHash: Double
+    get() = intrinsic()
+
+  val Quantity: Double
+    get() = intrinsic()
+
+  val ReferenceId: Double
+    get() = intrinsic()
+}
+
+/** A Filtered slot of a thing that isn't a structure, such as an item or a robot. */
+class ItemFilteredSlot internal constructor() : DeviceSlot() {
+  val Class: Double
+    get() = intrinsic()
+
+  val Damage: Double
+    get() = intrinsic()
+
+  val FilterType: Double
+    get() = intrinsic()
+
+  val MaxQuantity: Double
+    get() = intrinsic()
+
+  val OccupantHash: Double
+    get() = intrinsic()
+
+  val Occupied: Boolean
+    get() = intrinsic()
+
+  val PrefabHash: Double
+    get() = intrinsic()
+
+  val Quantity: Double
+    get() = intrinsic()
+
+  val ReferenceId: Double
+    get() = intrinsic()
+}
+
 /** A device that comes as several prefabs, each a nested class. */
 interface Battery {
   val Charge: Double
@@ -1257,12 +1380,12 @@ class DynamicGPR internal constructor() : TypedDevice() {
     get() = intrinsic()
 
   /** The device's slots, by number. */
-  val slots: Slots<BatterySlot>
+  val slots: Slots<ItemBatterySlot>
     get() = intrinsic()
 
   /** Slot 0. */
   @SlotNumber(0)
-  val Battery: BatterySlot
+  val Battery: ItemBatterySlot
     get() = intrinsic()
 
   /** The DynamicGPR prefab. */
@@ -1284,7 +1407,7 @@ object DynamicGPRs {
 
   class Batch internal constructor() : DeviceBatch<DynamicGPR>() {
     /** A slot of every one in the batch, by number. */
-    val slots: Slots<SlotBatch<BatterySlot>>
+    val slots: Slots<SlotBatch<ItemBatterySlot>>
       get() = intrinsic()
   }
 }
@@ -1308,12 +1431,12 @@ class DynamicLight internal constructor() : TypedDevice() {
     get() = intrinsic()
 
   /** The device's slots, by number. */
-  val slots: Slots<BatterySlot>
+  val slots: Slots<ItemBatterySlot>
     get() = intrinsic()
 
   /** Slot 0. */
   @SlotNumber(0)
-  val Battery: BatterySlot
+  val Battery: ItemBatterySlot
     get() = intrinsic()
 
   /** The DynamicLight prefab. */
@@ -1335,7 +1458,7 @@ object DynamicLights {
 
   class Batch internal constructor() : DeviceBatch<DynamicLight>() {
     /** A slot of every one in the batch, by number. */
-    val slots: Slots<SlotBatch<BatterySlot>>
+    val slots: Slots<SlotBatch<ItemBatterySlot>>
       get() = intrinsic()
   }
 }
@@ -1733,27 +1856,27 @@ class AdvancedTablet internal constructor() : TypedDevice() {
     set(value) = intrinsic()
 
   /** The device's slots, by number. */
-  val slots: Slots<CommonSlot>
+  val slots: Slots<ItemCommonSlot>
     get() = intrinsic()
 
   /** Slot 0. */
   @SlotNumber(0)
-  val Battery: BatterySlot
+  val Battery: ItemBatterySlot
     get() = intrinsic()
 
   /** Slot 1. */
   @SlotNumber(1)
-  val Cartridge: CommonSlot
+  val Cartridge: ItemCommonSlot
     get() = intrinsic()
 
   /** Slot 2. */
   @SlotNumber(2)
-  val Cartridge1: CommonSlot
+  val Cartridge1: ItemCommonSlot
     get() = intrinsic()
 
   /** Slot 3. */
   @SlotNumber(3)
-  val ProgrammableChip: CommonSlot
+  val ProgrammableChip: ItemCommonSlot
     get() = intrinsic()
 
   /** The ItemAdvancedTablet prefab. */
@@ -1775,7 +1898,7 @@ object AdvancedTablets {
 
   class Batch internal constructor() : DeviceBatch<AdvancedTablet>() {
     /** A slot of every one in the batch, by number. */
-    val slots: Slots<SlotBatch<CommonSlot>>
+    val slots: Slots<SlotBatch<ItemCommonSlot>>
       get() = intrinsic()
   }
 }
@@ -1791,12 +1914,12 @@ class AngleGrinder internal constructor() : TypedDevice() {
     get() = intrinsic()
 
   /** The device's slots, by number. */
-  val slots: Slots<BatterySlot>
+  val slots: Slots<ItemBatterySlot>
     get() = intrinsic()
 
   /** Slot 0. */
   @SlotNumber(0)
-  val Battery: BatterySlot
+  val Battery: ItemBatterySlot
     get() = intrinsic()
 
   /** The ItemAngleGrinder prefab. */
@@ -1818,7 +1941,7 @@ object AngleGrinders {
 
   class Batch internal constructor() : DeviceBatch<AngleGrinder>() {
     /** A slot of every one in the batch, by number. */
-    val slots: Slots<SlotBatch<BatterySlot>>
+    val slots: Slots<SlotBatch<ItemBatterySlot>>
       get() = intrinsic()
   }
 }
@@ -1834,12 +1957,12 @@ class ArcWelder internal constructor() : TypedDevice() {
     get() = intrinsic()
 
   /** The device's slots, by number. */
-  val slots: Slots<BatterySlot>
+  val slots: Slots<ItemBatterySlot>
     get() = intrinsic()
 
   /** Slot 0. */
   @SlotNumber(0)
-  val Battery: BatterySlot
+  val Battery: ItemBatterySlot
     get() = intrinsic()
 
   /** The ItemArcWelder prefab. */
@@ -1861,7 +1984,7 @@ object ArcWelders {
 
   class Batch internal constructor() : DeviceBatch<ArcWelder>() {
     /** A slot of every one in the batch, by number. */
-    val slots: Slots<SlotBatch<BatterySlot>>
+    val slots: Slots<SlotBatch<ItemBatterySlot>>
       get() = intrinsic()
   }
 }
@@ -1955,12 +2078,12 @@ class ItemBeacon internal constructor() : TypedDevice() {
     get() = intrinsic()
 
   /** The device's slots, by number. */
-  val slots: Slots<BatterySlot>
+  val slots: Slots<ItemBatterySlot>
     get() = intrinsic()
 
   /** Slot 0. */
   @SlotNumber(0)
-  val Battery: BatterySlot
+  val Battery: ItemBatterySlot
     get() = intrinsic()
 
   /** The ItemBeacon prefab. */
@@ -1982,7 +2105,7 @@ object ItemBeacons {
 
   class Batch internal constructor() : DeviceBatch<ItemBeacon>() {
     /** A slot of every one in the batch, by number. */
-    val slots: Slots<SlotBatch<BatterySlot>>
+    val slots: Slots<SlotBatch<ItemBatterySlot>>
       get() = intrinsic()
   }
 }
@@ -1998,12 +2121,12 @@ class Drill internal constructor() : TypedDevice() {
     get() = intrinsic()
 
   /** The device's slots, by number. */
-  val slots: Slots<BatterySlot>
+  val slots: Slots<ItemBatterySlot>
     get() = intrinsic()
 
   /** Slot 0. */
   @SlotNumber(0)
-  val Battery: BatterySlot
+  val Battery: ItemBatterySlot
     get() = intrinsic()
 
   /** The ItemDrill prefab. */
@@ -2025,7 +2148,7 @@ object Drills {
 
   class Batch internal constructor() : DeviceBatch<Drill>() {
     /** A slot of every one in the batch, by number. */
-    val slots: Slots<SlotBatch<BatterySlot>>
+    val slots: Slots<SlotBatch<ItemBatterySlot>>
       get() = intrinsic()
   }
 }
@@ -2041,12 +2164,12 @@ class EmergencyAngleGrinder internal constructor() : TypedDevice() {
     get() = intrinsic()
 
   /** The device's slots, by number. */
-  val slots: Slots<BatterySlot>
+  val slots: Slots<ItemBatterySlot>
     get() = intrinsic()
 
   /** Slot 0. */
   @SlotNumber(0)
-  val Battery: BatterySlot
+  val Battery: ItemBatterySlot
     get() = intrinsic()
 
   /** The ItemEmergencyAngleGrinder prefab. */
@@ -2068,7 +2191,7 @@ object EmergencyAngleGrinders {
 
   class Batch internal constructor() : DeviceBatch<EmergencyAngleGrinder>() {
     /** A slot of every one in the batch, by number. */
-    val slots: Slots<SlotBatch<BatterySlot>>
+    val slots: Slots<SlotBatch<ItemBatterySlot>>
       get() = intrinsic()
   }
 }
@@ -2084,12 +2207,12 @@ class EmergencyArcWelder internal constructor() : TypedDevice() {
     get() = intrinsic()
 
   /** The device's slots, by number. */
-  val slots: Slots<BatterySlot>
+  val slots: Slots<ItemBatterySlot>
     get() = intrinsic()
 
   /** Slot 0. */
   @SlotNumber(0)
-  val Battery: BatterySlot
+  val Battery: ItemBatterySlot
     get() = intrinsic()
 
   /** The ItemEmergencyArcWelder prefab. */
@@ -2111,7 +2234,7 @@ object EmergencyArcWelders {
 
   class Batch internal constructor() : DeviceBatch<EmergencyArcWelder>() {
     /** A slot of every one in the batch, by number. */
-    val slots: Slots<SlotBatch<BatterySlot>>
+    val slots: Slots<SlotBatch<ItemBatterySlot>>
       get() = intrinsic()
   }
 }
@@ -2127,12 +2250,12 @@ class EmergencyDrill internal constructor() : TypedDevice() {
     get() = intrinsic()
 
   /** The device's slots, by number. */
-  val slots: Slots<BatterySlot>
+  val slots: Slots<ItemBatterySlot>
     get() = intrinsic()
 
   /** Slot 0. */
   @SlotNumber(0)
-  val Battery: BatterySlot
+  val Battery: ItemBatterySlot
     get() = intrinsic()
 
   /** The ItemEmergencyDrill prefab. */
@@ -2154,7 +2277,7 @@ object EmergencyDrills {
 
   class Batch internal constructor() : DeviceBatch<EmergencyDrill>() {
     /** A slot of every one in the batch, by number. */
-    val slots: Slots<SlotBatch<BatterySlot>>
+    val slots: Slots<SlotBatch<ItemBatterySlot>>
       get() = intrinsic()
   }
 }
@@ -2318,12 +2441,12 @@ class Flashlight internal constructor() : TypedDevice() {
     get() = intrinsic()
 
   /** The device's slots, by number. */
-  val slots: Slots<BatterySlot>
+  val slots: Slots<ItemBatterySlot>
     get() = intrinsic()
 
   /** Slot 0. */
   @SlotNumber(0)
-  val Battery: BatterySlot
+  val Battery: ItemBatterySlot
     get() = intrinsic()
 
   /** The ItemFlashlight prefab. */
@@ -2345,7 +2468,7 @@ object Flashlights {
 
   class Batch internal constructor() : DeviceBatch<Flashlight>() {
     /** A slot of every one in the batch, by number. */
-    val slots: Slots<SlotBatch<BatterySlot>>
+    val slots: Slots<SlotBatch<ItemBatterySlot>>
       get() = intrinsic()
   }
 }
@@ -2462,7 +2585,7 @@ class GasMask internal constructor() : TypedDevice() {
     set(value) = intrinsic()
 
   /** The device's slots, by number. */
-  val slots: Slots<FilteredSlot>
+  val slots: Slots<ItemFilteredSlot>
     get() = intrinsic()
 
   /** The ItemGasMask prefab. */
@@ -2484,7 +2607,7 @@ object GasMasks {
 
   class Batch internal constructor() : DeviceBatch<GasMask>() {
     /** A slot of every one in the batch, by number. */
-    val slots: Slots<SlotBatch<FilteredSlot>>
+    val slots: Slots<SlotBatch<ItemFilteredSlot>>
       get() = intrinsic()
   }
 }
@@ -2500,12 +2623,12 @@ class HardHat internal constructor() : TypedDevice() {
     get() = intrinsic()
 
   /** The device's slots, by number. */
-  val slots: Slots<BatterySlot>
+  val slots: Slots<ItemBatterySlot>
     get() = intrinsic()
 
   /** Slot 0. */
   @SlotNumber(0)
-  val Battery: BatterySlot
+  val Battery: ItemBatterySlot
     get() = intrinsic()
 
   /** The ItemHardHat prefab. */
@@ -2527,7 +2650,7 @@ object HardHats {
 
   class Batch internal constructor() : DeviceBatch<HardHat>() {
     /** A slot of every one in the batch, by number. */
-    val slots: Slots<SlotBatch<BatterySlot>>
+    val slots: Slots<SlotBatch<ItemBatterySlot>>
       get() = intrinsic()
   }
 }
@@ -2544,12 +2667,12 @@ class HardJetpack internal constructor() : TypedDevice() {
     set(value) = intrinsic()
 
   /** The device's slots, by number. */
-  val slots: Slots<CommonSlot>
+  val slots: Slots<ItemCommonSlot>
     get() = intrinsic()
 
   /** Slot 0. */
   @SlotNumber(0)
-  val Propellant: AirTankSlot
+  val Propellant: ItemAirTankSlot
     get() = intrinsic()
 
   /** The ItemHardJetpack prefab. */
@@ -2571,7 +2694,7 @@ object HardJetpacks {
 
   class Batch internal constructor() : DeviceBatch<HardJetpack>() {
     /** A slot of every one in the batch, by number. */
-    val slots: Slots<SlotBatch<CommonSlot>>
+    val slots: Slots<SlotBatch<ItemCommonSlot>>
       get() = intrinsic()
   }
 }
@@ -2774,27 +2897,27 @@ class HardSuit internal constructor() : TypedDevice() {
     set(value) = intrinsic()
 
   /** The device's slots, by number. */
-  val slots: Slots<CommonSlot>
+  val slots: Slots<ItemCommonSlot>
     get() = intrinsic()
 
   /** Slot 0. */
   @SlotNumber(0)
-  val AirTank: AirTankSlot
+  val AirTank: ItemAirTankSlot
     get() = intrinsic()
 
   /** Slot 1. */
   @SlotNumber(1)
-  val WasteTank: AirTankSlot
+  val WasteTank: ItemAirTankSlot
     get() = intrinsic()
 
   /** Slot 2. */
   @SlotNumber(2)
-  val LifeSupport: BatterySlot
+  val LifeSupport: ItemBatterySlot
     get() = intrinsic()
 
   /** Slot 3. */
   @SlotNumber(3)
-  val ProgrammableChip: CommonSlot
+  val ProgrammableChip: ItemCommonSlot
     get() = intrinsic()
 
   /** The ItemHardSuit prefab. */
@@ -2816,7 +2939,7 @@ object HardSuits {
 
   class Batch internal constructor() : DeviceBatch<HardSuit>() {
     /** A slot of every one in the batch, by number. */
-    val slots: Slots<SlotBatch<CommonSlot>>
+    val slots: Slots<SlotBatch<ItemCommonSlot>>
       get() = intrinsic()
   }
 }
@@ -3145,12 +3268,12 @@ class JetpackBasic internal constructor() : TypedDevice() {
     set(value) = intrinsic()
 
   /** The device's slots, by number. */
-  val slots: Slots<CommonSlot>
+  val slots: Slots<ItemCommonSlot>
     get() = intrinsic()
 
   /** Slot 0. */
   @SlotNumber(0)
-  val Propellant: AirTankSlot
+  val Propellant: ItemAirTankSlot
     get() = intrinsic()
 
   /** The ItemJetpackBasic prefab. */
@@ -3172,7 +3295,7 @@ object JetpackBasics {
 
   class Batch internal constructor() : DeviceBatch<JetpackBasic>() {
     /** A slot of every one in the batch, by number. */
-    val slots: Slots<SlotBatch<CommonSlot>>
+    val slots: Slots<SlotBatch<ItemCommonSlot>>
       get() = intrinsic()
   }
 }
@@ -3191,12 +3314,12 @@ class Labeller internal constructor() : TypedDevice() {
     get() = intrinsic()
 
   /** The device's slots, by number. */
-  val slots: Slots<BatterySlot>
+  val slots: Slots<ItemBatterySlot>
     get() = intrinsic()
 
   /** Slot 0. */
   @SlotNumber(0)
-  val Battery: BatterySlot
+  val Battery: ItemBatterySlot
     get() = intrinsic()
 
   /** The ItemLabeller prefab. */
@@ -3218,7 +3341,7 @@ object Labellers {
 
   class Batch internal constructor() : DeviceBatch<Labeller>() {
     /** A slot of every one in the batch, by number. */
-    val slots: Slots<SlotBatch<BatterySlot>>
+    val slots: Slots<SlotBatch<ItemBatterySlot>>
       get() = intrinsic()
   }
 }
@@ -3252,22 +3375,22 @@ class Laptop internal constructor() : TypedDevice() {
     get() = intrinsic()
 
   /** The device's slots, by number. */
-  val slots: Slots<CommonSlot>
+  val slots: Slots<ItemCommonSlot>
     get() = intrinsic()
 
   /** Slot 0. */
   @SlotNumber(0)
-  val ProgrammableChip: CommonSlot
+  val ProgrammableChip: ItemCommonSlot
     get() = intrinsic()
 
   /** Slot 1. */
   @SlotNumber(1)
-  val Battery: BatterySlot
+  val Battery: ItemBatterySlot
     get() = intrinsic()
 
   /** Slot 2. */
   @SlotNumber(2)
-  val Motherboard: CommonSlot
+  val Motherboard: ItemCommonSlot
     get() = intrinsic()
 
   /** The ItemLaptop prefab. */
@@ -3289,7 +3412,7 @@ object Laptops {
 
   class Batch internal constructor() : DeviceBatch<Laptop>() {
     /** A slot of every one in the batch, by number. */
-    val slots: Slots<SlotBatch<CommonSlot>>
+    val slots: Slots<SlotBatch<ItemCommonSlot>>
       get() = intrinsic()
   }
 }
@@ -3316,12 +3439,12 @@ class LiquidVacuum internal constructor() : TypedDevice() {
     get() = intrinsic()
 
   /** The device's slots, by number. */
-  val slots: Slots<BatterySlot>
+  val slots: Slots<ItemBatterySlot>
     get() = intrinsic()
 
   /** Slot 0. */
   @SlotNumber(0)
-  val Battery: BatterySlot
+  val Battery: ItemBatterySlot
     get() = intrinsic()
 
   /** The ItemLiquidVacuum prefab. */
@@ -3343,7 +3466,7 @@ object LiquidVacuums {
 
   class Batch internal constructor() : DeviceBatch<LiquidVacuum>() {
     /** A slot of every one in the batch, by number. */
-    val slots: Slots<SlotBatch<BatterySlot>>
+    val slots: Slots<SlotBatch<ItemBatterySlot>>
       get() = intrinsic()
   }
 }
@@ -3359,12 +3482,12 @@ class MKIIAngleGrinder internal constructor() : TypedDevice() {
     get() = intrinsic()
 
   /** The device's slots, by number. */
-  val slots: Slots<BatterySlot>
+  val slots: Slots<ItemBatterySlot>
     get() = intrinsic()
 
   /** Slot 0. */
   @SlotNumber(0)
-  val Battery: BatterySlot
+  val Battery: ItemBatterySlot
     get() = intrinsic()
 
   /** The ItemMKIIAngleGrinder prefab. */
@@ -3386,7 +3509,7 @@ object MKIIAngleGrinders {
 
   class Batch internal constructor() : DeviceBatch<MKIIAngleGrinder>() {
     /** A slot of every one in the batch, by number. */
-    val slots: Slots<SlotBatch<BatterySlot>>
+    val slots: Slots<SlotBatch<ItemBatterySlot>>
       get() = intrinsic()
   }
 }
@@ -3402,12 +3525,12 @@ class MKIIArcWelder internal constructor() : TypedDevice() {
     get() = intrinsic()
 
   /** The device's slots, by number. */
-  val slots: Slots<BatterySlot>
+  val slots: Slots<ItemBatterySlot>
     get() = intrinsic()
 
   /** Slot 0. */
   @SlotNumber(0)
-  val Battery: BatterySlot
+  val Battery: ItemBatterySlot
     get() = intrinsic()
 
   /** The ItemMKIIArcWelder prefab. */
@@ -3429,7 +3552,7 @@ object MKIIArcWelders {
 
   class Batch internal constructor() : DeviceBatch<MKIIArcWelder>() {
     /** A slot of every one in the batch, by number. */
-    val slots: Slots<SlotBatch<BatterySlot>>
+    val slots: Slots<SlotBatch<ItemBatterySlot>>
       get() = intrinsic()
   }
 }
@@ -3445,12 +3568,12 @@ class MKIIDrill internal constructor() : TypedDevice() {
     get() = intrinsic()
 
   /** The device's slots, by number. */
-  val slots: Slots<BatterySlot>
+  val slots: Slots<ItemBatterySlot>
     get() = intrinsic()
 
   /** Slot 0. */
   @SlotNumber(0)
-  val Battery: BatterySlot
+  val Battery: ItemBatterySlot
     get() = intrinsic()
 
   /** The ItemMKIIDrill prefab. */
@@ -3472,7 +3595,7 @@ object MKIIDrills {
 
   class Batch internal constructor() : DeviceBatch<MKIIDrill>() {
     /** A slot of every one in the batch, by number. */
-    val slots: Slots<SlotBatch<BatterySlot>>
+    val slots: Slots<SlotBatch<ItemBatterySlot>>
       get() = intrinsic()
   }
 }
@@ -3499,12 +3622,12 @@ class MKIIMiningDrill internal constructor() : TypedDevice() {
     get() = intrinsic()
 
   /** The device's slots, by number. */
-  val slots: Slots<BatterySlot>
+  val slots: Slots<ItemBatterySlot>
     get() = intrinsic()
 
   /** Slot 0. */
   @SlotNumber(0)
-  val Battery: BatterySlot
+  val Battery: ItemBatterySlot
     get() = intrinsic()
 
   /** The ItemMKIIMiningDrill prefab. */
@@ -3526,7 +3649,7 @@ object MKIIMiningDrills {
 
   class Batch internal constructor() : DeviceBatch<MKIIMiningDrill>() {
     /** A slot of every one in the batch, by number. */
-    val slots: Slots<SlotBatch<BatterySlot>>
+    val slots: Slots<SlotBatch<ItemBatterySlot>>
       get() = intrinsic()
   }
 }
@@ -3553,12 +3676,12 @@ class MiningDrill internal constructor() : TypedDevice() {
     get() = intrinsic()
 
   /** The device's slots, by number. */
-  val slots: Slots<BatterySlot>
+  val slots: Slots<ItemBatterySlot>
     get() = intrinsic()
 
   /** Slot 0. */
   @SlotNumber(0)
-  val Battery: BatterySlot
+  val Battery: ItemBatterySlot
     get() = intrinsic()
 
   /** The ItemMiningDrill prefab. */
@@ -3580,7 +3703,7 @@ object MiningDrills {
 
   class Batch internal constructor() : DeviceBatch<MiningDrill>() {
     /** A slot of every one in the batch, by number. */
-    val slots: Slots<SlotBatch<BatterySlot>>
+    val slots: Slots<SlotBatch<ItemBatterySlot>>
       get() = intrinsic()
   }
 }
@@ -3607,12 +3730,12 @@ class MiningDrillHeavy internal constructor() : TypedDevice() {
     get() = intrinsic()
 
   /** The device's slots, by number. */
-  val slots: Slots<BatterySlot>
+  val slots: Slots<ItemBatterySlot>
     get() = intrinsic()
 
   /** Slot 0. */
   @SlotNumber(0)
-  val Battery: BatterySlot
+  val Battery: ItemBatterySlot
     get() = intrinsic()
 
   /** The ItemMiningDrillHeavy prefab. */
@@ -3634,7 +3757,7 @@ object MiningDrillHeavies {
 
   class Batch internal constructor() : DeviceBatch<MiningDrillHeavy>() {
     /** A slot of every one in the batch, by number. */
-    val slots: Slots<SlotBatch<BatterySlot>>
+    val slots: Slots<SlotBatch<ItemBatterySlot>>
       get() = intrinsic()
   }
 }
@@ -3654,12 +3777,12 @@ class NVG internal constructor() : TypedDevice() {
     get() = intrinsic()
 
   /** The device's slots, by number. */
-  val slots: Slots<BatterySlot>
+  val slots: Slots<ItemBatterySlot>
     get() = intrinsic()
 
   /** Slot 0. */
   @SlotNumber(0)
-  val Battery: BatterySlot
+  val Battery: ItemBatterySlot
     get() = intrinsic()
 
   /** The ItemNVG prefab. */
@@ -3681,7 +3804,7 @@ object NVGs {
 
   class Batch internal constructor() : DeviceBatch<NVG>() {
     /** A slot of every one in the batch, by number. */
-    val slots: Slots<SlotBatch<BatterySlot>>
+    val slots: Slots<SlotBatch<ItemBatterySlot>>
       get() = intrinsic()
   }
 }
@@ -3704,12 +3827,12 @@ class OreDetector internal constructor() : TypedDevice() {
     get() = intrinsic()
 
   /** The device's slots, by number. */
-  val slots: Slots<BatterySlot>
+  val slots: Slots<ItemBatterySlot>
     get() = intrinsic()
 
   /** Slot 0. */
   @SlotNumber(0)
-  val Battery: BatterySlot
+  val Battery: ItemBatterySlot
     get() = intrinsic()
 
   /** The ItemOreDetector prefab. */
@@ -3731,7 +3854,7 @@ object OreDetectors {
 
   class Batch internal constructor() : DeviceBatch<OreDetector>() {
     /** A slot of every one in the batch, by number. */
-    val slots: Slots<SlotBatch<BatterySlot>>
+    val slots: Slots<SlotBatch<ItemBatterySlot>>
       get() = intrinsic()
   }
 }
@@ -3755,12 +3878,12 @@ class PlantSampler internal constructor() : TypedDevice() {
     get() = intrinsic()
 
   /** The device's slots, by number. */
-  val slots: Slots<BatterySlot>
+  val slots: Slots<ItemBatterySlot>
     get() = intrinsic()
 
   /** Slot 0. */
   @SlotNumber(0)
-  val Battery: BatterySlot
+  val Battery: ItemBatterySlot
     get() = intrinsic()
 
   /** The ItemPlantSampler prefab. */
@@ -3782,7 +3905,7 @@ object PlantSamplers {
 
   class Batch internal constructor() : DeviceBatch<PlantSampler>() {
     /** A slot of every one in the batch, by number. */
-    val slots: Slots<SlotBatch<BatterySlot>>
+    val slots: Slots<SlotBatch<ItemBatterySlot>>
       get() = intrinsic()
   }
 }
@@ -3813,12 +3936,12 @@ class RemoteDetonator internal constructor() : TypedDevice() {
     get() = intrinsic()
 
   /** The device's slots, by number. */
-  val slots: Slots<BatterySlot>
+  val slots: Slots<ItemBatterySlot>
     get() = intrinsic()
 
   /** Slot 0. */
   @SlotNumber(0)
-  val Battery: BatterySlot
+  val Battery: ItemBatterySlot
     get() = intrinsic()
 
   /** The ItemRemoteDetonator prefab. */
@@ -3840,7 +3963,7 @@ object RemoteDetonators {
 
   class Batch internal constructor() : DeviceBatch<RemoteDetonator>() {
     /** A slot of every one in the batch, by number. */
-    val slots: Slots<SlotBatch<BatterySlot>>
+    val slots: Slots<SlotBatch<ItemBatterySlot>>
       get() = intrinsic()
   }
 }
@@ -3856,17 +3979,17 @@ class SensorLenses internal constructor() : TypedDevice() {
     get() = intrinsic()
 
   /** The device's slots, by number. */
-  val slots: Slots<CommonSlot>
+  val slots: Slots<ItemCommonSlot>
     get() = intrinsic()
 
   /** Slot 0. */
   @SlotNumber(0)
-  val Battery: BatterySlot
+  val Battery: ItemBatterySlot
     get() = intrinsic()
 
   /** Slot 1. */
   @SlotNumber(1)
-  val SensorProcessingUnit: CommonSlot
+  val SensorProcessingUnit: ItemCommonSlot
     get() = intrinsic()
 
   /** The ItemSensorLenses prefab. */
@@ -3888,7 +4011,7 @@ object SensorLenseses {
 
   class Batch internal constructor() : DeviceBatch<SensorLenses>() {
     /** A slot of every one in the batch, by number. */
-    val slots: Slots<SlotBatch<CommonSlot>>
+    val slots: Slots<SlotBatch<ItemCommonSlot>>
       get() = intrinsic()
   }
 }
@@ -4049,12 +4172,12 @@ class Spacepack internal constructor() : TypedDevice() {
     set(value) = intrinsic()
 
   /** The device's slots, by number. */
-  val slots: Slots<CommonSlot>
+  val slots: Slots<ItemCommonSlot>
     get() = intrinsic()
 
   /** Slot 0. */
   @SlotNumber(0)
-  val Propellant: AirTankSlot
+  val Propellant: ItemAirTankSlot
     get() = intrinsic()
 
   /** The ItemSpacepack prefab. */
@@ -4076,7 +4199,7 @@ object Spacepacks {
 
   class Batch internal constructor() : DeviceBatch<Spacepack>() {
     /** A slot of every one in the batch, by number. */
-    val slots: Slots<SlotBatch<CommonSlot>>
+    val slots: Slots<SlotBatch<ItemCommonSlot>>
       get() = intrinsic()
   }
 }
@@ -4279,57 +4402,57 @@ class SuitHARM internal constructor() : TypedDevice() {
     set(value) = intrinsic()
 
   /** The device's slots, by number. */
-  val slots: Slots<CommonSlot>
+  val slots: Slots<ItemCommonSlot>
     get() = intrinsic()
 
   /** Slot 0. */
   @SlotNumber(0)
-  val AirTank: AirTankSlot
+  val AirTank: ItemAirTankSlot
     get() = intrinsic()
 
   /** Slot 1. */
   @SlotNumber(1)
-  val WasteTank: AirTankSlot
+  val WasteTank: ItemAirTankSlot
     get() = intrinsic()
 
   /** Slot 2. */
   @SlotNumber(2)
-  val CoolantTank: CommonSlot
+  val CoolantTank: ItemCommonSlot
     get() = intrinsic()
 
   /** Slot 3. */
   @SlotNumber(3)
-  val Battery: BatterySlot
+  val Battery: ItemBatterySlot
     get() = intrinsic()
 
   /** Slot 4. */
   @SlotNumber(4)
-  val Chip: CommonSlot
+  val Chip: ItemCommonSlot
     get() = intrinsic()
 
   /** Slot 5. */
   @SlotNumber(5)
-  val Filter1: FilteredSlot
+  val Filter1: ItemFilteredSlot
     get() = intrinsic()
 
   /** Slot 6. */
   @SlotNumber(6)
-  val Filter2: FilteredSlot
+  val Filter2: ItemFilteredSlot
     get() = intrinsic()
 
   /** Slot 7. */
   @SlotNumber(7)
-  val Filter3: FilteredSlot
+  val Filter3: ItemFilteredSlot
     get() = intrinsic()
 
   /** Slot 8. */
   @SlotNumber(8)
-  val Filter4: FilteredSlot
+  val Filter4: ItemFilteredSlot
     get() = intrinsic()
 
   /** Slot 9. */
   @SlotNumber(9)
-  val Back: CommonSlot
+  val Back: ItemCommonSlot
     get() = intrinsic()
 
   /** The ItemSuitHARM prefab. */
@@ -4351,7 +4474,7 @@ object SuitHARMs {
 
   class Batch internal constructor() : DeviceBatch<SuitHARM>() {
     /** A slot of every one in the batch, by number. */
-    val slots: Slots<SlotBatch<CommonSlot>>
+    val slots: Slots<SlotBatch<ItemCommonSlot>>
       get() = intrinsic()
   }
 }
@@ -4514,17 +4637,17 @@ class Tablet internal constructor() : TypedDevice() {
     get() = intrinsic()
 
   /** The device's slots, by number. */
-  val slots: Slots<CommonSlot>
+  val slots: Slots<ItemCommonSlot>
     get() = intrinsic()
 
   /** Slot 0. */
   @SlotNumber(0)
-  val Battery: BatterySlot
+  val Battery: ItemBatterySlot
     get() = intrinsic()
 
   /** Slot 1. */
   @SlotNumber(1)
-  val Cartridge: CommonSlot
+  val Cartridge: ItemCommonSlot
     get() = intrinsic()
 
   /** The ItemTablet prefab. */
@@ -4546,7 +4669,7 @@ object Tablets {
 
   class Batch internal constructor() : DeviceBatch<Tablet>() {
     /** A slot of every one in the batch, by number. */
-    val slots: Slots<SlotBatch<CommonSlot>>
+    val slots: Slots<SlotBatch<ItemCommonSlot>>
       get() = intrinsic()
   }
 }
@@ -4573,17 +4696,17 @@ class TerrainManipulator internal constructor() : TypedDevice() {
     get() = intrinsic()
 
   /** The device's slots, by number. */
-  val slots: Slots<CommonSlot>
+  val slots: Slots<ItemCommonSlot>
     get() = intrinsic()
 
   /** Slot 0. */
   @SlotNumber(0)
-  val Battery: BatterySlot
+  val Battery: ItemBatterySlot
     get() = intrinsic()
 
   /** Slot 1. */
   @SlotNumber(1)
-  val DirtCanister: CommonSlot
+  val DirtCanister: ItemCommonSlot
     get() = intrinsic()
 
   /** The ItemTerrainManipulator prefab. */
@@ -4605,7 +4728,7 @@ object TerrainManipulators {
 
   class Batch internal constructor() : DeviceBatch<TerrainManipulator>() {
     /** A slot of every one in the batch, by number. */
-    val slots: Slots<SlotBatch<CommonSlot>>
+    val slots: Slots<SlotBatch<ItemCommonSlot>>
       get() = intrinsic()
   }
 }
@@ -4621,12 +4744,12 @@ class WearLamp internal constructor() : TypedDevice() {
     get() = intrinsic()
 
   /** The device's slots, by number. */
-  val slots: Slots<BatterySlot>
+  val slots: Slots<ItemBatterySlot>
     get() = intrinsic()
 
   /** Slot 0. */
   @SlotNumber(0)
-  val Battery: BatterySlot
+  val Battery: ItemBatterySlot
     get() = intrinsic()
 
   /** The ItemWearLamp prefab. */
@@ -4648,7 +4771,7 @@ object WearLamps {
 
   class Batch internal constructor() : DeviceBatch<WearLamp>() {
     /** A slot of every one in the batch, by number. */
-    val slots: Slots<SlotBatch<BatterySlot>>
+    val slots: Slots<SlotBatch<ItemBatterySlot>>
       get() = intrinsic()
   }
 }
@@ -5621,12 +5744,12 @@ class PortableSolarPanel internal constructor() : TypedDevice() {
     set(value) = intrinsic()
 
   /** The device's slots, by number. */
-  val slots: Slots<BatterySlot>
+  val slots: Slots<ItemBatterySlot>
     get() = intrinsic()
 
   /** Slot 0. */
   @SlotNumber(0)
-  val Battery: BatterySlot
+  val Battery: ItemBatterySlot
     get() = intrinsic()
 
   /** The PortableSolarPanel prefab. */
@@ -5648,7 +5771,7 @@ object PortableSolarPanels {
 
   class Batch internal constructor() : DeviceBatch<PortableSolarPanel>() {
     /** A slot of every one in the batch, by number. */
-    val slots: Slots<SlotBatch<BatterySlot>>
+    val slots: Slots<SlotBatch<ItemBatterySlot>>
       get() = intrinsic()
   }
 }
@@ -5737,17 +5860,17 @@ class Robot internal constructor() : TypedDevice() {
     get() = intrinsic()
 
   /** The device's slots, by number. */
-  val slots: Slots<CommonSlot>
+  val slots: Slots<ItemCommonSlot>
     get() = intrinsic()
 
   /** Slot 0. */
   @SlotNumber(0)
-  val Battery: BatterySlot
+  val Battery: ItemBatterySlot
     get() = intrinsic()
 
   /** Slot 1. */
   @SlotNumber(1)
-  val ProgrammableChip: CommonSlot
+  val ProgrammableChip: ItemCommonSlot
     get() = intrinsic()
 
   /** The Robot prefab. */
@@ -5769,7 +5892,7 @@ object Robots {
 
   class Batch internal constructor() : DeviceBatch<Robot>() {
     /** A slot of every one in the batch, by number. */
-    val slots: Slots<SlotBatch<CommonSlot>>
+    val slots: Slots<SlotBatch<ItemCommonSlot>>
       get() = intrinsic()
   }
 }
@@ -5785,7 +5908,7 @@ class Rover_MkI internal constructor() : TypedDevice() {
     get() = intrinsic()
 
   /** The device's slots, by number. */
-  val slots: Slots<CommonSlot>
+  val slots: Slots<ItemCommonSlot>
     get() = intrinsic()
 
   /** The Rover_MkI prefab. */
@@ -5807,7 +5930,7 @@ object Rover_MkIs {
 
   class Batch internal constructor() : DeviceBatch<Rover_MkI>() {
     /** A slot of every one in the batch, by number. */
-    val slots: Slots<SlotBatch<CommonSlot>>
+    val slots: Slots<SlotBatch<ItemCommonSlot>>
       get() = intrinsic()
   }
 }
