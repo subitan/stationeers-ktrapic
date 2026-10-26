@@ -666,8 +666,34 @@ internal class Translator {
         batchWrites(call, source, args[1])
         NoValue
       }
+      in BATCH_TESTS -> {
+        // As a value, the test's comparison sets a register; in a condition, branch() uses it.
+        val test = batchTest(call, source, name)
+        Reg(newVReg()).also { emit("s${test.op}z", it.reg, operand(test.a)) }
+      }
       else -> fail(call, "$name is not supported on a batch")
     }
+  }
+
+  /**
+   * `any`, `all` or `none { it.On }`: one batch read and a comparison with 0. `any` and `none` read
+   * the `Maximum` (negative infinity for no devices, so `any` is false and `none` true, as in
+   * Kotlin); `all` reads the `Minimum` (0 for no devices, so false, where Kotlin gives true).
+   */
+  private fun batchTest(call: IrCall, source: Value, name: String): Comparison {
+    val (method, op) = BATCH_TESTS.getValue(name)
+    val read = batchRead(source, selected(call, call.arguments[1]), method)
+    return Comparison(op, read, Const(0.0), mayBeNaN = false)
+  }
+
+  /** A call of a batch's `any`, `all` or `none`, as the comparison [branch] can jump on. */
+  private fun batchTestCondition(condition: IrCall): Comparison? {
+    val function = condition.symbol.owner
+    val name = function.name.asString()
+    if (name !in BATCH_TESTS || function.parentClassOrNull?.isBatchClass() != true) return null
+    val source = aliasOrValue(condition.arguments[0]!!)
+    if (source !is Batch && !(source is SlotOf && source.owner is Batch)) return null
+    return batchTest(condition, source, name)
   }
 
   /**
@@ -724,7 +750,8 @@ internal class Translator {
   /**
    * `forEach { it.On = true }`: each assignment to the element's logic type, or to one of its
    * slots' (`it.slots[0].Open`, `it.Battery.On`), writes every device (`sb`, `sbn`, `sbs`). Each
-   * value is computed once for all the devices, even for none, so it may not assign anything.
+   * value is computed once for all the devices, even for none, so it may have no side effect (see
+   * [hasSideEffects]). One that reads the batch again reads it before any device is written.
    */
   private fun batchWrites(call: IrCall, source: Value, argument: IrExpression?) {
     val lambda =
@@ -745,10 +772,14 @@ internal class Translator {
       val slot = writeTarget(set.arguments[0]!!, parameter)
       val written = set.arguments.last()!!
       if (written.mentions(parameter)) {
-        fail(written, "a value written to a batch can't depend on its devices")
+        fail(written, "a value written to a batch can't use the batch's devices (it)")
       }
-      if (written.mayAssign()) {
-        fail(written, "a value written to a batch is computed once, so it can't assign anything")
+      if (written.hasSideEffects()) {
+        fail(
+            written,
+            "a value written to a batch is computed once, so it can't have side effects " +
+                "(assign, write a device, sleep or yield)",
+        )
       }
       val name = property.name.asString()
       val stored = Fixed(Name(storedLogicType(name)))
@@ -778,8 +809,12 @@ internal class Translator {
               (slots.arguments[0] as? IrGetValue)?.symbol == parameter.symbol &&
               !number.mentions(parameter)
       ) {
-        if (number.mayAssign()) {
-          fail(number, "a slot number written to a batch is computed once, so it can't assign")
+        if (number.hasSideEffects()) {
+          fail(
+              number,
+              "a slot number written to a batch is computed once, so it can't have side effects " +
+                  "(assign, write a device, sleep or yield)",
+          )
         }
         return operand(snapshot(slotNumber(number)))
       }
@@ -819,6 +854,14 @@ internal class Translator {
     )
     return found
   }
+
+  /**
+   * A runtime function with a side effect that is not an assignment: a device's indexed write
+   * (`Device.set`), a batch's `forEach`, `sleep` or `yield`.
+   */
+  private fun IrSimpleFunction.isSideEffect(): Boolean =
+      kotlinFqName.asString() in SIDE_EFFECTS ||
+          (name.asString() == "forEach" && parentClassOrNull?.isBatchClass() == true)
 
   /** A batch's or a batch of slots' class, whose members are its collection operations. */
   private fun IrClass.isBatchClass(): Boolean =
@@ -1023,16 +1066,28 @@ internal class Translator {
    * True if evaluating this expression may assign a variable or property, including a property
    * assigned by one of the program's functions it calls.
    */
-  private fun IrExpression.mayAssign(): Boolean = assigns(this, variables = true, mutableSetOf())
+  private fun IrExpression.mayAssign(): Boolean =
+      assigns(this, variables = true, effects = false, mutableSetOf())
 
   /**
-   * True if [element] assigns a property, or a variable when [variables] is set. A call to one of
-   * the program's functions assigns the properties its body does; the variables its body assigns
-   * are its own, so they do not count. [visited] holds the functions already looked into.
+   * True if evaluating this expression does anything besides compute its value: assigns a variable
+   * or property (a logic type or slot's included), writes a device by index (`d0[LogicType.On] =
+   * 1.0`) or a batch (`forEach`), or calls `sleep` or `yield`, itself or in one of the program's
+   * functions it calls.
+   */
+  private fun IrExpression.hasSideEffects(): Boolean =
+      assigns(this, variables = true, effects = true, mutableSetOf())
+
+  /**
+   * True if [element] assigns a property, or a variable when [variables] is set, or, when [effects]
+   * is set, calls a runtime function with a side effect. A call to one of the program's functions
+   * counts what its body does, except the variables it assigns, which are its own. [visited] holds
+   * the functions already looked into.
    */
   private fun assigns(
       element: IrElement,
       variables: Boolean,
+      effects: Boolean,
       visited: MutableSet<IrSimpleFunction>,
   ): Boolean {
     var assigns = false
@@ -1056,9 +1111,13 @@ internal class Translator {
               assigns = true
               return
             }
+            if (effects && function.isSideEffect()) {
+              assigns = true
+              return
+            }
             if (function in graph.functions && visited.add(function)) {
               val body = function.body
-              if (body != null && assigns(body, variables = false, visited)) {
+              if (body != null && assigns(body, variables = false, effects, visited)) {
                 assigns = true
                 return
               }
@@ -1296,6 +1355,10 @@ internal class Translator {
       return
     }
     if (condition is IrCall) {
+      batchTestCondition(condition)?.let {
+        compareAndBranch(it, if (whenTrue) it.op else NEGATED.getValue(it.op), target)
+        return
+      }
       val function = condition.symbol.owner
       if (
           function.name.asString() == "not" &&
@@ -1619,7 +1682,16 @@ internal class Translator {
     const val DEVICE_SLOT = "ktrapic.DeviceSlot"
     const val SLOT_NUMBER = "ktrapic.SlotNumber"
     const val MAX_SLOT = 255
+
     /** The functions ending a `map`, by the game's batch method they read with. */
+    /** A batch's Boolean tests, by the batch method each reads and its comparison with 0. */
+    val BATCH_TESTS =
+        mapOf(
+            "any" to ("Maximum" to "gt"),
+            "all" to ("Minimum" to "gt"),
+            "none" to ("Maximum" to "le"),
+        )
+
     val MAPPED_TERMINALS =
         mapOf(
             "ktrapic.average" to "Average",
@@ -1627,6 +1699,8 @@ internal class Translator {
             "ktrapic.min" to "Minimum",
             "ktrapic.max" to "Maximum",
         )
+    /** The runtime functions besides a batch's `forEach` with a side effect not an assignment. */
+    val SIDE_EFFECTS = setOf("ktrapic.Device.set", "ktrapic.sleep", "ktrapic.yield")
     val PIN_GETTERS =
         listOf("d0", "d1", "d2", "d3", "d4", "d5", "db").associateBy { "ktrapic.<get-$it>" }
     val INT_RANGE = Int.MIN_VALUE.toDouble()..Int.MAX_VALUE.toDouble()

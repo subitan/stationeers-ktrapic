@@ -140,15 +140,17 @@ would get the same name that way, both keep their full names, as `ItemBeacons` a
 
 A batch is read with collection operations, each of which compiles to one batch instruction
 (`lb`, `lbn`): `map { it.X }` followed by `average()`, `sum()`, `min()` or `max()`; `sumOf`,
-`minOf` and `maxOf`; `count { it.On }`, how many have a logic type on; and `count()`, how many
-devices of the prefab there are. The game can't count the devices with a name, so `count()` on a
-`named(...)` batch is a compile error. A batch is written with `forEach`, each of whose
-assignments writes every device (`sb`, `sbn`):
+`minOf` and `maxOf`; `count { it.On }`, how many have a logic type on; `any { it.On }`,
+`all { it.On }` and `none { it.On }`, which inside an `if` become the branch itself; and
+`count()`, how many devices of the prefab there are. The game can't count the devices with a
+name, so `count()` on a `named(...)` batch is a compile error. A batch is written with `forEach`,
+each of whose assignments writes every device (`sb`, `sbn`):
 
 ```kotlin
 GrowLights.all.forEach { it.On = true }
 GrowLights.named("Potatoes").forEach { it.On = false }
 val lit = GrowLights.all.count { it.On }
+if (GrowLights.named("Potatoes").any { it.On }) db.On = true
 val charge = Batteries.Small.all.map { it.Charge }.average()
 val most = Batteries.Small.all.maxOf(Battery.Small::Charge)
 val sensor = GasSensors.at(d0)
@@ -157,15 +159,19 @@ db.Setting = if (sensor.Temperature > 300.0) charge else most
 
 The lambdas are narrower than Kotlin's: a reading one may only pick a logic type, as `{ it.X }` or
 a property reference such as `Battery.Small::Charge`, and a writing one may only assign logic
-types of `it` (or of its slots), with values that don't depend on `it`. A written value is
-computed once for all the devices, so it may not assign anything (`n++`, or a call to a function
-that sets a property, such as a device's `On`), and a writing lambda can't `return`. Anything else is a
+types of `it` (or of its slots), with values that don't use `it`. A written value, or a slot
+number in `it.slots[n]`, is computed once for all the devices, even for none, so it may have no
+side effect: it can't assign anything (`n++`), write a device (`d0.On = true`,
+`d0[LogicType.On] = 1.0`, a slot's logic type, or a batch's `forEach`), or call `sleep` or
+`yield`, nor call a function that does any of these. A value that reads the batch being written
+reads it once, before any device is written. A writing lambda can't `return`. Anything else is a
 compile error. The result of `map` can only be ended with one of the four functions above, in the
 same expression: it can't be iterated or held in a `val`.
 
 With no devices in a batch, `average()` is NaN, as in Kotlin, but `max()` and `maxOf` give
-negative infinity, and `min()` and `minOf` 0, where Kotlin throws. A typed device or a batch can be
-held in a `val`; a `map` can't.
+negative infinity, and `min()` and `minOf` 0, where Kotlin throws. `any` is false and `none` true,
+as in Kotlin, but `all` is false, where Kotlin gives true. A typed device or a batch can be held
+in a `val`; a `map` can't.
 
 Devices that come in several prefabs are grouped by kind: `Batteries.Small.at(d0)` is a
 `Battery.Small`, and `Batteries.Large.all` every large one. On its own, `Battery` is no prefab: it

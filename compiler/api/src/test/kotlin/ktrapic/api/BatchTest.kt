@@ -157,6 +157,48 @@ class BatchTest {
   }
 
   @Test
+  fun `any, all and none read once and compare, or branch in a condition`() {
+    val source =
+        """
+        db.Setting = if (GrowLights.all.any { it.On }) 1.0 else 0.0
+        db.Ratio = if (GrowLights.named("Potatoes").all { it.On }) 1.0 else 0.0
+        val dark = GrowLights.named("Tomatoes").none { it.On }
+        db.Mode = if (dark) 1.0 else 0.0
+        """
+    val code = compiled(source).code
+
+    assertThat(code).contains("lb r0 ${Hashes.hash(growLight)} On Maximum\nblez r0 ")
+    assertThat(code)
+        .contains(
+            "lbn r0 ${Hashes.hash(growLight)} ${Hashes.hash("Potatoes")} On Minimum\nblez r0 "
+        )
+    assertThat(code)
+        .contains(
+            "lbn r0 ${Hashes.hash(growLight)} ${Hashes.hash("Tomatoes")} On Maximum\nslez r0 r0"
+        )
+    // Potatoes: one off, one on; Tomatoes: on.
+    val db = run(source, ::lights)[0]
+    assertThat(listOf(db["Setting"], db["Ratio"], db["Mode"]))
+        .containsExactly(1.0, 0.0, 0.0)
+        .inOrder()
+  }
+
+  @Test
+  fun `on an empty batch, any is false and none true as in Kotlin, and all is false`() {
+    val source =
+        """
+        db.Setting = if (GrowLights.all.any { it.On }) 1.0 else 0.0
+        db.Ratio = if (GrowLights.all.none { it.On }) 1.0 else 0.0
+        db.Mode = if (GrowLights.all.all { it.On }) 1.0 else 0.0
+        """
+    val db = run(source) { listOf(FakeDevice(), FakeDevice()) }[0]
+
+    assertThat(listOf(db["Setting"], db["Ratio"], db["Mode"]))
+        .containsExactly(0.0, 1.0, 0.0)
+        .inOrder()
+  }
+
+  @Test
   fun `an empty batch reads as the game gives`() {
     val source =
         """
@@ -242,6 +284,8 @@ class BatchTest {
             "val x = 1\nGrowLights.all.forEach {\n  return@forEach\n  it.On = true\n}" to (3 to 3),
             "var n = 0\nGrowLights.all.forEach { it.Lock = n++ > 100 }" to (2 to 36),
             "var n = 0\nGasTankStorages.all.forEach { it.slots[n++].Open = true }" to (2 to 40),
+            "fun w(): Boolean {\n  yield()\n  return true\n}\nGrowLights.all.forEach { it.On = w() }" to
+                (5 to 34),
             // The game has no named batch slot write, nor count of a named batch.
             "val x = 1\nGasTankStorages.named(\"N\").forEach { it.slots[0].Open = true }" to
                 (2 to 50),
@@ -251,6 +295,7 @@ class BatchTest {
                 (2 to 31),
             "val x = 1\nval h = GrowLights.all.hashCode()" to (2 to 24),
             "val x = 1\nval m = GrowLights.all.map { it.Power }" to (2 to 24),
+            "fun f() {\n  val m = GrowLights.all.map { it.Power }\n}\nf()" to (2 to 26),
         )) {
       val error = error(source)
       assertWithMessage("$source\n${error.message}").that(error.line to error.column).isEqualTo(at)
@@ -266,6 +311,15 @@ class BatchTest {
                 "computed once",
             "fun on(): Boolean {\n  db.On = true\n  return true\n}\nGrowLights.all.forEach { it.On = on() }" to
                 "computed once",
+            "fun bump(): Boolean {\n  d0[LogicType.Setting] = d0[LogicType.Setting] + 1.0\n" +
+                "  return true\n}\nGrowLights.all.forEach { it.On = bump() }" to "computed once",
+            "fun w(): Boolean {\n  yield()\n  return true\n}\nGrowLights.all.forEach { it.On = w() }" to
+                "computed once",
+            "fun n(): Int {\n  sleep(1)\n  return 0\n}\nGasTankStorages.all.forEach { it.slots[n()].Open = true }" to
+                "computed once",
+            "fun g(): Boolean {\n  GrowLights.all.forEach { it.Lock = true }\n  return true\n}\n" +
+                "GrowLights.all.forEach { it.On = g() }" to "computed once",
+            "GrowLights.all.forEach { it.On = !it.On }" to "can't use the batch's devices",
             "GrowLights.all.forEach { return@forEach }" to "can't return",
             "GrowLights.all.forEach { sleep(1) }" to "may only assign logic types",
             "GrowLights.all.forEach { GrowLights.all.forEach { it.On = true } }" to

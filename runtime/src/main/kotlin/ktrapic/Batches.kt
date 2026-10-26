@@ -11,7 +11,9 @@ package ktrapic
  *
  * A reading lambda may only pick a logic type, as `{ it.X }` or a property reference such as
  * `GrowLight::On`; a writing one may only assign logic types, as `it.X = value`, with values that
- * don't depend on `it` and don't assign anything, as each is computed once for all the devices.
+ * don't use `it`. Each value is computed once for all the devices, before any is written, so it may
+ * have no side effect: no assignment, device or batch write, `sleep` or `yield`, nor a call to a
+ * function doing one of these.
  *
  * A batch or its slots can be held in a val; a map can't, and is ended where it is made.
  *
@@ -35,6 +37,18 @@ abstract class Batch<out T> internal constructor() {
 
   /** How many of the batch have [predicate]'s logic type on: its `Sum`. */
   fun count(predicate: (T) -> Boolean): Int = intrinsic()
+
+  /** Whether any of the batch has [predicate]'s logic type on (its `Maximum` is above 0). */
+  fun any(predicate: (T) -> Boolean): Boolean = intrinsic()
+
+  /**
+   * Whether all of the batch have [predicate]'s logic type on (its `Minimum` is above 0). Unlike
+   * Kotlin's, it is false for an empty batch, whose `Minimum` is 0.
+   */
+  fun all(predicate: (T) -> Boolean): Boolean = intrinsic()
+
+  /** Whether none of the batch has [predicate]'s logic type on (its `Maximum` is at most 0). */
+  fun none(predicate: (T) -> Boolean): Boolean = intrinsic()
 
   /** Writes the logic types [action] assigns (`it.On = true`) to every one of the batch. */
   fun forEach(action: (T) -> Unit): Unit = intrinsic()
