@@ -141,7 +141,8 @@ would get the same name that way, both keep their full names, as `ItemBeacons` a
 A batch is read with collection operations, each of which compiles to one batch instruction
 (`lb`, `lbn`): `map { it.X }` followed by `average()`, `sum()`, `min()` or `max()`; `sumOf`,
 `minOf` and `maxOf`; `count { it.On }`, how many have a logic type on; and `count()`, how many
-devices of the prefab there are, whatever their names. It is written with `forEach`, each of whose
+devices of the prefab there are. The game can't count the devices with a name, so `count()` on a
+`named(...)` batch is a compile error. A batch is written with `forEach`, each of whose
 assignments writes every device (`sb`, `sbn`):
 
 ```kotlin
@@ -156,12 +157,15 @@ db.Setting = if (sensor.Temperature > 300.0) charge else most
 
 The lambdas are narrower than Kotlin's: a reading one may only pick a logic type, as `{ it.X }` or
 a property reference such as `Battery.Small::Charge`, and a writing one may only assign logic
-types of `it` (or of its slots), with values that don't depend on `it`. Anything else is a compile
-error. The result of `map` can only be ended with one of the four functions above, not iterated.
+types of `it` (or of its slots), with values that don't depend on `it`. A written value is
+computed once for all the devices, so it may not assign anything (`n++`, or a call to a function
+that sets a property, such as a device's `On`), and a writing lambda can't `return`. Anything else is a
+compile error. The result of `map` can only be ended with one of the four functions above, in the
+same expression: it can't be iterated or held in a `val`.
 
 With no devices in a batch, `average()` is NaN, as in Kotlin, but `max()` and `maxOf` give
-negative infinity, and `min()` and `minOf` 0, where Kotlin throws. A typed device, a batch or a
-`map` of one can be held in a `val`.
+negative infinity, and `min()` and `minOf` 0, where Kotlin throws. A typed device or a batch can be
+held in a `val`; a `map` can't.
 
 Devices that come in several prefabs are grouped by kind: `Batteries.Small.at(d0)` is a
 `Battery.Small`, and `Batteries.Large.all` every large one. On its own, `Battery` is no prefab: it

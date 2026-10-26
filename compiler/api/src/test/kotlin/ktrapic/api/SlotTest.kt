@@ -111,6 +111,20 @@ class SlotTest {
   }
 
   @Test
+  fun `a computed slot number is fixed when the slot is taken`() {
+    val source =
+        """
+        var i = 0
+        val slot = BatteryChargers.at(d0).slots[i]
+        i = 1
+        db.Setting = slot.Charge
+        """
+    val db = run(source) { listOf(FakeDevice(), chargerWith(3.0, 5.0)) }[0]
+
+    assertThat(db["Setting"]).isEqualTo(3.0)
+  }
+
+  @Test
   fun `a console writes Mode on its slots`() {
     val source =
         """

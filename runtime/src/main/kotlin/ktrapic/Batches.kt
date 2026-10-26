@@ -11,7 +11,9 @@ package ktrapic
  *
  * A reading lambda may only pick a logic type, as `{ it.X }` or a property reference such as
  * `GrowLight::On`; a writing one may only assign logic types, as `it.X = value`, with values that
- * don't depend on `it`.
+ * don't depend on `it` and don't assign anything, as each is computed once for all the devices.
+ *
+ * A batch or its slots can be held in a val; a map can't, and is ended where it is made.
  *
  * Unlike Kotlin's, `minOf` and `maxOf` don't throw for an empty batch: `maxOf` gives negative
  * infinity, and `minOf` and `sumOf` give 0.
@@ -40,14 +42,20 @@ abstract class Batch<out T> internal constructor() {
 
 /** A batch of devices, which can also be counted. */
 open class DeviceBatch<out T> internal constructor() : Batch<T>() {
-  /** How many devices of the prefab are on the network (`Count`), whatever their names. */
+  /**
+   * How many devices of the prefab are on the network (`Count`). The game can't count the devices
+   * with a name, so on a `named(...)` batch this is a compile error.
+   */
   fun count(): Int = intrinsic()
 }
 
 /** One slot of every device in a batch: `BatteryChargers.all.slots[0]`. */
 class SlotBatch<out S> internal constructor() : Batch<S>()
 
-/** A batch's logic type, picked by `map`, to be ended with [average], [sum], [min] or [max]. */
+/**
+ * A batch's logic type, picked by `map`, to be ended in the same expression with [average], [sum],
+ * [min] or [max]; it can't be held in a val.
+ */
 class Mapped<out R> internal constructor()
 
 /** The average over the batch (`Average`); NaN for no devices. */

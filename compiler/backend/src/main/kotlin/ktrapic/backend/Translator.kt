@@ -48,7 +48,6 @@ import org.jetbrains.kotlin.ir.expressions.IrGetValue
 import org.jetbrains.kotlin.ir.expressions.IrLoop
 import org.jetbrains.kotlin.ir.expressions.IrPropertyReference
 import org.jetbrains.kotlin.ir.expressions.IrReturn
-import org.jetbrains.kotlin.ir.expressions.IrRichPropertyReference
 import org.jetbrains.kotlin.ir.expressions.IrSetField
 import org.jetbrains.kotlin.ir.expressions.IrSetValue
 import org.jetbrains.kotlin.ir.expressions.IrStatementOrigin
@@ -98,7 +97,8 @@ internal data class Batch(val prefab: Double, val name: Double?) : Value
 
 /**
  * A batch's logic type picked by `map` ([source] a [Batch], or a [SlotOf] one), to be read by one
- * of the [Translator.MAPPED_TERMINALS].
+ * of the [Translator.MAPPED_TERMINALS]. The batch is read where it is ended, so a map can't be held
+ * in a val: Kotlin's `map` would keep the values it read when it was made.
  */
 internal data class Mapped(val source: Value, val logicType: String) : Value
 
@@ -324,6 +324,7 @@ internal class Translator {
     val value = aliasOrValue(initializer)
     properties[property.symbol] =
         when {
+          value is Mapped -> fail(initializer, MAPPED_HELD)
           value.isAlias() && !property.isVar -> value
           value.isAlias() -> fail(property, "a device, batch or slot can only be held in a val")
           value is Const && !property.isVar -> value
@@ -352,6 +353,7 @@ internal class Translator {
     val value = aliasOrValue(initializer)
     variables[variable] =
         when {
+          value is Mapped -> fail(initializer, MAPPED_HELD)
           value.isAlias() && !variable.isVar -> value
           value.isAlias() -> fail(variable, "a device, batch or slot can only be held in a val")
           value is Const && !variable.isVar -> value
@@ -361,7 +363,8 @@ internal class Translator {
 
   /**
    * What [expression] evaluates to, which must not be a [Batch], a slot or a [Mapped]: those have
-   * no value and are only held in a `val` or used directly ([aliasOrValue]).
+   * no value and are only used directly ([aliasOrValue]) or held in a `val`, a [Mapped] not even
+   * that.
    */
   private fun value(
       expression: IrExpression,
@@ -650,10 +653,15 @@ internal class Translator {
       "minOf" -> batchRead(source, selected(call, args[1]), "Minimum")
       "maxOf" -> batchRead(source, selected(call, args[1]), "Maximum")
       // count { it.On } sums the logic type; count() counts the devices, reading a logic type
-      // every device has.
+      // every device has. The game's named batch read counts every device of the prefab, whatever
+      // its name, so a named batch has no count().
       "count" ->
-          if (args.size > 1) batchRead(source, selected(call, args[1]), "Sum")
-          else batchRead(source, "PrefabHash", "Count")
+          when {
+            args.size > 1 -> batchRead(source, selected(call, args[1]), "Sum")
+            source is Batch && source.name != null ->
+                fail(call, "the game can't count a named batch, only all of a prefab's devices")
+            else -> batchRead(source, "PrefabHash", "Count")
+          }
       "forEach" -> {
         batchWrites(call, source, args[1])
         NoValue
@@ -682,10 +690,6 @@ internal class Translator {
           return property.name.asString()
         }
       }
-      is IrRichPropertyReference ->
-          (argument.reflectionTargetSymbol?.owner as? IrProperty)?.let {
-            return it.name.asString()
-          }
       is IrPropertyReference -> return argument.symbol.owner.name.asString()
       else -> {}
     }
@@ -719,7 +723,8 @@ internal class Translator {
 
   /**
    * `forEach { it.On = true }`: each assignment to the element's logic type, or to one of its
-   * slots' (`it.slots[0].Open`, `it.Battery.On`), writes every device (`sb`, `sbn`, `sbs`).
+   * slots' (`it.slots[0].Open`, `it.Battery.On`), writes every device (`sb`, `sbn`, `sbs`). Each
+   * value is computed once for all the devices, even for none, so it may not assign anything.
    */
   private fun batchWrites(call: IrCall, source: Value, argument: IrExpression?) {
     val lambda =
@@ -731,15 +736,8 @@ internal class Translator {
     val parameter = lambda.parameters.single { it.kind == IrParameterKind.Regular }
     val statements = (lambda.body as? IrBlockBody)?.statements ?: emptyList()
     for (statement in statements) {
-      var expression = (statement as? IrReturn)?.value ?: statement
-      if (expression is IrGetObjectValue && expression.type.isUnit()) continue
-      if (
-          expression is IrTypeOperatorCall &&
-              expression.operator == IrTypeOperator.IMPLICIT_COERCION_TO_UNIT
-      ) {
-        expression = expression.argument
-      }
-      val set = expression as? IrCall
+      if (statement is IrReturn) fail(statement, "forEach can't return, only assign logic types")
+      val set = statement as? IrCall
       val property = set?.symbol?.owner?.correspondingPropertySymbol?.owner
       if (property == null || set.symbol.owner != property.setter) {
         fail(statement, "forEach may only assign logic types, as it.On = true")
@@ -748,6 +746,9 @@ internal class Translator {
       val written = set.arguments.last()!!
       if (written.mentions(parameter)) {
         fail(written, "a value written to a batch can't depend on its devices")
+      }
+      if (written.mayAssign()) {
+        fail(written, "a value written to a batch is computed once, so it can't assign anything")
       }
       val name = property.name.asString()
       val stored = Fixed(Name(storedLogicType(name)))
@@ -777,6 +778,9 @@ internal class Translator {
               (slots.arguments[0] as? IrGetValue)?.symbol == parameter.symbol &&
               !number.mentions(parameter)
       ) {
+        if (number.mayAssign()) {
+          fail(number, "a slot number written to a batch is computed once, so it can't assign")
+        }
         return operand(snapshot(slotNumber(number)))
       }
     }
@@ -1609,6 +1613,8 @@ internal class Translator {
     const val PREFAB_NAME = "ktrapic.PrefabName"
     const val TEXT = "Text"
     const val SLOTS = "slots"
+    const val MAPPED_HELD =
+        "a map can't be held, only ended where it is made, as all.map { it.X }.sum()"
     const val SLOTS_CLASS = "ktrapic.Slots"
     const val DEVICE_SLOT = "ktrapic.DeviceSlot"
     const val SLOT_NUMBER = "ktrapic.SlotNumber"
