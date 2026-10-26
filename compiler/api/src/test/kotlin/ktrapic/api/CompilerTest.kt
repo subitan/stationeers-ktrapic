@@ -692,6 +692,117 @@ class CompilerTest {
   }
 
   @Test
+  fun `the source map points each source line at the code it compiled to`() {
+    val source =
+        """
+        var total = 0.0
+        for (i in 0..<3) {
+          total += d0.Setting
+        }
+        fun bump(x: Double): Double {
+          return x + 7.0
+        }
+        db.Setting = bump(total)
+        db.Ratio = bump(2.0)
+        """
+    for (compact in listOf(false, true)) {
+      val result = compiled(source, CompileOptions(compact = compact))
+      val code = result.code.lines()
+      // compile() puts two import lines before the source.
+      fun at(line: Int) = result.sourceMap[line + 2].orEmpty().map { code[it] }
+
+      assertWithMessage("compact=$compact\n${result.code}").apply {
+        that(result.sourceMap.values.flatten().map { code[it] })
+            .containsNoneIn(code.filter { it.endsWith(":") })
+        that(at(1).count { it.startsWith("bge ") }).isEqualTo(1)
+        that(at(2).single { it.startsWith("l ") }).endsWith("d0 Setting")
+        that(at(5).single { it.startsWith("add ") }).endsWith(" 7")
+        that(at(7).count { it.startsWith("jal ") }).isEqualTo(1)
+        that(at(7).last()).startsWith("s db Setting ")
+        that(at(8).last()).startsWith("s db Ratio ")
+        that(result.sourceMap.keys).containsNoneOf(3 + 2, 6 + 2)
+      }
+    }
+  }
+
+  @Test
+  fun `the source map points branches and loop conditions at their own lines`() {
+    val source =
+        """
+        val m = d0.Setting
+        when {
+          m > 5.0 -> db.Setting = 1.0
+          m > 2.0 -> db.Setting = 2.0
+          else -> db.Setting = 3.0
+        }
+        var x = d0.Ratio
+        if (x > 1.0)
+          x = x * 3.0
+        else
+          x = x + 5.0
+        db.Ratio = x
+        var n = 0
+        do {
+          n++
+        } while (
+          n < 4
+        )
+        while (true) {
+          n++
+          if (n == 9) break
+          val done = d0.On
+          if (done) break
+        }
+        db.Setting = n.toDouble()
+        when {
+          n > 20 ->
+            db.Ratio = 1.0
+          else -> db.Ratio = 2.0
+        }
+        while (
+          n < 30
+        ) n++
+        if (n > 1 &&
+            n < 50)
+          db.Setting = 1.0
+        if (n < 0 ||
+            n > 60)
+          db.Ratio = 3.0
+        if (!(
+            n > 3))
+          db.Ratio = 4.0
+        """
+    for (compact in listOf(false, true)) {
+      val result = compiled(source, CompileOptions(compact = compact))
+      val code = result.code.lines()
+      // compile() puts two import lines before the source.
+      fun at(line: Int) = result.sourceMap[line + 2].orEmpty().map { code[it] }
+
+      assertWithMessage("compact=$compact\n${result.code}").apply {
+        that(at(2).single { it.startsWith("s ") }).isEqualTo("s db Setting 1")
+        that(at(3).single { it.startsWith("s ") }).isEqualTo("s db Setting 2")
+        that(at(4).single { it.startsWith("s ") }).isEqualTo("s db Setting 3")
+        that(at(1).none { it.startsWith("s ") }).isTrue()
+        that(at(8).single()).startsWith("mul ")
+        that(at(10).single()).startsWith("add ")
+        that(at(16).single()).startsWith("blt ")
+        // Each of these is a branch over a `j`, which lowering inverts into one branch.
+        that(at(20).single()).matches("b(eq|ne) .* 9 .*")
+        that(at(22).single()).matches("b(eq|ne)z .*")
+        that(at(26).map { it.substringBefore(" ") }).containsExactly("bgt", "j").inOrder()
+        that(at(27)).containsExactly("s db Ratio 1")
+        that(at(31).map { it.substringBefore(" ") }).containsExactly("blt", "j").inOrder()
+        that(at(33).map { it.substringBefore(" ") }).containsExactly("bgt", "j").inOrder()
+        that(at(34).map { it.substringBefore(" ") }).containsExactly("blt", "j").inOrder()
+        that(at(36).map { it.substringBefore(" ") }).contains("bltz")
+        that(at(37).map { it.substringBefore(" ") }).contains("bgt")
+        that(at(39).none { it.startsWith("b") }).isTrue()
+        that(at(40).map { it.substringBefore(" ") }).contains("bgt")
+      }
+    }
+  }
+
+  @Test
   fun `a function called more than once has one body, called with jal`() {
     val source =
         """

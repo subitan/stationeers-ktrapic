@@ -24,6 +24,8 @@ class DaemonTest {
     assertThat(response["code"].asString).isEqualTo("s db Setting 1")
     assertThat(response["num_lines"].asInt).isEqualTo(1)
     assertThat(response["num_registers"].asInt).isEqualTo(0)
+    // Source line 1 (the second) compiled to line 0 of the code.
+    assertThat(response["source_mapping"].toString()).isEqualTo("""{"1":[0]}""")
   }
 
   @Test

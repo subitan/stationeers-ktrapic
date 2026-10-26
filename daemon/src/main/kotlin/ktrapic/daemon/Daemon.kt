@@ -13,7 +13,9 @@ import ktrapic.api.Compiler
  * is one line of base64-encoded JSON, `{"action": "compile", "code": ..., "options": {...}}`, and
  * gets one line of base64-encoded JSON back. `code` is the source, or a map of module names to
  * sources whose `""` entry is the program. A success is `{"code", "num_lines", "num_bytes",
- * "num_registers", "warnings"}`; a failure is `{"error": {"description", "line", "column", ...}}`.
+ * "num_registers", "warnings", "source_mapping"}`; a failure is `{"error": {"description", "line",
+ * "column", ...}}`. `source_mapping` maps each 0-based source line, as a string key, to the 0-based
+ * lines of `code` it compiled to, as PyTrapIC's does.
  *
  * Unlike PyTrapIC, `line` and `column` are both 1-based, and `line_end`/`column_end` repeat them
  * because the compiler reports only where a problem starts. All four are 0 when the compiler gives
@@ -74,6 +76,7 @@ object Daemon {
             addProperty("num_bytes", result.bytes)
             addProperty("num_registers", result.registers)
             add("warnings", gson.toJsonTree(result.warnings.map { describe(it) }))
+            add("source_mapping", gson.toJsonTree(result.sourceMap))
           }
       is CompileResult.Failure -> {
         val first = result.errors.first()

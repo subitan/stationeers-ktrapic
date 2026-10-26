@@ -4,15 +4,25 @@ import ktrapic.ic10.LabelRef
 import ktrapic.ic10.Line
 import ktrapic.ic10.Program
 
+/**
+ * A compiled [program] and, for each of its lines, the IR start offset of the source statement it
+ * comes from ([TirInstruction.offset]), or null.
+ */
+data class Lowered(val program: Program, val offsets: List<Int?>)
+
 /** Tidies [TirLine]s, allocates registers and produces the IC10 [Program]. */
 object Lowering {
-  fun lower(lines: List<TirLine>): Program {
+  fun lower(lines: List<TirLine>): Lowered {
     val simplified = simplify(lines)
     val registers = RegisterAllocator.allocate(simplified)
     val program = mutableListOf<Line>()
+    val offsets = mutableListOf<Int?>()
     for (line in simplified) {
       when (line) {
-        is TirLabel -> program += Line.Label(line.name)
+        is TirLabel -> {
+          program += Line.Label(line.name)
+          offsets += null
+        }
         is TirInstruction -> {
           val operands =
               line.operands.map {
@@ -23,10 +33,11 @@ object Lowering {
               }
           if (line.op == "move" && operands[0] == operands[1]) continue
           program += Line.Instruction(line.op, operands)
+          offsets += line.offset
         }
       }
     }
-    return Program(program)
+    return Lowered(Program(program), offsets)
   }
 
   /** Repeats the clean-ups until none changes anything. */
@@ -69,7 +80,9 @@ object Lowering {
    * Turns `bX a b skip; j far; skip:` into `bY a b far` (Y the negation of X), as `if (c) break`
    * and similar produce. A branch that is not [TirInstruction.negatable] is left as it is, and so
    * is a branch over `j ra`, which has no label for the branch to take (the translator puts no
-   * branch target right after a `j ra`, so this only guards against one).
+   * branch target right after a `j ra`, so this only guards against one). The merged branch keeps
+   * the branch's source line, so a `break` or `continue` on a line of its own after the condition
+   * has no line of code mapped to it.
    */
   private fun invertBranchesOverJumps(lines: List<TirLine>): List<TirLine> {
     val result = lines.toMutableList()
@@ -82,7 +95,8 @@ object Lowering {
         val following =
             result.drop(index + 2).takeWhile { it is TirLabel }.map { (it as TirLabel).name }
         if (branch.target in following) {
-          result[index] = TirInstruction(negated, branch.operands.dropLast(1) + jump.operands)
+          result[index] =
+              branch.copy(op = negated, operands = branch.operands.dropLast(1) + jump.operands)
           result.removeAt(index + 1)
         }
       }
