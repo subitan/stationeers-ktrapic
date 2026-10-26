@@ -234,13 +234,9 @@ object PrefabGenerator {
             )
             line()
           }
+          // No batch method reads Text, so it is only written, as on a single display.
           if (prefab.name in textDisplays) {
-            property(
-                "Text",
-                "String",
-                Access(read = false, write = true),
-                writeOnlyMessage = "PICK_A_BATCH_METHOD",
-            )
+            property("Text", "String", Access(read = false, write = true))
             line()
           }
           trimBlankLine()

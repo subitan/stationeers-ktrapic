@@ -591,7 +591,7 @@ object LedDisplays {
         set(value) = intrinsic()
 
       var Text: String
-        @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
+        @Deprecated(WRITE_ONLY, level = DeprecationLevel.ERROR) get() = intrinsic()
         set(value) = intrinsic()
     }
 
@@ -662,7 +662,7 @@ object LedDisplays {
         set(value) = intrinsic()
 
       var Text: String
-        @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
+        @Deprecated(WRITE_ONLY, level = DeprecationLevel.ERROR) get() = intrinsic()
         set(value) = intrinsic()
     }
 
@@ -733,7 +733,7 @@ object LedDisplays {
         set(value) = intrinsic()
 
       var Text: String
-        @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
+        @Deprecated(WRITE_ONLY, level = DeprecationLevel.ERROR) get() = intrinsic()
         set(value) = intrinsic()
     }
 

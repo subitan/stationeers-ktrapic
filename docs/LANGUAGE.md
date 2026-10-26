@@ -129,7 +129,9 @@ writing a logic type a device doesn't have is an error on the chip.
 ### Typed devices and batches
 
 Each prefab with logic types has an entry point named after it in the plural, without the
-game's `Structure` or `Item` prefix: `StructureGrowLight` is `GrowLights`. Through it:
+game's `Structure` or `Item` prefix: `StructureGrowLight` is `GrowLights`. Where two prefabs
+would get the same name that way, both keep their full names, as `ItemBeacons` and
+`StructureBeacons` do. Through an entry point:
 
 - `GrowLights.at(d0)` is the device on `d0` as a `GrowLight`, which has only the logic types a
   grow light has, as `val` where they can only be read. Using one it lacks is a compile error.
@@ -152,7 +154,8 @@ With no devices in a batch, `average` is NaN, `maximum` is negative infinity, an
 Devices that come in several prefabs are grouped by kind: `Batteries.Small.at(d0)` is a
 `Battery.Small`, and `Batteries.Large.all` every large one. On its own, `Battery` is no prefab: it
 is the interface its members share, with the logic types all of them can read, so an inlined
-function can take any battery. The kinds grouped so far are `Battery` (`Station`, `Large`,
+function can take any battery. It has only those logic types: `PrefabHash`, `NameHash` and
+`ReferenceId` are read from a member (`Batteries.Small.at(d0)`) or its pin. The kinds grouped so far are `Battery` (`Station`, `Large`,
 `Medium`, `Small`) and `LedDisplay` (`Small`, `Medium`, `Large`); every other prefab has its own
 entry point.
 

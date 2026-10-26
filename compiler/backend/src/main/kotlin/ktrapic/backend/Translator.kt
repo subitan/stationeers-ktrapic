@@ -309,7 +309,7 @@ internal class Translator {
     val initializer =
         property.backingField?.initializer?.expression
             ?: fail(property, "Properties without an initializer are not supported")
-    val value = value(initializer)
+    val value = aliasOrValue(initializer)
     properties[property.symbol] =
         when {
           value.isAlias() && !property.isVar -> value
@@ -325,7 +325,7 @@ internal class Translator {
     when (element) {
       is IrBlockBody -> element.statements.forEach { statement(it) }
       is IrVariable -> variable(element)
-      is IrExpression -> value(element)
+      is IrExpression -> aliasOrValue(element)
       is IrSimpleFunction -> fail(element, "Local functions are not supported")
       else -> fail(element, "This statement is not supported")
     }
@@ -337,7 +337,7 @@ internal class Translator {
       variables[variable] = Reg(newVReg(variable.name.asString()))
       return
     }
-    val value = value(initializer)
+    val value = aliasOrValue(initializer)
     variables[variable] =
         when {
           value.isAlias() && !variable.isVar -> value
@@ -347,7 +347,19 @@ internal class Translator {
         }
   }
 
+  /**
+   * What [expression] evaluates to, which must not be a [Batch] or [BatchRead]: those have no value
+   * and are only held in a `val` or used directly ([aliasOrValue]).
+   */
   private fun value(expression: IrExpression): Value =
+      aliasOrValue(expression).also {
+        if (it is Batch || it is BatchRead) {
+          fail(expression, "a batch can only be used directly or held in a val")
+        }
+      }
+
+  /** What [expression] evaluates to, a [Batch] or [BatchRead] included. */
+  private fun aliasOrValue(expression: IrExpression): Value =
       when (expression) {
         is IrConst -> constant(expression)
         is IrGetValue ->
@@ -384,7 +396,7 @@ internal class Translator {
         is IrTypeOperatorCall ->
             when (expression.operator) {
               IrTypeOperator.IMPLICIT_COERCION_TO_UNIT -> {
-                value(expression.argument)
+                aliasOrValue(expression.argument)
                 NoValue
               }
               else -> fail(expression, "Casts and type checks are not supported")
@@ -398,7 +410,7 @@ internal class Translator {
       result = NoValue
       when (statement) {
         is IrVariable -> variable(statement)
-        is IrExpression -> result = value(statement)
+        is IrExpression -> result = aliasOrValue(statement)
         is IrSimpleFunction -> fail(statement, "Local functions are not supported")
         else -> fail(statement, "This statement is not supported")
       }
@@ -411,7 +423,8 @@ internal class Translator {
         IrConstKind.Int -> Const((constant.value as Int).toDouble())
         IrConstKind.Double -> Const(constant.value as Double)
         IrConstKind.Boolean -> Const(if (constant.value as Boolean) 1.0 else 0.0)
-        IrConstKind.String -> fail(constant, "text can only be used in hash(...) or str(...)")
+        IrConstKind.String ->
+            fail(constant, "text can only be used in hash(...), str(...), named(...) or Text")
         else -> fail(constant, "${constant.type.render()} values are not supported")
       }
 
@@ -535,9 +548,14 @@ internal class Translator {
       }
       cls.isSubclassOf(DEVICE_BATCH) -> {
         val batch =
-            value(args[0]!!) as? Batch
+            aliasOrValue(args[0]!!) as? Batch
                 ?: fail(call, "this batch must be all, named(...), or a val holding one")
-        if (!isSetter) return BatchRead(batch, name.replaceFirstChar { it.uppercaseChar() })
+        if (!isSetter) {
+          // The other getters are logic types', which can't be read from a batch directly.
+          if (name !in BATCH_METHODS)
+              fail(call, "read a batch through a method, as in all.average.X")
+          return BatchRead(batch, name.replaceFirstChar { it.uppercaseChar() })
+        }
         val stored = storedValue(call, name, args.last()!!)
         val logicType = Fixed(Name(storedLogicType(name)))
         if (batch.name == null) {
@@ -549,7 +567,7 @@ internal class Translator {
       }
       cls.isSubclassOf(BATCH_READING) -> {
         val read =
-            value(args[0]!!) as? BatchRead
+            aliasOrValue(args[0]!!) as? BatchRead
                 ?: fail(call, "this batch reading must be a batch method's")
         val batch = read.batch
         val result = newVReg()
@@ -579,6 +597,7 @@ internal class Translator {
           )
           NoValue
         } else {
+          if (name == TEXT) fail(call, "Text can only be written")
           val result = newVReg()
           emit("l", result, device, Fixed(Name(name)))
           Reg(result)
@@ -1364,6 +1383,7 @@ internal class Translator {
     const val PREFAB = "ktrapic.Prefab"
     const val PREFAB_NAME = "ktrapic.PrefabName"
     const val TEXT = "Text"
+    val BATCH_METHODS = setOf("average", "sum", "minimum", "maximum")
     val PIN_GETTERS =
         listOf("d0", "d1", "d2", "d3", "d4", "d5", "db").associateBy { "ktrapic.<get-$it>" }
     val INT_RANGE = Int.MIN_VALUE.toDouble()..Int.MAX_VALUE.toDouble()

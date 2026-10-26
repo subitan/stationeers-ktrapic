@@ -121,6 +121,65 @@ class TypedDeviceTest {
   }
 
   @Test
+  fun `a batch method's reading can be held in a val`() {
+    val source =
+        """
+        val reading = Batteries.Small.all.average
+        db.Setting = reading.Charge
+        db.Ratio = reading.Charge
+        """
+    val db =
+        run(source) {
+          listOf(
+              FakeDevice(),
+              FakeDevice(smallBattery).apply { this["Charge"] = 10.0 },
+              FakeDevice(smallBattery).apply { this["Charge"] = 30.0 },
+          )
+        }[0]
+
+    assertThat(db["Setting"] to db["Ratio"]).isEqualTo(20.0 to 20.0)
+  }
+
+  @Test
+  fun `a batch used as a value is an error`() {
+    for ((source, position) in
+        listOf(
+            "val b = if (db.Setting > 0.0) GrowLights.all else GrowLights.named(\"x\")\nb.On = true" to
+                (1 to 42),
+            "val b = when {\n  db.Setting > 0.0 -> GrowLights.all\n  else -> GrowLights.all\n}" to
+                (2 to 34),
+            "val r = if (db.Setting > 0.0) GrowLights.all.sum else GrowLights.all.average" to
+                (1 to 46),
+        )) {
+      val error = error(source)
+      assertWithMessage(source).that(error.message).contains("batch")
+      assertWithMessage(source).that(error.line to error.column).isEqualTo(position)
+    }
+  }
+
+  @Test
+  fun `a suppressed logic type getter on a batch is still an error`() {
+    val error =
+        error(
+            "@Suppress(\"DEPRECATION_ERROR\") val on = GrowLights.all.On\n" +
+                "db.Setting = if (on) 1.0 else 0.0"
+        )
+
+    assertThat(error.message).contains("through a method")
+    assertThat(error.line to error.column).isEqualTo(1 to 56)
+  }
+
+  @Test
+  fun `Text can't be read from a display or a batch of them`() {
+    for (source in listOf("LedDisplays.Small.at(d0).Text", "LedDisplays.Small.all.Text")) {
+      val error = error("val x = 1\nval t = $source")
+      assertWithMessage(source).that(error.message).contains("written")
+    }
+    val suppressed = error("@Suppress(\"DEPRECATION_ERROR\") val t = LedDisplays.Small.at(d0).Text")
+    assertThat(suppressed.message).contains("Text can only be written")
+  }
+
+  @Test
   fun `reading a batch without a batch method is an error`() {
     val error = error("val x = 1\nval on = GrowLights.all.On")
 
@@ -143,6 +202,16 @@ class TypedDeviceTest {
     assertThat(compiled(source).code).contains("${Hashes.hash(smallBattery)}")
     assertThat(small["Setting"] to small["Ratio"]).isEqualTo(1.0 to 0.0)
     assertThat(light["Setting"] to light["Ratio"]).isEqualTo(0.0 to 1.0)
+  }
+
+  @Test
+  fun `a typed device reads its NameHash`() {
+    val db =
+        run("db.Setting = GrowLights.at(d0).NameHash") {
+          listOf(FakeDevice(), FakeDevice(growLight, "Potatoes"))
+        }[0]
+
+    assertThat(db["Setting"]).isEqualTo(Hashes.hash("Potatoes").toDouble())
   }
 
   @Test
