@@ -354,6 +354,7 @@ class EmulatorTest {
                     |lb r3 Missing Charge Maximum
                     |lb r4 HASH("StructureBattery") Charge Count
                     |lbn r5 HASH("StructureBattery") HASH("Other") Charge Count
+                    |lbns r6 HASH("StructureBattery") HASH("Other") 0 Quantity Count
                     """
                         .trimMargin()
                 ),
@@ -366,8 +367,9 @@ class EmulatorTest {
     assertThat(emu.register("r2")).isEqualTo(0.0)
     assertThat(emu.register("r3")).isEqualTo(Double.NEGATIVE_INFINITY)
     assertThat(emu.register("r4")).isEqualTo(1.0)
-    // The game counts by prefab alone for lbn ... Count.
+    // The game counts by prefab alone for lbn ... Count and lbns ... Count.
     assertThat(emu.register("r5")).isEqualTo(1.0)
+    assertThat(emu.register("r6")).isEqualTo(1.0)
   }
 
   @Test

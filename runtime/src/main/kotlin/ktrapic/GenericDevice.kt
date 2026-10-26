@@ -1397,4 +1397,114 @@ abstract class GenericDevice internal constructor() {
   var RatioLiquidOzoneOutput2: Double
     get() = intrinsic()
     set(value) = intrinsic()
+
+  /** The device's slots, by number. */
+  val slots: Slots<Slot>
+    get() = intrinsic()
+}
+
+/**
+ * A slot of a device whose prefab isn't known, with every slot logic type the game has. A slot can
+ * read only some of them, and the game lets a program write only Lock, Mode, On, Open.
+ */
+class Slot internal constructor() : DeviceSlot() {
+  val Occupied: Boolean
+    get() = intrinsic()
+
+  val OccupantHash: Double
+    get() = intrinsic()
+
+  val Quantity: Double
+    get() = intrinsic()
+
+  val Damage: Double
+    get() = intrinsic()
+
+  val Efficiency: Double
+    get() = intrinsic()
+
+  val Health: Double
+    get() = intrinsic()
+
+  val Growth: Double
+    get() = intrinsic()
+
+  val Pressure: Double
+    get() = intrinsic()
+
+  val Temperature: Double
+    get() = intrinsic()
+
+  val Charge: Double
+    get() = intrinsic()
+
+  val ChargeRatio: Double
+    get() = intrinsic()
+
+  val Class: Double
+    get() = intrinsic()
+
+  val PressureWaste: Double
+    get() = intrinsic()
+
+  val PressureAir: Double
+    get() = intrinsic()
+
+  val MaxQuantity: Double
+    get() = intrinsic()
+
+  val Mature: Double
+    get() = intrinsic()
+
+  val PrefabHash: Double
+    get() = intrinsic()
+
+  val Seeding: Double
+    get() = intrinsic()
+
+  val LineNumber: Double
+    get() = intrinsic()
+
+  val Volume: Double
+    get() = intrinsic()
+
+  var Open: Boolean
+    get() = intrinsic()
+    set(value) = intrinsic()
+
+  var On: Boolean
+    get() = intrinsic()
+    set(value) = intrinsic()
+
+  var Lock: Boolean
+    get() = intrinsic()
+    set(value) = intrinsic()
+
+  val SortingClass: Double
+    get() = intrinsic()
+
+  val FilterType: Double
+    get() = intrinsic()
+
+  val ReferenceId: Double
+    get() = intrinsic()
+
+  val HarvestedHash: Double
+    get() = intrinsic()
+
+  var Mode: Double
+    get() = intrinsic()
+    set(value) = intrinsic()
+
+  val MaturityRatio: Double
+    get() = intrinsic()
+
+  val SeedingRatio: Double
+    get() = intrinsic()
+
+  val FreeSlots: Double
+    get() = intrinsic()
+
+  val TotalSlots: Double
+    get() = intrinsic()
 }

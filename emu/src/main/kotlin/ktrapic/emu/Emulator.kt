@@ -42,8 +42,8 @@ class Ic10RuntimeException(val line: Int, message: String) : Exception("line $li
  * literal jump target, address, slot, device hash or batch mode need only have a whole value (the
  * game also wants it written as an integer, so `j 2.0` is an error there).
  *
- * Not modelled yet: logic types given as numbers, device reference ids (`ld`, `sd`, `getd`, `lbns`,
- * `d?` from a register), reagents, other hosts (machines, suits, tablets), and indirect registers
+ * Not modelled yet: logic types given as numbers, device reference ids (`ld`, `sd`, `getd`, `d?`
+ * from a register), reagents, other hosts (machines, suits, tablets), and indirect registers
  * (`rr0`).
  */
 class Emulator(
@@ -313,6 +313,15 @@ class Emulator(
         val devices = matching(ops[1])
         val slot = integer(ops[2])
         set(batch(devices, ops[4]) { it.readSlot(slot, logicType(ops[3])) })
+      }
+      // As for `lbn`, `Count` counts by prefab only.
+      "lbns" -> {
+        val slot = integer(ops[3])
+        set(
+            batch(matching(ops[1], ops[2]), ops[5], count = matching(ops[1]).size) {
+              it.readSlot(slot, logicType(ops[4]))
+            }
+        )
       }
       "sb" -> matching(ops[0]).forEach { it.write(logicType(ops[1]), v(2)) }
       "sbn" -> matching(ops[0], ops[1]).forEach { it.write(logicType(ops[2]), v(3)) }

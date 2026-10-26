@@ -40,14 +40,40 @@ data class LogicEnums(val source: String, val enums: Map<String, Map<String, Int
  *   become Kotlin enum classes. Every other enum holds values a program reads or writes, and
  *   becomes an object of `Double` constants.
  * @property booleanLogicTypes logic types declared `Boolean` on devices; the rest are `Double`.
+ * @property booleanSlotLogicTypes slot logic types declared `Boolean` on slots.
+ * @property slotReadsAlways the slot logic types the game lets a program read on any slot of a
+ *   structure, added to each slot kind's reads from the data. (On an item that runs a program, such
+ *   as a suit, the game reads only some of them; the typed API doesn't tell the two apart.)
+ * @property slotWrites the slot logic types the game lets a program write, by slot kind; `any` is
+ *   every one some slot can write, which an untyped slot allows. The game's rule, not PyTrapIC's
+ *   data, which marks every slot logic type writable. The game decides by the slot's class, whose
+ *   names the kinds here share; a kind with no prefab yet is listed so the table is the game's
+ *   whole rule. `Mode` on `Circuitboard` is a console's rule rather than the slot's: a console can
+ *   write `Mode` on any of its slots, and consoles' slots are the only `Circuitboard` slots.
+ * @property consoles the prefabs that are the game's consoles with slots. The generator checks that
+ *   they are exactly the prefabs with `Circuitboard` slots, and have no other kind of slot, so the
+ *   `Mode` that [slotWrites] gives `Circuitboard` is on a console's slots and only there.
  */
-data class Typing(val operandEnums: List<String>, val booleanLogicTypes: List<String>) {
+data class Typing(
+    val operandEnums: List<String>,
+    val booleanLogicTypes: List<String>,
+    val booleanSlotLogicTypes: List<String> = emptyList(),
+    val slotReadsAlways: List<String> = emptyList(),
+    val slotWrites: Map<String, List<String>> = emptyMap(),
+    val consoles: List<String> = emptyList(),
+) {
   companion object {
     fun fromJson(text: String): Typing {
       val root = JsonParser.parseString(text).asJsonObject
       return Typing(
           root["operandEnums"].asJsonArray.map { it.asString },
           root["booleanLogicTypes"].asJsonArray.map { it.asString },
+          root["booleanSlotLogicTypes"]?.asJsonArray?.map { it.asString } ?: emptyList(),
+          root["slotReadsAlways"]?.asJsonArray?.map { it.asString } ?: emptyList(),
+          root["slotWrites"]?.asJsonObject?.entrySet()?.associate { (kind, types) ->
+            kind to types.asJsonArray.map { it.asString }
+          } ?: emptyMap(),
+          root["consoles"]?.asJsonArray?.map { it.asString } ?: emptyList(),
       )
     }
   }
@@ -67,11 +93,34 @@ data class Access(val read: Boolean, val write: Boolean) {
   }
 }
 
-/** A prefab: its game name, the game's hash of that name, and its logic types. */
-data class Prefab(val name: String, val hash: Int, val logic: Map<String, Access>)
+/** A slot: its kind (a key of [Prefabs.slotKinds]) and the game's name for it, if it has one. */
+data class SlotInfo(val kind: String, val name: String? = null) {
+  override fun toString() = if (name == null) kind else "$kind:$name"
 
-/** The game's prefabs that have logic types, by name. [source] says where they came from. */
-data class Prefabs(val source: String, val prefabs: List<Prefab>) {
+  companion object {
+    fun parse(text: String) = text.split(':', limit = 2).let { SlotInfo(it[0], it.getOrNull(1)) }
+  }
+}
+
+/**
+ * A prefab: its game name, the game's hash of that name, its logic types and its slots by number.
+ */
+data class Prefab(
+    val name: String,
+    val hash: Int,
+    val logic: Map<String, Access>,
+    val slots: Map<Int, SlotInfo> = emptyMap(),
+)
+
+/**
+ * The game's prefabs that have logic types, by name, and the slot logic types each kind of slot can
+ * read ([slotKinds]). [source] says where they came from.
+ */
+data class Prefabs(
+    val source: String,
+    val prefabs: List<Prefab>,
+    val slotKinds: Map<String, List<String>> = emptyMap(),
+) {
   fun toJson(): String {
     val root = JsonObject()
     root.addProperty("source", source)
@@ -87,10 +136,26 @@ data class Prefabs(val source: String, val prefabs: List<Prefab>) {
                   prefab.logic.forEach { (k, v) -> addProperty(k, v.toString()) }
                 },
             )
+            if (prefab.slots.isNotEmpty()) {
+              add(
+                  "slots",
+                  JsonObject().apply {
+                    prefab.slots.forEach { (index, slot) -> addProperty("$index", slot.toString()) }
+                  },
+              )
+            }
           }
       )
     }
     root.add("prefabs", list)
+    root.add(
+        "slotKinds",
+        JsonObject().apply {
+          slotKinds.forEach { (kind, types) ->
+            add(kind, com.google.gson.JsonArray().apply { types.forEach { add(it) } })
+          }
+        },
+    )
     return GsonBuilder().setPrettyPrinting().create().toJson(root) + "\n"
   }
 
@@ -107,8 +172,14 @@ data class Prefabs(val source: String, val prefabs: List<Prefab>) {
                 prefab["logic"].asJsonObject.entrySet().associate { (k, v) ->
                   k to Access.parse(v.asString)
                 },
+                prefab["slots"]?.asJsonObject?.entrySet()?.associate { (index, slot) ->
+                  index.toInt() to SlotInfo.parse(slot.asString)
+                } ?: emptyMap(),
             )
           },
+          root["slotKinds"]?.asJsonObject?.entrySet()?.associate { (kind, types) ->
+            kind to types.asJsonArray.map { it.asString }
+          } ?: emptyMap(),
       )
     }
   }

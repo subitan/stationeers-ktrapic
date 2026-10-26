@@ -31,6 +31,28 @@ class PrefabGeneratorTest {
       |        return _DeviceLogicType(self, _LT.Charge)
       |
       |
+      |class _SlotTypeCommon(_BaseSlotType):
+      |    @property
+      |    def Quantity(self) -> float:
+      |        return _DeviceSlotType(self, _LST.Quantity)
+      |
+      |    @Quantity.setter
+      |    def Quantity(self, value: int | float):
+      |        pass
+      |
+      |
+      |class _SlotTypeCommons(_BaseSlotTypes):
+      |    @property
+      |    def Quantity(self) -> _DevicesSlotType:
+      |        return _DevicesSlotType(self, _LST.Quantity)
+      |
+      |
+      |class _SlotTypePlant(_SlotTypeCommon):
+      |    @property
+      |    def Growth(self) -> float:
+      |        return _DeviceSlotType(self, _LST.Growth)
+      |
+      |
       |class GrowLight(_BaseStructure, _On):
       |    _hash: int = ${hash("StructureGrowLight")}
       |    _prefab_name: int = "StructureGrowLight"
@@ -38,6 +60,14 @@ class PrefabGeneratorTest {
       |    @property
       |    def slot0(self) -> _SlotTypePlant:
       |        return _SlotTypePlant(self, 0)
+      |
+      |    @property
+      |    def Tray(self) -> _SlotTypePlant:
+      |        return self.slot0
+      |
+      |    @property
+      |    def slot255(self) -> _SlotTypeCommon:
+      |        return _SlotTypeCommon(self, 255)
       |
       |
       |class _GrowLights(_BaseStructures, _Ons):
@@ -86,7 +116,85 @@ class PrefabGeneratorTest {
       )
 
   private fun generate(grouping: Grouping = this.grouping) =
-      PrefabGenerator.generate(prefabs, grouping, setOf("LogicType"), setOf("On")).second
+      PrefabGenerator.generate(
+              prefabs,
+              grouping,
+              setOf("LogicType"),
+              typing,
+          )
+          .second
+
+  private val typing =
+      Typing(
+          operandEnums = emptyList(),
+          booleanLogicTypes = listOf("On"),
+          booleanSlotLogicTypes = listOf("Occupied"),
+          slotReadsAlways = listOf("Occupied"),
+          slotWrites = mapOf("Plant" to listOf("Open")),
+      )
+
+  @Test
+  fun `imports slots by number with their names, and what each kind of slot reads`() {
+    val light = prefabs.prefabs.single { it.name == "StructureGrowLight" }
+
+    assertThat(light.slots)
+        .containsExactly(0, SlotInfo("Plant", "Tray"), 255, SlotInfo("Common"))
+        .inOrder()
+    // PyTrapIC's setters on slot logic types are ignored: the game decides what slots write.
+    assertThat(prefabs.slotKinds)
+        .containsExactly("Common", listOf("Quantity"), "Plant", listOf("Growth", "Quantity"))
+  }
+
+  @Test
+  fun `slots are typed by kind, named where the game names them, and batched`() {
+    val code = generate()
+
+    assertThat(code).contains("class PlantSlot internal constructor() : DeviceSlot() {")
+    // Reads come from the data plus the always-readable set; writes only from the game's rule.
+    assertThat(code).contains("  val Growth: Double\n")
+    assertThat(code).contains("  val Occupied: Boolean\n")
+    assertThat(code).contains("  var Open: Double\n    @Deprecated(WRITE_ONLY")
+    assertThat(code).contains("  val Quantity: Double\n")
+    assertThat(code).contains("class CommonSlot internal constructor() : DeviceSlot() {")
+    // The grow light's slots are of two kinds, so slots[n] has what every slot reads.
+    assertThat(code).contains("  val slots: Slots<CommonSlot>\n")
+    assertThat(code).contains("  @SlotNumber(0)\n  val Tray: PlantSlot\n")
+    assertThat(code).contains("    val slots: Slots<CommonSlot.Batch>\n")
+    assertThat(code).contains("    val slots: Slots<CommonSlot.Reading>\n")
+  }
+
+  @Test
+  fun `a slot name that isn't an identifier, is given twice or clashes is left out`() {
+    val tray =
+        Prefab(
+            "StructureTray",
+            hash("StructureTray"),
+            mapOf("On" to Access(read = true, write = true)),
+            mapOf(
+                0 to SlotInfo("Plant", "Tray"),
+                1 to SlotInfo("Plant", "Spare"),
+                2 to SlotInfo("Plant", "Spare"),
+                3 to SlotInfo("Plant", "On"),
+                4 to SlotInfo("Plant", "slots"),
+                5 to SlotInfo("Plant", "Not a name"),
+            ),
+        )
+    val code =
+        PrefabGenerator.generate(
+                Prefabs("test", listOf(tray), prefabs.slotKinds),
+                Grouping(emptyMap(), emptyList()),
+                setOf("LogicType"),
+                typing,
+            )
+            .second
+
+    assertThat(code).contains("  @SlotNumber(0)\n  val Tray: PlantSlot\n")
+    assertThat(code).doesNotContain("val Spare")
+    assertThat(code).doesNotContain("val On: PlantSlot")
+    assertThat(code).doesNotContain("val slots: PlantSlot")
+    assertThat(code).doesNotContain("Not a name")
+    for (number in 1..5) assertThat(code).doesNotContain("@SlotNumber($number)")
+  }
 
   @Test
   fun `imports prefabs with their own and inherited logic types`() {
@@ -156,6 +264,46 @@ class PrefabGeneratorTest {
             Grouping(emptyMap(), listOf("StructureGrowLight")),
         )) {
       assertThrows<IllegalArgumentException>(bad.toString()) { generate(bad) }
+    }
+  }
+
+  @Test
+  fun `the consoles must be exactly the prefabs with Circuitboard slots`() {
+    fun prefab(name: String, vararg kinds: String) =
+        Prefab(
+            name,
+            hash(name),
+            mapOf("On" to Access(read = true, write = true)),
+            kinds.withIndex().associate { (number, kind) -> number to SlotInfo(kind) },
+        )
+    val kinds = mapOf("Circuitboard" to listOf("Quantity"), "Plant" to listOf("Quantity"))
+    fun generate(consoles: List<String>, vararg prefabs: Prefab) =
+        PrefabGenerator.generate(
+            Prefabs("test", prefabs.toList(), kinds),
+            Grouping(emptyMap(), emptyList()),
+            setOf("LogicType"),
+            typing.copy(consoles = consoles),
+        )
+
+    generate(
+        listOf("StructureConsole"),
+        prefab("StructureConsole", "Circuitboard"),
+        prefab("StructureTray", "Plant"),
+    )
+    for ((consoles, prefabs) in
+        listOf(
+            // A Circuitboard slot on a prefab that isn't a console.
+            emptyList<String>() to listOf(prefab("StructureConsole", "Circuitboard")),
+            // A console with a slot of another kind.
+            listOf("StructureConsole") to
+                listOf(prefab("StructureConsole", "Circuitboard", "Plant")),
+            // A console with no slots, or that isn't a prefab.
+            listOf("StructureConsole") to listOf(prefab("StructureConsole")),
+            listOf("Missing") to emptyList(),
+        )) {
+      assertThrows<IllegalArgumentException>("$consoles $prefabs") {
+        generate(consoles, *prefabs.toTypedArray())
+      }
     }
   }
 

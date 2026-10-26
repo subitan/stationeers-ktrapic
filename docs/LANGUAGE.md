@@ -181,7 +181,54 @@ sign.Text = "HOT"
 LedDisplays.Large.all.Text = "OK"
 ```
 
-Slots are not supported yet; see [Not supported yet](#not-supported-yet).
+### Slots
+
+A device's slots are `slots`, numbered from 0: `d0.slots[0].Quantity` reads a slot's logic type
+(`ls`). The number may be computed, such as a loop's variable; it is fixed when the slot is
+taken, so a slot held in a `val` keeps its number when the variable changes. A constant number
+must be from 0 to 255 (255 is a robotic arm dock's target slot). That range is all the compiler
+checks, not the device's own slots: any number past a device's last slot, constant or computed, is
+an error on the chip.
+
+```kotlin
+var plants = 0.0
+for (i in 0..<4) plants += d0.slots[i].Quantity
+d1.slots[0].Open = true
+db.Setting = plants
+```
+
+The game lets a program write only a few slot logic types: `On` on helmet, tool and appliance
+slots, `Lock` on helmet slots, `Open` on helmet, canister and bottle slots, and `Mode` on any
+slot of a console. A pin's slots offer all four, and every slot logic type to read; a slot can
+read only some of them, and reading or writing one it lacks is an error on the chip.
+
+A typed device's slots have only what its kind of slot has, and only the writes the game allows
+there, so anything else is a compile error. Where all of a device's slots are of one kind, such as
+a battery charger's battery slots, `slots[n]` is of that kind; otherwise it has the logic types
+every slot can read. Slots the game names are also properties, of their own kind:
+
+```kotlin
+val tanks = GasTankStorages.at(d2)
+tanks.GasCanister.Open = true
+db.Ratio = BatteryChargers.at(d3).slots[0].Charge
+```
+
+A batch's slots are read through a batch method, which comes first, as for its logic types
+(`lbs`, `lbns`), and written to every device of the prefab (`sbs`). The game can't write the slots
+of a named batch.
+
+```kotlin
+val charge = BatteryChargers.all.average.slots[0].Charge
+val north = BatteryChargers.named("North").maximum.slots[1].Charge
+GasTankStorages.all.slots[0].Open = false
+```
+
+A slot, or a device's or batch's `slots`, can be held in a `val`.
+
+An item that runs a program, such as a suit or a tablet, has other rules: none of its slots can
+be written, and they can't read `SortingClass`, `FreeSlots` or `TotalSlots`. Its typed slots have
+no writes, but they offer those three as a structure's slots do, so reading one of them there is
+an error on the chip.
 
 ## Intrinsics and maths
 
@@ -256,7 +303,6 @@ has no line or column.
 
 Planned, roughly in this order:
 
-- Slots, on pins, typed devices and batches.
 - Your own enums and `when` over them; classes, interfaces and objects, compiled away at compile
   time; inline functions taking lambdas. Features are only added where their cost in lines is
   worth it on a 128-line chip.

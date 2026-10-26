@@ -96,6 +96,12 @@ internal data class Batch(val prefab: Double, val name: Double?) : Value
 /** A [Batch] read through a batch method (`Average`, `Sum`, `Minimum` or `Maximum`). */
 internal data class BatchRead(val batch: Batch, val method: String) : Value
 
+/** A device's, a batch's or a batch reading's slots (`slots`), before one is picked. */
+internal data class SlotsOf(val owner: Value) : Value
+
+/** Slot [number] of a device ([Dev]), a batch ([Batch]) or a batch reading ([BatchRead]). */
+internal data class SlotOf(val owner: Value, val number: TirOperand) : Value
+
 internal data object NoValue : Value
 
 /**
@@ -313,7 +319,7 @@ internal class Translator {
     properties[property.symbol] =
         when {
           value.isAlias() && !property.isVar -> value
-          value.isAlias() -> fail(property, "a device or batch can only be held in a val")
+          value.isAlias() -> fail(property, "a device, batch or slot can only be held in a val")
           value is Const && !property.isVar -> value
           else -> Reg(newVReg(property.name.asString())).also { move(it.reg, value) }
         }
@@ -341,7 +347,7 @@ internal class Translator {
     variables[variable] =
         when {
           value.isAlias() && !variable.isVar -> value
-          value.isAlias() -> fail(variable, "a device or batch can only be held in a val")
+          value.isAlias() -> fail(variable, "a device, batch or slot can only be held in a val")
           value is Const && !variable.isVar -> value
           else -> Reg(newVReg(variable.name.asString())).also { move(it.reg, value) }
         }
@@ -356,7 +362,10 @@ internal class Translator {
       batchError: String = "a batch can only be used directly or held in a val",
   ): Value =
       aliasOrValue(expression).also {
-        if (it is Batch || it is BatchRead) fail(expression, batchError)
+        if (it is SlotsOf || it is SlotOf) {
+          fail(expression, "a slot can only be used directly or held in a val")
+        }
+        if (it.isAlias() && it !is Dev) fail(expression, batchError)
       }
 
   /** What [expression] evaluates to, a [Batch] or [BatchRead] included. */
@@ -464,6 +473,7 @@ internal class Translator {
     }
     if (property != null && owner in DEVICE_CLASSES) {
       val device = device(call, args[0])
+      if (property.owner.name.asString() == SLOTS) return SlotsOf(device)
       val logicType = Fixed(Name(property.owner.name.asString()))
       return if (function == property.owner.setter) {
         emit("s", Fixed(device.device), logicType, operand(value(args[1]!!)))
@@ -547,10 +557,13 @@ internal class Translator {
           else -> fail(call, "$name is not supported")
         }
       }
-      cls.isSubclassOf(DEVICE_BATCH) -> {
+      // A batch's and a batch reading's members are their properties: any other member (hashCode,
+      // ...) is left unsupported.
+      property != null && cls.isSubclassOf(DEVICE_BATCH) -> {
         val batch =
             aliasOrValue(args[0]!!) as? Batch
                 ?: fail(call, "this batch must be all, named(...), or a val holding one")
+        if (name == SLOTS) return SlotsOf(batch)
         if (!isSetter) {
           if (name == TEXT) fail(call, "Text can only be written")
           // The other getters are logic types', which can't be read from a batch directly.
@@ -567,10 +580,11 @@ internal class Translator {
         }
         NoValue
       }
-      cls.isSubclassOf(BATCH_READING) -> {
+      property != null && cls.isSubclassOf(BATCH_READING) -> {
         val read =
             aliasOrValue(args[0]!!) as? BatchRead
                 ?: fail(call, "this batch reading must be a batch method's")
+        if (name == SLOTS) return SlotsOf(read)
         val batch = read.batch
         val result = newVReg()
         val logicType = Fixed(Name(name))
@@ -588,6 +602,21 @@ internal class Translator {
         }
         Reg(result)
       }
+      cls.kotlinFqName.asString() == SLOTS_CLASS && name == "get" -> {
+        val owner =
+            aliasOrValue(args[0]!!) as? SlotsOf
+                ?: fail(call, "these slots must be a device's or a batch's")
+        // A copy of a computed number, so a later change to its variable doesn't move the slot.
+        SlotOf(owner.owner, operand(snapshot(slotNumber(args[1]!!))))
+      }
+      // Only a slot's logic types: any other member (hashCode, ...) is left unsupported.
+      property != null &&
+          (cls.isSubclassOf(DEVICE_SLOT) ||
+              cls.isSubclassOf(SLOT_BATCH) ||
+              cls.isSubclassOf(SLOT_READING)) -> slotCall(call, name, isSetter)
+      property != null && cls.isTypedDevice() && name == SLOTS -> SlotsOf(device(call, args[0]))
+      property != null && cls.isTypedDevice() && property.slotNumber() != null ->
+          SlotOf(device(call, args[0]), Fixed(Number(property.slotNumber()!!.toDouble())))
       property != null && cls.isTypedDevice() -> {
         val device = Fixed(device(call, args[0]).device)
         if (isSetter) {
@@ -619,6 +648,73 @@ internal class Translator {
         operand(value(argument))
       }
 
+  /**
+   * A slot's logic type: on a device's slot, loaded with `ls` and stored with `ss`; on a batch's,
+   * stored to every device's with `sbs`; on a batch reading's, loaded with `lbs` or `lbns`.
+   */
+  private fun slotCall(call: IrCall, name: String, isSetter: Boolean): Value {
+    val slot =
+        aliasOrValue(call.arguments[0]!!) as? SlotOf
+            ?: fail(call, "this slot must be slots[...], a named slot, or a val holding one")
+    val logicType = Fixed(Name(name))
+    return when (val owner = slot.owner) {
+      is Dev ->
+          if (isSetter) {
+            val stored = operand(value(call.arguments.last()!!))
+            emit("ss", Fixed(owner.device), slot.number, logicType, stored)
+            NoValue
+          } else {
+            Reg(newVReg()).also { emit("ls", it.reg, Fixed(owner.device), slot.number, logicType) }
+          }
+      is Batch -> {
+        if (!isSetter) fail(call, "read a batch through a method, as in all.average.slots[0].X")
+        // The game has `sbs` but no named form of it.
+        if (owner.name != null) fail(call, "the slots of a named batch can't be written")
+        val stored = operand(value(call.arguments.last()!!))
+        emit("sbs", Fixed(Number(owner.prefab)), slot.number, logicType, stored)
+        NoValue
+      }
+      is BatchRead -> {
+        val batch = owner.batch
+        val method = Fixed(Name(owner.method))
+        val result = newVReg()
+        if (batch.name == null) {
+          emit("lbs", result, Fixed(Number(batch.prefab)), slot.number, logicType, method)
+        } else {
+          val nameHash = Fixed(Number(batch.name))
+          emit(
+              "lbns",
+              result,
+              Fixed(Number(batch.prefab)),
+              nameHash,
+              slot.number,
+              logicType,
+              method,
+          )
+        }
+        Reg(result)
+      }
+      else -> fail(call, "this slot must be a device's or a batch's")
+    }
+  }
+
+  /**
+   * A slot's number, which if constant must be one a device can have: the game has no slot below 0,
+   * and none above 255, the number of a robotic arm dock's target slot.
+   */
+  private fun slotNumber(expression: IrExpression): Value =
+      value(expression).also {
+        if (it is Const && it.number !in 0.0..MAX_SLOT.toDouble()) {
+          fail(expression, "slot numbers run from 0 to $MAX_SLOT")
+        }
+      }
+
+  /** The number of the slot a generated named slot property stands for. */
+  private fun IrProperty.slotNumber(): Int? =
+      annotations
+          .firstOrNull { it.type.classFqName?.asString() == SLOT_NUMBER }
+          ?.let { (it.arguments[0] as? IrConst)?.value as? Int }
+
   /** A prefab used as a value (a typed device's companion object): its hash. */
   private fun prefab(expression: IrGetObjectValue): Value {
     val cls = expression.symbol.owner
@@ -647,7 +743,9 @@ internal class Translator {
         (kind == ClassKind.INTERFACE && kotlinFqName.parent().asString() == "ktrapic")
   }
 
-  private fun Value.isAlias() = this is Dev || this is Batch || this is BatchRead
+  /** A value that names something on the chip rather than holding a number: kept as is in a val. */
+  private fun Value.isAlias() =
+      this is Dev || this is Batch || this is BatchRead || this is SlotsOf || this is SlotOf
 
   private fun logicType(call: IrCall, argument: IrExpression?): Fixed {
     if (argument !is IrGetEnumValue) {
@@ -1360,7 +1458,9 @@ internal class Translator {
         is Reg -> value.reg
         is Dev -> Fixed(value.device)
         is Batch,
-        is BatchRead -> error("a batch has no value")
+        is BatchRead,
+        is SlotsOf,
+        is SlotOf -> error("a batch or slot has no value")
         NoValue -> error("no value")
       }
 
@@ -1386,6 +1486,13 @@ internal class Translator {
     const val PREFAB = "ktrapic.Prefab"
     const val PREFAB_NAME = "ktrapic.PrefabName"
     const val TEXT = "Text"
+    const val SLOTS = "slots"
+    const val SLOTS_CLASS = "ktrapic.Slots"
+    const val DEVICE_SLOT = "ktrapic.DeviceSlot"
+    const val SLOT_BATCH = "ktrapic.SlotBatch"
+    const val SLOT_READING = "ktrapic.SlotReading"
+    const val SLOT_NUMBER = "ktrapic.SlotNumber"
+    const val MAX_SLOT = 255
     val BATCH_METHODS = setOf("average", "sum", "minimum", "maximum")
     val PIN_GETTERS =
         listOf("d0", "d1", "d2", "d3", "d4", "d5", "db").associateBy { "ktrapic.<get-$it>" }

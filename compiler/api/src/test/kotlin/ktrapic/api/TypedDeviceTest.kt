@@ -248,6 +248,20 @@ class TypedDeviceTest {
   }
 
   @Test
+  fun `only a batch's and a batch reading's properties compile`() {
+    for ((source, at) in
+        listOf(
+            "val x = 1\nval h = GrowLights.all.hashCode()" to (2 to 24),
+            "val x = 1\nval h = GrowLights.all.average.hashCode()" to (2 to 32),
+            "val x = 1\nval h = GrowLights.named(\"x\").sum.toString()" to (2 to 35),
+        )) {
+      val error = error(source)
+      assertWithMessage(source).that(error.message).contains("not supported")
+      assertWithMessage(source).that(error.line to error.column).isEqualTo(at)
+    }
+  }
+
+  @Test
   fun `a prefab is its hash, and compares with a device's prefab`() {
     val source =
         """
