@@ -74,21 +74,6 @@ namespace KTrapIC
         private static readonly Style EnumValueStyle = new Style { Color = ColorFromHTML("#B5CEA8") };
         private static readonly Style FunctionStyle = new Style { Color = ColorFromHTML("#DCDCAA") };
 
-        /// <summary>The runtime's hand-written types, beside its generated ones.</summary>
-        private static readonly HashSet<string> Types = new HashSet<string>(
-            RuntimeNames.Types.Concat(new[] { "Device", "Prefab", "TypedDevice", "GenericDevice", "Slot", "DeviceSlot" }));
-
-        private static readonly HashSet<string> Enums = new HashSet<string>(RuntimeNames.Enums);
-        private static readonly HashSet<string> EnumValues = new HashSet<string>(RuntimeNames.EnumValues);
-        private static readonly HashSet<string> LogicTypes = new HashSet<string>(RuntimeNames.LogicTypes);
-        private static readonly HashSet<string> Devices = new HashSet<string> { "d0", "d1", "d2", "d3", "d4", "d5", "db" };
-
-        private static readonly HashSet<string> Functions = new HashSet<string>
-        {
-            "sleep", "yield", "hash", "str", "at", "named", "map", "sumOf", "minOf", "maxOf", "count", "any",
-            "none", "forEach", "average", "sum", "min", "max", "toInt", "toDouble",
-        };
-
         /// <summary>Bumped on every edit, so a compile can tell whether the code changed since it began.</summary>
         private int _version;
 
@@ -149,52 +134,53 @@ namespace KTrapIC
         }
 
         /// <summary>
-        /// Highlights the Kotlin keywords and the runtime's names. A name after a dot is a member: a
-        /// logic type (<c>d0.Temperature</c>), an enum's value (<c>Color.Red</c>) or a family's
-        /// prefab (<c>Batteries.Small</c>). Anywhere else it is a type, an enum, a device or a
-        /// function, so <c>db.Color = Color.Red</c> colors each <c>Color</c> as what it is there.
+        /// Highlights the Kotlin keywords and the runtime's names. A name after a dot is a member,
+        /// told apart by the name before the dot: an enum's value (<c>Color.Red</c>), a family's
+        /// prefab (<c>Batteries.Small</c>) or a logic type (<c>d0.Temperature</c>). Anywhere else it
+        /// is a type, an enum, a device or a function, so <c>db.Color = Color.Red</c> colors each
+        /// <c>Color</c> as what it is there.
         /// </summary>
         public override StyledLine ParseLine(string lineText)
         {
             var line = base.ParseLine(lineText);
+            Token qualifier = null;
             Token previous = null;
             foreach (var token in line)
             {
                 if (!token.Text.StartsWith(CommentPrefix) && !KotlinKeywords.ContainsKey(token.Text))
                 {
-                    var style = previous?.Text == "." ? MemberStyle(token.Text) : NameStyle(token.Text);
+                    var kind = previous?.Text == "."
+                        ? RuntimeNameKinds.Member(qualifier?.Text, token.Text)
+                        : RuntimeNameKinds.Name(token.Text);
+                    var style = StyleOf(kind);
                     if (style.HasValue)
                         token.Style = style.Value;
                 }
+                qualifier = previous;
                 previous = token;
             }
             return line;
         }
 
-        private static Style? MemberStyle(string name)
+        private static Style? StyleOf(NameKind kind)
         {
-            if (LogicTypes.Contains(name))
-                return LogicTypeStyle;
-            if (EnumValues.Contains(name))
-                return EnumValueStyle;
-            if (Types.Contains(name))
-                return TypeStyle;
-            if (Functions.Contains(name))
-                return FunctionStyle;
-            return null;
-        }
-
-        private static Style? NameStyle(string name)
-        {
-            if (Enums.Contains(name))
-                return EnumStyle;
-            if (Types.Contains(name))
-                return TypeStyle;
-            if (Devices.Contains(name))
-                return DeviceStyle;
-            if (Functions.Contains(name))
-                return FunctionStyle;
-            return null;
+            switch (kind)
+            {
+                case NameKind.Type:
+                    return TypeStyle;
+                case NameKind.Enum:
+                    return EnumStyle;
+                case NameKind.EnumValue:
+                    return EnumValueStyle;
+                case NameKind.Device:
+                    return DeviceStyle;
+                case NameKind.LogicType:
+                    return LogicTypeStyle;
+                case NameKind.Function:
+                    return FunctionStyle;
+                default:
+                    return null;
+            }
         }
 
         /// <summary>
