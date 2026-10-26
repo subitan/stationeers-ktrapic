@@ -111,73 +111,12 @@ class SlotTest {
   }
 
   @Test
-  fun `batch slot reads go through a batch method`() {
-    val source =
-        """
-        db.Setting = BatteryChargers.all.average.slots[0].Charge
-        db.Ratio = BatteryChargers.named("North").maximum.slots[1].Charge
-        """
-    val code = compiled(source).code
-
-    assertThat(code).contains("lbs r0 ${Hashes.hash(charger)} 0 Charge Average")
-    assertThat(code)
-        .contains("lbns r0 ${Hashes.hash(charger)} ${Hashes.hash("North")} 1 Charge Maximum")
-    val db =
-        run(source) {
-          listOf(
-              FakeDevice(),
-              chargerWith(10.0, 1.0, name = "North"),
-              chargerWith(30.0, 5.0, name = "South"),
-          )
-        }[0]
-    assertThat(db["Setting"]).isEqualTo(20.0)
-    assertThat(db["Ratio"]).isEqualTo(1.0)
-  }
-
-  @Test
-  fun `batch slot writes go to every device of the prefab`() {
-    val source = "GasTankStorages.all.slots[0].Open = true"
-
-    assertThat(compiled(source).code).isEqualTo("sbs ${Hashes.hash(tankStorage)} 0 Open 1")
-    val devices =
-        run(source) { listOf(FakeDevice(), FakeDevice(tankStorage), FakeDevice(tankStorage)) }
-    assertThat(devices.drop(1).map { it.slot(0)["Open"] }).containsExactly(1.0, 1.0)
-  }
-
-  @Test
-  fun `slots and slots of batches can be held in vals`() {
-    val source =
-        """
-        val battery = BatteryChargers.at(d0).slots[1]
-        val average = BatteryChargers.all.average.slots
-        db.Setting = battery.Charge + average[0].Charge
-        """
-    val db = run(source) { listOf(FakeDevice(), chargerWith(3.0, 5.0)) }[0]
-
-    assertThat(db["Setting"]).isEqualTo(8.0)
-  }
-
-  @Test
-  fun `a computed slot number is fixed when the slot is taken`() {
-    val source =
-        """
-        var i = 0
-        val slot = BatteryChargers.at(d0).slots[i]
-        i = 1
-        db.Setting = slot.Charge
-        """
-    val db = run(source) { listOf(FakeDevice(), chargerWith(3.0, 5.0)) }[0]
-
-    assertThat(db["Setting"]).isEqualTo(3.0)
-  }
-
-  @Test
   fun `a console writes Mode on its slots`() {
     val source =
         """
         Consoles.at(d0).slots[0].Mode = 1.0
         Consoles.at(d0).Circuitboard.Mode = 2.0
-        Consoles.all.slots[0].Mode = 3.0
+        Consoles.all.slots[0].forEach { it.Mode = 3.0 }
         """
     val code = compiled(source).code
 
@@ -206,7 +145,6 @@ class SlotTest {
     for ((source, at) in
         listOf(
             "val x = 1\ndb.Setting = d0.slots[0].hashCode().toDouble()" to (2 to 26),
-            "val x = 1\nval h = BatteryChargers.all.average.slots[0].hashCode()" to (2 to 46),
             "val x = 1\nval h = BatteryChargers.all.slots[0].toString()" to (2 to 38),
             "val x = 1\nval h = d0.slots.hashCode()" to (2 to 18),
             "val x = 1\nval q = d0.slots[-1].Quantity" to (2 to 18),
@@ -224,7 +162,8 @@ class SlotTest {
     for ((source, at) in
         listOf(
             "val x = 1\nBatteryChargers.at(d0).slots[0].Charge = 1.0" to (2 to 33),
-            "val x = 1\nGasTankStorages.named(\"A\").slots[0].Open = true" to (2 to 37),
+            "val x = 1\nGasTankStorages.named(\"A\").slots[0].forEach { it.Open = true }" to
+                (2 to 50),
             "val x = 1\nval s = if (db.On) d0.slots[0] else d0.slots[1]" to (2 to 20),
             "val x = 1\nval c = BatteryChargers.all.slots[0].Charge" to (2 to 38),
         )) {

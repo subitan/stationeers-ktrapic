@@ -136,20 +136,32 @@ would get the same name that way, both keep their full names, as `ItemBeacons` a
 - `GrowLights.at(d0)` is the device on `d0` as a `GrowLight`, which has only the logic types a
   grow light has, as `val` where they can only be read. Using one it lacks is a compile error.
 - `GrowLights.all` is every grow light on the chip's network, and `GrowLights.named("Potatoes")`
-  every one with that name. Writing a logic type writes it to all of them (`sb`, `sbn`); reading
-  goes through a batch method, `average`, `sum`, `minimum` or `maximum`, and is always a `Double`
-  (`lb`, `lbn`). Reading a logic type straight from a batch is a compile error.
+  every one with that name: a batch, which is used like a Kotlin collection of `GrowLight`s.
+
+A batch is read with collection operations, each of which compiles to one batch instruction
+(`lb`, `lbn`): `map { it.X }` followed by `average()`, `sum()`, `min()` or `max()`; `sumOf`,
+`minOf` and `maxOf`; `count { it.On }`, how many have a logic type on; and `count()`, how many
+devices of the prefab there are, whatever their names. It is written with `forEach`, each of whose
+assignments writes every device (`sb`, `sbn`):
 
 ```kotlin
-GrowLights.all.On = true
-GrowLights.named("Potatoes").On = false
-val lit = GrowLights.all.sum.On
+GrowLights.all.forEach { it.On = true }
+GrowLights.named("Potatoes").forEach { it.On = false }
+val lit = GrowLights.all.count { it.On }
+val charge = Batteries.Small.all.map { it.Charge }.average()
+val most = Batteries.Small.all.maxOf(Battery.Small::Charge)
 val sensor = GasSensors.at(d0)
-db.Setting = if (sensor.Temperature > 300.0) lit else 0.0
+db.Setting = if (sensor.Temperature > 300.0) charge else most
 ```
 
-With no devices in a batch, `average` is NaN, `maximum` is negative infinity, and `sum` and
-`minimum` are 0. A typed device or a batch can be held in a `val`.
+The lambdas are narrower than Kotlin's: a reading one may only pick a logic type, as `{ it.X }` or
+a property reference such as `Battery.Small::Charge`, and a writing one may only assign logic
+types of `it` (or of its slots), with values that don't depend on `it`. Anything else is a compile
+error. The result of `map` can only be ended with one of the four functions above, not iterated.
+
+With no devices in a batch, `average()` is NaN, as in Kotlin, but `max()` and `maxOf` give
+negative infinity, and `min()` and `minOf` 0, where Kotlin throws. A typed device, a batch or a
+`map` of one can be held in a `val`.
 
 Devices that come in several prefabs are grouped by kind: `Batteries.Small.at(d0)` is a
 `Battery.Small`, and `Batteries.Large.all` every large one. On its own, `Battery` is no prefab: it
@@ -161,7 +173,7 @@ far are `Battery` (`Station`, `Large`, `Medium`, `Small`) and `LedDisplay` (`Sma
 
 ```kotlin
 inline fun charge(battery: Battery): Double = battery.Ratio
-db.Setting = charge(Batteries.Small.at(d0)) + Batteries.Large.all.average.Ratio
+db.Setting = charge(Batteries.Small.at(d0)) + Batteries.Large.all.map { it.Ratio }.average()
 ```
 
 A prefab's name is also its value: `GrowLight` and `Battery.Small` are the game's hashes of
@@ -178,7 +190,7 @@ text, or anything but printable ASCII, is a compile error.
 val sign = LedDisplays.Small.at(d5)
 sign.Mode = DisplayMode.String
 sign.Text = "HOT"
-LedDisplays.Large.all.Text = "OK"
+LedDisplays.Large.all.forEach { it.Text = "OK" }
 ```
 
 ### Slots
@@ -213,14 +225,15 @@ tanks.GasCanister.Open = true
 db.Ratio = BatteryChargers.at(d3).slots[0].Charge
 ```
 
-A batch's slots are read through a batch method, which comes first, as for its logic types
-(`lbs`, `lbns`), and written to every device of the prefab (`sbs`). The game can't write the slots
-of a named batch.
+A batch's `slots[n]` is that slot of every device in it, read and written like a batch (`lbs`,
+`lbns`, `sbs`); a `forEach` over the devices can also write their slots. The game can't write the
+slots of a named batch.
 
 ```kotlin
-val charge = BatteryChargers.all.average.slots[0].Charge
-val north = BatteryChargers.named("North").maximum.slots[1].Charge
-GasTankStorages.all.slots[0].Open = false
+val charge = BatteryChargers.all.slots[0].map { it.Charge }.average()
+val north = BatteryChargers.named("North").slots[1].maxOf { it.Charge }
+GasTankStorages.all.slots[0].forEach { it.Open = false }
+GasTankStorages.all.forEach { it.GasCanister.Open = true }
 ```
 
 A slot, or a device's or batch's `slots`, can be held in a `val`.

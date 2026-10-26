@@ -40,12 +40,15 @@ import org.jetbrains.kotlin.ir.expressions.IrContinue
 import org.jetbrains.kotlin.ir.expressions.IrDoWhileLoop
 import org.jetbrains.kotlin.ir.expressions.IrExpression
 import org.jetbrains.kotlin.ir.expressions.IrExpressionBody
+import org.jetbrains.kotlin.ir.expressions.IrFunctionExpression
 import org.jetbrains.kotlin.ir.expressions.IrGetEnumValue
 import org.jetbrains.kotlin.ir.expressions.IrGetField
 import org.jetbrains.kotlin.ir.expressions.IrGetObjectValue
 import org.jetbrains.kotlin.ir.expressions.IrGetValue
 import org.jetbrains.kotlin.ir.expressions.IrLoop
+import org.jetbrains.kotlin.ir.expressions.IrPropertyReference
 import org.jetbrains.kotlin.ir.expressions.IrReturn
+import org.jetbrains.kotlin.ir.expressions.IrRichPropertyReference
 import org.jetbrains.kotlin.ir.expressions.IrSetField
 import org.jetbrains.kotlin.ir.expressions.IrSetValue
 import org.jetbrains.kotlin.ir.expressions.IrStatementOrigin
@@ -93,13 +96,16 @@ internal data class Dev(val device: Device) : Value
  */
 internal data class Batch(val prefab: Double, val name: Double?) : Value
 
-/** A [Batch] read through a batch method (`Average`, `Sum`, `Minimum` or `Maximum`). */
-internal data class BatchRead(val batch: Batch, val method: String) : Value
+/**
+ * A batch's logic type picked by `map` ([source] a [Batch], or a [SlotOf] one), to be read by one
+ * of the [Translator.MAPPED_TERMINALS].
+ */
+internal data class Mapped(val source: Value, val logicType: String) : Value
 
-/** A device's, a batch's or a batch reading's slots (`slots`), before one is picked. */
+/** A device's or a batch's slots (`slots`), before one is picked. */
 internal data class SlotsOf(val owner: Value) : Value
 
-/** Slot [number] of a device ([Dev]), a batch ([Batch]) or a batch reading ([BatchRead]). */
+/** Slot [number] of a device ([Dev]) or of every device in a batch ([Batch]). */
 internal data class SlotOf(val owner: Value, val number: TirOperand) : Value
 
 internal data object NoValue : Value
@@ -354,8 +360,8 @@ internal class Translator {
   }
 
   /**
-   * What [expression] evaluates to, which must not be a [Batch] or [BatchRead]: those have no value
-   * and are only held in a `val` or used directly ([aliasOrValue]).
+   * What [expression] evaluates to, which must not be a [Batch], a slot or a [Mapped]: those have
+   * no value and are only held in a `val` or used directly ([aliasOrValue]).
    */
   private fun value(
       expression: IrExpression,
@@ -368,7 +374,7 @@ internal class Translator {
         if (it.isAlias() && it !is Dev) fail(expression, batchError)
       }
 
-  /** What [expression] evaluates to, a [Batch] or [BatchRead] included. */
+  /** What [expression] evaluates to, a [Batch], a slot or a [Mapped] included. */
   private fun aliasOrValue(expression: IrExpression): Value =
       when (expression) {
         is IrConst -> constant(expression)
@@ -511,6 +517,12 @@ internal class Translator {
         emit("yield")
         NoValue
       }
+      in MAPPED_TERMINALS -> {
+        val mapped =
+            aliasOrValue(args[0]!!) as? Mapped
+                ?: fail(call, "${function.name}() reads a batch's map { ... }")
+        batchRead(mapped.source, mapped.logicType, MAPPED_TERMINALS.getValue(fqName))
+      }
       "ktrapic.hash" -> stringConstant(call, StringConstant.Kind.HASH)
       "ktrapic.str" -> stringConstant(call, StringConstant.Kind.STR)
       else ->
@@ -530,13 +542,13 @@ internal class Translator {
       argument?.let { value(it) } as? Dev
           ?: fail(argument ?: call, "this device must be a pin, or a val holding one")
 
-  // The typed device API: typed devices, their entry points, batches and batch readings.
+  // The typed device API: typed devices, their entry points, batches and slots.
 
   /**
    * A call into the generated typed device API, or null if [cls] isn't part of it. An entry point
    * (`GrowLights`) gives a typed device (`at(d0)`) or a [Batch] (`all`, `named("x")`); a typed
-   * device's logic types load and store like a pin's; a batch's store to every device in it (`sb`,
-   * `sbn`) and its batch methods give a [BatchRead], whose logic types load (`lb`, `lbn`).
+   * device's logic types load and store like a pin's; a batch is read and written through its
+   * collection operations ([batchCall]).
    */
   private fun typedCall(call: IrCall, cls: IrClass, function: IrSimpleFunction): Value? {
     val property = function.correspondingPropertySymbol?.owner
@@ -557,51 +569,7 @@ internal class Translator {
           else -> fail(call, "$name is not supported")
         }
       }
-      // A batch's and a batch reading's members are their properties: any other member (hashCode,
-      // ...) is left unsupported.
-      property != null && cls.isSubclassOf(DEVICE_BATCH) -> {
-        val batch =
-            aliasOrValue(args[0]!!) as? Batch
-                ?: fail(call, "this batch must be all, named(...), or a val holding one")
-        if (name == SLOTS) return SlotsOf(batch)
-        if (!isSetter) {
-          if (name == TEXT) fail(call, "Text can only be written")
-          // The other getters are logic types', which can't be read from a batch directly.
-          if (name !in BATCH_METHODS)
-              fail(call, "read a batch through a method, as in all.average.X")
-          return BatchRead(batch, name.replaceFirstChar { it.uppercaseChar() })
-        }
-        val stored = storedValue(call, name, args.last()!!)
-        val logicType = Fixed(Name(storedLogicType(name)))
-        if (batch.name == null) {
-          emit("sb", Fixed(Number(batch.prefab)), logicType, stored)
-        } else {
-          emit("sbn", Fixed(Number(batch.prefab)), Fixed(Number(batch.name)), logicType, stored)
-        }
-        NoValue
-      }
-      property != null && cls.isSubclassOf(BATCH_READING) -> {
-        val read =
-            aliasOrValue(args[0]!!) as? BatchRead
-                ?: fail(call, "this batch reading must be a batch method's")
-        if (name == SLOTS) return SlotsOf(read)
-        val batch = read.batch
-        val result = newVReg()
-        val logicType = Fixed(Name(name))
-        if (batch.name == null) {
-          emit("lb", result, Fixed(Number(batch.prefab)), logicType, Fixed(Name(read.method)))
-        } else {
-          emit(
-              "lbn",
-              result,
-              Fixed(Number(batch.prefab)),
-              Fixed(Number(batch.name)),
-              logicType,
-              Fixed(Name(read.method)),
-          )
-        }
-        Reg(result)
-      }
+      cls.isBatchClass() -> batchCall(call, name, property)
       cls.kotlinFqName.asString() == SLOTS_CLASS && name == "get" -> {
         val owner =
             aliasOrValue(args[0]!!) as? SlotsOf
@@ -610,10 +578,7 @@ internal class Translator {
         SlotOf(owner.owner, operand(snapshot(slotNumber(args[1]!!))))
       }
       // Only a slot's logic types: any other member (hashCode, ...) is left unsupported.
-      property != null &&
-          (cls.isSubclassOf(DEVICE_SLOT) ||
-              cls.isSubclassOf(SLOT_BATCH) ||
-              cls.isSubclassOf(SLOT_READING)) -> slotCall(call, name, isSetter)
+      property != null && cls.isSubclassOf(DEVICE_SLOT) -> slotCall(call, name, isSetter)
       property != null && cls.isTypedDevice() && name == SLOTS -> SlotsOf(device(call, args[0]))
       property != null && cls.isTypedDevice() && property.slotNumber() != null ->
           SlotOf(device(call, args[0]), Fixed(Number(property.slotNumber()!!.toDouble())))
@@ -648,55 +613,213 @@ internal class Translator {
         operand(value(argument))
       }
 
-  /**
-   * A slot's logic type: on a device's slot, loaded with `ls` and stored with `ss`; on a batch's,
-   * stored to every device's with `sbs`; on a batch reading's, loaded with `lbs` or `lbns`.
-   */
+  /** A slot's logic type on a device's slot, loaded with `ls` and stored with `ss`. */
   private fun slotCall(call: IrCall, name: String, isSetter: Boolean): Value {
     val slot =
         aliasOrValue(call.arguments[0]!!) as? SlotOf
             ?: fail(call, "this slot must be slots[...], a named slot, or a val holding one")
+    val owner = slot.owner as? Dev ?: fail(call, "this slot must be a device's")
     val logicType = Fixed(Name(name))
-    return when (val owner = slot.owner) {
-      is Dev ->
-          if (isSetter) {
-            val stored = operand(value(call.arguments.last()!!))
-            emit("ss", Fixed(owner.device), slot.number, logicType, stored)
-            NoValue
-          } else {
-            Reg(newVReg()).also { emit("ls", it.reg, Fixed(owner.device), slot.number, logicType) }
-          }
-      is Batch -> {
-        if (!isSetter) fail(call, "read a batch through a method, as in all.average.slots[0].X")
-        // The game has `sbs` but no named form of it.
-        if (owner.name != null) fail(call, "the slots of a named batch can't be written")
-        val stored = operand(value(call.arguments.last()!!))
-        emit("sbs", Fixed(Number(owner.prefab)), slot.number, logicType, stored)
-        NoValue
-      }
-      is BatchRead -> {
-        val batch = owner.batch
-        val method = Fixed(Name(owner.method))
-        val result = newVReg()
-        if (batch.name == null) {
-          emit("lbs", result, Fixed(Number(batch.prefab)), slot.number, logicType, method)
-        } else {
-          val nameHash = Fixed(Number(batch.name))
-          emit(
-              "lbns",
-              result,
-              Fixed(Number(batch.prefab)),
-              nameHash,
-              slot.number,
-              logicType,
-              method,
-          )
-        }
-        Reg(result)
-      }
-      else -> fail(call, "this slot must be a device's or a batch's")
+    return if (isSetter) {
+      val stored = operand(value(call.arguments.last()!!))
+      emit("ss", Fixed(owner.device), slot.number, logicType, stored)
+      NoValue
+    } else {
+      Reg(newVReg()).also { emit("ls", it.reg, Fixed(owner.device), slot.number, logicType) }
     }
   }
+
+  /**
+   * A batch's collection operation: `map` picks a logic type for a [MAPPED_TERMINALS] function;
+   * `sumOf`, `minOf`, `maxOf` and `count { ... }` read one with a batch method; `count()` counts
+   * the devices; `forEach` writes. The only property is a batch of devices' `slots`.
+   */
+  private fun batchCall(call: IrCall, name: String, property: IrProperty?): Value {
+    val args = call.arguments
+    val source = aliasOrValue(args[0]!!)
+    if (source !is Batch && !(source is SlotOf && source.owner is Batch)) {
+      fail(call, "this batch must be all, named(...), a batch's slots[...], or a val holding one")
+    }
+    if (property != null) {
+      if (name == SLOTS && source is Batch) return SlotsOf(source)
+      fail(call, "$name is not supported on a batch")
+    }
+    return when (name) {
+      "map" -> Mapped(source, selected(call, args[1]))
+      "sumOf" -> batchRead(source, selected(call, args[1]), "Sum")
+      "minOf" -> batchRead(source, selected(call, args[1]), "Minimum")
+      "maxOf" -> batchRead(source, selected(call, args[1]), "Maximum")
+      // count { it.On } sums the logic type; count() counts the devices, reading a logic type
+      // every device has.
+      "count" ->
+          if (args.size > 1) batchRead(source, selected(call, args[1]), "Sum")
+          else batchRead(source, "PrefabHash", "Count")
+      "forEach" -> {
+        batchWrites(call, source, args[1])
+        NoValue
+      }
+      else -> fail(call, "$name is not supported on a batch")
+    }
+  }
+
+  /**
+   * The logic type a reading lambda picks: `{ it.Charge }`, or a property reference such as
+   * `GrowLight::Charge`.
+   */
+  private fun selected(call: IrCall, argument: IrExpression?): String {
+    when (argument) {
+      is IrFunctionExpression -> {
+        val lambda = argument.function
+        val parameter = lambda.parameters.single { it.kind == IrParameterKind.Regular }
+        val statement = (lambda.body as? IrBlockBody)?.statements?.singleOrNull()
+        val get = ((statement as? IrReturn)?.value ?: statement) as? IrCall
+        val property = get?.symbol?.owner?.correspondingPropertySymbol?.owner
+        if (
+            property != null &&
+                get.symbol.owner == property.getter &&
+                (get.arguments[0] as? IrGetValue)?.symbol == parameter.symbol
+        ) {
+          return property.name.asString()
+        }
+      }
+      is IrRichPropertyReference ->
+          (argument.reflectionTargetSymbol?.owner as? IrProperty)?.let {
+            return it.name.asString()
+          }
+      is IrPropertyReference -> return argument.symbol.owner.name.asString()
+      else -> {}
+    }
+    fail(argument ?: call, "a batch is read by picking a logic type, as { it.Charge }")
+  }
+
+  /** The `lb`, `lbn`, `lbs` or `lbns` reading [logicType] of [source] with batch [method]. */
+  private fun batchRead(source: Value, logicType: String, method: String): Value {
+    val result = newVReg()
+    val type = Fixed(Name(logicType))
+    val mode = Fixed(Name(method))
+    when (source) {
+      is Batch -> {
+        val prefab = Fixed(Number(source.prefab))
+        if (source.name == null) emit("lb", result, prefab, type, mode)
+        else emit("lbn", result, prefab, Fixed(Number(source.name)), type, mode)
+      }
+      is SlotOf -> {
+        val batch = source.owner as Batch
+        val prefab = Fixed(Number(batch.prefab))
+        if (batch.name == null) {
+          emit("lbs", result, prefab, source.number, type, mode)
+        } else {
+          emit("lbns", result, prefab, Fixed(Number(batch.name)), source.number, type, mode)
+        }
+      }
+      else -> error("not a batch")
+    }
+    return Reg(result)
+  }
+
+  /**
+   * `forEach { it.On = true }`: each assignment to the element's logic type, or to one of its
+   * slots' (`it.slots[0].Open`, `it.Battery.On`), writes every device (`sb`, `sbn`, `sbs`).
+   */
+  private fun batchWrites(call: IrCall, source: Value, argument: IrExpression?) {
+    val lambda =
+        (argument as? IrFunctionExpression)?.function
+            ?: fail(
+                argument ?: call,
+                "forEach needs a lambda assigning logic types, as { it.On = true }",
+            )
+    val parameter = lambda.parameters.single { it.kind == IrParameterKind.Regular }
+    val statements = (lambda.body as? IrBlockBody)?.statements ?: emptyList()
+    for (statement in statements) {
+      var expression = (statement as? IrReturn)?.value ?: statement
+      if (expression is IrGetObjectValue && expression.type.isUnit()) continue
+      if (
+          expression is IrTypeOperatorCall &&
+              expression.operator == IrTypeOperator.IMPLICIT_COERCION_TO_UNIT
+      ) {
+        expression = expression.argument
+      }
+      val set = expression as? IrCall
+      val property = set?.symbol?.owner?.correspondingPropertySymbol?.owner
+      if (property == null || set.symbol.owner != property.setter) {
+        fail(statement, "forEach may only assign logic types, as it.On = true")
+      }
+      val slot = writeTarget(set.arguments[0]!!, parameter)
+      val written = set.arguments.last()!!
+      if (written.mentions(parameter)) {
+        fail(written, "a value written to a batch can't depend on its devices")
+      }
+      val name = property.name.asString()
+      val stored = Fixed(Name(storedLogicType(name)))
+      batchWrite(set, source, slot, stored, storedValue(set, name, written))
+    }
+  }
+
+  /** Where a `forEach` assignment writes: the element itself (null), or one of its slots. */
+  private fun writeTarget(receiver: IrExpression, parameter: IrValueParameter): TirOperand? {
+    if (receiver is IrGetValue && receiver.symbol == parameter.symbol) return null
+    val call = receiver as? IrCall
+    val function = call?.symbol?.owner
+    val property = function?.correspondingPropertySymbol?.owner
+    val onElement = (call?.arguments?.getOrNull(0) as? IrGetValue)?.symbol == parameter.symbol
+    // A named slot, such as it.Battery.
+    property?.slotNumber()?.let { if (onElement) return Fixed(Number(it.toDouble())) }
+    // it.slots[n], with n not depending on the devices.
+    if (
+        function?.parentClassOrNull?.kotlinFqName?.asString() == SLOTS_CLASS &&
+            function.name.asString() == "get"
+    ) {
+      val slots = call.arguments[0] as? IrCall
+      val slotsOwner = slots?.symbol?.owner?.correspondingPropertySymbol?.owner
+      val number = call.arguments[1]!!
+      if (
+          slotsOwner?.name?.asString() == SLOTS &&
+              (slots.arguments[0] as? IrGetValue)?.symbol == parameter.symbol &&
+              !number.mentions(parameter)
+      ) {
+        return operand(snapshot(slotNumber(number)))
+      }
+    }
+    fail(receiver, "forEach may only assign the logic types of it, or of its slots")
+  }
+
+  private fun batchWrite(
+      element: IrElement,
+      source: Value,
+      slot: TirOperand?,
+      logicType: TirOperand,
+      stored: TirOperand,
+  ) {
+    val batch = (if (source is SlotOf) source.owner else source) as Batch
+    val prefab = Fixed(Number(batch.prefab))
+    val number = slot ?: (source as? SlotOf)?.number
+    when {
+      number == null && batch.name == null -> emit("sb", prefab, logicType, stored)
+      number == null -> emit("sbn", prefab, Fixed(Number(batch.name!!)), logicType, stored)
+      // The game has `sbs` but no named form of it.
+      batch.name != null -> fail(element, "the slots of a named batch can't be written")
+      else -> emit("sbs", prefab, number, logicType, stored)
+    }
+  }
+
+  /** Whether this expression reads [parameter] anywhere. */
+  private fun IrExpression.mentions(parameter: IrValueParameter): Boolean {
+    var found = false
+    acceptVoid(
+        object : IrVisitorVoid() {
+          override fun visitElement(element: IrElement) {
+            if (element is IrGetValue && element.symbol == parameter.symbol) found = true
+            element.acceptChildrenVoid(this)
+          }
+        }
+    )
+    return found
+  }
+
+  /** A batch's or a batch of slots' class, whose members are its collection operations. */
+  private fun IrClass.isBatchClass(): Boolean =
+      kotlinFqName.asString() == BATCH_CLASS ||
+          superTypes.any { it.classOrNull?.owner?.isBatchClass() == true }
 
   /**
    * A slot's number, which if constant must be one a device can have: the game has no slot below 0,
@@ -745,7 +868,7 @@ internal class Translator {
 
   /** A value that names something on the chip rather than holding a number: kept as is in a val. */
   private fun Value.isAlias() =
-      this is Dev || this is Batch || this is BatchRead || this is SlotsOf || this is SlotOf
+      this is Dev || this is Batch || this is Mapped || this is SlotsOf || this is SlotOf
 
   private fun logicType(call: IrCall, argument: IrExpression?): Fixed {
     if (argument !is IrGetEnumValue) {
@@ -1458,7 +1581,7 @@ internal class Translator {
         is Reg -> value.reg
         is Dev -> Fixed(value.device)
         is Batch,
-        is BatchRead,
+        is Mapped,
         is SlotsOf,
         is SlotOf -> error("a batch or slot has no value")
         NoValue -> error("no value")
@@ -1481,19 +1604,23 @@ internal class Translator {
   private companion object {
     val DEVICE_CLASSES = setOf("ktrapic.Device", "ktrapic.GenericDevice")
     const val TYPED_DEVICE = "ktrapic.TypedDevice"
-    const val DEVICE_BATCH = "ktrapic.DeviceBatch"
-    const val BATCH_READING = "ktrapic.BatchReading"
+    const val BATCH_CLASS = "ktrapic.Batch"
     const val PREFAB = "ktrapic.Prefab"
     const val PREFAB_NAME = "ktrapic.PrefabName"
     const val TEXT = "Text"
     const val SLOTS = "slots"
     const val SLOTS_CLASS = "ktrapic.Slots"
     const val DEVICE_SLOT = "ktrapic.DeviceSlot"
-    const val SLOT_BATCH = "ktrapic.SlotBatch"
-    const val SLOT_READING = "ktrapic.SlotReading"
     const val SLOT_NUMBER = "ktrapic.SlotNumber"
     const val MAX_SLOT = 255
-    val BATCH_METHODS = setOf("average", "sum", "minimum", "maximum")
+    /** The functions ending a `map`, by the game's batch method they read with. */
+    val MAPPED_TERMINALS =
+        mapOf(
+            "ktrapic.average" to "Average",
+            "ktrapic.sum" to "Sum",
+            "ktrapic.min" to "Minimum",
+            "ktrapic.max" to "Maximum",
+        )
     val PIN_GETTERS =
         listOf("d0", "d1", "d2", "d3", "d4", "d5", "db").associateBy { "ktrapic.<get-$it>" }
     val INT_RANGE = Int.MIN_VALUE.toDouble()..Int.MAX_VALUE.toDouble()
