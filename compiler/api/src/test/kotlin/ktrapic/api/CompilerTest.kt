@@ -765,6 +765,12 @@ class CompilerTest {
         if (n > 1 &&
             n < 50)
           db.Setting = 1.0
+        if (n < 0 ||
+            n > 60)
+          db.Ratio = 3.0
+        if (!(
+            n > 3))
+          db.Ratio = 4.0
         """
     for (compact in listOf(false, true)) {
       val result = compiled(source, CompileOptions(compact = compact))
@@ -788,6 +794,10 @@ class CompilerTest {
         that(at(31).map { it.substringBefore(" ") }).containsExactly("blt", "j").inOrder()
         that(at(33).map { it.substringBefore(" ") }).containsExactly("bgt", "j").inOrder()
         that(at(34).map { it.substringBefore(" ") }).containsExactly("blt", "j").inOrder()
+        that(at(36).map { it.substringBefore(" ") }).contains("bltz")
+        that(at(37).map { it.substringBefore(" ") }).contains("bgt")
+        that(at(39).none { it.startsWith("b") }).isTrue()
+        that(at(40).map { it.substringBefore(" ") }).contains("bgt")
       }
     }
   }
