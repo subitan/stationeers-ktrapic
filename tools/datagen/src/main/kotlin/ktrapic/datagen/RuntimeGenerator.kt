@@ -41,6 +41,7 @@ object RuntimeGenerator {
     val slotLogicTypes = enums.enums["LogicSlotType"]?.keys.orEmpty()
     val unknownSlot =
         (prefabs.slotKinds.values.flatten() +
+                typing.booleanSlotLogicTypes +
                 typing.slotReadsAlways +
                 typing.slotWrites.values.flatten() +
                 typing.thingSlotReadsAlways +
@@ -50,6 +51,16 @@ object RuntimeGenerator {
     // A kind the prefab data lacks is a misspelling, and its reads would reach no slot.
     val unknownKinds = typing.thingSlotReadsByKind.keys - prefabs.slotKinds.keys
     require(unknownKinds.isEmpty()) { "thing slot kinds not in the prefab data: $unknownKinds" }
+    // The game decides slot writes by the slot's class, so a kind must be one; some have no
+    // prefab yet, so the prefab data's kinds can't be the check.
+    val writeKinds = typing.slotWrites.keys - "any"
+    val unknownWriteKinds = writeKinds - enums.enums["SlotClass"]?.keys.orEmpty()
+    require(unknownWriteKinds.isEmpty()) { "slot write kinds not in SlotClass: $unknownWriteKinds" }
+    val anyWrites = typing.slotWrites["any"].orEmpty().toSet()
+    val kindWrites = writeKinds.flatMap { typing.slotWrites.getValue(it) }.toSet()
+    require(anyWrites == kindWrites) {
+      "slot writes for any ($anyWrites) aren't those of every kind together ($kindWrites)"
+    }
     val enumNames = enums.enums.keys.map { identifier(it) }.toSet()
     return generate(enums, typing) + PrefabGenerator.generate(prefabs, grouping, enumNames, typing)
   }

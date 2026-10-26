@@ -48,8 +48,10 @@ data class LogicEnums(val source: String, val enums: Map<String, Map<String, Int
  *   every one some slot can write, which an untyped slot allows. The game's rule, not PyTrapIC's
  *   data, which marks every slot logic type writable. The game decides by the slot's class, whose
  *   names the kinds here share; a kind with no prefab yet is listed so the table is the game's
- *   whole rule. `Mode` on `Circuitboard` is a console's rule rather than the slot's: a console can
- *   write `Mode` on any of its slots, and consoles' slots are the only `Circuitboard` slots.
+ *   whole rule. The generator checks that every kind is a `SlotClass` and that `any` is exactly the
+ *   kinds' writes together. `Mode` on `Circuitboard` is a console's rule rather than the slot's: a
+ *   console can write `Mode` on any of its slots, and consoles' slots are the only `Circuitboard`
+ *   slots.
  * @property consoles the prefabs that are the game's consoles with slots. The generator checks that
  *   they are exactly the prefabs with `Circuitboard` slots, and have no other kind of slot, so the
  *   `Mode` that [slotWrites] gives `Circuitboard` is on a console's slots and only there.
