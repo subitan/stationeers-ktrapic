@@ -86,7 +86,11 @@ internal object Parser {
 
   private fun operand(lineNumber: Int, token: String, labels: Set<String>): Operand {
     stringConstant.matchEntire(token)?.let { match ->
-      return StringConstant(StringConstant.Kind.valueOf(match.groupValues[1]), match.groupValues[2])
+      return try {
+        StringConstant(StringConstant.Kind.valueOf(match.groupValues[1]), match.groupValues[2])
+      } catch (e: IllegalArgumentException) {
+        throw Ic10ParseException(lineNumber, e.message ?: "bad string constant: $token")
+      }
     }
     return when {
       token in Register.NAMES -> Register(token)
@@ -113,8 +117,10 @@ internal object Parser {
   }
 
   /**
-   * Splits a line into whitespace-separated tokens and a comment, keeping quoted text whole. As in
-   * the game, the first `#` starts the comment even inside quotes.
+   * Splits a line into whitespace-separated tokens and a comment, keeping quoted text whole. The
+   * game gets the same tokens another way: it replaces each `HASH("...")` and `STR("...")` with its
+   * number before splitting the line on whitespace. As in the game, the first `#` starts the
+   * comment even inside quotes.
    */
   private fun tokenize(lineNumber: Int, raw: String): Pair<List<String>, String?> {
     val tokens = mutableListOf<String>()

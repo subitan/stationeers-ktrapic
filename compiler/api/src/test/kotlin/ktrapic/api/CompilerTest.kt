@@ -20,6 +20,8 @@ class CompilerTest {
   /**
    * Compiles [source], runs it to the end with [db] as the housing, and returns [db]. The compact
    * program runs too, on copies of the devices as they were before, and must leave them the same.
+   * What runs is the emitted text parsed back, as the chip would get it, so a value the text
+   * doesn't carry (such as the sign of a zero) can't pass unnoticed.
    */
   private fun run(
       source: String,
@@ -30,7 +32,7 @@ class CompilerTest {
     val copies = devices.mapValues { (_, device) -> device.copy() }
     for ((compact, runDevices) in listOf(false to devices, true to copies)) {
       val result = compiled(source, CompileOptions(compact = compact))
-      val emulator = Emulator(result.program, runDevices).runUntilHalt()
+      val emulator = Emulator(Program.parse(result.code), runDevices).runUntilHalt()
       assertWithMessage("halted (compact=$compact)\n${result.code}").that(emulator.halted).isTrue()
     }
     for ((pin, device) in devices) {
@@ -215,7 +217,7 @@ class CompilerTest {
   fun `sleep and yield take ticks`() {
     val result = compiled("db.Setting = 1.0\nsleep(1)\nyield()\ndb.Setting = 2.0")
     val db = FakeDevice()
-    val emulator = Emulator(result.program, mapOf("db" to db)).runUntilHalt()
+    val emulator = Emulator(Program.parse(result.code), mapOf("db" to db)).runUntilHalt()
 
     assertThat(db["Setting"]).isEqualTo(2.0)
     assertThat(emulator.ticks).isAtLeast(3)
@@ -538,6 +540,95 @@ class CompilerTest {
 
     assertThat(db["Setting"]).isEqualTo(Double.POSITIVE_INFINITY)
     assertThat(db["Ratio"]).isEqualTo(Double.POSITIVE_INFINITY)
+  }
+
+  @Test
+  fun `negating a Double zero gives negative zero, folded or not`() {
+    val db =
+        run(
+            """
+            var x = 0.0
+            var w = -0.0
+            db.Setting = 1.0 / -x
+            db.Ratio = 1.0 / -0.0
+            db.Mode = 1.0 / w
+            """
+        )
+
+    assertThat(db["Setting"]).isEqualTo(Double.NEGATIVE_INFINITY)
+    assertThat(db["Ratio"]).isEqualTo(Double.NEGATIVE_INFINITY)
+    assertThat(db["Mode"]).isEqualTo(Double.NEGATIVE_INFINITY)
+  }
+
+  @Test
+  fun `a negative-zero constant is compared as zero`() {
+    val source =
+        """
+        var x = 0.0
+        db.Setting = if (x == -0.0) 1.0 else 2.0
+        db.Ratio = when (x) { -0.0 -> 1.0; else -> 2.0 }
+        db.Mode = if (-0.0 < x) 1.0 else 2.0
+        """
+
+    assertThat(compiled(source).code).doesNotContain("mul")
+    val db = run(source)
+    assertThat(db["Setting"]).isEqualTo(1.0)
+    assertThat(db["Ratio"]).isEqualTo(1.0)
+    assertThat(db["Mode"]).isEqualTo(2.0)
+  }
+
+  @Test
+  fun `an Int zero stays positive when negated or folded`() {
+    val db =
+        run(
+            """
+            var n = 0
+            var m = 0 * -1
+            db.Setting = 1.0 / (-n).toDouble()
+            db.Ratio = 1.0 / m.toDouble()
+            """
+        )
+
+    assertThat(db["Setting"]).isEqualTo(Double.POSITIVE_INFINITY)
+    assertThat(db["Ratio"]).isEqualTo(Double.POSITIVE_INFINITY)
+  }
+
+  @Test
+  fun `kotlin math constants are folded`() {
+    val result = compiled("db.Setting = PI\ndb.Ratio = E")
+
+    assertThat(result.code).isEqualTo("s db Setting ${Math.PI}\ns db Ratio ${Math.E}")
+  }
+
+  @Test
+  fun `str text the game can't take is reported where it is`() {
+    for (text in listOf("1234567", "é", "a\\nb", "a\\tb", "a\\u0000")) {
+      val error = error("db.Setting = str(\"$text\")")
+
+      assertWithMessage(text).that(error.line).isEqualTo(3)
+      assertWithMessage(text).that(error.column).isEqualTo(14)
+    }
+  }
+
+  @Test
+  fun `hash text with a line break or another control character is reported where it is`() {
+    val q = "\"\"\""
+    for (argument in listOf("\"a\\nb\"", "\"a\\rb\"", "\"a\\u007f\"", "${q}a\nb$q")) {
+      val error = error("db.Setting = hash($argument)")
+
+      assertWithMessage(argument).that(error.line).isEqualTo(3)
+      assertWithMessage(argument).that(error.column).isEqualTo(14)
+      assertWithMessage(argument).that(error.message).contains("control character")
+    }
+  }
+
+  @Test
+  fun `ordered Boolean comparisons, in outside a for, and coerceIn with a range are rejected`() {
+    assertThat(error("db.Setting = if (d0.Open > d0.On) 1.0 else 0.0").line).isEqualTo(3)
+    assertThat(error("var n = 3\ndb.Setting = if (n in 0..5) 1.0 else 0.0").line).isEqualTo(4)
+    assertThat(error("var n = 3\ndb.Setting = when (n) { in 0..5 -> 1.0; else -> 2.0 }").line)
+        .isEqualTo(4)
+    assertThat(error("var x = 0.5\ndb.Setting = x.coerceIn(0.0..1.0)").line).isEqualTo(4)
   }
 
   @Test

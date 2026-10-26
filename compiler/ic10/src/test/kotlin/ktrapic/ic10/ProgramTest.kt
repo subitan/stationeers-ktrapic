@@ -132,6 +132,16 @@ class ProgramTest {
     assertThrows<IllegalArgumentException> { Hashes.str("é") }
     assertThrows<IllegalArgumentException> { StringConstant(StringConstant.Kind.HASH, "") }
     assertThrows<IllegalArgumentException> { StringConstant(StringConstant.Kind.STR, "a#b") }
+    for (text in listOf("a\nb", "a\rb")) {
+      assertThrows<IllegalArgumentException>(text) {
+        StringConstant(StringConstant.Kind.HASH, text)
+      }
+    }
+    // The game takes any other control character.
+    assertThat(StringConstant(StringConstant.Kind.STR, "a\tb").numericValue)
+        .isEqualTo(0x610962L.toDouble())
+    assertThat(StringConstant(StringConstant.Kind.HASH, "a\u0000").text())
+        .isEqualTo("HASH(\"a\u0000\")")
   }
 
   @Test

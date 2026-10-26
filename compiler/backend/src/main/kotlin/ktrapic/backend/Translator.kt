@@ -497,13 +497,22 @@ internal class Translator {
   private fun stringConstant(call: IrCall, kind: StringConstant.Kind): Value {
     val text = (call.arguments[0] as? IrConst)?.value as? String
     if (text == null) fail(call, "${kind.name.lowercase()}(...) needs a constant string")
-    val constant =
-        try {
-          StringConstant(kind, text)
-        } catch (e: IllegalArgumentException) {
-          fail(call, e.message ?: "bad ${kind.name.lowercase()}(...) text")
-        }
-    return Const(constant.numericValue, constant)
+    // The game would take a tab or another control character other than a line break, but in
+    // source text one is almost certainly a mistake.
+    if (text.any { it.isISOControl() }) {
+      fail(
+          call,
+          "${kind.name.lowercase()}(...) text can't contain a line break or another control character",
+      )
+    }
+    // Both the constructor and numericValue reject text the game can't take (STR's length and
+    // ASCII limits are checked when the value is computed).
+    return try {
+      val constant = StringConstant(kind, text)
+      Const(constant.numericValue, constant)
+    } catch (e: IllegalArgumentException) {
+      fail(call, e.message ?: "bad ${kind.name.lowercase()}(...) text")
+    }
   }
 
   /**
@@ -525,6 +534,9 @@ internal class Translator {
               "${result.operand.text()}, where the JVM wraps",
       )
     }
+    // A constant Int that is zero is +0, as on the JVM, even where the chip's arithmetic (0 * -1)
+    // would give -0.
+    if (int && result is Const && result.number == 0.0) return Const(0.0)
     return result
   }
 
@@ -543,7 +555,11 @@ internal class Translator {
         "div" ->
             if (int) intDivision(call, a(), b()) else arithmetic("div", a(), b()) { x, y -> x / y }
         "rem" -> remainder(call, a(), b(), int)
-        "unaryMinus" -> arithmetic("sub", Const(0.0), a()) { x, y -> x - y }
+        // A Double is negated by multiplying by -1, so -0.0 is negative zero as on the JVM (0 - x
+        // would give +0.0). An Int has no negative zero, so 0 - x is right for it.
+        "unaryMinus" ->
+            if (int) arithmetic("sub", Const(0.0), a()) { x, y -> x - y }
+            else arithmetic("mul", a(), Const(-1.0)) { x, _ -> -x }
         "unaryPlus" -> a()
         "inc" -> arithmetic("add", a(), Const(1.0)) { x, y -> x + y }
         "dec" -> arithmetic("sub", a(), Const(1.0)) { x, y -> x - y }
@@ -839,7 +855,16 @@ internal class Translator {
       }
     }
     val boolean = left.type.isBoolean()
-    val (a, b) = operands(listOf(left, right)).map { if (boolean) truth(it) else it }
+    // Comparisons can't tell -0.0 from 0.0, so a negative-zero constant is compared as 0, which
+    // needs no line to compute and can use the `z` forms.
+    val (a, b) =
+        operands(listOf(left, right)).map {
+          when {
+            boolean -> truth(it)
+            it is Const && it.number.toRawBits() == NEGATIVE_ZERO_BITS -> Const(0.0)
+            else -> it
+          }
+        }
     return Comparison(condition, a, b, mayBeNaN = condition != "eq" && !boolean)
   }
 
@@ -1152,10 +1177,14 @@ internal class Translator {
 
   private fun operand(value: Value): TirOperand =
       when (value) {
-        // The chip rejects `nan` written as an operand, so NaN is computed as 0 / 0 instead.
+        // The chip rejects `nan` written as an operand, so NaN is computed as 0 / 0 instead, and
+        // negative zero as 0 * -1: the chip reads a number with the runtime's decimal parser,
+        // which is not known to keep the sign of `-0`.
         is Const ->
             if (value.number.isNaN()) {
               newVReg().also { emit("div", it, Fixed(Number(0.0)), Fixed(Number(0.0))) }
+            } else if (value.number.toRawBits() == NEGATIVE_ZERO_BITS) {
+              newVReg().also { emit("mul", it, Fixed(Number(0.0)), Fixed(Number(-1.0))) }
             } else {
               Fixed(value.operand)
             }
@@ -1178,6 +1207,7 @@ internal class Translator {
     val PIN_GETTERS =
         listOf("d0", "d1", "d2", "d3", "d4", "d5", "db").associateBy { "ktrapic.<get-$it>" }
     val INT_RANGE = Int.MIN_VALUE.toDouble()..Int.MAX_VALUE.toDouble()
+    val NEGATIVE_ZERO_BITS = (-0.0).toRawBits()
     const val END_LABEL = "end"
     /**
      * Register and pin names, which a function label never takes. Nor does it take a constant's

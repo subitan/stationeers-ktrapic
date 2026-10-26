@@ -18,7 +18,10 @@ kt_junit5_tests(
     srcs = glob(["src/test/kotlin/**/*.kt"]),
     associates = [":api"],
     size = "medium",
-    data = ["//test/cases"],
+    data = [
+        "//docs",
+        "//test/cases",
+    ],
     deps = [
         "//compiler/ic10",
         "//emu",

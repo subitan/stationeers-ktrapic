@@ -105,6 +105,15 @@ object Ic10Math {
     return if (remainder < 0.0) remainder + b else remainder
   }
 
+  /**
+   * `max`, as the game's runtime computes it: [a] if it is greater or NaN, else [b]. Unlike the
+   * JVM's, it returns [b] when the two are zeros of different sign.
+   */
+  fun max(a: Double, b: Double) = if (a > b || a.isNaN()) a else b
+
+  /** `min`: [a] if it is less or NaN, else [b], as for [max]. */
+  fun min(a: Double, b: Double) = if (a < b || a.isNaN()) a else b
+
   /** `sgn`: 1, -1 or 0 (NaN gives 0). */
   fun sign(a: Double) = if (a > 0.0) 1.0 else if (a < 0.0) -1.0 else 0.0
 }
