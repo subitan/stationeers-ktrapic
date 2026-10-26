@@ -76,5 +76,81 @@
     "StructureConsole",
     "StructureConsoleDual",
     "StructureConsoleMonitor"
+  ],
+  "thingSlotReadsAlways": [
+    "Occupied",
+    "OccupantHash",
+    "Quantity",
+    "Damage",
+    "Class",
+    "MaxQuantity",
+    "PrefabHash",
+    "ReferenceId"
+  ],
+  "thingSlotReadsByKind": {
+    "AirTank": [
+      "Pressure",
+      "Temperature"
+    ],
+    "Battery": [
+      "Charge",
+      "ChargeRatio"
+    ],
+    "Filter": [
+      "FilterType"
+    ],
+    "Filtered": [
+      "FilterType"
+    ],
+    "GasCanister": [
+      "Pressure",
+      "Temperature"
+    ]
+  },
+  "slottedThings": [
+    "DynamicGPR",
+    "DynamicLight",
+    "ItemAdvancedTablet",
+    "ItemAngleGrinder",
+    "ItemArcWelder",
+    "ItemBeacon",
+    "ItemDrill",
+    "ItemEmergencyAngleGrinder",
+    "ItemEmergencyArcWelder",
+    "ItemEmergencyDrill",
+    "ItemFlashlight",
+    "ItemGasMask",
+    "ItemHardHat",
+    "ItemHardJetpack",
+    "ItemHardSuit",
+    "ItemJetpackBasic",
+    "ItemLabeller",
+    "ItemLaptop",
+    "ItemLiquidVacuum",
+    "ItemMKIIAngleGrinder",
+    "ItemMKIIArcWelder",
+    "ItemMKIIDrill",
+    "ItemMKIIMiningDrill",
+    "ItemMiningDrill",
+    "ItemMiningDrillHeavy",
+    "ItemNVG",
+    "ItemOreDetector",
+    "ItemPlantSampler",
+    "ItemRemoteDetonator",
+    "ItemSensorLenses",
+    "ItemSpacepack",
+    "ItemSuitHARM",
+    "ItemTablet",
+    "ItemTerrainManipulator",
+    "ItemWearLamp",
+    "PortableSolarPanel",
+    "Robot",
+    "Rover_MkI"
+  ],
+  "slottedStructures": [
+    "H2Combustor",
+    "Landingpad_GasTankConnectorPiece",
+    "Landingpad_LiquidTankConnectorPiece",
+    "LogicStepSequencer8"
   ]
 }

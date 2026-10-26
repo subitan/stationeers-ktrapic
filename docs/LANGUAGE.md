@@ -252,10 +252,12 @@ GasTankStorages.all.forEach { it.GasCanister.Open = true }
 
 A slot, or a device's or batch's `slots`, can be held in a `val`.
 
-An item that runs a program, such as a suit or a tablet, has other rules: none of its slots can
-be written, and they can't read `SortingClass`, `FreeSlots` or `TotalSlots`. Its typed slots have
-no writes, but they offer those three as a structure's slots do, so reading one of them there is
-an error on the chip.
+A thing that isn't a structure, such as a tablet, a suit, a tool, the AIMeE bot or a rover, has
+other rules: none of its slots can be written, and they read fewer logic types (not
+`SortingClass`, `FreeSlots` or `TotalSlots`). Its typed slots (`ItemBatterySlot`,
+`ItemCommonSlot`, ...) follow those rules, so `AdvancedTablets.at(db).Battery.Charge` compiles and
+anything a thing's slot can't do is a compile error. A pin's untyped slots don't know which kind
+of device they're on, so they offer a structure's.
 
 ## Intrinsics and maths
 

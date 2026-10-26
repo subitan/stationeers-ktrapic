@@ -42,9 +42,14 @@ object RuntimeGenerator {
     val unknownSlot =
         (prefabs.slotKinds.values.flatten() +
                 typing.slotReadsAlways +
-                typing.slotWrites.values.flatten())
+                typing.slotWrites.values.flatten() +
+                typing.thingSlotReadsAlways +
+                typing.thingSlotReadsByKind.values.flatten())
             .toSet() - slotLogicTypes
     require(unknownSlot.isEmpty()) { "slot logic types not in LogicSlotType: $unknownSlot" }
+    // A kind the prefab data lacks is a misspelling, and its reads would reach no slot.
+    val unknownKinds = typing.thingSlotReadsByKind.keys - prefabs.slotKinds.keys
+    require(unknownKinds.isEmpty()) { "thing slot kinds not in the prefab data: $unknownKinds" }
     val enumNames = enums.enums.keys.map { identifier(it) }.toSet()
     return generate(enums, typing) + PrefabGenerator.generate(prefabs, grouping, enumNames, typing)
   }

@@ -53,6 +53,15 @@ data class LogicEnums(val source: String, val enums: Map<String, Map<String, Int
  * @property consoles the prefabs that are the game's consoles with slots. The generator checks that
  *   they are exactly the prefabs with `Circuitboard` slots, and have no other kind of slot, so the
  *   `Mode` that [slotWrites] gives `Circuitboard` is on a console's slots and only there.
+ * @property thingSlotReadsAlways the slot logic types the game lets a program read on any slot of a
+ *   thing that isn't a structure (an item, a robot, a rover): fewer than a structure's. A thing's
+ *   slots can't be written at all.
+ * @property thingSlotReadsByKind the further slot logic types a thing's slot of each kind can read.
+ *   Each kind must be one of the prefab data's slot kinds, which the generator checks.
+ * @property slottedThings the prefabs with slots that are things rather than structures. Prefabs
+ *   named `Structure...` are structures; every other prefab with slots must be listed here or in
+ *   [slottedStructures], which the generator checks, since a name doesn't always say which it is.
+ * @property slottedStructures the prefabs with slots that are structures without being named so.
  */
 data class Typing(
     val operandEnums: List<String>,
@@ -61,6 +70,10 @@ data class Typing(
     val slotReadsAlways: List<String> = emptyList(),
     val slotWrites: Map<String, List<String>> = emptyMap(),
     val consoles: List<String> = emptyList(),
+    val thingSlotReadsAlways: List<String> = emptyList(),
+    val thingSlotReadsByKind: Map<String, List<String>> = emptyMap(),
+    val slottedThings: List<String> = emptyList(),
+    val slottedStructures: List<String> = emptyList(),
 ) {
   companion object {
     fun fromJson(text: String): Typing {
@@ -74,6 +87,12 @@ data class Typing(
             kind to types.asJsonArray.map { it.asString }
           } ?: emptyMap(),
           root["consoles"]?.asJsonArray?.map { it.asString } ?: emptyList(),
+          root["thingSlotReadsAlways"]?.asJsonArray?.map { it.asString } ?: emptyList(),
+          root["thingSlotReadsByKind"]?.asJsonObject?.entrySet()?.associate { (kind, types) ->
+            kind to types.asJsonArray.map { it.asString }
+          } ?: emptyMap(),
+          root["slottedThings"]?.asJsonArray?.map { it.asString } ?: emptyList(),
+          root["slottedStructures"]?.asJsonArray?.map { it.asString } ?: emptyList(),
       )
     }
   }

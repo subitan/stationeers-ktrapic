@@ -171,6 +171,32 @@ class SlotTest {
   }
 
   @Test
+  fun `a thing's slots read only what the game lets a thing's slots read, and can't be written`() {
+    val code =
+        compiled(
+                """
+                val tablet = AdvancedTablets.at(db)
+                db.Setting = tablet.Battery.Charge + tablet.slots[1].Quantity
+                """
+            )
+            .code
+    assertThat(code).contains("ls r0 db 0 Charge")
+    assertThat(code).contains("ls r1 db 1 Quantity")
+
+    for ((source, at) in
+        listOf(
+            // A structure's slot reads these; a thing's slot can't.
+            "val x = 1\nval s = AdvancedTablets.at(db).slots[0].SortingClass" to (2 to 41),
+            "val x = 1\nval s = Robots.at(d0).slots[0].TotalSlots" to (2 to 32),
+            // A thing's slots can't be written at all.
+            "val x = 1\nAdvancedTablets.at(db).slots[1].On = true" to (2 to 33),
+        )) {
+      val error = error(source)
+      assertWithMessage(source).that(error.line to error.column).isEqualTo(at)
+    }
+  }
+
+  @Test
   fun `writes the game doesn't allow are compile errors`() {
     // A battery slot can't write Charge; a named batch has no slot writes; a slot has no value.
     for ((source, at) in
