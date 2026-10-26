@@ -2,2647 +2,7768 @@
 
 # Devices
 
-Every prefab a program can name, with its logic types, and the game's value enums. The [language guide](LANGUAGE.md#devices) says how to use them.
+The typed devices, slots and enums a program can name, as Kotlin declarations: 357 prefabs in all. The [language guide](LANGUAGE.md#devices) says how to use them. Search this page for a game prefab name (`StructureGrowLight`) to find its type.
 
-A prefab is used through its entry point: `GrowLights.at(d0)` is the grow light on pin `d0`, `GrowLights.all` every one on the chip's network, and `GrowLights.named("Potatoes")` every one with that name. Logic types marked **rw** can be written; the others can only be read. Any device can also be used untyped, as `d0` to `d5` or `db`, with every logic type.
-
-- [Index](#index)
+- [Using a device](#using-a-device)
 - [Families](#families)
-- [Devices by prefab](#devices-by-prefab)
+- Devices: [A](#a) · [B](#b) · [C](#c) · [D](#d) · [E](#e) · [F](#f) · [G](#g) · [H](#h) · [I](#i) · [J](#j) · [K](#k) · [L](#l) · [M](#m) · [N](#n) · [O](#o) · [P](#p) · [R](#r) · [S](#s) · [T](#t) · [U](#u) · [V](#v) · [W](#w)
+- [Slots](#slots)
 - [Enums](#enums)
 
-## Index
+## Using a device
 
-357 prefabs.
+Each prefab has a device type, such as `GrowLight`, and an entry point named after it in the plural, such as `GrowLights`, which every device below names in its comment. Every entry point has the same three members:
 
-| Prefab | Entry point | Type |
-|---|---|---|
-| [Battery_Wireless_cell](#battery_wireless_cell) | `Battery_Wireless_cells` | `Battery_Wireless_cell` |
-| [Battery_Wireless_cell_Big](#battery_wireless_cell_big) | `Battery_Wireless_cell_Bigs` | `Battery_Wireless_cell_Big` |
-| [CompositeRollCover](#compositerollcover) | `CompositeRollCovers` | `CompositeRollCover` |
-| [DeviceLfoVolume](#devicelfovolume) | `DeviceLfoVolumes` | `DeviceLfoVolume` |
-| [DeviceStepUnit](#devicestepunit) | `DeviceStepUnits` | `DeviceStepUnit` |
-| [DynamicGPR](#dynamicgpr) | `DynamicGPRs` | `DynamicGPR` |
-| [DynamicLight](#dynamiclight) | `DynamicLights` | `DynamicLight` |
-| [H2Combustor](#h2combustor) | `H2Combustors` | `H2Combustor` |
-| [ItemAdvancedTablet](#itemadvancedtablet) | `AdvancedTablets` | `AdvancedTablet` |
-| [ItemAngleGrinder](#itemanglegrinder) | `AngleGrinders` | `AngleGrinder` |
-| [ItemArcWelder](#itemarcwelder) | `ArcWelders` | `ArcWelder` |
-| [ItemBatteryCell](#itembatterycell) | `BatteryCells` | `BatteryCell` |
-| [ItemBatteryCellLarge](#itembatterycelllarge) | `BatteryCellLarges` | `BatteryCellLarge` |
-| [ItemBatteryCellNuclear](#itembatterycellnuclear) | `BatteryCellNuclears` | `BatteryCellNuclear` |
-| [ItemBeacon](#itembeacon) | `ItemBeacons` | `ItemBeacon` |
-| [ItemDrill](#itemdrill) | `Drills` | `Drill` |
-| [ItemEmergencyAngleGrinder](#itememergencyanglegrinder) | `EmergencyAngleGrinders` | `EmergencyAngleGrinder` |
-| [ItemEmergencyArcWelder](#itememergencyarcwelder) | `EmergencyArcWelders` | `EmergencyArcWelder` |
-| [ItemEmergencyDrill](#itememergencydrill) | `EmergencyDrills` | `EmergencyDrill` |
-| [ItemEmergencySpaceHelmet](#itememergencyspacehelmet) | `EmergencySpaceHelmets` | `EmergencySpaceHelmet` |
-| [ItemFlashlight](#itemflashlight) | `Flashlights` | `Flashlight` |
-| [ItemGasMask](#itemgasmask) | `GasMasks` | `GasMask` |
-| [ItemHardHat](#itemhardhat) | `HardHats` | `HardHat` |
-| [ItemHardJetpack](#itemhardjetpack) | `HardJetpacks` | `HardJetpack` |
-| [ItemHardSuit](#itemhardsuit) | `HardSuits` | `HardSuit` |
-| [ItemHardsuitHelmet](#itemhardsuithelmet) | `HardsuitHelmets` | `HardsuitHelmet` |
-| [ItemIcarusHelmet](#itemicarushelmet) | `IcarusHelmets` | `IcarusHelmet` |
-| [ItemIntegratedCircuit10](#itemintegratedcircuit10) | `IntegratedCircuit10s` | `IntegratedCircuit10` |
-| [ItemJetpackBasic](#itemjetpackbasic) | `JetpackBasics` | `JetpackBasic` |
-| [ItemLabeller](#itemlabeller) | `Labellers` | `Labeller` |
-| [ItemLaptop](#itemlaptop) | `Laptops` | `Laptop` |
-| [ItemLiquidVacuum](#itemliquidvacuum) | `LiquidVacuums` | `LiquidVacuum` |
-| [ItemMiningDrill](#itemminingdrill) | `MiningDrills` | `MiningDrill` |
-| [ItemMiningDrillHeavy](#itemminingdrillheavy) | `MiningDrillHeavies` | `MiningDrillHeavy` |
-| [ItemMKIIAngleGrinder](#itemmkiianglegrinder) | `MKIIAngleGrinders` | `MKIIAngleGrinder` |
-| [ItemMKIIArcWelder](#itemmkiiarcwelder) | `MKIIArcWelders` | `MKIIArcWelder` |
-| [ItemMKIIDrill](#itemmkiidrill) | `MKIIDrills` | `MKIIDrill` |
-| [ItemMKIIMiningDrill](#itemmkiiminingdrill) | `MKIIMiningDrills` | `MKIIMiningDrill` |
-| [ItemNVG](#itemnvg) | `NVGs` | `NVG` |
-| [ItemOreDetector](#itemoredetector) | `OreDetectors` | `OreDetector` |
-| [ItemPlantSampler](#itemplantsampler) | `PlantSamplers` | `PlantSampler` |
-| [ItemRemoteDetonator](#itemremotedetonator) | `RemoteDetonators` | `RemoteDetonator` |
-| [ItemSensorLenses](#itemsensorlenses) | `SensorLenseses` | `SensorLenses` |
-| [ItemSpaceHelmet](#itemspacehelmet) | `SpaceHelmets` | `SpaceHelmet` |
-| [ItemSpacepack](#itemspacepack) | `Spacepacks` | `Spacepack` |
-| [ItemSuitHARM](#itemsuitharm) | `SuitHARMs` | `SuitHARM` |
-| [ItemSuitHelmetHARM](#itemsuithelmetharm) | `SuitHelmetHARMs` | `SuitHelmetHARM` |
-| [ItemTablet](#itemtablet) | `Tablets` | `Tablet` |
-| [ItemTerrainManipulator](#itemterrainmanipulator) | `TerrainManipulators` | `TerrainManipulator` |
-| [ItemWearLamp](#itemwearlamp) | `WearLamps` | `WearLamp` |
-| [ItemWirelessBatteryCellExtraLarge](#itemwirelessbatterycellextralarge) | `WirelessBatteryCellExtraLarges` | `WirelessBatteryCellExtraLarge` |
-| [Landingpad_DataConnectionPiece](#landingpad_dataconnectionpiece) | `Landingpad_DataConnectionPieces` | `Landingpad_DataConnectionPiece` |
-| [Landingpad_GasConnectorInwardPiece](#landingpad_gasconnectorinwardpiece) | `Landingpad_GasConnectorInwardPieces` | `Landingpad_GasConnectorInwardPiece` |
-| [Landingpad_GasConnectorOutwardPiece](#landingpad_gasconnectoroutwardpiece) | `Landingpad_GasConnectorOutwardPieces` | `Landingpad_GasConnectorOutwardPiece` |
-| [Landingpad_GasTankConnectorPiece](#landingpad_gastankconnectorpiece) | `Landingpad_GasTankConnectorPieces` | `Landingpad_GasTankConnectorPiece` |
-| [Landingpad_LiquidConnectorInwardPiece](#landingpad_liquidconnectorinwardpiece) | `Landingpad_LiquidConnectorInwardPieces` | `Landingpad_LiquidConnectorInwardPiece` |
-| [Landingpad_LiquidConnectorOutwardPiece](#landingpad_liquidconnectoroutwardpiece) | `Landingpad_LiquidConnectorOutwardPieces` | `Landingpad_LiquidConnectorOutwardPiece` |
-| [Landingpad_LiquidTankConnectorPiece](#landingpad_liquidtankconnectorpiece) | `Landingpad_LiquidTankConnectorPieces` | `Landingpad_LiquidTankConnectorPiece` |
-| [Landingpad_ThreshholdPiece](#landingpad_threshholdpiece) | `Landingpad_ThreshholdPieces` | `Landingpad_ThreshholdPiece` |
-| [LogicStepSequencer8](#logicstepsequencer8) | `LogicStepSequencer8s` | `LogicStepSequencer8` |
-| [PassiveSpeaker](#passivespeaker) | `PassiveSpeakers` | `PassiveSpeaker` |
-| [PortableSolarPanel](#portablesolarpanel) | `PortableSolarPanels` | `PortableSolarPanel` |
-| [Robot](#robot) | `Robots` | `Robot` |
-| [Rover_MkI](#rover_mki) | `Rover_MkIs` | `Rover_MkI` |
-| [StopWatch](#stopwatch) | `StopWatches` | `StopWatch` |
-| [StructureAccessBridge](#structureaccessbridge) | `AccessBridges` | `AccessBridge` |
-| [StructureActiveVent](#structureactivevent) | `ActiveVents` | `ActiveVent` |
-| [StructureAdvancedComposter](#structureadvancedcomposter) | `AdvancedComposters` | `AdvancedComposter` |
-| [StructureAdvancedFurnace](#structureadvancedfurnace) | `AdvancedFurnaces` | `AdvancedFurnace` |
-| [StructureAdvancedPackagingMachine](#structureadvancedpackagingmachine) | `AdvancedPackagingMachines` | `AdvancedPackagingMachine` |
-| [StructureAirConditioner](#structureairconditioner) | `AirConditioners` | `AirConditioner` |
-| [StructureAirlock](#structureairlock) | `Airlocks` | `Airlock` |
-| [StructureAirlockGate](#structureairlockgate) | `AirlockGates` | `AirlockGate` |
-| [StructureAirlockWide](#structureairlockwide) | `AirlockWides` | `AirlockWide` |
-| [StructureArcFurnace](#structurearcfurnace) | `ArcFurnaces` | `ArcFurnace` |
-| [StructureAreaPowerControl](#structureareapowercontrol) | `AreaPowerControls` | `AreaPowerControl` |
-| [StructureAreaPowerControlReversed](#structureareapowercontrolreversed) | `AreaPowerControlReverseds` | `AreaPowerControlReversed` |
-| [StructureAutolathe](#structureautolathe) | `Autolathes` | `Autolathe` |
-| [StructureAutomatedOven](#structureautomatedoven) | `AutomatedOvens` | `AutomatedOven` |
-| [StructureAutoMinerSmall](#structureautominersmall) | `AutoMinerSmalls` | `AutoMinerSmall` |
-| [StructureBackLiquidPressureRegulator](#structurebackliquidpressureregulator) | `BackLiquidPressureRegulators` | `BackLiquidPressureRegulator` |
-| [StructureBackPressureRegulator](#structurebackpressureregulator) | `BackPressureRegulators` | `BackPressureRegulator` |
-| [StructureBasketHoop](#structurebaskethoop) | `BasketHoops` | `BasketHoop` |
-| [StructureBattery](#structurebattery) | `Batteries.Station` | `Battery.Station` |
-| [StructureBatteryCharger](#structurebatterycharger) | `BatteryChargers` | `BatteryCharger` |
-| [StructureBatteryChargerSmall](#structurebatterychargersmall) | `BatteryChargerSmalls` | `BatteryChargerSmall` |
-| [StructureBatteryLarge](#structurebatterylarge) | `Batteries.Large` | `Battery.Large` |
-| [StructureBatteryMedium](#structurebatterymedium) | `Batteries.Medium` | `Battery.Medium` |
-| [StructureBatterySmall](#structurebatterysmall) | `Batteries.Small` | `Battery.Small` |
-| [StructureBeacon](#structurebeacon) | `StructureBeacons` | `StructureBeacon` |
-| [StructureBench](#structurebench) | `Benches` | `Bench` |
-| [StructureBench1](#structurebench1) | `Bench1s` | `Bench1` |
-| [StructureBench2](#structurebench2) | `Bench2s` | `Bench2` |
-| [StructureBench3](#structurebench3) | `Bench3s` | `Bench3` |
-| [StructureBench4](#structurebench4) | `Bench4s` | `Bench4` |
-| [StructureBlastDoor](#structureblastdoor) | `BlastDoors` | `BlastDoor` |
-| [StructureBlockBed](#structureblockbed) | `BlockBeds` | `BlockBed` |
-| [StructureCableAnalysizer](#structurecableanalysizer) | `CableAnalysizers` | `CableAnalysizer` |
-| [StructureCamera](#structurecamera) | `Cameras` | `Camera` |
-| [StructureCapsuleTankGas](#structurecapsuletankgas) | `CapsuleTankGases` | `CapsuleTankGas` |
-| [StructureCapsuleTankLiquid](#structurecapsuletankliquid) | `CapsuleTankLiquids` | `CapsuleTankLiquid` |
-| [StructureCargoStorageMedium](#structurecargostoragemedium) | `CargoStorageMediums` | `CargoStorageMedium` |
-| [StructureCargoStorageSmall](#structurecargostoragesmall) | `CargoStorageSmalls` | `CargoStorageSmall` |
-| [StructureCentrifuge](#structurecentrifuge) | `Centrifuges` | `Centrifuge` |
-| [StructureChuteBin](#structurechutebin) | `ChuteBins` | `ChuteBin` |
-| [StructureChuteDigitalFlipFlopSplitterLeft](#structurechutedigitalflipflopsplitterleft) | `ChuteDigitalFlipFlopSplitterLefts` | `ChuteDigitalFlipFlopSplitterLeft` |
-| [StructureChuteDigitalFlipFlopSplitterRight](#structurechutedigitalflipflopsplitterright) | `ChuteDigitalFlipFlopSplitterRights` | `ChuteDigitalFlipFlopSplitterRight` |
-| [StructureChuteDigitalValveLeft](#structurechutedigitalvalveleft) | `ChuteDigitalValveLefts` | `ChuteDigitalValveLeft` |
-| [StructureChuteDigitalValveRight](#structurechutedigitalvalveright) | `ChuteDigitalValveRights` | `ChuteDigitalValveRight` |
-| [StructureChuteExportBin](#structurechuteexportbin) | `ChuteExportBins` | `ChuteExportBin` |
-| [StructureChuteInlet](#structurechuteinlet) | `ChuteInlets` | `ChuteInlet` |
-| [StructureChuteOutlet](#structurechuteoutlet) | `ChuteOutlets` | `ChuteOutlet` |
-| [StructureChuteUmbilicalMale](#structurechuteumbilicalmale) | `ChuteUmbilicalMales` | `ChuteUmbilicalMale` |
-| [StructureCircuitHousing](#structurecircuithousing) | `CircuitHousings` | `CircuitHousing` |
-| [StructureCircuitHousingCompact](#structurecircuithousingcompact) | `CircuitHousingCompacts` | `CircuitHousingCompact` |
-| [StructureCombustionCentrifuge](#structurecombustioncentrifuge) | `CombustionCentrifuges` | `CombustionCentrifuge` |
-| [StructureCombustionDeepMiner](#structurecombustiondeepminer) | `CombustionDeepMiners` | `CombustionDeepMiner` |
-| [StructureCompositeDoor](#structurecompositedoor) | `CompositeDoors` | `CompositeDoor` |
-| [StructureCompositeWindowShutterController](#structurecompositewindowshuttercontroller) | `CompositeWindowShutterControllers` | `CompositeWindowShutterController` |
-| [StructureComputer](#structurecomputer) | `Computers` | `Computer` |
-| [StructureComputerBigScreen](#structurecomputerbigscreen) | `ComputerBigScreens` | `ComputerBigScreen` |
-| [StructureComputerBigScreenWallMounted](#structurecomputerbigscreenwallmounted) | `ComputerBigScreenWallMounteds` | `ComputerBigScreenWallMounted` |
-| [StructureComputerUpright](#structurecomputerupright) | `ComputerUprights` | `ComputerUpright` |
-| [StructureCondensationChamber](#structurecondensationchamber) | `CondensationChambers` | `CondensationChamber` |
-| [StructureCondensationValve](#structurecondensationvalve) | `CondensationValves` | `CondensationValve` |
-| [StructureConsole](#structureconsole) | `Consoles` | `Console` |
-| [StructureConsoleDual](#structureconsoledual) | `ConsoleDuals` | `ConsoleDual` |
-| [StructureConsoleLED1x2](#structureconsoleled1x2) | `LedDisplays.Medium` | `LedDisplay.Medium` |
-| [StructureConsoleLED1x3](#structureconsoleled1x3) | `LedDisplays.Large` | `LedDisplay.Large` |
-| [StructureConsoleLED5](#structureconsoleled5) | `LedDisplays.Small` | `LedDisplay.Small` |
-| [StructureConsoleMonitor](#structureconsolemonitor) | `ConsoleMonitors` | `ConsoleMonitor` |
-| [StructureCornerLocker](#structurecornerlocker) | `CornerLockers` | `CornerLocker` |
-| [StructureCrewUmbilical](#structurecrewumbilical) | `CrewUmbilicals` | `CrewUmbilical` |
-| [StructureCryoTubeHorizontal](#structurecryotubehorizontal) | `CryoTubeHorizontals` | `CryoTubeHorizontal` |
-| [StructureCryoTubeVertical](#structurecryotubevertical) | `CryoTubeVerticals` | `CryoTubeVertical` |
-| [StructureDaylightSensor](#structuredaylightsensor) | `DaylightSensors` | `DaylightSensor` |
-| [StructureDeepMiner](#structuredeepminer) | `DeepMiners` | `DeepMiner` |
-| [StructureDigitalValve](#structuredigitalvalve) | `DigitalValves` | `DigitalValve` |
-| [StructureDiode](#structurediode) | `Diodes` | `Diode` |
-| [StructureDiodeSlide](#structurediodeslide) | `DiodeSlides` | `DiodeSlide` |
-| [StructureDrinkingFountain2x1](#structuredrinkingfountain2x1) | `DrinkingFountain2x1s` | `DrinkingFountain2x1` |
-| [StructureElectrolyzer](#structureelectrolyzer) | `Electrolyzers` | `Electrolyzer` |
-| [StructureElectronicsPrinter](#structureelectronicsprinter) | `ElectronicsPrinters` | `ElectronicsPrinter` |
-| [StructureElevatorLevelFront](#structureelevatorlevelfront) | `ElevatorLevelFronts` | `ElevatorLevelFront` |
-| [StructureElevatorLevelIndustrial](#structureelevatorlevelindustrial) | `ElevatorLevelIndustrials` | `ElevatorLevelIndustrial` |
-| [StructureElevatorShaft](#structureelevatorshaft) | `ElevatorShafts` | `ElevatorShaft` |
-| [StructureElevatorShaftIndustrial](#structureelevatorshaftindustrial) | `ElevatorShaftIndustrials` | `ElevatorShaftIndustrial` |
-| [StructureEmergencyButton](#structureemergencybutton) | `EmergencyButtons` | `EmergencyButton` |
-| [StructureEvaporationChamber](#structureevaporationchamber) | `EvaporationChambers` | `EvaporationChamber` |
-| [StructureExpansionValve](#structureexpansionvalve) | `ExpansionValves` | `ExpansionValve` |
-| [StructureFermenter](#structurefermenter) | `Fermenters` | `Fermenter` |
-| [StructureFiltration](#structurefiltration) | `Filtrations` | `Filtration` |
-| [StructureFiltrationLiquid](#structurefiltrationliquid) | `FiltrationLiquids` | `FiltrationLiquid` |
-| [StructureFlashingLight](#structureflashinglight) | `FlashingLights` | `FlashingLight` |
-| [StructureFridgeBig](#structurefridgebig) | `FridgeBigs` | `FridgeBig` |
-| [StructureFridgeSmall](#structurefridgesmall) | `FridgeSmalls` | `FridgeSmall` |
-| [StructureFurnace](#structurefurnace) | `Furnaces` | `Furnace` |
-| [StructureGasGenerator](#structuregasgenerator) | `GasGenerators` | `GasGenerator` |
-| [StructureGasMixer](#structuregasmixer) | `GasMixers` | `GasMixer` |
-| [StructureGasSensor](#structuregassensor) | `GasSensors` | `GasSensor` |
-| [StructureGasTankStorage](#structuregastankstorage) | `GasTankStorages` | `GasTankStorage` |
-| [StructureGasUmbilicalFemale](#structuregasumbilicalfemale) | `GasUmbilicalFemales` | `GasUmbilicalFemale` |
-| [StructureGasUmbilicalFemaleSide](#structuregasumbilicalfemaleside) | `GasUmbilicalFemaleSides` | `GasUmbilicalFemaleSide` |
-| [StructureGasUmbilicalMale](#structuregasumbilicalmale) | `GasUmbilicalMales` | `GasUmbilicalMale` |
-| [StructureGlassDoor](#structureglassdoor) | `GlassDoors` | `GlassDoor` |
-| [StructureGovernedGasEngine](#structuregovernedgasengine) | `GovernedGasEngines` | `GovernedGasEngine` |
-| [StructureGroundBasedTelescope](#structuregroundbasedtelescope) | `GroundBasedTelescopes` | `GroundBasedTelescope` |
-| [StructureGrowLight](#structuregrowlight) | `GrowLights` | `GrowLight` |
-| [StructureHarvie](#structureharvie) | `Harvies` | `Harvie` |
-| [StructureHorizontalAutoMiner](#structurehorizontalautominer) | `HorizontalAutoMiners` | `HorizontalAutoMiner` |
-| [StructureHydraulicPipeBender](#structurehydraulicpipebender) | `HydraulicPipeBenders` | `HydraulicPipeBender` |
-| [StructureHydroponicsStation](#structurehydroponicsstation) | `HydroponicsStations` | `HydroponicsStation` |
-| [StructureHydroponicsTrayData](#structurehydroponicstraydata) | `HydroponicsTrayDatas` | `HydroponicsTrayData` |
-| [StructureIceCrusher](#structureicecrusher) | `IceCrushers` | `IceCrusher` |
-| [StructureIgniter](#structureigniter) | `Igniters` | `Igniter` |
-| [StructureInteriorDoorGlass](#structureinteriordoorglass) | `InteriorDoorGlasses` | `InteriorDoorGlass` |
-| [StructureInteriorDoorPadded](#structureinteriordoorpadded) | `InteriorDoorPaddeds` | `InteriorDoorPadded` |
-| [StructureInteriorDoorPaddedThin](#structureinteriordoorpaddedthin) | `InteriorDoorPaddedThins` | `InteriorDoorPaddedThin` |
-| [StructureInteriorDoorTriangle](#structureinteriordoortriangle) | `InteriorDoorTriangles` | `InteriorDoorTriangle` |
-| [StructureKlaxon](#structureklaxon) | `Klaxons` | `Klaxon` |
-| [StructureLargeDirectHeatExchangeGastoGas](#structurelargedirectheatexchangegastogas) | `LargeDirectHeatExchangeGastoGases` | `LargeDirectHeatExchangeGastoGas` |
-| [StructureLargeDirectHeatExchangeGastoLiquid](#structurelargedirectheatexchangegastoliquid) | `LargeDirectHeatExchangeGastoLiquids` | `LargeDirectHeatExchangeGastoLiquid` |
-| [StructureLargeDirectHeatExchangeLiquidtoLiquid](#structurelargedirectheatexchangeliquidtoliquid) | `LargeDirectHeatExchangeLiquidtoLiquids` | `LargeDirectHeatExchangeLiquidtoLiquid` |
-| [StructureLargeExtendableRadiator](#structurelargeextendableradiator) | `LargeExtendableRadiators` | `LargeExtendableRadiator` |
-| [StructureLargeHangerDoor](#structurelargehangerdoor) | `LargeHangerDoors` | `LargeHangerDoor` |
-| [StructureLargeRocketGasFuelTank](#structurelargerocketgasfueltank) | `LargeRocketGasFuelTanks` | `LargeRocketGasFuelTank` |
-| [StructureLargeRocketLiquidFuelTank](#structurelargerocketliquidfueltank) | `LargeRocketLiquidFuelTanks` | `LargeRocketLiquidFuelTank` |
-| [StructureLargeSatelliteDish](#structurelargesatellitedish) | `LargeSatelliteDishes` | `LargeSatelliteDish` |
-| [StructureLarreDockAtmos](#structurelarredockatmos) | `LarreDockAtmoses` | `LarreDockAtmos` |
-| [StructureLarreDockBypass](#structurelarredockbypass) | `LarreDockBypasses` | `LarreDockBypass` |
-| [StructureLarreDockCargo](#structurelarredockcargo) | `LarreDockCargos` | `LarreDockCargo` |
-| [StructureLarreDockCollector](#structurelarredockcollector) | `LarreDockCollectors` | `LarreDockCollector` |
-| [StructureLarreDockHydroponics](#structurelarredockhydroponics) | `LarreDockHydroponicses` | `LarreDockHydroponics` |
-| [StructureLightLong](#structurelightlong) | `LightLongs` | `LightLong` |
-| [StructureLightLongAngled](#structurelightlongangled) | `LightLongAngleds` | `LightLongAngled` |
-| [StructureLightLongWide](#structurelightlongwide) | `LightLongWides` | `LightLongWide` |
-| [StructureLightRound](#structurelightround) | `LightRounds` | `LightRound` |
-| [StructureLightRoundAngled](#structurelightroundangled) | `LightRoundAngleds` | `LightRoundAngled` |
-| [StructureLightRoundSmall](#structurelightroundsmall) | `LightRoundSmalls` | `LightRoundSmall` |
-| [StructureLiquidDrain](#structureliquiddrain) | `LiquidDrains` | `LiquidDrain` |
-| [StructureLiquidPipeAnalyzer](#structureliquidpipeanalyzer) | `LiquidPipeAnalyzers` | `LiquidPipeAnalyzer` |
-| [StructureLiquidPipeHeater](#structureliquidpipeheater) | `LiquidPipeHeaters` | `LiquidPipeHeater` |
-| [StructureLiquidPressureRegulator](#structureliquidpressureregulator) | `LiquidPressureRegulators` | `LiquidPressureRegulator` |
-| [StructureLiquidTankStorage](#structureliquidtankstorage) | `LiquidTankStorages` | `LiquidTankStorage` |
-| [StructureLiquidTurboVolumePump](#structureliquidturbovolumepump) | `LiquidTurboVolumePumps` | `LiquidTurboVolumePump` |
-| [StructureLiquidUmbilicalFemale](#structureliquidumbilicalfemale) | `LiquidUmbilicalFemales` | `LiquidUmbilicalFemale` |
-| [StructureLiquidUmbilicalFemaleSide](#structureliquidumbilicalfemaleside) | `LiquidUmbilicalFemaleSides` | `LiquidUmbilicalFemaleSide` |
-| [StructureLiquidUmbilicalMale](#structureliquidumbilicalmale) | `LiquidUmbilicalMales` | `LiquidUmbilicalMale` |
-| [StructureLiquidValve](#structureliquidvalve) | `LiquidValves` | `LiquidValve` |
-| [StructureLiquidVolumePump](#structureliquidvolumepump) | `LiquidVolumePumps` | `LiquidVolumePump` |
-| [StructureLockerSmall](#structurelockersmall) | `LockerSmalls` | `LockerSmall` |
-| [StructureLogicBatchReader](#structurelogicbatchreader) | `LogicBatchReaders` | `LogicBatchReader` |
-| [StructureLogicBatchSlotReader](#structurelogicbatchslotreader) | `LogicBatchSlotReaders` | `LogicBatchSlotReader` |
-| [StructureLogicBatchWriter](#structurelogicbatchwriter) | `LogicBatchWriters` | `LogicBatchWriter` |
-| [StructureLogicButton](#structurelogicbutton) | `LogicButtons` | `LogicButton` |
-| [StructureLogicCompare](#structurelogiccompare) | `LogicCompares` | `LogicCompare` |
-| [StructureLogicDial](#structurelogicdial) | `LogicDials` | `LogicDial` |
-| [StructureLogicGate](#structurelogicgate) | `LogicGates` | `LogicGate` |
-| [StructureLogicHashGen](#structurelogichashgen) | `LogicHashGens` | `LogicHashGen` |
-| [StructureLogicMath](#structurelogicmath) | `LogicMaths` | `LogicMath` |
-| [StructureLogicMathUnary](#structurelogicmathunary) | `LogicMathUnaries` | `LogicMathUnary` |
-| [StructureLogicMemory](#structurelogicmemory) | `LogicMemories` | `LogicMemory` |
-| [StructureLogicMinMax](#structurelogicminmax) | `LogicMinMaxes` | `LogicMinMax` |
-| [StructureLogicPidController](#structurelogicpidcontroller) | `LogicPidControllers` | `LogicPidController` |
-| [StructureLogicReader](#structurelogicreader) | `LogicReaders` | `LogicReader` |
-| [StructureLogicReagentReader](#structurelogicreagentreader) | `LogicReagentReaders` | `LogicReagentReader` |
-| [StructureLogicRocketDownlink](#structurelogicrocketdownlink) | `LogicRocketDownlinks` | `LogicRocketDownlink` |
-| [StructureLogicRocketUplink](#structurelogicrocketuplink) | `LogicRocketUplinks` | `LogicRocketUplink` |
-| [StructureLogicSelect](#structurelogicselect) | `LogicSelects` | `LogicSelect` |
-| [StructureLogicSlotReader](#structurelogicslotreader) | `LogicSlotReaders` | `LogicSlotReader` |
-| [StructureLogicSorter](#structurelogicsorter) | `LogicSorters` | `LogicSorter` |
-| [StructureLogicSwitch](#structurelogicswitch) | `LogicSwitches` | `LogicSwitch` |
-| [StructureLogicSwitch2](#structurelogicswitch2) | `LogicSwitch2s` | `LogicSwitch2` |
-| [StructureLogicWriter](#structurelogicwriter) | `LogicWriters` | `LogicWriter` |
-| [StructureLogicWriterSwitch](#structurelogicwriterswitch) | `LogicWriterSwitches` | `LogicWriterSwitch` |
-| [StructureManualFloorHatch](#structuremanualfloorhatch) | `ManualFloorHatches` | `ManualFloorHatch` |
-| [StructureManualHatch](#structuremanualhatch) | `ManualHatches` | `ManualHatch` |
-| [StructureMediumConvectionRadiator](#structuremediumconvectionradiator) | `MediumConvectionRadiators` | `MediumConvectionRadiator` |
-| [StructureMediumConvectionRadiatorLiquid](#structuremediumconvectionradiatorliquid) | `MediumConvectionRadiatorLiquids` | `MediumConvectionRadiatorLiquid` |
-| [StructureMediumHangerDoor](#structuremediumhangerdoor) | `MediumHangerDoors` | `MediumHangerDoor` |
-| [StructureMediumRadiator](#structuremediumradiator) | `MediumRadiators` | `MediumRadiator` |
-| [StructureMediumRadiatorLiquid](#structuremediumradiatorliquid) | `MediumRadiatorLiquids` | `MediumRadiatorLiquid` |
-| [StructureMediumRocketGasFuelTank](#structuremediumrocketgasfueltank) | `MediumRocketGasFuelTanks` | `MediumRocketGasFuelTank` |
-| [StructureMediumRocketLiquidFuelTank](#structuremediumrocketliquidfueltank) | `MediumRocketLiquidFuelTanks` | `MediumRocketLiquidFuelTank` |
-| [StructureMotionSensor](#structuremotionsensor) | `MotionSensors` | `MotionSensor` |
-| [StructureNitrolyzer](#structurenitrolyzer) | `Nitrolyzers` | `Nitrolyzer` |
-| [StructureOccupancySensor](#structureoccupancysensor) | `OccupancySensors` | `OccupancySensor` |
-| [StructureOverheadShortCornerLocker](#structureoverheadshortcornerlocker) | `OverheadShortCornerLockers` | `OverheadShortCornerLocker` |
-| [StructureOverheadShortLocker](#structureoverheadshortlocker) | `OverheadShortLockers` | `OverheadShortLocker` |
-| [StructurePacker](#structurepacker) | `Packers` | `Packer` |
-| [StructurePassiveLargeRadiatorGas](#structurepassivelargeradiatorgas) | `PassiveLargeRadiatorGases` | `PassiveLargeRadiatorGas` |
-| [StructurePassiveLargeRadiatorLiquid](#structurepassivelargeradiatorliquid) | `PassiveLargeRadiatorLiquids` | `PassiveLargeRadiatorLiquid` |
-| [StructurePassthroughHeatExchangerGasToGas](#structurepassthroughheatexchangergastogas) | `PassthroughHeatExchangerGasToGases` | `PassthroughHeatExchangerGasToGas` |
-| [StructurePassthroughHeatExchangerGasToLiquid](#structurepassthroughheatexchangergastoliquid) | `PassthroughHeatExchangerGasToLiquids` | `PassthroughHeatExchangerGasToLiquid` |
-| [StructurePassthroughHeatExchangerLiquidToLiquid](#structurepassthroughheatexchangerliquidtoliquid) | `PassthroughHeatExchangerLiquidToLiquids` | `PassthroughHeatExchangerLiquidToLiquid` |
-| [StructurePipeAnalysizer](#structurepipeanalysizer) | `PipeAnalysizers` | `PipeAnalysizer` |
-| [StructurePipeHeater](#structurepipeheater) | `PipeHeaters` | `PipeHeater` |
-| [StructurePipeIgniter](#structurepipeigniter) | `PipeIgniters` | `PipeIgniter` |
-| [StructurePipeLiquidOneWayValveLever](#structurepipeliquidonewayvalvelever) | `PipeLiquidOneWayValveLevers` | `PipeLiquidOneWayValveLever` |
-| [StructurePipeOneWayValveLever](#structurepipeonewayvalvelever) | `PipeOneWayValveLevers` | `PipeOneWayValveLever` |
-| [StructurePortablesConnector](#structureportablesconnector) | `PortablesConnectors` | `PortablesConnector` |
-| [StructurePowerConnector](#structurepowerconnector) | `PowerConnectors` | `PowerConnector` |
-| [StructurePoweredVent](#structurepoweredvent) | `PoweredVents` | `PoweredVent` |
-| [StructurePoweredVentLarge](#structurepoweredventlarge) | `PoweredVentLarges` | `PoweredVentLarge` |
-| [StructurePowerTransmitter](#structurepowertransmitter) | `PowerTransmitters` | `PowerTransmitter` |
-| [StructurePowerTransmitterOmni](#structurepowertransmitteromni) | `PowerTransmitterOmnis` | `PowerTransmitterOmni` |
-| [StructurePowerTransmitterReceiver](#structurepowertransmitterreceiver) | `PowerTransmitterReceivers` | `PowerTransmitterReceiver` |
-| [StructurePowerUmbilicalMale](#structurepowerumbilicalmale) | `PowerUmbilicalMales` | `PowerUmbilicalMale` |
-| [StructurePressurantValve](#structurepressurantvalve) | `PressurantValves` | `PressurantValve` |
-| [StructurePressureFedGasEngine](#structurepressurefedgasengine) | `PressureFedGasEngines` | `PressureFedGasEngine` |
-| [StructurePressureFedGasEngineHeavy](#structurepressurefedgasengineheavy) | `PressureFedGasEngineHeavies` | `PressureFedGasEngineHeavy` |
-| [StructurePressureFedLiquidEngine](#structurepressurefedliquidengine) | `PressureFedLiquidEngines` | `PressureFedLiquidEngine` |
-| [StructurePressureFedLiquidEngineHeavy](#structurepressurefedliquidengineheavy) | `PressureFedLiquidEngineHeavies` | `PressureFedLiquidEngineHeavy` |
-| [StructurePressurePlateLarge](#structurepressureplatelarge) | `PressurePlateLarges` | `PressurePlateLarge` |
-| [StructurePressurePlateMedium](#structurepressureplatemedium) | `PressurePlateMediums` | `PressurePlateMedium` |
-| [StructurePressurePlateSmall](#structurepressureplatesmall) | `PressurePlateSmalls` | `PressurePlateSmall` |
-| [StructurePressureRegulator](#structurepressureregulator) | `PressureRegulators` | `PressureRegulator` |
-| [StructureProximitySensor](#structureproximitysensor) | `ProximitySensors` | `ProximitySensor` |
-| [StructurePumpedLiquidEngine](#structurepumpedliquidengine) | `PumpedLiquidEngines` | `PumpedLiquidEngine` |
-| [StructurePurgeValve](#structurepurgevalve) | `PurgeValves` | `PurgeValve` |
-| [StructureRecycler](#structurerecycler) | `Recyclers` | `Recycler` |
-| [StructureRefrigeratedVendingMachine](#structurerefrigeratedvendingmachine) | `RefrigeratedVendingMachines` | `RefrigeratedVendingMachine` |
-| [StructureRobotArmDoor](#structurerobotarmdoor) | `RobotArmDoors` | `RobotArmDoor` |
-| [StructureRoboticArmDock](#structureroboticarmdock) | `RoboticArmDocks` | `RoboticArmDock` |
-| [StructureRocketAvionics](#structurerocketavionics) | `RocketAvionicses` | `RocketAvionics` |
-| [StructureRocketCelestialTracker](#structurerocketcelestialtracker) | `RocketCelestialTrackers` | `RocketCelestialTracker` |
-| [StructureRocketCircuitHousing](#structurerocketcircuithousing) | `RocketCircuitHousings` | `RocketCircuitHousing` |
-| [StructureRocketEngineTiny](#structurerocketenginetiny) | `RocketEngineTinies` | `RocketEngineTiny` |
-| [StructureRocketFiltrationGas](#structurerocketfiltrationgas) | `RocketFiltrationGases` | `RocketFiltrationGas` |
-| [StructureRocketGasCollector](#structurerocketgascollector) | `RocketGasCollectors` | `RocketGasCollector` |
-| [StructureRocketManufactory](#structurerocketmanufactory) | `RocketManufactories` | `RocketManufactory` |
-| [StructureRocketMiner](#structurerocketminer) | `RocketMiners` | `RocketMiner` |
-| [StructureRocketScanner](#structurerocketscanner) | `RocketScanners` | `RocketScanner` |
-| [StructureRocketTransformerSmall](#structurerockettransformersmall) | `RocketTransformerSmalls` | `RocketTransformerSmall` |
-| [StructureSatelliteDish](#structuresatellitedish) | `SatelliteDishes` | `SatelliteDish` |
-| [StructureSDBHopper](#structuresdbhopper) | `SDBHoppers` | `SDBHopper` |
-| [StructureSDBHopperAdvanced](#structuresdbhopperadvanced) | `SDBHopperAdvanceds` | `SDBHopperAdvanced` |
-| [StructureSDBSilo](#structuresdbsilo) | `SDBSilos` | `SDBSilo` |
-| [StructureSecurityPrinter](#structuresecurityprinter) | `SecurityPrinters` | `SecurityPrinter` |
-| [StructureShelfMedium](#structureshelfmedium) | `ShelfMediums` | `ShelfMedium` |
-| [StructureShortCornerLocker](#structureshortcornerlocker) | `ShortCornerLockers` | `ShortCornerLocker` |
-| [StructureShortLocker](#structureshortlocker) | `ShortLockers` | `ShortLocker` |
-| [StructureShower](#structureshower) | `Showers` | `Shower` |
-| [StructureShowerPowered](#structureshowerpowered) | `ShowerPowereds` | `ShowerPowered` |
-| [StructureSleeper](#structuresleeper) | `Sleepers` | `Sleeper` |
-| [StructureSleeperLeft](#structuresleeperleft) | `SleeperLefts` | `SleeperLeft` |
-| [StructureSleeperRight](#structuresleeperright) | `SleeperRights` | `SleeperRight` |
-| [StructureSleeperVertical](#structuresleepervertical) | `SleeperVerticals` | `SleeperVertical` |
-| [StructureSleeperVerticalDroid](#structuresleeperverticaldroid) | `SleeperVerticalDroids` | `SleeperVerticalDroid` |
-| [StructureSmallDirectHeatExchangeGastoGas](#structuresmalldirectheatexchangegastogas) | `SmallDirectHeatExchangeGastoGases` | `SmallDirectHeatExchangeGastoGas` |
-| [StructureSmallDirectHeatExchangeLiquidtoGas](#structuresmalldirectheatexchangeliquidtogas) | `SmallDirectHeatExchangeLiquidtoGases` | `SmallDirectHeatExchangeLiquidtoGas` |
-| [StructureSmallDirectHeatExchangeLiquidtoLiquid](#structuresmalldirectheatexchangeliquidtoliquid) | `SmallDirectHeatExchangeLiquidtoLiquids` | `SmallDirectHeatExchangeLiquidtoLiquid` |
-| [StructureSmallSatelliteDish](#structuresmallsatellitedish) | `SmallSatelliteDishes` | `SmallSatelliteDish` |
-| [StructureSolarPanel](#structuresolarpanel) | `SolarPanels` | `SolarPanel` |
-| [StructureSolarPanel45](#structuresolarpanel45) | `SolarPanel45s` | `SolarPanel45` |
-| [StructureSolarPanel45Reinforced](#structuresolarpanel45reinforced) | `SolarPanel45Reinforceds` | `SolarPanel45Reinforced` |
-| [StructureSolarPanelDual](#structuresolarpaneldual) | `SolarPanelDuals` | `SolarPanelDual` |
-| [StructureSolarPanelDualReinforced](#structuresolarpaneldualreinforced) | `SolarPanelDualReinforceds` | `SolarPanelDualReinforced` |
-| [StructureSolarPanelFlat](#structuresolarpanelflat) | `SolarPanelFlats` | `SolarPanelFlat` |
-| [StructureSolarPanelFlatReinforced](#structuresolarpanelflatreinforced) | `SolarPanelFlatReinforceds` | `SolarPanelFlatReinforced` |
-| [StructureSolarPanelReinforced](#structuresolarpanelreinforced) | `SolarPanelReinforceds` | `SolarPanelReinforced` |
-| [StructureSolidFuelGenerator](#structuresolidfuelgenerator) | `SolidFuelGenerators` | `SolidFuelGenerator` |
-| [StructureSorter](#structuresorter) | `Sorters` | `Sorter` |
-| [StructureStacker](#structurestacker) | `Stackers` | `Stacker` |
-| [StructureStackerReverse](#structurestackerreverse) | `StackerReverses` | `StackerReverse` |
-| [StructureStirlingEngine](#structurestirlingengine) | `StirlingEngines` | `StirlingEngine` |
-| [StructureStorageLocker](#structurestoragelocker) | `StorageLockers` | `StorageLocker` |
-| [StructureSuitStorage](#structuresuitstorage) | `SuitStorages` | `SuitStorage` |
-| [StructureSuitStorageFrame](#structuresuitstorageframe) | `SuitStorageFrames` | `SuitStorageFrame` |
-| [StructureSuitStorageLocker](#structuresuitstoragelocker) | `SuitStorageLockers` | `SuitStorageLocker` |
-| [StructureSuperLargeDirectHeatExchangeGastoGas](#structuresuperlargedirectheatexchangegastogas) | `SuperLargeDirectHeatExchangeGastoGases` | `SuperLargeDirectHeatExchangeGastoGas` |
-| [StructureSuperLargeDirectHeatExchangeGastoLiquid](#structuresuperlargedirectheatexchangegastoliquid) | `SuperLargeDirectHeatExchangeGastoLiquids` | `SuperLargeDirectHeatExchangeGastoLiquid` |
-| [StructureSuperLargeDirectHeatExchangeLiquidToLiquid](#structuresuperlargedirectheatexchangeliquidtoliquid) | `SuperLargeDirectHeatExchangeLiquidToLiquids` | `SuperLargeDirectHeatExchangeLiquidToLiquid` |
-| [StructureToolManufactory](#structuretoolmanufactory) | `ToolManufactories` | `ToolManufactory` |
-| [StructureTraderWaypoint](#structuretraderwaypoint) | `TraderWaypoints` | `TraderWaypoint` |
-| [StructureTransformer](#structuretransformer) | `Transformers` | `Transformer` |
-| [StructureTransformerMedium](#structuretransformermedium) | `TransformerMediums` | `TransformerMedium` |
-| [StructureTransformerSmall](#structuretransformersmall) | `TransformerSmalls` | `TransformerSmall` |
-| [StructureTransformerSmallReversed](#structuretransformersmallreversed) | `TransformerSmallReverseds` | `TransformerSmallReversed` |
-| [StructureTurboVolumePump](#structureturbovolumepump) | `TurboVolumePumps` | `TurboVolumePump` |
-| [StructureUnloader](#structureunloader) | `Unloaders` | `Unloader` |
-| [StructureUprightWindTurbine](#structureuprightwindturbine) | `UprightWindTurbines` | `UprightWindTurbine` |
-| [StructureValve](#structurevalve) | `Valves` | `Valve` |
-| [StructureVendingMachine](#structurevendingmachine) | `VendingMachines` | `VendingMachine` |
-| [StructureVendingMachineSmall](#structurevendingmachinesmall) | `VendingMachineSmalls` | `VendingMachineSmall` |
-| [StructureVolumePump](#structurevolumepump) | `VolumePumps` | `VolumePump` |
-| [StructureWallCooler](#structurewallcooler) | `WallCoolers` | `WallCooler` |
-| [StructureWallHeater](#structurewallheater) | `WallHeaters` | `WallHeater` |
-| [StructureWallLight](#structurewalllight) | `WallLights` | `WallLight` |
-| [StructureWallLightBattery](#structurewalllightbattery) | `WallLightBatteries` | `WallLightBattery` |
-| [StructureWaterBottleFillerPowered](#structurewaterbottlefillerpowered) | `WaterBottleFillerPowereds` | `WaterBottleFillerPowered` |
-| [StructureWaterBottleFillerPoweredBottom](#structurewaterbottlefillerpoweredbottom) | `WaterBottleFillerPoweredBottoms` | `WaterBottleFillerPoweredBottom` |
-| [StructureWaterDigitalValve](#structurewaterdigitalvalve) | `WaterDigitalValves` | `WaterDigitalValve` |
-| [StructureWaterPurifier](#structurewaterpurifier) | `WaterPurifiers` | `WaterPurifier` |
-| [StructureWaterWallCooler](#structurewaterwallcooler) | `WaterWallCoolers` | `WaterWallCooler` |
-| [StructureWeatherStation](#structureweatherstation) | `WeatherStations` | `WeatherStation` |
-| [StructureWindTurbine](#structurewindturbine) | `WindTurbines` | `WindTurbine` |
+```kotlin
+object GrowLights {
+  /** The device on [pin], as a GrowLight. */
+  fun at(pin: Device): GrowLight
+
+  /** Every one on the chip's network. */
+  val all: DeviceBatch<GrowLight>
+
+  /** Every one on the network named [name], which must be a constant. */
+  fun named(name: String): DeviceBatch<GrowLight>
+}
+```
+
+A device's logic types are its properties: a `var` can be written, a `val` only read. Every typed device also has `val PrefabHash: Prefab`, `val NameHash: Double` and `val ReferenceId: Double`. Any device can also be used untyped, as `d0` to `d5` or `db`, with every logic type.
 
 ## Families
 
-A family's prefabs share the logic types listed for it, so a function can take the family's type for any of them.
+A family is a device that comes as several prefabs. Its interface holds the logic types every member has, so a function can take any of them; each member is a nested class, with an entry point nested the same way (`Batteries.Small`).
 
 ### Battery
 
-Prefabs: `Battery.Station` (StructureBattery), `Battery.Large` (StructureBatteryLarge), `Battery.Medium` (StructureBatteryMedium), `Battery.Small` (StructureBatterySmall).
+```kotlin
+interface Battery {
+  val Charge: Double
+  val Maximum: Double
+  val Mode: Double
+  var On: Boolean
+  val Power: Boolean
+  val PowerActual: Double
+  val PowerPotential: Double
+  val Ratio: Double
 
-`Charge`, `Maximum`, `Mode`, `On` **rw**, `Power`, `PowerActual`, `PowerPotential`, `Ratio`
+  /** StructureBattery. Entry point: Batteries.Station. */
+  class Station : Battery {
+    val Error: Boolean
+    var Lock: Boolean
+  }
+
+  /** StructureBatteryLarge. Entry point: Batteries.Large. */
+  class Large : Battery {
+    val Error: Boolean
+    var Lock: Boolean
+  }
+
+  /** StructureBatteryMedium. Entry point: Batteries.Medium. */
+  class Medium : Battery
+
+  /** StructureBatterySmall. Entry point: Batteries.Small. */
+  class Small : Battery
+}
+```
 
 ### LedDisplay
 
-Prefabs: `LedDisplay.Medium` (StructureConsoleLED1x2), `LedDisplay.Large` (StructureConsoleLED1x3), `LedDisplay.Small` (StructureConsoleLED5).
-
-`Color` **rw**, `Error`, `Mode` **rw**, `On` **rw**, `Power`, `RequiredPower`, `Setting` **rw**
-
-## Devices by prefab
-
-### Battery_Wireless_cell
-
-Entry point `Battery_Wireless_cells`, type `Battery_Wireless_cell`.
-
-`Mode` **rw**
-
-### Battery_Wireless_cell_Big
-
-Entry point `Battery_Wireless_cell_Bigs`, type `Battery_Wireless_cell_Big`.
-
-`Mode` **rw**
-
-### CompositeRollCover
-
-Entry point `CompositeRollCovers`, type `CompositeRollCover`.
-
-`Idle`, `Lock` **rw**, `Mode` **rw**, `On` **rw**, `Open` **rw**, `Setting` **rw**
-
-### DeviceLfoVolume
-
-Entry point `DeviceLfoVolumes`, type `DeviceLfoVolume`.
-
-`Activate` **rw**, `Bpm` **rw**, `Error`, `Mode` **rw**, `On` **rw**, `Power`, `RequiredPower`, `Time` **rw**
-
-### DeviceStepUnit
-
-Entry point `DeviceStepUnits`, type `DeviceStepUnit`.
-
-`Activate` **rw**, `Error`, `Mode` **rw**, `On` **rw**, `Power`, `RequiredPower`, `Volume` **rw**
-
-### DynamicGPR
-
-Entry point `DynamicGPRs`, type `DynamicGPR`, slots `Slots<ItemBatterySlot>`.
-
-`Activate` **rw**, `Battery`, `On` **rw**, `Power`
-
-### DynamicLight
-
-Entry point `DynamicLights`, type `DynamicLight`, slots `Slots<ItemBatterySlot>`.
-
-`Battery`, `Lock` **rw**, `On` **rw**, `Open` **rw**, `Power`
-
-### H2Combustor
-
-Entry point `H2Combustors`, type `H2Combustor`, slots `Slots<DataDiskSlot>`.
-
-`Activate` **rw**, `Combustion`, `CombustionInput`, `CombustionOutput`, `Error`, `Lock` **rw**, `Maximum`, `Mode` **rw**, `On` **rw**, `Open` **rw**, `Power`, `Pressure`, `PressureInput`, `PressureOutput`, `ProgrammableChip`, `Ratio`, `RatioCarbonDioxide`, `RatioCarbonDioxideInput`, `RatioCarbonDioxideOutput`, `RatioHelium`, `RatioHeliumInput`, `RatioHeliumOutput`, `RatioHydrazine`, `RatioHydrazineInput`, `RatioHydrazineOutput`, `RatioHydrochloricAcid`, `RatioHydrochloricAcidInput`, `RatioHydrochloricAcidOutput`, `RatioHydrogen`, `RatioHydrogenInput`, `RatioHydrogenOutput`, `RatioLiquidAlcohol`, `RatioLiquidAlcoholInput`, `RatioLiquidAlcoholOutput`, `RatioLiquidCarbonDioxide`, `RatioLiquidCarbonDioxideInput`, `RatioLiquidCarbonDioxideOutput`, `RatioLiquidHydrazine`, `RatioLiquidHydrazineInput`, `RatioLiquidHydrazineOutput`, `RatioLiquidHydrochloricAcid`, `RatioLiquidHydrochloricAcidInput`, `RatioLiquidHydrochloricAcidOutput`, `RatioLiquidHydrogen`, `RatioLiquidHydrogenInput`, `RatioLiquidHydrogenOutput`, `RatioLiquidMethane`, `RatioLiquidMethaneInput`, `RatioLiquidMethaneOutput`, `RatioLiquidNitrogen`, `RatioLiquidNitrogenInput`, `RatioLiquidNitrogenOutput`, `RatioLiquidNitrousOxide`, `RatioLiquidNitrousOxideInput`, `RatioLiquidNitrousOxideOutput`, `RatioLiquidOxygen`, `RatioLiquidOxygenInput`, `RatioLiquidOxygenOutput`, `RatioLiquidOzone`, `RatioLiquidOzoneInput`, `RatioLiquidOzoneOutput`, `RatioLiquidPollutant`, `RatioLiquidPollutantInput`, `RatioLiquidPollutantOutput`, `RatioLiquidSilanol`, `RatioLiquidSilanolInput`, `RatioLiquidSilanolOutput`, `RatioLiquidSodiumChloride`, `RatioLiquidSodiumChlorideInput`, `RatioLiquidSodiumChlorideOutput`, `RatioMethane`, `RatioMethaneInput`, `RatioMethaneOutput`, `RatioNitrogen`, `RatioNitrogenInput`, `RatioNitrogenOutput`, `RatioNitrousOxide`, `RatioNitrousOxideInput`, `RatioNitrousOxideOutput`, `RatioOxygen`, `RatioOxygenInput`, `RatioOxygenOutput`, `RatioOzone`, `RatioOzoneInput`, `RatioOzoneOutput`, `RatioPollutant`, `RatioPollutantInput`, `RatioPollutantOutput`, `RatioPollutedWater`, `RatioPollutedWaterInput`, `RatioPollutedWaterOutput`, `RatioSilanol`, `RatioSilanolInput`, `RatioSilanolOutput`, `RatioSteam`, `RatioSteamInput`, `RatioSteamOutput`, `RatioWater`, `RatioWaterInput`, `RatioWaterOutput`, `RequiredPower`, `Setting` **rw**, `Temperature`, `TemperatureInput`, `TemperatureOutput`, `TotalMoles`, `TotalMolesInput`, `TotalMolesOutput`
-
-### ItemAdvancedTablet
-
-Entry point `AdvancedTablets`, type `AdvancedTablet`, slots `Slots<ItemCommonSlot>`.
-
-`Activate` **rw**, `Battery`, `Cartridge`, `Cartridge1`, `Error`, `Mode` **rw**, `On` **rw**, `Power`, `ProgrammableChip`, `SoundAlert` **rw**, `Volume` **rw**
-
-### ItemAngleGrinder
-
-Entry point `AngleGrinders`, type `AngleGrinder`, slots `Slots<ItemBatterySlot>`.
-
-`Activate` **rw**, `Battery`, `Power`
-
-### ItemArcWelder
-
-Entry point `ArcWelders`, type `ArcWelder`, slots `Slots<ItemBatterySlot>`.
-
-`Activate` **rw**, `Battery`, `Power`
-
-### ItemBatteryCell
-
-Entry point `BatteryCells`, type `BatteryCell`.
-
-`Mode` **rw**
-
-### ItemBatteryCellLarge
-
-Entry point `BatteryCellLarges`, type `BatteryCellLarge`.
-
-`Mode` **rw**
-
-### ItemBatteryCellNuclear
-
-Entry point `BatteryCellNuclears`, type `BatteryCellNuclear`.
-
-`Mode` **rw**
-
-### ItemBeacon
-
-Entry point `ItemBeacons`, type `ItemBeacon`, slots `Slots<ItemBatterySlot>`.
-
-`Battery`, `Error`, `On` **rw**, `Power`
-
-### ItemDrill
-
-Entry point `Drills`, type `Drill`, slots `Slots<ItemBatterySlot>`.
-
-`Activate` **rw**, `Battery`, `Power`
-
-### ItemEmergencyAngleGrinder
-
-Entry point `EmergencyAngleGrinders`, type `EmergencyAngleGrinder`, slots `Slots<ItemBatterySlot>`.
-
-`Activate` **rw**, `Battery`, `Power`
-
-### ItemEmergencyArcWelder
-
-Entry point `EmergencyArcWelders`, type `EmergencyArcWelder`, slots `Slots<ItemBatterySlot>`.
-
-`Activate` **rw**, `Battery`, `Power`
-
-### ItemEmergencyDrill
-
-Entry point `EmergencyDrills`, type `EmergencyDrill`, slots `Slots<ItemBatterySlot>`.
-
-`Activate` **rw**, `Battery`, `Power`
-
-### ItemEmergencySpaceHelmet
-
-Entry point `EmergencySpaceHelmets`, type `EmergencySpaceHelmet`.
-
-`Combustion`, `Flush` **rw**, `Lock` **rw**, `On` **rw**, `Open` **rw**, `Power`, `Pressure`, `RatioCarbonDioxide`, `RatioHelium`, `RatioHydrazine`, `RatioHydrochloricAcid`, `RatioHydrogen`, `RatioLiquidAlcohol`, `RatioLiquidCarbonDioxide`, `RatioLiquidHydrazine`, `RatioLiquidHydrochloricAcid`, `RatioLiquidHydrogen`, `RatioLiquidMethane`, `RatioLiquidNitrogen`, `RatioLiquidNitrousOxide`, `RatioLiquidOxygen`, `RatioLiquidOzone`, `RatioLiquidPollutant`, `RatioLiquidSilanol`, `RatioLiquidSodiumChloride`, `RatioMethane`, `RatioNitrogen`, `RatioNitrousOxide`, `RatioOxygen`, `RatioOzone`, `RatioPollutant`, `RatioPollutedWater`, `RatioSilanol`, `RatioSteam`, `RatioWater`, `SoundAlert` **rw**, `Temperature`, `TotalMoles`, `Volume` **rw**
-
-### ItemFlashlight
-
-Entry point `Flashlights`, type `Flashlight`, slots `Slots<ItemBatterySlot>`.
-
-`Battery`, `Mode` **rw**, `On` **rw**, `Power`
-
-### ItemGasMask
-
-Entry point `GasMasks`, type `GasMask`, slots `Slots<ItemFilteredSlot>`.
-
-`Combustion`, `Flush` **rw**, `Pressure`, `RatioCarbonDioxide`, `RatioHelium`, `RatioHydrazine`, `RatioHydrochloricAcid`, `RatioHydrogen`, `RatioLiquidAlcohol`, `RatioLiquidCarbonDioxide`, `RatioLiquidHydrazine`, `RatioLiquidHydrochloricAcid`, `RatioLiquidHydrogen`, `RatioLiquidMethane`, `RatioLiquidNitrogen`, `RatioLiquidNitrousOxide`, `RatioLiquidOxygen`, `RatioLiquidOzone`, `RatioLiquidPollutant`, `RatioLiquidSilanol`, `RatioLiquidSodiumChloride`, `RatioMethane`, `RatioNitrogen`, `RatioNitrousOxide`, `RatioOxygen`, `RatioOzone`, `RatioPollutant`, `RatioPollutedWater`, `RatioSilanol`, `RatioSteam`, `RatioWater`, `SoundAlert` **rw**, `Temperature`, `TotalMoles`, `Volume` **rw**
-
-### ItemHardHat
-
-Entry point `HardHats`, type `HardHat`, slots `Slots<ItemBatterySlot>`.
-
-`Battery`, `On` **rw**, `Power`
-
-### ItemHardJetpack
-
-Entry point `HardJetpacks`, type `HardJetpack`, slots `Slots<ItemCommonSlot>`.
-
-`Activate` **rw**, `On` **rw**, `Propellant`
-
-### ItemHardSuit
-
-Entry point `HardSuits`, type `HardSuit`, slots `Slots<ItemCommonSlot>`.
-
-`Activate` **rw**, `AirRelease` **rw**, `AirTank`, `Combustion`, `EntityState`, `Error` **rw**, `Filtration` **rw**, `ForwardX`, `ForwardY`, `ForwardZ`, `LifeSupport`, `Lock` **rw**, `On` **rw**, `Orientation`, `PositionX`, `PositionY`, `PositionZ`, `Power`, `Pressure`, `PressureExternal`, `PressureSetting` **rw**, `ProgrammableChip`, `RatioCarbonDioxide`, `RatioHelium`, `RatioHydrazine`, `RatioHydrochloricAcid`, `RatioHydrogen`, `RatioLiquidAlcohol`, `RatioLiquidCarbonDioxide`, `RatioLiquidHydrazine`, `RatioLiquidHydrochloricAcid`, `RatioLiquidHydrogen`, `RatioLiquidMethane`, `RatioLiquidNitrogen`, `RatioLiquidNitrousOxide`, `RatioLiquidOxygen`, `RatioLiquidOzone`, `RatioLiquidPollutant`, `RatioLiquidSilanol`, `RatioLiquidSodiumChloride`, `RatioMethane`, `RatioNitrogen`, `RatioNitrousOxide`, `RatioOxygen`, `RatioOzone`, `RatioPollutant`, `RatioPollutedWater`, `RatioSilanol`, `RatioSteam`, `RatioWater`, `Setting` **rw**, `SoundAlert` **rw**, `Temperature`, `TemperatureExternal`, `TemperatureSetting` **rw**, `TotalMoles`, `VelocityMagnitude`, `VelocityRelativeX`, `VelocityRelativeY`, `VelocityRelativeZ`, `VelocityX`, `VelocityY`, `VelocityZ`, `Volume` **rw**, `WasteTank`
-
-### ItemHardsuitHelmet
-
-Entry point `HardsuitHelmets`, type `HardsuitHelmet`.
-
-`Combustion`, `Flush` **rw**, `Lock` **rw**, `On` **rw**, `Open` **rw**, `Power`, `Pressure`, `RatioCarbonDioxide`, `RatioHelium`, `RatioHydrazine`, `RatioHydrochloricAcid`, `RatioHydrogen`, `RatioLiquidAlcohol`, `RatioLiquidCarbonDioxide`, `RatioLiquidHydrazine`, `RatioLiquidHydrochloricAcid`, `RatioLiquidHydrogen`, `RatioLiquidMethane`, `RatioLiquidNitrogen`, `RatioLiquidNitrousOxide`, `RatioLiquidOxygen`, `RatioLiquidOzone`, `RatioLiquidPollutant`, `RatioLiquidSilanol`, `RatioLiquidSodiumChloride`, `RatioMethane`, `RatioNitrogen`, `RatioNitrousOxide`, `RatioOxygen`, `RatioOzone`, `RatioPollutant`, `RatioPollutedWater`, `RatioSilanol`, `RatioSteam`, `RatioWater`, `SoundAlert` **rw**, `Temperature`, `TotalMoles`, `Volume` **rw**
-
-### ItemIcarusHelmet
-
-Entry point `IcarusHelmets`, type `IcarusHelmet`.
-
-`Combustion`, `Flush` **rw**, `Lock` **rw**, `On` **rw**, `Open` **rw**, `Power`, `Pressure`, `RatioCarbonDioxide`, `RatioHelium`, `RatioHydrazine`, `RatioHydrochloricAcid`, `RatioHydrogen`, `RatioLiquidAlcohol`, `RatioLiquidCarbonDioxide`, `RatioLiquidHydrazine`, `RatioLiquidHydrochloricAcid`, `RatioLiquidHydrogen`, `RatioLiquidMethane`, `RatioLiquidNitrogen`, `RatioLiquidNitrousOxide`, `RatioLiquidOxygen`, `RatioLiquidOzone`, `RatioLiquidPollutant`, `RatioLiquidSilanol`, `RatioLiquidSodiumChloride`, `RatioMethane`, `RatioNitrogen`, `RatioNitrousOxide`, `RatioOxygen`, `RatioOzone`, `RatioPollutant`, `RatioPollutedWater`, `RatioSilanol`, `RatioSteam`, `RatioWater`, `SoundAlert` **rw**, `Temperature`, `TotalMoles`, `Volume` **rw**
-
-### ItemIntegratedCircuit10
-
-Entry point `IntegratedCircuit10s`, type `IntegratedCircuit10`.
-
-`LineNumber`
-
-### ItemJetpackBasic
-
-Entry point `JetpackBasics`, type `JetpackBasic`, slots `Slots<ItemCommonSlot>`.
-
-`Activate` **rw**, `On` **rw**, `Propellant`
-
-### ItemLabeller
-
-Entry point `Labellers`, type `Labeller`, slots `Slots<ItemBatterySlot>`.
-
-`Battery`, `Error`, `On` **rw**, `Power`
-
-### ItemLaptop
-
-Entry point `Laptops`, type `Laptop`, slots `Slots<ItemCommonSlot>`.
-
-`Battery`, `Error`, `Motherboard`, `On` **rw**, `PositionX`, `PositionY`, `PositionZ`, `Power`, `PressureExternal`, `ProgrammableChip`, `TemperatureExternal`
-
-### ItemLiquidVacuum
-
-Entry point `LiquidVacuums`, type `LiquidVacuum`, slots `Slots<ItemBatterySlot>`.
-
-`Activate` **rw**, `Battery`, `Error`, `Mode` **rw**, `On` **rw**, `Power`
-
-### ItemMiningDrill
-
-Entry point `MiningDrills`, type `MiningDrill`, slots `Slots<ItemBatterySlot>`.
-
-`Activate` **rw**, `Battery`, `Error`, `Mode` **rw**, `On` **rw**, `Power`
-
-### ItemMiningDrillHeavy
-
-Entry point `MiningDrillHeavies`, type `MiningDrillHeavy`, slots `Slots<ItemBatterySlot>`.
-
-`Activate` **rw**, `Battery`, `Error`, `Mode` **rw**, `On` **rw**, `Power`
-
-### ItemMKIIAngleGrinder
-
-Entry point `MKIIAngleGrinders`, type `MKIIAngleGrinder`, slots `Slots<ItemBatterySlot>`.
-
-`Activate` **rw**, `Battery`, `Power`
-
-### ItemMKIIArcWelder
-
-Entry point `MKIIArcWelders`, type `MKIIArcWelder`, slots `Slots<ItemBatterySlot>`.
-
-`Activate` **rw**, `Battery`, `Power`
-
-### ItemMKIIDrill
-
-Entry point `MKIIDrills`, type `MKIIDrill`, slots `Slots<ItemBatterySlot>`.
-
-`Activate` **rw**, `Battery`, `Power`
-
-### ItemMKIIMiningDrill
-
-Entry point `MKIIMiningDrills`, type `MKIIMiningDrill`, slots `Slots<ItemBatterySlot>`.
-
-`Activate` **rw**, `Battery`, `Error`, `Mode` **rw**, `On` **rw**, `Power`
-
-### ItemNVG
-
-Entry point `NVGs`, type `NVG`, slots `Slots<ItemBatterySlot>`.
-
-`Battery`, `Lock` **rw**, `On` **rw**, `Power`
-
-### ItemOreDetector
-
-Entry point `OreDetectors`, type `OreDetector`, slots `Slots<ItemBatterySlot>`.
-
-`Battery`, `Error`, `Mode` **rw**, `On` **rw**, `Power`
-
-### ItemPlantSampler
-
-Entry point `PlantSamplers`, type `PlantSampler`, slots `Slots<ItemBatterySlot>`.
-
-`Activate` **rw**, `Battery`, `Mode` **rw**, `On` **rw**, `Power`
-
-### ItemRemoteDetonator
-
-Entry point `RemoteDetonators`, type `RemoteDetonator`, slots `Slots<ItemBatterySlot>`.
-
-`Activate` **rw**, `Battery`, `Error`, `Lock` **rw**, `Mode` **rw**, `On` **rw**, `Power`
-
-### ItemSensorLenses
-
-Entry point `SensorLenseses`, type `SensorLenses`, slots `Slots<ItemCommonSlot>`.
-
-`Battery`, `On` **rw**, `Power`, `SensorProcessingUnit`
-
-### ItemSpaceHelmet
-
-Entry point `SpaceHelmets`, type `SpaceHelmet`.
-
-`Combustion`, `Flush` **rw**, `Lock` **rw**, `On` **rw**, `Open` **rw**, `Power`, `Pressure`, `RatioCarbonDioxide`, `RatioHelium`, `RatioHydrazine`, `RatioHydrochloricAcid`, `RatioHydrogen`, `RatioLiquidAlcohol`, `RatioLiquidCarbonDioxide`, `RatioLiquidHydrazine`, `RatioLiquidHydrochloricAcid`, `RatioLiquidHydrogen`, `RatioLiquidMethane`, `RatioLiquidNitrogen`, `RatioLiquidNitrousOxide`, `RatioLiquidOxygen`, `RatioLiquidOzone`, `RatioLiquidPollutant`, `RatioLiquidSilanol`, `RatioLiquidSodiumChloride`, `RatioMethane`, `RatioNitrogen`, `RatioNitrousOxide`, `RatioOxygen`, `RatioOzone`, `RatioPollutant`, `RatioPollutedWater`, `RatioSilanol`, `RatioSteam`, `RatioWater`, `SoundAlert` **rw**, `Temperature`, `TotalMoles`, `Volume` **rw**
-
-### ItemSpacepack
-
-Entry point `Spacepacks`, type `Spacepack`, slots `Slots<ItemCommonSlot>`.
-
-`Activate` **rw**, `On` **rw**, `Propellant`
-
-### ItemSuitHARM
-
-Entry point `SuitHARMs`, type `SuitHARM`, slots `Slots<ItemCommonSlot>`.
-
-`Activate` **rw**, `AirRelease` **rw**, `AirTank`, `Back`, `Battery`, `Chip`, `Combustion`, `CoolantTank`, `EntityState`, `Error` **rw**, `Filter1`, `Filter2`, `Filter3`, `Filter4`, `Filtration` **rw**, `ForwardX`, `ForwardY`, `ForwardZ`, `Lock` **rw**, `On` **rw**, `Orientation`, `PositionX`, `PositionY`, `PositionZ`, `Power`, `Pressure`, `PressureExternal`, `PressureSetting` **rw**, `RatioCarbonDioxide`, `RatioHelium`, `RatioHydrazine`, `RatioHydrochloricAcid`, `RatioHydrogen`, `RatioLiquidAlcohol`, `RatioLiquidCarbonDioxide`, `RatioLiquidHydrazine`, `RatioLiquidHydrochloricAcid`, `RatioLiquidHydrogen`, `RatioLiquidMethane`, `RatioLiquidNitrogen`, `RatioLiquidNitrousOxide`, `RatioLiquidOxygen`, `RatioLiquidOzone`, `RatioLiquidPollutant`, `RatioLiquidSilanol`, `RatioLiquidSodiumChloride`, `RatioMethane`, `RatioNitrogen`, `RatioNitrousOxide`, `RatioOxygen`, `RatioOzone`, `RatioPollutant`, `RatioPollutedWater`, `RatioSilanol`, `RatioSteam`, `RatioWater`, `Setting` **rw**, `SoundAlert` **rw**, `Temperature`, `TemperatureExternal`, `TemperatureSetting` **rw**, `TotalMoles`, `VelocityMagnitude`, `VelocityRelativeX`, `VelocityRelativeY`, `VelocityRelativeZ`, `VelocityX`, `VelocityY`, `VelocityZ`, `Volume` **rw**, `WasteTank`
-
-### ItemSuitHelmetHARM
-
-Entry point `SuitHelmetHARMs`, type `SuitHelmetHARM`.
-
-`Combustion`, `Flush` **rw**, `Lock` **rw**, `On` **rw**, `Open` **rw**, `Power`, `Pressure`, `RatioCarbonDioxide`, `RatioHelium`, `RatioHydrazine`, `RatioHydrochloricAcid`, `RatioHydrogen`, `RatioLiquidAlcohol`, `RatioLiquidCarbonDioxide`, `RatioLiquidHydrazine`, `RatioLiquidHydrochloricAcid`, `RatioLiquidHydrogen`, `RatioLiquidMethane`, `RatioLiquidNitrogen`, `RatioLiquidNitrousOxide`, `RatioLiquidOxygen`, `RatioLiquidOzone`, `RatioLiquidPollutant`, `RatioLiquidSilanol`, `RatioLiquidSodiumChloride`, `RatioMethane`, `RatioNitrogen`, `RatioNitrousOxide`, `RatioOxygen`, `RatioOzone`, `RatioPollutant`, `RatioPollutedWater`, `RatioSilanol`, `RatioSteam`, `RatioWater`, `SoundAlert` **rw**, `Temperature`, `TotalMoles`, `Volume` **rw**
-
-### ItemTablet
-
-Entry point `Tablets`, type `Tablet`, slots `Slots<ItemCommonSlot>`.
-
-`Battery`, `Cartridge`, `Error`, `On` **rw**, `Power`
-
-### ItemTerrainManipulator
-
-Entry point `TerrainManipulators`, type `TerrainManipulator`, slots `Slots<ItemCommonSlot>`.
-
-`Activate` **rw**, `Battery`, `DirtCanister`, `Error`, `Mode` **rw**, `On` **rw**, `Power`
-
-### ItemWearLamp
-
-Entry point `WearLamps`, type `WearLamp`, slots `Slots<ItemBatterySlot>`.
-
-`Battery`, `On` **rw**, `Power`
-
-### ItemWirelessBatteryCellExtraLarge
-
-Entry point `WirelessBatteryCellExtraLarges`, type `WirelessBatteryCellExtraLarge`.
-
-`Mode` **rw**
-
-### Landingpad_DataConnectionPiece
-
-Entry point `Landingpad_DataConnectionPieces`, type `Landingpad_DataConnectionPiece`.
-
-`Activate` **rw**, `Combustion`, `ContactTypeId`, `Error`, `Mode`, `On` **rw**, `Power`, `Pressure`, `RatioCarbonDioxide`, `RatioHelium`, `RatioHydrazine`, `RatioHydrochloricAcid`, `RatioHydrogen`, `RatioLiquidAlcohol`, `RatioLiquidCarbonDioxide`, `RatioLiquidHydrazine`, `RatioLiquidHydrochloricAcid`, `RatioLiquidHydrogen`, `RatioLiquidMethane`, `RatioLiquidNitrogen`, `RatioLiquidNitrousOxide`, `RatioLiquidOxygen`, `RatioLiquidOzone`, `RatioLiquidPollutant`, `RatioLiquidSilanol`, `RatioLiquidSodiumChloride`, `RatioMethane`, `RatioNitrogen`, `RatioNitrousOxide`, `RatioOxygen`, `RatioOzone`, `RatioPollutant`, `RatioPollutedWater`, `RatioSilanol`, `RatioSteam`, `RatioWater`, `RequiredPower`, `Temperature`, `TotalMoles`, `Vertical` **rw**
-
-### Landingpad_GasConnectorInwardPiece
-
-Entry point `Landingpad_GasConnectorInwardPieces`, type `Landingpad_GasConnectorInwardPiece`.
-
-`Combustion`, `Error`, `Maximum`, `On` **rw**, `Power`, `Pressure`, `Ratio`, `RatioCarbonDioxide`, `RatioHelium`, `RatioHydrazine`, `RatioHydrochloricAcid`, `RatioHydrogen`, `RatioLiquidAlcohol`, `RatioLiquidCarbonDioxide`, `RatioLiquidHydrazine`, `RatioLiquidHydrochloricAcid`, `RatioLiquidHydrogen`, `RatioLiquidMethane`, `RatioLiquidNitrogen`, `RatioLiquidNitrousOxide`, `RatioLiquidOxygen`, `RatioLiquidOzone`, `RatioLiquidPollutant`, `RatioLiquidSilanol`, `RatioLiquidSodiumChloride`, `RatioMethane`, `RatioNitrogen`, `RatioNitrousOxide`, `RatioOxygen`, `RatioOzone`, `RatioPollutant`, `RatioPollutedWater`, `RatioSilanol`, `RatioSteam`, `RatioWater`, `RequiredPower`, `Setting` **rw**, `Temperature`, `TotalMoles`
-
-### Landingpad_GasConnectorOutwardPiece
-
-Entry point `Landingpad_GasConnectorOutwardPieces`, type `Landingpad_GasConnectorOutwardPiece`.
-
-`Combustion`, `Error`, `Maximum`, `On` **rw**, `Power`, `Pressure`, `Ratio`, `RatioCarbonDioxide`, `RatioHelium`, `RatioHydrazine`, `RatioHydrochloricAcid`, `RatioHydrogen`, `RatioLiquidAlcohol`, `RatioLiquidCarbonDioxide`, `RatioLiquidHydrazine`, `RatioLiquidHydrochloricAcid`, `RatioLiquidHydrogen`, `RatioLiquidMethane`, `RatioLiquidNitrogen`, `RatioLiquidNitrousOxide`, `RatioLiquidOxygen`, `RatioLiquidOzone`, `RatioLiquidPollutant`, `RatioLiquidSilanol`, `RatioLiquidSodiumChloride`, `RatioMethane`, `RatioNitrogen`, `RatioNitrousOxide`, `RatioOxygen`, `RatioOzone`, `RatioPollutant`, `RatioPollutedWater`, `RatioSilanol`, `RatioSteam`, `RatioWater`, `RequiredPower`, `Setting` **rw**, `Temperature`, `TotalMoles`
-
-### Landingpad_GasTankConnectorPiece
-
-Entry point `Landingpad_GasTankConnectorPieces`, type `Landingpad_GasTankConnectorPiece`, slots `Slots<DataDiskSlot>`.
-
-`Error`, `Mode` **rw**, `On` **rw**, `PortableSlot`, `Power`, `RequiredPower`
-
-### Landingpad_LiquidConnectorInwardPiece
-
-Entry point `Landingpad_LiquidConnectorInwardPieces`, type `Landingpad_LiquidConnectorInwardPiece`.
-
-`Combustion`, `Error`, `Maximum`, `On` **rw**, `Power`, `Pressure`, `Ratio`, `RatioCarbonDioxide`, `RatioHelium`, `RatioHydrazine`, `RatioHydrochloricAcid`, `RatioHydrogen`, `RatioLiquidAlcohol`, `RatioLiquidCarbonDioxide`, `RatioLiquidHydrazine`, `RatioLiquidHydrochloricAcid`, `RatioLiquidHydrogen`, `RatioLiquidMethane`, `RatioLiquidNitrogen`, `RatioLiquidNitrousOxide`, `RatioLiquidOxygen`, `RatioLiquidOzone`, `RatioLiquidPollutant`, `RatioLiquidSilanol`, `RatioLiquidSodiumChloride`, `RatioMethane`, `RatioNitrogen`, `RatioNitrousOxide`, `RatioOxygen`, `RatioOzone`, `RatioPollutant`, `RatioPollutedWater`, `RatioSilanol`, `RatioSteam`, `RatioWater`, `RequiredPower`, `Setting` **rw**, `Temperature`, `TotalMoles`
-
-### Landingpad_LiquidConnectorOutwardPiece
-
-Entry point `Landingpad_LiquidConnectorOutwardPieces`, type `Landingpad_LiquidConnectorOutwardPiece`.
-
-`Combustion`, `Error`, `Maximum`, `On` **rw**, `Power`, `Pressure`, `Ratio`, `RatioCarbonDioxide`, `RatioHelium`, `RatioHydrazine`, `RatioHydrochloricAcid`, `RatioHydrogen`, `RatioLiquidAlcohol`, `RatioLiquidCarbonDioxide`, `RatioLiquidHydrazine`, `RatioLiquidHydrochloricAcid`, `RatioLiquidHydrogen`, `RatioLiquidMethane`, `RatioLiquidNitrogen`, `RatioLiquidNitrousOxide`, `RatioLiquidOxygen`, `RatioLiquidOzone`, `RatioLiquidPollutant`, `RatioLiquidSilanol`, `RatioLiquidSodiumChloride`, `RatioMethane`, `RatioNitrogen`, `RatioNitrousOxide`, `RatioOxygen`, `RatioOzone`, `RatioPollutant`, `RatioPollutedWater`, `RatioSilanol`, `RatioSteam`, `RatioWater`, `RequiredPower`, `Setting` **rw**, `Temperature`, `TotalMoles`
-
-### Landingpad_LiquidTankConnectorPiece
-
-Entry point `Landingpad_LiquidTankConnectorPieces`, type `Landingpad_LiquidTankConnectorPiece`, slots `Slots<DataDiskSlot>`.
-
-`Error`, `Mode` **rw**, `On` **rw**, `PortableSlot`, `Power`, `RequiredPower`
-
-### Landingpad_ThreshholdPiece
-
-Entry point `Landingpad_ThreshholdPieces`, type `Landingpad_ThreshholdPiece`.
-
-`On` **rw**, `Power`, `RequiredPower`
-
-### LogicStepSequencer8
-
-Entry point `LogicStepSequencer8s`, type `LogicStepSequencer8`, slots `Slots<DataDiskSlot>`.
-
-`Activate` **rw**, `Bpm` **rw**, `Error`, `Mode` **rw**, `On` **rw**, `Power`, `RequiredPower`, `SoundCartridge`, `Time` **rw**
-
-### PassiveSpeaker
-
-Entry point `PassiveSpeakers`, type `PassiveSpeaker`.
-
-`SoundAlert` **rw**, `Volume` **rw**
-
-### PortableSolarPanel
-
-Entry point `PortableSolarPanels`, type `PortableSolarPanel`, slots `Slots<ItemBatterySlot>`.
-
-`Battery`, `Open` **rw**
-
-### Robot
-
-Entry point `Robots`, type `Robot`, slots `Slots<ItemCommonSlot>`.
-
-`Battery`, `Error`, `ForwardX`, `ForwardY`, `ForwardZ`, `MineablesInQueue`, `MineablesInVicinity`, `Mode` **rw**, `On` **rw**, `Orientation`, `PositionX`, `PositionY`, `PositionZ`, `Power`, `PressureExternal`, `ProgrammableChip`, `TargetX` **rw**, `TargetY` **rw**, `TargetZ` **rw**, `TemperatureExternal`, `VelocityMagnitude`, `VelocityRelativeX`, `VelocityRelativeY`, `VelocityRelativeZ`, `VelocityX`, `VelocityY`, `VelocityZ`
-
-### Rover_MkI
-
-Entry point `Rover_MkIs`, type `Rover_MkI`, slots `Slots<ItemCommonSlot>`.
-
-`On` **rw**, `Power`
-
-### StopWatch
-
-Entry point `StopWatches`, type `StopWatch`.
-
-`Activate` **rw**, `Error`, `On` **rw**, `Power`, `RequiredPower`, `Time`
-
-### StructureAccessBridge
-
-Entry point `AccessBridges`, type `AccessBridge`.
-
-`Activate` **rw**, `Lock` **rw**, `On` **rw**, `Open` **rw**, `Power`, `RequiredPower`
-
-### StructureActiveVent
-
-Entry point `ActiveVents`, type `ActiveVent`, slots `Slots<DataDiskSlot>`.
-
-`CombustionOutput`, `DataDisk`, `Error`, `Lock` **rw**, `Maximum`, `Mode` **rw**, `On` **rw**, `Open` **rw**, `Power`, `PressureExternal` **rw**, `PressureInternal` **rw**, `PressureOutput`, `Ratio`, `RatioCarbonDioxideOutput`, `RatioHeliumOutput`, `RatioHydrazineOutput`, `RatioHydrochloricAcidOutput`, `RatioHydrogenOutput`, `RatioLiquidAlcoholOutput`, `RatioLiquidHydrazineOutput`, `RatioLiquidHydrochloricAcidOutput`, `RatioLiquidHydrogenOutput`, `RatioLiquidOzoneOutput`, `RatioLiquidSilanolOutput`, `RatioLiquidSodiumChlorideOutput`, `RatioMethaneOutput`, `RatioNitrogenOutput`, `RatioNitrousOxideOutput`, `RatioOxygenOutput`, `RatioOzoneOutput`, `RatioPollutantOutput`, `RatioPollutedWaterOutput`, `RatioSilanolOutput`, `RatioWaterOutput`, `RequiredPower`, `Setting` **rw**, `TemperatureOutput`, `TotalMolesOutput`
-
-### StructureAdvancedComposter
-
-Entry point `AdvancedComposters`, type `AdvancedComposter`, slots `Slots<DataDiskSlot>`.
-
-`Activate` **rw**, `ClearMemory` **rw**, `Error`, `Export`, `ExportCount`, `Import`, `ImportCount`, `Lock` **rw**, `Maximum`, `Mode` **rw**, `On` **rw**, `Open` **rw**, `Power`, `Quantity`, `Ratio`, `RequiredPower`, `Setting` **rw**
-
-### StructureAdvancedFurnace
-
-Entry point `AdvancedFurnaces`, type `AdvancedFurnace`, slots `Slots<DataDiskSlot>`.
-
-`Activate` **rw**, `ClearMemory` **rw**, `Combustion`, `Error`, `Export`, `ExportCount`, `Import`, `ImportCount`, `Lock` **rw**, `Maximum`, `Mode` **rw**, `On` **rw**, `Open` **rw**, `Power`, `Pressure`, `Ratio`, `RatioCarbonDioxide`, `RatioHelium`, `RatioHydrazine`, `RatioHydrochloricAcid`, `RatioHydrogen`, `RatioLiquidAlcohol`, `RatioLiquidCarbonDioxide`, `RatioLiquidHydrazine`, `RatioLiquidHydrochloricAcid`, `RatioLiquidHydrogen`, `RatioLiquidMethane`, `RatioLiquidNitrogen`, `RatioLiquidNitrousOxide`, `RatioLiquidOxygen`, `RatioLiquidOzone`, `RatioLiquidPollutant`, `RatioLiquidSilanol`, `RatioLiquidSodiumChloride`, `RatioMethane`, `RatioNitrogen`, `RatioNitrousOxide`, `RatioOxygen`, `RatioOzone`, `RatioPollutant`, `RatioPollutedWater`, `RatioSilanol`, `RatioSteam`, `RatioWater`, `Reagents`, `RecipeHash`, `RequiredPower`, `Setting` **rw**, `SettingInput` **rw**, `SettingOutput` **rw**, `Temperature`, `TotalMoles`
-
-### StructureAdvancedPackagingMachine
-
-Entry point `AdvancedPackagingMachines`, type `AdvancedPackagingMachine`, slots `Slots<DataDiskSlot>`.
-
-`Activate` **rw**, `ClearMemory` **rw**, `CompletionRatio`, `Error`, `Export`, `ExportCount`, `Import`, `ImportCount`, `Lock` **rw**, `On` **rw**, `Open` **rw**, `Power`, `Reagents`, `RecipeHash` **rw**, `RequiredPower`, `StackSize`
-
-### StructureAirConditioner
-
-Entry point `AirConditioners`, type `AirConditioner`, slots `Slots<DataDiskSlot>`.
-
-`CombustionInput`, `CombustionOutput`, `CombustionOutput2`, `Error`, `Lock` **rw**, `Maximum`, `Mode` **rw**, `On` **rw**, `Open` **rw**, `OperationalTemperatureEfficiency`, `Power`, `PressureEfficiency`, `PressureInput`, `PressureOutput`, `PressureOutput2`, `ProgrammableChip`, `Ratio`, `RatioCarbonDioxideInput`, `RatioCarbonDioxideOutput`, `RatioCarbonDioxideOutput2`, `RatioHeliumInput`, `RatioHeliumOutput`, `RatioHeliumOutput2`, `RatioHydrazineInput`, `RatioHydrazineOutput`, `RatioHydrazineOutput2`, `RatioHydrochloricAcidInput`, `RatioHydrochloricAcidOutput`, `RatioHydrochloricAcidOutput2`, `RatioHydrogenInput`, `RatioHydrogenOutput`, `RatioHydrogenOutput2`, `RatioLiquidAlcoholInput`, `RatioLiquidAlcoholOutput`, `RatioLiquidAlcoholOutput2`, `RatioLiquidCarbonDioxideInput`, `RatioLiquidCarbonDioxideOutput`, `RatioLiquidCarbonDioxideOutput2`, `RatioLiquidHydrazineInput`, `RatioLiquidHydrazineOutput`, `RatioLiquidHydrazineOutput2`, `RatioLiquidHydrochloricAcidInput`, `RatioLiquidHydrochloricAcidOutput`, `RatioLiquidHydrochloricAcidOutput2`, `RatioLiquidHydrogenInput`, `RatioLiquidHydrogenOutput`, `RatioLiquidHydrogenOutput2`, `RatioLiquidMethaneInput`, `RatioLiquidMethaneOutput`, `RatioLiquidMethaneOutput2`, `RatioLiquidNitrogenInput`, `RatioLiquidNitrogenOutput`, `RatioLiquidNitrogenOutput2`, `RatioLiquidNitrousOxideInput`, `RatioLiquidNitrousOxideOutput`, `RatioLiquidNitrousOxideOutput2`, `RatioLiquidOxygenInput`, `RatioLiquidOxygenOutput`, `RatioLiquidOxygenOutput2`, `RatioLiquidOzoneInput`, `RatioLiquidOzoneOutput`, `RatioLiquidOzoneOutput2`, `RatioLiquidPollutantInput`, `RatioLiquidPollutantOutput`, `RatioLiquidPollutantOutput2`, `RatioLiquidSilanolInput`, `RatioLiquidSilanolOutput`, `RatioLiquidSilanolOutput2`, `RatioLiquidSodiumChlorideInput`, `RatioLiquidSodiumChlorideOutput`, `RatioLiquidSodiumChlorideOutput2`, `RatioMethaneInput`, `RatioMethaneOutput`, `RatioMethaneOutput2`, `RatioNitrogenInput`, `RatioNitrogenOutput`, `RatioNitrogenOutput2`, `RatioNitrousOxideInput`, `RatioNitrousOxideOutput`, `RatioNitrousOxideOutput2`, `RatioOxygenInput`, `RatioOxygenOutput`, `RatioOxygenOutput2`, `RatioOzoneInput`, `RatioOzoneOutput`, `RatioOzoneOutput2`, `RatioPollutantInput`, `RatioPollutantOutput`, `RatioPollutantOutput2`, `RatioPollutedWaterInput`, `RatioPollutedWaterOutput`, `RatioPollutedWaterOutput2`, `RatioSilanolInput`, `RatioSilanolOutput`, `RatioSilanolOutput2`, `RatioSteamInput`, `RatioSteamOutput`, `RatioSteamOutput2`, `RatioWaterInput`, `RatioWaterOutput`, `RatioWaterOutput2`, `RequiredPower`, `Setting` **rw**, `TemperatureDifferentialEfficiency`, `TemperatureInput`, `TemperatureOutput`, `TemperatureOutput2`, `TotalMolesInput`, `TotalMolesOutput`, `TotalMolesOutput2`
-
-### StructureAirlock
-
-Entry point `Airlocks`, type `Airlock`.
-
-`Idle`, `Lock` **rw**, `Mode` **rw**, `On` **rw**, `Open` **rw**, `Power`, `RequiredPower`, `Setting` **rw**
-
-### StructureAirlockGate
-
-Entry point `AirlockGates`, type `AirlockGate`.
-
-`Idle`, `Lock` **rw**, `Mode` **rw**, `On` **rw**, `Open` **rw**, `Power`, `RequiredPower`, `Setting` **rw**
-
-### StructureAirlockWide
-
-Entry point `AirlockWides`, type `AirlockWide`.
-
-`Idle`, `Lock` **rw**, `Mode` **rw**, `On` **rw**, `Open` **rw**, `Power`, `RequiredPower`, `Setting` **rw**
-
-### StructureArcFurnace
-
-Entry point `ArcFurnaces`, type `ArcFurnace`, slots `Slots<DataDiskSlot>`.
-
-`Activate` **rw**, `ClearMemory` **rw**, `Error`, `Export`, `ExportCount`, `Idle`, `Import`, `ImportCount`, `Lock` **rw**, `On` **rw**, `Power`, `Reagents`, `RecipeHash`, `RequiredPower`
-
-### StructureAreaPowerControl
-
-Entry point `AreaPowerControls`, type `AreaPowerControl`, slots `Slots<CommonSlot>`.
-
-`Battery`, `Charge`, `DataDisk`, `Error`, `Lock` **rw**, `Maximum`, `Mode` **rw**, `On` **rw**, `Open` **rw**, `Power`, `PowerActual`, `PowerPotential`, `Ratio`, `RequiredPower`
-
-### StructureAreaPowerControlReversed
-
-Entry point `AreaPowerControlReverseds`, type `AreaPowerControlReversed`, slots `Slots<CommonSlot>`.
-
-`Battery`, `Charge`, `DataDisk`, `Error`, `Lock` **rw**, `Maximum`, `Mode` **rw**, `On` **rw**, `Open` **rw**, `Power`, `PowerActual`, `PowerPotential`, `Ratio`, `RequiredPower`
-
-### StructureAutolathe
-
-Entry point `Autolathes`, type `Autolathe`, slots `Slots<DataDiskSlot>`.
-
-`Activate` **rw**, `ClearMemory` **rw**, `CompletionRatio`, `Error`, `Export`, `ExportCount`, `Import`, `ImportCount`, `Lock` **rw**, `On` **rw**, `Open` **rw**, `Power`, `Reagents`, `RecipeHash` **rw**, `RequiredPower`, `StackSize`
-
-### StructureAutomatedOven
-
-Entry point `AutomatedOvens`, type `AutomatedOven`, slots `Slots<DataDiskSlot>`.
-
-`Activate` **rw**, `ClearMemory` **rw**, `CompletionRatio`, `Error`, `Export`, `ExportCount`, `Import`, `ImportCount`, `Lock` **rw**, `On` **rw**, `Open` **rw**, `Power`, `Reagents`, `RecipeHash` **rw**, `RequiredPower`, `StackSize`
-
-### StructureAutoMinerSmall
-
-Entry point `AutoMinerSmalls`, type `AutoMinerSmall`, slots `Slots<DataDiskSlot>`.
-
-`Activate` **rw**, `ClearMemory` **rw**, `Error`, `Export`, `ExportCount`, `Import`, `ImportCount`, `On` **rw**, `Open` **rw**, `Power`, `RequiredPower`
-
-### StructureBackLiquidPressureRegulator
-
-Entry point `BackLiquidPressureRegulators`, type `BackLiquidPressureRegulator`.
-
-`Error`, `Lock` **rw**, `Maximum`, `On` **rw**, `Power`, `Ratio`, `RequiredPower`, `Setting` **rw**
-
-### StructureBackPressureRegulator
-
-Entry point `BackPressureRegulators`, type `BackPressureRegulator`.
-
-`Error`, `Lock` **rw**, `Maximum`, `On` **rw**, `Power`, `Ratio`, `RequiredPower`, `Setting` **rw**
-
-### StructureBasketHoop
-
-Entry point `BasketHoops`, type `BasketHoop`.
-
-`Lock` **rw**, `On` **rw**, `Power`, `RequiredPower`, `Setting` **rw**
-
-### StructureBattery
-
-Entry point `Batteries.Station`, type `Battery.Station`.
-
-`Charge`, `Error`, `Lock` **rw**, `Maximum`, `Mode`, `On` **rw**, `Power`, `PowerActual`, `PowerPotential`, `Ratio`
-
-### StructureBatteryCharger
-
-Entry point `BatteryChargers`, type `BatteryCharger`, slots `Slots<BatterySlot>`.
-
-`Activate` **rw**, `Error`, `On` **rw**, `Power`, `RequiredPower`
-
-### StructureBatteryChargerSmall
-
-Entry point `BatteryChargerSmalls`, type `BatteryChargerSmall`, slots `Slots<BatterySlot>`.
-
-`Activate` **rw**, `Error`, `On` **rw**, `Power`, `RequiredPower`
-
-### StructureBatteryLarge
-
-Entry point `Batteries.Large`, type `Battery.Large`.
-
-`Charge`, `Error`, `Lock` **rw**, `Maximum`, `Mode`, `On` **rw**, `Power`, `PowerActual`, `PowerPotential`, `Ratio`
-
-### StructureBatteryMedium
-
-Entry point `Batteries.Medium`, type `Battery.Medium`.
-
-`Charge`, `Maximum`, `Mode`, `On` **rw**, `Power`, `PowerActual`, `PowerPotential`, `Ratio`
-
-### StructureBatterySmall
-
-Entry point `Batteries.Small`, type `Battery.Small`.
-
-`Charge`, `Maximum`, `Mode`, `On` **rw**, `Power`, `PowerActual`, `PowerPotential`, `Ratio`
-
-### StructureBeacon
-
-Entry point `StructureBeacons`, type `StructureBeacon`.
-
-`Color` **rw**, `Error`, `Lock` **rw**, `On` **rw**, `PositionX`, `PositionY`, `PositionZ`, `Power`, `RequiredPower`
-
-### StructureBench
-
-Entry point `Benches`, type `Bench`, slots `Slots<ApplianceSlot>`.
-
-`Appliance1`, `Appliance2`, `Error`, `On` **rw**, `Power`, `RequiredPower`
-
-### StructureBench1
-
-Entry point `Bench1s`, type `Bench1`, slots `Slots<ApplianceSlot>`.
-
-`Appliance1`, `Appliance2`, `Error`, `On` **rw**, `Power`, `RequiredPower`
-
-### StructureBench2
-
-Entry point `Bench2s`, type `Bench2`, slots `Slots<ApplianceSlot>`.
-
-`Appliance1`, `Appliance2`, `Error`, `On` **rw**, `Power`, `RequiredPower`
-
-### StructureBench3
-
-Entry point `Bench3s`, type `Bench3`, slots `Slots<ApplianceSlot>`.
-
-`Appliance1`, `Appliance2`, `Error`, `On` **rw**, `Power`, `RequiredPower`
-
-### StructureBench4
-
-Entry point `Bench4s`, type `Bench4`, slots `Slots<ApplianceSlot>`.
-
-`Appliance1`, `Appliance2`, `Error`, `On` **rw**, `Power`, `RequiredPower`
-
-### StructureBlastDoor
-
-Entry point `BlastDoors`, type `BlastDoor`.
-
-`Idle`, `Lock` **rw**, `Mode` **rw**, `On` **rw**, `Open` **rw**, `Power`, `RequiredPower`, `Setting` **rw**
-
-### StructureBlockBed
-
-Entry point `BlockBeds`, type `BlockBed`, slots `Slots<DataDiskSlot>`.
-
-`Activate` **rw**, `Bed`, `Error`, `On` **rw**, `Power`, `RequiredPower`
-
-### StructureCableAnalysizer
-
-Entry point `CableAnalysizers`, type `CableAnalysizer`.
-
-`PowerActual`, `PowerPotential`, `PowerRequired`
-
-### StructureCamera
-
-Entry point `Cameras`, type `Camera`.
-
-`Mode` **rw**, `On` **rw**
-
-### StructureCapsuleTankGas
-
-Entry point `CapsuleTankGases`, type `CapsuleTankGas`.
-
-`Combustion`, `CombustionOutput`, `Maximum`, `Pressure`, `PressureOutput`, `Ratio`, `RatioCarbonDioxide`, `RatioCarbonDioxideOutput`, `RatioHelium`, `RatioHeliumOutput`, `RatioHydrazine`, `RatioHydrazineOutput`, `RatioHydrochloricAcid`, `RatioHydrochloricAcidOutput`, `RatioHydrogen`, `RatioHydrogenOutput`, `RatioLiquidAlcohol`, `RatioLiquidAlcoholOutput`, `RatioLiquidCarbonDioxide`, `RatioLiquidHydrazine`, `RatioLiquidHydrazineOutput`, `RatioLiquidHydrochloricAcid`, `RatioLiquidHydrochloricAcidOutput`, `RatioLiquidHydrogen`, `RatioLiquidHydrogenOutput`, `RatioLiquidMethane`, `RatioLiquidNitrogen`, `RatioLiquidNitrousOxide`, `RatioLiquidOxygen`, `RatioLiquidOzone`, `RatioLiquidOzoneOutput`, `RatioLiquidPollutant`, `RatioLiquidSilanol`, `RatioLiquidSilanolOutput`, `RatioLiquidSodiumChloride`, `RatioLiquidSodiumChlorideOutput`, `RatioMethane`, `RatioMethaneOutput`, `RatioNitrogen`, `RatioNitrogenOutput`, `RatioNitrousOxide`, `RatioNitrousOxideOutput`, `RatioOxygen`, `RatioOxygenOutput`, `RatioOzone`, `RatioOzoneOutput`, `RatioPollutant`, `RatioPollutantOutput`, `RatioPollutedWater`, `RatioPollutedWaterOutput`, `RatioSilanol`, `RatioSilanolOutput`, `RatioSteam`, `RatioWater`, `RatioWaterOutput`, `Setting` **rw**, `Temperature`, `TemperatureOutput`, `TotalMoles`, `TotalMolesOutput`, `Volume`, `VolumeOfLiquid`
-
-### StructureCapsuleTankLiquid
-
-Entry point `CapsuleTankLiquids`, type `CapsuleTankLiquid`.
-
-`Combustion`, `CombustionOutput`, `Maximum`, `Pressure`, `PressureOutput`, `Ratio`, `RatioCarbonDioxide`, `RatioCarbonDioxideOutput`, `RatioHelium`, `RatioHeliumOutput`, `RatioHydrazine`, `RatioHydrazineOutput`, `RatioHydrochloricAcid`, `RatioHydrochloricAcidOutput`, `RatioHydrogen`, `RatioHydrogenOutput`, `RatioLiquidAlcohol`, `RatioLiquidAlcoholOutput`, `RatioLiquidCarbonDioxide`, `RatioLiquidHydrazine`, `RatioLiquidHydrazineOutput`, `RatioLiquidHydrochloricAcid`, `RatioLiquidHydrochloricAcidOutput`, `RatioLiquidHydrogen`, `RatioLiquidHydrogenOutput`, `RatioLiquidMethane`, `RatioLiquidNitrogen`, `RatioLiquidNitrousOxide`, `RatioLiquidOxygen`, `RatioLiquidOzone`, `RatioLiquidOzoneOutput`, `RatioLiquidPollutant`, `RatioLiquidSilanol`, `RatioLiquidSilanolOutput`, `RatioLiquidSodiumChloride`, `RatioLiquidSodiumChlorideOutput`, `RatioMethane`, `RatioMethaneOutput`, `RatioNitrogen`, `RatioNitrogenOutput`, `RatioNitrousOxide`, `RatioNitrousOxideOutput`, `RatioOxygen`, `RatioOxygenOutput`, `RatioOzone`, `RatioOzoneOutput`, `RatioPollutant`, `RatioPollutantOutput`, `RatioPollutedWater`, `RatioPollutedWaterOutput`, `RatioSilanol`, `RatioSilanolOutput`, `RatioSteam`, `RatioWater`, `RatioWaterOutput`, `Setting` **rw**, `Temperature`, `TemperatureOutput`, `TotalMoles`, `TotalMolesOutput`, `Volume`, `VolumeOfLiquid`
-
-### StructureCargoStorageMedium
-
-Entry point `CargoStorageMediums`, type `CargoStorageMedium`, slots `Slots<DataDiskSlot>`.
-
-`ClearMemory` **rw**, `Error`, `Export`, `ExportCount`, `Import`, `ImportCount`, `Lock` **rw**, `On` **rw**, `Open` **rw**, `Power`, `Quantity`, `Ratio`, `RequiredPower`
-
-### StructureCargoStorageSmall
-
-Entry point `CargoStorageSmalls`, type `CargoStorageSmall`, slots `Slots<DataDiskSlot>`.
-
-`ClearMemory` **rw**, `Error`, `Export`, `ExportCount`, `Import`, `ImportCount`, `Lock` **rw**, `On` **rw**, `Open` **rw**, `Power`, `Quantity`, `Ratio`, `RequiredPower`
-
-### StructureCentrifuge
-
-Entry point `Centrifuges`, type `Centrifuge`, slots `Slots<DataDiskSlot>`.
-
-`ClearMemory` **rw**, `Error`, `Export`, `ExportCount`, `Import`, `ImportCount`, `On` **rw**, `Open` **rw**, `Power`, `Reagents`, `RequiredPower`
-
-### StructureChuteBin
-
-Entry point `ChuteBins`, type `ChuteBin`, slots `Slots<DataDiskSlot>`.
-
-`Error`, `Input`, `Lock` **rw**, `On` **rw**, `Open` **rw**, `Power`, `RequiredPower`
-
-### StructureChuteDigitalFlipFlopSplitterLeft
-
-Entry point `ChuteDigitalFlipFlopSplitterLefts`, type `ChuteDigitalFlipFlopSplitterLeft`, slots `Slots<DataDiskSlot>`.
-
-`Mode` **rw**, `On` **rw**, `Power`, `Quantity` **rw**, `RequiredPower`, `Setting` **rw**, `SettingOutput` **rw**, `TransportSlot`
-
-### StructureChuteDigitalFlipFlopSplitterRight
-
-Entry point `ChuteDigitalFlipFlopSplitterRights`, type `ChuteDigitalFlipFlopSplitterRight`, slots `Slots<DataDiskSlot>`.
-
-`Mode` **rw**, `On` **rw**, `Power`, `Quantity` **rw**, `RequiredPower`, `Setting` **rw**, `SettingOutput` **rw**, `TransportSlot`
-
-### StructureChuteDigitalValveLeft
-
-Entry point `ChuteDigitalValveLefts`, type `ChuteDigitalValveLeft`, slots `Slots<DataDiskSlot>`.
-
-`Lock` **rw**, `On` **rw**, `Open` **rw**, `Power`, `Quantity` **rw**, `RequiredPower`, `Setting` **rw**, `TransportSlot`
-
-### StructureChuteDigitalValveRight
-
-Entry point `ChuteDigitalValveRights`, type `ChuteDigitalValveRight`, slots `Slots<DataDiskSlot>`.
-
-`Lock` **rw**, `On` **rw**, `Open` **rw**, `Power`, `Quantity` **rw**, `RequiredPower`, `Setting` **rw**, `TransportSlot`
-
-### StructureChuteExportBin
-
-Entry point `ChuteExportBins`, type `ChuteExportBin`, slots `Slots<DataDiskSlot>`.
-
-`Error`, `Input`, `Lock` **rw**, `On` **rw**, `Open` **rw**, `Power`, `RequiredPower`
-
-### StructureChuteInlet
-
-Entry point `ChuteInlets`, type `ChuteInlet`, slots `Slots<DataDiskSlot>`.
-
-`ClearMemory` **rw**, `Import`, `ImportCount`, `Lock` **rw**
-
-### StructureChuteOutlet
-
-Entry point `ChuteOutlets`, type `ChuteOutlet`, slots `Slots<DataDiskSlot>`.
-
-`ClearMemory` **rw**, `Export`, `ExportCount`, `ImportCount`, `Lock` **rw**
-
-### StructureChuteUmbilicalMale
-
-Entry point `ChuteUmbilicalMales`, type `ChuteUmbilicalMale`, slots `Slots<DataDiskSlot>`.
-
-`Error`, `Lock` **rw**, `Mode`, `On` **rw**, `Open` **rw**, `Power`, `RequiredPower`, `TransportSlot`
-
-### StructureCircuitHousing
-
-Entry point `CircuitHousings`, type `CircuitHousing`, slots `Slots<CommonSlot>`.
-
-`Error`, `LineNumber` **rw**, `Mode` **rw**, `On` **rw**, `Power`, `ProgrammableChip`, `RequiredPower`, `Setting` **rw**, `StackSize`
-
-### StructureCircuitHousingCompact
-
-Entry point `CircuitHousingCompacts`, type `CircuitHousingCompact`, slots `Slots<ProgrammableChipSlot>`.
-
-`Error`, `LineNumber` **rw**, `Mode` **rw**, `On` **rw**, `Power`, `ProgrammableChip`, `RequiredPower`, `Setting` **rw**, `StackSize`
-
-### StructureCombustionCentrifuge
-
-Entry point `CombustionCentrifuges`, type `CombustionCentrifuge`, slots `Slots<DataDiskSlot>`.
-
-`ClearMemory` **rw**, `Combustion`, `CombustionInput`, `CombustionLimiter` **rw**, `CombustionOutput`, `Error`, `Export`, `ExportCount`, `Import`, `ImportCount`, `Lock` **rw**, `On` **rw**, `Open` **rw**, `Power`, `Pressure`, `PressureInput`, `PressureOutput`, `ProgrammableChip`, `RatioCarbonDioxide`, `RatioCarbonDioxideInput`, `RatioCarbonDioxideOutput`, `RatioHelium`, `RatioHeliumInput`, `RatioHeliumOutput`, `RatioHydrazine`, `RatioHydrazineInput`, `RatioHydrazineOutput`, `RatioHydrochloricAcid`, `RatioHydrochloricAcidInput`, `RatioHydrochloricAcidOutput`, `RatioHydrogen`, `RatioHydrogenInput`, `RatioHydrogenOutput`, `RatioLiquidAlcohol`, `RatioLiquidAlcoholInput`, `RatioLiquidAlcoholOutput`, `RatioLiquidCarbonDioxide`, `RatioLiquidCarbonDioxideInput`, `RatioLiquidCarbonDioxideOutput`, `RatioLiquidHydrazine`, `RatioLiquidHydrazineInput`, `RatioLiquidHydrazineOutput`, `RatioLiquidHydrochloricAcid`, `RatioLiquidHydrochloricAcidInput`, `RatioLiquidHydrochloricAcidOutput`, `RatioLiquidHydrogen`, `RatioLiquidHydrogenInput`, `RatioLiquidHydrogenOutput`, `RatioLiquidMethane`, `RatioLiquidMethaneInput`, `RatioLiquidMethaneOutput`, `RatioLiquidNitrogen`, `RatioLiquidNitrogenInput`, `RatioLiquidNitrogenOutput`, `RatioLiquidNitrousOxide`, `RatioLiquidNitrousOxideInput`, `RatioLiquidNitrousOxideOutput`, `RatioLiquidOxygen`, `RatioLiquidOxygenInput`, `RatioLiquidOxygenOutput`, `RatioLiquidOzone`, `RatioLiquidOzoneInput`, `RatioLiquidOzoneOutput`, `RatioLiquidPollutant`, `RatioLiquidPollutantInput`, `RatioLiquidPollutantOutput`, `RatioLiquidSilanol`, `RatioLiquidSilanolInput`, `RatioLiquidSilanolOutput`, `RatioLiquidSodiumChloride`, `RatioLiquidSodiumChlorideInput`, `RatioLiquidSodiumChlorideOutput`, `RatioMethane`, `RatioMethaneInput`, `RatioMethaneOutput`, `RatioNitrogen`, `RatioNitrogenInput`, `RatioNitrogenOutput`, `RatioNitrousOxide`, `RatioNitrousOxideInput`, `RatioNitrousOxideOutput`, `RatioOxygen`, `RatioOxygenInput`, `RatioOxygenOutput`, `RatioOzone`, `RatioOzoneInput`, `RatioOzoneOutput`, `RatioPollutant`, `RatioPollutantInput`, `RatioPollutantOutput`, `RatioPollutedWater`, `RatioPollutedWaterInput`, `RatioPollutedWaterOutput`, `RatioSilanol`, `RatioSilanolInput`, `RatioSilanolOutput`, `RatioSteam`, `RatioSteamInput`, `RatioSteamOutput`, `RatioWater`, `RatioWaterInput`, `RatioWaterOutput`, `Reagents`, `RequiredPower`, `Rpm`, `Stress`, `Temperature`, `TemperatureInput`, `TemperatureOutput`, `Throttle` **rw**, `TotalMoles`, `TotalMolesInput`, `TotalMolesOutput`
-
-### StructureCombustionDeepMiner
-
-Entry point `CombustionDeepMiners`, type `CombustionDeepMiner`, slots `Slots<DataDiskSlot>`.
-
-`ClearMemory` **rw**, `Combustion`, `CombustionInput`, `CombustionLimiter` **rw**, `CombustionOutput`, `Error`, `Export`, `ExportCount`, `ImportCount`, `Lock` **rw**, `On` **rw**, `Open` **rw**, `Power`, `Pressure`, `PressureInput`, `PressureOutput`, `ProgrammableChip`, `RatioCarbonDioxide`, `RatioCarbonDioxideInput`, `RatioCarbonDioxideOutput`, `RatioHelium`, `RatioHeliumInput`, `RatioHeliumOutput`, `RatioHydrazine`, `RatioHydrazineInput`, `RatioHydrazineOutput`, `RatioHydrochloricAcid`, `RatioHydrochloricAcidInput`, `RatioHydrochloricAcidOutput`, `RatioHydrogen`, `RatioHydrogenInput`, `RatioHydrogenOutput`, `RatioLiquidAlcohol`, `RatioLiquidAlcoholInput`, `RatioLiquidAlcoholOutput`, `RatioLiquidCarbonDioxide`, `RatioLiquidCarbonDioxideInput`, `RatioLiquidCarbonDioxideOutput`, `RatioLiquidHydrazine`, `RatioLiquidHydrazineInput`, `RatioLiquidHydrazineOutput`, `RatioLiquidHydrochloricAcid`, `RatioLiquidHydrochloricAcidInput`, `RatioLiquidHydrochloricAcidOutput`, `RatioLiquidHydrogen`, `RatioLiquidHydrogenInput`, `RatioLiquidHydrogenOutput`, `RatioLiquidMethane`, `RatioLiquidMethaneInput`, `RatioLiquidMethaneOutput`, `RatioLiquidNitrogen`, `RatioLiquidNitrogenInput`, `RatioLiquidNitrogenOutput`, `RatioLiquidNitrousOxide`, `RatioLiquidNitrousOxideInput`, `RatioLiquidNitrousOxideOutput`, `RatioLiquidOxygen`, `RatioLiquidOxygenInput`, `RatioLiquidOxygenOutput`, `RatioLiquidOzone`, `RatioLiquidOzoneInput`, `RatioLiquidOzoneOutput`, `RatioLiquidPollutant`, `RatioLiquidPollutantInput`, `RatioLiquidPollutantOutput`, `RatioLiquidSilanol`, `RatioLiquidSilanolInput`, `RatioLiquidSilanolOutput`, `RatioLiquidSodiumChloride`, `RatioLiquidSodiumChlorideInput`, `RatioLiquidSodiumChlorideOutput`, `RatioMethane`, `RatioMethaneInput`, `RatioMethaneOutput`, `RatioNitrogen`, `RatioNitrogenInput`, `RatioNitrogenOutput`, `RatioNitrousOxide`, `RatioNitrousOxideInput`, `RatioNitrousOxideOutput`, `RatioOxygen`, `RatioOxygenInput`, `RatioOxygenOutput`, `RatioOzone`, `RatioOzoneInput`, `RatioOzoneOutput`, `RatioPollutant`, `RatioPollutantInput`, `RatioPollutantOutput`, `RatioPollutedWater`, `RatioPollutedWaterInput`, `RatioPollutedWaterOutput`, `RatioSilanol`, `RatioSilanolInput`, `RatioSilanolOutput`, `RatioSteam`, `RatioSteamInput`, `RatioSteamOutput`, `RatioWater`, `RatioWaterInput`, `RatioWaterOutput`, `RequiredPower`, `Rpm`, `Stress`, `Temperature`, `TemperatureInput`, `TemperatureOutput`, `Throttle` **rw**, `TotalMoles`, `TotalMolesInput`, `TotalMolesOutput`
-
-### StructureCompositeDoor
-
-Entry point `CompositeDoors`, type `CompositeDoor`.
-
-`Idle`, `Lock` **rw**, `Mode` **rw**, `On` **rw**, `Open` **rw**, `Power`, `RequiredPower`, `Setting` **rw**
-
-### StructureCompositeWindowShutterController
-
-Entry point `CompositeWindowShutterControllers`, type `CompositeWindowShutterController`.
-
-`Error`, `Lock` **rw**, `On` **rw**, `Open` **rw**, `Power`, `RequiredPower`
-
-### StructureComputer
-
-Entry point `Computers`, type `Computer`, slots `Slots<DataDiskSlot>`.
-
-`Error`, `Lock` **rw**, `Motherboard`, `On` **rw**, `Open` **rw**, `Power`, `RequiredPower`
-
-### StructureComputerBigScreen
-
-Entry point `ComputerBigScreens`, type `ComputerBigScreen`, slots `Slots<DataDiskSlot>`.
-
-`Error`, `Lock` **rw**, `Motherboard`, `On` **rw**, `Open` **rw**, `Power`, `RequiredPower`
-
-### StructureComputerBigScreenWallMounted
-
-Entry point `ComputerBigScreenWallMounteds`, type `ComputerBigScreenWallMounted`, slots `Slots<DataDiskSlot>`.
-
-`Error`, `Lock` **rw**, `Motherboard`, `On` **rw**, `Open` **rw**, `Power`, `RequiredPower`
-
-### StructureComputerUpright
-
-Entry point `ComputerUprights`, type `ComputerUpright`, slots `Slots<DataDiskSlot>`.
-
-`Error`, `Lock` **rw**, `Motherboard`, `On` **rw**, `Open` **rw**, `Power`, `RequiredPower`
-
-### StructureCondensationChamber
-
-Entry point `CondensationChambers`, type `CondensationChamber`.
-
-`Combustion`, `Error`, `Lock` **rw**, `Maximum`, `On` **rw**, `Open` **rw**, `Power`, `Pressure`, `Ratio`, `RatioCarbonDioxide`, `RatioHelium`, `RatioHydrazine`, `RatioHydrochloricAcid`, `RatioHydrogen`, `RatioLiquidAlcohol`, `RatioLiquidCarbonDioxide`, `RatioLiquidHydrazine`, `RatioLiquidHydrochloricAcid`, `RatioLiquidHydrogen`, `RatioLiquidMethane`, `RatioLiquidNitrogen`, `RatioLiquidNitrousOxide`, `RatioLiquidOxygen`, `RatioLiquidOzone`, `RatioLiquidPollutant`, `RatioLiquidSilanol`, `RatioLiquidSodiumChloride`, `RatioMethane`, `RatioNitrogen`, `RatioNitrousOxide`, `RatioOxygen`, `RatioOzone`, `RatioPollutant`, `RatioPollutedWater`, `RatioSilanol`, `RatioSteam`, `RatioWater`, `RequiredPower`, `Setting` **rw**, `Temperature`, `TotalMoles`
-
-### StructureCondensationValve
-
-Entry point `CondensationValves`, type `CondensationValve`.
-
-`Maximum`, `On` **rw**, `Ratio`, `Setting` **rw**
-
-### StructureConsole
-
-Entry point `Consoles`, type `Console`, slots `Slots<CircuitboardSlot>`.
-
-`Activate` **rw**, `Circuitboard`, `Error`, `On` **rw**, `Open` **rw**, `Power`, `RequiredPower`, `Setting`
-
-### StructureConsoleDual
-
-Entry point `ConsoleDuals`, type `ConsoleDual`, slots `Slots<CircuitboardSlot>`.
-
-`Activate` **rw**, `Circuitboard`, `Error`, `On` **rw**, `Open` **rw**, `Power`, `RequiredPower`, `Setting`
-
-### StructureConsoleLED1x2
-
-Entry point `LedDisplays.Medium`, type `LedDisplay.Medium`.
-
-`Color` **rw**, `Error`, `Mode` **rw**, `On` **rw**, `Power`, `RequiredPower`, `Setting` **rw**, `Text` **rw**
-
-### StructureConsoleLED1x3
-
-Entry point `LedDisplays.Large`, type `LedDisplay.Large`.
-
-`Color` **rw**, `Error`, `Mode` **rw**, `On` **rw**, `Power`, `RequiredPower`, `Setting` **rw**, `Text` **rw**
-
-### StructureConsoleLED5
-
-Entry point `LedDisplays.Small`, type `LedDisplay.Small`.
-
-`Color` **rw**, `Error`, `Mode` **rw**, `On` **rw**, `Power`, `RequiredPower`, `Setting` **rw**, `Text` **rw**
-
-### StructureConsoleMonitor
-
-Entry point `ConsoleMonitors`, type `ConsoleMonitor`, slots `Slots<CircuitboardSlot>`.
-
-`Activate` **rw**, `Circuitboard`, `Error`, `On` **rw**, `Open` **rw**, `Power`, `RequiredPower`, `Setting`
-
-### StructureCornerLocker
-
-Entry point `CornerLockers`, type `CornerLocker`, slots `Slots<DataDiskSlot>`.
-
-`Lock` **rw**, `Open` **rw**
-
-### StructureCrewUmbilical
-
-Entry point `CrewUmbilicals`, type `CrewUmbilical`.
-
-`Error`, `Lock` **rw**, `Mode` **rw**, `On` **rw**, `Open` **rw**, `Power`, `RequiredPower`
-
-### StructureCryoTubeHorizontal
-
-Entry point `CryoTubeHorizontals`, type `CryoTubeHorizontal`, slots `Slots<CommonSlot>`.
-
-`Activate` **rw**, `EntityState`, `Error`, `Lock` **rw**, `Mask`, `Maximum`, `Mode` **rw**, `On` **rw**, `Open` **rw**, `Player`, `Power`, `Pressure`, `Ratio`, `RequiredPower`, `Setting` **rw**, `Temperature`
-
-### StructureCryoTubeVertical
-
-Entry point `CryoTubeVerticals`, type `CryoTubeVertical`, slots `Slots<CommonSlot>`.
-
-`Activate` **rw**, `EntityState`, `Error`, `Lock` **rw**, `Mask`, `Maximum`, `Mode` **rw**, `On` **rw**, `Open` **rw**, `Player`, `Power`, `Pressure`, `Ratio`, `RequiredPower`, `Setting` **rw**, `Temperature`
-
-### StructureDaylightSensor
-
-Entry point `DaylightSensors`, type `DaylightSensor`.
-
-`Activate` **rw**, `Horizontal`, `Mode` **rw**, `On` **rw**, `SolarAngle`, `SolarIrradiance`, `Vertical`
-
-### StructureDeepMiner
-
-Entry point `DeepMiners`, type `DeepMiner`, slots `Slots<DataDiskSlot>`.
-
-`ClearMemory` **rw**, `Error`, `Export`, `ExportCount`, `ImportCount`, `Maximum`, `On` **rw**, `Power`, `Ratio`, `RequiredPower`, `Setting` **rw**
-
-### StructureDigitalValve
-
-Entry point `DigitalValves`, type `DigitalValve`.
-
-`Error`, `Lock` **rw**, `Maximum`, `On` **rw**, `Power`, `Ratio`, `RequiredPower`, `Setting` **rw**
-
-### StructureDiode
-
-Entry point `Diodes`, type `Diode`.
-
-`Color` **rw**, `Lock` **rw**, `On` **rw**, `Power`, `RequiredPower`
-
-### StructureDiodeSlide
-
-Entry point `DiodeSlides`, type `DiodeSlide`.
-
-`Lock` **rw**, `On` **rw**, `Power`, `RequiredPower`, `Setting` **rw**
-
-### StructureDrinkingFountain2x1
-
-Entry point `DrinkingFountain2x1s`, type `DrinkingFountain2x1`.
-
-`Error`, `On` **rw**, `Power`, `RequiredPower`
-
-### StructureElectrolyzer
-
-Entry point `Electrolyzers`, type `Electrolyzer`, slots `Slots<DataDiskSlot>`.
-
-`Activate` **rw**, `CombustionInput`, `CombustionOutput`, `Error`, `Lock` **rw**, `Maximum`, `Mode` **rw**, `On` **rw**, `Open` **rw**, `Power`, `PressureInput`, `PressureOutput`, `ProgrammableChip`, `Ratio`, `RatioCarbonDioxideInput`, `RatioCarbonDioxideOutput`, `RatioHeliumInput`, `RatioHeliumOutput`, `RatioHydrazineInput`, `RatioHydrazineOutput`, `RatioHydrochloricAcidInput`, `RatioHydrochloricAcidOutput`, `RatioHydrogenInput`, `RatioHydrogenOutput`, `RatioLiquidAlcoholInput`, `RatioLiquidAlcoholOutput`, `RatioLiquidCarbonDioxideInput`, `RatioLiquidCarbonDioxideOutput`, `RatioLiquidHydrazineInput`, `RatioLiquidHydrazineOutput`, `RatioLiquidHydrochloricAcidInput`, `RatioLiquidHydrochloricAcidOutput`, `RatioLiquidHydrogenInput`, `RatioLiquidHydrogenOutput`, `RatioLiquidMethaneInput`, `RatioLiquidMethaneOutput`, `RatioLiquidNitrogenInput`, `RatioLiquidNitrogenOutput`, `RatioLiquidNitrousOxideInput`, `RatioLiquidNitrousOxideOutput`, `RatioLiquidOxygenInput`, `RatioLiquidOxygenOutput`, `RatioLiquidOzoneInput`, `RatioLiquidOzoneOutput`, `RatioLiquidPollutantInput`, `RatioLiquidPollutantOutput`, `RatioLiquidSilanolInput`, `RatioLiquidSilanolOutput`, `RatioLiquidSodiumChlorideInput`, `RatioLiquidSodiumChlorideOutput`, `RatioMethaneInput`, `RatioMethaneOutput`, `RatioNitrogenInput`, `RatioNitrogenOutput`, `RatioNitrousOxideInput`, `RatioNitrousOxideOutput`, `RatioOxygenInput`, `RatioOxygenOutput`, `RatioOzoneInput`, `RatioOzoneOutput`, `RatioPollutantInput`, `RatioPollutantOutput`, `RatioPollutedWaterInput`, `RatioPollutedWaterOutput`, `RatioSilanolInput`, `RatioSilanolOutput`, `RatioSteamInput`, `RatioSteamOutput`, `RatioWaterInput`, `RatioWaterOutput`, `RequiredPower`, `Setting` **rw**, `TemperatureInput`, `TemperatureOutput`, `TotalMolesInput`, `TotalMolesOutput`
-
-### StructureElectronicsPrinter
-
-Entry point `ElectronicsPrinters`, type `ElectronicsPrinter`, slots `Slots<DataDiskSlot>`.
-
-`Activate` **rw**, `ClearMemory` **rw**, `CompletionRatio`, `Error`, `Export`, `ExportCount`, `Import`, `ImportCount`, `Lock` **rw**, `On` **rw**, `Open` **rw**, `Power`, `Reagents`, `RecipeHash` **rw**, `RequiredPower`, `StackSize`
-
-### StructureElevatorLevelFront
-
-Entry point `ElevatorLevelFronts`, type `ElevatorLevelFront`.
-
-`Activate` **rw**, `ElevatorLevel` **rw**, `ElevatorSpeed` **rw**, `Error`, `Lock` **rw**, `On` **rw**, `Open` **rw**, `Power`, `RequiredPower`
-
-### StructureElevatorLevelIndustrial
-
-Entry point `ElevatorLevelIndustrials`, type `ElevatorLevelIndustrial`.
-
-`Activate` **rw**, `ElevatorLevel` **rw**, `ElevatorSpeed` **rw**, `Error`, `Lock` **rw**, `On` **rw**, `Open` **rw**, `Power`, `RequiredPower`
-
-### StructureElevatorShaft
-
-Entry point `ElevatorShafts`, type `ElevatorShaft`.
-
-`ElevatorLevel` **rw**, `ElevatorSpeed` **rw**, `On` **rw**, `Power`, `RequiredPower`
-
-### StructureElevatorShaftIndustrial
-
-Entry point `ElevatorShaftIndustrials`, type `ElevatorShaftIndustrial`.
-
-`ElevatorLevel` **rw**, `ElevatorSpeed` **rw**
-
-### StructureEmergencyButton
-
-Entry point `EmergencyButtons`, type `EmergencyButton`.
-
-`Activate` **rw**, `Error`, `Lock` **rw**, `On` **rw**, `Open` **rw**, `Power`, `RequiredPower`, `Setting`
-
-### StructureEvaporationChamber
-
-Entry point `EvaporationChambers`, type `EvaporationChamber`.
-
-`Combustion`, `Error`, `Lock` **rw**, `Maximum`, `On` **rw**, `Open` **rw**, `Power`, `Pressure`, `Ratio`, `RatioCarbonDioxide`, `RatioHelium`, `RatioHydrazine`, `RatioHydrochloricAcid`, `RatioHydrogen`, `RatioLiquidAlcohol`, `RatioLiquidCarbonDioxide`, `RatioLiquidHydrazine`, `RatioLiquidHydrochloricAcid`, `RatioLiquidHydrogen`, `RatioLiquidMethane`, `RatioLiquidNitrogen`, `RatioLiquidNitrousOxide`, `RatioLiquidOxygen`, `RatioLiquidOzone`, `RatioLiquidPollutant`, `RatioLiquidSilanol`, `RatioLiquidSodiumChloride`, `RatioMethane`, `RatioNitrogen`, `RatioNitrousOxide`, `RatioOxygen`, `RatioOzone`, `RatioPollutant`, `RatioPollutedWater`, `RatioSilanol`, `RatioSteam`, `RatioWater`, `RequiredPower`, `Setting` **rw**, `Temperature`, `TotalMoles`
-
-### StructureExpansionValve
-
-Entry point `ExpansionValves`, type `ExpansionValve`.
-
-`Maximum`, `On` **rw**, `Ratio`, `Setting` **rw**
-
-### StructureFermenter
-
-Entry point `Fermenters`, type `Fermenter`, slots `Slots<DataDiskSlot>`.
-
-`ClearMemory` **rw**, `CombustionInput`, `CombustionInput2`, `CombustionOutput`, `CompletionRatio`, `Error`, `Import`, `ImportCount`, `Lock` **rw**, `Maximum`, `Mode` **rw**, `On` **rw**, `Open` **rw**, `Power`, `PressureInput`, `PressureInput2`, `PressureOutput`, `ProgrammableChip`, `Ratio`, `RatioCarbonDioxideInput`, `RatioCarbonDioxideInput2`, `RatioCarbonDioxideOutput`, `RatioHeliumInput`, `RatioHeliumInput2`, `RatioHeliumOutput`, `RatioHydrazineInput`, `RatioHydrazineInput2`, `RatioHydrazineOutput`, `RatioHydrochloricAcidInput`, `RatioHydrochloricAcidInput2`, `RatioHydrochloricAcidOutput`, `RatioHydrogenInput`, `RatioHydrogenInput2`, `RatioHydrogenOutput`, `RatioLiquidAlcoholInput`, `RatioLiquidAlcoholInput2`, `RatioLiquidAlcoholOutput`, `RatioLiquidCarbonDioxideInput`, `RatioLiquidCarbonDioxideInput2`, `RatioLiquidCarbonDioxideOutput`, `RatioLiquidHydrazineInput`, `RatioLiquidHydrazineInput2`, `RatioLiquidHydrazineOutput`, `RatioLiquidHydrochloricAcidInput`, `RatioLiquidHydrochloricAcidInput2`, `RatioLiquidHydrochloricAcidOutput`, `RatioLiquidHydrogenInput`, `RatioLiquidHydrogenInput2`, `RatioLiquidHydrogenOutput`, `RatioLiquidMethaneInput`, `RatioLiquidMethaneInput2`, `RatioLiquidMethaneOutput`, `RatioLiquidNitrogenInput`, `RatioLiquidNitrogenInput2`, `RatioLiquidNitrogenOutput`, `RatioLiquidNitrousOxideInput`, `RatioLiquidNitrousOxideInput2`, `RatioLiquidNitrousOxideOutput`, `RatioLiquidOxygenInput`, `RatioLiquidOxygenInput2`, `RatioLiquidOxygenOutput`, `RatioLiquidOzoneInput`, `RatioLiquidOzoneInput2`, `RatioLiquidOzoneOutput`, `RatioLiquidPollutantInput`, `RatioLiquidPollutantInput2`, `RatioLiquidPollutantOutput`, `RatioLiquidSilanolInput`, `RatioLiquidSilanolInput2`, `RatioLiquidSilanolOutput`, `RatioLiquidSodiumChlorideInput`, `RatioLiquidSodiumChlorideInput2`, `RatioLiquidSodiumChlorideOutput`, `RatioMethaneInput`, `RatioMethaneInput2`, `RatioMethaneOutput`, `RatioNitrogenInput`, `RatioNitrogenInput2`, `RatioNitrogenOutput`, `RatioNitrousOxideInput`, `RatioNitrousOxideInput2`, `RatioNitrousOxideOutput`, `RatioOxygenInput`, `RatioOxygenInput2`, `RatioOxygenOutput`, `RatioOzoneInput`, `RatioOzoneInput2`, `RatioOzoneOutput`, `RatioPollutantInput`, `RatioPollutantInput2`, `RatioPollutantOutput`, `RatioPollutedWaterInput`, `RatioPollutedWaterInput2`, `RatioPollutedWaterOutput`, `RatioSilanolInput`, `RatioSilanolInput2`, `RatioSilanolOutput`, `RatioSteamInput`, `RatioSteamInput2`, `RatioSteamOutput`, `RatioWaterInput`, `RatioWaterInput2`, `RatioWaterOutput`, `RequiredPower`, `Setting` **rw**, `TemperatureInput`, `TemperatureInput2`, `TemperatureOutput`, `TotalMolesInput`, `TotalMolesInput2`, `TotalMolesOutput`
-
-### StructureFiltration
-
-Entry point `Filtrations`, type `Filtration`, slots `Slots<CommonSlot>`.
-
-`CombustionInput`, `CombustionOutput`, `CombustionOutput2`, `Error`, `Lock` **rw**, `Maximum`, `Mode` **rw**, `On` **rw**, `Open` **rw**, `Power`, `PressureInput`, `PressureOutput`, `PressureOutput2`, `ProgrammableChip`, `Ratio`, `RatioCarbonDioxideInput`, `RatioCarbonDioxideOutput`, `RatioCarbonDioxideOutput2`, `RatioHeliumInput`, `RatioHeliumOutput`, `RatioHeliumOutput2`, `RatioHydrazineInput`, `RatioHydrazineOutput`, `RatioHydrazineOutput2`, `RatioHydrochloricAcidInput`, `RatioHydrochloricAcidOutput`, `RatioHydrochloricAcidOutput2`, `RatioHydrogenInput`, `RatioHydrogenOutput`, `RatioHydrogenOutput2`, `RatioLiquidAlcoholInput`, `RatioLiquidAlcoholOutput`, `RatioLiquidAlcoholOutput2`, `RatioLiquidCarbonDioxideInput`, `RatioLiquidCarbonDioxideOutput`, `RatioLiquidCarbonDioxideOutput2`, `RatioLiquidHydrazineInput`, `RatioLiquidHydrazineOutput`, `RatioLiquidHydrazineOutput2`, `RatioLiquidHydrochloricAcidInput`, `RatioLiquidHydrochloricAcidOutput`, `RatioLiquidHydrochloricAcidOutput2`, `RatioLiquidHydrogenInput`, `RatioLiquidHydrogenOutput`, `RatioLiquidHydrogenOutput2`, `RatioLiquidMethaneInput`, `RatioLiquidMethaneOutput`, `RatioLiquidMethaneOutput2`, `RatioLiquidNitrogenInput`, `RatioLiquidNitrogenOutput`, `RatioLiquidNitrogenOutput2`, `RatioLiquidNitrousOxideInput`, `RatioLiquidNitrousOxideOutput`, `RatioLiquidNitrousOxideOutput2`, `RatioLiquidOxygenInput`, `RatioLiquidOxygenOutput`, `RatioLiquidOxygenOutput2`, `RatioLiquidOzoneInput`, `RatioLiquidOzoneOutput`, `RatioLiquidOzoneOutput2`, `RatioLiquidPollutantInput`, `RatioLiquidPollutantOutput`, `RatioLiquidPollutantOutput2`, `RatioLiquidSilanolInput`, `RatioLiquidSilanolOutput`, `RatioLiquidSilanolOutput2`, `RatioLiquidSodiumChlorideInput`, `RatioLiquidSodiumChlorideOutput`, `RatioLiquidSodiumChlorideOutput2`, `RatioMethaneInput`, `RatioMethaneOutput`, `RatioMethaneOutput2`, `RatioNitrogenInput`, `RatioNitrogenOutput`, `RatioNitrogenOutput2`, `RatioNitrousOxideInput`, `RatioNitrousOxideOutput`, `RatioNitrousOxideOutput2`, `RatioOxygenInput`, `RatioOxygenOutput`, `RatioOxygenOutput2`, `RatioOzoneInput`, `RatioOzoneOutput`, `RatioOzoneOutput2`, `RatioPollutantInput`, `RatioPollutantOutput`, `RatioPollutantOutput2`, `RatioPollutedWaterInput`, `RatioPollutedWaterOutput`, `RatioPollutedWaterOutput2`, `RatioSilanolInput`, `RatioSilanolOutput`, `RatioSilanolOutput2`, `RatioSteamInput`, `RatioSteamOutput`, `RatioSteamOutput2`, `RatioWaterInput`, `RatioWaterOutput`, `RatioWaterOutput2`, `RequiredPower`, `Setting` **rw**, `TemperatureInput`, `TemperatureOutput`, `TemperatureOutput2`, `TotalMolesInput`, `TotalMolesOutput`, `TotalMolesOutput2`
-
-### StructureFiltrationLiquid
-
-Entry point `FiltrationLiquids`, type `FiltrationLiquid`, slots `Slots<CommonSlot>`.
-
-`CombustionInput`, `CombustionOutput`, `CombustionOutput2`, `Error`, `Lock` **rw**, `Maximum`, `Mode` **rw**, `On` **rw**, `Open` **rw**, `Power`, `PressureInput`, `PressureOutput`, `PressureOutput2`, `ProgrammableChip`, `Ratio`, `RatioCarbonDioxideInput`, `RatioCarbonDioxideOutput`, `RatioCarbonDioxideOutput2`, `RatioHeliumInput`, `RatioHeliumOutput`, `RatioHeliumOutput2`, `RatioHydrazineInput`, `RatioHydrazineOutput`, `RatioHydrazineOutput2`, `RatioHydrochloricAcidInput`, `RatioHydrochloricAcidOutput`, `RatioHydrochloricAcidOutput2`, `RatioHydrogenInput`, `RatioHydrogenOutput`, `RatioHydrogenOutput2`, `RatioLiquidAlcoholInput`, `RatioLiquidAlcoholOutput`, `RatioLiquidAlcoholOutput2`, `RatioLiquidCarbonDioxideInput`, `RatioLiquidCarbonDioxideOutput`, `RatioLiquidCarbonDioxideOutput2`, `RatioLiquidHydrazineInput`, `RatioLiquidHydrazineOutput`, `RatioLiquidHydrazineOutput2`, `RatioLiquidHydrochloricAcidInput`, `RatioLiquidHydrochloricAcidOutput`, `RatioLiquidHydrochloricAcidOutput2`, `RatioLiquidHydrogenInput`, `RatioLiquidHydrogenOutput`, `RatioLiquidHydrogenOutput2`, `RatioLiquidMethaneInput`, `RatioLiquidMethaneOutput`, `RatioLiquidMethaneOutput2`, `RatioLiquidNitrogenInput`, `RatioLiquidNitrogenOutput`, `RatioLiquidNitrogenOutput2`, `RatioLiquidNitrousOxideInput`, `RatioLiquidNitrousOxideOutput`, `RatioLiquidNitrousOxideOutput2`, `RatioLiquidOxygenInput`, `RatioLiquidOxygenOutput`, `RatioLiquidOxygenOutput2`, `RatioLiquidOzoneInput`, `RatioLiquidOzoneOutput`, `RatioLiquidOzoneOutput2`, `RatioLiquidPollutantInput`, `RatioLiquidPollutantOutput`, `RatioLiquidPollutantOutput2`, `RatioLiquidSilanolInput`, `RatioLiquidSilanolOutput`, `RatioLiquidSilanolOutput2`, `RatioLiquidSodiumChlorideInput`, `RatioLiquidSodiumChlorideOutput`, `RatioLiquidSodiumChlorideOutput2`, `RatioMethaneInput`, `RatioMethaneOutput`, `RatioMethaneOutput2`, `RatioNitrogenInput`, `RatioNitrogenOutput`, `RatioNitrogenOutput2`, `RatioNitrousOxideInput`, `RatioNitrousOxideOutput`, `RatioNitrousOxideOutput2`, `RatioOxygenInput`, `RatioOxygenOutput`, `RatioOxygenOutput2`, `RatioOzoneInput`, `RatioOzoneOutput`, `RatioOzoneOutput2`, `RatioPollutantInput`, `RatioPollutantOutput`, `RatioPollutantOutput2`, `RatioPollutedWaterInput`, `RatioPollutedWaterOutput`, `RatioPollutedWaterOutput2`, `RatioSilanolInput`, `RatioSilanolOutput`, `RatioSilanolOutput2`, `RatioSteamInput`, `RatioSteamOutput`, `RatioSteamOutput2`, `RatioWaterInput`, `RatioWaterOutput`, `RatioWaterOutput2`, `RequiredPower`, `Setting` **rw**, `TemperatureInput`, `TemperatureOutput`, `TemperatureOutput2`, `TotalMolesInput`, `TotalMolesOutput`, `TotalMolesOutput2`
-
-### StructureFlashingLight
-
-Entry point `FlashingLights`, type `FlashingLight`.
-
-`Lock` **rw**, `On` **rw**, `Power`, `RequiredPower`
-
-### StructureFridgeBig
-
-Entry point `FridgeBigs`, type `FridgeBig`, slots `Slots<DataDiskSlot>`.
-
-`Combustion`, `CombustionOutput`, `Error`, `Maximum`, `On` **rw**, `Open` **rw**, `Power`, `Pressure`, `PressureOutput`, `Ratio`, `RatioCarbonDioxide`, `RatioCarbonDioxideOutput`, `RatioHelium`, `RatioHeliumOutput`, `RatioHydrazine`, `RatioHydrazineOutput`, `RatioHydrochloricAcid`, `RatioHydrochloricAcidOutput`, `RatioHydrogen`, `RatioHydrogenOutput`, `RatioLiquidAlcohol`, `RatioLiquidAlcoholOutput`, `RatioLiquidCarbonDioxide`, `RatioLiquidHydrazine`, `RatioLiquidHydrazineOutput`, `RatioLiquidHydrochloricAcid`, `RatioLiquidHydrochloricAcidOutput`, `RatioLiquidHydrogen`, `RatioLiquidHydrogenOutput`, `RatioLiquidMethane`, `RatioLiquidNitrogen`, `RatioLiquidNitrousOxide`, `RatioLiquidOxygen`, `RatioLiquidOzone`, `RatioLiquidOzoneOutput`, `RatioLiquidPollutant`, `RatioLiquidSilanol`, `RatioLiquidSilanolOutput`, `RatioLiquidSodiumChloride`, `RatioLiquidSodiumChlorideOutput`, `RatioMethane`, `RatioMethaneOutput`, `RatioNitrogen`, `RatioNitrogenOutput`, `RatioNitrousOxide`, `RatioNitrousOxideOutput`, `RatioOxygen`, `RatioOxygenOutput`, `RatioOzone`, `RatioOzoneOutput`, `RatioPollutant`, `RatioPollutantOutput`, `RatioPollutedWater`, `RatioPollutedWaterOutput`, `RatioSilanol`, `RatioSilanolOutput`, `RatioSteam`, `RatioWater`, `RatioWaterOutput`, `RequiredPower`, `Setting` **rw**, `Temperature`, `TemperatureOutput`, `TotalMoles`, `TotalMolesOutput`
-
-### StructureFridgeSmall
-
-Entry point `FridgeSmalls`, type `FridgeSmall`, slots `Slots<DataDiskSlot>`.
-
-`Combustion`, `CombustionOutput`, `Maximum`, `Open` **rw**, `Pressure`, `PressureOutput`, `Ratio`, `RatioCarbonDioxide`, `RatioCarbonDioxideOutput`, `RatioHelium`, `RatioHeliumOutput`, `RatioHydrazine`, `RatioHydrazineOutput`, `RatioHydrochloricAcid`, `RatioHydrochloricAcidOutput`, `RatioHydrogen`, `RatioHydrogenOutput`, `RatioLiquidAlcohol`, `RatioLiquidAlcoholOutput`, `RatioLiquidCarbonDioxide`, `RatioLiquidHydrazine`, `RatioLiquidHydrazineOutput`, `RatioLiquidHydrochloricAcid`, `RatioLiquidHydrochloricAcidOutput`, `RatioLiquidHydrogen`, `RatioLiquidHydrogenOutput`, `RatioLiquidMethane`, `RatioLiquidNitrogen`, `RatioLiquidNitrousOxide`, `RatioLiquidOxygen`, `RatioLiquidOzone`, `RatioLiquidOzoneOutput`, `RatioLiquidPollutant`, `RatioLiquidSilanol`, `RatioLiquidSilanolOutput`, `RatioLiquidSodiumChloride`, `RatioLiquidSodiumChlorideOutput`, `RatioMethane`, `RatioMethaneOutput`, `RatioNitrogen`, `RatioNitrogenOutput`, `RatioNitrousOxide`, `RatioNitrousOxideOutput`, `RatioOxygen`, `RatioOxygenOutput`, `RatioOzone`, `RatioOzoneOutput`, `RatioPollutant`, `RatioPollutantOutput`, `RatioPollutedWater`, `RatioPollutedWaterOutput`, `RatioSilanol`, `RatioSilanolOutput`, `RatioSteam`, `RatioWater`, `RatioWaterOutput`, `Setting` **rw**, `Temperature`, `TemperatureOutput`, `TotalMoles`, `TotalMolesOutput`
-
-### StructureFurnace
-
-Entry point `Furnaces`, type `Furnace`, slots `Slots<DataDiskSlot>`.
-
-`Activate` **rw**, `ClearMemory` **rw**, `Combustion`, `Export`, `ExportCount`, `Import`, `ImportCount`, `Lock` **rw**, `Maximum`, `Mode` **rw**, `Open` **rw**, `Pressure`, `Ratio`, `RatioCarbonDioxide`, `RatioHelium`, `RatioHydrazine`, `RatioHydrochloricAcid`, `RatioHydrogen`, `RatioLiquidAlcohol`, `RatioLiquidCarbonDioxide`, `RatioLiquidHydrazine`, `RatioLiquidHydrochloricAcid`, `RatioLiquidHydrogen`, `RatioLiquidMethane`, `RatioLiquidNitrogen`, `RatioLiquidNitrousOxide`, `RatioLiquidOxygen`, `RatioLiquidOzone`, `RatioLiquidPollutant`, `RatioLiquidSilanol`, `RatioLiquidSodiumChloride`, `RatioMethane`, `RatioNitrogen`, `RatioNitrousOxide`, `RatioOxygen`, `RatioOzone`, `RatioPollutant`, `RatioPollutedWater`, `RatioSilanol`, `RatioSteam`, `RatioWater`, `Reagents`, `RecipeHash`, `Setting` **rw**, `Temperature`, `TotalMoles`
-
-### StructureGasGenerator
-
-Entry point `GasGenerators`, type `GasGenerator`.
-
-`Combustion`, `Error`, `Maximum`, `On` **rw**, `Power`, `PowerGeneration`, `Pressure`, `Ratio`, `RatioCarbonDioxide`, `RatioHelium`, `RatioHydrazine`, `RatioHydrochloricAcid`, `RatioHydrogen`, `RatioLiquidAlcohol`, `RatioLiquidCarbonDioxide`, `RatioLiquidHydrazine`, `RatioLiquidHydrochloricAcid`, `RatioLiquidHydrogen`, `RatioLiquidMethane`, `RatioLiquidNitrogen`, `RatioLiquidNitrousOxide`, `RatioLiquidOxygen`, `RatioLiquidOzone`, `RatioLiquidPollutant`, `RatioLiquidSilanol`, `RatioLiquidSodiumChloride`, `RatioMethane`, `RatioNitrogen`, `RatioNitrousOxide`, `RatioOxygen`, `RatioOzone`, `RatioPollutant`, `RatioPollutedWater`, `RatioSilanol`, `RatioSteam`, `RatioWater`, `RequiredPower`, `Setting` **rw**, `Temperature`, `TotalMoles`
-
-### StructureGasMixer
-
-Entry point `GasMixers`, type `GasMixer`.
-
-`Error`, `Lock` **rw**, `Maximum`, `On` **rw**, `Power`, `Ratio`, `RequiredPower`, `Setting` **rw**
-
-### StructureGasSensor
-
-Entry point `GasSensors`, type `GasSensor`.
-
-`Combustion`, `Pressure`, `RatioCarbonDioxide`, `RatioHelium`, `RatioHydrazine`, `RatioHydrochloricAcid`, `RatioHydrogen`, `RatioLiquidAlcohol`, `RatioLiquidCarbonDioxide`, `RatioLiquidHydrazine`, `RatioLiquidHydrochloricAcid`, `RatioLiquidHydrogen`, `RatioLiquidMethane`, `RatioLiquidNitrogen`, `RatioLiquidNitrousOxide`, `RatioLiquidOxygen`, `RatioLiquidOzone`, `RatioLiquidPollutant`, `RatioLiquidSilanol`, `RatioLiquidSodiumChloride`, `RatioMethane`, `RatioNitrogen`, `RatioNitrousOxide`, `RatioOxygen`, `RatioOzone`, `RatioPollutant`, `RatioPollutedWater`, `RatioSilanol`, `RatioSteam`, `RatioWater`, `Temperature`, `TotalMoles`, `VolumeOfLiquid`
-
-### StructureGasTankStorage
-
-Entry point `GasTankStorages`, type `GasTankStorage`, slots `Slots<GasCanisterSlot>`.
-
-`GasCanister`, `Pressure`, `Quantity`, `RatioCarbonDioxide`, `RatioHelium`, `RatioHydrazine`, `RatioHydrochloricAcid`, `RatioHydrogen`, `RatioLiquidAlcohol`, `RatioLiquidCarbonDioxide`, `RatioLiquidHydrazine`, `RatioLiquidHydrochloricAcid`, `RatioLiquidHydrogen`, `RatioLiquidMethane`, `RatioLiquidNitrogen`, `RatioLiquidNitrousOxide`, `RatioLiquidOxygen`, `RatioLiquidOzone`, `RatioLiquidPollutant`, `RatioLiquidSilanol`, `RatioLiquidSodiumChloride`, `RatioMethane`, `RatioNitrogen`, `RatioNitrousOxide`, `RatioOxygen`, `RatioOzone`, `RatioPollutant`, `RatioPollutedWater`, `RatioSilanol`, `RatioSteam`, `RatioWater`, `Temperature`
-
-### StructureGasUmbilicalFemale
-
-Entry point `GasUmbilicalFemales`, type `GasUmbilicalFemale`.
-
-`Maximum`, `Ratio`, `Setting` **rw**
-
-### StructureGasUmbilicalFemaleSide
-
-Entry point `GasUmbilicalFemaleSides`, type `GasUmbilicalFemaleSide`.
-
-`Maximum`, `Ratio`, `Setting` **rw**
-
-### StructureGasUmbilicalMale
-
-Entry point `GasUmbilicalMales`, type `GasUmbilicalMale`.
-
-`Error`, `Lock` **rw**, `Maximum`, `Mode`, `On` **rw**, `Open` **rw**, `Power`, `Ratio`, `RequiredPower`, `Setting` **rw**
-
-### StructureGlassDoor
-
-Entry point `GlassDoors`, type `GlassDoor`.
-
-`Idle`, `Lock` **rw**, `Mode` **rw**, `On` **rw**, `Open` **rw**, `Power`, `RequiredPower`, `Setting` **rw**
-
-### StructureGovernedGasEngine
-
-Entry point `GovernedGasEngines`, type `GovernedGasEngine`.
-
-`Combustion`, `Error`, `On` **rw**, `PassedMoles`, `Power`, `Pressure`, `RatioCarbonDioxide`, `RatioHelium`, `RatioHydrazine`, `RatioHydrochloricAcid`, `RatioHydrogen`, `RatioLiquidAlcohol`, `RatioLiquidCarbonDioxide`, `RatioLiquidHydrazine`, `RatioLiquidHydrochloricAcid`, `RatioLiquidHydrogen`, `RatioLiquidMethane`, `RatioLiquidNitrogen`, `RatioLiquidNitrousOxide`, `RatioLiquidOxygen`, `RatioLiquidOzone`, `RatioLiquidPollutant`, `RatioLiquidSilanol`, `RatioLiquidSodiumChloride`, `RatioMethane`, `RatioNitrogen`, `RatioNitrousOxide`, `RatioOxygen`, `RatioOzone`, `RatioPollutant`, `RatioPollutedWater`, `RatioSilanol`, `RatioSteam`, `RatioWater`, `RequiredPower`, `Temperature`, `Throttle` **rw**, `TotalMoles`
-
-### StructureGroundBasedTelescope
-
-Entry point `GroundBasedTelescopes`, type `GroundBasedTelescope`.
-
-`Activate` **rw**, `AlignmentError`, `CelestialHash`, `CelestialParentHash`, `DistanceAu`, `DistanceKm`, `Eccentricity`, `Error`, `Horizontal` **rw**, `HorizontalRatio` **rw**, `Inclination`, `Lock` **rw**, `On` **rw**, `Open` **rw**, `OrbitPeriod`, `Power`, `RequiredPower`, `SemiMajorAxis`, `TrueAnomaly`, `Vertical` **rw**, `VerticalRatio` **rw**
-
-### StructureGrowLight
-
-Entry point `GrowLights`, type `GrowLight`.
-
-`Lock` **rw**, `On` **rw**, `Power`, `RequiredPower`
-
-### StructureHarvie
-
-Entry point `Harvies`, type `Harvie`, slots `Slots<DataDiskSlot>`.
-
-`Activate` **rw**, `ClearMemory` **rw**, `Error`, `Export`, `ExportCount`, `Hand`, `Harvest` **rw**, `Import`, `ImportCount`, `Lock` **rw**, `Mode` **rw**, `On` **rw**, `Plant` **rw**, `Power`, `RequiredPower`
-
-### StructureHorizontalAutoMiner
-
-Entry point `HorizontalAutoMiners`, type `HorizontalAutoMiner`, slots `Slots<DataDiskSlot>`.
-
-`Activate` **rw**, `ClearMemory` **rw**, `Error`, `Export`, `ExportCount`, `Import`, `ImportCount`, `Mode` **rw**, `On` **rw**, `Open` **rw**, `Power`, `RequiredPower`
-
-### StructureHydraulicPipeBender
-
-Entry point `HydraulicPipeBenders`, type `HydraulicPipeBender`, slots `Slots<DataDiskSlot>`.
-
-`Activate` **rw**, `ClearMemory` **rw**, `CompletionRatio`, `Error`, `Export`, `ExportCount`, `Import`, `ImportCount`, `Lock` **rw**, `On` **rw**, `Open` **rw**, `Power`, `Reagents`, `RecipeHash` **rw**, `RequiredPower`, `StackSize`
-
-### StructureHydroponicsStation
-
-Entry point `HydroponicsStations`, type `HydroponicsStation`, slots `Slots<PlantSlot>`.
-
-`Combustion`, `CombustionOutput`, `Error`, `Maximum`, `On` **rw**, `Power`, `Pressure`, `PressureOutput`, `Ratio`, `RatioCarbonDioxide`, `RatioCarbonDioxideOutput`, `RatioHelium`, `RatioHeliumOutput`, `RatioHydrazine`, `RatioHydrazineOutput`, `RatioHydrochloricAcid`, `RatioHydrochloricAcidOutput`, `RatioHydrogen`, `RatioHydrogenOutput`, `RatioLiquidAlcohol`, `RatioLiquidAlcoholOutput`, `RatioLiquidCarbonDioxide`, `RatioLiquidHydrazine`, `RatioLiquidHydrazineOutput`, `RatioLiquidHydrochloricAcid`, `RatioLiquidHydrochloricAcidOutput`, `RatioLiquidHydrogen`, `RatioLiquidHydrogenOutput`, `RatioLiquidMethane`, `RatioLiquidNitrogen`, `RatioLiquidNitrousOxide`, `RatioLiquidOxygen`, `RatioLiquidOzone`, `RatioLiquidOzoneOutput`, `RatioLiquidPollutant`, `RatioLiquidSilanol`, `RatioLiquidSilanolOutput`, `RatioLiquidSodiumChloride`, `RatioLiquidSodiumChlorideOutput`, `RatioMethane`, `RatioMethaneOutput`, `RatioNitrogen`, `RatioNitrogenOutput`, `RatioNitrousOxide`, `RatioNitrousOxideOutput`, `RatioOxygen`, `RatioOxygenOutput`, `RatioOzone`, `RatioOzoneOutput`, `RatioPollutant`, `RatioPollutantOutput`, `RatioPollutedWater`, `RatioPollutedWaterOutput`, `RatioSilanol`, `RatioSilanolOutput`, `RatioSteam`, `RatioWater`, `RatioWaterOutput`, `RequiredPower`, `Setting` **rw**, `Temperature`, `TemperatureOutput`, `TotalMoles`, `TotalMolesOutput`
-
-### StructureHydroponicsTrayData
-
-Entry point `HydroponicsTrayDatas`, type `HydroponicsTrayData`, slots `Slots<CommonSlot>`.
-
-`Combustion`, `Fertiliser`, `Plant`, `Pressure`, `RatioCarbonDioxide`, `RatioHelium`, `RatioHydrazine`, `RatioHydrochloricAcid`, `RatioHydrogen`, `RatioLiquidAlcohol`, `RatioLiquidCarbonDioxide`, `RatioLiquidHydrazine`, `RatioLiquidHydrochloricAcid`, `RatioLiquidHydrogen`, `RatioLiquidMethane`, `RatioLiquidNitrogen`, `RatioLiquidNitrousOxide`, `RatioLiquidOxygen`, `RatioLiquidOzone`, `RatioLiquidPollutant`, `RatioLiquidSilanol`, `RatioLiquidSodiumChloride`, `RatioMethane`, `RatioNitrogen`, `RatioNitrousOxide`, `RatioOxygen`, `RatioOzone`, `RatioPollutant`, `RatioPollutedWater`, `RatioSilanol`, `RatioSteam`, `RatioWater`, `Temperature`, `TotalMoles`
-
-### StructureIceCrusher
-
-Entry point `IceCrushers`, type `IceCrusher`, slots `Slots<DataDiskSlot>`.
-
-`Activate` **rw**, `ClearMemory` **rw**, `Error`, `Import`, `ImportCount`, `Lock` **rw**, `Maximum`, `On` **rw**, `Power`, `Ratio`, `RequiredPower`, `Setting` **rw**
-
-### StructureIgniter
-
-Entry point `Igniters`, type `Igniter`.
-
-`On` **rw**
-
-### StructureInteriorDoorGlass
-
-Entry point `InteriorDoorGlasses`, type `InteriorDoorGlass`.
-
-`Idle`, `Lock` **rw**, `Mode` **rw**, `On` **rw**, `Open` **rw**, `Power`, `RequiredPower`, `Setting` **rw**
-
-### StructureInteriorDoorPadded
-
-Entry point `InteriorDoorPaddeds`, type `InteriorDoorPadded`.
-
-`Idle`, `Lock` **rw**, `Mode` **rw**, `On` **rw**, `Open` **rw**, `Power`, `RequiredPower`, `Setting` **rw**
-
-### StructureInteriorDoorPaddedThin
-
-Entry point `InteriorDoorPaddedThins`, type `InteriorDoorPaddedThin`.
-
-`Idle`, `Lock` **rw**, `Mode` **rw**, `On` **rw**, `Open` **rw**, `Power`, `RequiredPower`, `Setting` **rw**
-
-### StructureInteriorDoorTriangle
-
-Entry point `InteriorDoorTriangles`, type `InteriorDoorTriangle`.
-
-`Idle`, `Lock` **rw**, `Mode` **rw**, `On` **rw**, `Open` **rw**, `Power`, `RequiredPower`, `Setting` **rw**
-
-### StructureKlaxon
-
-Entry point `Klaxons`, type `Klaxon`.
-
-`Mode` **rw**, `On` **rw**, `Power`, `RequiredPower`, `SoundAlert` **rw**, `Volume` **rw**
-
-### StructureLargeDirectHeatExchangeGastoGas
-
-Entry point `LargeDirectHeatExchangeGastoGases`, type `LargeDirectHeatExchangeGastoGas`.
-
-`Maximum`, `Ratio`, `Setting` **rw**
-
-### StructureLargeDirectHeatExchangeGastoLiquid
-
-Entry point `LargeDirectHeatExchangeGastoLiquids`, type `LargeDirectHeatExchangeGastoLiquid`.
-
-`Maximum`, `Ratio`, `Setting` **rw**
-
-### StructureLargeDirectHeatExchangeLiquidtoLiquid
-
-Entry point `LargeDirectHeatExchangeLiquidtoLiquids`, type `LargeDirectHeatExchangeLiquidtoLiquid`.
-
-`Maximum`, `Ratio`, `Setting` **rw**
-
-### StructureLargeExtendableRadiator
-
-Entry point `LargeExtendableRadiators`, type `LargeExtendableRadiator`.
-
-`Horizontal` **rw**, `Lock` **rw**, `Maximum`, `Open` **rw**, `Ratio`, `Setting` **rw**
-
-### StructureLargeHangerDoor
-
-Entry point `LargeHangerDoors`, type `LargeHangerDoor`.
-
-`Idle`, `Lock` **rw**, `Mode` **rw**, `On` **rw**, `Open` **rw**, `Power`, `RequiredPower`, `Setting` **rw**
-
-### StructureLargeRocketGasFuelTank
-
-Entry point `LargeRocketGasFuelTanks`, type `LargeRocketGasFuelTank`.
-
-`Combustion`, `CombustionOutput`, `Maximum`, `Pressure`, `PressureOutput`, `Ratio`, `RatioCarbonDioxide`, `RatioCarbonDioxideOutput`, `RatioHelium`, `RatioHeliumOutput`, `RatioHydrazine`, `RatioHydrazineOutput`, `RatioHydrochloricAcid`, `RatioHydrochloricAcidOutput`, `RatioHydrogen`, `RatioHydrogenOutput`, `RatioLiquidAlcohol`, `RatioLiquidAlcoholOutput`, `RatioLiquidCarbonDioxide`, `RatioLiquidHydrazine`, `RatioLiquidHydrazineOutput`, `RatioLiquidHydrochloricAcid`, `RatioLiquidHydrochloricAcidOutput`, `RatioLiquidHydrogen`, `RatioLiquidHydrogenOutput`, `RatioLiquidMethane`, `RatioLiquidNitrogen`, `RatioLiquidNitrousOxide`, `RatioLiquidOxygen`, `RatioLiquidOzone`, `RatioLiquidOzoneOutput`, `RatioLiquidPollutant`, `RatioLiquidSilanol`, `RatioLiquidSilanolOutput`, `RatioLiquidSodiumChloride`, `RatioLiquidSodiumChlorideOutput`, `RatioMethane`, `RatioMethaneOutput`, `RatioNitrogen`, `RatioNitrogenOutput`, `RatioNitrousOxide`, `RatioNitrousOxideOutput`, `RatioOxygen`, `RatioOxygenOutput`, `RatioOzone`, `RatioOzoneOutput`, `RatioPollutant`, `RatioPollutantOutput`, `RatioPollutedWater`, `RatioPollutedWaterOutput`, `RatioSilanol`, `RatioSilanolOutput`, `RatioSteam`, `RatioWater`, `RatioWaterOutput`, `Setting` **rw**, `Temperature`, `TemperatureOutput`, `TotalMoles`, `TotalMolesOutput`, `Volume`, `VolumeOfLiquid`
-
-### StructureLargeRocketLiquidFuelTank
-
-Entry point `LargeRocketLiquidFuelTanks`, type `LargeRocketLiquidFuelTank`.
-
-`Combustion`, `CombustionOutput`, `Maximum`, `Pressure`, `PressureOutput`, `Ratio`, `RatioCarbonDioxide`, `RatioCarbonDioxideOutput`, `RatioHelium`, `RatioHeliumOutput`, `RatioHydrazine`, `RatioHydrazineOutput`, `RatioHydrochloricAcid`, `RatioHydrochloricAcidOutput`, `RatioHydrogen`, `RatioHydrogenOutput`, `RatioLiquidAlcohol`, `RatioLiquidAlcoholOutput`, `RatioLiquidCarbonDioxide`, `RatioLiquidHydrazine`, `RatioLiquidHydrazineOutput`, `RatioLiquidHydrochloricAcid`, `RatioLiquidHydrochloricAcidOutput`, `RatioLiquidHydrogen`, `RatioLiquidHydrogenOutput`, `RatioLiquidMethane`, `RatioLiquidNitrogen`, `RatioLiquidNitrousOxide`, `RatioLiquidOxygen`, `RatioLiquidOzone`, `RatioLiquidOzoneOutput`, `RatioLiquidPollutant`, `RatioLiquidSilanol`, `RatioLiquidSilanolOutput`, `RatioLiquidSodiumChloride`, `RatioLiquidSodiumChlorideOutput`, `RatioMethane`, `RatioMethaneOutput`, `RatioNitrogen`, `RatioNitrogenOutput`, `RatioNitrousOxide`, `RatioNitrousOxideOutput`, `RatioOxygen`, `RatioOxygenOutput`, `RatioOzone`, `RatioOzoneOutput`, `RatioPollutant`, `RatioPollutantOutput`, `RatioPollutedWater`, `RatioPollutedWaterOutput`, `RatioSilanol`, `RatioSilanolOutput`, `RatioSteam`, `RatioWater`, `RatioWaterOutput`, `Setting` **rw**, `Temperature`, `TemperatureOutput`, `TotalMoles`, `TotalMolesOutput`, `Volume`, `VolumeOfLiquid`
-
-### StructureLargeSatelliteDish
-
-Entry point `LargeSatelliteDishes`, type `LargeSatelliteDish`.
-
-`Activate` **rw**, `BestContactFilter` **rw**, `ContactSlotIndex`, `ContactTypeId`, `Error`, `Horizontal` **rw**, `Idle`, `InterrogationProgress`, `MinimumWattsToContact`, `On` **rw**, `Power`, `RequiredPower`, `Setting` **rw**, `SignalID`, `SignalStrength`, `SizeX`, `SizeZ`, `TargetPadIndex` **rw**, `Vertical` **rw**, `WattsReachingContact`
-
-### StructureLarreDockAtmos
-
-Entry point `LarreDockAtmoses`, type `LarreDockAtmos`, slots `Slots<FilterSlot>`.
-
-`Activate` **rw**, `Combustion`, `CombustionInput`, `Error`, `Extended`, `Filter`, `Idle`, `Mode` **rw**, `On` **rw**, `Open` **rw**, `PositionX`, `Power`, `Pressure`, `PressureExternal` **rw**, `PressureInput`, `PressureInternal` **rw**, `RatioCarbonDioxide`, `RatioCarbonDioxideInput`, `RatioHelium`, `RatioHydrazine`, `RatioHydrochloricAcid`, `RatioHydrogen`, `RatioLiquidAlcohol`, `RatioLiquidCarbonDioxide`, `RatioLiquidCarbonDioxideInput`, `RatioLiquidHydrazine`, `RatioLiquidHydrochloricAcid`, `RatioLiquidHydrogen`, `RatioLiquidMethane`, `RatioLiquidMethaneInput`, `RatioLiquidNitrogen`, `RatioLiquidNitrogenInput`, `RatioLiquidNitrousOxide`, `RatioLiquidNitrousOxideInput`, `RatioLiquidOxygen`, `RatioLiquidOxygenInput`, `RatioLiquidOzone`, `RatioLiquidPollutant`, `RatioLiquidPollutantInput`, `RatioLiquidSilanol`, `RatioLiquidSodiumChloride`, `RatioMethane`, `RatioMethaneInput`, `RatioNitrogen`, `RatioNitrogenInput`, `RatioNitrousOxide`, `RatioNitrousOxideInput`, `RatioOxygen`, `RatioOxygenInput`, `RatioOzone`, `RatioPollutant`, `RatioPollutantInput`, `RatioPollutedWater`, `RatioSilanol`, `RatioSteam`, `RatioSteamInput`, `RatioWater`, `RatioWaterInput`, `RequiredPower`, `Setting` **rw**, `Temperature`, `TemperatureInput`, `TotalMoles`, `TotalMolesInput`
-
-### StructureLarreDockBypass
-
-Entry point `LarreDockBypasses`, type `LarreDockBypass`.
-
-`On` **rw**, `Open` **rw**, `Power`, `RequiredPower`
-
-### StructureLarreDockCargo
-
-Entry point `LarreDockCargos`, type `LarreDockCargo`, slots `Slots<CommonSlot>`.
-
-`Activate` **rw**, `ArmSlot`, `Error`, `Extended`, `Idle`, `On` **rw**, `Open` **rw**, `PositionX`, `Power`, `RequiredPower`, `Setting` **rw**, `TargetPrefabHash`, `TargetSlot`, `TargetSlotIndex` **rw**
-
-### StructureLarreDockCollector
-
-Entry point `LarreDockCollectors`, type `LarreDockCollector`, slots `Slots<DataDiskSlot>`.
-
-`Activate` **rw**, `Error`, `Extended`, `Idle`, `Mode` **rw**, `On` **rw**, `Open` **rw**, `PositionX`, `Power`, `Quantity`, `Ratio`, `RequiredPower`, `Setting` **rw**
-
-### StructureLarreDockHydroponics
-
-Entry point `LarreDockHydroponicses`, type `LarreDockHydroponics`, slots `Slots<CommonSlot>`.
-
-`Activate` **rw**, `ArmSlot`, `Error`, `Extended`, `HopperSlot`, `Idle`, `On` **rw**, `Open` **rw**, `PositionX`, `Power`, `RequiredPower`, `Setting` **rw**, `TargetPrefabHash`, `TargetSlot`, `TargetSlotIndex`
-
-### StructureLightLong
-
-Entry point `LightLongs`, type `LightLong`.
-
-`Lock` **rw**, `On` **rw**, `Power`, `RequiredPower`
-
-### StructureLightLongAngled
-
-Entry point `LightLongAngleds`, type `LightLongAngled`.
-
-`Lock` **rw**, `On` **rw**, `Power`, `RequiredPower`
-
-### StructureLightLongWide
-
-Entry point `LightLongWides`, type `LightLongWide`.
-
-`Lock` **rw**, `On` **rw**, `Power`, `RequiredPower`
-
-### StructureLightRound
-
-Entry point `LightRounds`, type `LightRound`.
-
-`Lock` **rw**, `On` **rw**, `Power`, `RequiredPower`
-
-### StructureLightRoundAngled
-
-Entry point `LightRoundAngleds`, type `LightRoundAngled`.
-
-`Lock` **rw**, `On` **rw**, `Power`, `RequiredPower`
-
-### StructureLightRoundSmall
-
-Entry point `LightRoundSmalls`, type `LightRoundSmall`.
-
-`Lock` **rw**, `On` **rw**, `Power`, `RequiredPower`
-
-### StructureLiquidDrain
-
-Entry point `LiquidDrains`, type `LiquidDrain`.
-
-`CombustionOutput`, `Error`, `Lock` **rw**, `Maximum`, `On` **rw**, `Power`, `PressureOutput`, `Ratio`, `RatioCarbonDioxideOutput`, `RatioHeliumOutput`, `RatioHydrazineOutput`, `RatioHydrochloricAcidOutput`, `RatioHydrogenOutput`, `RatioLiquidAlcoholOutput`, `RatioLiquidHydrazineOutput`, `RatioLiquidHydrochloricAcidOutput`, `RatioLiquidHydrogenOutput`, `RatioLiquidOzoneOutput`, `RatioLiquidSilanolOutput`, `RatioLiquidSodiumChlorideOutput`, `RatioMethaneOutput`, `RatioNitrogenOutput`, `RatioNitrousOxideOutput`, `RatioOxygenOutput`, `RatioOzoneOutput`, `RatioPollutantOutput`, `RatioPollutedWaterOutput`, `RatioSilanolOutput`, `RatioWaterOutput`, `RequiredPower`, `Setting` **rw**, `TemperatureOutput`, `TotalMolesOutput`
-
-### StructureLiquidPipeAnalyzer
-
-Entry point `LiquidPipeAnalyzers`, type `LiquidPipeAnalyzer`.
-
-`Combustion`, `Error`, `Lock` **rw**, `NetworkFault`, `On` **rw**, `Power`, `Pressure`, `RatioCarbonDioxide`, `RatioHelium`, `RatioHydrazine`, `RatioHydrochloricAcid`, `RatioHydrogen`, `RatioLiquidAlcohol`, `RatioLiquidCarbonDioxide`, `RatioLiquidHydrazine`, `RatioLiquidHydrochloricAcid`, `RatioLiquidHydrogen`, `RatioLiquidMethane`, `RatioLiquidNitrogen`, `RatioLiquidNitrousOxide`, `RatioLiquidOxygen`, `RatioLiquidOzone`, `RatioLiquidPollutant`, `RatioLiquidSilanol`, `RatioLiquidSodiumChloride`, `RatioMethane`, `RatioNitrogen`, `RatioNitrousOxide`, `RatioOxygen`, `RatioOzone`, `RatioPollutant`, `RatioPollutedWater`, `RatioSilanol`, `RatioSteam`, `RatioWater`, `RequiredPower`, `Temperature`, `TotalMoles`, `Volume`, `VolumeOfLiquid`
-
-### StructureLiquidPipeHeater
-
-Entry point `LiquidPipeHeaters`, type `LiquidPipeHeater`.
-
-`Error`, `Lock` **rw**, `On` **rw**, `Power`, `RequiredPower`
-
-### StructureLiquidPressureRegulator
-
-Entry point `LiquidPressureRegulators`, type `LiquidPressureRegulator`.
-
-`Error`, `Lock` **rw**, `Maximum`, `On` **rw**, `Power`, `Ratio`, `RequiredPower`, `Setting` **rw**
-
-### StructureLiquidTankStorage
-
-Entry point `LiquidTankStorages`, type `LiquidTankStorage`, slots `Slots<GasCanisterSlot>`.
-
-`LiquidCanister`, `Pressure`, `Quantity`, `RatioCarbonDioxide`, `RatioHelium`, `RatioHydrazine`, `RatioHydrochloricAcid`, `RatioHydrogen`, `RatioLiquidAlcohol`, `RatioLiquidCarbonDioxide`, `RatioLiquidHydrazine`, `RatioLiquidHydrochloricAcid`, `RatioLiquidHydrogen`, `RatioLiquidMethane`, `RatioLiquidNitrogen`, `RatioLiquidNitrousOxide`, `RatioLiquidOxygen`, `RatioLiquidOzone`, `RatioLiquidPollutant`, `RatioLiquidSilanol`, `RatioLiquidSodiumChloride`, `RatioMethane`, `RatioNitrogen`, `RatioNitrousOxide`, `RatioOxygen`, `RatioOzone`, `RatioPollutant`, `RatioPollutedWater`, `RatioSilanol`, `RatioSteam`, `RatioWater`, `Temperature`
-
-### StructureLiquidTurboVolumePump
-
-Entry point `LiquidTurboVolumePumps`, type `LiquidTurboVolumePump`.
-
-`Error`, `Lock` **rw**, `Maximum`, `Mode` **rw**, `On` **rw**, `Power`, `Ratio`, `RequiredPower`, `Setting` **rw**
-
-### StructureLiquidUmbilicalFemale
-
-Entry point `LiquidUmbilicalFemales`, type `LiquidUmbilicalFemale`.
-
-`Maximum`, `Ratio`, `Setting` **rw**
-
-### StructureLiquidUmbilicalFemaleSide
-
-Entry point `LiquidUmbilicalFemaleSides`, type `LiquidUmbilicalFemaleSide`.
-
-`Maximum`, `Ratio`, `Setting` **rw**
-
-### StructureLiquidUmbilicalMale
-
-Entry point `LiquidUmbilicalMales`, type `LiquidUmbilicalMale`.
-
-`Error`, `Lock` **rw**, `Maximum`, `Mode`, `On` **rw**, `Open` **rw**, `Power`, `Ratio`, `RequiredPower`, `Setting` **rw**
-
-### StructureLiquidValve
-
-Entry point `LiquidValves`, type `LiquidValve`.
-
-`Maximum`, `On` **rw**, `Ratio`, `Setting` **rw**
-
-### StructureLiquidVolumePump
-
-Entry point `LiquidVolumePumps`, type `LiquidVolumePump`.
-
-`Error`, `Lock` **rw**, `Maximum`, `On` **rw**, `Power`, `Ratio`, `RequiredPower`, `Setting` **rw**
-
-### StructureLockerSmall
-
-Entry point `LockerSmalls`, type `LockerSmall`, slots `Slots<DataDiskSlot>`.
-
-`Lock` **rw**, `Open` **rw**
-
-### StructureLogicBatchReader
-
-Entry point `LogicBatchReaders`, type `LogicBatchReader`.
-
-`Error`, `On` **rw**, `Power`, `RequiredPower`, `Setting`
-
-### StructureLogicBatchSlotReader
-
-Entry point `LogicBatchSlotReaders`, type `LogicBatchSlotReader`.
-
-`Error`, `On` **rw**, `Power`, `RequiredPower`, `Setting`
-
-### StructureLogicBatchWriter
-
-Entry point `LogicBatchWriters`, type `LogicBatchWriter`.
-
-`Error`, `ForceWrite` **rw**, `On` **rw**, `Power`, `RequiredPower`
-
-### StructureLogicButton
-
-Entry point `LogicButtons`, type `LogicButton`.
-
-`Activate` **rw**, `Lock` **rw**, `Setting`
-
-### StructureLogicCompare
-
-Entry point `LogicCompares`, type `LogicCompare`.
-
-`Error`, `Mode` **rw**, `On` **rw**, `Power`, `RequiredPower`, `Setting`
-
-### StructureLogicDial
-
-Entry point `LogicDials`, type `LogicDial`.
-
-`Mode` **rw**, `Ratio`, `Setting` **rw**
-
-### StructureLogicGate
-
-Entry point `LogicGates`, type `LogicGate`.
-
-`Error`, `Mode` **rw**, `On` **rw**, `Power`, `RequiredPower`, `Setting`
-
-### StructureLogicHashGen
-
-Entry point `LogicHashGens`, type `LogicHashGen`.
-
-`Setting`
-
-### StructureLogicMath
-
-Entry point `LogicMaths`, type `LogicMath`.
-
-`Error`, `Mode` **rw**, `On` **rw**, `Power`, `RequiredPower`, `Setting`
-
-### StructureLogicMathUnary
-
-Entry point `LogicMathUnaries`, type `LogicMathUnary`.
-
-`Error`, `Mode` **rw**, `On` **rw**, `Power`, `RequiredPower`, `Setting`
-
-### StructureLogicMemory
-
-Entry point `LogicMemories`, type `LogicMemory`.
-
-`Setting` **rw**
-
-### StructureLogicMinMax
-
-Entry point `LogicMinMaxes`, type `LogicMinMax`.
-
-`Error`, `Mode` **rw**, `On` **rw**, `Power`, `RequiredPower`, `Setting`
-
-### StructureLogicPidController
-
-Entry point `LogicPidControllers`, type `LogicPidController`.
-
-`DerivativeGain` **rw**, `Error`, `IntegralGain` **rw**, `Maximum` **rw**, `Minimum` **rw**, `On` **rw**, `Power`, `ProportionalGain` **rw**, `RequiredPower`, `Reset` **rw**, `Setpoint` **rw**, `Setting`
-
-### StructureLogicReader
-
-Entry point `LogicReaders`, type `LogicReader`.
-
-`Error`, `On` **rw**, `Power`, `RequiredPower`, `Setting`
-
-### StructureLogicReagentReader
-
-Entry point `LogicReagentReaders`, type `LogicReagentReader`.
-
-`Error`, `On` **rw**, `Power`, `RequiredPower`, `Setting`
-
-### StructureLogicRocketDownlink
-
-Entry point `LogicRocketDownlinks`, type `LogicRocketDownlink`.
-
-`Power`, `RequiredPower`
-
-### StructureLogicRocketUplink
-
-Entry point `LogicRocketUplinks`, type `LogicRocketUplink`.
-
-`Error`, `On` **rw**, `Power`, `RequiredPower`
-
-### StructureLogicSelect
-
-Entry point `LogicSelects`, type `LogicSelect`.
-
-`Error`, `Mode` **rw**, `On` **rw**, `Power`, `RequiredPower`, `Setting`
-
-### StructureLogicSlotReader
-
-Entry point `LogicSlotReaders`, type `LogicSlotReader`.
-
-`Error`, `On` **rw**, `Power`, `RequiredPower`, `Setting`
-
-### StructureLogicSorter
-
-Entry point `LogicSorters`, type `LogicSorter`, slots `Slots<DataDiskSlot>`.
-
-`ClearMemory` **rw**, `Error`, `Export`, `Export2`, `ExportCount`, `Import`, `ImportCount`, `Lock` **rw**, `Mode` **rw**, `On` **rw**, `Power`, `RequiredPower`, `StackSize`
-
-### StructureLogicSwitch
-
-Entry point `LogicSwitches`, type `LogicSwitch`.
-
-`Lock` **rw**, `Open` **rw**, `Setting`
-
-### StructureLogicSwitch2
-
-Entry point `LogicSwitch2s`, type `LogicSwitch2`.
-
-`Lock` **rw**, `Open` **rw**, `Setting`
-
-### StructureLogicWriter
-
-Entry point `LogicWriters`, type `LogicWriter`.
-
-`Error`, `ForceWrite` **rw**, `On` **rw**, `Power`, `RequiredPower`
-
-### StructureLogicWriterSwitch
-
-Entry point `LogicWriterSwitches`, type `LogicWriterSwitch`.
-
-`Activate` **rw**, `Error`, `ForceWrite` **rw**, `On` **rw**, `Power`, `RequiredPower`
-
-### StructureManualFloorHatch
-
-Entry point `ManualFloorHatches`, type `ManualFloorHatch`.
-
-`Idle`, `Lock` **rw**, `Open` **rw**, `Setting` **rw**
-
-### StructureManualHatch
-
-Entry point `ManualHatches`, type `ManualHatch`.
-
-`Idle`, `Lock` **rw**, `Mode` **rw**, `On` **rw**, `Open` **rw**, `Power`, `RequiredPower`, `Setting` **rw**
-
-### StructureMediumConvectionRadiator
-
-Entry point `MediumConvectionRadiators`, type `MediumConvectionRadiator`.
-
-`Maximum`, `Ratio`, `Setting` **rw**
-
-### StructureMediumConvectionRadiatorLiquid
-
-Entry point `MediumConvectionRadiatorLiquids`, type `MediumConvectionRadiatorLiquid`.
-
-`Maximum`, `Ratio`, `Setting` **rw**
-
-### StructureMediumHangerDoor
-
-Entry point `MediumHangerDoors`, type `MediumHangerDoor`.
-
-`Idle`, `Lock` **rw**, `Mode` **rw**, `On` **rw**, `Open` **rw**, `Power`, `RequiredPower`, `Setting` **rw**
-
-### StructureMediumRadiator
-
-Entry point `MediumRadiators`, type `MediumRadiator`.
-
-`Maximum`, `Ratio`, `Setting` **rw**
-
-### StructureMediumRadiatorLiquid
-
-Entry point `MediumRadiatorLiquids`, type `MediumRadiatorLiquid`.
-
-`Maximum`, `Ratio`, `Setting` **rw**
-
-### StructureMediumRocketGasFuelTank
-
-Entry point `MediumRocketGasFuelTanks`, type `MediumRocketGasFuelTank`.
-
-`Combustion`, `CombustionOutput`, `Maximum`, `Pressure`, `PressureOutput`, `Ratio`, `RatioCarbonDioxide`, `RatioCarbonDioxideOutput`, `RatioHelium`, `RatioHeliumOutput`, `RatioHydrazine`, `RatioHydrazineOutput`, `RatioHydrochloricAcid`, `RatioHydrochloricAcidOutput`, `RatioHydrogen`, `RatioHydrogenOutput`, `RatioLiquidAlcohol`, `RatioLiquidAlcoholOutput`, `RatioLiquidCarbonDioxide`, `RatioLiquidHydrazine`, `RatioLiquidHydrazineOutput`, `RatioLiquidHydrochloricAcid`, `RatioLiquidHydrochloricAcidOutput`, `RatioLiquidHydrogen`, `RatioLiquidHydrogenOutput`, `RatioLiquidMethane`, `RatioLiquidNitrogen`, `RatioLiquidNitrousOxide`, `RatioLiquidOxygen`, `RatioLiquidOzone`, `RatioLiquidOzoneOutput`, `RatioLiquidPollutant`, `RatioLiquidSilanol`, `RatioLiquidSilanolOutput`, `RatioLiquidSodiumChloride`, `RatioLiquidSodiumChlorideOutput`, `RatioMethane`, `RatioMethaneOutput`, `RatioNitrogen`, `RatioNitrogenOutput`, `RatioNitrousOxide`, `RatioNitrousOxideOutput`, `RatioOxygen`, `RatioOxygenOutput`, `RatioOzone`, `RatioOzoneOutput`, `RatioPollutant`, `RatioPollutantOutput`, `RatioPollutedWater`, `RatioPollutedWaterOutput`, `RatioSilanol`, `RatioSilanolOutput`, `RatioSteam`, `RatioWater`, `RatioWaterOutput`, `Setting` **rw**, `Temperature`, `TemperatureOutput`, `TotalMoles`, `TotalMolesOutput`, `Volume`, `VolumeOfLiquid`
-
-### StructureMediumRocketLiquidFuelTank
-
-Entry point `MediumRocketLiquidFuelTanks`, type `MediumRocketLiquidFuelTank`.
-
-`Combustion`, `CombustionOutput`, `Maximum`, `Pressure`, `PressureOutput`, `Ratio`, `RatioCarbonDioxide`, `RatioCarbonDioxideOutput`, `RatioHelium`, `RatioHeliumOutput`, `RatioHydrazine`, `RatioHydrazineOutput`, `RatioHydrochloricAcid`, `RatioHydrochloricAcidOutput`, `RatioHydrogen`, `RatioHydrogenOutput`, `RatioLiquidAlcohol`, `RatioLiquidAlcoholOutput`, `RatioLiquidCarbonDioxide`, `RatioLiquidHydrazine`, `RatioLiquidHydrazineOutput`, `RatioLiquidHydrochloricAcid`, `RatioLiquidHydrochloricAcidOutput`, `RatioLiquidHydrogen`, `RatioLiquidHydrogenOutput`, `RatioLiquidMethane`, `RatioLiquidNitrogen`, `RatioLiquidNitrousOxide`, `RatioLiquidOxygen`, `RatioLiquidOzone`, `RatioLiquidOzoneOutput`, `RatioLiquidPollutant`, `RatioLiquidSilanol`, `RatioLiquidSilanolOutput`, `RatioLiquidSodiumChloride`, `RatioLiquidSodiumChlorideOutput`, `RatioMethane`, `RatioMethaneOutput`, `RatioNitrogen`, `RatioNitrogenOutput`, `RatioNitrousOxide`, `RatioNitrousOxideOutput`, `RatioOxygen`, `RatioOxygenOutput`, `RatioOzone`, `RatioOzoneOutput`, `RatioPollutant`, `RatioPollutantOutput`, `RatioPollutedWater`, `RatioPollutedWaterOutput`, `RatioSilanol`, `RatioSilanolOutput`, `RatioSteam`, `RatioWater`, `RatioWaterOutput`, `Setting` **rw**, `Temperature`, `TemperatureOutput`, `TotalMoles`, `TotalMolesOutput`, `Volume`, `VolumeOfLiquid`
-
-### StructureMotionSensor
-
-Entry point `MotionSensors`, type `MotionSensor`.
-
-`Activate` **rw**, `On` **rw**, `Quantity`
-
-### StructureNitrolyzer
-
-Entry point `Nitrolyzers`, type `Nitrolyzer`, slots `Slots<DataDiskSlot>`.
-
-`Activate` **rw**, `Combustion`, `CombustionInput`, `CombustionInput2`, `CombustionOutput`, `Error`, `Maximum`, `Mode` **rw**, `On` **rw**, `Open` **rw**, `Power`, `Pressure`, `PressureInput`, `PressureInput2`, `PressureOutput`, `ProgrammableChip`, `Ratio`, `RatioCarbonDioxide`, `RatioCarbonDioxideInput`, `RatioCarbonDioxideInput2`, `RatioCarbonDioxideOutput`, `RatioHelium`, `RatioHeliumInput`, `RatioHeliumInput2`, `RatioHeliumOutput`, `RatioHydrazine`, `RatioHydrazineInput`, `RatioHydrazineInput2`, `RatioHydrazineOutput`, `RatioHydrochloricAcid`, `RatioHydrochloricAcidInput`, `RatioHydrochloricAcidInput2`, `RatioHydrochloricAcidOutput`, `RatioHydrogen`, `RatioHydrogenInput`, `RatioHydrogenInput2`, `RatioHydrogenOutput`, `RatioLiquidAlcohol`, `RatioLiquidAlcoholInput`, `RatioLiquidAlcoholInput2`, `RatioLiquidAlcoholOutput`, `RatioLiquidCarbonDioxide`, `RatioLiquidCarbonDioxideInput`, `RatioLiquidCarbonDioxideInput2`, `RatioLiquidCarbonDioxideOutput`, `RatioLiquidHydrazine`, `RatioLiquidHydrazineInput`, `RatioLiquidHydrazineInput2`, `RatioLiquidHydrazineOutput`, `RatioLiquidHydrochloricAcid`, `RatioLiquidHydrochloricAcidInput`, `RatioLiquidHydrochloricAcidInput2`, `RatioLiquidHydrochloricAcidOutput`, `RatioLiquidHydrogen`, `RatioLiquidHydrogenInput`, `RatioLiquidHydrogenInput2`, `RatioLiquidHydrogenOutput`, `RatioLiquidMethane`, `RatioLiquidMethaneInput`, `RatioLiquidMethaneInput2`, `RatioLiquidMethaneOutput`, `RatioLiquidNitrogen`, `RatioLiquidNitrogenInput`, `RatioLiquidNitrogenInput2`, `RatioLiquidNitrogenOutput`, `RatioLiquidNitrousOxide`, `RatioLiquidNitrousOxideInput`, `RatioLiquidNitrousOxideInput2`, `RatioLiquidNitrousOxideOutput`, `RatioLiquidOxygen`, `RatioLiquidOxygenInput`, `RatioLiquidOxygenInput2`, `RatioLiquidOxygenOutput`, `RatioLiquidOzone`, `RatioLiquidOzoneInput`, `RatioLiquidOzoneInput2`, `RatioLiquidOzoneOutput`, `RatioLiquidPollutant`, `RatioLiquidPollutantInput`, `RatioLiquidPollutantInput2`, `RatioLiquidPollutantOutput`, `RatioLiquidSilanol`, `RatioLiquidSilanolInput`, `RatioLiquidSilanolInput2`, `RatioLiquidSilanolOutput`, `RatioLiquidSodiumChloride`, `RatioLiquidSodiumChlorideInput`, `RatioLiquidSodiumChlorideInput2`, `RatioLiquidSodiumChlorideOutput`, `RatioMethane`, `RatioMethaneInput`, `RatioMethaneInput2`, `RatioMethaneOutput`, `RatioNitrogen`, `RatioNitrogenInput`, `RatioNitrogenInput2`, `RatioNitrogenOutput`, `RatioNitrousOxide`, `RatioNitrousOxideInput`, `RatioNitrousOxideInput2`, `RatioNitrousOxideOutput`, `RatioOxygen`, `RatioOxygenInput`, `RatioOxygenInput2`, `RatioOxygenOutput`, `RatioOzone`, `RatioOzoneInput`, `RatioOzoneInput2`, `RatioOzoneOutput`, `RatioPollutant`, `RatioPollutantInput`, `RatioPollutantInput2`, `RatioPollutantOutput`, `RatioPollutedWater`, `RatioPollutedWaterInput`, `RatioPollutedWaterInput2`, `RatioPollutedWaterOutput`, `RatioSilanol`, `RatioSilanolInput`, `RatioSilanolInput2`, `RatioSilanolOutput`, `RatioSteam`, `RatioSteamInput`, `RatioSteamInput2`, `RatioSteamOutput`, `RatioWater`, `RatioWaterInput`, `RatioWaterInput2`, `RatioWaterOutput`, `RequiredPower`, `Setting` **rw**, `Temperature`, `TemperatureInput`, `TemperatureInput2`, `TemperatureOutput`, `TotalMoles`, `TotalMolesInput`, `TotalMolesInput2`, `TotalMolesOutput`
-
-### StructureOccupancySensor
-
-Entry point `OccupancySensors`, type `OccupancySensor`.
-
-`Activate`, `Quantity`, `StackSize`
-
-### StructureOverheadShortCornerLocker
-
-Entry point `OverheadShortCornerLockers`, type `OverheadShortCornerLocker`, slots `Slots<DataDiskSlot>`.
-
-`Lock` **rw**, `Open` **rw**
-
-### StructureOverheadShortLocker
-
-Entry point `OverheadShortLockers`, type `OverheadShortLocker`, slots `Slots<DataDiskSlot>`.
-
-`Lock` **rw**, `Open` **rw**
-
-### StructurePacker
-
-Entry point `Packers`, type `Packer`, slots `Slots<DataDiskSlot>`.
-
-`Error`, `Export`, `Lock` **rw**, `Mode` **rw**, `On` **rw**, `Open` **rw**, `Payload`, `Power`, `Recipient`, `RequiredPower`
-
-### StructurePassiveLargeRadiatorGas
-
-Entry point `PassiveLargeRadiatorGases`, type `PassiveLargeRadiatorGas`.
-
-`Maximum`, `Ratio`, `Setting` **rw**
-
-### StructurePassiveLargeRadiatorLiquid
-
-Entry point `PassiveLargeRadiatorLiquids`, type `PassiveLargeRadiatorLiquid`.
-
-`Maximum`, `Ratio`, `Setting` **rw**
-
-### StructurePassthroughHeatExchangerGasToGas
-
-Entry point `PassthroughHeatExchangerGasToGases`, type `PassthroughHeatExchangerGasToGas`.
-
-`Maximum`, `Ratio`, `Setting` **rw**
-
-### StructurePassthroughHeatExchangerGasToLiquid
-
-Entry point `PassthroughHeatExchangerGasToLiquids`, type `PassthroughHeatExchangerGasToLiquid`.
-
-`Maximum`, `Ratio`, `Setting` **rw**
-
-### StructurePassthroughHeatExchangerLiquidToLiquid
-
-Entry point `PassthroughHeatExchangerLiquidToLiquids`, type `PassthroughHeatExchangerLiquidToLiquid`.
-
-`Maximum`, `Ratio`, `Setting` **rw**
-
-### StructurePipeAnalysizer
-
-Entry point `PipeAnalysizers`, type `PipeAnalysizer`.
-
-`Combustion`, `Error`, `Lock` **rw**, `NetworkFault`, `On` **rw**, `Power`, `Pressure`, `RatioCarbonDioxide`, `RatioHelium`, `RatioHydrazine`, `RatioHydrochloricAcid`, `RatioHydrogen`, `RatioLiquidAlcohol`, `RatioLiquidCarbonDioxide`, `RatioLiquidHydrazine`, `RatioLiquidHydrochloricAcid`, `RatioLiquidHydrogen`, `RatioLiquidMethane`, `RatioLiquidNitrogen`, `RatioLiquidNitrousOxide`, `RatioLiquidOxygen`, `RatioLiquidOzone`, `RatioLiquidPollutant`, `RatioLiquidSilanol`, `RatioLiquidSodiumChloride`, `RatioMethane`, `RatioNitrogen`, `RatioNitrousOxide`, `RatioOxygen`, `RatioOzone`, `RatioPollutant`, `RatioPollutedWater`, `RatioSilanol`, `RatioSteam`, `RatioWater`, `RequiredPower`, `Temperature`, `TotalMoles`, `Volume`, `VolumeOfLiquid`
-
-### StructurePipeHeater
-
-Entry point `PipeHeaters`, type `PipeHeater`.
-
-`Error`, `Lock` **rw**, `On` **rw**, `Power`, `RequiredPower`
-
-### StructurePipeIgniter
-
-Entry point `PipeIgniters`, type `PipeIgniter`.
-
-`Activate` **rw**, `Error`, `Power`, `RequiredPower`
-
-### StructurePipeLiquidOneWayValveLever
-
-Entry point `PipeLiquidOneWayValveLevers`, type `PipeLiquidOneWayValveLever`.
-
-`Maximum`, `On` **rw**, `Ratio`, `Setting` **rw**
-
-### StructurePipeOneWayValveLever
-
-Entry point `PipeOneWayValveLevers`, type `PipeOneWayValveLever`.
-
-`Maximum`, `On` **rw**, `Ratio`, `Setting` **rw**
-
-### StructurePortablesConnector
-
-Entry point `PortablesConnectors`, type `PortablesConnector`, slots `Slots<DataDiskSlot>`.
-
-`Maximum`, `Open` **rw**, `PortableSlot`, `Ratio`, `Setting` **rw**
-
-### StructurePowerConnector
-
-Entry point `PowerConnectors`, type `PowerConnector`, slots `Slots<DataDiskSlot>`.
-
-`Open` **rw**, `Portableslot`
-
-### StructurePoweredVent
-
-Entry point `PoweredVents`, type `PoweredVent`.
-
-`CombustionOutput`, `Error`, `Lock` **rw**, `Mode` **rw**, `On` **rw**, `Power`, `PressureExternal` **rw**, `PressureOutput`, `RatioCarbonDioxideOutput`, `RatioHeliumOutput`, `RatioHydrazineOutput`, `RatioHydrochloricAcidOutput`, `RatioHydrogenOutput`, `RatioLiquidAlcoholOutput`, `RatioLiquidHydrazineOutput`, `RatioLiquidHydrochloricAcidOutput`, `RatioLiquidHydrogenOutput`, `RatioLiquidOzoneOutput`, `RatioLiquidSilanolOutput`, `RatioLiquidSodiumChlorideOutput`, `RatioMethaneOutput`, `RatioNitrogenOutput`, `RatioNitrousOxideOutput`, `RatioOxygenOutput`, `RatioOzoneOutput`, `RatioPollutantOutput`, `RatioPollutedWaterOutput`, `RatioSilanolOutput`, `RatioWaterOutput`, `RequiredPower`, `TemperatureOutput`, `TotalMolesOutput`
-
-### StructurePoweredVentLarge
-
-Entry point `PoweredVentLarges`, type `PoweredVentLarge`.
-
-`CombustionOutput`, `Error`, `Lock` **rw**, `Mode` **rw**, `On` **rw**, `Power`, `PressureExternal` **rw**, `PressureOutput`, `RatioCarbonDioxideOutput`, `RatioHeliumOutput`, `RatioHydrazineOutput`, `RatioHydrochloricAcidOutput`, `RatioHydrogenOutput`, `RatioLiquidAlcoholOutput`, `RatioLiquidHydrazineOutput`, `RatioLiquidHydrochloricAcidOutput`, `RatioLiquidHydrogenOutput`, `RatioLiquidOzoneOutput`, `RatioLiquidSilanolOutput`, `RatioLiquidSodiumChlorideOutput`, `RatioMethaneOutput`, `RatioNitrogenOutput`, `RatioNitrousOxideOutput`, `RatioOxygenOutput`, `RatioOzoneOutput`, `RatioPollutantOutput`, `RatioPollutedWaterOutput`, `RatioSilanolOutput`, `RatioWaterOutput`, `RequiredPower`, `TemperatureOutput`, `TotalMolesOutput`
-
-### StructurePowerTransmitter
-
-Entry point `PowerTransmitters`, type `PowerTransmitter`.
-
-`Charge`, `Error`, `Horizontal` **rw**, `Mode`, `On` **rw**, `PositionX`, `PositionY`, `PositionZ`, `Power`, `PowerActual`, `PowerPotential`, `RequiredPower`, `Vertical` **rw**
-
-### StructurePowerTransmitterOmni
-
-Entry point `PowerTransmitterOmnis`, type `PowerTransmitterOmni`.
-
-`Error`, `On` **rw**, `Power`, `RequiredPower`
-
-### StructurePowerTransmitterReceiver
-
-Entry point `PowerTransmitterReceivers`, type `PowerTransmitterReceiver`.
-
-`Charge`, `Error`, `Horizontal` **rw**, `Mode`, `On` **rw**, `PositionX`, `PositionY`, `PositionZ`, `Power`, `PowerActual`, `PowerPotential`, `RequiredPower`, `Vertical` **rw**
-
-### StructurePowerUmbilicalMale
-
-Entry point `PowerUmbilicalMales`, type `PowerUmbilicalMale`.
-
-`Error`, `Lock` **rw**, `Mode`, `On` **rw**, `Open` **rw**, `Power`, `RequiredPower`
-
-### StructurePressurantValve
-
-Entry point `PressurantValves`, type `PressurantValve`.
-
-`Error`, `Lock` **rw**, `Maximum`, `On` **rw**, `Power`, `Ratio`, `RequiredPower`, `Setting` **rw**
-
-### StructurePressureFedGasEngine
-
-Entry point `PressureFedGasEngines`, type `PressureFedGasEngine`.
-
-`Combustion`, `Error`, `On` **rw**, `PassedMoles`, `Power`, `Pressure`, `RatioCarbonDioxide`, `RatioHelium`, `RatioHydrazine`, `RatioHydrochloricAcid`, `RatioHydrogen`, `RatioLiquidAlcohol`, `RatioLiquidCarbonDioxide`, `RatioLiquidHydrazine`, `RatioLiquidHydrochloricAcid`, `RatioLiquidHydrogen`, `RatioLiquidMethane`, `RatioLiquidNitrogen`, `RatioLiquidNitrousOxide`, `RatioLiquidOxygen`, `RatioLiquidOzone`, `RatioLiquidPollutant`, `RatioLiquidSilanol`, `RatioLiquidSodiumChloride`, `RatioMethane`, `RatioNitrogen`, `RatioNitrousOxide`, `RatioOxygen`, `RatioOzone`, `RatioPollutant`, `RatioPollutedWater`, `RatioSilanol`, `RatioSteam`, `RatioWater`, `RequiredPower`, `Temperature`, `Throttle` **rw**, `TotalMoles`
-
-### StructurePressureFedGasEngineHeavy
-
-Entry point `PressureFedGasEngineHeavies`, type `PressureFedGasEngineHeavy`.
-
-`Combustion`, `Error`, `On` **rw**, `PassedMoles`, `Power`, `Pressure`, `RatioCarbonDioxide`, `RatioHelium`, `RatioHydrazine`, `RatioHydrochloricAcid`, `RatioHydrogen`, `RatioLiquidAlcohol`, `RatioLiquidCarbonDioxide`, `RatioLiquidHydrazine`, `RatioLiquidHydrochloricAcid`, `RatioLiquidHydrogen`, `RatioLiquidMethane`, `RatioLiquidNitrogen`, `RatioLiquidNitrousOxide`, `RatioLiquidOxygen`, `RatioLiquidOzone`, `RatioLiquidPollutant`, `RatioLiquidSilanol`, `RatioLiquidSodiumChloride`, `RatioMethane`, `RatioNitrogen`, `RatioNitrousOxide`, `RatioOxygen`, `RatioOzone`, `RatioPollutant`, `RatioPollutedWater`, `RatioSilanol`, `RatioSteam`, `RatioWater`, `RequiredPower`, `Temperature`, `Throttle` **rw**, `TotalMoles`
-
-### StructurePressureFedLiquidEngine
-
-Entry point `PressureFedLiquidEngines`, type `PressureFedLiquidEngine`.
-
-`Combustion`, `Error`, `Maximum`, `On` **rw**, `PassedMoles`, `Power`, `Pressure`, `Ratio`, `RatioCarbonDioxide`, `RatioHelium`, `RatioHydrazine`, `RatioHydrochloricAcid`, `RatioHydrogen`, `RatioLiquidAlcohol`, `RatioLiquidCarbonDioxide`, `RatioLiquidHydrazine`, `RatioLiquidHydrochloricAcid`, `RatioLiquidHydrogen`, `RatioLiquidMethane`, `RatioLiquidNitrogen`, `RatioLiquidNitrousOxide`, `RatioLiquidOxygen`, `RatioLiquidOzone`, `RatioLiquidPollutant`, `RatioLiquidSilanol`, `RatioLiquidSodiumChloride`, `RatioMethane`, `RatioNitrogen`, `RatioNitrousOxide`, `RatioOxygen`, `RatioOzone`, `RatioPollutant`, `RatioPollutedWater`, `RatioSilanol`, `RatioSteam`, `RatioWater`, `RequiredPower`, `Setting` **rw**, `Temperature`, `Throttle` **rw**, `TotalMoles`
-
-### StructurePressureFedLiquidEngineHeavy
-
-Entry point `PressureFedLiquidEngineHeavies`, type `PressureFedLiquidEngineHeavy`.
-
-`Combustion`, `Error`, `Maximum`, `On` **rw**, `PassedMoles`, `Power`, `Pressure`, `Ratio`, `RatioCarbonDioxide`, `RatioHelium`, `RatioHydrazine`, `RatioHydrochloricAcid`, `RatioHydrogen`, `RatioLiquidAlcohol`, `RatioLiquidCarbonDioxide`, `RatioLiquidHydrazine`, `RatioLiquidHydrochloricAcid`, `RatioLiquidHydrogen`, `RatioLiquidMethane`, `RatioLiquidNitrogen`, `RatioLiquidNitrousOxide`, `RatioLiquidOxygen`, `RatioLiquidOzone`, `RatioLiquidPollutant`, `RatioLiquidSilanol`, `RatioLiquidSodiumChloride`, `RatioMethane`, `RatioNitrogen`, `RatioNitrousOxide`, `RatioOxygen`, `RatioOzone`, `RatioPollutant`, `RatioPollutedWater`, `RatioSilanol`, `RatioSteam`, `RatioWater`, `RequiredPower`, `Setting` **rw**, `Temperature`, `Throttle` **rw**, `TotalMoles`
-
-### StructurePressurePlateLarge
-
-Entry point `PressurePlateLarges`, type `PressurePlateLarge`.
-
-`Setting`
-
-### StructurePressurePlateMedium
-
-Entry point `PressurePlateMediums`, type `PressurePlateMedium`.
-
-`Setting`
-
-### StructurePressurePlateSmall
-
-Entry point `PressurePlateSmalls`, type `PressurePlateSmall`.
-
-`Setting`
-
-### StructurePressureRegulator
-
-Entry point `PressureRegulators`, type `PressureRegulator`.
-
-`Error`, `Lock` **rw**, `Maximum`, `On` **rw**, `Power`, `Ratio`, `RequiredPower`, `Setting` **rw**
-
-### StructureProximitySensor
-
-Entry point `ProximitySensors`, type `ProximitySensor`.
-
-`Activate`, `Quantity`, `Setting` **rw**
-
-### StructurePumpedLiquidEngine
-
-Entry point `PumpedLiquidEngines`, type `PumpedLiquidEngine`.
-
-`Combustion`, `Error`, `Maximum`, `On` **rw**, `PassedMoles`, `Power`, `Pressure`, `Ratio`, `RatioCarbonDioxide`, `RatioHelium`, `RatioHydrazine`, `RatioHydrochloricAcid`, `RatioHydrogen`, `RatioLiquidAlcohol`, `RatioLiquidCarbonDioxide`, `RatioLiquidHydrazine`, `RatioLiquidHydrochloricAcid`, `RatioLiquidHydrogen`, `RatioLiquidMethane`, `RatioLiquidNitrogen`, `RatioLiquidNitrousOxide`, `RatioLiquidOxygen`, `RatioLiquidOzone`, `RatioLiquidPollutant`, `RatioLiquidSilanol`, `RatioLiquidSodiumChloride`, `RatioMethane`, `RatioNitrogen`, `RatioNitrousOxide`, `RatioOxygen`, `RatioOzone`, `RatioPollutant`, `RatioPollutedWater`, `RatioSilanol`, `RatioSteam`, `RatioWater`, `RequiredPower`, `Setting` **rw**, `Temperature`, `Throttle` **rw**, `TotalMoles`
-
-### StructurePurgeValve
-
-Entry point `PurgeValves`, type `PurgeValve`.
-
-`Error`, `Lock` **rw**, `Maximum`, `On` **rw**, `Power`, `Ratio`, `RequiredPower`, `Setting` **rw**
-
-### StructureRecycler
-
-Entry point `Recyclers`, type `Recycler`, slots `Slots<DataDiskSlot>`.
-
-`Activate` **rw**, `ClearMemory` **rw**, `Error`, `Export`, `ExportCount`, `Import`, `ImportCount`, `On` **rw**, `Power`, `Reagents`, `RequiredPower`
-
-### StructureRefrigeratedVendingMachine
-
-Entry point `RefrigeratedVendingMachines`, type `RefrigeratedVendingMachine`, slots `Slots<DataDiskSlot>`.
-
-`Activate` **rw**, `ClearMemory` **rw**, `Combustion`, `Error`, `Export`, `ExportCount`, `Import`, `ImportCount`, `Lock` **rw**, `On` **rw**, `Power`, `Pressure`, `Quantity`, `Ratio`, `RatioCarbonDioxide`, `RatioHelium`, `RatioHydrazine`, `RatioHydrochloricAcid`, `RatioHydrogen`, `RatioLiquidAlcohol`, `RatioLiquidCarbonDioxide`, `RatioLiquidHydrazine`, `RatioLiquidHydrochloricAcid`, `RatioLiquidHydrogen`, `RatioLiquidMethane`, `RatioLiquidNitrogen`, `RatioLiquidNitrousOxide`, `RatioLiquidOxygen`, `RatioLiquidOzone`, `RatioLiquidPollutant`, `RatioLiquidSilanol`, `RatioLiquidSodiumChloride`, `RatioMethane`, `RatioNitrogen`, `RatioNitrousOxide`, `RatioOxygen`, `RatioOzone`, `RatioPollutant`, `RatioPollutedWater`, `RatioSilanol`, `RatioSteam`, `RatioWater`, `RequestHash` **rw**, `RequiredPower`, `Setting` **rw**, `TargetPrefabHash`, `TargetSlotIndex`, `Temperature`, `TotalMoles`
-
-### StructureRobotArmDoor
-
-Entry point `RobotArmDoors`, type `RobotArmDoor`.
-
-`Open` **rw**, `Power`, `RequiredPower`
-
-### StructureRoboticArmDock
-
-Entry point `RoboticArmDocks`, type `RoboticArmDock`, slots `Slots<DataDiskSlot>`.
-
-`Activate` **rw**, `ArmSlot`, `Error`, `Extended`, `Idle`, `On` **rw**, `PositionX`, `Power`, `RequiredPower`, `Setting` **rw**
-
-### StructureRocketAvionics
-
-Entry point `RocketAvionicses`, type `RocketAvionics`.
-
-`Acceleration`, `Altitude`, `Apex`, `AutoLand` **rw**, `AutoShutOff` **rw**, `BurnTimeRemaining`, `Chart`, `ChartedNavPoints`, `CurrentCode`, `Density`, `DestinationCode` **rw**, `Discover`, `DryMass`, `Error`, `FlightControlRule`, `Mass`, `MinedQuantity`, `Mode` **rw**, `NavPoints`, `On` **rw**, `Power`, `Progress`, `Quantity`, `RatioCarbonDioxide`, `RatioHelium`, `RatioHydrazine`, `RatioHydrochloricAcid`, `RatioHydrogen`, `RatioLiquidAlcohol`, `RatioLiquidCarbonDioxide`, `RatioLiquidHydrazine`, `RatioLiquidHydrochloricAcid`, `RatioLiquidHydrogen`, `RatioLiquidMethane`, `RatioLiquidNitrogen`, `RatioLiquidNitrousOxide`, `RatioLiquidOxygen`, `RatioLiquidOzone`, `RatioLiquidPollutant`, `RatioLiquidSilanol`, `RatioLiquidSodiumChloride`, `RatioMethane`, `RatioNitrogen`, `RatioNitrousOxide`, `RatioOxygen`, `RatioOzone`, `RatioPollutant`, `RatioPollutedWater`, `RatioSilanol`, `RatioSteam`, `RatioWater`, `ReEntryAltitude`, `Reagents`, `RequiredPower`, `Richness`, `Sites`, `Size`, `StackSize`, `Survey`, `Temperature`, `Thrust`, `ThrustToWeight`, `TimeToDestination`, `TotalMoles`, `TotalQuantity`, `VelocityRelativeY`, `Weight`
-
-### StructureRocketCelestialTracker
-
-Entry point `RocketCelestialTrackers`, type `RocketCelestialTracker`.
-
-`CelestialHash`, `Error`, `Horizontal`, `Index` **rw**, `On` **rw**, `Power`, `RequiredPower`, `StackSize`, `Vertical`
-
-### StructureRocketCircuitHousing
-
-Entry point `RocketCircuitHousings`, type `RocketCircuitHousing`, slots `Slots<ProgrammableChipSlot>`.
-
-`Error`, `LineNumber` **rw**, `Mode` **rw**, `On` **rw**, `Power`, `ProgrammableChip`, `RequiredPower`, `Setting` **rw**, `StackSize`
-
-### StructureRocketEngineTiny
-
-Entry point `RocketEngineTinies`, type `RocketEngineTiny`.
-
-`CombustionOutput`, `Error`, `Lock` **rw**, `Maximum`, `On` **rw**, `Power`, `PressureOutput`, `Ratio`, `RatioCarbonDioxideOutput`, `RatioHeliumOutput`, `RatioHydrazineOutput`, `RatioHydrochloricAcidOutput`, `RatioHydrogenOutput`, `RatioLiquidAlcoholOutput`, `RatioLiquidHydrazineOutput`, `RatioLiquidHydrochloricAcidOutput`, `RatioLiquidHydrogenOutput`, `RatioLiquidOzoneOutput`, `RatioLiquidSilanolOutput`, `RatioLiquidSodiumChlorideOutput`, `RatioMethaneOutput`, `RatioNitrogenOutput`, `RatioNitrousOxideOutput`, `RatioOxygenOutput`, `RatioOzoneOutput`, `RatioPollutantOutput`, `RatioPollutedWaterOutput`, `RatioSilanolOutput`, `RatioWaterOutput`, `RequiredPower`, `Setting` **rw**, `TemperatureOutput`, `TotalMolesOutput`
-
-### StructureRocketFiltrationGas
-
-Entry point `RocketFiltrationGases`, type `RocketFiltrationGas`, slots `Slots<FilterSlot>`.
-
-`CombustionInput`, `CombustionOutput`, `CombustionOutput2`, `Error`, `GasFilter`, `Lock` **rw**, `Maximum`, `Mode` **rw**, `On` **rw**, `Power`, `PressureInput`, `PressureOutput`, `PressureOutput2`, `Ratio`, `RatioCarbonDioxideInput`, `RatioCarbonDioxideOutput`, `RatioCarbonDioxideOutput2`, `RatioHeliumInput`, `RatioHeliumOutput`, `RatioHeliumOutput2`, `RatioHydrazineInput`, `RatioHydrazineOutput`, `RatioHydrazineOutput2`, `RatioHydrochloricAcidInput`, `RatioHydrochloricAcidOutput`, `RatioHydrochloricAcidOutput2`, `RatioHydrogenInput`, `RatioHydrogenOutput`, `RatioHydrogenOutput2`, `RatioLiquidAlcoholInput`, `RatioLiquidAlcoholOutput`, `RatioLiquidAlcoholOutput2`, `RatioLiquidCarbonDioxideInput`, `RatioLiquidCarbonDioxideOutput`, `RatioLiquidCarbonDioxideOutput2`, `RatioLiquidHydrazineInput`, `RatioLiquidHydrazineOutput`, `RatioLiquidHydrazineOutput2`, `RatioLiquidHydrochloricAcidInput`, `RatioLiquidHydrochloricAcidOutput`, `RatioLiquidHydrochloricAcidOutput2`, `RatioLiquidHydrogenInput`, `RatioLiquidHydrogenOutput`, `RatioLiquidHydrogenOutput2`, `RatioLiquidMethaneInput`, `RatioLiquidMethaneOutput`, `RatioLiquidMethaneOutput2`, `RatioLiquidNitrogenInput`, `RatioLiquidNitrogenOutput`, `RatioLiquidNitrogenOutput2`, `RatioLiquidNitrousOxideInput`, `RatioLiquidNitrousOxideOutput`, `RatioLiquidNitrousOxideOutput2`, `RatioLiquidOxygenInput`, `RatioLiquidOxygenOutput`, `RatioLiquidOxygenOutput2`, `RatioLiquidOzoneInput`, `RatioLiquidOzoneOutput`, `RatioLiquidOzoneOutput2`, `RatioLiquidPollutantInput`, `RatioLiquidPollutantOutput`, `RatioLiquidPollutantOutput2`, `RatioLiquidSilanolInput`, `RatioLiquidSilanolOutput`, `RatioLiquidSilanolOutput2`, `RatioLiquidSodiumChlorideInput`, `RatioLiquidSodiumChlorideOutput`, `RatioLiquidSodiumChlorideOutput2`, `RatioMethaneInput`, `RatioMethaneOutput`, `RatioMethaneOutput2`, `RatioNitrogenInput`, `RatioNitrogenOutput`, `RatioNitrogenOutput2`, `RatioNitrousOxideInput`, `RatioNitrousOxideOutput`, `RatioNitrousOxideOutput2`, `RatioOxygenInput`, `RatioOxygenOutput`, `RatioOxygenOutput2`, `RatioOzoneInput`, `RatioOzoneOutput`, `RatioOzoneOutput2`, `RatioPollutantInput`, `RatioPollutantOutput`, `RatioPollutantOutput2`, `RatioPollutedWaterInput`, `RatioPollutedWaterOutput`, `RatioPollutedWaterOutput2`, `RatioSilanolInput`, `RatioSilanolOutput`, `RatioSilanolOutput2`, `RatioSteamInput`, `RatioSteamOutput`, `RatioSteamOutput2`, `RatioWaterInput`, `RatioWaterOutput`, `RatioWaterOutput2`, `RequiredPower`, `Setting` **rw**, `TemperatureInput`, `TemperatureOutput`, `TemperatureOutput2`, `TotalMolesInput`, `TotalMolesOutput`, `TotalMolesOutput2`
-
-### StructureRocketGasCollector
-
-Entry point `RocketGasCollectors`, type `RocketGasCollector`.
-
-`Combustion`, `Lock` **rw**, `On` **rw**, `Power`, `Pressure`, `RatioCarbonDioxide`, `RatioHelium`, `RatioHydrazine`, `RatioHydrochloricAcid`, `RatioHydrogen`, `RatioLiquidAlcohol`, `RatioLiquidCarbonDioxide`, `RatioLiquidHydrazine`, `RatioLiquidHydrochloricAcid`, `RatioLiquidHydrogen`, `RatioLiquidMethane`, `RatioLiquidNitrogen`, `RatioLiquidNitrousOxide`, `RatioLiquidOxygen`, `RatioLiquidOzone`, `RatioLiquidPollutant`, `RatioLiquidSilanol`, `RatioLiquidSodiumChloride`, `RatioMethane`, `RatioNitrogen`, `RatioNitrousOxide`, `RatioOxygen`, `RatioOzone`, `RatioPollutant`, `RatioPollutedWater`, `RatioSilanol`, `RatioSteam`, `RatioWater`, `RequiredPower`, `Temperature`, `TotalMoles`
-
-### StructureRocketManufactory
-
-Entry point `RocketManufactories`, type `RocketManufactory`, slots `Slots<DataDiskSlot>`.
-
-`Activate` **rw**, `ClearMemory` **rw**, `CompletionRatio`, `Error`, `Export`, `ExportCount`, `Import`, `ImportCount`, `Lock` **rw**, `On` **rw**, `Open` **rw**, `Power`, `Reagents`, `RecipeHash` **rw**, `RequiredPower`, `StackSize`
-
-### StructureRocketMiner
-
-Entry point `RocketMiners`, type `RocketMiner`, slots `Slots<DataDiskSlot>`.
-
-`ClearMemory` **rw**, `DrillCondition`, `DrillHeadSlot`, `Error`, `Export`, `ExportCount`, `ImportCount`, `Lock` **rw**, `On` **rw**, `Power`, `Quantity`, `RequiredPower`
-
-### StructureRocketScanner
-
-Entry point `RocketScanners`, type `RocketScanner`, slots `Slots<DataDiskSlot>`.
-
-`Error`, `Lock` **rw**, `On` **rw**, `Power`, `RequiredPower`, `ScannerHeadSlot`
-
-### StructureRocketTransformerSmall
-
-Entry point `RocketTransformerSmalls`, type `RocketTransformerSmall`.
-
-`Error`, `Lock` **rw**, `Maximum`, `On` **rw**, `Power`, `Ratio`, `RequiredPower`, `Setting` **rw**
-
-### StructureSatelliteDish
-
-Entry point `SatelliteDishes`, type `SatelliteDish`.
-
-`Activate` **rw**, `BestContactFilter` **rw**, `ContactSlotIndex`, `ContactTypeId`, `Error`, `Horizontal` **rw**, `Idle`, `InterrogationProgress`, `MinimumWattsToContact`, `On` **rw**, `Power`, `RequiredPower`, `Setting` **rw**, `SignalID`, `SignalStrength`, `SizeX`, `SizeZ`, `StackSize`, `TargetPadIndex` **rw**, `Vertical` **rw**, `WattsReachingContact`
-
-### StructureSDBHopper
-
-Entry point `SDBHoppers`, type `SDBHopper`, slots `Slots<DataDiskSlot>`.
-
-`ClearMemory` **rw**, `Import`, `ImportCount`, `Open` **rw**
-
-### StructureSDBHopperAdvanced
-
-Entry point `SDBHopperAdvanceds`, type `SDBHopperAdvanced`, slots `Slots<DataDiskSlot>`.
-
-`ClearMemory` **rw**, `Import`, `ImportCount`, `Lock` **rw**, `Open` **rw**
-
-### StructureSDBSilo
-
-Entry point `SDBSilos`, type `SDBSilo`, slots `Slots<DataDiskSlot>`.
-
-`Activate` **rw**, `ClearMemory` **rw**, `Error`, `Export`, `ExportCount`, `Import`, `ImportCount`, `Lock` **rw**, `Mode` **rw**, `On` **rw**, `Open` **rw**, `Power`, `Quantity`, `RequiredPower`
-
-### StructureSecurityPrinter
-
-Entry point `SecurityPrinters`, type `SecurityPrinter`, slots `Slots<DataDiskSlot>`.
-
-`Activate` **rw**, `ClearMemory` **rw**, `CompletionRatio`, `Error`, `Export`, `ExportCount`, `Import`, `ImportCount`, `Lock` **rw**, `On` **rw**, `Open` **rw**, `Power`, `Reagents`, `RecipeHash` **rw**, `RequiredPower`, `StackSize`
-
-### StructureShelfMedium
-
-Entry point `ShelfMediums`, type `ShelfMedium`, slots `Slots<DataDiskSlot>`.
-
-`Open` **rw**
-
-### StructureShortCornerLocker
-
-Entry point `ShortCornerLockers`, type `ShortCornerLocker`, slots `Slots<DataDiskSlot>`.
-
-`Lock` **rw**, `Open` **rw**
-
-### StructureShortLocker
-
-Entry point `ShortLockers`, type `ShortLocker`, slots `Slots<DataDiskSlot>`.
-
-`Lock` **rw**, `Open` **rw**
-
-### StructureShower
-
-Entry point `Showers`, type `Shower`.
-
-`Activate` **rw**, `Maximum`, `Open` **rw**, `Ratio`, `Setting` **rw**
-
-### StructureShowerPowered
-
-Entry point `ShowerPowereds`, type `ShowerPowered`.
-
-`Error`, `On` **rw**, `Open` **rw**, `Power`, `RequiredPower`
-
-### StructureSleeper
-
-Entry point `Sleepers`, type `Sleeper`, slots `Slots<DataDiskSlot>`.
-
-`Activate` **rw**, `Bed`, `EntityState`, `Error`, `Lock` **rw**, `Maximum`, `On` **rw**, `Open` **rw**, `Power`, `Ratio`, `RequiredPower`, `Setting` **rw**
-
-### StructureSleeperLeft
-
-Entry point `SleeperLefts`, type `SleeperLeft`, slots `Slots<DataDiskSlot>`.
-
-`Activate` **rw**, `EntityState`, `Error`, `Lock` **rw**, `Maximum`, `Mode` **rw**, `On` **rw**, `Open` **rw**, `Player`, `Power`, `Ratio`, `RequiredPower`, `Setting` **rw**
-
-### StructureSleeperRight
-
-Entry point `SleeperRights`, type `SleeperRight`, slots `Slots<DataDiskSlot>`.
-
-`Activate` **rw**, `EntityState`, `Error`, `Lock` **rw**, `Maximum`, `Mode` **rw**, `On` **rw**, `Open` **rw**, `Player`, `Power`, `Ratio`, `RequiredPower`, `Setting` **rw**
-
-### StructureSleeperVertical
-
-Entry point `SleeperVerticals`, type `SleeperVertical`, slots `Slots<DataDiskSlot>`.
-
-`Activate` **rw**, `EntityState`, `Error`, `Lock` **rw**, `Maximum`, `Mode` **rw**, `On` **rw**, `Open` **rw**, `Player`, `Power`, `Ratio`, `RequiredPower`, `Setting` **rw**
-
-### StructureSleeperVerticalDroid
-
-Entry point `SleeperVerticalDroids`, type `SleeperVerticalDroid`, slots `Slots<DataDiskSlot>`.
-
-`Activate` **rw**, `Error`, `Lock` **rw**, `On` **rw**, `Open` **rw**, `Player`, `Power`, `RequiredPower`
-
-### StructureSmallDirectHeatExchangeGastoGas
-
-Entry point `SmallDirectHeatExchangeGastoGases`, type `SmallDirectHeatExchangeGastoGas`.
-
-`Maximum`, `Ratio`, `Setting` **rw**
-
-### StructureSmallDirectHeatExchangeLiquidtoGas
-
-Entry point `SmallDirectHeatExchangeLiquidtoGases`, type `SmallDirectHeatExchangeLiquidtoGas`.
-
-`Maximum`, `Ratio`, `Setting` **rw**
-
-### StructureSmallDirectHeatExchangeLiquidtoLiquid
-
-Entry point `SmallDirectHeatExchangeLiquidtoLiquids`, type `SmallDirectHeatExchangeLiquidtoLiquid`.
-
-`Maximum`, `Ratio`, `Setting` **rw**
-
-### StructureSmallSatelliteDish
-
-Entry point `SmallSatelliteDishes`, type `SmallSatelliteDish`.
-
-`Activate` **rw**, `BestContactFilter` **rw**, `ContactSlotIndex`, `ContactTypeId`, `Error`, `Horizontal` **rw**, `Idle`, `InterrogationProgress`, `MinimumWattsToContact`, `On` **rw**, `Power`, `RequiredPower`, `Setting` **rw**, `SignalID`, `SignalStrength`, `SizeX`, `SizeZ`, `TargetPadIndex` **rw**, `Vertical` **rw**, `WattsReachingContact`
-
-### StructureSolarPanel
-
-Entry point `SolarPanels`, type `SolarPanel`.
-
-`Charge`, `Horizontal` **rw**, `Maximum`, `Ratio`, `Vertical` **rw**
-
-### StructureSolarPanel45
-
-Entry point `SolarPanel45s`, type `SolarPanel45`.
-
-`Charge`, `Horizontal` **rw**, `Maximum`, `Ratio`, `Vertical` **rw**
-
-### StructureSolarPanel45Reinforced
-
-Entry point `SolarPanel45Reinforceds`, type `SolarPanel45Reinforced`.
-
-`Charge`, `Horizontal` **rw**, `Maximum`, `Ratio`, `Vertical` **rw**
-
-### StructureSolarPanelDual
-
-Entry point `SolarPanelDuals`, type `SolarPanelDual`.
-
-`Charge`, `Horizontal` **rw**, `Maximum`, `Ratio`, `Vertical` **rw**
-
-### StructureSolarPanelDualReinforced
-
-Entry point `SolarPanelDualReinforceds`, type `SolarPanelDualReinforced`.
-
-`Charge`, `Horizontal` **rw**, `Maximum`, `Ratio`, `Vertical` **rw**
-
-### StructureSolarPanelFlat
-
-Entry point `SolarPanelFlats`, type `SolarPanelFlat`.
-
-`Charge`, `Horizontal` **rw**, `Maximum`, `Ratio`, `Vertical` **rw**
-
-### StructureSolarPanelFlatReinforced
-
-Entry point `SolarPanelFlatReinforceds`, type `SolarPanelFlatReinforced`.
-
-`Charge`, `Horizontal` **rw**, `Maximum`, `Ratio`, `Vertical` **rw**
-
-### StructureSolarPanelReinforced
-
-Entry point `SolarPanelReinforceds`, type `SolarPanelReinforced`.
-
-`Charge`, `Horizontal` **rw**, `Maximum`, `Ratio`, `Vertical` **rw**
-
-### StructureSolidFuelGenerator
-
-Entry point `SolidFuelGenerators`, type `SolidFuelGenerator`, slots `Slots<DataDiskSlot>`.
-
-`ClearMemory` **rw**, `ImportCount`, `Input`, `Lock` **rw**, `On` **rw**, `PowerGeneration`
-
-### StructureSorter
-
-Entry point `Sorters`, type `Sorter`, slots `Slots<DataDiskSlot>`.
-
-`ClearMemory` **rw**, `Error`, `Export`, `Export2`, `ExportCount`, `Import`, `ImportCount`, `Lock` **rw**, `Mode` **rw**, `On` **rw**, `Output` **rw**, `Power`, `RequiredPower`
-
-### StructureStacker
-
-Entry point `Stackers`, type `Stacker`, slots `Slots<DataDiskSlot>`.
-
-`Activate` **rw**, `ClearMemory` **rw**, `Error`, `Export`, `ExportCount`, `Import`, `ImportCount`, `Lock` **rw**, `Mode` **rw**, `On` **rw**, `Output` **rw**, `Power`, `Processing`, `RequiredPower`, `Setting` **rw**
-
-### StructureStackerReverse
-
-Entry point `StackerReverses`, type `StackerReverse`, slots `Slots<DataDiskSlot>`.
-
-`Activate` **rw**, `ClearMemory` **rw**, `Error`, `Export`, `ExportCount`, `Import`, `ImportCount`, `Lock` **rw**, `Mode` **rw**, `On` **rw**, `Output` **rw**, `Power`, `Processing`, `RequiredPower`, `Setting` **rw**
-
-### StructureStirlingEngine
-
-Entry point `StirlingEngines`, type `StirlingEngine`, slots `Slots<GasCanisterSlot>`.
-
-`Combustion`, `EnvironmentEfficiency`, `Error`, `GasCanister`, `Maximum`, `On` **rw**, `Power`, `PowerGeneration`, `Pressure`, `Quantity`, `Ratio`, `RatioCarbonDioxide`, `RatioHelium`, `RatioHydrazine`, `RatioHydrochloricAcid`, `RatioHydrogen`, `RatioLiquidAlcohol`, `RatioLiquidCarbonDioxide`, `RatioLiquidHydrazine`, `RatioLiquidHydrochloricAcid`, `RatioLiquidHydrogen`, `RatioLiquidMethane`, `RatioLiquidNitrogen`, `RatioLiquidNitrousOxide`, `RatioLiquidOxygen`, `RatioLiquidOzone`, `RatioLiquidPollutant`, `RatioLiquidSilanol`, `RatioLiquidSodiumChloride`, `RatioMethane`, `RatioNitrogen`, `RatioNitrousOxide`, `RatioOxygen`, `RatioOzone`, `RatioPollutant`, `RatioPollutedWater`, `RatioSilanol`, `RatioSteam`, `RatioWater`, `RequiredPower`, `Setting` **rw**, `Temperature`, `TotalMoles`, `Volume`, `WorkingGasEfficiency`
-
-### StructureStorageLocker
-
-Entry point `StorageLockers`, type `StorageLocker`, slots `Slots<DataDiskSlot>`.
-
-`Lock` **rw**, `Open` **rw**
-
-### StructureSuitStorage
-
-Entry point `SuitStorages`, type `SuitStorage`, slots `Slots<CommonSlot>`.
-
-`Back`, `Error`, `Helmet`, `Maximum`, `On` **rw**, `Power`, `Ratio`, `RequiredPower`, `Setting` **rw**, `Suit`
-
-### StructureSuitStorageFrame
-
-Entry point `SuitStorageFrames`, type `SuitStorageFrame`, slots `Slots<CommonSlot>`.
-
-`Back`, `Error`, `Helmet`, `Maximum`, `On` **rw**, `Power`, `Ratio`, `RequiredPower`, `Setting` **rw**, `Suit`
-
-### StructureSuitStorageLocker
-
-Entry point `SuitStorageLockers`, type `SuitStorageLocker`, slots `Slots<CommonSlot>`.
-
-`Back`, `Error`, `Helmet`, `Maximum`, `On` **rw**, `Power`, `Ratio`, `RequiredPower`, `Setting` **rw**, `Suit`
-
-### StructureSuperLargeDirectHeatExchangeGastoGas
-
-Entry point `SuperLargeDirectHeatExchangeGastoGases`, type `SuperLargeDirectHeatExchangeGastoGas`.
-
-`Maximum`, `Ratio`, `Setting` **rw**
-
-### StructureSuperLargeDirectHeatExchangeGastoLiquid
-
-Entry point `SuperLargeDirectHeatExchangeGastoLiquids`, type `SuperLargeDirectHeatExchangeGastoLiquid`.
-
-`Maximum`, `Ratio`, `Setting` **rw**
-
-### StructureSuperLargeDirectHeatExchangeLiquidToLiquid
-
-Entry point `SuperLargeDirectHeatExchangeLiquidToLiquids`, type `SuperLargeDirectHeatExchangeLiquidToLiquid`.
-
-`Maximum`, `Ratio`, `Setting` **rw**
-
-### StructureToolManufactory
-
-Entry point `ToolManufactories`, type `ToolManufactory`, slots `Slots<DataDiskSlot>`.
-
-`Activate` **rw**, `ClearMemory` **rw**, `CompletionRatio`, `Error`, `Export`, `ExportCount`, `Import`, `ImportCount`, `Lock` **rw**, `On` **rw**, `Open` **rw**, `Power`, `Reagents`, `RecipeHash` **rw**, `RequiredPower`, `StackSize`
-
-### StructureTraderWaypoint
-
-Entry point `TraderWaypoints`, type `TraderWaypoint`.
-
-`Error`, `On` **rw**, `Power`, `RequiredPower`
-
-### StructureTransformer
-
-Entry point `Transformers`, type `Transformer`.
-
-`Error`, `Lock` **rw**, `Maximum`, `On` **rw**, `Power`, `Ratio`, `RequiredPower`, `Setting` **rw**
-
-### StructureTransformerMedium
-
-Entry point `TransformerMediums`, type `TransformerMedium`.
-
-`Error`, `Lock` **rw**, `Maximum`, `On` **rw**, `Power`, `Ratio`, `RequiredPower`, `Setting` **rw**
-
-### StructureTransformerSmall
-
-Entry point `TransformerSmalls`, type `TransformerSmall`.
-
-`Error`, `Lock` **rw**, `Maximum`, `On` **rw**, `Power`, `Ratio`, `RequiredPower`, `Setting` **rw**
-
-### StructureTransformerSmallReversed
-
-Entry point `TransformerSmallReverseds`, type `TransformerSmallReversed`.
-
-`Error`, `Lock` **rw**, `Maximum`, `On` **rw**, `Power`, `Ratio`, `RequiredPower`, `Setting` **rw**
-
-### StructureTurboVolumePump
-
-Entry point `TurboVolumePumps`, type `TurboVolumePump`.
-
-`Error`, `Lock` **rw**, `Maximum`, `Mode` **rw**, `On` **rw**, `Power`, `Ratio`, `RequiredPower`, `Setting` **rw**
-
-### StructureUnloader
-
-Entry point `Unloaders`, type `Unloader`, slots `Slots<DataDiskSlot>`.
-
-`ClearMemory` **rw**, `Error`, `Export`, `ExportCount`, `Import`, `ImportCount`, `Lock` **rw**, `Mode` **rw**, `On` **rw**, `Output` **rw**, `Power`, `RequiredPower`
-
-### StructureUprightWindTurbine
-
-Entry point `UprightWindTurbines`, type `UprightWindTurbine`.
-
-`PowerGeneration`
-
-### StructureValve
-
-Entry point `Valves`, type `Valve`.
-
-`Maximum`, `On` **rw**, `Ratio`, `Setting` **rw**
-
-### StructureVendingMachine
-
-Entry point `VendingMachines`, type `VendingMachine`, slots `Slots<DataDiskSlot>`.
-
-`Activate` **rw**, `ClearMemory` **rw**, `Error`, `Export`, `ExportCount`, `Import`, `ImportCount`, `Lock` **rw**, `On` **rw**, `Power`, `Quantity`, `Ratio`, `RequestHash` **rw**, `RequiredPower`, `TargetPrefabHash`, `TargetSlotIndex`
-
-### StructureVendingMachineSmall
-
-Entry point `VendingMachineSmalls`, type `VendingMachineSmall`, slots `Slots<DataDiskSlot>`.
-
-`Activate` **rw**, `ClearMemory` **rw**, `Error`, `Export`, `ExportCount`, `Import`, `ImportCount`, `Lock` **rw**, `On` **rw**, `Power`, `Quantity`, `Ratio`, `RequestHash` **rw**, `RequiredPower`, `TargetPrefabHash`, `TargetSlotIndex`
-
-### StructureVolumePump
-
-Entry point `VolumePumps`, type `VolumePump`.
-
-`Error`, `Lock` **rw**, `Maximum`, `On` **rw**, `Power`, `Ratio`, `RequiredPower`, `Setting` **rw**
-
-### StructureWallCooler
-
-Entry point `WallCoolers`, type `WallCooler`, slots `Slots<DataDiskSlot>`.
-
-`CombustionOutput`, `DataDisk`, `Error`, `Lock` **rw**, `Maximum`, `On` **rw**, `Power`, `PressureOutput`, `Ratio`, `RatioCarbonDioxideOutput`, `RatioHeliumOutput`, `RatioHydrazineOutput`, `RatioHydrochloricAcidOutput`, `RatioHydrogenOutput`, `RatioLiquidAlcoholOutput`, `RatioLiquidHydrazineOutput`, `RatioLiquidHydrochloricAcidOutput`, `RatioLiquidHydrogenOutput`, `RatioLiquidOzoneOutput`, `RatioLiquidSilanolOutput`, `RatioLiquidSodiumChlorideOutput`, `RatioMethaneOutput`, `RatioNitrogenOutput`, `RatioNitrousOxideOutput`, `RatioOxygenOutput`, `RatioOzoneOutput`, `RatioPollutantOutput`, `RatioPollutedWaterOutput`, `RatioSilanolOutput`, `RatioWaterOutput`, `RequiredPower`, `Setting` **rw**, `TemperatureOutput`, `TotalMolesOutput`
-
-### StructureWallHeater
-
-Entry point `WallHeaters`, type `WallHeater`, slots `Slots<DataDiskSlot>`.
-
-`DataDisk`, `Error`, `Lock` **rw**, `On` **rw**, `Power`, `RequiredPower`
-
-### StructureWallLight
-
-Entry point `WallLights`, type `WallLight`.
-
-`Lock` **rw**, `On` **rw**, `Power`, `RequiredPower`
-
-### StructureWallLightBattery
-
-Entry point `WallLightBatteries`, type `WallLightBattery`, slots `Slots<BatterySlot>`.
-
-`Battery`, `Lock` **rw**, `On` **rw**, `Power`, `RequiredPower`
-
-### StructureWaterBottleFillerPowered
-
-Entry point `WaterBottleFillerPowereds`, type `WaterBottleFillerPowered`, slots `Slots<GasCanisterSlot>`.
-
-`Activate` **rw**, `Error`, `On` **rw**, `Power`, `RequiredPower`
-
-### StructureWaterBottleFillerPoweredBottom
-
-Entry point `WaterBottleFillerPoweredBottoms`, type `WaterBottleFillerPoweredBottom`, slots `Slots<GasCanisterSlot>`.
-
-`Activate` **rw**, `Error`, `On` **rw**, `Power`, `RequiredPower`
-
-### StructureWaterDigitalValve
-
-Entry point `WaterDigitalValves`, type `WaterDigitalValve`.
-
-`Error`, `Lock` **rw**, `Maximum`, `On` **rw**, `Power`, `Ratio`, `RequiredPower`, `Setting` **rw**
-
-### StructureWaterPurifier
-
-Entry point `WaterPurifiers`, type `WaterPurifier`, slots `Slots<DataDiskSlot>`.
-
-`ClearMemory` **rw**, `Error`, `Import`, `ImportCount`, `Lock` **rw**, `On` **rw**, `Power`, `RequiredPower`
-
-### StructureWaterWallCooler
-
-Entry point `WaterWallCoolers`, type `WaterWallCooler`, slots `Slots<DataDiskSlot>`.
-
-`CombustionOutput`, `DataDisk`, `Error`, `Lock` **rw**, `Maximum`, `On` **rw**, `Power`, `PressureOutput`, `Ratio`, `RatioCarbonDioxideOutput`, `RatioHeliumOutput`, `RatioHydrazineOutput`, `RatioHydrochloricAcidOutput`, `RatioHydrogenOutput`, `RatioLiquidAlcoholOutput`, `RatioLiquidHydrazineOutput`, `RatioLiquidHydrochloricAcidOutput`, `RatioLiquidHydrogenOutput`, `RatioLiquidOzoneOutput`, `RatioLiquidSilanolOutput`, `RatioLiquidSodiumChlorideOutput`, `RatioMethaneOutput`, `RatioNitrogenOutput`, `RatioNitrousOxideOutput`, `RatioOxygenOutput`, `RatioOzoneOutput`, `RatioPollutantOutput`, `RatioPollutedWaterOutput`, `RatioSilanolOutput`, `RatioWaterOutput`, `RequiredPower`, `Setting` **rw**, `TemperatureOutput`, `TotalMolesOutput`
-
-### StructureWeatherStation
-
-Entry point `WeatherStations`, type `WeatherStation`.
-
-`Activate` **rw**, `Error`, `Lock` **rw**, `Mode`, `NextWeatherEventTime`, `NextWeatherHash`, `On` **rw**, `Power`, `RequiredPower`
-
-### StructureWindTurbine
-
-Entry point `WindTurbines`, type `WindTurbine`.
-
-`PowerGeneration`
+```kotlin
+interface LedDisplay {
+  var Color: Double
+  val Error: Boolean
+  var Mode: Double
+  var On: Boolean
+  val Power: Boolean
+  val RequiredPower: Double
+  var Setting: Double
+
+  /** StructureConsoleLED5. Entry point: LedDisplays.Small. */
+  class Small : LedDisplay {
+    var Text: String
+  }
+
+  /** StructureConsoleLED1x2. Entry point: LedDisplays.Medium. */
+  class Medium : LedDisplay {
+    var Text: String
+  }
+
+  /** StructureConsoleLED1x3. Entry point: LedDisplays.Large. */
+  class Large : LedDisplay {
+    var Text: String
+  }
+}
+```
+
+## Devices
+
+### A
+
+```kotlin
+/** StructureAccessBridge. Entry point: AccessBridges. */
+class AccessBridge : TypedDevice {
+  var Activate: Boolean
+  var Lock: Boolean
+  var On: Boolean
+  var Open: Boolean
+  val Power: Boolean
+  val RequiredPower: Double
+}
+
+/** StructureActiveVent. Entry point: ActiveVents. */
+class ActiveVent : TypedDevice {
+  val CombustionOutput: Double
+  val DataDisk: DataDiskSlot
+  val Error: Boolean
+  var Lock: Boolean
+  val Maximum: Double
+  var Mode: Double
+  var On: Boolean
+  var Open: Boolean
+  val Power: Boolean
+  var PressureExternal: Double
+  var PressureInternal: Double
+  val PressureOutput: Double
+  val Ratio: Double
+  val RatioCarbonDioxideOutput: Double
+  val RatioHeliumOutput: Double
+  val RatioHydrazineOutput: Double
+  val RatioHydrochloricAcidOutput: Double
+  val RatioHydrogenOutput: Double
+  val RatioLiquidAlcoholOutput: Double
+  val RatioLiquidHydrazineOutput: Double
+  val RatioLiquidHydrochloricAcidOutput: Double
+  val RatioLiquidHydrogenOutput: Double
+  val RatioLiquidOzoneOutput: Double
+  val RatioLiquidSilanolOutput: Double
+  val RatioLiquidSodiumChlorideOutput: Double
+  val RatioMethaneOutput: Double
+  val RatioNitrogenOutput: Double
+  val RatioNitrousOxideOutput: Double
+  val RatioOxygenOutput: Double
+  val RatioOzoneOutput: Double
+  val RatioPollutantOutput: Double
+  val RatioPollutedWaterOutput: Double
+  val RatioSilanolOutput: Double
+  val RatioWaterOutput: Double
+  val RequiredPower: Double
+  var Setting: Double
+  val TemperatureOutput: Double
+  val TotalMolesOutput: Double
+  val slots: Slots<DataDiskSlot>
+}
+
+/** StructureAdvancedComposter. Entry point: AdvancedComposters. */
+class AdvancedComposter : TypedDevice {
+  var Activate: Boolean
+  var ClearMemory: Boolean
+  val Error: Boolean
+  val Export: DataDiskSlot
+  val ExportCount: Double
+  val Import: DataDiskSlot
+  val ImportCount: Double
+  var Lock: Boolean
+  val Maximum: Double
+  var Mode: Double
+  var On: Boolean
+  var Open: Boolean
+  val Power: Boolean
+  val Quantity: Double
+  val Ratio: Double
+  val RequiredPower: Double
+  var Setting: Double
+  val slots: Slots<DataDiskSlot>
+}
+
+/** StructureAdvancedFurnace. Entry point: AdvancedFurnaces. */
+class AdvancedFurnace : TypedDevice {
+  var Activate: Boolean
+  var ClearMemory: Boolean
+  val Combustion: Boolean
+  val Error: Boolean
+  val Export: DataDiskSlot
+  val ExportCount: Double
+  val Import: DataDiskSlot
+  val ImportCount: Double
+  var Lock: Boolean
+  val Maximum: Double
+  var Mode: Double
+  var On: Boolean
+  var Open: Boolean
+  val Power: Boolean
+  val Pressure: Double
+  val Ratio: Double
+  val RatioCarbonDioxide: Double
+  val RatioHelium: Double
+  val RatioHydrazine: Double
+  val RatioHydrochloricAcid: Double
+  val RatioHydrogen: Double
+  val RatioLiquidAlcohol: Double
+  val RatioLiquidCarbonDioxide: Double
+  val RatioLiquidHydrazine: Double
+  val RatioLiquidHydrochloricAcid: Double
+  val RatioLiquidHydrogen: Double
+  val RatioLiquidMethane: Double
+  val RatioLiquidNitrogen: Double
+  val RatioLiquidNitrousOxide: Double
+  val RatioLiquidOxygen: Double
+  val RatioLiquidOzone: Double
+  val RatioLiquidPollutant: Double
+  val RatioLiquidSilanol: Double
+  val RatioLiquidSodiumChloride: Double
+  val RatioMethane: Double
+  val RatioNitrogen: Double
+  val RatioNitrousOxide: Double
+  val RatioOxygen: Double
+  val RatioOzone: Double
+  val RatioPollutant: Double
+  val RatioPollutedWater: Double
+  val RatioSilanol: Double
+  val RatioSteam: Double
+  val RatioWater: Double
+  val Reagents: Double
+  val RecipeHash: Double
+  val RequiredPower: Double
+  var Setting: Double
+  var SettingInput: Double
+  var SettingOutput: Double
+  val Temperature: Double
+  val TotalMoles: Double
+  val slots: Slots<DataDiskSlot>
+}
+
+/** StructureAdvancedPackagingMachine. Entry point: AdvancedPackagingMachines. */
+class AdvancedPackagingMachine : TypedDevice {
+  var Activate: Boolean
+  var ClearMemory: Boolean
+  val CompletionRatio: Double
+  val Error: Boolean
+  val Export: DataDiskSlot
+  val ExportCount: Double
+  val Import: DataDiskSlot
+  val ImportCount: Double
+  var Lock: Boolean
+  var On: Boolean
+  var Open: Boolean
+  val Power: Boolean
+  val Reagents: Double
+  var RecipeHash: Double
+  val RequiredPower: Double
+  val StackSize: Double
+  val slots: Slots<DataDiskSlot>
+}
+
+/** ItemAdvancedTablet. Entry point: AdvancedTablets. */
+class AdvancedTablet : TypedDevice {
+  var Activate: Boolean
+  val Battery: ItemBatterySlot
+  val Cartridge: ItemCommonSlot
+  val Cartridge1: ItemCommonSlot
+  val Error: Boolean
+  var Mode: Double
+  var On: Boolean
+  val Power: Boolean
+  val ProgrammableChip: ItemCommonSlot
+  var SoundAlert: Double
+  var Volume: Double
+  val slots: Slots<ItemCommonSlot>
+}
+
+/** StructureAirConditioner. Entry point: AirConditioners. */
+class AirConditioner : TypedDevice {
+  val CombustionInput: Double
+  val CombustionOutput: Double
+  val CombustionOutput2: Double
+  val Error: Boolean
+  var Lock: Boolean
+  val Maximum: Double
+  var Mode: Double
+  var On: Boolean
+  var Open: Boolean
+  val OperationalTemperatureEfficiency: Double
+  val Power: Boolean
+  val PressureEfficiency: Double
+  val PressureInput: Double
+  val PressureOutput: Double
+  val PressureOutput2: Double
+  val ProgrammableChip: DataDiskSlot
+  val Ratio: Double
+  val RatioCarbonDioxideInput: Double
+  val RatioCarbonDioxideOutput: Double
+  val RatioCarbonDioxideOutput2: Double
+  val RatioHeliumInput: Double
+  val RatioHeliumOutput: Double
+  val RatioHeliumOutput2: Double
+  val RatioHydrazineInput: Double
+  val RatioHydrazineOutput: Double
+  val RatioHydrazineOutput2: Double
+  val RatioHydrochloricAcidInput: Double
+  val RatioHydrochloricAcidOutput: Double
+  val RatioHydrochloricAcidOutput2: Double
+  val RatioHydrogenInput: Double
+  val RatioHydrogenOutput: Double
+  val RatioHydrogenOutput2: Double
+  val RatioLiquidAlcoholInput: Double
+  val RatioLiquidAlcoholOutput: Double
+  val RatioLiquidAlcoholOutput2: Double
+  val RatioLiquidCarbonDioxideInput: Double
+  val RatioLiquidCarbonDioxideOutput: Double
+  val RatioLiquidCarbonDioxideOutput2: Double
+  val RatioLiquidHydrazineInput: Double
+  val RatioLiquidHydrazineOutput: Double
+  val RatioLiquidHydrazineOutput2: Double
+  val RatioLiquidHydrochloricAcidInput: Double
+  val RatioLiquidHydrochloricAcidOutput: Double
+  val RatioLiquidHydrochloricAcidOutput2: Double
+  val RatioLiquidHydrogenInput: Double
+  val RatioLiquidHydrogenOutput: Double
+  val RatioLiquidHydrogenOutput2: Double
+  val RatioLiquidMethaneInput: Double
+  val RatioLiquidMethaneOutput: Double
+  val RatioLiquidMethaneOutput2: Double
+  val RatioLiquidNitrogenInput: Double
+  val RatioLiquidNitrogenOutput: Double
+  val RatioLiquidNitrogenOutput2: Double
+  val RatioLiquidNitrousOxideInput: Double
+  val RatioLiquidNitrousOxideOutput: Double
+  val RatioLiquidNitrousOxideOutput2: Double
+  val RatioLiquidOxygenInput: Double
+  val RatioLiquidOxygenOutput: Double
+  val RatioLiquidOxygenOutput2: Double
+  val RatioLiquidOzoneInput: Double
+  val RatioLiquidOzoneOutput: Double
+  val RatioLiquidOzoneOutput2: Double
+  val RatioLiquidPollutantInput: Double
+  val RatioLiquidPollutantOutput: Double
+  val RatioLiquidPollutantOutput2: Double
+  val RatioLiquidSilanolInput: Double
+  val RatioLiquidSilanolOutput: Double
+  val RatioLiquidSilanolOutput2: Double
+  val RatioLiquidSodiumChlorideInput: Double
+  val RatioLiquidSodiumChlorideOutput: Double
+  val RatioLiquidSodiumChlorideOutput2: Double
+  val RatioMethaneInput: Double
+  val RatioMethaneOutput: Double
+  val RatioMethaneOutput2: Double
+  val RatioNitrogenInput: Double
+  val RatioNitrogenOutput: Double
+  val RatioNitrogenOutput2: Double
+  val RatioNitrousOxideInput: Double
+  val RatioNitrousOxideOutput: Double
+  val RatioNitrousOxideOutput2: Double
+  val RatioOxygenInput: Double
+  val RatioOxygenOutput: Double
+  val RatioOxygenOutput2: Double
+  val RatioOzoneInput: Double
+  val RatioOzoneOutput: Double
+  val RatioOzoneOutput2: Double
+  val RatioPollutantInput: Double
+  val RatioPollutantOutput: Double
+  val RatioPollutantOutput2: Double
+  val RatioPollutedWaterInput: Double
+  val RatioPollutedWaterOutput: Double
+  val RatioPollutedWaterOutput2: Double
+  val RatioSilanolInput: Double
+  val RatioSilanolOutput: Double
+  val RatioSilanolOutput2: Double
+  val RatioSteamInput: Double
+  val RatioSteamOutput: Double
+  val RatioSteamOutput2: Double
+  val RatioWaterInput: Double
+  val RatioWaterOutput: Double
+  val RatioWaterOutput2: Double
+  val RequiredPower: Double
+  var Setting: Double
+  val TemperatureDifferentialEfficiency: Double
+  val TemperatureInput: Double
+  val TemperatureOutput: Double
+  val TemperatureOutput2: Double
+  val TotalMolesInput: Double
+  val TotalMolesOutput: Double
+  val TotalMolesOutput2: Double
+  val slots: Slots<DataDiskSlot>
+}
+
+/** StructureAirlock. Entry point: Airlocks. */
+class Airlock : TypedDevice {
+  val Idle: Boolean
+  var Lock: Boolean
+  var Mode: Double
+  var On: Boolean
+  var Open: Boolean
+  val Power: Boolean
+  val RequiredPower: Double
+  var Setting: Double
+}
+
+/** StructureAirlockGate. Entry point: AirlockGates. */
+class AirlockGate : TypedDevice {
+  val Idle: Boolean
+  var Lock: Boolean
+  var Mode: Double
+  var On: Boolean
+  var Open: Boolean
+  val Power: Boolean
+  val RequiredPower: Double
+  var Setting: Double
+}
+
+/** StructureAirlockWide. Entry point: AirlockWides. */
+class AirlockWide : TypedDevice {
+  val Idle: Boolean
+  var Lock: Boolean
+  var Mode: Double
+  var On: Boolean
+  var Open: Boolean
+  val Power: Boolean
+  val RequiredPower: Double
+  var Setting: Double
+}
+
+/** ItemAngleGrinder. Entry point: AngleGrinders. */
+class AngleGrinder : TypedDevice {
+  var Activate: Boolean
+  val Battery: ItemBatterySlot
+  val Power: Boolean
+  val slots: Slots<ItemBatterySlot>
+}
+
+/** StructureArcFurnace. Entry point: ArcFurnaces. */
+class ArcFurnace : TypedDevice {
+  var Activate: Boolean
+  var ClearMemory: Boolean
+  val Error: Boolean
+  val Export: DataDiskSlot
+  val ExportCount: Double
+  val Idle: Boolean
+  val Import: DataDiskSlot
+  val ImportCount: Double
+  var Lock: Boolean
+  var On: Boolean
+  val Power: Boolean
+  val Reagents: Double
+  val RecipeHash: Double
+  val RequiredPower: Double
+  val slots: Slots<DataDiskSlot>
+}
+
+/** ItemArcWelder. Entry point: ArcWelders. */
+class ArcWelder : TypedDevice {
+  var Activate: Boolean
+  val Battery: ItemBatterySlot
+  val Power: Boolean
+  val slots: Slots<ItemBatterySlot>
+}
+
+/** StructureAreaPowerControl. Entry point: AreaPowerControls. */
+class AreaPowerControl : TypedDevice {
+  val Battery: BatterySlot
+  val Charge: Double
+  val DataDisk: DataDiskSlot
+  val Error: Boolean
+  var Lock: Boolean
+  val Maximum: Double
+  var Mode: Double
+  var On: Boolean
+  var Open: Boolean
+  val Power: Boolean
+  val PowerActual: Double
+  val PowerPotential: Double
+  val Ratio: Double
+  val RequiredPower: Double
+  val slots: Slots<CommonSlot>
+}
+
+/** StructureAreaPowerControlReversed. Entry point: AreaPowerControlReverseds. */
+class AreaPowerControlReversed : TypedDevice {
+  val Battery: BatterySlot
+  val Charge: Double
+  val DataDisk: DataDiskSlot
+  val Error: Boolean
+  var Lock: Boolean
+  val Maximum: Double
+  var Mode: Double
+  var On: Boolean
+  var Open: Boolean
+  val Power: Boolean
+  val PowerActual: Double
+  val PowerPotential: Double
+  val Ratio: Double
+  val RequiredPower: Double
+  val slots: Slots<CommonSlot>
+}
+
+/** StructureAutolathe. Entry point: Autolathes. */
+class Autolathe : TypedDevice {
+  var Activate: Boolean
+  var ClearMemory: Boolean
+  val CompletionRatio: Double
+  val Error: Boolean
+  val Export: DataDiskSlot
+  val ExportCount: Double
+  val Import: DataDiskSlot
+  val ImportCount: Double
+  var Lock: Boolean
+  var On: Boolean
+  var Open: Boolean
+  val Power: Boolean
+  val Reagents: Double
+  var RecipeHash: Double
+  val RequiredPower: Double
+  val StackSize: Double
+  val slots: Slots<DataDiskSlot>
+}
+
+/** StructureAutomatedOven. Entry point: AutomatedOvens. */
+class AutomatedOven : TypedDevice {
+  var Activate: Boolean
+  var ClearMemory: Boolean
+  val CompletionRatio: Double
+  val Error: Boolean
+  val Export: DataDiskSlot
+  val ExportCount: Double
+  val Import: DataDiskSlot
+  val ImportCount: Double
+  var Lock: Boolean
+  var On: Boolean
+  var Open: Boolean
+  val Power: Boolean
+  val Reagents: Double
+  var RecipeHash: Double
+  val RequiredPower: Double
+  val StackSize: Double
+  val slots: Slots<DataDiskSlot>
+}
+
+/** StructureAutoMinerSmall. Entry point: AutoMinerSmalls. */
+class AutoMinerSmall : TypedDevice {
+  var Activate: Boolean
+  var ClearMemory: Boolean
+  val Error: Boolean
+  val Export: DataDiskSlot
+  val ExportCount: Double
+  val Import: DataDiskSlot
+  val ImportCount: Double
+  var On: Boolean
+  var Open: Boolean
+  val Power: Boolean
+  val RequiredPower: Double
+  val slots: Slots<DataDiskSlot>
+}
+```
+
+### B
+
+```kotlin
+/** StructureBackLiquidPressureRegulator. Entry point: BackLiquidPressureRegulators. */
+class BackLiquidPressureRegulator : TypedDevice {
+  val Error: Boolean
+  var Lock: Boolean
+  val Maximum: Double
+  var On: Boolean
+  val Power: Boolean
+  val Ratio: Double
+  val RequiredPower: Double
+  var Setting: Double
+}
+
+/** StructureBackPressureRegulator. Entry point: BackPressureRegulators. */
+class BackPressureRegulator : TypedDevice {
+  val Error: Boolean
+  var Lock: Boolean
+  val Maximum: Double
+  var On: Boolean
+  val Power: Boolean
+  val Ratio: Double
+  val RequiredPower: Double
+  var Setting: Double
+}
+
+/** StructureBasketHoop. Entry point: BasketHoops. */
+class BasketHoop : TypedDevice {
+  var Lock: Boolean
+  var On: Boolean
+  val Power: Boolean
+  val RequiredPower: Double
+  var Setting: Double
+}
+
+/** Battery_Wireless_cell. Entry point: Battery_Wireless_cells. */
+class Battery_Wireless_cell : TypedDevice {
+  var Mode: Double
+}
+
+/** Battery_Wireless_cell_Big. Entry point: Battery_Wireless_cell_Bigs. */
+class Battery_Wireless_cell_Big : TypedDevice {
+  var Mode: Double
+}
+
+/** ItemBatteryCell. Entry point: BatteryCells. */
+class BatteryCell : TypedDevice {
+  var Mode: Double
+}
+
+/** ItemBatteryCellLarge. Entry point: BatteryCellLarges. */
+class BatteryCellLarge : TypedDevice {
+  var Mode: Double
+}
+
+/** ItemBatteryCellNuclear. Entry point: BatteryCellNuclears. */
+class BatteryCellNuclear : TypedDevice {
+  var Mode: Double
+}
+
+/** StructureBatteryCharger. Entry point: BatteryChargers. */
+class BatteryCharger : TypedDevice {
+  var Activate: Boolean
+  val Error: Boolean
+  var On: Boolean
+  val Power: Boolean
+  val RequiredPower: Double
+  val slots: Slots<BatterySlot>
+}
+
+/** StructureBatteryChargerSmall. Entry point: BatteryChargerSmalls. */
+class BatteryChargerSmall : TypedDevice {
+  var Activate: Boolean
+  val Error: Boolean
+  var On: Boolean
+  val Power: Boolean
+  val RequiredPower: Double
+  val slots: Slots<BatterySlot>
+}
+
+/** StructureBench. Entry point: Benches. */
+class Bench : TypedDevice {
+  val Appliance1: ApplianceSlot
+  val Appliance2: ApplianceSlot
+  val Error: Boolean
+  var On: Boolean
+  val Power: Boolean
+  val RequiredPower: Double
+  val slots: Slots<ApplianceSlot>
+}
+
+/** StructureBench1. Entry point: Bench1s. */
+class Bench1 : TypedDevice {
+  val Appliance1: ApplianceSlot
+  val Appliance2: ApplianceSlot
+  val Error: Boolean
+  var On: Boolean
+  val Power: Boolean
+  val RequiredPower: Double
+  val slots: Slots<ApplianceSlot>
+}
+
+/** StructureBench2. Entry point: Bench2s. */
+class Bench2 : TypedDevice {
+  val Appliance1: ApplianceSlot
+  val Appliance2: ApplianceSlot
+  val Error: Boolean
+  var On: Boolean
+  val Power: Boolean
+  val RequiredPower: Double
+  val slots: Slots<ApplianceSlot>
+}
+
+/** StructureBench3. Entry point: Bench3s. */
+class Bench3 : TypedDevice {
+  val Appliance1: ApplianceSlot
+  val Appliance2: ApplianceSlot
+  val Error: Boolean
+  var On: Boolean
+  val Power: Boolean
+  val RequiredPower: Double
+  val slots: Slots<ApplianceSlot>
+}
+
+/** StructureBench4. Entry point: Bench4s. */
+class Bench4 : TypedDevice {
+  val Appliance1: ApplianceSlot
+  val Appliance2: ApplianceSlot
+  val Error: Boolean
+  var On: Boolean
+  val Power: Boolean
+  val RequiredPower: Double
+  val slots: Slots<ApplianceSlot>
+}
+
+/** StructureBlastDoor. Entry point: BlastDoors. */
+class BlastDoor : TypedDevice {
+  val Idle: Boolean
+  var Lock: Boolean
+  var Mode: Double
+  var On: Boolean
+  var Open: Boolean
+  val Power: Boolean
+  val RequiredPower: Double
+  var Setting: Double
+}
+
+/** StructureBlockBed. Entry point: BlockBeds. */
+class BlockBed : TypedDevice {
+  var Activate: Boolean
+  val Bed: DataDiskSlot
+  val Error: Boolean
+  var On: Boolean
+  val Power: Boolean
+  val RequiredPower: Double
+  val slots: Slots<DataDiskSlot>
+}
+```
+
+### C
+
+```kotlin
+/** StructureCableAnalysizer. Entry point: CableAnalysizers. */
+class CableAnalysizer : TypedDevice {
+  val PowerActual: Double
+  val PowerPotential: Double
+  val PowerRequired: Double
+}
+
+/** StructureCamera. Entry point: Cameras. */
+class Camera : TypedDevice {
+  var Mode: Double
+  var On: Boolean
+}
+
+/** StructureCapsuleTankGas. Entry point: CapsuleTankGases. */
+class CapsuleTankGas : TypedDevice {
+  val Combustion: Boolean
+  val CombustionOutput: Double
+  val Maximum: Double
+  val Pressure: Double
+  val PressureOutput: Double
+  val Ratio: Double
+  val RatioCarbonDioxide: Double
+  val RatioCarbonDioxideOutput: Double
+  val RatioHelium: Double
+  val RatioHeliumOutput: Double
+  val RatioHydrazine: Double
+  val RatioHydrazineOutput: Double
+  val RatioHydrochloricAcid: Double
+  val RatioHydrochloricAcidOutput: Double
+  val RatioHydrogen: Double
+  val RatioHydrogenOutput: Double
+  val RatioLiquidAlcohol: Double
+  val RatioLiquidAlcoholOutput: Double
+  val RatioLiquidCarbonDioxide: Double
+  val RatioLiquidHydrazine: Double
+  val RatioLiquidHydrazineOutput: Double
+  val RatioLiquidHydrochloricAcid: Double
+  val RatioLiquidHydrochloricAcidOutput: Double
+  val RatioLiquidHydrogen: Double
+  val RatioLiquidHydrogenOutput: Double
+  val RatioLiquidMethane: Double
+  val RatioLiquidNitrogen: Double
+  val RatioLiquidNitrousOxide: Double
+  val RatioLiquidOxygen: Double
+  val RatioLiquidOzone: Double
+  val RatioLiquidOzoneOutput: Double
+  val RatioLiquidPollutant: Double
+  val RatioLiquidSilanol: Double
+  val RatioLiquidSilanolOutput: Double
+  val RatioLiquidSodiumChloride: Double
+  val RatioLiquidSodiumChlorideOutput: Double
+  val RatioMethane: Double
+  val RatioMethaneOutput: Double
+  val RatioNitrogen: Double
+  val RatioNitrogenOutput: Double
+  val RatioNitrousOxide: Double
+  val RatioNitrousOxideOutput: Double
+  val RatioOxygen: Double
+  val RatioOxygenOutput: Double
+  val RatioOzone: Double
+  val RatioOzoneOutput: Double
+  val RatioPollutant: Double
+  val RatioPollutantOutput: Double
+  val RatioPollutedWater: Double
+  val RatioPollutedWaterOutput: Double
+  val RatioSilanol: Double
+  val RatioSilanolOutput: Double
+  val RatioSteam: Double
+  val RatioWater: Double
+  val RatioWaterOutput: Double
+  var Setting: Double
+  val Temperature: Double
+  val TemperatureOutput: Double
+  val TotalMoles: Double
+  val TotalMolesOutput: Double
+  val Volume: Double
+  val VolumeOfLiquid: Double
+}
+
+/** StructureCapsuleTankLiquid. Entry point: CapsuleTankLiquids. */
+class CapsuleTankLiquid : TypedDevice {
+  val Combustion: Boolean
+  val CombustionOutput: Double
+  val Maximum: Double
+  val Pressure: Double
+  val PressureOutput: Double
+  val Ratio: Double
+  val RatioCarbonDioxide: Double
+  val RatioCarbonDioxideOutput: Double
+  val RatioHelium: Double
+  val RatioHeliumOutput: Double
+  val RatioHydrazine: Double
+  val RatioHydrazineOutput: Double
+  val RatioHydrochloricAcid: Double
+  val RatioHydrochloricAcidOutput: Double
+  val RatioHydrogen: Double
+  val RatioHydrogenOutput: Double
+  val RatioLiquidAlcohol: Double
+  val RatioLiquidAlcoholOutput: Double
+  val RatioLiquidCarbonDioxide: Double
+  val RatioLiquidHydrazine: Double
+  val RatioLiquidHydrazineOutput: Double
+  val RatioLiquidHydrochloricAcid: Double
+  val RatioLiquidHydrochloricAcidOutput: Double
+  val RatioLiquidHydrogen: Double
+  val RatioLiquidHydrogenOutput: Double
+  val RatioLiquidMethane: Double
+  val RatioLiquidNitrogen: Double
+  val RatioLiquidNitrousOxide: Double
+  val RatioLiquidOxygen: Double
+  val RatioLiquidOzone: Double
+  val RatioLiquidOzoneOutput: Double
+  val RatioLiquidPollutant: Double
+  val RatioLiquidSilanol: Double
+  val RatioLiquidSilanolOutput: Double
+  val RatioLiquidSodiumChloride: Double
+  val RatioLiquidSodiumChlorideOutput: Double
+  val RatioMethane: Double
+  val RatioMethaneOutput: Double
+  val RatioNitrogen: Double
+  val RatioNitrogenOutput: Double
+  val RatioNitrousOxide: Double
+  val RatioNitrousOxideOutput: Double
+  val RatioOxygen: Double
+  val RatioOxygenOutput: Double
+  val RatioOzone: Double
+  val RatioOzoneOutput: Double
+  val RatioPollutant: Double
+  val RatioPollutantOutput: Double
+  val RatioPollutedWater: Double
+  val RatioPollutedWaterOutput: Double
+  val RatioSilanol: Double
+  val RatioSilanolOutput: Double
+  val RatioSteam: Double
+  val RatioWater: Double
+  val RatioWaterOutput: Double
+  var Setting: Double
+  val Temperature: Double
+  val TemperatureOutput: Double
+  val TotalMoles: Double
+  val TotalMolesOutput: Double
+  val Volume: Double
+  val VolumeOfLiquid: Double
+}
+
+/** StructureCargoStorageMedium. Entry point: CargoStorageMediums. */
+class CargoStorageMedium : TypedDevice {
+  var ClearMemory: Boolean
+  val Error: Boolean
+  val Export: DataDiskSlot
+  val ExportCount: Double
+  val Import: DataDiskSlot
+  val ImportCount: Double
+  var Lock: Boolean
+  var On: Boolean
+  var Open: Boolean
+  val Power: Boolean
+  val Quantity: Double
+  val Ratio: Double
+  val RequiredPower: Double
+  val slots: Slots<DataDiskSlot>
+}
+
+/** StructureCargoStorageSmall. Entry point: CargoStorageSmalls. */
+class CargoStorageSmall : TypedDevice {
+  var ClearMemory: Boolean
+  val Error: Boolean
+  val Export: DataDiskSlot
+  val ExportCount: Double
+  val Import: DataDiskSlot
+  val ImportCount: Double
+  var Lock: Boolean
+  var On: Boolean
+  var Open: Boolean
+  val Power: Boolean
+  val Quantity: Double
+  val Ratio: Double
+  val RequiredPower: Double
+  val slots: Slots<DataDiskSlot>
+}
+
+/** StructureCentrifuge. Entry point: Centrifuges. */
+class Centrifuge : TypedDevice {
+  var ClearMemory: Boolean
+  val Error: Boolean
+  val Export: DataDiskSlot
+  val ExportCount: Double
+  val Import: DataDiskSlot
+  val ImportCount: Double
+  var On: Boolean
+  var Open: Boolean
+  val Power: Boolean
+  val Reagents: Double
+  val RequiredPower: Double
+  val slots: Slots<DataDiskSlot>
+}
+
+/** StructureChuteBin. Entry point: ChuteBins. */
+class ChuteBin : TypedDevice {
+  val Error: Boolean
+  val Input: DataDiskSlot
+  var Lock: Boolean
+  var On: Boolean
+  var Open: Boolean
+  val Power: Boolean
+  val RequiredPower: Double
+  val slots: Slots<DataDiskSlot>
+}
+
+/** StructureChuteDigitalFlipFlopSplitterLeft. Entry point: ChuteDigitalFlipFlopSplitterLefts. */
+class ChuteDigitalFlipFlopSplitterLeft : TypedDevice {
+  var Mode: Double
+  var On: Boolean
+  val Power: Boolean
+  var Quantity: Double
+  val RequiredPower: Double
+  var Setting: Double
+  var SettingOutput: Double
+  val TransportSlot: DataDiskSlot
+  val slots: Slots<DataDiskSlot>
+}
+
+/** StructureChuteDigitalFlipFlopSplitterRight. Entry point: ChuteDigitalFlipFlopSplitterRights. */
+class ChuteDigitalFlipFlopSplitterRight : TypedDevice {
+  var Mode: Double
+  var On: Boolean
+  val Power: Boolean
+  var Quantity: Double
+  val RequiredPower: Double
+  var Setting: Double
+  var SettingOutput: Double
+  val TransportSlot: DataDiskSlot
+  val slots: Slots<DataDiskSlot>
+}
+
+/** StructureChuteDigitalValveLeft. Entry point: ChuteDigitalValveLefts. */
+class ChuteDigitalValveLeft : TypedDevice {
+  var Lock: Boolean
+  var On: Boolean
+  var Open: Boolean
+  val Power: Boolean
+  var Quantity: Double
+  val RequiredPower: Double
+  var Setting: Double
+  val TransportSlot: DataDiskSlot
+  val slots: Slots<DataDiskSlot>
+}
+
+/** StructureChuteDigitalValveRight. Entry point: ChuteDigitalValveRights. */
+class ChuteDigitalValveRight : TypedDevice {
+  var Lock: Boolean
+  var On: Boolean
+  var Open: Boolean
+  val Power: Boolean
+  var Quantity: Double
+  val RequiredPower: Double
+  var Setting: Double
+  val TransportSlot: DataDiskSlot
+  val slots: Slots<DataDiskSlot>
+}
+
+/** StructureChuteExportBin. Entry point: ChuteExportBins. */
+class ChuteExportBin : TypedDevice {
+  val Error: Boolean
+  val Input: DataDiskSlot
+  var Lock: Boolean
+  var On: Boolean
+  var Open: Boolean
+  val Power: Boolean
+  val RequiredPower: Double
+  val slots: Slots<DataDiskSlot>
+}
+
+/** StructureChuteInlet. Entry point: ChuteInlets. */
+class ChuteInlet : TypedDevice {
+  var ClearMemory: Boolean
+  val Import: DataDiskSlot
+  val ImportCount: Double
+  var Lock: Boolean
+  val slots: Slots<DataDiskSlot>
+}
+
+/** StructureChuteOutlet. Entry point: ChuteOutlets. */
+class ChuteOutlet : TypedDevice {
+  var ClearMemory: Boolean
+  val Export: DataDiskSlot
+  val ExportCount: Double
+  val ImportCount: Double
+  var Lock: Boolean
+  val slots: Slots<DataDiskSlot>
+}
+
+/** StructureChuteUmbilicalMale. Entry point: ChuteUmbilicalMales. */
+class ChuteUmbilicalMale : TypedDevice {
+  val Error: Boolean
+  var Lock: Boolean
+  val Mode: Double
+  var On: Boolean
+  var Open: Boolean
+  val Power: Boolean
+  val RequiredPower: Double
+  val TransportSlot: DataDiskSlot
+  val slots: Slots<DataDiskSlot>
+}
+
+/** StructureCircuitHousing. Entry point: CircuitHousings. */
+class CircuitHousing : TypedDevice {
+  val Error: Boolean
+  var LineNumber: Double
+  var Mode: Double
+  var On: Boolean
+  val Power: Boolean
+  val ProgrammableChip: CommonSlot
+  val RequiredPower: Double
+  var Setting: Double
+  val StackSize: Double
+  val slots: Slots<CommonSlot>
+}
+
+/** StructureCircuitHousingCompact. Entry point: CircuitHousingCompacts. */
+class CircuitHousingCompact : TypedDevice {
+  val Error: Boolean
+  var LineNumber: Double
+  var Mode: Double
+  var On: Boolean
+  val Power: Boolean
+  val ProgrammableChip: ProgrammableChipSlot
+  val RequiredPower: Double
+  var Setting: Double
+  val StackSize: Double
+  val slots: Slots<ProgrammableChipSlot>
+}
+
+/** StructureCombustionCentrifuge. Entry point: CombustionCentrifuges. */
+class CombustionCentrifuge : TypedDevice {
+  var ClearMemory: Boolean
+  val Combustion: Boolean
+  val CombustionInput: Double
+  var CombustionLimiter: Double
+  val CombustionOutput: Double
+  val Error: Boolean
+  val Export: DataDiskSlot
+  val ExportCount: Double
+  val Import: DataDiskSlot
+  val ImportCount: Double
+  var Lock: Boolean
+  var On: Boolean
+  var Open: Boolean
+  val Power: Boolean
+  val Pressure: Double
+  val PressureInput: Double
+  val PressureOutput: Double
+  val ProgrammableChip: DataDiskSlot
+  val RatioCarbonDioxide: Double
+  val RatioCarbonDioxideInput: Double
+  val RatioCarbonDioxideOutput: Double
+  val RatioHelium: Double
+  val RatioHeliumInput: Double
+  val RatioHeliumOutput: Double
+  val RatioHydrazine: Double
+  val RatioHydrazineInput: Double
+  val RatioHydrazineOutput: Double
+  val RatioHydrochloricAcid: Double
+  val RatioHydrochloricAcidInput: Double
+  val RatioHydrochloricAcidOutput: Double
+  val RatioHydrogen: Double
+  val RatioHydrogenInput: Double
+  val RatioHydrogenOutput: Double
+  val RatioLiquidAlcohol: Double
+  val RatioLiquidAlcoholInput: Double
+  val RatioLiquidAlcoholOutput: Double
+  val RatioLiquidCarbonDioxide: Double
+  val RatioLiquidCarbonDioxideInput: Double
+  val RatioLiquidCarbonDioxideOutput: Double
+  val RatioLiquidHydrazine: Double
+  val RatioLiquidHydrazineInput: Double
+  val RatioLiquidHydrazineOutput: Double
+  val RatioLiquidHydrochloricAcid: Double
+  val RatioLiquidHydrochloricAcidInput: Double
+  val RatioLiquidHydrochloricAcidOutput: Double
+  val RatioLiquidHydrogen: Double
+  val RatioLiquidHydrogenInput: Double
+  val RatioLiquidHydrogenOutput: Double
+  val RatioLiquidMethane: Double
+  val RatioLiquidMethaneInput: Double
+  val RatioLiquidMethaneOutput: Double
+  val RatioLiquidNitrogen: Double
+  val RatioLiquidNitrogenInput: Double
+  val RatioLiquidNitrogenOutput: Double
+  val RatioLiquidNitrousOxide: Double
+  val RatioLiquidNitrousOxideInput: Double
+  val RatioLiquidNitrousOxideOutput: Double
+  val RatioLiquidOxygen: Double
+  val RatioLiquidOxygenInput: Double
+  val RatioLiquidOxygenOutput: Double
+  val RatioLiquidOzone: Double
+  val RatioLiquidOzoneInput: Double
+  val RatioLiquidOzoneOutput: Double
+  val RatioLiquidPollutant: Double
+  val RatioLiquidPollutantInput: Double
+  val RatioLiquidPollutantOutput: Double
+  val RatioLiquidSilanol: Double
+  val RatioLiquidSilanolInput: Double
+  val RatioLiquidSilanolOutput: Double
+  val RatioLiquidSodiumChloride: Double
+  val RatioLiquidSodiumChlorideInput: Double
+  val RatioLiquidSodiumChlorideOutput: Double
+  val RatioMethane: Double
+  val RatioMethaneInput: Double
+  val RatioMethaneOutput: Double
+  val RatioNitrogen: Double
+  val RatioNitrogenInput: Double
+  val RatioNitrogenOutput: Double
+  val RatioNitrousOxide: Double
+  val RatioNitrousOxideInput: Double
+  val RatioNitrousOxideOutput: Double
+  val RatioOxygen: Double
+  val RatioOxygenInput: Double
+  val RatioOxygenOutput: Double
+  val RatioOzone: Double
+  val RatioOzoneInput: Double
+  val RatioOzoneOutput: Double
+  val RatioPollutant: Double
+  val RatioPollutantInput: Double
+  val RatioPollutantOutput: Double
+  val RatioPollutedWater: Double
+  val RatioPollutedWaterInput: Double
+  val RatioPollutedWaterOutput: Double
+  val RatioSilanol: Double
+  val RatioSilanolInput: Double
+  val RatioSilanolOutput: Double
+  val RatioSteam: Double
+  val RatioSteamInput: Double
+  val RatioSteamOutput: Double
+  val RatioWater: Double
+  val RatioWaterInput: Double
+  val RatioWaterOutput: Double
+  val Reagents: Double
+  val RequiredPower: Double
+  val Rpm: Double
+  val Stress: Double
+  val Temperature: Double
+  val TemperatureInput: Double
+  val TemperatureOutput: Double
+  var Throttle: Double
+  val TotalMoles: Double
+  val TotalMolesInput: Double
+  val TotalMolesOutput: Double
+  val slots: Slots<DataDiskSlot>
+}
+
+/** StructureCombustionDeepMiner. Entry point: CombustionDeepMiners. */
+class CombustionDeepMiner : TypedDevice {
+  var ClearMemory: Boolean
+  val Combustion: Boolean
+  val CombustionInput: Double
+  var CombustionLimiter: Double
+  val CombustionOutput: Double
+  val Error: Boolean
+  val Export: DataDiskSlot
+  val ExportCount: Double
+  val ImportCount: Double
+  var Lock: Boolean
+  var On: Boolean
+  var Open: Boolean
+  val Power: Boolean
+  val Pressure: Double
+  val PressureInput: Double
+  val PressureOutput: Double
+  val ProgrammableChip: DataDiskSlot
+  val RatioCarbonDioxide: Double
+  val RatioCarbonDioxideInput: Double
+  val RatioCarbonDioxideOutput: Double
+  val RatioHelium: Double
+  val RatioHeliumInput: Double
+  val RatioHeliumOutput: Double
+  val RatioHydrazine: Double
+  val RatioHydrazineInput: Double
+  val RatioHydrazineOutput: Double
+  val RatioHydrochloricAcid: Double
+  val RatioHydrochloricAcidInput: Double
+  val RatioHydrochloricAcidOutput: Double
+  val RatioHydrogen: Double
+  val RatioHydrogenInput: Double
+  val RatioHydrogenOutput: Double
+  val RatioLiquidAlcohol: Double
+  val RatioLiquidAlcoholInput: Double
+  val RatioLiquidAlcoholOutput: Double
+  val RatioLiquidCarbonDioxide: Double
+  val RatioLiquidCarbonDioxideInput: Double
+  val RatioLiquidCarbonDioxideOutput: Double
+  val RatioLiquidHydrazine: Double
+  val RatioLiquidHydrazineInput: Double
+  val RatioLiquidHydrazineOutput: Double
+  val RatioLiquidHydrochloricAcid: Double
+  val RatioLiquidHydrochloricAcidInput: Double
+  val RatioLiquidHydrochloricAcidOutput: Double
+  val RatioLiquidHydrogen: Double
+  val RatioLiquidHydrogenInput: Double
+  val RatioLiquidHydrogenOutput: Double
+  val RatioLiquidMethane: Double
+  val RatioLiquidMethaneInput: Double
+  val RatioLiquidMethaneOutput: Double
+  val RatioLiquidNitrogen: Double
+  val RatioLiquidNitrogenInput: Double
+  val RatioLiquidNitrogenOutput: Double
+  val RatioLiquidNitrousOxide: Double
+  val RatioLiquidNitrousOxideInput: Double
+  val RatioLiquidNitrousOxideOutput: Double
+  val RatioLiquidOxygen: Double
+  val RatioLiquidOxygenInput: Double
+  val RatioLiquidOxygenOutput: Double
+  val RatioLiquidOzone: Double
+  val RatioLiquidOzoneInput: Double
+  val RatioLiquidOzoneOutput: Double
+  val RatioLiquidPollutant: Double
+  val RatioLiquidPollutantInput: Double
+  val RatioLiquidPollutantOutput: Double
+  val RatioLiquidSilanol: Double
+  val RatioLiquidSilanolInput: Double
+  val RatioLiquidSilanolOutput: Double
+  val RatioLiquidSodiumChloride: Double
+  val RatioLiquidSodiumChlorideInput: Double
+  val RatioLiquidSodiumChlorideOutput: Double
+  val RatioMethane: Double
+  val RatioMethaneInput: Double
+  val RatioMethaneOutput: Double
+  val RatioNitrogen: Double
+  val RatioNitrogenInput: Double
+  val RatioNitrogenOutput: Double
+  val RatioNitrousOxide: Double
+  val RatioNitrousOxideInput: Double
+  val RatioNitrousOxideOutput: Double
+  val RatioOxygen: Double
+  val RatioOxygenInput: Double
+  val RatioOxygenOutput: Double
+  val RatioOzone: Double
+  val RatioOzoneInput: Double
+  val RatioOzoneOutput: Double
+  val RatioPollutant: Double
+  val RatioPollutantInput: Double
+  val RatioPollutantOutput: Double
+  val RatioPollutedWater: Double
+  val RatioPollutedWaterInput: Double
+  val RatioPollutedWaterOutput: Double
+  val RatioSilanol: Double
+  val RatioSilanolInput: Double
+  val RatioSilanolOutput: Double
+  val RatioSteam: Double
+  val RatioSteamInput: Double
+  val RatioSteamOutput: Double
+  val RatioWater: Double
+  val RatioWaterInput: Double
+  val RatioWaterOutput: Double
+  val RequiredPower: Double
+  val Rpm: Double
+  val Stress: Double
+  val Temperature: Double
+  val TemperatureInput: Double
+  val TemperatureOutput: Double
+  var Throttle: Double
+  val TotalMoles: Double
+  val TotalMolesInput: Double
+  val TotalMolesOutput: Double
+  val slots: Slots<DataDiskSlot>
+}
+
+/** StructureCompositeDoor. Entry point: CompositeDoors. */
+class CompositeDoor : TypedDevice {
+  val Idle: Boolean
+  var Lock: Boolean
+  var Mode: Double
+  var On: Boolean
+  var Open: Boolean
+  val Power: Boolean
+  val RequiredPower: Double
+  var Setting: Double
+}
+
+/** CompositeRollCover. Entry point: CompositeRollCovers. */
+class CompositeRollCover : TypedDevice {
+  val Idle: Boolean
+  var Lock: Boolean
+  var Mode: Double
+  var On: Boolean
+  var Open: Boolean
+  var Setting: Double
+}
+
+/** StructureCompositeWindowShutterController. Entry point: CompositeWindowShutterControllers. */
+class CompositeWindowShutterController : TypedDevice {
+  val Error: Boolean
+  var Lock: Boolean
+  var On: Boolean
+  var Open: Boolean
+  val Power: Boolean
+  val RequiredPower: Double
+}
+
+/** StructureComputer. Entry point: Computers. */
+class Computer : TypedDevice {
+  val Error: Boolean
+  var Lock: Boolean
+  val Motherboard: DataDiskSlot
+  var On: Boolean
+  var Open: Boolean
+  val Power: Boolean
+  val RequiredPower: Double
+  val slots: Slots<DataDiskSlot>
+}
+
+/** StructureComputerBigScreen. Entry point: ComputerBigScreens. */
+class ComputerBigScreen : TypedDevice {
+  val Error: Boolean
+  var Lock: Boolean
+  val Motherboard: DataDiskSlot
+  var On: Boolean
+  var Open: Boolean
+  val Power: Boolean
+  val RequiredPower: Double
+  val slots: Slots<DataDiskSlot>
+}
+
+/** StructureComputerBigScreenWallMounted. Entry point: ComputerBigScreenWallMounteds. */
+class ComputerBigScreenWallMounted : TypedDevice {
+  val Error: Boolean
+  var Lock: Boolean
+  val Motherboard: DataDiskSlot
+  var On: Boolean
+  var Open: Boolean
+  val Power: Boolean
+  val RequiredPower: Double
+  val slots: Slots<DataDiskSlot>
+}
+
+/** StructureComputerUpright. Entry point: ComputerUprights. */
+class ComputerUpright : TypedDevice {
+  val Error: Boolean
+  var Lock: Boolean
+  val Motherboard: DataDiskSlot
+  var On: Boolean
+  var Open: Boolean
+  val Power: Boolean
+  val RequiredPower: Double
+  val slots: Slots<DataDiskSlot>
+}
+
+/** StructureCondensationChamber. Entry point: CondensationChambers. */
+class CondensationChamber : TypedDevice {
+  val Combustion: Boolean
+  val Error: Boolean
+  var Lock: Boolean
+  val Maximum: Double
+  var On: Boolean
+  var Open: Boolean
+  val Power: Boolean
+  val Pressure: Double
+  val Ratio: Double
+  val RatioCarbonDioxide: Double
+  val RatioHelium: Double
+  val RatioHydrazine: Double
+  val RatioHydrochloricAcid: Double
+  val RatioHydrogen: Double
+  val RatioLiquidAlcohol: Double
+  val RatioLiquidCarbonDioxide: Double
+  val RatioLiquidHydrazine: Double
+  val RatioLiquidHydrochloricAcid: Double
+  val RatioLiquidHydrogen: Double
+  val RatioLiquidMethane: Double
+  val RatioLiquidNitrogen: Double
+  val RatioLiquidNitrousOxide: Double
+  val RatioLiquidOxygen: Double
+  val RatioLiquidOzone: Double
+  val RatioLiquidPollutant: Double
+  val RatioLiquidSilanol: Double
+  val RatioLiquidSodiumChloride: Double
+  val RatioMethane: Double
+  val RatioNitrogen: Double
+  val RatioNitrousOxide: Double
+  val RatioOxygen: Double
+  val RatioOzone: Double
+  val RatioPollutant: Double
+  val RatioPollutedWater: Double
+  val RatioSilanol: Double
+  val RatioSteam: Double
+  val RatioWater: Double
+  val RequiredPower: Double
+  var Setting: Double
+  val Temperature: Double
+  val TotalMoles: Double
+}
+
+/** StructureCondensationValve. Entry point: CondensationValves. */
+class CondensationValve : TypedDevice {
+  val Maximum: Double
+  var On: Boolean
+  val Ratio: Double
+  var Setting: Double
+}
+
+/** StructureConsole. Entry point: Consoles. */
+class Console : TypedDevice {
+  var Activate: Boolean
+  val Circuitboard: CircuitboardSlot
+  val Error: Boolean
+  var On: Boolean
+  var Open: Boolean
+  val Power: Boolean
+  val RequiredPower: Double
+  val Setting: Double
+  val slots: Slots<CircuitboardSlot>
+}
+
+/** StructureConsoleDual. Entry point: ConsoleDuals. */
+class ConsoleDual : TypedDevice {
+  var Activate: Boolean
+  val Circuitboard: CircuitboardSlot
+  val Error: Boolean
+  var On: Boolean
+  var Open: Boolean
+  val Power: Boolean
+  val RequiredPower: Double
+  val Setting: Double
+  val slots: Slots<CircuitboardSlot>
+}
+
+/** StructureConsoleMonitor. Entry point: ConsoleMonitors. */
+class ConsoleMonitor : TypedDevice {
+  var Activate: Boolean
+  val Circuitboard: CircuitboardSlot
+  val Error: Boolean
+  var On: Boolean
+  var Open: Boolean
+  val Power: Boolean
+  val RequiredPower: Double
+  val Setting: Double
+  val slots: Slots<CircuitboardSlot>
+}
+
+/** StructureCornerLocker. Entry point: CornerLockers. */
+class CornerLocker : TypedDevice {
+  var Lock: Boolean
+  var Open: Boolean
+  val slots: Slots<DataDiskSlot>
+}
+
+/** StructureCrewUmbilical. Entry point: CrewUmbilicals. */
+class CrewUmbilical : TypedDevice {
+  val Error: Boolean
+  var Lock: Boolean
+  var Mode: Double
+  var On: Boolean
+  var Open: Boolean
+  val Power: Boolean
+  val RequiredPower: Double
+}
+
+/** StructureCryoTubeHorizontal. Entry point: CryoTubeHorizontals. */
+class CryoTubeHorizontal : TypedDevice {
+  var Activate: Boolean
+  val EntityState: Double
+  val Error: Boolean
+  var Lock: Boolean
+  val Mask: MaskSlot
+  val Maximum: Double
+  var Mode: Double
+  var On: Boolean
+  var Open: Boolean
+  val Player: DataDiskSlot
+  val Power: Boolean
+  val Pressure: Double
+  val Ratio: Double
+  val RequiredPower: Double
+  var Setting: Double
+  val Temperature: Double
+  val slots: Slots<CommonSlot>
+}
+
+/** StructureCryoTubeVertical. Entry point: CryoTubeVerticals. */
+class CryoTubeVertical : TypedDevice {
+  var Activate: Boolean
+  val EntityState: Double
+  val Error: Boolean
+  var Lock: Boolean
+  val Mask: MaskSlot
+  val Maximum: Double
+  var Mode: Double
+  var On: Boolean
+  var Open: Boolean
+  val Player: DataDiskSlot
+  val Power: Boolean
+  val Pressure: Double
+  val Ratio: Double
+  val RequiredPower: Double
+  var Setting: Double
+  val Temperature: Double
+  val slots: Slots<CommonSlot>
+}
+```
+
+### D
+
+```kotlin
+/** StructureDaylightSensor. Entry point: DaylightSensors. */
+class DaylightSensor : TypedDevice {
+  var Activate: Boolean
+  val Horizontal: Double
+  var Mode: Double
+  var On: Boolean
+  val SolarAngle: Double
+  val SolarIrradiance: Double
+  val Vertical: Double
+}
+
+/** StructureDeepMiner. Entry point: DeepMiners. */
+class DeepMiner : TypedDevice {
+  var ClearMemory: Boolean
+  val Error: Boolean
+  val Export: DataDiskSlot
+  val ExportCount: Double
+  val ImportCount: Double
+  val Maximum: Double
+  var On: Boolean
+  val Power: Boolean
+  val Ratio: Double
+  val RequiredPower: Double
+  var Setting: Double
+  val slots: Slots<DataDiskSlot>
+}
+
+/** DeviceLfoVolume. Entry point: DeviceLfoVolumes. */
+class DeviceLfoVolume : TypedDevice {
+  var Activate: Boolean
+  var Bpm: Double
+  val Error: Boolean
+  var Mode: Double
+  var On: Boolean
+  val Power: Boolean
+  val RequiredPower: Double
+  var Time: Double
+}
+
+/** DeviceStepUnit. Entry point: DeviceStepUnits. */
+class DeviceStepUnit : TypedDevice {
+  var Activate: Boolean
+  val Error: Boolean
+  var Mode: Double
+  var On: Boolean
+  val Power: Boolean
+  val RequiredPower: Double
+  var Volume: Double
+}
+
+/** StructureDigitalValve. Entry point: DigitalValves. */
+class DigitalValve : TypedDevice {
+  val Error: Boolean
+  var Lock: Boolean
+  val Maximum: Double
+  var On: Boolean
+  val Power: Boolean
+  val Ratio: Double
+  val RequiredPower: Double
+  var Setting: Double
+}
+
+/** StructureDiode. Entry point: Diodes. */
+class Diode : TypedDevice {
+  var Color: Double
+  var Lock: Boolean
+  var On: Boolean
+  val Power: Boolean
+  val RequiredPower: Double
+}
+
+/** StructureDiodeSlide. Entry point: DiodeSlides. */
+class DiodeSlide : TypedDevice {
+  var Lock: Boolean
+  var On: Boolean
+  val Power: Boolean
+  val RequiredPower: Double
+  var Setting: Double
+}
+
+/** ItemDrill. Entry point: Drills. */
+class Drill : TypedDevice {
+  var Activate: Boolean
+  val Battery: ItemBatterySlot
+  val Power: Boolean
+  val slots: Slots<ItemBatterySlot>
+}
+
+/** StructureDrinkingFountain2x1. Entry point: DrinkingFountain2x1s. */
+class DrinkingFountain2x1 : TypedDevice {
+  val Error: Boolean
+  var On: Boolean
+  val Power: Boolean
+  val RequiredPower: Double
+}
+
+/** DynamicGPR. Entry point: DynamicGPRs. */
+class DynamicGPR : TypedDevice {
+  var Activate: Boolean
+  val Battery: ItemBatterySlot
+  var On: Boolean
+  val Power: Boolean
+  val slots: Slots<ItemBatterySlot>
+}
+
+/** DynamicLight. Entry point: DynamicLights. */
+class DynamicLight : TypedDevice {
+  val Battery: ItemBatterySlot
+  var Lock: Boolean
+  var On: Boolean
+  var Open: Boolean
+  val Power: Boolean
+  val slots: Slots<ItemBatterySlot>
+}
+```
+
+### E
+
+```kotlin
+/** StructureElectrolyzer. Entry point: Electrolyzers. */
+class Electrolyzer : TypedDevice {
+  var Activate: Boolean
+  val CombustionInput: Double
+  val CombustionOutput: Double
+  val Error: Boolean
+  var Lock: Boolean
+  val Maximum: Double
+  var Mode: Double
+  var On: Boolean
+  var Open: Boolean
+  val Power: Boolean
+  val PressureInput: Double
+  val PressureOutput: Double
+  val ProgrammableChip: DataDiskSlot
+  val Ratio: Double
+  val RatioCarbonDioxideInput: Double
+  val RatioCarbonDioxideOutput: Double
+  val RatioHeliumInput: Double
+  val RatioHeliumOutput: Double
+  val RatioHydrazineInput: Double
+  val RatioHydrazineOutput: Double
+  val RatioHydrochloricAcidInput: Double
+  val RatioHydrochloricAcidOutput: Double
+  val RatioHydrogenInput: Double
+  val RatioHydrogenOutput: Double
+  val RatioLiquidAlcoholInput: Double
+  val RatioLiquidAlcoholOutput: Double
+  val RatioLiquidCarbonDioxideInput: Double
+  val RatioLiquidCarbonDioxideOutput: Double
+  val RatioLiquidHydrazineInput: Double
+  val RatioLiquidHydrazineOutput: Double
+  val RatioLiquidHydrochloricAcidInput: Double
+  val RatioLiquidHydrochloricAcidOutput: Double
+  val RatioLiquidHydrogenInput: Double
+  val RatioLiquidHydrogenOutput: Double
+  val RatioLiquidMethaneInput: Double
+  val RatioLiquidMethaneOutput: Double
+  val RatioLiquidNitrogenInput: Double
+  val RatioLiquidNitrogenOutput: Double
+  val RatioLiquidNitrousOxideInput: Double
+  val RatioLiquidNitrousOxideOutput: Double
+  val RatioLiquidOxygenInput: Double
+  val RatioLiquidOxygenOutput: Double
+  val RatioLiquidOzoneInput: Double
+  val RatioLiquidOzoneOutput: Double
+  val RatioLiquidPollutantInput: Double
+  val RatioLiquidPollutantOutput: Double
+  val RatioLiquidSilanolInput: Double
+  val RatioLiquidSilanolOutput: Double
+  val RatioLiquidSodiumChlorideInput: Double
+  val RatioLiquidSodiumChlorideOutput: Double
+  val RatioMethaneInput: Double
+  val RatioMethaneOutput: Double
+  val RatioNitrogenInput: Double
+  val RatioNitrogenOutput: Double
+  val RatioNitrousOxideInput: Double
+  val RatioNitrousOxideOutput: Double
+  val RatioOxygenInput: Double
+  val RatioOxygenOutput: Double
+  val RatioOzoneInput: Double
+  val RatioOzoneOutput: Double
+  val RatioPollutantInput: Double
+  val RatioPollutantOutput: Double
+  val RatioPollutedWaterInput: Double
+  val RatioPollutedWaterOutput: Double
+  val RatioSilanolInput: Double
+  val RatioSilanolOutput: Double
+  val RatioSteamInput: Double
+  val RatioSteamOutput: Double
+  val RatioWaterInput: Double
+  val RatioWaterOutput: Double
+  val RequiredPower: Double
+  var Setting: Double
+  val TemperatureInput: Double
+  val TemperatureOutput: Double
+  val TotalMolesInput: Double
+  val TotalMolesOutput: Double
+  val slots: Slots<DataDiskSlot>
+}
+
+/** StructureElectronicsPrinter. Entry point: ElectronicsPrinters. */
+class ElectronicsPrinter : TypedDevice {
+  var Activate: Boolean
+  var ClearMemory: Boolean
+  val CompletionRatio: Double
+  val Error: Boolean
+  val Export: DataDiskSlot
+  val ExportCount: Double
+  val Import: DataDiskSlot
+  val ImportCount: Double
+  var Lock: Boolean
+  var On: Boolean
+  var Open: Boolean
+  val Power: Boolean
+  val Reagents: Double
+  var RecipeHash: Double
+  val RequiredPower: Double
+  val StackSize: Double
+  val slots: Slots<DataDiskSlot>
+}
+
+/** StructureElevatorLevelFront. Entry point: ElevatorLevelFronts. */
+class ElevatorLevelFront : TypedDevice {
+  var Activate: Boolean
+  var ElevatorLevel: Double
+  var ElevatorSpeed: Double
+  val Error: Boolean
+  var Lock: Boolean
+  var On: Boolean
+  var Open: Boolean
+  val Power: Boolean
+  val RequiredPower: Double
+}
+
+/** StructureElevatorLevelIndustrial. Entry point: ElevatorLevelIndustrials. */
+class ElevatorLevelIndustrial : TypedDevice {
+  var Activate: Boolean
+  var ElevatorLevel: Double
+  var ElevatorSpeed: Double
+  val Error: Boolean
+  var Lock: Boolean
+  var On: Boolean
+  var Open: Boolean
+  val Power: Boolean
+  val RequiredPower: Double
+}
+
+/** StructureElevatorShaft. Entry point: ElevatorShafts. */
+class ElevatorShaft : TypedDevice {
+  var ElevatorLevel: Double
+  var ElevatorSpeed: Double
+  var On: Boolean
+  val Power: Boolean
+  val RequiredPower: Double
+}
+
+/** StructureElevatorShaftIndustrial. Entry point: ElevatorShaftIndustrials. */
+class ElevatorShaftIndustrial : TypedDevice {
+  var ElevatorLevel: Double
+  var ElevatorSpeed: Double
+}
+
+/** ItemEmergencyAngleGrinder. Entry point: EmergencyAngleGrinders. */
+class EmergencyAngleGrinder : TypedDevice {
+  var Activate: Boolean
+  val Battery: ItemBatterySlot
+  val Power: Boolean
+  val slots: Slots<ItemBatterySlot>
+}
+
+/** ItemEmergencyArcWelder. Entry point: EmergencyArcWelders. */
+class EmergencyArcWelder : TypedDevice {
+  var Activate: Boolean
+  val Battery: ItemBatterySlot
+  val Power: Boolean
+  val slots: Slots<ItemBatterySlot>
+}
+
+/** StructureEmergencyButton. Entry point: EmergencyButtons. */
+class EmergencyButton : TypedDevice {
+  var Activate: Boolean
+  val Error: Boolean
+  var Lock: Boolean
+  var On: Boolean
+  var Open: Boolean
+  val Power: Boolean
+  val RequiredPower: Double
+  val Setting: Double
+}
+
+/** ItemEmergencyDrill. Entry point: EmergencyDrills. */
+class EmergencyDrill : TypedDevice {
+  var Activate: Boolean
+  val Battery: ItemBatterySlot
+  val Power: Boolean
+  val slots: Slots<ItemBatterySlot>
+}
+
+/** ItemEmergencySpaceHelmet. Entry point: EmergencySpaceHelmets. */
+class EmergencySpaceHelmet : TypedDevice {
+  val Combustion: Boolean
+  var Flush: Boolean
+  var Lock: Boolean
+  var On: Boolean
+  var Open: Boolean
+  val Power: Boolean
+  val Pressure: Double
+  val RatioCarbonDioxide: Double
+  val RatioHelium: Double
+  val RatioHydrazine: Double
+  val RatioHydrochloricAcid: Double
+  val RatioHydrogen: Double
+  val RatioLiquidAlcohol: Double
+  val RatioLiquidCarbonDioxide: Double
+  val RatioLiquidHydrazine: Double
+  val RatioLiquidHydrochloricAcid: Double
+  val RatioLiquidHydrogen: Double
+  val RatioLiquidMethane: Double
+  val RatioLiquidNitrogen: Double
+  val RatioLiquidNitrousOxide: Double
+  val RatioLiquidOxygen: Double
+  val RatioLiquidOzone: Double
+  val RatioLiquidPollutant: Double
+  val RatioLiquidSilanol: Double
+  val RatioLiquidSodiumChloride: Double
+  val RatioMethane: Double
+  val RatioNitrogen: Double
+  val RatioNitrousOxide: Double
+  val RatioOxygen: Double
+  val RatioOzone: Double
+  val RatioPollutant: Double
+  val RatioPollutedWater: Double
+  val RatioSilanol: Double
+  val RatioSteam: Double
+  val RatioWater: Double
+  var SoundAlert: Double
+  val Temperature: Double
+  val TotalMoles: Double
+  var Volume: Double
+}
+
+/** StructureEvaporationChamber. Entry point: EvaporationChambers. */
+class EvaporationChamber : TypedDevice {
+  val Combustion: Boolean
+  val Error: Boolean
+  var Lock: Boolean
+  val Maximum: Double
+  var On: Boolean
+  var Open: Boolean
+  val Power: Boolean
+  val Pressure: Double
+  val Ratio: Double
+  val RatioCarbonDioxide: Double
+  val RatioHelium: Double
+  val RatioHydrazine: Double
+  val RatioHydrochloricAcid: Double
+  val RatioHydrogen: Double
+  val RatioLiquidAlcohol: Double
+  val RatioLiquidCarbonDioxide: Double
+  val RatioLiquidHydrazine: Double
+  val RatioLiquidHydrochloricAcid: Double
+  val RatioLiquidHydrogen: Double
+  val RatioLiquidMethane: Double
+  val RatioLiquidNitrogen: Double
+  val RatioLiquidNitrousOxide: Double
+  val RatioLiquidOxygen: Double
+  val RatioLiquidOzone: Double
+  val RatioLiquidPollutant: Double
+  val RatioLiquidSilanol: Double
+  val RatioLiquidSodiumChloride: Double
+  val RatioMethane: Double
+  val RatioNitrogen: Double
+  val RatioNitrousOxide: Double
+  val RatioOxygen: Double
+  val RatioOzone: Double
+  val RatioPollutant: Double
+  val RatioPollutedWater: Double
+  val RatioSilanol: Double
+  val RatioSteam: Double
+  val RatioWater: Double
+  val RequiredPower: Double
+  var Setting: Double
+  val Temperature: Double
+  val TotalMoles: Double
+}
+
+/** StructureExpansionValve. Entry point: ExpansionValves. */
+class ExpansionValve : TypedDevice {
+  val Maximum: Double
+  var On: Boolean
+  val Ratio: Double
+  var Setting: Double
+}
+```
+
+### F
+
+```kotlin
+/** StructureFermenter. Entry point: Fermenters. */
+class Fermenter : TypedDevice {
+  var ClearMemory: Boolean
+  val CombustionInput: Double
+  val CombustionInput2: Double
+  val CombustionOutput: Double
+  val CompletionRatio: Double
+  val Error: Boolean
+  val Import: DataDiskSlot
+  val ImportCount: Double
+  var Lock: Boolean
+  val Maximum: Double
+  var Mode: Double
+  var On: Boolean
+  var Open: Boolean
+  val Power: Boolean
+  val PressureInput: Double
+  val PressureInput2: Double
+  val PressureOutput: Double
+  val ProgrammableChip: DataDiskSlot
+  val Ratio: Double
+  val RatioCarbonDioxideInput: Double
+  val RatioCarbonDioxideInput2: Double
+  val RatioCarbonDioxideOutput: Double
+  val RatioHeliumInput: Double
+  val RatioHeliumInput2: Double
+  val RatioHeliumOutput: Double
+  val RatioHydrazineInput: Double
+  val RatioHydrazineInput2: Double
+  val RatioHydrazineOutput: Double
+  val RatioHydrochloricAcidInput: Double
+  val RatioHydrochloricAcidInput2: Double
+  val RatioHydrochloricAcidOutput: Double
+  val RatioHydrogenInput: Double
+  val RatioHydrogenInput2: Double
+  val RatioHydrogenOutput: Double
+  val RatioLiquidAlcoholInput: Double
+  val RatioLiquidAlcoholInput2: Double
+  val RatioLiquidAlcoholOutput: Double
+  val RatioLiquidCarbonDioxideInput: Double
+  val RatioLiquidCarbonDioxideInput2: Double
+  val RatioLiquidCarbonDioxideOutput: Double
+  val RatioLiquidHydrazineInput: Double
+  val RatioLiquidHydrazineInput2: Double
+  val RatioLiquidHydrazineOutput: Double
+  val RatioLiquidHydrochloricAcidInput: Double
+  val RatioLiquidHydrochloricAcidInput2: Double
+  val RatioLiquidHydrochloricAcidOutput: Double
+  val RatioLiquidHydrogenInput: Double
+  val RatioLiquidHydrogenInput2: Double
+  val RatioLiquidHydrogenOutput: Double
+  val RatioLiquidMethaneInput: Double
+  val RatioLiquidMethaneInput2: Double
+  val RatioLiquidMethaneOutput: Double
+  val RatioLiquidNitrogenInput: Double
+  val RatioLiquidNitrogenInput2: Double
+  val RatioLiquidNitrogenOutput: Double
+  val RatioLiquidNitrousOxideInput: Double
+  val RatioLiquidNitrousOxideInput2: Double
+  val RatioLiquidNitrousOxideOutput: Double
+  val RatioLiquidOxygenInput: Double
+  val RatioLiquidOxygenInput2: Double
+  val RatioLiquidOxygenOutput: Double
+  val RatioLiquidOzoneInput: Double
+  val RatioLiquidOzoneInput2: Double
+  val RatioLiquidOzoneOutput: Double
+  val RatioLiquidPollutantInput: Double
+  val RatioLiquidPollutantInput2: Double
+  val RatioLiquidPollutantOutput: Double
+  val RatioLiquidSilanolInput: Double
+  val RatioLiquidSilanolInput2: Double
+  val RatioLiquidSilanolOutput: Double
+  val RatioLiquidSodiumChlorideInput: Double
+  val RatioLiquidSodiumChlorideInput2: Double
+  val RatioLiquidSodiumChlorideOutput: Double
+  val RatioMethaneInput: Double
+  val RatioMethaneInput2: Double
+  val RatioMethaneOutput: Double
+  val RatioNitrogenInput: Double
+  val RatioNitrogenInput2: Double
+  val RatioNitrogenOutput: Double
+  val RatioNitrousOxideInput: Double
+  val RatioNitrousOxideInput2: Double
+  val RatioNitrousOxideOutput: Double
+  val RatioOxygenInput: Double
+  val RatioOxygenInput2: Double
+  val RatioOxygenOutput: Double
+  val RatioOzoneInput: Double
+  val RatioOzoneInput2: Double
+  val RatioOzoneOutput: Double
+  val RatioPollutantInput: Double
+  val RatioPollutantInput2: Double
+  val RatioPollutantOutput: Double
+  val RatioPollutedWaterInput: Double
+  val RatioPollutedWaterInput2: Double
+  val RatioPollutedWaterOutput: Double
+  val RatioSilanolInput: Double
+  val RatioSilanolInput2: Double
+  val RatioSilanolOutput: Double
+  val RatioSteamInput: Double
+  val RatioSteamInput2: Double
+  val RatioSteamOutput: Double
+  val RatioWaterInput: Double
+  val RatioWaterInput2: Double
+  val RatioWaterOutput: Double
+  val RequiredPower: Double
+  var Setting: Double
+  val TemperatureInput: Double
+  val TemperatureInput2: Double
+  val TemperatureOutput: Double
+  val TotalMolesInput: Double
+  val TotalMolesInput2: Double
+  val TotalMolesOutput: Double
+  val slots: Slots<DataDiskSlot>
+}
+
+/** StructureFiltration. Entry point: Filtrations. */
+class Filtration : TypedDevice {
+  val CombustionInput: Double
+  val CombustionOutput: Double
+  val CombustionOutput2: Double
+  val Error: Boolean
+  var Lock: Boolean
+  val Maximum: Double
+  var Mode: Double
+  var On: Boolean
+  var Open: Boolean
+  val Power: Boolean
+  val PressureInput: Double
+  val PressureOutput: Double
+  val PressureOutput2: Double
+  val ProgrammableChip: DataDiskSlot
+  val Ratio: Double
+  val RatioCarbonDioxideInput: Double
+  val RatioCarbonDioxideOutput: Double
+  val RatioCarbonDioxideOutput2: Double
+  val RatioHeliumInput: Double
+  val RatioHeliumOutput: Double
+  val RatioHeliumOutput2: Double
+  val RatioHydrazineInput: Double
+  val RatioHydrazineOutput: Double
+  val RatioHydrazineOutput2: Double
+  val RatioHydrochloricAcidInput: Double
+  val RatioHydrochloricAcidOutput: Double
+  val RatioHydrochloricAcidOutput2: Double
+  val RatioHydrogenInput: Double
+  val RatioHydrogenOutput: Double
+  val RatioHydrogenOutput2: Double
+  val RatioLiquidAlcoholInput: Double
+  val RatioLiquidAlcoholOutput: Double
+  val RatioLiquidAlcoholOutput2: Double
+  val RatioLiquidCarbonDioxideInput: Double
+  val RatioLiquidCarbonDioxideOutput: Double
+  val RatioLiquidCarbonDioxideOutput2: Double
+  val RatioLiquidHydrazineInput: Double
+  val RatioLiquidHydrazineOutput: Double
+  val RatioLiquidHydrazineOutput2: Double
+  val RatioLiquidHydrochloricAcidInput: Double
+  val RatioLiquidHydrochloricAcidOutput: Double
+  val RatioLiquidHydrochloricAcidOutput2: Double
+  val RatioLiquidHydrogenInput: Double
+  val RatioLiquidHydrogenOutput: Double
+  val RatioLiquidHydrogenOutput2: Double
+  val RatioLiquidMethaneInput: Double
+  val RatioLiquidMethaneOutput: Double
+  val RatioLiquidMethaneOutput2: Double
+  val RatioLiquidNitrogenInput: Double
+  val RatioLiquidNitrogenOutput: Double
+  val RatioLiquidNitrogenOutput2: Double
+  val RatioLiquidNitrousOxideInput: Double
+  val RatioLiquidNitrousOxideOutput: Double
+  val RatioLiquidNitrousOxideOutput2: Double
+  val RatioLiquidOxygenInput: Double
+  val RatioLiquidOxygenOutput: Double
+  val RatioLiquidOxygenOutput2: Double
+  val RatioLiquidOzoneInput: Double
+  val RatioLiquidOzoneOutput: Double
+  val RatioLiquidOzoneOutput2: Double
+  val RatioLiquidPollutantInput: Double
+  val RatioLiquidPollutantOutput: Double
+  val RatioLiquidPollutantOutput2: Double
+  val RatioLiquidSilanolInput: Double
+  val RatioLiquidSilanolOutput: Double
+  val RatioLiquidSilanolOutput2: Double
+  val RatioLiquidSodiumChlorideInput: Double
+  val RatioLiquidSodiumChlorideOutput: Double
+  val RatioLiquidSodiumChlorideOutput2: Double
+  val RatioMethaneInput: Double
+  val RatioMethaneOutput: Double
+  val RatioMethaneOutput2: Double
+  val RatioNitrogenInput: Double
+  val RatioNitrogenOutput: Double
+  val RatioNitrogenOutput2: Double
+  val RatioNitrousOxideInput: Double
+  val RatioNitrousOxideOutput: Double
+  val RatioNitrousOxideOutput2: Double
+  val RatioOxygenInput: Double
+  val RatioOxygenOutput: Double
+  val RatioOxygenOutput2: Double
+  val RatioOzoneInput: Double
+  val RatioOzoneOutput: Double
+  val RatioOzoneOutput2: Double
+  val RatioPollutantInput: Double
+  val RatioPollutantOutput: Double
+  val RatioPollutantOutput2: Double
+  val RatioPollutedWaterInput: Double
+  val RatioPollutedWaterOutput: Double
+  val RatioPollutedWaterOutput2: Double
+  val RatioSilanolInput: Double
+  val RatioSilanolOutput: Double
+  val RatioSilanolOutput2: Double
+  val RatioSteamInput: Double
+  val RatioSteamOutput: Double
+  val RatioSteamOutput2: Double
+  val RatioWaterInput: Double
+  val RatioWaterOutput: Double
+  val RatioWaterOutput2: Double
+  val RequiredPower: Double
+  var Setting: Double
+  val TemperatureInput: Double
+  val TemperatureOutput: Double
+  val TemperatureOutput2: Double
+  val TotalMolesInput: Double
+  val TotalMolesOutput: Double
+  val TotalMolesOutput2: Double
+  val slots: Slots<CommonSlot>
+}
+
+/** StructureFiltrationLiquid. Entry point: FiltrationLiquids. */
+class FiltrationLiquid : TypedDevice {
+  val CombustionInput: Double
+  val CombustionOutput: Double
+  val CombustionOutput2: Double
+  val Error: Boolean
+  var Lock: Boolean
+  val Maximum: Double
+  var Mode: Double
+  var On: Boolean
+  var Open: Boolean
+  val Power: Boolean
+  val PressureInput: Double
+  val PressureOutput: Double
+  val PressureOutput2: Double
+  val ProgrammableChip: DataDiskSlot
+  val Ratio: Double
+  val RatioCarbonDioxideInput: Double
+  val RatioCarbonDioxideOutput: Double
+  val RatioCarbonDioxideOutput2: Double
+  val RatioHeliumInput: Double
+  val RatioHeliumOutput: Double
+  val RatioHeliumOutput2: Double
+  val RatioHydrazineInput: Double
+  val RatioHydrazineOutput: Double
+  val RatioHydrazineOutput2: Double
+  val RatioHydrochloricAcidInput: Double
+  val RatioHydrochloricAcidOutput: Double
+  val RatioHydrochloricAcidOutput2: Double
+  val RatioHydrogenInput: Double
+  val RatioHydrogenOutput: Double
+  val RatioHydrogenOutput2: Double
+  val RatioLiquidAlcoholInput: Double
+  val RatioLiquidAlcoholOutput: Double
+  val RatioLiquidAlcoholOutput2: Double
+  val RatioLiquidCarbonDioxideInput: Double
+  val RatioLiquidCarbonDioxideOutput: Double
+  val RatioLiquidCarbonDioxideOutput2: Double
+  val RatioLiquidHydrazineInput: Double
+  val RatioLiquidHydrazineOutput: Double
+  val RatioLiquidHydrazineOutput2: Double
+  val RatioLiquidHydrochloricAcidInput: Double
+  val RatioLiquidHydrochloricAcidOutput: Double
+  val RatioLiquidHydrochloricAcidOutput2: Double
+  val RatioLiquidHydrogenInput: Double
+  val RatioLiquidHydrogenOutput: Double
+  val RatioLiquidHydrogenOutput2: Double
+  val RatioLiquidMethaneInput: Double
+  val RatioLiquidMethaneOutput: Double
+  val RatioLiquidMethaneOutput2: Double
+  val RatioLiquidNitrogenInput: Double
+  val RatioLiquidNitrogenOutput: Double
+  val RatioLiquidNitrogenOutput2: Double
+  val RatioLiquidNitrousOxideInput: Double
+  val RatioLiquidNitrousOxideOutput: Double
+  val RatioLiquidNitrousOxideOutput2: Double
+  val RatioLiquidOxygenInput: Double
+  val RatioLiquidOxygenOutput: Double
+  val RatioLiquidOxygenOutput2: Double
+  val RatioLiquidOzoneInput: Double
+  val RatioLiquidOzoneOutput: Double
+  val RatioLiquidOzoneOutput2: Double
+  val RatioLiquidPollutantInput: Double
+  val RatioLiquidPollutantOutput: Double
+  val RatioLiquidPollutantOutput2: Double
+  val RatioLiquidSilanolInput: Double
+  val RatioLiquidSilanolOutput: Double
+  val RatioLiquidSilanolOutput2: Double
+  val RatioLiquidSodiumChlorideInput: Double
+  val RatioLiquidSodiumChlorideOutput: Double
+  val RatioLiquidSodiumChlorideOutput2: Double
+  val RatioMethaneInput: Double
+  val RatioMethaneOutput: Double
+  val RatioMethaneOutput2: Double
+  val RatioNitrogenInput: Double
+  val RatioNitrogenOutput: Double
+  val RatioNitrogenOutput2: Double
+  val RatioNitrousOxideInput: Double
+  val RatioNitrousOxideOutput: Double
+  val RatioNitrousOxideOutput2: Double
+  val RatioOxygenInput: Double
+  val RatioOxygenOutput: Double
+  val RatioOxygenOutput2: Double
+  val RatioOzoneInput: Double
+  val RatioOzoneOutput: Double
+  val RatioOzoneOutput2: Double
+  val RatioPollutantInput: Double
+  val RatioPollutantOutput: Double
+  val RatioPollutantOutput2: Double
+  val RatioPollutedWaterInput: Double
+  val RatioPollutedWaterOutput: Double
+  val RatioPollutedWaterOutput2: Double
+  val RatioSilanolInput: Double
+  val RatioSilanolOutput: Double
+  val RatioSilanolOutput2: Double
+  val RatioSteamInput: Double
+  val RatioSteamOutput: Double
+  val RatioSteamOutput2: Double
+  val RatioWaterInput: Double
+  val RatioWaterOutput: Double
+  val RatioWaterOutput2: Double
+  val RequiredPower: Double
+  var Setting: Double
+  val TemperatureInput: Double
+  val TemperatureOutput: Double
+  val TemperatureOutput2: Double
+  val TotalMolesInput: Double
+  val TotalMolesOutput: Double
+  val TotalMolesOutput2: Double
+  val slots: Slots<CommonSlot>
+}
+
+/** StructureFlashingLight. Entry point: FlashingLights. */
+class FlashingLight : TypedDevice {
+  var Lock: Boolean
+  var On: Boolean
+  val Power: Boolean
+  val RequiredPower: Double
+}
+
+/** ItemFlashlight. Entry point: Flashlights. */
+class Flashlight : TypedDevice {
+  val Battery: ItemBatterySlot
+  var Mode: Double
+  var On: Boolean
+  val Power: Boolean
+  val slots: Slots<ItemBatterySlot>
+}
+
+/** StructureFridgeBig. Entry point: FridgeBigs. */
+class FridgeBig : TypedDevice {
+  val Combustion: Boolean
+  val CombustionOutput: Double
+  val Error: Boolean
+  val Maximum: Double
+  var On: Boolean
+  var Open: Boolean
+  val Power: Boolean
+  val Pressure: Double
+  val PressureOutput: Double
+  val Ratio: Double
+  val RatioCarbonDioxide: Double
+  val RatioCarbonDioxideOutput: Double
+  val RatioHelium: Double
+  val RatioHeliumOutput: Double
+  val RatioHydrazine: Double
+  val RatioHydrazineOutput: Double
+  val RatioHydrochloricAcid: Double
+  val RatioHydrochloricAcidOutput: Double
+  val RatioHydrogen: Double
+  val RatioHydrogenOutput: Double
+  val RatioLiquidAlcohol: Double
+  val RatioLiquidAlcoholOutput: Double
+  val RatioLiquidCarbonDioxide: Double
+  val RatioLiquidHydrazine: Double
+  val RatioLiquidHydrazineOutput: Double
+  val RatioLiquidHydrochloricAcid: Double
+  val RatioLiquidHydrochloricAcidOutput: Double
+  val RatioLiquidHydrogen: Double
+  val RatioLiquidHydrogenOutput: Double
+  val RatioLiquidMethane: Double
+  val RatioLiquidNitrogen: Double
+  val RatioLiquidNitrousOxide: Double
+  val RatioLiquidOxygen: Double
+  val RatioLiquidOzone: Double
+  val RatioLiquidOzoneOutput: Double
+  val RatioLiquidPollutant: Double
+  val RatioLiquidSilanol: Double
+  val RatioLiquidSilanolOutput: Double
+  val RatioLiquidSodiumChloride: Double
+  val RatioLiquidSodiumChlorideOutput: Double
+  val RatioMethane: Double
+  val RatioMethaneOutput: Double
+  val RatioNitrogen: Double
+  val RatioNitrogenOutput: Double
+  val RatioNitrousOxide: Double
+  val RatioNitrousOxideOutput: Double
+  val RatioOxygen: Double
+  val RatioOxygenOutput: Double
+  val RatioOzone: Double
+  val RatioOzoneOutput: Double
+  val RatioPollutant: Double
+  val RatioPollutantOutput: Double
+  val RatioPollutedWater: Double
+  val RatioPollutedWaterOutput: Double
+  val RatioSilanol: Double
+  val RatioSilanolOutput: Double
+  val RatioSteam: Double
+  val RatioWater: Double
+  val RatioWaterOutput: Double
+  val RequiredPower: Double
+  var Setting: Double
+  val Temperature: Double
+  val TemperatureOutput: Double
+  val TotalMoles: Double
+  val TotalMolesOutput: Double
+  val slots: Slots<DataDiskSlot>
+}
+
+/** StructureFridgeSmall. Entry point: FridgeSmalls. */
+class FridgeSmall : TypedDevice {
+  val Combustion: Boolean
+  val CombustionOutput: Double
+  val Maximum: Double
+  var Open: Boolean
+  val Pressure: Double
+  val PressureOutput: Double
+  val Ratio: Double
+  val RatioCarbonDioxide: Double
+  val RatioCarbonDioxideOutput: Double
+  val RatioHelium: Double
+  val RatioHeliumOutput: Double
+  val RatioHydrazine: Double
+  val RatioHydrazineOutput: Double
+  val RatioHydrochloricAcid: Double
+  val RatioHydrochloricAcidOutput: Double
+  val RatioHydrogen: Double
+  val RatioHydrogenOutput: Double
+  val RatioLiquidAlcohol: Double
+  val RatioLiquidAlcoholOutput: Double
+  val RatioLiquidCarbonDioxide: Double
+  val RatioLiquidHydrazine: Double
+  val RatioLiquidHydrazineOutput: Double
+  val RatioLiquidHydrochloricAcid: Double
+  val RatioLiquidHydrochloricAcidOutput: Double
+  val RatioLiquidHydrogen: Double
+  val RatioLiquidHydrogenOutput: Double
+  val RatioLiquidMethane: Double
+  val RatioLiquidNitrogen: Double
+  val RatioLiquidNitrousOxide: Double
+  val RatioLiquidOxygen: Double
+  val RatioLiquidOzone: Double
+  val RatioLiquidOzoneOutput: Double
+  val RatioLiquidPollutant: Double
+  val RatioLiquidSilanol: Double
+  val RatioLiquidSilanolOutput: Double
+  val RatioLiquidSodiumChloride: Double
+  val RatioLiquidSodiumChlorideOutput: Double
+  val RatioMethane: Double
+  val RatioMethaneOutput: Double
+  val RatioNitrogen: Double
+  val RatioNitrogenOutput: Double
+  val RatioNitrousOxide: Double
+  val RatioNitrousOxideOutput: Double
+  val RatioOxygen: Double
+  val RatioOxygenOutput: Double
+  val RatioOzone: Double
+  val RatioOzoneOutput: Double
+  val RatioPollutant: Double
+  val RatioPollutantOutput: Double
+  val RatioPollutedWater: Double
+  val RatioPollutedWaterOutput: Double
+  val RatioSilanol: Double
+  val RatioSilanolOutput: Double
+  val RatioSteam: Double
+  val RatioWater: Double
+  val RatioWaterOutput: Double
+  var Setting: Double
+  val Temperature: Double
+  val TemperatureOutput: Double
+  val TotalMoles: Double
+  val TotalMolesOutput: Double
+  val slots: Slots<DataDiskSlot>
+}
+
+/** StructureFurnace. Entry point: Furnaces. */
+class Furnace : TypedDevice {
+  var Activate: Boolean
+  var ClearMemory: Boolean
+  val Combustion: Boolean
+  val Export: DataDiskSlot
+  val ExportCount: Double
+  val Import: DataDiskSlot
+  val ImportCount: Double
+  var Lock: Boolean
+  val Maximum: Double
+  var Mode: Double
+  var Open: Boolean
+  val Pressure: Double
+  val Ratio: Double
+  val RatioCarbonDioxide: Double
+  val RatioHelium: Double
+  val RatioHydrazine: Double
+  val RatioHydrochloricAcid: Double
+  val RatioHydrogen: Double
+  val RatioLiquidAlcohol: Double
+  val RatioLiquidCarbonDioxide: Double
+  val RatioLiquidHydrazine: Double
+  val RatioLiquidHydrochloricAcid: Double
+  val RatioLiquidHydrogen: Double
+  val RatioLiquidMethane: Double
+  val RatioLiquidNitrogen: Double
+  val RatioLiquidNitrousOxide: Double
+  val RatioLiquidOxygen: Double
+  val RatioLiquidOzone: Double
+  val RatioLiquidPollutant: Double
+  val RatioLiquidSilanol: Double
+  val RatioLiquidSodiumChloride: Double
+  val RatioMethane: Double
+  val RatioNitrogen: Double
+  val RatioNitrousOxide: Double
+  val RatioOxygen: Double
+  val RatioOzone: Double
+  val RatioPollutant: Double
+  val RatioPollutedWater: Double
+  val RatioSilanol: Double
+  val RatioSteam: Double
+  val RatioWater: Double
+  val Reagents: Double
+  val RecipeHash: Double
+  var Setting: Double
+  val Temperature: Double
+  val TotalMoles: Double
+  val slots: Slots<DataDiskSlot>
+}
+```
+
+### G
+
+```kotlin
+/** StructureGasGenerator. Entry point: GasGenerators. */
+class GasGenerator : TypedDevice {
+  val Combustion: Boolean
+  val Error: Boolean
+  val Maximum: Double
+  var On: Boolean
+  val Power: Boolean
+  val PowerGeneration: Double
+  val Pressure: Double
+  val Ratio: Double
+  val RatioCarbonDioxide: Double
+  val RatioHelium: Double
+  val RatioHydrazine: Double
+  val RatioHydrochloricAcid: Double
+  val RatioHydrogen: Double
+  val RatioLiquidAlcohol: Double
+  val RatioLiquidCarbonDioxide: Double
+  val RatioLiquidHydrazine: Double
+  val RatioLiquidHydrochloricAcid: Double
+  val RatioLiquidHydrogen: Double
+  val RatioLiquidMethane: Double
+  val RatioLiquidNitrogen: Double
+  val RatioLiquidNitrousOxide: Double
+  val RatioLiquidOxygen: Double
+  val RatioLiquidOzone: Double
+  val RatioLiquidPollutant: Double
+  val RatioLiquidSilanol: Double
+  val RatioLiquidSodiumChloride: Double
+  val RatioMethane: Double
+  val RatioNitrogen: Double
+  val RatioNitrousOxide: Double
+  val RatioOxygen: Double
+  val RatioOzone: Double
+  val RatioPollutant: Double
+  val RatioPollutedWater: Double
+  val RatioSilanol: Double
+  val RatioSteam: Double
+  val RatioWater: Double
+  val RequiredPower: Double
+  var Setting: Double
+  val Temperature: Double
+  val TotalMoles: Double
+}
+
+/** ItemGasMask. Entry point: GasMasks. */
+class GasMask : TypedDevice {
+  val Combustion: Boolean
+  var Flush: Boolean
+  val Pressure: Double
+  val RatioCarbonDioxide: Double
+  val RatioHelium: Double
+  val RatioHydrazine: Double
+  val RatioHydrochloricAcid: Double
+  val RatioHydrogen: Double
+  val RatioLiquidAlcohol: Double
+  val RatioLiquidCarbonDioxide: Double
+  val RatioLiquidHydrazine: Double
+  val RatioLiquidHydrochloricAcid: Double
+  val RatioLiquidHydrogen: Double
+  val RatioLiquidMethane: Double
+  val RatioLiquidNitrogen: Double
+  val RatioLiquidNitrousOxide: Double
+  val RatioLiquidOxygen: Double
+  val RatioLiquidOzone: Double
+  val RatioLiquidPollutant: Double
+  val RatioLiquidSilanol: Double
+  val RatioLiquidSodiumChloride: Double
+  val RatioMethane: Double
+  val RatioNitrogen: Double
+  val RatioNitrousOxide: Double
+  val RatioOxygen: Double
+  val RatioOzone: Double
+  val RatioPollutant: Double
+  val RatioPollutedWater: Double
+  val RatioSilanol: Double
+  val RatioSteam: Double
+  val RatioWater: Double
+  var SoundAlert: Double
+  val Temperature: Double
+  val TotalMoles: Double
+  var Volume: Double
+  val slots: Slots<ItemFilteredSlot>
+}
+
+/** StructureGasMixer. Entry point: GasMixers. */
+class GasMixer : TypedDevice {
+  val Error: Boolean
+  var Lock: Boolean
+  val Maximum: Double
+  var On: Boolean
+  val Power: Boolean
+  val Ratio: Double
+  val RequiredPower: Double
+  var Setting: Double
+}
+
+/** StructureGasSensor. Entry point: GasSensors. */
+class GasSensor : TypedDevice {
+  val Combustion: Boolean
+  val Pressure: Double
+  val RatioCarbonDioxide: Double
+  val RatioHelium: Double
+  val RatioHydrazine: Double
+  val RatioHydrochloricAcid: Double
+  val RatioHydrogen: Double
+  val RatioLiquidAlcohol: Double
+  val RatioLiquidCarbonDioxide: Double
+  val RatioLiquidHydrazine: Double
+  val RatioLiquidHydrochloricAcid: Double
+  val RatioLiquidHydrogen: Double
+  val RatioLiquidMethane: Double
+  val RatioLiquidNitrogen: Double
+  val RatioLiquidNitrousOxide: Double
+  val RatioLiquidOxygen: Double
+  val RatioLiquidOzone: Double
+  val RatioLiquidPollutant: Double
+  val RatioLiquidSilanol: Double
+  val RatioLiquidSodiumChloride: Double
+  val RatioMethane: Double
+  val RatioNitrogen: Double
+  val RatioNitrousOxide: Double
+  val RatioOxygen: Double
+  val RatioOzone: Double
+  val RatioPollutant: Double
+  val RatioPollutedWater: Double
+  val RatioSilanol: Double
+  val RatioSteam: Double
+  val RatioWater: Double
+  val Temperature: Double
+  val TotalMoles: Double
+  val VolumeOfLiquid: Double
+}
+
+/** StructureGasTankStorage. Entry point: GasTankStorages. */
+class GasTankStorage : TypedDevice {
+  val GasCanister: GasCanisterSlot
+  val Pressure: Double
+  val Quantity: Double
+  val RatioCarbonDioxide: Double
+  val RatioHelium: Double
+  val RatioHydrazine: Double
+  val RatioHydrochloricAcid: Double
+  val RatioHydrogen: Double
+  val RatioLiquidAlcohol: Double
+  val RatioLiquidCarbonDioxide: Double
+  val RatioLiquidHydrazine: Double
+  val RatioLiquidHydrochloricAcid: Double
+  val RatioLiquidHydrogen: Double
+  val RatioLiquidMethane: Double
+  val RatioLiquidNitrogen: Double
+  val RatioLiquidNitrousOxide: Double
+  val RatioLiquidOxygen: Double
+  val RatioLiquidOzone: Double
+  val RatioLiquidPollutant: Double
+  val RatioLiquidSilanol: Double
+  val RatioLiquidSodiumChloride: Double
+  val RatioMethane: Double
+  val RatioNitrogen: Double
+  val RatioNitrousOxide: Double
+  val RatioOxygen: Double
+  val RatioOzone: Double
+  val RatioPollutant: Double
+  val RatioPollutedWater: Double
+  val RatioSilanol: Double
+  val RatioSteam: Double
+  val RatioWater: Double
+  val Temperature: Double
+  val slots: Slots<GasCanisterSlot>
+}
+
+/** StructureGasUmbilicalFemale. Entry point: GasUmbilicalFemales. */
+class GasUmbilicalFemale : TypedDevice {
+  val Maximum: Double
+  val Ratio: Double
+  var Setting: Double
+}
+
+/** StructureGasUmbilicalFemaleSide. Entry point: GasUmbilicalFemaleSides. */
+class GasUmbilicalFemaleSide : TypedDevice {
+  val Maximum: Double
+  val Ratio: Double
+  var Setting: Double
+}
+
+/** StructureGasUmbilicalMale. Entry point: GasUmbilicalMales. */
+class GasUmbilicalMale : TypedDevice {
+  val Error: Boolean
+  var Lock: Boolean
+  val Maximum: Double
+  val Mode: Double
+  var On: Boolean
+  var Open: Boolean
+  val Power: Boolean
+  val Ratio: Double
+  val RequiredPower: Double
+  var Setting: Double
+}
+
+/** StructureGlassDoor. Entry point: GlassDoors. */
+class GlassDoor : TypedDevice {
+  val Idle: Boolean
+  var Lock: Boolean
+  var Mode: Double
+  var On: Boolean
+  var Open: Boolean
+  val Power: Boolean
+  val RequiredPower: Double
+  var Setting: Double
+}
+
+/** StructureGovernedGasEngine. Entry point: GovernedGasEngines. */
+class GovernedGasEngine : TypedDevice {
+  val Combustion: Boolean
+  val Error: Boolean
+  var On: Boolean
+  val PassedMoles: Double
+  val Power: Boolean
+  val Pressure: Double
+  val RatioCarbonDioxide: Double
+  val RatioHelium: Double
+  val RatioHydrazine: Double
+  val RatioHydrochloricAcid: Double
+  val RatioHydrogen: Double
+  val RatioLiquidAlcohol: Double
+  val RatioLiquidCarbonDioxide: Double
+  val RatioLiquidHydrazine: Double
+  val RatioLiquidHydrochloricAcid: Double
+  val RatioLiquidHydrogen: Double
+  val RatioLiquidMethane: Double
+  val RatioLiquidNitrogen: Double
+  val RatioLiquidNitrousOxide: Double
+  val RatioLiquidOxygen: Double
+  val RatioLiquidOzone: Double
+  val RatioLiquidPollutant: Double
+  val RatioLiquidSilanol: Double
+  val RatioLiquidSodiumChloride: Double
+  val RatioMethane: Double
+  val RatioNitrogen: Double
+  val RatioNitrousOxide: Double
+  val RatioOxygen: Double
+  val RatioOzone: Double
+  val RatioPollutant: Double
+  val RatioPollutedWater: Double
+  val RatioSilanol: Double
+  val RatioSteam: Double
+  val RatioWater: Double
+  val RequiredPower: Double
+  val Temperature: Double
+  var Throttle: Double
+  val TotalMoles: Double
+}
+
+/** StructureGroundBasedTelescope. Entry point: GroundBasedTelescopes. */
+class GroundBasedTelescope : TypedDevice {
+  var Activate: Boolean
+  val AlignmentError: Double
+  val CelestialHash: Double
+  val CelestialParentHash: Double
+  val DistanceAu: Double
+  val DistanceKm: Double
+  val Eccentricity: Double
+  val Error: Boolean
+  var Horizontal: Double
+  var HorizontalRatio: Double
+  val Inclination: Double
+  var Lock: Boolean
+  var On: Boolean
+  var Open: Boolean
+  val OrbitPeriod: Double
+  val Power: Boolean
+  val RequiredPower: Double
+  val SemiMajorAxis: Double
+  val TrueAnomaly: Double
+  var Vertical: Double
+  var VerticalRatio: Double
+}
+
+/** StructureGrowLight. Entry point: GrowLights. */
+class GrowLight : TypedDevice {
+  var Lock: Boolean
+  var On: Boolean
+  val Power: Boolean
+  val RequiredPower: Double
+}
+```
+
+### H
+
+```kotlin
+/** H2Combustor. Entry point: H2Combustors. */
+class H2Combustor : TypedDevice {
+  var Activate: Boolean
+  val Combustion: Boolean
+  val CombustionInput: Double
+  val CombustionOutput: Double
+  val Error: Boolean
+  var Lock: Boolean
+  val Maximum: Double
+  var Mode: Double
+  var On: Boolean
+  var Open: Boolean
+  val Power: Boolean
+  val Pressure: Double
+  val PressureInput: Double
+  val PressureOutput: Double
+  val ProgrammableChip: DataDiskSlot
+  val Ratio: Double
+  val RatioCarbonDioxide: Double
+  val RatioCarbonDioxideInput: Double
+  val RatioCarbonDioxideOutput: Double
+  val RatioHelium: Double
+  val RatioHeliumInput: Double
+  val RatioHeliumOutput: Double
+  val RatioHydrazine: Double
+  val RatioHydrazineInput: Double
+  val RatioHydrazineOutput: Double
+  val RatioHydrochloricAcid: Double
+  val RatioHydrochloricAcidInput: Double
+  val RatioHydrochloricAcidOutput: Double
+  val RatioHydrogen: Double
+  val RatioHydrogenInput: Double
+  val RatioHydrogenOutput: Double
+  val RatioLiquidAlcohol: Double
+  val RatioLiquidAlcoholInput: Double
+  val RatioLiquidAlcoholOutput: Double
+  val RatioLiquidCarbonDioxide: Double
+  val RatioLiquidCarbonDioxideInput: Double
+  val RatioLiquidCarbonDioxideOutput: Double
+  val RatioLiquidHydrazine: Double
+  val RatioLiquidHydrazineInput: Double
+  val RatioLiquidHydrazineOutput: Double
+  val RatioLiquidHydrochloricAcid: Double
+  val RatioLiquidHydrochloricAcidInput: Double
+  val RatioLiquidHydrochloricAcidOutput: Double
+  val RatioLiquidHydrogen: Double
+  val RatioLiquidHydrogenInput: Double
+  val RatioLiquidHydrogenOutput: Double
+  val RatioLiquidMethane: Double
+  val RatioLiquidMethaneInput: Double
+  val RatioLiquidMethaneOutput: Double
+  val RatioLiquidNitrogen: Double
+  val RatioLiquidNitrogenInput: Double
+  val RatioLiquidNitrogenOutput: Double
+  val RatioLiquidNitrousOxide: Double
+  val RatioLiquidNitrousOxideInput: Double
+  val RatioLiquidNitrousOxideOutput: Double
+  val RatioLiquidOxygen: Double
+  val RatioLiquidOxygenInput: Double
+  val RatioLiquidOxygenOutput: Double
+  val RatioLiquidOzone: Double
+  val RatioLiquidOzoneInput: Double
+  val RatioLiquidOzoneOutput: Double
+  val RatioLiquidPollutant: Double
+  val RatioLiquidPollutantInput: Double
+  val RatioLiquidPollutantOutput: Double
+  val RatioLiquidSilanol: Double
+  val RatioLiquidSilanolInput: Double
+  val RatioLiquidSilanolOutput: Double
+  val RatioLiquidSodiumChloride: Double
+  val RatioLiquidSodiumChlorideInput: Double
+  val RatioLiquidSodiumChlorideOutput: Double
+  val RatioMethane: Double
+  val RatioMethaneInput: Double
+  val RatioMethaneOutput: Double
+  val RatioNitrogen: Double
+  val RatioNitrogenInput: Double
+  val RatioNitrogenOutput: Double
+  val RatioNitrousOxide: Double
+  val RatioNitrousOxideInput: Double
+  val RatioNitrousOxideOutput: Double
+  val RatioOxygen: Double
+  val RatioOxygenInput: Double
+  val RatioOxygenOutput: Double
+  val RatioOzone: Double
+  val RatioOzoneInput: Double
+  val RatioOzoneOutput: Double
+  val RatioPollutant: Double
+  val RatioPollutantInput: Double
+  val RatioPollutantOutput: Double
+  val RatioPollutedWater: Double
+  val RatioPollutedWaterInput: Double
+  val RatioPollutedWaterOutput: Double
+  val RatioSilanol: Double
+  val RatioSilanolInput: Double
+  val RatioSilanolOutput: Double
+  val RatioSteam: Double
+  val RatioSteamInput: Double
+  val RatioSteamOutput: Double
+  val RatioWater: Double
+  val RatioWaterInput: Double
+  val RatioWaterOutput: Double
+  val RequiredPower: Double
+  var Setting: Double
+  val Temperature: Double
+  val TemperatureInput: Double
+  val TemperatureOutput: Double
+  val TotalMoles: Double
+  val TotalMolesInput: Double
+  val TotalMolesOutput: Double
+  val slots: Slots<DataDiskSlot>
+}
+
+/** ItemHardHat. Entry point: HardHats. */
+class HardHat : TypedDevice {
+  val Battery: ItemBatterySlot
+  var On: Boolean
+  val Power: Boolean
+  val slots: Slots<ItemBatterySlot>
+}
+
+/** ItemHardJetpack. Entry point: HardJetpacks. */
+class HardJetpack : TypedDevice {
+  var Activate: Boolean
+  var On: Boolean
+  val Propellant: ItemAirTankSlot
+  val slots: Slots<ItemCommonSlot>
+}
+
+/** ItemHardSuit. Entry point: HardSuits. */
+class HardSuit : TypedDevice {
+  var Activate: Boolean
+  var AirRelease: Double
+  val AirTank: ItemAirTankSlot
+  val Combustion: Boolean
+  val EntityState: Double
+  var Error: Boolean
+  var Filtration: Double
+  val ForwardX: Double
+  val ForwardY: Double
+  val ForwardZ: Double
+  val LifeSupport: ItemBatterySlot
+  var Lock: Boolean
+  var On: Boolean
+  val Orientation: Double
+  val PositionX: Double
+  val PositionY: Double
+  val PositionZ: Double
+  val Power: Boolean
+  val Pressure: Double
+  val PressureExternal: Double
+  var PressureSetting: Double
+  val ProgrammableChip: ItemCommonSlot
+  val RatioCarbonDioxide: Double
+  val RatioHelium: Double
+  val RatioHydrazine: Double
+  val RatioHydrochloricAcid: Double
+  val RatioHydrogen: Double
+  val RatioLiquidAlcohol: Double
+  val RatioLiquidCarbonDioxide: Double
+  val RatioLiquidHydrazine: Double
+  val RatioLiquidHydrochloricAcid: Double
+  val RatioLiquidHydrogen: Double
+  val RatioLiquidMethane: Double
+  val RatioLiquidNitrogen: Double
+  val RatioLiquidNitrousOxide: Double
+  val RatioLiquidOxygen: Double
+  val RatioLiquidOzone: Double
+  val RatioLiquidPollutant: Double
+  val RatioLiquidSilanol: Double
+  val RatioLiquidSodiumChloride: Double
+  val RatioMethane: Double
+  val RatioNitrogen: Double
+  val RatioNitrousOxide: Double
+  val RatioOxygen: Double
+  val RatioOzone: Double
+  val RatioPollutant: Double
+  val RatioPollutedWater: Double
+  val RatioSilanol: Double
+  val RatioSteam: Double
+  val RatioWater: Double
+  var Setting: Double
+  var SoundAlert: Double
+  val Temperature: Double
+  val TemperatureExternal: Double
+  var TemperatureSetting: Double
+  val TotalMoles: Double
+  val VelocityMagnitude: Double
+  val VelocityRelativeX: Double
+  val VelocityRelativeY: Double
+  val VelocityRelativeZ: Double
+  val VelocityX: Double
+  val VelocityY: Double
+  val VelocityZ: Double
+  var Volume: Double
+  val WasteTank: ItemAirTankSlot
+  val slots: Slots<ItemCommonSlot>
+}
+
+/** ItemHardsuitHelmet. Entry point: HardsuitHelmets. */
+class HardsuitHelmet : TypedDevice {
+  val Combustion: Boolean
+  var Flush: Boolean
+  var Lock: Boolean
+  var On: Boolean
+  var Open: Boolean
+  val Power: Boolean
+  val Pressure: Double
+  val RatioCarbonDioxide: Double
+  val RatioHelium: Double
+  val RatioHydrazine: Double
+  val RatioHydrochloricAcid: Double
+  val RatioHydrogen: Double
+  val RatioLiquidAlcohol: Double
+  val RatioLiquidCarbonDioxide: Double
+  val RatioLiquidHydrazine: Double
+  val RatioLiquidHydrochloricAcid: Double
+  val RatioLiquidHydrogen: Double
+  val RatioLiquidMethane: Double
+  val RatioLiquidNitrogen: Double
+  val RatioLiquidNitrousOxide: Double
+  val RatioLiquidOxygen: Double
+  val RatioLiquidOzone: Double
+  val RatioLiquidPollutant: Double
+  val RatioLiquidSilanol: Double
+  val RatioLiquidSodiumChloride: Double
+  val RatioMethane: Double
+  val RatioNitrogen: Double
+  val RatioNitrousOxide: Double
+  val RatioOxygen: Double
+  val RatioOzone: Double
+  val RatioPollutant: Double
+  val RatioPollutedWater: Double
+  val RatioSilanol: Double
+  val RatioSteam: Double
+  val RatioWater: Double
+  var SoundAlert: Double
+  val Temperature: Double
+  val TotalMoles: Double
+  var Volume: Double
+}
+
+/** StructureHarvie. Entry point: Harvies. */
+class Harvie : TypedDevice {
+  var Activate: Boolean
+  var ClearMemory: Boolean
+  val Error: Boolean
+  val Export: DataDiskSlot
+  val ExportCount: Double
+  val Hand: DataDiskSlot
+  var Harvest: Double
+  val Import: DataDiskSlot
+  val ImportCount: Double
+  var Lock: Boolean
+  var Mode: Double
+  var On: Boolean
+  var Plant: Double
+  val Power: Boolean
+  val RequiredPower: Double
+  val slots: Slots<DataDiskSlot>
+}
+
+/** StructureHorizontalAutoMiner. Entry point: HorizontalAutoMiners. */
+class HorizontalAutoMiner : TypedDevice {
+  var Activate: Boolean
+  var ClearMemory: Boolean
+  val Error: Boolean
+  val Export: DataDiskSlot
+  val ExportCount: Double
+  val Import: DataDiskSlot
+  val ImportCount: Double
+  var Mode: Double
+  var On: Boolean
+  var Open: Boolean
+  val Power: Boolean
+  val RequiredPower: Double
+  val slots: Slots<DataDiskSlot>
+}
+
+/** StructureHydraulicPipeBender. Entry point: HydraulicPipeBenders. */
+class HydraulicPipeBender : TypedDevice {
+  var Activate: Boolean
+  var ClearMemory: Boolean
+  val CompletionRatio: Double
+  val Error: Boolean
+  val Export: DataDiskSlot
+  val ExportCount: Double
+  val Import: DataDiskSlot
+  val ImportCount: Double
+  var Lock: Boolean
+  var On: Boolean
+  var Open: Boolean
+  val Power: Boolean
+  val Reagents: Double
+  var RecipeHash: Double
+  val RequiredPower: Double
+  val StackSize: Double
+  val slots: Slots<DataDiskSlot>
+}
+
+/** StructureHydroponicsStation. Entry point: HydroponicsStations. */
+class HydroponicsStation : TypedDevice {
+  val Combustion: Boolean
+  val CombustionOutput: Double
+  val Error: Boolean
+  val Maximum: Double
+  var On: Boolean
+  val Power: Boolean
+  val Pressure: Double
+  val PressureOutput: Double
+  val Ratio: Double
+  val RatioCarbonDioxide: Double
+  val RatioCarbonDioxideOutput: Double
+  val RatioHelium: Double
+  val RatioHeliumOutput: Double
+  val RatioHydrazine: Double
+  val RatioHydrazineOutput: Double
+  val RatioHydrochloricAcid: Double
+  val RatioHydrochloricAcidOutput: Double
+  val RatioHydrogen: Double
+  val RatioHydrogenOutput: Double
+  val RatioLiquidAlcohol: Double
+  val RatioLiquidAlcoholOutput: Double
+  val RatioLiquidCarbonDioxide: Double
+  val RatioLiquidHydrazine: Double
+  val RatioLiquidHydrazineOutput: Double
+  val RatioLiquidHydrochloricAcid: Double
+  val RatioLiquidHydrochloricAcidOutput: Double
+  val RatioLiquidHydrogen: Double
+  val RatioLiquidHydrogenOutput: Double
+  val RatioLiquidMethane: Double
+  val RatioLiquidNitrogen: Double
+  val RatioLiquidNitrousOxide: Double
+  val RatioLiquidOxygen: Double
+  val RatioLiquidOzone: Double
+  val RatioLiquidOzoneOutput: Double
+  val RatioLiquidPollutant: Double
+  val RatioLiquidSilanol: Double
+  val RatioLiquidSilanolOutput: Double
+  val RatioLiquidSodiumChloride: Double
+  val RatioLiquidSodiumChlorideOutput: Double
+  val RatioMethane: Double
+  val RatioMethaneOutput: Double
+  val RatioNitrogen: Double
+  val RatioNitrogenOutput: Double
+  val RatioNitrousOxide: Double
+  val RatioNitrousOxideOutput: Double
+  val RatioOxygen: Double
+  val RatioOxygenOutput: Double
+  val RatioOzone: Double
+  val RatioOzoneOutput: Double
+  val RatioPollutant: Double
+  val RatioPollutantOutput: Double
+  val RatioPollutedWater: Double
+  val RatioPollutedWaterOutput: Double
+  val RatioSilanol: Double
+  val RatioSilanolOutput: Double
+  val RatioSteam: Double
+  val RatioWater: Double
+  val RatioWaterOutput: Double
+  val RequiredPower: Double
+  var Setting: Double
+  val Temperature: Double
+  val TemperatureOutput: Double
+  val TotalMoles: Double
+  val TotalMolesOutput: Double
+  val slots: Slots<PlantSlot>
+}
+
+/** StructureHydroponicsTrayData. Entry point: HydroponicsTrayDatas. */
+class HydroponicsTrayData : TypedDevice {
+  val Combustion: Boolean
+  val Fertiliser: DataDiskSlot
+  val Plant: PlantSlot
+  val Pressure: Double
+  val RatioCarbonDioxide: Double
+  val RatioHelium: Double
+  val RatioHydrazine: Double
+  val RatioHydrochloricAcid: Double
+  val RatioHydrogen: Double
+  val RatioLiquidAlcohol: Double
+  val RatioLiquidCarbonDioxide: Double
+  val RatioLiquidHydrazine: Double
+  val RatioLiquidHydrochloricAcid: Double
+  val RatioLiquidHydrogen: Double
+  val RatioLiquidMethane: Double
+  val RatioLiquidNitrogen: Double
+  val RatioLiquidNitrousOxide: Double
+  val RatioLiquidOxygen: Double
+  val RatioLiquidOzone: Double
+  val RatioLiquidPollutant: Double
+  val RatioLiquidSilanol: Double
+  val RatioLiquidSodiumChloride: Double
+  val RatioMethane: Double
+  val RatioNitrogen: Double
+  val RatioNitrousOxide: Double
+  val RatioOxygen: Double
+  val RatioOzone: Double
+  val RatioPollutant: Double
+  val RatioPollutedWater: Double
+  val RatioSilanol: Double
+  val RatioSteam: Double
+  val RatioWater: Double
+  val Temperature: Double
+  val TotalMoles: Double
+  val slots: Slots<CommonSlot>
+}
+```
+
+### I
+
+```kotlin
+/** ItemIcarusHelmet. Entry point: IcarusHelmets. */
+class IcarusHelmet : TypedDevice {
+  val Combustion: Boolean
+  var Flush: Boolean
+  var Lock: Boolean
+  var On: Boolean
+  var Open: Boolean
+  val Power: Boolean
+  val Pressure: Double
+  val RatioCarbonDioxide: Double
+  val RatioHelium: Double
+  val RatioHydrazine: Double
+  val RatioHydrochloricAcid: Double
+  val RatioHydrogen: Double
+  val RatioLiquidAlcohol: Double
+  val RatioLiquidCarbonDioxide: Double
+  val RatioLiquidHydrazine: Double
+  val RatioLiquidHydrochloricAcid: Double
+  val RatioLiquidHydrogen: Double
+  val RatioLiquidMethane: Double
+  val RatioLiquidNitrogen: Double
+  val RatioLiquidNitrousOxide: Double
+  val RatioLiquidOxygen: Double
+  val RatioLiquidOzone: Double
+  val RatioLiquidPollutant: Double
+  val RatioLiquidSilanol: Double
+  val RatioLiquidSodiumChloride: Double
+  val RatioMethane: Double
+  val RatioNitrogen: Double
+  val RatioNitrousOxide: Double
+  val RatioOxygen: Double
+  val RatioOzone: Double
+  val RatioPollutant: Double
+  val RatioPollutedWater: Double
+  val RatioSilanol: Double
+  val RatioSteam: Double
+  val RatioWater: Double
+  var SoundAlert: Double
+  val Temperature: Double
+  val TotalMoles: Double
+  var Volume: Double
+}
+
+/** StructureIceCrusher. Entry point: IceCrushers. */
+class IceCrusher : TypedDevice {
+  var Activate: Boolean
+  var ClearMemory: Boolean
+  val Error: Boolean
+  val Import: DataDiskSlot
+  val ImportCount: Double
+  var Lock: Boolean
+  val Maximum: Double
+  var On: Boolean
+  val Power: Boolean
+  val Ratio: Double
+  val RequiredPower: Double
+  var Setting: Double
+  val slots: Slots<DataDiskSlot>
+}
+
+/** StructureIgniter. Entry point: Igniters. */
+class Igniter : TypedDevice {
+  var On: Boolean
+}
+
+/** ItemIntegratedCircuit10. Entry point: IntegratedCircuit10s. */
+class IntegratedCircuit10 : TypedDevice {
+  val LineNumber: Double
+}
+
+/** StructureInteriorDoorGlass. Entry point: InteriorDoorGlasses. */
+class InteriorDoorGlass : TypedDevice {
+  val Idle: Boolean
+  var Lock: Boolean
+  var Mode: Double
+  var On: Boolean
+  var Open: Boolean
+  val Power: Boolean
+  val RequiredPower: Double
+  var Setting: Double
+}
+
+/** StructureInteriorDoorPadded. Entry point: InteriorDoorPaddeds. */
+class InteriorDoorPadded : TypedDevice {
+  val Idle: Boolean
+  var Lock: Boolean
+  var Mode: Double
+  var On: Boolean
+  var Open: Boolean
+  val Power: Boolean
+  val RequiredPower: Double
+  var Setting: Double
+}
+
+/** StructureInteriorDoorPaddedThin. Entry point: InteriorDoorPaddedThins. */
+class InteriorDoorPaddedThin : TypedDevice {
+  val Idle: Boolean
+  var Lock: Boolean
+  var Mode: Double
+  var On: Boolean
+  var Open: Boolean
+  val Power: Boolean
+  val RequiredPower: Double
+  var Setting: Double
+}
+
+/** StructureInteriorDoorTriangle. Entry point: InteriorDoorTriangles. */
+class InteriorDoorTriangle : TypedDevice {
+  val Idle: Boolean
+  var Lock: Boolean
+  var Mode: Double
+  var On: Boolean
+  var Open: Boolean
+  val Power: Boolean
+  val RequiredPower: Double
+  var Setting: Double
+}
+
+/** ItemBeacon. Entry point: ItemBeacons. */
+class ItemBeacon : TypedDevice {
+  val Battery: ItemBatterySlot
+  val Error: Boolean
+  var On: Boolean
+  val Power: Boolean
+  val slots: Slots<ItemBatterySlot>
+}
+```
+
+### J
+
+```kotlin
+/** ItemJetpackBasic. Entry point: JetpackBasics. */
+class JetpackBasic : TypedDevice {
+  var Activate: Boolean
+  var On: Boolean
+  val Propellant: ItemAirTankSlot
+  val slots: Slots<ItemCommonSlot>
+}
+```
+
+### K
+
+```kotlin
+/** StructureKlaxon. Entry point: Klaxons. */
+class Klaxon : TypedDevice {
+  var Mode: Double
+  var On: Boolean
+  val Power: Boolean
+  val RequiredPower: Double
+  var SoundAlert: Double
+  var Volume: Double
+}
+```
+
+### L
+
+```kotlin
+/** ItemLabeller. Entry point: Labellers. */
+class Labeller : TypedDevice {
+  val Battery: ItemBatterySlot
+  val Error: Boolean
+  var On: Boolean
+  val Power: Boolean
+  val slots: Slots<ItemBatterySlot>
+}
+
+/** Landingpad_DataConnectionPiece. Entry point: Landingpad_DataConnectionPieces. */
+class Landingpad_DataConnectionPiece : TypedDevice {
+  var Activate: Boolean
+  val Combustion: Boolean
+  val ContactTypeId: Double
+  val Error: Boolean
+  val Mode: Double
+  var On: Boolean
+  val Power: Boolean
+  val Pressure: Double
+  val RatioCarbonDioxide: Double
+  val RatioHelium: Double
+  val RatioHydrazine: Double
+  val RatioHydrochloricAcid: Double
+  val RatioHydrogen: Double
+  val RatioLiquidAlcohol: Double
+  val RatioLiquidCarbonDioxide: Double
+  val RatioLiquidHydrazine: Double
+  val RatioLiquidHydrochloricAcid: Double
+  val RatioLiquidHydrogen: Double
+  val RatioLiquidMethane: Double
+  val RatioLiquidNitrogen: Double
+  val RatioLiquidNitrousOxide: Double
+  val RatioLiquidOxygen: Double
+  val RatioLiquidOzone: Double
+  val RatioLiquidPollutant: Double
+  val RatioLiquidSilanol: Double
+  val RatioLiquidSodiumChloride: Double
+  val RatioMethane: Double
+  val RatioNitrogen: Double
+  val RatioNitrousOxide: Double
+  val RatioOxygen: Double
+  val RatioOzone: Double
+  val RatioPollutant: Double
+  val RatioPollutedWater: Double
+  val RatioSilanol: Double
+  val RatioSteam: Double
+  val RatioWater: Double
+  val RequiredPower: Double
+  val Temperature: Double
+  val TotalMoles: Double
+  var Vertical: Double
+}
+
+/** Landingpad_GasConnectorInwardPiece. Entry point: Landingpad_GasConnectorInwardPieces. */
+class Landingpad_GasConnectorInwardPiece : TypedDevice {
+  val Combustion: Boolean
+  val Error: Boolean
+  val Maximum: Double
+  var On: Boolean
+  val Power: Boolean
+  val Pressure: Double
+  val Ratio: Double
+  val RatioCarbonDioxide: Double
+  val RatioHelium: Double
+  val RatioHydrazine: Double
+  val RatioHydrochloricAcid: Double
+  val RatioHydrogen: Double
+  val RatioLiquidAlcohol: Double
+  val RatioLiquidCarbonDioxide: Double
+  val RatioLiquidHydrazine: Double
+  val RatioLiquidHydrochloricAcid: Double
+  val RatioLiquidHydrogen: Double
+  val RatioLiquidMethane: Double
+  val RatioLiquidNitrogen: Double
+  val RatioLiquidNitrousOxide: Double
+  val RatioLiquidOxygen: Double
+  val RatioLiquidOzone: Double
+  val RatioLiquidPollutant: Double
+  val RatioLiquidSilanol: Double
+  val RatioLiquidSodiumChloride: Double
+  val RatioMethane: Double
+  val RatioNitrogen: Double
+  val RatioNitrousOxide: Double
+  val RatioOxygen: Double
+  val RatioOzone: Double
+  val RatioPollutant: Double
+  val RatioPollutedWater: Double
+  val RatioSilanol: Double
+  val RatioSteam: Double
+  val RatioWater: Double
+  val RequiredPower: Double
+  var Setting: Double
+  val Temperature: Double
+  val TotalMoles: Double
+}
+
+/** Landingpad_GasConnectorOutwardPiece. Entry point: Landingpad_GasConnectorOutwardPieces. */
+class Landingpad_GasConnectorOutwardPiece : TypedDevice {
+  val Combustion: Boolean
+  val Error: Boolean
+  val Maximum: Double
+  var On: Boolean
+  val Power: Boolean
+  val Pressure: Double
+  val Ratio: Double
+  val RatioCarbonDioxide: Double
+  val RatioHelium: Double
+  val RatioHydrazine: Double
+  val RatioHydrochloricAcid: Double
+  val RatioHydrogen: Double
+  val RatioLiquidAlcohol: Double
+  val RatioLiquidCarbonDioxide: Double
+  val RatioLiquidHydrazine: Double
+  val RatioLiquidHydrochloricAcid: Double
+  val RatioLiquidHydrogen: Double
+  val RatioLiquidMethane: Double
+  val RatioLiquidNitrogen: Double
+  val RatioLiquidNitrousOxide: Double
+  val RatioLiquidOxygen: Double
+  val RatioLiquidOzone: Double
+  val RatioLiquidPollutant: Double
+  val RatioLiquidSilanol: Double
+  val RatioLiquidSodiumChloride: Double
+  val RatioMethane: Double
+  val RatioNitrogen: Double
+  val RatioNitrousOxide: Double
+  val RatioOxygen: Double
+  val RatioOzone: Double
+  val RatioPollutant: Double
+  val RatioPollutedWater: Double
+  val RatioSilanol: Double
+  val RatioSteam: Double
+  val RatioWater: Double
+  val RequiredPower: Double
+  var Setting: Double
+  val Temperature: Double
+  val TotalMoles: Double
+}
+
+/** Landingpad_GasTankConnectorPiece. Entry point: Landingpad_GasTankConnectorPieces. */
+class Landingpad_GasTankConnectorPiece : TypedDevice {
+  val Error: Boolean
+  var Mode: Double
+  var On: Boolean
+  val PortableSlot: DataDiskSlot
+  val Power: Boolean
+  val RequiredPower: Double
+  val slots: Slots<DataDiskSlot>
+}
+
+/** Landingpad_LiquidConnectorInwardPiece. Entry point: Landingpad_LiquidConnectorInwardPieces. */
+class Landingpad_LiquidConnectorInwardPiece : TypedDevice {
+  val Combustion: Boolean
+  val Error: Boolean
+  val Maximum: Double
+  var On: Boolean
+  val Power: Boolean
+  val Pressure: Double
+  val Ratio: Double
+  val RatioCarbonDioxide: Double
+  val RatioHelium: Double
+  val RatioHydrazine: Double
+  val RatioHydrochloricAcid: Double
+  val RatioHydrogen: Double
+  val RatioLiquidAlcohol: Double
+  val RatioLiquidCarbonDioxide: Double
+  val RatioLiquidHydrazine: Double
+  val RatioLiquidHydrochloricAcid: Double
+  val RatioLiquidHydrogen: Double
+  val RatioLiquidMethane: Double
+  val RatioLiquidNitrogen: Double
+  val RatioLiquidNitrousOxide: Double
+  val RatioLiquidOxygen: Double
+  val RatioLiquidOzone: Double
+  val RatioLiquidPollutant: Double
+  val RatioLiquidSilanol: Double
+  val RatioLiquidSodiumChloride: Double
+  val RatioMethane: Double
+  val RatioNitrogen: Double
+  val RatioNitrousOxide: Double
+  val RatioOxygen: Double
+  val RatioOzone: Double
+  val RatioPollutant: Double
+  val RatioPollutedWater: Double
+  val RatioSilanol: Double
+  val RatioSteam: Double
+  val RatioWater: Double
+  val RequiredPower: Double
+  var Setting: Double
+  val Temperature: Double
+  val TotalMoles: Double
+}
+
+/** Landingpad_LiquidConnectorOutwardPiece. Entry point: Landingpad_LiquidConnectorOutwardPieces. */
+class Landingpad_LiquidConnectorOutwardPiece : TypedDevice {
+  val Combustion: Boolean
+  val Error: Boolean
+  val Maximum: Double
+  var On: Boolean
+  val Power: Boolean
+  val Pressure: Double
+  val Ratio: Double
+  val RatioCarbonDioxide: Double
+  val RatioHelium: Double
+  val RatioHydrazine: Double
+  val RatioHydrochloricAcid: Double
+  val RatioHydrogen: Double
+  val RatioLiquidAlcohol: Double
+  val RatioLiquidCarbonDioxide: Double
+  val RatioLiquidHydrazine: Double
+  val RatioLiquidHydrochloricAcid: Double
+  val RatioLiquidHydrogen: Double
+  val RatioLiquidMethane: Double
+  val RatioLiquidNitrogen: Double
+  val RatioLiquidNitrousOxide: Double
+  val RatioLiquidOxygen: Double
+  val RatioLiquidOzone: Double
+  val RatioLiquidPollutant: Double
+  val RatioLiquidSilanol: Double
+  val RatioLiquidSodiumChloride: Double
+  val RatioMethane: Double
+  val RatioNitrogen: Double
+  val RatioNitrousOxide: Double
+  val RatioOxygen: Double
+  val RatioOzone: Double
+  val RatioPollutant: Double
+  val RatioPollutedWater: Double
+  val RatioSilanol: Double
+  val RatioSteam: Double
+  val RatioWater: Double
+  val RequiredPower: Double
+  var Setting: Double
+  val Temperature: Double
+  val TotalMoles: Double
+}
+
+/** Landingpad_LiquidTankConnectorPiece. Entry point: Landingpad_LiquidTankConnectorPieces. */
+class Landingpad_LiquidTankConnectorPiece : TypedDevice {
+  val Error: Boolean
+  var Mode: Double
+  var On: Boolean
+  val PortableSlot: DataDiskSlot
+  val Power: Boolean
+  val RequiredPower: Double
+  val slots: Slots<DataDiskSlot>
+}
+
+/** Landingpad_ThreshholdPiece. Entry point: Landingpad_ThreshholdPieces. */
+class Landingpad_ThreshholdPiece : TypedDevice {
+  var On: Boolean
+  val Power: Boolean
+  val RequiredPower: Double
+}
+
+/** ItemLaptop. Entry point: Laptops. */
+class Laptop : TypedDevice {
+  val Battery: ItemBatterySlot
+  val Error: Boolean
+  val Motherboard: ItemCommonSlot
+  var On: Boolean
+  val PositionX: Double
+  val PositionY: Double
+  val PositionZ: Double
+  val Power: Boolean
+  val PressureExternal: Double
+  val ProgrammableChip: ItemCommonSlot
+  val TemperatureExternal: Double
+  val slots: Slots<ItemCommonSlot>
+}
+
+/** StructureLargeDirectHeatExchangeGastoGas. Entry point: LargeDirectHeatExchangeGastoGases. */
+class LargeDirectHeatExchangeGastoGas : TypedDevice {
+  val Maximum: Double
+  val Ratio: Double
+  var Setting: Double
+}
+
+/** StructureLargeDirectHeatExchangeGastoLiquid. Entry point: LargeDirectHeatExchangeGastoLiquids. */
+class LargeDirectHeatExchangeGastoLiquid : TypedDevice {
+  val Maximum: Double
+  val Ratio: Double
+  var Setting: Double
+}
+
+/** StructureLargeDirectHeatExchangeLiquidtoLiquid. Entry point: LargeDirectHeatExchangeLiquidtoLiquids. */
+class LargeDirectHeatExchangeLiquidtoLiquid : TypedDevice {
+  val Maximum: Double
+  val Ratio: Double
+  var Setting: Double
+}
+
+/** StructureLargeExtendableRadiator. Entry point: LargeExtendableRadiators. */
+class LargeExtendableRadiator : TypedDevice {
+  var Horizontal: Double
+  var Lock: Boolean
+  val Maximum: Double
+  var Open: Boolean
+  val Ratio: Double
+  var Setting: Double
+}
+
+/** StructureLargeHangerDoor. Entry point: LargeHangerDoors. */
+class LargeHangerDoor : TypedDevice {
+  val Idle: Boolean
+  var Lock: Boolean
+  var Mode: Double
+  var On: Boolean
+  var Open: Boolean
+  val Power: Boolean
+  val RequiredPower: Double
+  var Setting: Double
+}
+
+/** StructureLargeRocketGasFuelTank. Entry point: LargeRocketGasFuelTanks. */
+class LargeRocketGasFuelTank : TypedDevice {
+  val Combustion: Boolean
+  val CombustionOutput: Double
+  val Maximum: Double
+  val Pressure: Double
+  val PressureOutput: Double
+  val Ratio: Double
+  val RatioCarbonDioxide: Double
+  val RatioCarbonDioxideOutput: Double
+  val RatioHelium: Double
+  val RatioHeliumOutput: Double
+  val RatioHydrazine: Double
+  val RatioHydrazineOutput: Double
+  val RatioHydrochloricAcid: Double
+  val RatioHydrochloricAcidOutput: Double
+  val RatioHydrogen: Double
+  val RatioHydrogenOutput: Double
+  val RatioLiquidAlcohol: Double
+  val RatioLiquidAlcoholOutput: Double
+  val RatioLiquidCarbonDioxide: Double
+  val RatioLiquidHydrazine: Double
+  val RatioLiquidHydrazineOutput: Double
+  val RatioLiquidHydrochloricAcid: Double
+  val RatioLiquidHydrochloricAcidOutput: Double
+  val RatioLiquidHydrogen: Double
+  val RatioLiquidHydrogenOutput: Double
+  val RatioLiquidMethane: Double
+  val RatioLiquidNitrogen: Double
+  val RatioLiquidNitrousOxide: Double
+  val RatioLiquidOxygen: Double
+  val RatioLiquidOzone: Double
+  val RatioLiquidOzoneOutput: Double
+  val RatioLiquidPollutant: Double
+  val RatioLiquidSilanol: Double
+  val RatioLiquidSilanolOutput: Double
+  val RatioLiquidSodiumChloride: Double
+  val RatioLiquidSodiumChlorideOutput: Double
+  val RatioMethane: Double
+  val RatioMethaneOutput: Double
+  val RatioNitrogen: Double
+  val RatioNitrogenOutput: Double
+  val RatioNitrousOxide: Double
+  val RatioNitrousOxideOutput: Double
+  val RatioOxygen: Double
+  val RatioOxygenOutput: Double
+  val RatioOzone: Double
+  val RatioOzoneOutput: Double
+  val RatioPollutant: Double
+  val RatioPollutantOutput: Double
+  val RatioPollutedWater: Double
+  val RatioPollutedWaterOutput: Double
+  val RatioSilanol: Double
+  val RatioSilanolOutput: Double
+  val RatioSteam: Double
+  val RatioWater: Double
+  val RatioWaterOutput: Double
+  var Setting: Double
+  val Temperature: Double
+  val TemperatureOutput: Double
+  val TotalMoles: Double
+  val TotalMolesOutput: Double
+  val Volume: Double
+  val VolumeOfLiquid: Double
+}
+
+/** StructureLargeRocketLiquidFuelTank. Entry point: LargeRocketLiquidFuelTanks. */
+class LargeRocketLiquidFuelTank : TypedDevice {
+  val Combustion: Boolean
+  val CombustionOutput: Double
+  val Maximum: Double
+  val Pressure: Double
+  val PressureOutput: Double
+  val Ratio: Double
+  val RatioCarbonDioxide: Double
+  val RatioCarbonDioxideOutput: Double
+  val RatioHelium: Double
+  val RatioHeliumOutput: Double
+  val RatioHydrazine: Double
+  val RatioHydrazineOutput: Double
+  val RatioHydrochloricAcid: Double
+  val RatioHydrochloricAcidOutput: Double
+  val RatioHydrogen: Double
+  val RatioHydrogenOutput: Double
+  val RatioLiquidAlcohol: Double
+  val RatioLiquidAlcoholOutput: Double
+  val RatioLiquidCarbonDioxide: Double
+  val RatioLiquidHydrazine: Double
+  val RatioLiquidHydrazineOutput: Double
+  val RatioLiquidHydrochloricAcid: Double
+  val RatioLiquidHydrochloricAcidOutput: Double
+  val RatioLiquidHydrogen: Double
+  val RatioLiquidHydrogenOutput: Double
+  val RatioLiquidMethane: Double
+  val RatioLiquidNitrogen: Double
+  val RatioLiquidNitrousOxide: Double
+  val RatioLiquidOxygen: Double
+  val RatioLiquidOzone: Double
+  val RatioLiquidOzoneOutput: Double
+  val RatioLiquidPollutant: Double
+  val RatioLiquidSilanol: Double
+  val RatioLiquidSilanolOutput: Double
+  val RatioLiquidSodiumChloride: Double
+  val RatioLiquidSodiumChlorideOutput: Double
+  val RatioMethane: Double
+  val RatioMethaneOutput: Double
+  val RatioNitrogen: Double
+  val RatioNitrogenOutput: Double
+  val RatioNitrousOxide: Double
+  val RatioNitrousOxideOutput: Double
+  val RatioOxygen: Double
+  val RatioOxygenOutput: Double
+  val RatioOzone: Double
+  val RatioOzoneOutput: Double
+  val RatioPollutant: Double
+  val RatioPollutantOutput: Double
+  val RatioPollutedWater: Double
+  val RatioPollutedWaterOutput: Double
+  val RatioSilanol: Double
+  val RatioSilanolOutput: Double
+  val RatioSteam: Double
+  val RatioWater: Double
+  val RatioWaterOutput: Double
+  var Setting: Double
+  val Temperature: Double
+  val TemperatureOutput: Double
+  val TotalMoles: Double
+  val TotalMolesOutput: Double
+  val Volume: Double
+  val VolumeOfLiquid: Double
+}
+
+/** StructureLargeSatelliteDish. Entry point: LargeSatelliteDishes. */
+class LargeSatelliteDish : TypedDevice {
+  var Activate: Boolean
+  var BestContactFilter: Double
+  val ContactSlotIndex: Double
+  val ContactTypeId: Double
+  val Error: Boolean
+  var Horizontal: Double
+  val Idle: Boolean
+  val InterrogationProgress: Double
+  val MinimumWattsToContact: Double
+  var On: Boolean
+  val Power: Boolean
+  val RequiredPower: Double
+  var Setting: Double
+  val SignalID: Double
+  val SignalStrength: Double
+  val SizeX: Double
+  val SizeZ: Double
+  var TargetPadIndex: Double
+  var Vertical: Double
+  val WattsReachingContact: Double
+}
+
+/** StructureLarreDockAtmos. Entry point: LarreDockAtmoses. */
+class LarreDockAtmos : TypedDevice {
+  var Activate: Boolean
+  val Combustion: Boolean
+  val CombustionInput: Double
+  val Error: Boolean
+  val Extended: Double
+  val Filter: FilterSlot
+  val Idle: Boolean
+  var Mode: Double
+  var On: Boolean
+  var Open: Boolean
+  val PositionX: Double
+  val Power: Boolean
+  val Pressure: Double
+  var PressureExternal: Double
+  val PressureInput: Double
+  var PressureInternal: Double
+  val RatioCarbonDioxide: Double
+  val RatioCarbonDioxideInput: Double
+  val RatioHelium: Double
+  val RatioHydrazine: Double
+  val RatioHydrochloricAcid: Double
+  val RatioHydrogen: Double
+  val RatioLiquidAlcohol: Double
+  val RatioLiquidCarbonDioxide: Double
+  val RatioLiquidCarbonDioxideInput: Double
+  val RatioLiquidHydrazine: Double
+  val RatioLiquidHydrochloricAcid: Double
+  val RatioLiquidHydrogen: Double
+  val RatioLiquidMethane: Double
+  val RatioLiquidMethaneInput: Double
+  val RatioLiquidNitrogen: Double
+  val RatioLiquidNitrogenInput: Double
+  val RatioLiquidNitrousOxide: Double
+  val RatioLiquidNitrousOxideInput: Double
+  val RatioLiquidOxygen: Double
+  val RatioLiquidOxygenInput: Double
+  val RatioLiquidOzone: Double
+  val RatioLiquidPollutant: Double
+  val RatioLiquidPollutantInput: Double
+  val RatioLiquidSilanol: Double
+  val RatioLiquidSodiumChloride: Double
+  val RatioMethane: Double
+  val RatioMethaneInput: Double
+  val RatioNitrogen: Double
+  val RatioNitrogenInput: Double
+  val RatioNitrousOxide: Double
+  val RatioNitrousOxideInput: Double
+  val RatioOxygen: Double
+  val RatioOxygenInput: Double
+  val RatioOzone: Double
+  val RatioPollutant: Double
+  val RatioPollutantInput: Double
+  val RatioPollutedWater: Double
+  val RatioSilanol: Double
+  val RatioSteam: Double
+  val RatioSteamInput: Double
+  val RatioWater: Double
+  val RatioWaterInput: Double
+  val RequiredPower: Double
+  var Setting: Double
+  val Temperature: Double
+  val TemperatureInput: Double
+  val TotalMoles: Double
+  val TotalMolesInput: Double
+  val slots: Slots<FilterSlot>
+}
+
+/** StructureLarreDockBypass. Entry point: LarreDockBypasses. */
+class LarreDockBypass : TypedDevice {
+  var On: Boolean
+  var Open: Boolean
+  val Power: Boolean
+  val RequiredPower: Double
+}
+
+/** StructureLarreDockCargo. Entry point: LarreDockCargos. */
+class LarreDockCargo : TypedDevice {
+  var Activate: Boolean
+  val ArmSlot: DataDiskSlot
+  val Error: Boolean
+  val Extended: Double
+  val Idle: Boolean
+  var On: Boolean
+  var Open: Boolean
+  val PositionX: Double
+  val Power: Boolean
+  val RequiredPower: Double
+  var Setting: Double
+  val TargetPrefabHash: Double
+  val TargetSlot: CommonSlot
+  var TargetSlotIndex: Double
+  val slots: Slots<CommonSlot>
+}
+
+/** StructureLarreDockCollector. Entry point: LarreDockCollectors. */
+class LarreDockCollector : TypedDevice {
+  var Activate: Boolean
+  val Error: Boolean
+  val Extended: Double
+  val Idle: Boolean
+  var Mode: Double
+  var On: Boolean
+  var Open: Boolean
+  val PositionX: Double
+  val Power: Boolean
+  val Quantity: Double
+  val Ratio: Double
+  val RequiredPower: Double
+  var Setting: Double
+  val slots: Slots<DataDiskSlot>
+}
+
+/** StructureLarreDockHydroponics. Entry point: LarreDockHydroponicses. */
+class LarreDockHydroponics : TypedDevice {
+  var Activate: Boolean
+  val ArmSlot: DataDiskSlot
+  val Error: Boolean
+  val Extended: Double
+  val HopperSlot: DataDiskSlot
+  val Idle: Boolean
+  var On: Boolean
+  var Open: Boolean
+  val PositionX: Double
+  val Power: Boolean
+  val RequiredPower: Double
+  var Setting: Double
+  val TargetPrefabHash: Double
+  val TargetSlot: CommonSlot
+  val TargetSlotIndex: Double
+  val slots: Slots<CommonSlot>
+}
+
+/** StructureLightLong. Entry point: LightLongs. */
+class LightLong : TypedDevice {
+  var Lock: Boolean
+  var On: Boolean
+  val Power: Boolean
+  val RequiredPower: Double
+}
+
+/** StructureLightLongAngled. Entry point: LightLongAngleds. */
+class LightLongAngled : TypedDevice {
+  var Lock: Boolean
+  var On: Boolean
+  val Power: Boolean
+  val RequiredPower: Double
+}
+
+/** StructureLightLongWide. Entry point: LightLongWides. */
+class LightLongWide : TypedDevice {
+  var Lock: Boolean
+  var On: Boolean
+  val Power: Boolean
+  val RequiredPower: Double
+}
+
+/** StructureLightRound. Entry point: LightRounds. */
+class LightRound : TypedDevice {
+  var Lock: Boolean
+  var On: Boolean
+  val Power: Boolean
+  val RequiredPower: Double
+}
+
+/** StructureLightRoundAngled. Entry point: LightRoundAngleds. */
+class LightRoundAngled : TypedDevice {
+  var Lock: Boolean
+  var On: Boolean
+  val Power: Boolean
+  val RequiredPower: Double
+}
+
+/** StructureLightRoundSmall. Entry point: LightRoundSmalls. */
+class LightRoundSmall : TypedDevice {
+  var Lock: Boolean
+  var On: Boolean
+  val Power: Boolean
+  val RequiredPower: Double
+}
+
+/** StructureLiquidDrain. Entry point: LiquidDrains. */
+class LiquidDrain : TypedDevice {
+  val CombustionOutput: Double
+  val Error: Boolean
+  var Lock: Boolean
+  val Maximum: Double
+  var On: Boolean
+  val Power: Boolean
+  val PressureOutput: Double
+  val Ratio: Double
+  val RatioCarbonDioxideOutput: Double
+  val RatioHeliumOutput: Double
+  val RatioHydrazineOutput: Double
+  val RatioHydrochloricAcidOutput: Double
+  val RatioHydrogenOutput: Double
+  val RatioLiquidAlcoholOutput: Double
+  val RatioLiquidHydrazineOutput: Double
+  val RatioLiquidHydrochloricAcidOutput: Double
+  val RatioLiquidHydrogenOutput: Double
+  val RatioLiquidOzoneOutput: Double
+  val RatioLiquidSilanolOutput: Double
+  val RatioLiquidSodiumChlorideOutput: Double
+  val RatioMethaneOutput: Double
+  val RatioNitrogenOutput: Double
+  val RatioNitrousOxideOutput: Double
+  val RatioOxygenOutput: Double
+  val RatioOzoneOutput: Double
+  val RatioPollutantOutput: Double
+  val RatioPollutedWaterOutput: Double
+  val RatioSilanolOutput: Double
+  val RatioWaterOutput: Double
+  val RequiredPower: Double
+  var Setting: Double
+  val TemperatureOutput: Double
+  val TotalMolesOutput: Double
+}
+
+/** StructureLiquidPipeAnalyzer. Entry point: LiquidPipeAnalyzers. */
+class LiquidPipeAnalyzer : TypedDevice {
+  val Combustion: Boolean
+  val Error: Boolean
+  var Lock: Boolean
+  val NetworkFault: Boolean
+  var On: Boolean
+  val Power: Boolean
+  val Pressure: Double
+  val RatioCarbonDioxide: Double
+  val RatioHelium: Double
+  val RatioHydrazine: Double
+  val RatioHydrochloricAcid: Double
+  val RatioHydrogen: Double
+  val RatioLiquidAlcohol: Double
+  val RatioLiquidCarbonDioxide: Double
+  val RatioLiquidHydrazine: Double
+  val RatioLiquidHydrochloricAcid: Double
+  val RatioLiquidHydrogen: Double
+  val RatioLiquidMethane: Double
+  val RatioLiquidNitrogen: Double
+  val RatioLiquidNitrousOxide: Double
+  val RatioLiquidOxygen: Double
+  val RatioLiquidOzone: Double
+  val RatioLiquidPollutant: Double
+  val RatioLiquidSilanol: Double
+  val RatioLiquidSodiumChloride: Double
+  val RatioMethane: Double
+  val RatioNitrogen: Double
+  val RatioNitrousOxide: Double
+  val RatioOxygen: Double
+  val RatioOzone: Double
+  val RatioPollutant: Double
+  val RatioPollutedWater: Double
+  val RatioSilanol: Double
+  val RatioSteam: Double
+  val RatioWater: Double
+  val RequiredPower: Double
+  val Temperature: Double
+  val TotalMoles: Double
+  val Volume: Double
+  val VolumeOfLiquid: Double
+}
+
+/** StructureLiquidPipeHeater. Entry point: LiquidPipeHeaters. */
+class LiquidPipeHeater : TypedDevice {
+  val Error: Boolean
+  var Lock: Boolean
+  var On: Boolean
+  val Power: Boolean
+  val RequiredPower: Double
+}
+
+/** StructureLiquidPressureRegulator. Entry point: LiquidPressureRegulators. */
+class LiquidPressureRegulator : TypedDevice {
+  val Error: Boolean
+  var Lock: Boolean
+  val Maximum: Double
+  var On: Boolean
+  val Power: Boolean
+  val Ratio: Double
+  val RequiredPower: Double
+  var Setting: Double
+}
+
+/** StructureLiquidTankStorage. Entry point: LiquidTankStorages. */
+class LiquidTankStorage : TypedDevice {
+  val LiquidCanister: GasCanisterSlot
+  val Pressure: Double
+  val Quantity: Double
+  val RatioCarbonDioxide: Double
+  val RatioHelium: Double
+  val RatioHydrazine: Double
+  val RatioHydrochloricAcid: Double
+  val RatioHydrogen: Double
+  val RatioLiquidAlcohol: Double
+  val RatioLiquidCarbonDioxide: Double
+  val RatioLiquidHydrazine: Double
+  val RatioLiquidHydrochloricAcid: Double
+  val RatioLiquidHydrogen: Double
+  val RatioLiquidMethane: Double
+  val RatioLiquidNitrogen: Double
+  val RatioLiquidNitrousOxide: Double
+  val RatioLiquidOxygen: Double
+  val RatioLiquidOzone: Double
+  val RatioLiquidPollutant: Double
+  val RatioLiquidSilanol: Double
+  val RatioLiquidSodiumChloride: Double
+  val RatioMethane: Double
+  val RatioNitrogen: Double
+  val RatioNitrousOxide: Double
+  val RatioOxygen: Double
+  val RatioOzone: Double
+  val RatioPollutant: Double
+  val RatioPollutedWater: Double
+  val RatioSilanol: Double
+  val RatioSteam: Double
+  val RatioWater: Double
+  val Temperature: Double
+  val slots: Slots<GasCanisterSlot>
+}
+
+/** StructureLiquidTurboVolumePump. Entry point: LiquidTurboVolumePumps. */
+class LiquidTurboVolumePump : TypedDevice {
+  val Error: Boolean
+  var Lock: Boolean
+  val Maximum: Double
+  var Mode: Double
+  var On: Boolean
+  val Power: Boolean
+  val Ratio: Double
+  val RequiredPower: Double
+  var Setting: Double
+}
+
+/** StructureLiquidUmbilicalFemale. Entry point: LiquidUmbilicalFemales. */
+class LiquidUmbilicalFemale : TypedDevice {
+  val Maximum: Double
+  val Ratio: Double
+  var Setting: Double
+}
+
+/** StructureLiquidUmbilicalFemaleSide. Entry point: LiquidUmbilicalFemaleSides. */
+class LiquidUmbilicalFemaleSide : TypedDevice {
+  val Maximum: Double
+  val Ratio: Double
+  var Setting: Double
+}
+
+/** StructureLiquidUmbilicalMale. Entry point: LiquidUmbilicalMales. */
+class LiquidUmbilicalMale : TypedDevice {
+  val Error: Boolean
+  var Lock: Boolean
+  val Maximum: Double
+  val Mode: Double
+  var On: Boolean
+  var Open: Boolean
+  val Power: Boolean
+  val Ratio: Double
+  val RequiredPower: Double
+  var Setting: Double
+}
+
+/** ItemLiquidVacuum. Entry point: LiquidVacuums. */
+class LiquidVacuum : TypedDevice {
+  var Activate: Boolean
+  val Battery: ItemBatterySlot
+  val Error: Boolean
+  var Mode: Double
+  var On: Boolean
+  val Power: Boolean
+  val slots: Slots<ItemBatterySlot>
+}
+
+/** StructureLiquidValve. Entry point: LiquidValves. */
+class LiquidValve : TypedDevice {
+  val Maximum: Double
+  var On: Boolean
+  val Ratio: Double
+  var Setting: Double
+}
+
+/** StructureLiquidVolumePump. Entry point: LiquidVolumePumps. */
+class LiquidVolumePump : TypedDevice {
+  val Error: Boolean
+  var Lock: Boolean
+  val Maximum: Double
+  var On: Boolean
+  val Power: Boolean
+  val Ratio: Double
+  val RequiredPower: Double
+  var Setting: Double
+}
+
+/** StructureLockerSmall. Entry point: LockerSmalls. */
+class LockerSmall : TypedDevice {
+  var Lock: Boolean
+  var Open: Boolean
+  val slots: Slots<DataDiskSlot>
+}
+
+/** StructureLogicBatchReader. Entry point: LogicBatchReaders. */
+class LogicBatchReader : TypedDevice {
+  val Error: Boolean
+  var On: Boolean
+  val Power: Boolean
+  val RequiredPower: Double
+  val Setting: Double
+}
+
+/** StructureLogicBatchSlotReader. Entry point: LogicBatchSlotReaders. */
+class LogicBatchSlotReader : TypedDevice {
+  val Error: Boolean
+  var On: Boolean
+  val Power: Boolean
+  val RequiredPower: Double
+  val Setting: Double
+}
+
+/** StructureLogicBatchWriter. Entry point: LogicBatchWriters. */
+class LogicBatchWriter : TypedDevice {
+  val Error: Boolean
+  var ForceWrite: Boolean
+  var On: Boolean
+  val Power: Boolean
+  val RequiredPower: Double
+}
+
+/** StructureLogicButton. Entry point: LogicButtons. */
+class LogicButton : TypedDevice {
+  var Activate: Boolean
+  var Lock: Boolean
+  val Setting: Double
+}
+
+/** StructureLogicCompare. Entry point: LogicCompares. */
+class LogicCompare : TypedDevice {
+  val Error: Boolean
+  var Mode: Double
+  var On: Boolean
+  val Power: Boolean
+  val RequiredPower: Double
+  val Setting: Double
+}
+
+/** StructureLogicDial. Entry point: LogicDials. */
+class LogicDial : TypedDevice {
+  var Mode: Double
+  val Ratio: Double
+  var Setting: Double
+}
+
+/** StructureLogicGate. Entry point: LogicGates. */
+class LogicGate : TypedDevice {
+  val Error: Boolean
+  var Mode: Double
+  var On: Boolean
+  val Power: Boolean
+  val RequiredPower: Double
+  val Setting: Double
+}
+
+/** StructureLogicHashGen. Entry point: LogicHashGens. */
+class LogicHashGen : TypedDevice {
+  val Setting: Double
+}
+
+/** StructureLogicMath. Entry point: LogicMaths. */
+class LogicMath : TypedDevice {
+  val Error: Boolean
+  var Mode: Double
+  var On: Boolean
+  val Power: Boolean
+  val RequiredPower: Double
+  val Setting: Double
+}
+
+/** StructureLogicMathUnary. Entry point: LogicMathUnaries. */
+class LogicMathUnary : TypedDevice {
+  val Error: Boolean
+  var Mode: Double
+  var On: Boolean
+  val Power: Boolean
+  val RequiredPower: Double
+  val Setting: Double
+}
+
+/** StructureLogicMemory. Entry point: LogicMemories. */
+class LogicMemory : TypedDevice {
+  var Setting: Double
+}
+
+/** StructureLogicMinMax. Entry point: LogicMinMaxes. */
+class LogicMinMax : TypedDevice {
+  val Error: Boolean
+  var Mode: Double
+  var On: Boolean
+  val Power: Boolean
+  val RequiredPower: Double
+  val Setting: Double
+}
+
+/** StructureLogicPidController. Entry point: LogicPidControllers. */
+class LogicPidController : TypedDevice {
+  var DerivativeGain: Double
+  val Error: Boolean
+  var IntegralGain: Double
+  var Maximum: Double
+  var Minimum: Double
+  var On: Boolean
+  val Power: Boolean
+  var ProportionalGain: Double
+  val RequiredPower: Double
+  var Reset: Boolean
+  var Setpoint: Double
+  val Setting: Double
+}
+
+/** StructureLogicReader. Entry point: LogicReaders. */
+class LogicReader : TypedDevice {
+  val Error: Boolean
+  var On: Boolean
+  val Power: Boolean
+  val RequiredPower: Double
+  val Setting: Double
+}
+
+/** StructureLogicReagentReader. Entry point: LogicReagentReaders. */
+class LogicReagentReader : TypedDevice {
+  val Error: Boolean
+  var On: Boolean
+  val Power: Boolean
+  val RequiredPower: Double
+  val Setting: Double
+}
+
+/** StructureLogicRocketDownlink. Entry point: LogicRocketDownlinks. */
+class LogicRocketDownlink : TypedDevice {
+  val Power: Boolean
+  val RequiredPower: Double
+}
+
+/** StructureLogicRocketUplink. Entry point: LogicRocketUplinks. */
+class LogicRocketUplink : TypedDevice {
+  val Error: Boolean
+  var On: Boolean
+  val Power: Boolean
+  val RequiredPower: Double
+}
+
+/** StructureLogicSelect. Entry point: LogicSelects. */
+class LogicSelect : TypedDevice {
+  val Error: Boolean
+  var Mode: Double
+  var On: Boolean
+  val Power: Boolean
+  val RequiredPower: Double
+  val Setting: Double
+}
+
+/** StructureLogicSlotReader. Entry point: LogicSlotReaders. */
+class LogicSlotReader : TypedDevice {
+  val Error: Boolean
+  var On: Boolean
+  val Power: Boolean
+  val RequiredPower: Double
+  val Setting: Double
+}
+
+/** StructureLogicSorter. Entry point: LogicSorters. */
+class LogicSorter : TypedDevice {
+  var ClearMemory: Boolean
+  val Error: Boolean
+  val Export: DataDiskSlot
+  val Export2: DataDiskSlot
+  val ExportCount: Double
+  val Import: DataDiskSlot
+  val ImportCount: Double
+  var Lock: Boolean
+  var Mode: Double
+  var On: Boolean
+  val Power: Boolean
+  val RequiredPower: Double
+  val StackSize: Double
+  val slots: Slots<DataDiskSlot>
+}
+
+/** LogicStepSequencer8. Entry point: LogicStepSequencer8s. */
+class LogicStepSequencer8 : TypedDevice {
+  var Activate: Boolean
+  var Bpm: Double
+  val Error: Boolean
+  var Mode: Double
+  var On: Boolean
+  val Power: Boolean
+  val RequiredPower: Double
+  val SoundCartridge: DataDiskSlot
+  var Time: Double
+  val slots: Slots<DataDiskSlot>
+}
+
+/** StructureLogicSwitch. Entry point: LogicSwitches. */
+class LogicSwitch : TypedDevice {
+  var Lock: Boolean
+  var Open: Boolean
+  val Setting: Double
+}
+
+/** StructureLogicSwitch2. Entry point: LogicSwitch2s. */
+class LogicSwitch2 : TypedDevice {
+  var Lock: Boolean
+  var Open: Boolean
+  val Setting: Double
+}
+
+/** StructureLogicWriter. Entry point: LogicWriters. */
+class LogicWriter : TypedDevice {
+  val Error: Boolean
+  var ForceWrite: Boolean
+  var On: Boolean
+  val Power: Boolean
+  val RequiredPower: Double
+}
+
+/** StructureLogicWriterSwitch. Entry point: LogicWriterSwitches. */
+class LogicWriterSwitch : TypedDevice {
+  var Activate: Boolean
+  val Error: Boolean
+  var ForceWrite: Boolean
+  var On: Boolean
+  val Power: Boolean
+  val RequiredPower: Double
+}
+```
+
+### M
+
+```kotlin
+/** StructureManualFloorHatch. Entry point: ManualFloorHatches. */
+class ManualFloorHatch : TypedDevice {
+  val Idle: Boolean
+  var Lock: Boolean
+  var Open: Boolean
+  var Setting: Double
+}
+
+/** StructureManualHatch. Entry point: ManualHatches. */
+class ManualHatch : TypedDevice {
+  val Idle: Boolean
+  var Lock: Boolean
+  var Mode: Double
+  var On: Boolean
+  var Open: Boolean
+  val Power: Boolean
+  val RequiredPower: Double
+  var Setting: Double
+}
+
+/** StructureMediumConvectionRadiator. Entry point: MediumConvectionRadiators. */
+class MediumConvectionRadiator : TypedDevice {
+  val Maximum: Double
+  val Ratio: Double
+  var Setting: Double
+}
+
+/** StructureMediumConvectionRadiatorLiquid. Entry point: MediumConvectionRadiatorLiquids. */
+class MediumConvectionRadiatorLiquid : TypedDevice {
+  val Maximum: Double
+  val Ratio: Double
+  var Setting: Double
+}
+
+/** StructureMediumHangerDoor. Entry point: MediumHangerDoors. */
+class MediumHangerDoor : TypedDevice {
+  val Idle: Boolean
+  var Lock: Boolean
+  var Mode: Double
+  var On: Boolean
+  var Open: Boolean
+  val Power: Boolean
+  val RequiredPower: Double
+  var Setting: Double
+}
+
+/** StructureMediumRadiator. Entry point: MediumRadiators. */
+class MediumRadiator : TypedDevice {
+  val Maximum: Double
+  val Ratio: Double
+  var Setting: Double
+}
+
+/** StructureMediumRadiatorLiquid. Entry point: MediumRadiatorLiquids. */
+class MediumRadiatorLiquid : TypedDevice {
+  val Maximum: Double
+  val Ratio: Double
+  var Setting: Double
+}
+
+/** StructureMediumRocketGasFuelTank. Entry point: MediumRocketGasFuelTanks. */
+class MediumRocketGasFuelTank : TypedDevice {
+  val Combustion: Boolean
+  val CombustionOutput: Double
+  val Maximum: Double
+  val Pressure: Double
+  val PressureOutput: Double
+  val Ratio: Double
+  val RatioCarbonDioxide: Double
+  val RatioCarbonDioxideOutput: Double
+  val RatioHelium: Double
+  val RatioHeliumOutput: Double
+  val RatioHydrazine: Double
+  val RatioHydrazineOutput: Double
+  val RatioHydrochloricAcid: Double
+  val RatioHydrochloricAcidOutput: Double
+  val RatioHydrogen: Double
+  val RatioHydrogenOutput: Double
+  val RatioLiquidAlcohol: Double
+  val RatioLiquidAlcoholOutput: Double
+  val RatioLiquidCarbonDioxide: Double
+  val RatioLiquidHydrazine: Double
+  val RatioLiquidHydrazineOutput: Double
+  val RatioLiquidHydrochloricAcid: Double
+  val RatioLiquidHydrochloricAcidOutput: Double
+  val RatioLiquidHydrogen: Double
+  val RatioLiquidHydrogenOutput: Double
+  val RatioLiquidMethane: Double
+  val RatioLiquidNitrogen: Double
+  val RatioLiquidNitrousOxide: Double
+  val RatioLiquidOxygen: Double
+  val RatioLiquidOzone: Double
+  val RatioLiquidOzoneOutput: Double
+  val RatioLiquidPollutant: Double
+  val RatioLiquidSilanol: Double
+  val RatioLiquidSilanolOutput: Double
+  val RatioLiquidSodiumChloride: Double
+  val RatioLiquidSodiumChlorideOutput: Double
+  val RatioMethane: Double
+  val RatioMethaneOutput: Double
+  val RatioNitrogen: Double
+  val RatioNitrogenOutput: Double
+  val RatioNitrousOxide: Double
+  val RatioNitrousOxideOutput: Double
+  val RatioOxygen: Double
+  val RatioOxygenOutput: Double
+  val RatioOzone: Double
+  val RatioOzoneOutput: Double
+  val RatioPollutant: Double
+  val RatioPollutantOutput: Double
+  val RatioPollutedWater: Double
+  val RatioPollutedWaterOutput: Double
+  val RatioSilanol: Double
+  val RatioSilanolOutput: Double
+  val RatioSteam: Double
+  val RatioWater: Double
+  val RatioWaterOutput: Double
+  var Setting: Double
+  val Temperature: Double
+  val TemperatureOutput: Double
+  val TotalMoles: Double
+  val TotalMolesOutput: Double
+  val Volume: Double
+  val VolumeOfLiquid: Double
+}
+
+/** StructureMediumRocketLiquidFuelTank. Entry point: MediumRocketLiquidFuelTanks. */
+class MediumRocketLiquidFuelTank : TypedDevice {
+  val Combustion: Boolean
+  val CombustionOutput: Double
+  val Maximum: Double
+  val Pressure: Double
+  val PressureOutput: Double
+  val Ratio: Double
+  val RatioCarbonDioxide: Double
+  val RatioCarbonDioxideOutput: Double
+  val RatioHelium: Double
+  val RatioHeliumOutput: Double
+  val RatioHydrazine: Double
+  val RatioHydrazineOutput: Double
+  val RatioHydrochloricAcid: Double
+  val RatioHydrochloricAcidOutput: Double
+  val RatioHydrogen: Double
+  val RatioHydrogenOutput: Double
+  val RatioLiquidAlcohol: Double
+  val RatioLiquidAlcoholOutput: Double
+  val RatioLiquidCarbonDioxide: Double
+  val RatioLiquidHydrazine: Double
+  val RatioLiquidHydrazineOutput: Double
+  val RatioLiquidHydrochloricAcid: Double
+  val RatioLiquidHydrochloricAcidOutput: Double
+  val RatioLiquidHydrogen: Double
+  val RatioLiquidHydrogenOutput: Double
+  val RatioLiquidMethane: Double
+  val RatioLiquidNitrogen: Double
+  val RatioLiquidNitrousOxide: Double
+  val RatioLiquidOxygen: Double
+  val RatioLiquidOzone: Double
+  val RatioLiquidOzoneOutput: Double
+  val RatioLiquidPollutant: Double
+  val RatioLiquidSilanol: Double
+  val RatioLiquidSilanolOutput: Double
+  val RatioLiquidSodiumChloride: Double
+  val RatioLiquidSodiumChlorideOutput: Double
+  val RatioMethane: Double
+  val RatioMethaneOutput: Double
+  val RatioNitrogen: Double
+  val RatioNitrogenOutput: Double
+  val RatioNitrousOxide: Double
+  val RatioNitrousOxideOutput: Double
+  val RatioOxygen: Double
+  val RatioOxygenOutput: Double
+  val RatioOzone: Double
+  val RatioOzoneOutput: Double
+  val RatioPollutant: Double
+  val RatioPollutantOutput: Double
+  val RatioPollutedWater: Double
+  val RatioPollutedWaterOutput: Double
+  val RatioSilanol: Double
+  val RatioSilanolOutput: Double
+  val RatioSteam: Double
+  val RatioWater: Double
+  val RatioWaterOutput: Double
+  var Setting: Double
+  val Temperature: Double
+  val TemperatureOutput: Double
+  val TotalMoles: Double
+  val TotalMolesOutput: Double
+  val Volume: Double
+  val VolumeOfLiquid: Double
+}
+
+/** ItemMiningDrill. Entry point: MiningDrills. */
+class MiningDrill : TypedDevice {
+  var Activate: Boolean
+  val Battery: ItemBatterySlot
+  val Error: Boolean
+  var Mode: Double
+  var On: Boolean
+  val Power: Boolean
+  val slots: Slots<ItemBatterySlot>
+}
+
+/** ItemMiningDrillHeavy. Entry point: MiningDrillHeavies. */
+class MiningDrillHeavy : TypedDevice {
+  var Activate: Boolean
+  val Battery: ItemBatterySlot
+  val Error: Boolean
+  var Mode: Double
+  var On: Boolean
+  val Power: Boolean
+  val slots: Slots<ItemBatterySlot>
+}
+
+/** ItemMKIIAngleGrinder. Entry point: MKIIAngleGrinders. */
+class MKIIAngleGrinder : TypedDevice {
+  var Activate: Boolean
+  val Battery: ItemBatterySlot
+  val Power: Boolean
+  val slots: Slots<ItemBatterySlot>
+}
+
+/** ItemMKIIArcWelder. Entry point: MKIIArcWelders. */
+class MKIIArcWelder : TypedDevice {
+  var Activate: Boolean
+  val Battery: ItemBatterySlot
+  val Power: Boolean
+  val slots: Slots<ItemBatterySlot>
+}
+
+/** ItemMKIIDrill. Entry point: MKIIDrills. */
+class MKIIDrill : TypedDevice {
+  var Activate: Boolean
+  val Battery: ItemBatterySlot
+  val Power: Boolean
+  val slots: Slots<ItemBatterySlot>
+}
+
+/** ItemMKIIMiningDrill. Entry point: MKIIMiningDrills. */
+class MKIIMiningDrill : TypedDevice {
+  var Activate: Boolean
+  val Battery: ItemBatterySlot
+  val Error: Boolean
+  var Mode: Double
+  var On: Boolean
+  val Power: Boolean
+  val slots: Slots<ItemBatterySlot>
+}
+
+/** StructureMotionSensor. Entry point: MotionSensors. */
+class MotionSensor : TypedDevice {
+  var Activate: Boolean
+  var On: Boolean
+  val Quantity: Double
+}
+```
+
+### N
+
+```kotlin
+/** StructureNitrolyzer. Entry point: Nitrolyzers. */
+class Nitrolyzer : TypedDevice {
+  var Activate: Boolean
+  val Combustion: Boolean
+  val CombustionInput: Double
+  val CombustionInput2: Double
+  val CombustionOutput: Double
+  val Error: Boolean
+  val Maximum: Double
+  var Mode: Double
+  var On: Boolean
+  var Open: Boolean
+  val Power: Boolean
+  val Pressure: Double
+  val PressureInput: Double
+  val PressureInput2: Double
+  val PressureOutput: Double
+  val ProgrammableChip: DataDiskSlot
+  val Ratio: Double
+  val RatioCarbonDioxide: Double
+  val RatioCarbonDioxideInput: Double
+  val RatioCarbonDioxideInput2: Double
+  val RatioCarbonDioxideOutput: Double
+  val RatioHelium: Double
+  val RatioHeliumInput: Double
+  val RatioHeliumInput2: Double
+  val RatioHeliumOutput: Double
+  val RatioHydrazine: Double
+  val RatioHydrazineInput: Double
+  val RatioHydrazineInput2: Double
+  val RatioHydrazineOutput: Double
+  val RatioHydrochloricAcid: Double
+  val RatioHydrochloricAcidInput: Double
+  val RatioHydrochloricAcidInput2: Double
+  val RatioHydrochloricAcidOutput: Double
+  val RatioHydrogen: Double
+  val RatioHydrogenInput: Double
+  val RatioHydrogenInput2: Double
+  val RatioHydrogenOutput: Double
+  val RatioLiquidAlcohol: Double
+  val RatioLiquidAlcoholInput: Double
+  val RatioLiquidAlcoholInput2: Double
+  val RatioLiquidAlcoholOutput: Double
+  val RatioLiquidCarbonDioxide: Double
+  val RatioLiquidCarbonDioxideInput: Double
+  val RatioLiquidCarbonDioxideInput2: Double
+  val RatioLiquidCarbonDioxideOutput: Double
+  val RatioLiquidHydrazine: Double
+  val RatioLiquidHydrazineInput: Double
+  val RatioLiquidHydrazineInput2: Double
+  val RatioLiquidHydrazineOutput: Double
+  val RatioLiquidHydrochloricAcid: Double
+  val RatioLiquidHydrochloricAcidInput: Double
+  val RatioLiquidHydrochloricAcidInput2: Double
+  val RatioLiquidHydrochloricAcidOutput: Double
+  val RatioLiquidHydrogen: Double
+  val RatioLiquidHydrogenInput: Double
+  val RatioLiquidHydrogenInput2: Double
+  val RatioLiquidHydrogenOutput: Double
+  val RatioLiquidMethane: Double
+  val RatioLiquidMethaneInput: Double
+  val RatioLiquidMethaneInput2: Double
+  val RatioLiquidMethaneOutput: Double
+  val RatioLiquidNitrogen: Double
+  val RatioLiquidNitrogenInput: Double
+  val RatioLiquidNitrogenInput2: Double
+  val RatioLiquidNitrogenOutput: Double
+  val RatioLiquidNitrousOxide: Double
+  val RatioLiquidNitrousOxideInput: Double
+  val RatioLiquidNitrousOxideInput2: Double
+  val RatioLiquidNitrousOxideOutput: Double
+  val RatioLiquidOxygen: Double
+  val RatioLiquidOxygenInput: Double
+  val RatioLiquidOxygenInput2: Double
+  val RatioLiquidOxygenOutput: Double
+  val RatioLiquidOzone: Double
+  val RatioLiquidOzoneInput: Double
+  val RatioLiquidOzoneInput2: Double
+  val RatioLiquidOzoneOutput: Double
+  val RatioLiquidPollutant: Double
+  val RatioLiquidPollutantInput: Double
+  val RatioLiquidPollutantInput2: Double
+  val RatioLiquidPollutantOutput: Double
+  val RatioLiquidSilanol: Double
+  val RatioLiquidSilanolInput: Double
+  val RatioLiquidSilanolInput2: Double
+  val RatioLiquidSilanolOutput: Double
+  val RatioLiquidSodiumChloride: Double
+  val RatioLiquidSodiumChlorideInput: Double
+  val RatioLiquidSodiumChlorideInput2: Double
+  val RatioLiquidSodiumChlorideOutput: Double
+  val RatioMethane: Double
+  val RatioMethaneInput: Double
+  val RatioMethaneInput2: Double
+  val RatioMethaneOutput: Double
+  val RatioNitrogen: Double
+  val RatioNitrogenInput: Double
+  val RatioNitrogenInput2: Double
+  val RatioNitrogenOutput: Double
+  val RatioNitrousOxide: Double
+  val RatioNitrousOxideInput: Double
+  val RatioNitrousOxideInput2: Double
+  val RatioNitrousOxideOutput: Double
+  val RatioOxygen: Double
+  val RatioOxygenInput: Double
+  val RatioOxygenInput2: Double
+  val RatioOxygenOutput: Double
+  val RatioOzone: Double
+  val RatioOzoneInput: Double
+  val RatioOzoneInput2: Double
+  val RatioOzoneOutput: Double
+  val RatioPollutant: Double
+  val RatioPollutantInput: Double
+  val RatioPollutantInput2: Double
+  val RatioPollutantOutput: Double
+  val RatioPollutedWater: Double
+  val RatioPollutedWaterInput: Double
+  val RatioPollutedWaterInput2: Double
+  val RatioPollutedWaterOutput: Double
+  val RatioSilanol: Double
+  val RatioSilanolInput: Double
+  val RatioSilanolInput2: Double
+  val RatioSilanolOutput: Double
+  val RatioSteam: Double
+  val RatioSteamInput: Double
+  val RatioSteamInput2: Double
+  val RatioSteamOutput: Double
+  val RatioWater: Double
+  val RatioWaterInput: Double
+  val RatioWaterInput2: Double
+  val RatioWaterOutput: Double
+  val RequiredPower: Double
+  var Setting: Double
+  val Temperature: Double
+  val TemperatureInput: Double
+  val TemperatureInput2: Double
+  val TemperatureOutput: Double
+  val TotalMoles: Double
+  val TotalMolesInput: Double
+  val TotalMolesInput2: Double
+  val TotalMolesOutput: Double
+  val slots: Slots<DataDiskSlot>
+}
+
+/** ItemNVG. Entry point: NVGs. */
+class NVG : TypedDevice {
+  val Battery: ItemBatterySlot
+  var Lock: Boolean
+  var On: Boolean
+  val Power: Boolean
+  val slots: Slots<ItemBatterySlot>
+}
+```
+
+### O
+
+```kotlin
+/** StructureOccupancySensor. Entry point: OccupancySensors. */
+class OccupancySensor : TypedDevice {
+  val Activate: Boolean
+  val Quantity: Double
+  val StackSize: Double
+}
+
+/** ItemOreDetector. Entry point: OreDetectors. */
+class OreDetector : TypedDevice {
+  val Battery: ItemBatterySlot
+  val Error: Boolean
+  var Mode: Double
+  var On: Boolean
+  val Power: Boolean
+  val slots: Slots<ItemBatterySlot>
+}
+
+/** StructureOverheadShortCornerLocker. Entry point: OverheadShortCornerLockers. */
+class OverheadShortCornerLocker : TypedDevice {
+  var Lock: Boolean
+  var Open: Boolean
+  val slots: Slots<DataDiskSlot>
+}
+
+/** StructureOverheadShortLocker. Entry point: OverheadShortLockers. */
+class OverheadShortLocker : TypedDevice {
+  var Lock: Boolean
+  var Open: Boolean
+  val slots: Slots<DataDiskSlot>
+}
+```
+
+### P
+
+```kotlin
+/** StructurePacker. Entry point: Packers. */
+class Packer : TypedDevice {
+  val Error: Boolean
+  val Export: DataDiskSlot
+  var Lock: Boolean
+  var Mode: Double
+  var On: Boolean
+  var Open: Boolean
+  val Payload: DataDiskSlot
+  val Power: Boolean
+  val Recipient: DataDiskSlot
+  val RequiredPower: Double
+  val slots: Slots<DataDiskSlot>
+}
+
+/** StructurePassiveLargeRadiatorGas. Entry point: PassiveLargeRadiatorGases. */
+class PassiveLargeRadiatorGas : TypedDevice {
+  val Maximum: Double
+  val Ratio: Double
+  var Setting: Double
+}
+
+/** StructurePassiveLargeRadiatorLiquid. Entry point: PassiveLargeRadiatorLiquids. */
+class PassiveLargeRadiatorLiquid : TypedDevice {
+  val Maximum: Double
+  val Ratio: Double
+  var Setting: Double
+}
+
+/** PassiveSpeaker. Entry point: PassiveSpeakers. */
+class PassiveSpeaker : TypedDevice {
+  var SoundAlert: Double
+  var Volume: Double
+}
+
+/** StructurePassthroughHeatExchangerGasToGas. Entry point: PassthroughHeatExchangerGasToGases. */
+class PassthroughHeatExchangerGasToGas : TypedDevice {
+  val Maximum: Double
+  val Ratio: Double
+  var Setting: Double
+}
+
+/** StructurePassthroughHeatExchangerGasToLiquid. Entry point: PassthroughHeatExchangerGasToLiquids. */
+class PassthroughHeatExchangerGasToLiquid : TypedDevice {
+  val Maximum: Double
+  val Ratio: Double
+  var Setting: Double
+}
+
+/** StructurePassthroughHeatExchangerLiquidToLiquid. Entry point: PassthroughHeatExchangerLiquidToLiquids. */
+class PassthroughHeatExchangerLiquidToLiquid : TypedDevice {
+  val Maximum: Double
+  val Ratio: Double
+  var Setting: Double
+}
+
+/** StructurePipeAnalysizer. Entry point: PipeAnalysizers. */
+class PipeAnalysizer : TypedDevice {
+  val Combustion: Boolean
+  val Error: Boolean
+  var Lock: Boolean
+  val NetworkFault: Boolean
+  var On: Boolean
+  val Power: Boolean
+  val Pressure: Double
+  val RatioCarbonDioxide: Double
+  val RatioHelium: Double
+  val RatioHydrazine: Double
+  val RatioHydrochloricAcid: Double
+  val RatioHydrogen: Double
+  val RatioLiquidAlcohol: Double
+  val RatioLiquidCarbonDioxide: Double
+  val RatioLiquidHydrazine: Double
+  val RatioLiquidHydrochloricAcid: Double
+  val RatioLiquidHydrogen: Double
+  val RatioLiquidMethane: Double
+  val RatioLiquidNitrogen: Double
+  val RatioLiquidNitrousOxide: Double
+  val RatioLiquidOxygen: Double
+  val RatioLiquidOzone: Double
+  val RatioLiquidPollutant: Double
+  val RatioLiquidSilanol: Double
+  val RatioLiquidSodiumChloride: Double
+  val RatioMethane: Double
+  val RatioNitrogen: Double
+  val RatioNitrousOxide: Double
+  val RatioOxygen: Double
+  val RatioOzone: Double
+  val RatioPollutant: Double
+  val RatioPollutedWater: Double
+  val RatioSilanol: Double
+  val RatioSteam: Double
+  val RatioWater: Double
+  val RequiredPower: Double
+  val Temperature: Double
+  val TotalMoles: Double
+  val Volume: Double
+  val VolumeOfLiquid: Double
+}
+
+/** StructurePipeHeater. Entry point: PipeHeaters. */
+class PipeHeater : TypedDevice {
+  val Error: Boolean
+  var Lock: Boolean
+  var On: Boolean
+  val Power: Boolean
+  val RequiredPower: Double
+}
+
+/** StructurePipeIgniter. Entry point: PipeIgniters. */
+class PipeIgniter : TypedDevice {
+  var Activate: Boolean
+  val Error: Boolean
+  val Power: Boolean
+  val RequiredPower: Double
+}
+
+/** StructurePipeLiquidOneWayValveLever. Entry point: PipeLiquidOneWayValveLevers. */
+class PipeLiquidOneWayValveLever : TypedDevice {
+  val Maximum: Double
+  var On: Boolean
+  val Ratio: Double
+  var Setting: Double
+}
+
+/** StructurePipeOneWayValveLever. Entry point: PipeOneWayValveLevers. */
+class PipeOneWayValveLever : TypedDevice {
+  val Maximum: Double
+  var On: Boolean
+  val Ratio: Double
+  var Setting: Double
+}
+
+/** ItemPlantSampler. Entry point: PlantSamplers. */
+class PlantSampler : TypedDevice {
+  var Activate: Boolean
+  val Battery: ItemBatterySlot
+  var Mode: Double
+  var On: Boolean
+  val Power: Boolean
+  val slots: Slots<ItemBatterySlot>
+}
+
+/** StructurePortablesConnector. Entry point: PortablesConnectors. */
+class PortablesConnector : TypedDevice {
+  val Maximum: Double
+  var Open: Boolean
+  val PortableSlot: DataDiskSlot
+  val Ratio: Double
+  var Setting: Double
+  val slots: Slots<DataDiskSlot>
+}
+
+/** PortableSolarPanel. Entry point: PortableSolarPanels. */
+class PortableSolarPanel : TypedDevice {
+  val Battery: ItemBatterySlot
+  var Open: Boolean
+  val slots: Slots<ItemBatterySlot>
+}
+
+/** StructurePowerConnector. Entry point: PowerConnectors. */
+class PowerConnector : TypedDevice {
+  var Open: Boolean
+  val Portableslot: DataDiskSlot
+  val slots: Slots<DataDiskSlot>
+}
+
+/** StructurePoweredVent. Entry point: PoweredVents. */
+class PoweredVent : TypedDevice {
+  val CombustionOutput: Double
+  val Error: Boolean
+  var Lock: Boolean
+  var Mode: Double
+  var On: Boolean
+  val Power: Boolean
+  var PressureExternal: Double
+  val PressureOutput: Double
+  val RatioCarbonDioxideOutput: Double
+  val RatioHeliumOutput: Double
+  val RatioHydrazineOutput: Double
+  val RatioHydrochloricAcidOutput: Double
+  val RatioHydrogenOutput: Double
+  val RatioLiquidAlcoholOutput: Double
+  val RatioLiquidHydrazineOutput: Double
+  val RatioLiquidHydrochloricAcidOutput: Double
+  val RatioLiquidHydrogenOutput: Double
+  val RatioLiquidOzoneOutput: Double
+  val RatioLiquidSilanolOutput: Double
+  val RatioLiquidSodiumChlorideOutput: Double
+  val RatioMethaneOutput: Double
+  val RatioNitrogenOutput: Double
+  val RatioNitrousOxideOutput: Double
+  val RatioOxygenOutput: Double
+  val RatioOzoneOutput: Double
+  val RatioPollutantOutput: Double
+  val RatioPollutedWaterOutput: Double
+  val RatioSilanolOutput: Double
+  val RatioWaterOutput: Double
+  val RequiredPower: Double
+  val TemperatureOutput: Double
+  val TotalMolesOutput: Double
+}
+
+/** StructurePoweredVentLarge. Entry point: PoweredVentLarges. */
+class PoweredVentLarge : TypedDevice {
+  val CombustionOutput: Double
+  val Error: Boolean
+  var Lock: Boolean
+  var Mode: Double
+  var On: Boolean
+  val Power: Boolean
+  var PressureExternal: Double
+  val PressureOutput: Double
+  val RatioCarbonDioxideOutput: Double
+  val RatioHeliumOutput: Double
+  val RatioHydrazineOutput: Double
+  val RatioHydrochloricAcidOutput: Double
+  val RatioHydrogenOutput: Double
+  val RatioLiquidAlcoholOutput: Double
+  val RatioLiquidHydrazineOutput: Double
+  val RatioLiquidHydrochloricAcidOutput: Double
+  val RatioLiquidHydrogenOutput: Double
+  val RatioLiquidOzoneOutput: Double
+  val RatioLiquidSilanolOutput: Double
+  val RatioLiquidSodiumChlorideOutput: Double
+  val RatioMethaneOutput: Double
+  val RatioNitrogenOutput: Double
+  val RatioNitrousOxideOutput: Double
+  val RatioOxygenOutput: Double
+  val RatioOzoneOutput: Double
+  val RatioPollutantOutput: Double
+  val RatioPollutedWaterOutput: Double
+  val RatioSilanolOutput: Double
+  val RatioWaterOutput: Double
+  val RequiredPower: Double
+  val TemperatureOutput: Double
+  val TotalMolesOutput: Double
+}
+
+/** StructurePowerTransmitter. Entry point: PowerTransmitters. */
+class PowerTransmitter : TypedDevice {
+  val Charge: Double
+  val Error: Boolean
+  var Horizontal: Double
+  val Mode: Double
+  var On: Boolean
+  val PositionX: Double
+  val PositionY: Double
+  val PositionZ: Double
+  val Power: Boolean
+  val PowerActual: Double
+  val PowerPotential: Double
+  val RequiredPower: Double
+  var Vertical: Double
+}
+
+/** StructurePowerTransmitterOmni. Entry point: PowerTransmitterOmnis. */
+class PowerTransmitterOmni : TypedDevice {
+  val Error: Boolean
+  var On: Boolean
+  val Power: Boolean
+  val RequiredPower: Double
+}
+
+/** StructurePowerTransmitterReceiver. Entry point: PowerTransmitterReceivers. */
+class PowerTransmitterReceiver : TypedDevice {
+  val Charge: Double
+  val Error: Boolean
+  var Horizontal: Double
+  val Mode: Double
+  var On: Boolean
+  val PositionX: Double
+  val PositionY: Double
+  val PositionZ: Double
+  val Power: Boolean
+  val PowerActual: Double
+  val PowerPotential: Double
+  val RequiredPower: Double
+  var Vertical: Double
+}
+
+/** StructurePowerUmbilicalMale. Entry point: PowerUmbilicalMales. */
+class PowerUmbilicalMale : TypedDevice {
+  val Error: Boolean
+  var Lock: Boolean
+  val Mode: Double
+  var On: Boolean
+  var Open: Boolean
+  val Power: Boolean
+  val RequiredPower: Double
+}
+
+/** StructurePressurantValve. Entry point: PressurantValves. */
+class PressurantValve : TypedDevice {
+  val Error: Boolean
+  var Lock: Boolean
+  val Maximum: Double
+  var On: Boolean
+  val Power: Boolean
+  val Ratio: Double
+  val RequiredPower: Double
+  var Setting: Double
+}
+
+/** StructurePressureFedGasEngine. Entry point: PressureFedGasEngines. */
+class PressureFedGasEngine : TypedDevice {
+  val Combustion: Boolean
+  val Error: Boolean
+  var On: Boolean
+  val PassedMoles: Double
+  val Power: Boolean
+  val Pressure: Double
+  val RatioCarbonDioxide: Double
+  val RatioHelium: Double
+  val RatioHydrazine: Double
+  val RatioHydrochloricAcid: Double
+  val RatioHydrogen: Double
+  val RatioLiquidAlcohol: Double
+  val RatioLiquidCarbonDioxide: Double
+  val RatioLiquidHydrazine: Double
+  val RatioLiquidHydrochloricAcid: Double
+  val RatioLiquidHydrogen: Double
+  val RatioLiquidMethane: Double
+  val RatioLiquidNitrogen: Double
+  val RatioLiquidNitrousOxide: Double
+  val RatioLiquidOxygen: Double
+  val RatioLiquidOzone: Double
+  val RatioLiquidPollutant: Double
+  val RatioLiquidSilanol: Double
+  val RatioLiquidSodiumChloride: Double
+  val RatioMethane: Double
+  val RatioNitrogen: Double
+  val RatioNitrousOxide: Double
+  val RatioOxygen: Double
+  val RatioOzone: Double
+  val RatioPollutant: Double
+  val RatioPollutedWater: Double
+  val RatioSilanol: Double
+  val RatioSteam: Double
+  val RatioWater: Double
+  val RequiredPower: Double
+  val Temperature: Double
+  var Throttle: Double
+  val TotalMoles: Double
+}
+
+/** StructurePressureFedGasEngineHeavy. Entry point: PressureFedGasEngineHeavies. */
+class PressureFedGasEngineHeavy : TypedDevice {
+  val Combustion: Boolean
+  val Error: Boolean
+  var On: Boolean
+  val PassedMoles: Double
+  val Power: Boolean
+  val Pressure: Double
+  val RatioCarbonDioxide: Double
+  val RatioHelium: Double
+  val RatioHydrazine: Double
+  val RatioHydrochloricAcid: Double
+  val RatioHydrogen: Double
+  val RatioLiquidAlcohol: Double
+  val RatioLiquidCarbonDioxide: Double
+  val RatioLiquidHydrazine: Double
+  val RatioLiquidHydrochloricAcid: Double
+  val RatioLiquidHydrogen: Double
+  val RatioLiquidMethane: Double
+  val RatioLiquidNitrogen: Double
+  val RatioLiquidNitrousOxide: Double
+  val RatioLiquidOxygen: Double
+  val RatioLiquidOzone: Double
+  val RatioLiquidPollutant: Double
+  val RatioLiquidSilanol: Double
+  val RatioLiquidSodiumChloride: Double
+  val RatioMethane: Double
+  val RatioNitrogen: Double
+  val RatioNitrousOxide: Double
+  val RatioOxygen: Double
+  val RatioOzone: Double
+  val RatioPollutant: Double
+  val RatioPollutedWater: Double
+  val RatioSilanol: Double
+  val RatioSteam: Double
+  val RatioWater: Double
+  val RequiredPower: Double
+  val Temperature: Double
+  var Throttle: Double
+  val TotalMoles: Double
+}
+
+/** StructurePressureFedLiquidEngine. Entry point: PressureFedLiquidEngines. */
+class PressureFedLiquidEngine : TypedDevice {
+  val Combustion: Boolean
+  val Error: Boolean
+  val Maximum: Double
+  var On: Boolean
+  val PassedMoles: Double
+  val Power: Boolean
+  val Pressure: Double
+  val Ratio: Double
+  val RatioCarbonDioxide: Double
+  val RatioHelium: Double
+  val RatioHydrazine: Double
+  val RatioHydrochloricAcid: Double
+  val RatioHydrogen: Double
+  val RatioLiquidAlcohol: Double
+  val RatioLiquidCarbonDioxide: Double
+  val RatioLiquidHydrazine: Double
+  val RatioLiquidHydrochloricAcid: Double
+  val RatioLiquidHydrogen: Double
+  val RatioLiquidMethane: Double
+  val RatioLiquidNitrogen: Double
+  val RatioLiquidNitrousOxide: Double
+  val RatioLiquidOxygen: Double
+  val RatioLiquidOzone: Double
+  val RatioLiquidPollutant: Double
+  val RatioLiquidSilanol: Double
+  val RatioLiquidSodiumChloride: Double
+  val RatioMethane: Double
+  val RatioNitrogen: Double
+  val RatioNitrousOxide: Double
+  val RatioOxygen: Double
+  val RatioOzone: Double
+  val RatioPollutant: Double
+  val RatioPollutedWater: Double
+  val RatioSilanol: Double
+  val RatioSteam: Double
+  val RatioWater: Double
+  val RequiredPower: Double
+  var Setting: Double
+  val Temperature: Double
+  var Throttle: Double
+  val TotalMoles: Double
+}
+
+/** StructurePressureFedLiquidEngineHeavy. Entry point: PressureFedLiquidEngineHeavies. */
+class PressureFedLiquidEngineHeavy : TypedDevice {
+  val Combustion: Boolean
+  val Error: Boolean
+  val Maximum: Double
+  var On: Boolean
+  val PassedMoles: Double
+  val Power: Boolean
+  val Pressure: Double
+  val Ratio: Double
+  val RatioCarbonDioxide: Double
+  val RatioHelium: Double
+  val RatioHydrazine: Double
+  val RatioHydrochloricAcid: Double
+  val RatioHydrogen: Double
+  val RatioLiquidAlcohol: Double
+  val RatioLiquidCarbonDioxide: Double
+  val RatioLiquidHydrazine: Double
+  val RatioLiquidHydrochloricAcid: Double
+  val RatioLiquidHydrogen: Double
+  val RatioLiquidMethane: Double
+  val RatioLiquidNitrogen: Double
+  val RatioLiquidNitrousOxide: Double
+  val RatioLiquidOxygen: Double
+  val RatioLiquidOzone: Double
+  val RatioLiquidPollutant: Double
+  val RatioLiquidSilanol: Double
+  val RatioLiquidSodiumChloride: Double
+  val RatioMethane: Double
+  val RatioNitrogen: Double
+  val RatioNitrousOxide: Double
+  val RatioOxygen: Double
+  val RatioOzone: Double
+  val RatioPollutant: Double
+  val RatioPollutedWater: Double
+  val RatioSilanol: Double
+  val RatioSteam: Double
+  val RatioWater: Double
+  val RequiredPower: Double
+  var Setting: Double
+  val Temperature: Double
+  var Throttle: Double
+  val TotalMoles: Double
+}
+
+/** StructurePressurePlateLarge. Entry point: PressurePlateLarges. */
+class PressurePlateLarge : TypedDevice {
+  val Setting: Double
+}
+
+/** StructurePressurePlateMedium. Entry point: PressurePlateMediums. */
+class PressurePlateMedium : TypedDevice {
+  val Setting: Double
+}
+
+/** StructurePressurePlateSmall. Entry point: PressurePlateSmalls. */
+class PressurePlateSmall : TypedDevice {
+  val Setting: Double
+}
+
+/** StructurePressureRegulator. Entry point: PressureRegulators. */
+class PressureRegulator : TypedDevice {
+  val Error: Boolean
+  var Lock: Boolean
+  val Maximum: Double
+  var On: Boolean
+  val Power: Boolean
+  val Ratio: Double
+  val RequiredPower: Double
+  var Setting: Double
+}
+
+/** StructureProximitySensor. Entry point: ProximitySensors. */
+class ProximitySensor : TypedDevice {
+  val Activate: Boolean
+  val Quantity: Double
+  var Setting: Double
+}
+
+/** StructurePumpedLiquidEngine. Entry point: PumpedLiquidEngines. */
+class PumpedLiquidEngine : TypedDevice {
+  val Combustion: Boolean
+  val Error: Boolean
+  val Maximum: Double
+  var On: Boolean
+  val PassedMoles: Double
+  val Power: Boolean
+  val Pressure: Double
+  val Ratio: Double
+  val RatioCarbonDioxide: Double
+  val RatioHelium: Double
+  val RatioHydrazine: Double
+  val RatioHydrochloricAcid: Double
+  val RatioHydrogen: Double
+  val RatioLiquidAlcohol: Double
+  val RatioLiquidCarbonDioxide: Double
+  val RatioLiquidHydrazine: Double
+  val RatioLiquidHydrochloricAcid: Double
+  val RatioLiquidHydrogen: Double
+  val RatioLiquidMethane: Double
+  val RatioLiquidNitrogen: Double
+  val RatioLiquidNitrousOxide: Double
+  val RatioLiquidOxygen: Double
+  val RatioLiquidOzone: Double
+  val RatioLiquidPollutant: Double
+  val RatioLiquidSilanol: Double
+  val RatioLiquidSodiumChloride: Double
+  val RatioMethane: Double
+  val RatioNitrogen: Double
+  val RatioNitrousOxide: Double
+  val RatioOxygen: Double
+  val RatioOzone: Double
+  val RatioPollutant: Double
+  val RatioPollutedWater: Double
+  val RatioSilanol: Double
+  val RatioSteam: Double
+  val RatioWater: Double
+  val RequiredPower: Double
+  var Setting: Double
+  val Temperature: Double
+  var Throttle: Double
+  val TotalMoles: Double
+}
+
+/** StructurePurgeValve. Entry point: PurgeValves. */
+class PurgeValve : TypedDevice {
+  val Error: Boolean
+  var Lock: Boolean
+  val Maximum: Double
+  var On: Boolean
+  val Power: Boolean
+  val Ratio: Double
+  val RequiredPower: Double
+  var Setting: Double
+}
+```
+
+### R
+
+```kotlin
+/** StructureRecycler. Entry point: Recyclers. */
+class Recycler : TypedDevice {
+  var Activate: Boolean
+  var ClearMemory: Boolean
+  val Error: Boolean
+  val Export: DataDiskSlot
+  val ExportCount: Double
+  val Import: DataDiskSlot
+  val ImportCount: Double
+  var On: Boolean
+  val Power: Boolean
+  val Reagents: Double
+  val RequiredPower: Double
+  val slots: Slots<DataDiskSlot>
+}
+
+/** StructureRefrigeratedVendingMachine. Entry point: RefrigeratedVendingMachines. */
+class RefrigeratedVendingMachine : TypedDevice {
+  var Activate: Boolean
+  var ClearMemory: Boolean
+  val Combustion: Boolean
+  val Error: Boolean
+  val Export: DataDiskSlot
+  val ExportCount: Double
+  val Import: DataDiskSlot
+  val ImportCount: Double
+  var Lock: Boolean
+  var On: Boolean
+  val Power: Boolean
+  val Pressure: Double
+  val Quantity: Double
+  val Ratio: Double
+  val RatioCarbonDioxide: Double
+  val RatioHelium: Double
+  val RatioHydrazine: Double
+  val RatioHydrochloricAcid: Double
+  val RatioHydrogen: Double
+  val RatioLiquidAlcohol: Double
+  val RatioLiquidCarbonDioxide: Double
+  val RatioLiquidHydrazine: Double
+  val RatioLiquidHydrochloricAcid: Double
+  val RatioLiquidHydrogen: Double
+  val RatioLiquidMethane: Double
+  val RatioLiquidNitrogen: Double
+  val RatioLiquidNitrousOxide: Double
+  val RatioLiquidOxygen: Double
+  val RatioLiquidOzone: Double
+  val RatioLiquidPollutant: Double
+  val RatioLiquidSilanol: Double
+  val RatioLiquidSodiumChloride: Double
+  val RatioMethane: Double
+  val RatioNitrogen: Double
+  val RatioNitrousOxide: Double
+  val RatioOxygen: Double
+  val RatioOzone: Double
+  val RatioPollutant: Double
+  val RatioPollutedWater: Double
+  val RatioSilanol: Double
+  val RatioSteam: Double
+  val RatioWater: Double
+  var RequestHash: Double
+  val RequiredPower: Double
+  var Setting: Double
+  val TargetPrefabHash: Double
+  val TargetSlotIndex: Double
+  val Temperature: Double
+  val TotalMoles: Double
+  val slots: Slots<DataDiskSlot>
+}
+
+/** ItemRemoteDetonator. Entry point: RemoteDetonators. */
+class RemoteDetonator : TypedDevice {
+  var Activate: Boolean
+  val Battery: ItemBatterySlot
+  val Error: Boolean
+  var Lock: Boolean
+  var Mode: Double
+  var On: Boolean
+  val Power: Boolean
+  val slots: Slots<ItemBatterySlot>
+}
+
+/** Robot. Entry point: Robots. */
+class Robot : TypedDevice {
+  val Battery: ItemBatterySlot
+  val Error: Boolean
+  val ForwardX: Double
+  val ForwardY: Double
+  val ForwardZ: Double
+  val MineablesInQueue: Double
+  val MineablesInVicinity: Double
+  var Mode: Double
+  var On: Boolean
+  val Orientation: Double
+  val PositionX: Double
+  val PositionY: Double
+  val PositionZ: Double
+  val Power: Boolean
+  val PressureExternal: Double
+  val ProgrammableChip: ItemCommonSlot
+  var TargetX: Double
+  var TargetY: Double
+  var TargetZ: Double
+  val TemperatureExternal: Double
+  val VelocityMagnitude: Double
+  val VelocityRelativeX: Double
+  val VelocityRelativeY: Double
+  val VelocityRelativeZ: Double
+  val VelocityX: Double
+  val VelocityY: Double
+  val VelocityZ: Double
+  val slots: Slots<ItemCommonSlot>
+}
+
+/** StructureRobotArmDoor. Entry point: RobotArmDoors. */
+class RobotArmDoor : TypedDevice {
+  var Open: Boolean
+  val Power: Boolean
+  val RequiredPower: Double
+}
+
+/** StructureRoboticArmDock. Entry point: RoboticArmDocks. */
+class RoboticArmDock : TypedDevice {
+  var Activate: Boolean
+  val ArmSlot: DataDiskSlot
+  val Error: Boolean
+  val Extended: Double
+  val Idle: Boolean
+  var On: Boolean
+  val PositionX: Double
+  val Power: Boolean
+  val RequiredPower: Double
+  var Setting: Double
+  val slots: Slots<DataDiskSlot>
+}
+
+/** StructureRocketAvionics. Entry point: RocketAvionicses. */
+class RocketAvionics : TypedDevice {
+  val Acceleration: Double
+  val Altitude: Double
+  val Apex: Double
+  var AutoLand: Boolean
+  var AutoShutOff: Boolean
+  val BurnTimeRemaining: Double
+  val Chart: Double
+  val ChartedNavPoints: Double
+  val CurrentCode: Double
+  val Density: Double
+  var DestinationCode: Double
+  val Discover: Double
+  val DryMass: Double
+  val Error: Boolean
+  val FlightControlRule: Double
+  val Mass: Double
+  val MinedQuantity: Double
+  var Mode: Double
+  val NavPoints: Double
+  var On: Boolean
+  val Power: Boolean
+  val Progress: Double
+  val Quantity: Double
+  val RatioCarbonDioxide: Double
+  val RatioHelium: Double
+  val RatioHydrazine: Double
+  val RatioHydrochloricAcid: Double
+  val RatioHydrogen: Double
+  val RatioLiquidAlcohol: Double
+  val RatioLiquidCarbonDioxide: Double
+  val RatioLiquidHydrazine: Double
+  val RatioLiquidHydrochloricAcid: Double
+  val RatioLiquidHydrogen: Double
+  val RatioLiquidMethane: Double
+  val RatioLiquidNitrogen: Double
+  val RatioLiquidNitrousOxide: Double
+  val RatioLiquidOxygen: Double
+  val RatioLiquidOzone: Double
+  val RatioLiquidPollutant: Double
+  val RatioLiquidSilanol: Double
+  val RatioLiquidSodiumChloride: Double
+  val RatioMethane: Double
+  val RatioNitrogen: Double
+  val RatioNitrousOxide: Double
+  val RatioOxygen: Double
+  val RatioOzone: Double
+  val RatioPollutant: Double
+  val RatioPollutedWater: Double
+  val RatioSilanol: Double
+  val RatioSteam: Double
+  val RatioWater: Double
+  val ReEntryAltitude: Double
+  val Reagents: Double
+  val RequiredPower: Double
+  val Richness: Double
+  val Sites: Double
+  val Size: Double
+  val StackSize: Double
+  val Survey: Double
+  val Temperature: Double
+  val Thrust: Double
+  val ThrustToWeight: Double
+  val TimeToDestination: Double
+  val TotalMoles: Double
+  val TotalQuantity: Double
+  val VelocityRelativeY: Double
+  val Weight: Double
+}
+
+/** StructureRocketCelestialTracker. Entry point: RocketCelestialTrackers. */
+class RocketCelestialTracker : TypedDevice {
+  val CelestialHash: Double
+  val Error: Boolean
+  val Horizontal: Double
+  var Index: Double
+  var On: Boolean
+  val Power: Boolean
+  val RequiredPower: Double
+  val StackSize: Double
+  val Vertical: Double
+}
+
+/** StructureRocketCircuitHousing. Entry point: RocketCircuitHousings. */
+class RocketCircuitHousing : TypedDevice {
+  val Error: Boolean
+  var LineNumber: Double
+  var Mode: Double
+  var On: Boolean
+  val Power: Boolean
+  val ProgrammableChip: ProgrammableChipSlot
+  val RequiredPower: Double
+  var Setting: Double
+  val StackSize: Double
+  val slots: Slots<ProgrammableChipSlot>
+}
+
+/** StructureRocketEngineTiny. Entry point: RocketEngineTinies. */
+class RocketEngineTiny : TypedDevice {
+  val CombustionOutput: Double
+  val Error: Boolean
+  var Lock: Boolean
+  val Maximum: Double
+  var On: Boolean
+  val Power: Boolean
+  val PressureOutput: Double
+  val Ratio: Double
+  val RatioCarbonDioxideOutput: Double
+  val RatioHeliumOutput: Double
+  val RatioHydrazineOutput: Double
+  val RatioHydrochloricAcidOutput: Double
+  val RatioHydrogenOutput: Double
+  val RatioLiquidAlcoholOutput: Double
+  val RatioLiquidHydrazineOutput: Double
+  val RatioLiquidHydrochloricAcidOutput: Double
+  val RatioLiquidHydrogenOutput: Double
+  val RatioLiquidOzoneOutput: Double
+  val RatioLiquidSilanolOutput: Double
+  val RatioLiquidSodiumChlorideOutput: Double
+  val RatioMethaneOutput: Double
+  val RatioNitrogenOutput: Double
+  val RatioNitrousOxideOutput: Double
+  val RatioOxygenOutput: Double
+  val RatioOzoneOutput: Double
+  val RatioPollutantOutput: Double
+  val RatioPollutedWaterOutput: Double
+  val RatioSilanolOutput: Double
+  val RatioWaterOutput: Double
+  val RequiredPower: Double
+  var Setting: Double
+  val TemperatureOutput: Double
+  val TotalMolesOutput: Double
+}
+
+/** StructureRocketFiltrationGas. Entry point: RocketFiltrationGases. */
+class RocketFiltrationGas : TypedDevice {
+  val CombustionInput: Double
+  val CombustionOutput: Double
+  val CombustionOutput2: Double
+  val Error: Boolean
+  val GasFilter: FilterSlot
+  var Lock: Boolean
+  val Maximum: Double
+  var Mode: Double
+  var On: Boolean
+  val Power: Boolean
+  val PressureInput: Double
+  val PressureOutput: Double
+  val PressureOutput2: Double
+  val Ratio: Double
+  val RatioCarbonDioxideInput: Double
+  val RatioCarbonDioxideOutput: Double
+  val RatioCarbonDioxideOutput2: Double
+  val RatioHeliumInput: Double
+  val RatioHeliumOutput: Double
+  val RatioHeliumOutput2: Double
+  val RatioHydrazineInput: Double
+  val RatioHydrazineOutput: Double
+  val RatioHydrazineOutput2: Double
+  val RatioHydrochloricAcidInput: Double
+  val RatioHydrochloricAcidOutput: Double
+  val RatioHydrochloricAcidOutput2: Double
+  val RatioHydrogenInput: Double
+  val RatioHydrogenOutput: Double
+  val RatioHydrogenOutput2: Double
+  val RatioLiquidAlcoholInput: Double
+  val RatioLiquidAlcoholOutput: Double
+  val RatioLiquidAlcoholOutput2: Double
+  val RatioLiquidCarbonDioxideInput: Double
+  val RatioLiquidCarbonDioxideOutput: Double
+  val RatioLiquidCarbonDioxideOutput2: Double
+  val RatioLiquidHydrazineInput: Double
+  val RatioLiquidHydrazineOutput: Double
+  val RatioLiquidHydrazineOutput2: Double
+  val RatioLiquidHydrochloricAcidInput: Double
+  val RatioLiquidHydrochloricAcidOutput: Double
+  val RatioLiquidHydrochloricAcidOutput2: Double
+  val RatioLiquidHydrogenInput: Double
+  val RatioLiquidHydrogenOutput: Double
+  val RatioLiquidHydrogenOutput2: Double
+  val RatioLiquidMethaneInput: Double
+  val RatioLiquidMethaneOutput: Double
+  val RatioLiquidMethaneOutput2: Double
+  val RatioLiquidNitrogenInput: Double
+  val RatioLiquidNitrogenOutput: Double
+  val RatioLiquidNitrogenOutput2: Double
+  val RatioLiquidNitrousOxideInput: Double
+  val RatioLiquidNitrousOxideOutput: Double
+  val RatioLiquidNitrousOxideOutput2: Double
+  val RatioLiquidOxygenInput: Double
+  val RatioLiquidOxygenOutput: Double
+  val RatioLiquidOxygenOutput2: Double
+  val RatioLiquidOzoneInput: Double
+  val RatioLiquidOzoneOutput: Double
+  val RatioLiquidOzoneOutput2: Double
+  val RatioLiquidPollutantInput: Double
+  val RatioLiquidPollutantOutput: Double
+  val RatioLiquidPollutantOutput2: Double
+  val RatioLiquidSilanolInput: Double
+  val RatioLiquidSilanolOutput: Double
+  val RatioLiquidSilanolOutput2: Double
+  val RatioLiquidSodiumChlorideInput: Double
+  val RatioLiquidSodiumChlorideOutput: Double
+  val RatioLiquidSodiumChlorideOutput2: Double
+  val RatioMethaneInput: Double
+  val RatioMethaneOutput: Double
+  val RatioMethaneOutput2: Double
+  val RatioNitrogenInput: Double
+  val RatioNitrogenOutput: Double
+  val RatioNitrogenOutput2: Double
+  val RatioNitrousOxideInput: Double
+  val RatioNitrousOxideOutput: Double
+  val RatioNitrousOxideOutput2: Double
+  val RatioOxygenInput: Double
+  val RatioOxygenOutput: Double
+  val RatioOxygenOutput2: Double
+  val RatioOzoneInput: Double
+  val RatioOzoneOutput: Double
+  val RatioOzoneOutput2: Double
+  val RatioPollutantInput: Double
+  val RatioPollutantOutput: Double
+  val RatioPollutantOutput2: Double
+  val RatioPollutedWaterInput: Double
+  val RatioPollutedWaterOutput: Double
+  val RatioPollutedWaterOutput2: Double
+  val RatioSilanolInput: Double
+  val RatioSilanolOutput: Double
+  val RatioSilanolOutput2: Double
+  val RatioSteamInput: Double
+  val RatioSteamOutput: Double
+  val RatioSteamOutput2: Double
+  val RatioWaterInput: Double
+  val RatioWaterOutput: Double
+  val RatioWaterOutput2: Double
+  val RequiredPower: Double
+  var Setting: Double
+  val TemperatureInput: Double
+  val TemperatureOutput: Double
+  val TemperatureOutput2: Double
+  val TotalMolesInput: Double
+  val TotalMolesOutput: Double
+  val TotalMolesOutput2: Double
+  val slots: Slots<FilterSlot>
+}
+
+/** StructureRocketGasCollector. Entry point: RocketGasCollectors. */
+class RocketGasCollector : TypedDevice {
+  val Combustion: Boolean
+  var Lock: Boolean
+  var On: Boolean
+  val Power: Boolean
+  val Pressure: Double
+  val RatioCarbonDioxide: Double
+  val RatioHelium: Double
+  val RatioHydrazine: Double
+  val RatioHydrochloricAcid: Double
+  val RatioHydrogen: Double
+  val RatioLiquidAlcohol: Double
+  val RatioLiquidCarbonDioxide: Double
+  val RatioLiquidHydrazine: Double
+  val RatioLiquidHydrochloricAcid: Double
+  val RatioLiquidHydrogen: Double
+  val RatioLiquidMethane: Double
+  val RatioLiquidNitrogen: Double
+  val RatioLiquidNitrousOxide: Double
+  val RatioLiquidOxygen: Double
+  val RatioLiquidOzone: Double
+  val RatioLiquidPollutant: Double
+  val RatioLiquidSilanol: Double
+  val RatioLiquidSodiumChloride: Double
+  val RatioMethane: Double
+  val RatioNitrogen: Double
+  val RatioNitrousOxide: Double
+  val RatioOxygen: Double
+  val RatioOzone: Double
+  val RatioPollutant: Double
+  val RatioPollutedWater: Double
+  val RatioSilanol: Double
+  val RatioSteam: Double
+  val RatioWater: Double
+  val RequiredPower: Double
+  val Temperature: Double
+  val TotalMoles: Double
+}
+
+/** StructureRocketManufactory. Entry point: RocketManufactories. */
+class RocketManufactory : TypedDevice {
+  var Activate: Boolean
+  var ClearMemory: Boolean
+  val CompletionRatio: Double
+  val Error: Boolean
+  val Export: DataDiskSlot
+  val ExportCount: Double
+  val Import: DataDiskSlot
+  val ImportCount: Double
+  var Lock: Boolean
+  var On: Boolean
+  var Open: Boolean
+  val Power: Boolean
+  val Reagents: Double
+  var RecipeHash: Double
+  val RequiredPower: Double
+  val StackSize: Double
+  val slots: Slots<DataDiskSlot>
+}
+
+/** StructureRocketMiner. Entry point: RocketMiners. */
+class RocketMiner : TypedDevice {
+  var ClearMemory: Boolean
+  val DrillCondition: Double
+  val DrillHeadSlot: DataDiskSlot
+  val Error: Boolean
+  val Export: DataDiskSlot
+  val ExportCount: Double
+  val ImportCount: Double
+  var Lock: Boolean
+  var On: Boolean
+  val Power: Boolean
+  val Quantity: Double
+  val RequiredPower: Double
+  val slots: Slots<DataDiskSlot>
+}
+
+/** StructureRocketScanner. Entry point: RocketScanners. */
+class RocketScanner : TypedDevice {
+  val Error: Boolean
+  var Lock: Boolean
+  var On: Boolean
+  val Power: Boolean
+  val RequiredPower: Double
+  val ScannerHeadSlot: DataDiskSlot
+  val slots: Slots<DataDiskSlot>
+}
+
+/** StructureRocketTransformerSmall. Entry point: RocketTransformerSmalls. */
+class RocketTransformerSmall : TypedDevice {
+  val Error: Boolean
+  var Lock: Boolean
+  val Maximum: Double
+  var On: Boolean
+  val Power: Boolean
+  val Ratio: Double
+  val RequiredPower: Double
+  var Setting: Double
+}
+
+/** Rover_MkI. Entry point: Rover_MkIs. */
+class Rover_MkI : TypedDevice {
+  var On: Boolean
+  val Power: Boolean
+  val slots: Slots<ItemCommonSlot>
+}
+```
+
+### S
+
+```kotlin
+/** StructureSatelliteDish. Entry point: SatelliteDishes. */
+class SatelliteDish : TypedDevice {
+  var Activate: Boolean
+  var BestContactFilter: Double
+  val ContactSlotIndex: Double
+  val ContactTypeId: Double
+  val Error: Boolean
+  var Horizontal: Double
+  val Idle: Boolean
+  val InterrogationProgress: Double
+  val MinimumWattsToContact: Double
+  var On: Boolean
+  val Power: Boolean
+  val RequiredPower: Double
+  var Setting: Double
+  val SignalID: Double
+  val SignalStrength: Double
+  val SizeX: Double
+  val SizeZ: Double
+  val StackSize: Double
+  var TargetPadIndex: Double
+  var Vertical: Double
+  val WattsReachingContact: Double
+}
+
+/** StructureSDBHopper. Entry point: SDBHoppers. */
+class SDBHopper : TypedDevice {
+  var ClearMemory: Boolean
+  val Import: DataDiskSlot
+  val ImportCount: Double
+  var Open: Boolean
+  val slots: Slots<DataDiskSlot>
+}
+
+/** StructureSDBHopperAdvanced. Entry point: SDBHopperAdvanceds. */
+class SDBHopperAdvanced : TypedDevice {
+  var ClearMemory: Boolean
+  val Import: DataDiskSlot
+  val ImportCount: Double
+  var Lock: Boolean
+  var Open: Boolean
+  val slots: Slots<DataDiskSlot>
+}
+
+/** StructureSDBSilo. Entry point: SDBSilos. */
+class SDBSilo : TypedDevice {
+  var Activate: Boolean
+  var ClearMemory: Boolean
+  val Error: Boolean
+  val Export: DataDiskSlot
+  val ExportCount: Double
+  val Import: DataDiskSlot
+  val ImportCount: Double
+  var Lock: Boolean
+  var Mode: Double
+  var On: Boolean
+  var Open: Boolean
+  val Power: Boolean
+  val Quantity: Double
+  val RequiredPower: Double
+  val slots: Slots<DataDiskSlot>
+}
+
+/** StructureSecurityPrinter. Entry point: SecurityPrinters. */
+class SecurityPrinter : TypedDevice {
+  var Activate: Boolean
+  var ClearMemory: Boolean
+  val CompletionRatio: Double
+  val Error: Boolean
+  val Export: DataDiskSlot
+  val ExportCount: Double
+  val Import: DataDiskSlot
+  val ImportCount: Double
+  var Lock: Boolean
+  var On: Boolean
+  var Open: Boolean
+  val Power: Boolean
+  val Reagents: Double
+  var RecipeHash: Double
+  val RequiredPower: Double
+  val StackSize: Double
+  val slots: Slots<DataDiskSlot>
+}
+
+/** ItemSensorLenses. Entry point: SensorLenseses. */
+class SensorLenses : TypedDevice {
+  val Battery: ItemBatterySlot
+  var On: Boolean
+  val Power: Boolean
+  val SensorProcessingUnit: ItemCommonSlot
+  val slots: Slots<ItemCommonSlot>
+}
+
+/** StructureShelfMedium. Entry point: ShelfMediums. */
+class ShelfMedium : TypedDevice {
+  var Open: Boolean
+  val slots: Slots<DataDiskSlot>
+}
+
+/** StructureShortCornerLocker. Entry point: ShortCornerLockers. */
+class ShortCornerLocker : TypedDevice {
+  var Lock: Boolean
+  var Open: Boolean
+  val slots: Slots<DataDiskSlot>
+}
+
+/** StructureShortLocker. Entry point: ShortLockers. */
+class ShortLocker : TypedDevice {
+  var Lock: Boolean
+  var Open: Boolean
+  val slots: Slots<DataDiskSlot>
+}
+
+/** StructureShower. Entry point: Showers. */
+class Shower : TypedDevice {
+  var Activate: Boolean
+  val Maximum: Double
+  var Open: Boolean
+  val Ratio: Double
+  var Setting: Double
+}
+
+/** StructureShowerPowered. Entry point: ShowerPowereds. */
+class ShowerPowered : TypedDevice {
+  val Error: Boolean
+  var On: Boolean
+  var Open: Boolean
+  val Power: Boolean
+  val RequiredPower: Double
+}
+
+/** StructureSleeper. Entry point: Sleepers. */
+class Sleeper : TypedDevice {
+  var Activate: Boolean
+  val Bed: DataDiskSlot
+  val EntityState: Double
+  val Error: Boolean
+  var Lock: Boolean
+  val Maximum: Double
+  var On: Boolean
+  var Open: Boolean
+  val Power: Boolean
+  val Ratio: Double
+  val RequiredPower: Double
+  var Setting: Double
+  val slots: Slots<DataDiskSlot>
+}
+
+/** StructureSleeperLeft. Entry point: SleeperLefts. */
+class SleeperLeft : TypedDevice {
+  var Activate: Boolean
+  val EntityState: Double
+  val Error: Boolean
+  var Lock: Boolean
+  val Maximum: Double
+  var Mode: Double
+  var On: Boolean
+  var Open: Boolean
+  val Player: DataDiskSlot
+  val Power: Boolean
+  val Ratio: Double
+  val RequiredPower: Double
+  var Setting: Double
+  val slots: Slots<DataDiskSlot>
+}
+
+/** StructureSleeperRight. Entry point: SleeperRights. */
+class SleeperRight : TypedDevice {
+  var Activate: Boolean
+  val EntityState: Double
+  val Error: Boolean
+  var Lock: Boolean
+  val Maximum: Double
+  var Mode: Double
+  var On: Boolean
+  var Open: Boolean
+  val Player: DataDiskSlot
+  val Power: Boolean
+  val Ratio: Double
+  val RequiredPower: Double
+  var Setting: Double
+  val slots: Slots<DataDiskSlot>
+}
+
+/** StructureSleeperVertical. Entry point: SleeperVerticals. */
+class SleeperVertical : TypedDevice {
+  var Activate: Boolean
+  val EntityState: Double
+  val Error: Boolean
+  var Lock: Boolean
+  val Maximum: Double
+  var Mode: Double
+  var On: Boolean
+  var Open: Boolean
+  val Player: DataDiskSlot
+  val Power: Boolean
+  val Ratio: Double
+  val RequiredPower: Double
+  var Setting: Double
+  val slots: Slots<DataDiskSlot>
+}
+
+/** StructureSleeperVerticalDroid. Entry point: SleeperVerticalDroids. */
+class SleeperVerticalDroid : TypedDevice {
+  var Activate: Boolean
+  val Error: Boolean
+  var Lock: Boolean
+  var On: Boolean
+  var Open: Boolean
+  val Player: DataDiskSlot
+  val Power: Boolean
+  val RequiredPower: Double
+  val slots: Slots<DataDiskSlot>
+}
+
+/** StructureSmallDirectHeatExchangeGastoGas. Entry point: SmallDirectHeatExchangeGastoGases. */
+class SmallDirectHeatExchangeGastoGas : TypedDevice {
+  val Maximum: Double
+  val Ratio: Double
+  var Setting: Double
+}
+
+/** StructureSmallDirectHeatExchangeLiquidtoGas. Entry point: SmallDirectHeatExchangeLiquidtoGases. */
+class SmallDirectHeatExchangeLiquidtoGas : TypedDevice {
+  val Maximum: Double
+  val Ratio: Double
+  var Setting: Double
+}
+
+/** StructureSmallDirectHeatExchangeLiquidtoLiquid. Entry point: SmallDirectHeatExchangeLiquidtoLiquids. */
+class SmallDirectHeatExchangeLiquidtoLiquid : TypedDevice {
+  val Maximum: Double
+  val Ratio: Double
+  var Setting: Double
+}
+
+/** StructureSmallSatelliteDish. Entry point: SmallSatelliteDishes. */
+class SmallSatelliteDish : TypedDevice {
+  var Activate: Boolean
+  var BestContactFilter: Double
+  val ContactSlotIndex: Double
+  val ContactTypeId: Double
+  val Error: Boolean
+  var Horizontal: Double
+  val Idle: Boolean
+  val InterrogationProgress: Double
+  val MinimumWattsToContact: Double
+  var On: Boolean
+  val Power: Boolean
+  val RequiredPower: Double
+  var Setting: Double
+  val SignalID: Double
+  val SignalStrength: Double
+  val SizeX: Double
+  val SizeZ: Double
+  var TargetPadIndex: Double
+  var Vertical: Double
+  val WattsReachingContact: Double
+}
+
+/** StructureSolarPanel. Entry point: SolarPanels. */
+class SolarPanel : TypedDevice {
+  val Charge: Double
+  var Horizontal: Double
+  val Maximum: Double
+  val Ratio: Double
+  var Vertical: Double
+}
+
+/** StructureSolarPanel45. Entry point: SolarPanel45s. */
+class SolarPanel45 : TypedDevice {
+  val Charge: Double
+  var Horizontal: Double
+  val Maximum: Double
+  val Ratio: Double
+  var Vertical: Double
+}
+
+/** StructureSolarPanel45Reinforced. Entry point: SolarPanel45Reinforceds. */
+class SolarPanel45Reinforced : TypedDevice {
+  val Charge: Double
+  var Horizontal: Double
+  val Maximum: Double
+  val Ratio: Double
+  var Vertical: Double
+}
+
+/** StructureSolarPanelDual. Entry point: SolarPanelDuals. */
+class SolarPanelDual : TypedDevice {
+  val Charge: Double
+  var Horizontal: Double
+  val Maximum: Double
+  val Ratio: Double
+  var Vertical: Double
+}
+
+/** StructureSolarPanelDualReinforced. Entry point: SolarPanelDualReinforceds. */
+class SolarPanelDualReinforced : TypedDevice {
+  val Charge: Double
+  var Horizontal: Double
+  val Maximum: Double
+  val Ratio: Double
+  var Vertical: Double
+}
+
+/** StructureSolarPanelFlat. Entry point: SolarPanelFlats. */
+class SolarPanelFlat : TypedDevice {
+  val Charge: Double
+  var Horizontal: Double
+  val Maximum: Double
+  val Ratio: Double
+  var Vertical: Double
+}
+
+/** StructureSolarPanelFlatReinforced. Entry point: SolarPanelFlatReinforceds. */
+class SolarPanelFlatReinforced : TypedDevice {
+  val Charge: Double
+  var Horizontal: Double
+  val Maximum: Double
+  val Ratio: Double
+  var Vertical: Double
+}
+
+/** StructureSolarPanelReinforced. Entry point: SolarPanelReinforceds. */
+class SolarPanelReinforced : TypedDevice {
+  val Charge: Double
+  var Horizontal: Double
+  val Maximum: Double
+  val Ratio: Double
+  var Vertical: Double
+}
+
+/** StructureSolidFuelGenerator. Entry point: SolidFuelGenerators. */
+class SolidFuelGenerator : TypedDevice {
+  var ClearMemory: Boolean
+  val ImportCount: Double
+  val Input: DataDiskSlot
+  var Lock: Boolean
+  var On: Boolean
+  val PowerGeneration: Double
+  val slots: Slots<DataDiskSlot>
+}
+
+/** StructureSorter. Entry point: Sorters. */
+class Sorter : TypedDevice {
+  var ClearMemory: Boolean
+  val Error: Boolean
+  val Export: DataDiskSlot
+  val Export2: DataDiskSlot
+  val ExportCount: Double
+  val Import: DataDiskSlot
+  val ImportCount: Double
+  var Lock: Boolean
+  var Mode: Double
+  var On: Boolean
+  var Output: Double
+  val Power: Boolean
+  val RequiredPower: Double
+  val slots: Slots<DataDiskSlot>
+}
+
+/** ItemSpaceHelmet. Entry point: SpaceHelmets. */
+class SpaceHelmet : TypedDevice {
+  val Combustion: Boolean
+  var Flush: Boolean
+  var Lock: Boolean
+  var On: Boolean
+  var Open: Boolean
+  val Power: Boolean
+  val Pressure: Double
+  val RatioCarbonDioxide: Double
+  val RatioHelium: Double
+  val RatioHydrazine: Double
+  val RatioHydrochloricAcid: Double
+  val RatioHydrogen: Double
+  val RatioLiquidAlcohol: Double
+  val RatioLiquidCarbonDioxide: Double
+  val RatioLiquidHydrazine: Double
+  val RatioLiquidHydrochloricAcid: Double
+  val RatioLiquidHydrogen: Double
+  val RatioLiquidMethane: Double
+  val RatioLiquidNitrogen: Double
+  val RatioLiquidNitrousOxide: Double
+  val RatioLiquidOxygen: Double
+  val RatioLiquidOzone: Double
+  val RatioLiquidPollutant: Double
+  val RatioLiquidSilanol: Double
+  val RatioLiquidSodiumChloride: Double
+  val RatioMethane: Double
+  val RatioNitrogen: Double
+  val RatioNitrousOxide: Double
+  val RatioOxygen: Double
+  val RatioOzone: Double
+  val RatioPollutant: Double
+  val RatioPollutedWater: Double
+  val RatioSilanol: Double
+  val RatioSteam: Double
+  val RatioWater: Double
+  var SoundAlert: Double
+  val Temperature: Double
+  val TotalMoles: Double
+  var Volume: Double
+}
+
+/** ItemSpacepack. Entry point: Spacepacks. */
+class Spacepack : TypedDevice {
+  var Activate: Boolean
+  var On: Boolean
+  val Propellant: ItemAirTankSlot
+  val slots: Slots<ItemCommonSlot>
+}
+
+/** StructureStacker. Entry point: Stackers. */
+class Stacker : TypedDevice {
+  var Activate: Boolean
+  var ClearMemory: Boolean
+  val Error: Boolean
+  val Export: DataDiskSlot
+  val ExportCount: Double
+  val Import: DataDiskSlot
+  val ImportCount: Double
+  var Lock: Boolean
+  var Mode: Double
+  var On: Boolean
+  var Output: Double
+  val Power: Boolean
+  val Processing: DataDiskSlot
+  val RequiredPower: Double
+  var Setting: Double
+  val slots: Slots<DataDiskSlot>
+}
+
+/** StructureStackerReverse. Entry point: StackerReverses. */
+class StackerReverse : TypedDevice {
+  var Activate: Boolean
+  var ClearMemory: Boolean
+  val Error: Boolean
+  val Export: DataDiskSlot
+  val ExportCount: Double
+  val Import: DataDiskSlot
+  val ImportCount: Double
+  var Lock: Boolean
+  var Mode: Double
+  var On: Boolean
+  var Output: Double
+  val Power: Boolean
+  val Processing: DataDiskSlot
+  val RequiredPower: Double
+  var Setting: Double
+  val slots: Slots<DataDiskSlot>
+}
+
+/** StructureStirlingEngine. Entry point: StirlingEngines. */
+class StirlingEngine : TypedDevice {
+  val Combustion: Boolean
+  val EnvironmentEfficiency: Double
+  val Error: Boolean
+  val GasCanister: GasCanisterSlot
+  val Maximum: Double
+  var On: Boolean
+  val Power: Boolean
+  val PowerGeneration: Double
+  val Pressure: Double
+  val Quantity: Double
+  val Ratio: Double
+  val RatioCarbonDioxide: Double
+  val RatioHelium: Double
+  val RatioHydrazine: Double
+  val RatioHydrochloricAcid: Double
+  val RatioHydrogen: Double
+  val RatioLiquidAlcohol: Double
+  val RatioLiquidCarbonDioxide: Double
+  val RatioLiquidHydrazine: Double
+  val RatioLiquidHydrochloricAcid: Double
+  val RatioLiquidHydrogen: Double
+  val RatioLiquidMethane: Double
+  val RatioLiquidNitrogen: Double
+  val RatioLiquidNitrousOxide: Double
+  val RatioLiquidOxygen: Double
+  val RatioLiquidOzone: Double
+  val RatioLiquidPollutant: Double
+  val RatioLiquidSilanol: Double
+  val RatioLiquidSodiumChloride: Double
+  val RatioMethane: Double
+  val RatioNitrogen: Double
+  val RatioNitrousOxide: Double
+  val RatioOxygen: Double
+  val RatioOzone: Double
+  val RatioPollutant: Double
+  val RatioPollutedWater: Double
+  val RatioSilanol: Double
+  val RatioSteam: Double
+  val RatioWater: Double
+  val RequiredPower: Double
+  var Setting: Double
+  val Temperature: Double
+  val TotalMoles: Double
+  val Volume: Double
+  val WorkingGasEfficiency: Double
+  val slots: Slots<GasCanisterSlot>
+}
+
+/** StopWatch. Entry point: StopWatches. */
+class StopWatch : TypedDevice {
+  var Activate: Boolean
+  val Error: Boolean
+  var On: Boolean
+  val Power: Boolean
+  val RequiredPower: Double
+  val Time: Double
+}
+
+/** StructureStorageLocker. Entry point: StorageLockers. */
+class StorageLocker : TypedDevice {
+  var Lock: Boolean
+  var Open: Boolean
+  val slots: Slots<DataDiskSlot>
+}
+
+/** StructureBeacon. Entry point: StructureBeacons. */
+class StructureBeacon : TypedDevice {
+  var Color: Double
+  val Error: Boolean
+  var Lock: Boolean
+  var On: Boolean
+  val PositionX: Double
+  val PositionY: Double
+  val PositionZ: Double
+  val Power: Boolean
+  val RequiredPower: Double
+}
+
+/** ItemSuitHARM. Entry point: SuitHARMs. */
+class SuitHARM : TypedDevice {
+  var Activate: Boolean
+  var AirRelease: Double
+  val AirTank: ItemAirTankSlot
+  val Back: ItemCommonSlot
+  val Battery: ItemBatterySlot
+  val Chip: ItemCommonSlot
+  val Combustion: Boolean
+  val CoolantTank: ItemCommonSlot
+  val EntityState: Double
+  var Error: Boolean
+  val Filter1: ItemFilteredSlot
+  val Filter2: ItemFilteredSlot
+  val Filter3: ItemFilteredSlot
+  val Filter4: ItemFilteredSlot
+  var Filtration: Double
+  val ForwardX: Double
+  val ForwardY: Double
+  val ForwardZ: Double
+  var Lock: Boolean
+  var On: Boolean
+  val Orientation: Double
+  val PositionX: Double
+  val PositionY: Double
+  val PositionZ: Double
+  val Power: Boolean
+  val Pressure: Double
+  val PressureExternal: Double
+  var PressureSetting: Double
+  val RatioCarbonDioxide: Double
+  val RatioHelium: Double
+  val RatioHydrazine: Double
+  val RatioHydrochloricAcid: Double
+  val RatioHydrogen: Double
+  val RatioLiquidAlcohol: Double
+  val RatioLiquidCarbonDioxide: Double
+  val RatioLiquidHydrazine: Double
+  val RatioLiquidHydrochloricAcid: Double
+  val RatioLiquidHydrogen: Double
+  val RatioLiquidMethane: Double
+  val RatioLiquidNitrogen: Double
+  val RatioLiquidNitrousOxide: Double
+  val RatioLiquidOxygen: Double
+  val RatioLiquidOzone: Double
+  val RatioLiquidPollutant: Double
+  val RatioLiquidSilanol: Double
+  val RatioLiquidSodiumChloride: Double
+  val RatioMethane: Double
+  val RatioNitrogen: Double
+  val RatioNitrousOxide: Double
+  val RatioOxygen: Double
+  val RatioOzone: Double
+  val RatioPollutant: Double
+  val RatioPollutedWater: Double
+  val RatioSilanol: Double
+  val RatioSteam: Double
+  val RatioWater: Double
+  var Setting: Double
+  var SoundAlert: Double
+  val Temperature: Double
+  val TemperatureExternal: Double
+  var TemperatureSetting: Double
+  val TotalMoles: Double
+  val VelocityMagnitude: Double
+  val VelocityRelativeX: Double
+  val VelocityRelativeY: Double
+  val VelocityRelativeZ: Double
+  val VelocityX: Double
+  val VelocityY: Double
+  val VelocityZ: Double
+  var Volume: Double
+  val WasteTank: ItemAirTankSlot
+  val slots: Slots<ItemCommonSlot>
+}
+
+/** ItemSuitHelmetHARM. Entry point: SuitHelmetHARMs. */
+class SuitHelmetHARM : TypedDevice {
+  val Combustion: Boolean
+  var Flush: Boolean
+  var Lock: Boolean
+  var On: Boolean
+  var Open: Boolean
+  val Power: Boolean
+  val Pressure: Double
+  val RatioCarbonDioxide: Double
+  val RatioHelium: Double
+  val RatioHydrazine: Double
+  val RatioHydrochloricAcid: Double
+  val RatioHydrogen: Double
+  val RatioLiquidAlcohol: Double
+  val RatioLiquidCarbonDioxide: Double
+  val RatioLiquidHydrazine: Double
+  val RatioLiquidHydrochloricAcid: Double
+  val RatioLiquidHydrogen: Double
+  val RatioLiquidMethane: Double
+  val RatioLiquidNitrogen: Double
+  val RatioLiquidNitrousOxide: Double
+  val RatioLiquidOxygen: Double
+  val RatioLiquidOzone: Double
+  val RatioLiquidPollutant: Double
+  val RatioLiquidSilanol: Double
+  val RatioLiquidSodiumChloride: Double
+  val RatioMethane: Double
+  val RatioNitrogen: Double
+  val RatioNitrousOxide: Double
+  val RatioOxygen: Double
+  val RatioOzone: Double
+  val RatioPollutant: Double
+  val RatioPollutedWater: Double
+  val RatioSilanol: Double
+  val RatioSteam: Double
+  val RatioWater: Double
+  var SoundAlert: Double
+  val Temperature: Double
+  val TotalMoles: Double
+  var Volume: Double
+}
+
+/** StructureSuitStorage. Entry point: SuitStorages. */
+class SuitStorage : TypedDevice {
+  val Back: BackSlot
+  val Error: Boolean
+  val Helmet: HelmetSlot
+  val Maximum: Double
+  var On: Boolean
+  val Power: Boolean
+  val Ratio: Double
+  val RequiredPower: Double
+  var Setting: Double
+  val Suit: SuitSlot
+  val slots: Slots<CommonSlot>
+}
+
+/** StructureSuitStorageFrame. Entry point: SuitStorageFrames. */
+class SuitStorageFrame : TypedDevice {
+  val Back: BackSlot
+  val Error: Boolean
+  val Helmet: HelmetSlot
+  val Maximum: Double
+  var On: Boolean
+  val Power: Boolean
+  val Ratio: Double
+  val RequiredPower: Double
+  var Setting: Double
+  val Suit: SuitSlot
+  val slots: Slots<CommonSlot>
+}
+
+/** StructureSuitStorageLocker. Entry point: SuitStorageLockers. */
+class SuitStorageLocker : TypedDevice {
+  val Back: BackSlot
+  val Error: Boolean
+  val Helmet: HelmetSlot
+  val Maximum: Double
+  var On: Boolean
+  val Power: Boolean
+  val Ratio: Double
+  val RequiredPower: Double
+  var Setting: Double
+  val Suit: SuitSlot
+  val slots: Slots<CommonSlot>
+}
+
+/** StructureSuperLargeDirectHeatExchangeGastoGas. Entry point: SuperLargeDirectHeatExchangeGastoGases. */
+class SuperLargeDirectHeatExchangeGastoGas : TypedDevice {
+  val Maximum: Double
+  val Ratio: Double
+  var Setting: Double
+}
+
+/** StructureSuperLargeDirectHeatExchangeGastoLiquid. Entry point: SuperLargeDirectHeatExchangeGastoLiquids. */
+class SuperLargeDirectHeatExchangeGastoLiquid : TypedDevice {
+  val Maximum: Double
+  val Ratio: Double
+  var Setting: Double
+}
+
+/** StructureSuperLargeDirectHeatExchangeLiquidToLiquid. Entry point: SuperLargeDirectHeatExchangeLiquidToLiquids. */
+class SuperLargeDirectHeatExchangeLiquidToLiquid : TypedDevice {
+  val Maximum: Double
+  val Ratio: Double
+  var Setting: Double
+}
+```
+
+### T
+
+```kotlin
+/** ItemTablet. Entry point: Tablets. */
+class Tablet : TypedDevice {
+  val Battery: ItemBatterySlot
+  val Cartridge: ItemCommonSlot
+  val Error: Boolean
+  var On: Boolean
+  val Power: Boolean
+  val slots: Slots<ItemCommonSlot>
+}
+
+/** ItemTerrainManipulator. Entry point: TerrainManipulators. */
+class TerrainManipulator : TypedDevice {
+  var Activate: Boolean
+  val Battery: ItemBatterySlot
+  val DirtCanister: ItemCommonSlot
+  val Error: Boolean
+  var Mode: Double
+  var On: Boolean
+  val Power: Boolean
+  val slots: Slots<ItemCommonSlot>
+}
+
+/** StructureToolManufactory. Entry point: ToolManufactories. */
+class ToolManufactory : TypedDevice {
+  var Activate: Boolean
+  var ClearMemory: Boolean
+  val CompletionRatio: Double
+  val Error: Boolean
+  val Export: DataDiskSlot
+  val ExportCount: Double
+  val Import: DataDiskSlot
+  val ImportCount: Double
+  var Lock: Boolean
+  var On: Boolean
+  var Open: Boolean
+  val Power: Boolean
+  val Reagents: Double
+  var RecipeHash: Double
+  val RequiredPower: Double
+  val StackSize: Double
+  val slots: Slots<DataDiskSlot>
+}
+
+/** StructureTraderWaypoint. Entry point: TraderWaypoints. */
+class TraderWaypoint : TypedDevice {
+  val Error: Boolean
+  var On: Boolean
+  val Power: Boolean
+  val RequiredPower: Double
+}
+
+/** StructureTransformer. Entry point: Transformers. */
+class Transformer : TypedDevice {
+  val Error: Boolean
+  var Lock: Boolean
+  val Maximum: Double
+  var On: Boolean
+  val Power: Boolean
+  val Ratio: Double
+  val RequiredPower: Double
+  var Setting: Double
+}
+
+/** StructureTransformerMedium. Entry point: TransformerMediums. */
+class TransformerMedium : TypedDevice {
+  val Error: Boolean
+  var Lock: Boolean
+  val Maximum: Double
+  var On: Boolean
+  val Power: Boolean
+  val Ratio: Double
+  val RequiredPower: Double
+  var Setting: Double
+}
+
+/** StructureTransformerSmall. Entry point: TransformerSmalls. */
+class TransformerSmall : TypedDevice {
+  val Error: Boolean
+  var Lock: Boolean
+  val Maximum: Double
+  var On: Boolean
+  val Power: Boolean
+  val Ratio: Double
+  val RequiredPower: Double
+  var Setting: Double
+}
+
+/** StructureTransformerSmallReversed. Entry point: TransformerSmallReverseds. */
+class TransformerSmallReversed : TypedDevice {
+  val Error: Boolean
+  var Lock: Boolean
+  val Maximum: Double
+  var On: Boolean
+  val Power: Boolean
+  val Ratio: Double
+  val RequiredPower: Double
+  var Setting: Double
+}
+
+/** StructureTurboVolumePump. Entry point: TurboVolumePumps. */
+class TurboVolumePump : TypedDevice {
+  val Error: Boolean
+  var Lock: Boolean
+  val Maximum: Double
+  var Mode: Double
+  var On: Boolean
+  val Power: Boolean
+  val Ratio: Double
+  val RequiredPower: Double
+  var Setting: Double
+}
+```
+
+### U
+
+```kotlin
+/** StructureUnloader. Entry point: Unloaders. */
+class Unloader : TypedDevice {
+  var ClearMemory: Boolean
+  val Error: Boolean
+  val Export: DataDiskSlot
+  val ExportCount: Double
+  val Import: DataDiskSlot
+  val ImportCount: Double
+  var Lock: Boolean
+  var Mode: Double
+  var On: Boolean
+  var Output: Double
+  val Power: Boolean
+  val RequiredPower: Double
+  val slots: Slots<DataDiskSlot>
+}
+
+/** StructureUprightWindTurbine. Entry point: UprightWindTurbines. */
+class UprightWindTurbine : TypedDevice {
+  val PowerGeneration: Double
+}
+```
+
+### V
+
+```kotlin
+/** StructureValve. Entry point: Valves. */
+class Valve : TypedDevice {
+  val Maximum: Double
+  var On: Boolean
+  val Ratio: Double
+  var Setting: Double
+}
+
+/** StructureVendingMachine. Entry point: VendingMachines. */
+class VendingMachine : TypedDevice {
+  var Activate: Boolean
+  var ClearMemory: Boolean
+  val Error: Boolean
+  val Export: DataDiskSlot
+  val ExportCount: Double
+  val Import: DataDiskSlot
+  val ImportCount: Double
+  var Lock: Boolean
+  var On: Boolean
+  val Power: Boolean
+  val Quantity: Double
+  val Ratio: Double
+  var RequestHash: Double
+  val RequiredPower: Double
+  val TargetPrefabHash: Double
+  val TargetSlotIndex: Double
+  val slots: Slots<DataDiskSlot>
+}
+
+/** StructureVendingMachineSmall. Entry point: VendingMachineSmalls. */
+class VendingMachineSmall : TypedDevice {
+  var Activate: Boolean
+  var ClearMemory: Boolean
+  val Error: Boolean
+  val Export: DataDiskSlot
+  val ExportCount: Double
+  val Import: DataDiskSlot
+  val ImportCount: Double
+  var Lock: Boolean
+  var On: Boolean
+  val Power: Boolean
+  val Quantity: Double
+  val Ratio: Double
+  var RequestHash: Double
+  val RequiredPower: Double
+  val TargetPrefabHash: Double
+  val TargetSlotIndex: Double
+  val slots: Slots<DataDiskSlot>
+}
+
+/** StructureVolumePump. Entry point: VolumePumps. */
+class VolumePump : TypedDevice {
+  val Error: Boolean
+  var Lock: Boolean
+  val Maximum: Double
+  var On: Boolean
+  val Power: Boolean
+  val Ratio: Double
+  val RequiredPower: Double
+  var Setting: Double
+}
+```
+
+### W
+
+```kotlin
+/** StructureWallCooler. Entry point: WallCoolers. */
+class WallCooler : TypedDevice {
+  val CombustionOutput: Double
+  val DataDisk: DataDiskSlot
+  val Error: Boolean
+  var Lock: Boolean
+  val Maximum: Double
+  var On: Boolean
+  val Power: Boolean
+  val PressureOutput: Double
+  val Ratio: Double
+  val RatioCarbonDioxideOutput: Double
+  val RatioHeliumOutput: Double
+  val RatioHydrazineOutput: Double
+  val RatioHydrochloricAcidOutput: Double
+  val RatioHydrogenOutput: Double
+  val RatioLiquidAlcoholOutput: Double
+  val RatioLiquidHydrazineOutput: Double
+  val RatioLiquidHydrochloricAcidOutput: Double
+  val RatioLiquidHydrogenOutput: Double
+  val RatioLiquidOzoneOutput: Double
+  val RatioLiquidSilanolOutput: Double
+  val RatioLiquidSodiumChlorideOutput: Double
+  val RatioMethaneOutput: Double
+  val RatioNitrogenOutput: Double
+  val RatioNitrousOxideOutput: Double
+  val RatioOxygenOutput: Double
+  val RatioOzoneOutput: Double
+  val RatioPollutantOutput: Double
+  val RatioPollutedWaterOutput: Double
+  val RatioSilanolOutput: Double
+  val RatioWaterOutput: Double
+  val RequiredPower: Double
+  var Setting: Double
+  val TemperatureOutput: Double
+  val TotalMolesOutput: Double
+  val slots: Slots<DataDiskSlot>
+}
+
+/** StructureWallHeater. Entry point: WallHeaters. */
+class WallHeater : TypedDevice {
+  val DataDisk: DataDiskSlot
+  val Error: Boolean
+  var Lock: Boolean
+  var On: Boolean
+  val Power: Boolean
+  val RequiredPower: Double
+  val slots: Slots<DataDiskSlot>
+}
+
+/** StructureWallLight. Entry point: WallLights. */
+class WallLight : TypedDevice {
+  var Lock: Boolean
+  var On: Boolean
+  val Power: Boolean
+  val RequiredPower: Double
+}
+
+/** StructureWallLightBattery. Entry point: WallLightBatteries. */
+class WallLightBattery : TypedDevice {
+  val Battery: BatterySlot
+  var Lock: Boolean
+  var On: Boolean
+  val Power: Boolean
+  val RequiredPower: Double
+  val slots: Slots<BatterySlot>
+}
+
+/** StructureWaterBottleFillerPowered. Entry point: WaterBottleFillerPowereds. */
+class WaterBottleFillerPowered : TypedDevice {
+  var Activate: Boolean
+  val Error: Boolean
+  var On: Boolean
+  val Power: Boolean
+  val RequiredPower: Double
+  val slots: Slots<GasCanisterSlot>
+}
+
+/** StructureWaterBottleFillerPoweredBottom. Entry point: WaterBottleFillerPoweredBottoms. */
+class WaterBottleFillerPoweredBottom : TypedDevice {
+  var Activate: Boolean
+  val Error: Boolean
+  var On: Boolean
+  val Power: Boolean
+  val RequiredPower: Double
+  val slots: Slots<GasCanisterSlot>
+}
+
+/** StructureWaterDigitalValve. Entry point: WaterDigitalValves. */
+class WaterDigitalValve : TypedDevice {
+  val Error: Boolean
+  var Lock: Boolean
+  val Maximum: Double
+  var On: Boolean
+  val Power: Boolean
+  val Ratio: Double
+  val RequiredPower: Double
+  var Setting: Double
+}
+
+/** StructureWaterPurifier. Entry point: WaterPurifiers. */
+class WaterPurifier : TypedDevice {
+  var ClearMemory: Boolean
+  val Error: Boolean
+  val Import: DataDiskSlot
+  val ImportCount: Double
+  var Lock: Boolean
+  var On: Boolean
+  val Power: Boolean
+  val RequiredPower: Double
+  val slots: Slots<DataDiskSlot>
+}
+
+/** StructureWaterWallCooler. Entry point: WaterWallCoolers. */
+class WaterWallCooler : TypedDevice {
+  val CombustionOutput: Double
+  val DataDisk: DataDiskSlot
+  val Error: Boolean
+  var Lock: Boolean
+  val Maximum: Double
+  var On: Boolean
+  val Power: Boolean
+  val PressureOutput: Double
+  val Ratio: Double
+  val RatioCarbonDioxideOutput: Double
+  val RatioHeliumOutput: Double
+  val RatioHydrazineOutput: Double
+  val RatioHydrochloricAcidOutput: Double
+  val RatioHydrogenOutput: Double
+  val RatioLiquidAlcoholOutput: Double
+  val RatioLiquidHydrazineOutput: Double
+  val RatioLiquidHydrochloricAcidOutput: Double
+  val RatioLiquidHydrogenOutput: Double
+  val RatioLiquidOzoneOutput: Double
+  val RatioLiquidSilanolOutput: Double
+  val RatioLiquidSodiumChlorideOutput: Double
+  val RatioMethaneOutput: Double
+  val RatioNitrogenOutput: Double
+  val RatioNitrousOxideOutput: Double
+  val RatioOxygenOutput: Double
+  val RatioOzoneOutput: Double
+  val RatioPollutantOutput: Double
+  val RatioPollutedWaterOutput: Double
+  val RatioSilanolOutput: Double
+  val RatioWaterOutput: Double
+  val RequiredPower: Double
+  var Setting: Double
+  val TemperatureOutput: Double
+  val TotalMolesOutput: Double
+  val slots: Slots<DataDiskSlot>
+}
+
+/** ItemWearLamp. Entry point: WearLamps. */
+class WearLamp : TypedDevice {
+  val Battery: ItemBatterySlot
+  var On: Boolean
+  val Power: Boolean
+  val slots: Slots<ItemBatterySlot>
+}
+
+/** StructureWeatherStation. Entry point: WeatherStations. */
+class WeatherStation : TypedDevice {
+  var Activate: Boolean
+  val Error: Boolean
+  var Lock: Boolean
+  val Mode: Double
+  val NextWeatherEventTime: Double
+  val NextWeatherHash: Double
+  var On: Boolean
+  val Power: Boolean
+  val RequiredPower: Double
+}
+
+/** StructureWindTurbine. Entry point: WindTurbines. */
+class WindTurbine : TypedDevice {
+  val PowerGeneration: Double
+}
+
+/** ItemWirelessBatteryCellExtraLarge. Entry point: WirelessBatteryCellExtraLarges. */
+class WirelessBatteryCellExtraLarge : TypedDevice {
+  var Mode: Double
+}
+```
+
+## Slots
+
+A device's `slots` are numbered from 0: `d0.slots[0].Occupied`. A slot type has the slot logic types that kind of slot can read, and `var` for those a program can write.
+
+```kotlin
+class AirTankSlot : DeviceSlot {
+  val Class: Double
+  val Damage: Double
+  val FreeSlots: Double
+  val MaxQuantity: Double
+  val OccupantHash: Double
+  val Occupied: Boolean
+  val PrefabHash: Double
+  val Pressure: Double
+  val Quantity: Double
+  val ReferenceId: Double
+  val SortingClass: Double
+  val Temperature: Double
+  val TotalSlots: Double
+}
+
+class ApplianceSlot : DeviceSlot {
+  val Class: Double
+  val Damage: Double
+  val FreeSlots: Double
+  val MaxQuantity: Double
+  val OccupantHash: Double
+  val Occupied: Boolean
+  var On: Boolean
+  val PrefabHash: Double
+  val Quantity: Double
+  val ReferenceId: Double
+  val SortingClass: Double
+  val TotalSlots: Double
+}
+
+class BackSlot : DeviceSlot {
+  val Charge: Double
+  val ChargeRatio: Double
+  val Class: Double
+  val Damage: Double
+  val FreeSlots: Double
+  val MaxQuantity: Double
+  val OccupantHash: Double
+  val Occupied: Boolean
+  val PrefabHash: Double
+  val Pressure: Double
+  val Quantity: Double
+  val ReferenceId: Double
+  val SortingClass: Double
+  val TotalSlots: Double
+}
+
+class BatterySlot : DeviceSlot {
+  val Charge: Double
+  val ChargeRatio: Double
+  val Class: Double
+  val Damage: Double
+  val FreeSlots: Double
+  val MaxQuantity: Double
+  val OccupantHash: Double
+  val Occupied: Boolean
+  val PrefabHash: Double
+  val Quantity: Double
+  val ReferenceId: Double
+  val SortingClass: Double
+  val TotalSlots: Double
+}
+
+class CircuitboardSlot : DeviceSlot {
+  val Class: Double
+  val Damage: Double
+  val FreeSlots: Double
+  val MaxQuantity: Double
+  var Mode: Double
+  val OccupantHash: Double
+  val Occupied: Boolean
+  val PrefabHash: Double
+  val Quantity: Double
+  val ReferenceId: Double
+  val SortingClass: Double
+  val TotalSlots: Double
+}
+
+class CommonSlot : DeviceSlot {
+  val Class: Double
+  val Damage: Double
+  val FreeSlots: Double
+  val MaxQuantity: Double
+  val OccupantHash: Double
+  val Occupied: Boolean
+  val PrefabHash: Double
+  val Quantity: Double
+  val ReferenceId: Double
+  val SortingClass: Double
+  val TotalSlots: Double
+}
+
+class DataDiskSlot : DeviceSlot {
+  val Class: Double
+  val Damage: Double
+  val FreeSlots: Double
+  val MaxQuantity: Double
+  val OccupantHash: Double
+  val Occupied: Boolean
+  val PrefabHash: Double
+  val Quantity: Double
+  val ReferenceId: Double
+  val SortingClass: Double
+  val TotalSlots: Double
+}
+
+class FilteredSlot : DeviceSlot {
+  val Class: Double
+  val Damage: Double
+  val FilterType: Double
+  val FreeSlots: Double
+  val MaxQuantity: Double
+  val OccupantHash: Double
+  val Occupied: Boolean
+  val PrefabHash: Double
+  val Quantity: Double
+  val ReferenceId: Double
+  val SortingClass: Double
+  val TotalSlots: Double
+}
+
+class FilterSlot : DeviceSlot {
+  val Class: Double
+  val Damage: Double
+  val FilterType: Double
+  val FreeSlots: Double
+  val MaxQuantity: Double
+  val OccupantHash: Double
+  val Occupied: Boolean
+  val PrefabHash: Double
+  val Quantity: Double
+  val ReferenceId: Double
+  val SortingClass: Double
+  val TotalSlots: Double
+}
+
+class GasCanisterSlot : DeviceSlot {
+  val Class: Double
+  val Damage: Double
+  val FreeSlots: Double
+  val MaxQuantity: Double
+  val OccupantHash: Double
+  val Occupied: Boolean
+  var Open: Boolean
+  val PrefabHash: Double
+  val Pressure: Double
+  val Quantity: Double
+  val ReferenceId: Double
+  val SortingClass: Double
+  val Temperature: Double
+  val TotalSlots: Double
+  val Volume: Double
+}
+
+class HelmetSlot : DeviceSlot {
+  val Charge: Double
+  val ChargeRatio: Double
+  val Class: Double
+  val Damage: Double
+  val FreeSlots: Double
+  var Lock: Boolean
+  val MaxQuantity: Double
+  val OccupantHash: Double
+  val Occupied: Boolean
+  var On: Boolean
+  var Open: Boolean
+  val PrefabHash: Double
+  val Pressure: Double
+  val Quantity: Double
+  val ReferenceId: Double
+  val SortingClass: Double
+  val TotalSlots: Double
+}
+
+class ItemAirTankSlot : DeviceSlot {
+  val Class: Double
+  val Damage: Double
+  val MaxQuantity: Double
+  val OccupantHash: Double
+  val Occupied: Boolean
+  val PrefabHash: Double
+  val Pressure: Double
+  val Quantity: Double
+  val ReferenceId: Double
+  val Temperature: Double
+}
+
+class ItemBatterySlot : DeviceSlot {
+  val Charge: Double
+  val ChargeRatio: Double
+  val Class: Double
+  val Damage: Double
+  val MaxQuantity: Double
+  val OccupantHash: Double
+  val Occupied: Boolean
+  val PrefabHash: Double
+  val Quantity: Double
+  val ReferenceId: Double
+}
+
+class ItemCommonSlot : DeviceSlot {
+  val Class: Double
+  val Damage: Double
+  val MaxQuantity: Double
+  val OccupantHash: Double
+  val Occupied: Boolean
+  val PrefabHash: Double
+  val Quantity: Double
+  val ReferenceId: Double
+}
+
+class ItemFilteredSlot : DeviceSlot {
+  val Class: Double
+  val Damage: Double
+  val FilterType: Double
+  val MaxQuantity: Double
+  val OccupantHash: Double
+  val Occupied: Boolean
+  val PrefabHash: Double
+  val Quantity: Double
+  val ReferenceId: Double
+}
+
+class MaskSlot : DeviceSlot {
+  val Class: Double
+  val Damage: Double
+  val FreeSlots: Double
+  val Lock: Boolean
+  val MaxQuantity: Double
+  val OccupantHash: Double
+  val Occupied: Boolean
+  val On: Boolean
+  val Open: Boolean
+  val PrefabHash: Double
+  val Quantity: Double
+  val ReferenceId: Double
+  val SortingClass: Double
+  val TotalSlots: Double
+}
+
+class PlantSlot : DeviceSlot {
+  val Class: Double
+  val Damage: Double
+  val Efficiency: Double
+  val FreeSlots: Double
+  val Growth: Double
+  val Health: Double
+  val Mature: Double
+  val MaturityRatio: Double
+  val MaxQuantity: Double
+  val OccupantHash: Double
+  val Occupied: Boolean
+  val PrefabHash: Double
+  val Quantity: Double
+  val ReferenceId: Double
+  val Seeding: Double
+  val SeedingRatio: Double
+  val SortingClass: Double
+  val TotalSlots: Double
+}
+
+class ProgrammableChipSlot : DeviceSlot {
+  val Class: Double
+  val Damage: Double
+  val FreeSlots: Double
+  val LineNumber: Double
+  val MaxQuantity: Double
+  val OccupantHash: Double
+  val Occupied: Boolean
+  val PrefabHash: Double
+  val Quantity: Double
+  val ReferenceId: Double
+  val SortingClass: Double
+  val TotalSlots: Double
+}
+
+class SuitSlot : DeviceSlot {
+  val Charge: Double
+  val ChargeRatio: Double
+  val Class: Double
+  val Damage: Double
+  val FreeSlots: Double
+  val MaxQuantity: Double
+  val OccupantHash: Double
+  val Occupied: Boolean
+  val PrefabHash: Double
+  val Pressure: Double
+  val PressureAir: Double
+  val PressureWaste: Double
+  val Quantity: Double
+  val ReferenceId: Double
+  val SortingClass: Double
+  val TotalSlots: Double
+}
+```
 
 ## Enums
 
-Operand enums name logic types and batch methods, as in `d0[LogicType.Setting]`; value enums are `Double` constants that can be written to a device, as in `db.Color = Color.Red`.
+Operand enums name logic types and batch methods, as in `d0[LogicType.Setting]`. Value enums are `Double` constants that can be written to a device, as in `db.Color = Color.Red`.
 
-### AirCon
+```kotlin
+object AirCon {
+  const val Cold: Double = 0.0
+  const val Hot: Double = 1.0
+}
 
-`Cold` (0), `Hot` (1)
+object AirControl {
+  const val None: Double = 0.0
+  const val Offline: Double = 1.0
+  const val Pressure: Double = 2.0
+  const val Draught: Double = 4.0
+}
 
-### AirControl
+object Color {
+  const val Blue: Double = 0.0
+  const val Gray: Double = 1.0
+  const val Green: Double = 2.0
+  const val Orange: Double = 3.0
+  const val Red: Double = 4.0
+  const val Yellow: Double = 5.0
+  const val White: Double = 6.0
+  const val Black: Double = 7.0
+  const val Brown: Double = 8.0
+  const val Khaki: Double = 9.0
+  const val Pink: Double = 10.0
+  const val Purple: Double = 11.0
+}
 
-`None` (0), `Offline` (1), `Pressure` (2), `Draught` (4)
+object DaylightSensorMode {
+  const val Default: Double = 0.0
+  const val Horizontal: Double = 1.0
+  const val Vertical: Double = 2.0
+}
 
-### Color
+object DisplayMode {
+  const val Default: Double = 0.0
+  const val Percent: Double = 1.0
+  const val Power: Double = 2.0
+  const val Kelvin: Double = 3.0
+  const val Celsius: Double = 4.0
+  const val Meters: Double = 5.0
+  const val Credits: Double = 6.0
+  const val Seconds: Double = 7.0
+  const val Minutes: Double = 8.0
+  const val Days: Double = 9.0
+  const val String: Double = 10.0
+  const val Fahrenheit: Double = 11.0
+  const val Litres: Double = 12.0
+  const val Mol: Double = 13.0
+  const val Pa: Double = 14.0
+  const val Newtons: Double = 15.0
+  const val Degrees: Double = 16.0
+}
 
-`Blue` (0), `Gray` (1), `Green` (2), `Orange` (3), `Red` (4), `Yellow` (5), `White` (6), `Black` (7), `Brown` (8), `Khaki` (9), `Pink` (10), `Purple` (11)
+object ElevatorMode {
+  const val Stationary: Double = 0.0
+  const val Upward: Double = 1.0
+  const val Downward: Double = 2.0
+}
 
-### DaylightSensorMode
+object EntityState {
+  const val Alive: Double = 0.0
+  const val Dead: Double = 1.0
+  const val Unconscious: Double = 2.0
+  const val Decay: Double = 3.0
+}
 
-`Default` (0), `Horizontal` (1), `Vertical` (2)
+object GasType {
+  const val Undefined: Double = 0.0
+  const val Oxygen: Double = 1.0
+  const val Nitrogen: Double = 2.0
+  const val Air: Double = 3.0
+  const val CarbonDioxide: Double = 4.0
+  const val Methane: Double = 8.0
+  const val Fuel: Double = 9.0
+  const val Pollutant: Double = 16.0
+  const val Water: Double = 32.0
+  const val NitrousOxide: Double = 64.0
+  const val LiquidNitrogen: Double = 128.0
+  const val LiquidOxygen: Double = 256.0
+  const val LiquidMethane: Double = 512.0
+  const val Steam: Double = 1024.0
+  const val LiquidCarbonDioxide: Double = 2048.0
+  const val LiquidPollutant: Double = 4096.0
+  const val LiquidNitrousOxide: Double = 8192.0
+  const val Hydrogen: Double = 16384.0
+  const val LiquidHydrogen: Double = 32768.0
+  const val PollutedWater: Double = 65536.0
+  const val Hydrazine: Double = 131072.0
+  const val LiquidHydrazine: Double = 262144.0
+  const val LiquidAlcohol: Double = 524288.0
+  const val Helium: Double = 1048576.0
+  const val LiquidSodiumChloride: Double = 2097152.0
+  const val Silanol: Double = 4194304.0
+  const val LiquidSilanol: Double = 8388608.0
+  const val HydrochloricAcid: Double = 16777216.0
+  const val LiquidHydrochloricAcid: Double = 33554432.0
+  const val Ozone: Double = 67108864.0
+  const val LiquidOzone: Double = 134217728.0
+}
 
-### DisplayMode
+object HashType {
+  const val Prefab: Double = 0.0
+  const val GasLiquid: Double = 1.0
+}
 
-`Default` (0), `Percent` (1), `Power` (2), `Kelvin` (3), `Celsius` (4), `Meters` (5), `Credits` (6), `Seconds` (7), `Minutes` (8), `Days` (9), `String` (10), `Fahrenheit` (11), `Litres` (12), `Mol` (13), `Pa` (14), `Newtons` (15), `Degrees` (16)
+enum class LogicBatchMethod {
+  Average, Maximum, Minimum, Sum,
+}
 
-### ElevatorMode
+enum class LogicReagentMode {
+  Contents, Recipe, Required, TotalContents,
+}
 
-`Stationary` (0), `Upward` (1), `Downward` (2)
+enum class LogicSlotType {
+  Charge, ChargeRatio, Class, Damage, Efficiency, FilterType,
+  FreeSlots, Growth, HarvestedHash, Health, LineNumber, Lock,
+  Mature, MaturityRatio, MaxQuantity, Mode, OccupantHash, Occupied,
+  On, Open, PrefabHash, Pressure, PressureAir, PressureWaste,
+  Quantity, ReferenceId, Seeding, SeedingRatio, SortingClass, Temperature,
+  TotalSlots, Volume,
+}
 
-### EntityState
+enum class LogicType {
+  Acceleration, Activate, AirRelease, AlignmentError, Altitude, Apex,
+  AutoLand, AutoShutOff, BestContactFilter, Bpm, BurnTimeRemaining, CelestialHash,
+  CelestialParentHash, Channel0, Channel1, Channel2, Channel3, Channel4,
+  Channel5, Channel6, Channel7, Charge, Chart, ChartedNavPoints,
+  ClearMemory, CollectableGoods, Color, Combustion, CombustionInput, CombustionInput2,
+  CombustionLimiter, CombustionOutput, CombustionOutput2, CompletionRatio, ContactSlotIndex, ContactTypeId,
+  CurrentCode, CurrentResearchPodType, Density, DerivativeGain, DestinationCode, Discover,
+  DistanceAu, DistanceKm, DrillCondition, DryMass, Eccentricity, ElevatorLevel,
+  ElevatorSpeed, EntityState, EnvironmentEfficiency, Error, ExhaustVelocity, ExportCount,
+  ExportQuantity, ExportSlotHash, ExportSlotOccupant, Extended, Filtration, FlightControlRule,
+  Flush, ForceWrite, ForwardX, ForwardY, ForwardZ, Fuel,
+  Harvest, Horizontal, HorizontalRatio, Idle, ImportCount, ImportQuantity,
+  ImportSlotHash, ImportSlotOccupant, Inclination, Index, IntegralGain, InterrogationProgress,
+  LineNumber, Lock, ManualResearchRequiredPod, Mass, Maximum, MineablesInQueue,
+  MineablesInVicinity, MinedQuantity, Minimum, MinimumWattsToContact, Mode, NameHash,
+  NavPoints, NetworkFault, NextWeatherEventTime, NextWeatherHash, On, Open,
+  OperationalTemperatureEfficiency, OrbitPeriod, Orientation, Output, PassedMoles, Plant,
+  PlantEfficiency1, PlantEfficiency2, PlantEfficiency3, PlantEfficiency4, PlantGrowth1, PlantGrowth2,
+  PlantGrowth3, PlantGrowth4, PlantHash1, PlantHash2, PlantHash3, PlantHash4,
+  PlantHealth1, PlantHealth2, PlantHealth3, PlantHealth4, PositionX, PositionY,
+  PositionZ, Power, PowerActual, PowerGeneration, PowerPotential, PowerRequired,
+  PrefabHash, Pressure, PressureEfficiency, PressureExternal, PressureInput, PressureInput2,
+  PressureInternal, PressureOutput, PressureOutput2, PressureSetting, Progress, ProportionalGain,
+  Quantity, Ratio, RatioCarbonDioxide, RatioCarbonDioxideInput, RatioCarbonDioxideInput2, RatioCarbonDioxideOutput,
+  RatioCarbonDioxideOutput2, RatioHelium, RatioHeliumInput, RatioHeliumInput2, RatioHeliumOutput, RatioHeliumOutput2,
+  RatioHydrazine, RatioHydrazineInput, RatioHydrazineInput2, RatioHydrazineOutput, RatioHydrazineOutput2, RatioHydrochloricAcid,
+  RatioHydrochloricAcidInput, RatioHydrochloricAcidInput2, RatioHydrochloricAcidOutput, RatioHydrochloricAcidOutput2, RatioHydrogen, RatioHydrogenInput,
+  RatioHydrogenInput2, RatioHydrogenOutput, RatioHydrogenOutput2, RatioLiquidAlcohol, RatioLiquidAlcoholInput, RatioLiquidAlcoholInput2,
+  RatioLiquidAlcoholOutput, RatioLiquidAlcoholOutput2, RatioLiquidCarbonDioxide, RatioLiquidCarbonDioxideInput, RatioLiquidCarbonDioxideInput2, RatioLiquidCarbonDioxideOutput,
+  RatioLiquidCarbonDioxideOutput2, RatioLiquidHydrazine, RatioLiquidHydrazineInput, RatioLiquidHydrazineInput2, RatioLiquidHydrazineOutput, RatioLiquidHydrazineOutput2,
+  RatioLiquidHydrochloricAcid, RatioLiquidHydrochloricAcidInput, RatioLiquidHydrochloricAcidInput2, RatioLiquidHydrochloricAcidOutput, RatioLiquidHydrochloricAcidOutput2, RatioLiquidHydrogen,
+  RatioLiquidHydrogenInput, RatioLiquidHydrogenInput2, RatioLiquidHydrogenOutput, RatioLiquidHydrogenOutput2, RatioLiquidMethane, RatioLiquidMethaneInput,
+  RatioLiquidMethaneInput2, RatioLiquidMethaneOutput, RatioLiquidMethaneOutput2, RatioLiquidNitrogen, RatioLiquidNitrogenInput, RatioLiquidNitrogenInput2,
+  RatioLiquidNitrogenOutput, RatioLiquidNitrogenOutput2, RatioLiquidNitrousOxide, RatioLiquidNitrousOxideInput, RatioLiquidNitrousOxideInput2, RatioLiquidNitrousOxideOutput,
+  RatioLiquidNitrousOxideOutput2, RatioLiquidOxygen, RatioLiquidOxygenInput, RatioLiquidOxygenInput2, RatioLiquidOxygenOutput, RatioLiquidOxygenOutput2,
+  RatioLiquidOzone, RatioLiquidOzoneInput, RatioLiquidOzoneInput2, RatioLiquidOzoneOutput, RatioLiquidOzoneOutput2, RatioLiquidPollutant,
+  RatioLiquidPollutantInput, RatioLiquidPollutantInput2, RatioLiquidPollutantOutput, RatioLiquidPollutantOutput2, RatioLiquidSilanol, RatioLiquidSilanolInput,
+  RatioLiquidSilanolInput2, RatioLiquidSilanolOutput, RatioLiquidSilanolOutput2, RatioLiquidSodiumChloride, RatioLiquidSodiumChlorideInput, RatioLiquidSodiumChlorideInput2,
+  RatioLiquidSodiumChlorideOutput, RatioLiquidSodiumChlorideOutput2, RatioMethane, RatioMethaneInput, RatioMethaneInput2, RatioMethaneOutput,
+  RatioMethaneOutput2, RatioNitrogen, RatioNitrogenInput, RatioNitrogenInput2, RatioNitrogenOutput, RatioNitrogenOutput2,
+  RatioNitrousOxide, RatioNitrousOxideInput, RatioNitrousOxideInput2, RatioNitrousOxideOutput, RatioNitrousOxideOutput2, RatioOxygen,
+  RatioOxygenInput, RatioOxygenInput2, RatioOxygenOutput, RatioOxygenOutput2, RatioOzone, RatioOzoneInput,
+  RatioOzoneInput2, RatioOzoneOutput, RatioOzoneOutput2, RatioPollutant, RatioPollutantInput, RatioPollutantInput2,
+  RatioPollutantOutput, RatioPollutantOutput2, RatioPollutedWater, RatioPollutedWaterInput, RatioPollutedWaterInput2, RatioPollutedWaterOutput,
+  RatioPollutedWaterOutput2, RatioSilanol, RatioSilanolInput, RatioSilanolInput2, RatioSilanolOutput, RatioSilanolOutput2,
+  RatioSteam, RatioSteamInput, RatioSteamInput2, RatioSteamOutput, RatioSteamOutput2, RatioWater,
+  RatioWaterInput, RatioWaterInput2, RatioWaterOutput, RatioWaterOutput2, ReEntryAltitude, Reagents,
+  RecipeHash, ReferenceId, RequestHash, RequiredPower, Reset, ReturnFuelCost,
+  Richness, Rpm, SemiMajorAxis, Setpoint, Setting, SettingInput,
+  SettingOutput, SignalID, SignalStrength, Sites, Size, SizeX,
+  SizeY, SizeZ, SolarAngle, SolarIrradiance, SoundAlert, StackSize,
+  Stress, Survey, TargetPadIndex, TargetPrefabHash, TargetSlotIndex, TargetX,
+  TargetY, TargetZ, Temperature, TemperatureDifferentialEfficiency, TemperatureExternal, TemperatureInput,
+  TemperatureInput2, TemperatureOutput, TemperatureOutput2, TemperatureSetting, Throttle, Thrust,
+  ThrustToWeight, Time, TimeToDestination, TotalMoles, TotalMolesInput, TotalMolesInput2,
+  TotalMolesOutput, TotalMolesOutput2, TotalQuantity, TrueAnomaly, VelocityMagnitude, VelocityRelativeX,
+  VelocityRelativeY, VelocityRelativeZ, VelocityX, VelocityY, VelocityZ, Vertical,
+  VerticalRatio, Volume, VolumeOfLiquid, WattsReachingContact, Weight, WorkingGasEfficiency,
+}
 
-`Alive` (0), `Dead` (1), `Unconscious` (2), `Decay` (3)
+object PowerMode {
+  const val Idle: Double = 0.0
+  const val Discharged: Double = 1.0
+  const val Discharging: Double = 2.0
+  const val Charging: Double = 3.0
+  const val Charged: Double = 4.0
+}
 
-### GasType
+object PrinterInstruction {
+  const val None: Double = 0.0
+  const val StackPointer: Double = 1.0
+  const val ExecuteRecipe: Double = 2.0
+  const val WaitUntilNextValid: Double = 3.0
+  const val JumpIfNextInvalid: Double = 4.0
+  const val JumpToAddress: Double = 5.0
+  const val DeviceSetLock: Double = 6.0
+  const val EjectReagent: Double = 7.0
+  const val EjectAllReagents: Double = 8.0
+  const val MissingRecipeReagent: Double = 9.0
+}
 
-`Undefined` (0), `Oxygen` (1), `Nitrogen` (2), `Air` (3), `CarbonDioxide` (4), `Methane` (8), `Fuel` (9), `Pollutant` (16), `Water` (32), `NitrousOxide` (64), `LiquidNitrogen` (128), `LiquidOxygen` (256), `LiquidMethane` (512), `Steam` (1024), `LiquidCarbonDioxide` (2048), `LiquidPollutant` (4096), `LiquidNitrousOxide` (8192), `Hydrogen` (16384), `LiquidHydrogen` (32768), `PollutedWater` (65536), `Hydrazine` (131072), `LiquidHydrazine` (262144), `LiquidAlcohol` (524288), `Helium` (1048576), `LiquidSodiumChloride` (2097152), `Silanol` (4194304), `LiquidSilanol` (8388608), `HydrochloricAcid` (16777216), `LiquidHydrochloricAcid` (33554432), `Ozone` (67108864), `LiquidOzone` (134217728)
+object ReEntryProfile {
+  const val None: Double = 0.0
+  const val Low: Double = 1.0
+  const val Medium: Double = 2.0
+  const val High: Double = 3.0
+  const val Max: Double = 4.0
+}
 
-### HashType
+object RobotMode {
+  const val None: Double = 0.0
+  const val Follow: Double = 1.0
+  const val MoveToTarget: Double = 2.0
+  const val Roam: Double = 3.0
+  const val Unload: Double = 4.0
+  const val PathToTarget: Double = 5.0
+  const val StorageFull: Double = 6.0
+}
 
-`Prefab` (0), `GasLiquid` (1)
+object RocketMode {
+  const val Invalid: Double = 0.0
+  const val None: Double = 1.0
+  const val Mine: Double = 2.0
+  const val Survey: Double = 3.0
+  const val Discover: Double = 4.0
+  const val Chart: Double = 5.0
+  const val Deploy: Double = 6.0
+}
 
-### LogicBatchMethod
+object SettingDisplayMode {
+  const val Number: Double = 0.0
+  const val String: Double = 1.0
+}
 
-`Average`, `Maximum`, `Minimum`, `Sum`
+object ShuttleType {
+  const val None: Double = 0.0
+  const val Small: Double = 1.0
+  const val SmallGas: Double = 2.0
+  const val Medium: Double = 3.0
+  const val MediumGas: Double = 4.0
+  const val Large: Double = 5.0
+  const val LargeGas: Double = 6.0
+  const val MediumPlane: Double = 7.0
+  const val LargePlane: Double = 8.0
+}
 
-### LogicReagentMode
+object SlotClass {
+  const val None: Double = 0.0
+  const val Helmet: Double = 1.0
+  const val Suit: Double = 2.0
+  const val Back: Double = 3.0
+  const val GasFilter: Double = 4.0
+  const val GasCanister: Double = 5.0
+  const val Motherboard: Double = 6.0
+  const val Circuitboard: Double = 7.0
+  const val DataDisk: Double = 8.0
+  const val Organ: Double = 9.0
+  const val Ore: Double = 10.0
+  const val Plant: Double = 11.0
+  const val Uniform: Double = 12.0
+  const val Entity: Double = 13.0
+  const val Battery: Double = 14.0
+  const val Egg: Double = 15.0
+  const val Belt: Double = 16.0
+  const val Tool: Double = 17.0
+  const val Appliance: Double = 18.0
+  const val Ingot: Double = 19.0
+  const val Torpedo: Double = 20.0
+  const val Cartridge: Double = 21.0
+  const val AccessCard: Double = 22.0
+  const val Magazine: Double = 23.0
+  const val Circuit: Double = 24.0
+  const val Bottle: Double = 25.0
+  const val ProgrammableChip: Double = 26.0
+  const val Glasses: Double = 27.0
+  const val CreditCard: Double = 28.0
+  const val DirtCanister: Double = 29.0
+  const val SensorProcessingUnit: Double = 30.0
+  const val LiquidCanister: Double = 31.0
+  const val LiquidBottle: Double = 32.0
+  const val Wreckage: Double = 33.0
+  const val SoundCartridge: Double = 34.0
+  const val DrillHead: Double = 35.0
+  const val ScanningHead: Double = 36.0
+  const val Flare: Double = 37.0
+  const val Blocked: Double = 38.0
+  const val SuitMod: Double = 39.0
+  const val Crate: Double = 40.0
+  const val Portables: Double = 41.0
+  const val RocketPayload: Double = 42.0
+}
 
-`Contents`, `Recipe`, `Required`, `TotalContents`
+object SorterInstruction {
+  const val None: Double = 0.0
+  const val FilterPrefabHashEquals: Double = 1.0
+  const val FilterPrefabHashNotEquals: Double = 2.0
+  const val FilterSortingClassCompare: Double = 3.0
+  const val FilterSlotTypeCompare: Double = 4.0
+  const val FilterQuantityCompare: Double = 5.0
+  const val LimitNextExecutionByCount: Double = 6.0
+}
 
-### LogicSlotType
+object SortingClass {
+  const val Default: Double = 0.0
+  const val Kits: Double = 1.0
+  const val Tools: Double = 2.0
+  const val Resources: Double = 3.0
+  const val Food: Double = 4.0
+  const val Clothing: Double = 5.0
+  const val Appliances: Double = 6.0
+  const val Atmospherics: Double = 7.0
+  const val Storage: Double = 8.0
+  const val Ores: Double = 9.0
+  const val Ices: Double = 10.0
+}
 
-`Charge`, `ChargeRatio`, `Class`, `Damage`, `Efficiency`, `FilterType`, `FreeSlots`, `Growth`, `HarvestedHash`, `Health`, `LineNumber`, `Lock`, `Mature`, `MaturityRatio`, `MaxQuantity`, `Mode`, `OccupantHash`, `Occupied`, `On`, `Open`, `PrefabHash`, `Pressure`, `PressureAir`, `PressureWaste`, `Quantity`, `ReferenceId`, `Seeding`, `SeedingRatio`, `SortingClass`, `Temperature`, `TotalSlots`, `Volume`
+object Sound {
+  const val None: Double = 0.0
+  const val Alarm2: Double = 1.0
+  const val Alarm3: Double = 2.0
+  const val Alarm4: Double = 3.0
+  const val Alarm5: Double = 4.0
+  const val Alarm6: Double = 5.0
+  const val Alarm7: Double = 6.0
+  const val Music1: Double = 7.0
+  const val Music2: Double = 8.0
+  const val Music3: Double = 9.0
+  const val Alarm8: Double = 10.0
+  const val Alarm9: Double = 11.0
+  const val Alarm10: Double = 12.0
+  const val Alarm11: Double = 13.0
+  const val Alarm12: Double = 14.0
+  const val Danger: Double = 15.0
+  const val Warning: Double = 16.0
+  const val Alert: Double = 17.0
+  const val StormIncoming: Double = 18.0
+  const val IntruderAlert: Double = 19.0
+  const val Depressurising: Double = 20.0
+  const val Pressurising: Double = 21.0
+  const val AirlockCycling: Double = 22.0
+  const val PowerLow: Double = 23.0
+  const val SystemFailure: Double = 24.0
+  const val Welcome: Double = 25.0
+  const val MalfunctionDetected: Double = 26.0
+  const val HaltWhoGoesThere: Double = 27.0
+  const val FireFireFire: Double = 28.0
+  const val One: Double = 29.0
+  const val Two: Double = 30.0
+  const val Three: Double = 31.0
+  const val Four: Double = 32.0
+  const val Five: Double = 33.0
+  const val Floor: Double = 34.0
+  const val RocketLaunching: Double = 35.0
+  const val LiftOff: Double = 36.0
+  const val TraderIncoming: Double = 37.0
+  const val TraderLanded: Double = 38.0
+  const val PressureHigh: Double = 39.0
+  const val PressureLow: Double = 40.0
+  const val TemperatureHigh: Double = 41.0
+  const val TemperatureLow: Double = 42.0
+  const val PollutantsDetected: Double = 43.0
+  const val HighCarbonDioxide: Double = 44.0
+  const val Alarm1: Double = 45.0
+}
 
-### LogicType
+object TraderInstruction {
+  const val None: Double = 0.0
+  const val WriteTraderData: Double = 1.0
+  const val StrongestContactIdHash: Double = 2.0
+  const val StrongestContactMetaData: Double = 3.0
+  const val StrongestContactSignalData: Double = 4.0
+  const val WriteTraderBuyData: Double = 5.0
+  const val WriteTraderSellData: Double = 6.0
+  const val TraderBuyThingData: Double = 7.0
+  const val TraderBuyThingChildData: Double = 8.0
+  const val TraderBuyGasData: Double = 9.0
+  const val TraderSellThingData: Double = 10.0
+  const val TraderSellGasData: Double = 11.0
+  const val TraderSellThingChildData: Double = 12.0
+  const val FilterPrefabHashEquals: Double = 13.0
+  const val FilterPrefabHashNotEquals: Double = 14.0
+  const val FilterSortingClassCompare: Double = 15.0
+  const val FilterQuantityCompare: Double = 16.0
+  const val FilterGasContains: Double = 17.0
+  const val FilterGasNotContains: Double = 18.0
+}
 
-`Acceleration`, `Activate`, `AirRelease`, `AlignmentError`, `Altitude`, `Apex`, `AutoLand`, `AutoShutOff`, `BestContactFilter`, `Bpm`, `BurnTimeRemaining`, `CelestialHash`, `CelestialParentHash`, `Channel0`, `Channel1`, `Channel2`, `Channel3`, `Channel4`, `Channel5`, `Channel6`, `Channel7`, `Charge`, `Chart`, `ChartedNavPoints`, `ClearMemory`, `CollectableGoods`, `Color`, `Combustion`, `CombustionInput`, `CombustionInput2`, `CombustionLimiter`, `CombustionOutput`, `CombustionOutput2`, `CompletionRatio`, `ContactSlotIndex`, `ContactTypeId`, `CurrentCode`, `CurrentResearchPodType`, `Density`, `DerivativeGain`, `DestinationCode`, `Discover`, `DistanceAu`, `DistanceKm`, `DrillCondition`, `DryMass`, `Eccentricity`, `ElevatorLevel`, `ElevatorSpeed`, `EntityState`, `EnvironmentEfficiency`, `Error`, `ExhaustVelocity`, `ExportCount`, `ExportQuantity`, `ExportSlotHash`, `ExportSlotOccupant`, `Extended`, `Filtration`, `FlightControlRule`, `Flush`, `ForceWrite`, `ForwardX`, `ForwardY`, `ForwardZ`, `Fuel`, `Harvest`, `Horizontal`, `HorizontalRatio`, `Idle`, `ImportCount`, `ImportQuantity`, `ImportSlotHash`, `ImportSlotOccupant`, `Inclination`, `Index`, `IntegralGain`, `InterrogationProgress`, `LineNumber`, `Lock`, `ManualResearchRequiredPod`, `Mass`, `Maximum`, `MineablesInQueue`, `MineablesInVicinity`, `MinedQuantity`, `Minimum`, `MinimumWattsToContact`, `Mode`, `NameHash`, `NavPoints`, `NetworkFault`, `NextWeatherEventTime`, `NextWeatherHash`, `On`, `Open`, `OperationalTemperatureEfficiency`, `OrbitPeriod`, `Orientation`, `Output`, `PassedMoles`, `Plant`, `PlantEfficiency1`, `PlantEfficiency2`, `PlantEfficiency3`, `PlantEfficiency4`, `PlantGrowth1`, `PlantGrowth2`, `PlantGrowth3`, `PlantGrowth4`, `PlantHash1`, `PlantHash2`, `PlantHash3`, `PlantHash4`, `PlantHealth1`, `PlantHealth2`, `PlantHealth3`, `PlantHealth4`, `PositionX`, `PositionY`, `PositionZ`, `Power`, `PowerActual`, `PowerGeneration`, `PowerPotential`, `PowerRequired`, `PrefabHash`, `Pressure`, `PressureEfficiency`, `PressureExternal`, `PressureInput`, `PressureInput2`, `PressureInternal`, `PressureOutput`, `PressureOutput2`, `PressureSetting`, `Progress`, `ProportionalGain`, `Quantity`, `Ratio`, `RatioCarbonDioxide`, `RatioCarbonDioxideInput`, `RatioCarbonDioxideInput2`, `RatioCarbonDioxideOutput`, `RatioCarbonDioxideOutput2`, `RatioHelium`, `RatioHeliumInput`, `RatioHeliumInput2`, `RatioHeliumOutput`, `RatioHeliumOutput2`, `RatioHydrazine`, `RatioHydrazineInput`, `RatioHydrazineInput2`, `RatioHydrazineOutput`, `RatioHydrazineOutput2`, `RatioHydrochloricAcid`, `RatioHydrochloricAcidInput`, `RatioHydrochloricAcidInput2`, `RatioHydrochloricAcidOutput`, `RatioHydrochloricAcidOutput2`, `RatioHydrogen`, `RatioHydrogenInput`, `RatioHydrogenInput2`, `RatioHydrogenOutput`, `RatioHydrogenOutput2`, `RatioLiquidAlcohol`, `RatioLiquidAlcoholInput`, `RatioLiquidAlcoholInput2`, `RatioLiquidAlcoholOutput`, `RatioLiquidAlcoholOutput2`, `RatioLiquidCarbonDioxide`, `RatioLiquidCarbonDioxideInput`, `RatioLiquidCarbonDioxideInput2`, `RatioLiquidCarbonDioxideOutput`, `RatioLiquidCarbonDioxideOutput2`, `RatioLiquidHydrazine`, `RatioLiquidHydrazineInput`, `RatioLiquidHydrazineInput2`, `RatioLiquidHydrazineOutput`, `RatioLiquidHydrazineOutput2`, `RatioLiquidHydrochloricAcid`, `RatioLiquidHydrochloricAcidInput`, `RatioLiquidHydrochloricAcidInput2`, `RatioLiquidHydrochloricAcidOutput`, `RatioLiquidHydrochloricAcidOutput2`, `RatioLiquidHydrogen`, `RatioLiquidHydrogenInput`, `RatioLiquidHydrogenInput2`, `RatioLiquidHydrogenOutput`, `RatioLiquidHydrogenOutput2`, `RatioLiquidMethane`, `RatioLiquidMethaneInput`, `RatioLiquidMethaneInput2`, `RatioLiquidMethaneOutput`, `RatioLiquidMethaneOutput2`, `RatioLiquidNitrogen`, `RatioLiquidNitrogenInput`, `RatioLiquidNitrogenInput2`, `RatioLiquidNitrogenOutput`, `RatioLiquidNitrogenOutput2`, `RatioLiquidNitrousOxide`, `RatioLiquidNitrousOxideInput`, `RatioLiquidNitrousOxideInput2`, `RatioLiquidNitrousOxideOutput`, `RatioLiquidNitrousOxideOutput2`, `RatioLiquidOxygen`, `RatioLiquidOxygenInput`, `RatioLiquidOxygenInput2`, `RatioLiquidOxygenOutput`, `RatioLiquidOxygenOutput2`, `RatioLiquidOzone`, `RatioLiquidOzoneInput`, `RatioLiquidOzoneInput2`, `RatioLiquidOzoneOutput`, `RatioLiquidOzoneOutput2`, `RatioLiquidPollutant`, `RatioLiquidPollutantInput`, `RatioLiquidPollutantInput2`, `RatioLiquidPollutantOutput`, `RatioLiquidPollutantOutput2`, `RatioLiquidSilanol`, `RatioLiquidSilanolInput`, `RatioLiquidSilanolInput2`, `RatioLiquidSilanolOutput`, `RatioLiquidSilanolOutput2`, `RatioLiquidSodiumChloride`, `RatioLiquidSodiumChlorideInput`, `RatioLiquidSodiumChlorideInput2`, `RatioLiquidSodiumChlorideOutput`, `RatioLiquidSodiumChlorideOutput2`, `RatioMethane`, `RatioMethaneInput`, `RatioMethaneInput2`, `RatioMethaneOutput`, `RatioMethaneOutput2`, `RatioNitrogen`, `RatioNitrogenInput`, `RatioNitrogenInput2`, `RatioNitrogenOutput`, `RatioNitrogenOutput2`, `RatioNitrousOxide`, `RatioNitrousOxideInput`, `RatioNitrousOxideInput2`, `RatioNitrousOxideOutput`, `RatioNitrousOxideOutput2`, `RatioOxygen`, `RatioOxygenInput`, `RatioOxygenInput2`, `RatioOxygenOutput`, `RatioOxygenOutput2`, `RatioOzone`, `RatioOzoneInput`, `RatioOzoneInput2`, `RatioOzoneOutput`, `RatioOzoneOutput2`, `RatioPollutant`, `RatioPollutantInput`, `RatioPollutantInput2`, `RatioPollutantOutput`, `RatioPollutantOutput2`, `RatioPollutedWater`, `RatioPollutedWaterInput`, `RatioPollutedWaterInput2`, `RatioPollutedWaterOutput`, `RatioPollutedWaterOutput2`, `RatioSilanol`, `RatioSilanolInput`, `RatioSilanolInput2`, `RatioSilanolOutput`, `RatioSilanolOutput2`, `RatioSteam`, `RatioSteamInput`, `RatioSteamInput2`, `RatioSteamOutput`, `RatioSteamOutput2`, `RatioWater`, `RatioWaterInput`, `RatioWaterInput2`, `RatioWaterOutput`, `RatioWaterOutput2`, `ReEntryAltitude`, `Reagents`, `RecipeHash`, `ReferenceId`, `RequestHash`, `RequiredPower`, `Reset`, `ReturnFuelCost`, `Richness`, `Rpm`, `SemiMajorAxis`, `Setpoint`, `Setting`, `SettingInput`, `SettingOutput`, `SignalID`, `SignalStrength`, `Sites`, `Size`, `SizeX`, `SizeY`, `SizeZ`, `SolarAngle`, `SolarIrradiance`, `SoundAlert`, `StackSize`, `Stress`, `Survey`, `TargetPadIndex`, `TargetPrefabHash`, `TargetSlotIndex`, `TargetX`, `TargetY`, `TargetZ`, `Temperature`, `TemperatureDifferentialEfficiency`, `TemperatureExternal`, `TemperatureInput`, `TemperatureInput2`, `TemperatureOutput`, `TemperatureOutput2`, `TemperatureSetting`, `Throttle`, `Thrust`, `ThrustToWeight`, `Time`, `TimeToDestination`, `TotalMoles`, `TotalMolesInput`, `TotalMolesInput2`, `TotalMolesOutput`, `TotalMolesOutput2`, `TotalQuantity`, `TrueAnomaly`, `VelocityMagnitude`, `VelocityRelativeX`, `VelocityRelativeY`, `VelocityRelativeZ`, `VelocityX`, `VelocityY`, `VelocityZ`, `Vertical`, `VerticalRatio`, `Volume`, `VolumeOfLiquid`, `WattsReachingContact`, `Weight`, `WorkingGasEfficiency`
+object TransmitterMode {
+  const val Passive: Double = 0.0
+  const val Active: Double = 1.0
+}
 
-### PowerMode
-
-`Idle` (0), `Discharged` (1), `Discharging` (2), `Charging` (3), `Charged` (4)
-
-### PrinterInstruction
-
-`None` (0), `StackPointer` (1), `ExecuteRecipe` (2), `WaitUntilNextValid` (3), `JumpIfNextInvalid` (4), `JumpToAddress` (5), `DeviceSetLock` (6), `EjectReagent` (7), `EjectAllReagents` (8), `MissingRecipeReagent` (9)
-
-### ReEntryProfile
-
-`None` (0), `Low` (1), `Medium` (2), `High` (3), `Max` (4)
-
-### RobotMode
-
-`None` (0), `Follow` (1), `MoveToTarget` (2), `Roam` (3), `Unload` (4), `PathToTarget` (5), `StorageFull` (6)
-
-### RocketMode
-
-`Invalid` (0), `None` (1), `Mine` (2), `Survey` (3), `Discover` (4), `Chart` (5), `Deploy` (6)
-
-### SettingDisplayMode
-
-`Number` (0), `String` (1)
-
-### ShuttleType
-
-`None` (0), `Small` (1), `SmallGas` (2), `Medium` (3), `MediumGas` (4), `Large` (5), `LargeGas` (6), `MediumPlane` (7), `LargePlane` (8)
-
-### SlotClass
-
-`None` (0), `Helmet` (1), `Suit` (2), `Back` (3), `GasFilter` (4), `GasCanister` (5), `Motherboard` (6), `Circuitboard` (7), `DataDisk` (8), `Organ` (9), `Ore` (10), `Plant` (11), `Uniform` (12), `Entity` (13), `Battery` (14), `Egg` (15), `Belt` (16), `Tool` (17), `Appliance` (18), `Ingot` (19), `Torpedo` (20), `Cartridge` (21), `AccessCard` (22), `Magazine` (23), `Circuit` (24), `Bottle` (25), `ProgrammableChip` (26), `Glasses` (27), `CreditCard` (28), `DirtCanister` (29), `SensorProcessingUnit` (30), `LiquidCanister` (31), `LiquidBottle` (32), `Wreckage` (33), `SoundCartridge` (34), `DrillHead` (35), `ScanningHead` (36), `Flare` (37), `Blocked` (38), `SuitMod` (39), `Crate` (40), `Portables` (41), `RocketPayload` (42)
-
-### SorterInstruction
-
-`None` (0), `FilterPrefabHashEquals` (1), `FilterPrefabHashNotEquals` (2), `FilterSortingClassCompare` (3), `FilterSlotTypeCompare` (4), `FilterQuantityCompare` (5), `LimitNextExecutionByCount` (6)
-
-### SortingClass
-
-`Default` (0), `Kits` (1), `Tools` (2), `Resources` (3), `Food` (4), `Clothing` (5), `Appliances` (6), `Atmospherics` (7), `Storage` (8), `Ores` (9), `Ices` (10)
-
-### Sound
-
-`None` (0), `Alarm2` (1), `Alarm3` (2), `Alarm4` (3), `Alarm5` (4), `Alarm6` (5), `Alarm7` (6), `Music1` (7), `Music2` (8), `Music3` (9), `Alarm8` (10), `Alarm9` (11), `Alarm10` (12), `Alarm11` (13), `Alarm12` (14), `Danger` (15), `Warning` (16), `Alert` (17), `StormIncoming` (18), `IntruderAlert` (19), `Depressurising` (20), `Pressurising` (21), `AirlockCycling` (22), `PowerLow` (23), `SystemFailure` (24), `Welcome` (25), `MalfunctionDetected` (26), `HaltWhoGoesThere` (27), `FireFireFire` (28), `One` (29), `Two` (30), `Three` (31), `Four` (32), `Five` (33), `Floor` (34), `RocketLaunching` (35), `LiftOff` (36), `TraderIncoming` (37), `TraderLanded` (38), `PressureHigh` (39), `PressureLow` (40), `TemperatureHigh` (41), `TemperatureLow` (42), `PollutantsDetected` (43), `HighCarbonDioxide` (44), `Alarm1` (45)
-
-### TraderInstruction
-
-`None` (0), `WriteTraderData` (1), `StrongestContactIdHash` (2), `StrongestContactMetaData` (3), `StrongestContactSignalData` (4), `WriteTraderBuyData` (5), `WriteTraderSellData` (6), `TraderBuyThingData` (7), `TraderBuyThingChildData` (8), `TraderBuyGasData` (9), `TraderSellThingData` (10), `TraderSellGasData` (11), `TraderSellThingChildData` (12), `FilterPrefabHashEquals` (13), `FilterPrefabHashNotEquals` (14), `FilterSortingClassCompare` (15), `FilterQuantityCompare` (16), `FilterGasContains` (17), `FilterGasNotContains` (18)
-
-### TransmitterMode
-
-`Passive` (0), `Active` (1)
-
-### Vent
-
-`Outward` (0), `Inward` (1)
+object Vent {
+  const val Outward: Double = 0.0
+  const val Inward: Double = 1.0
+}
+```

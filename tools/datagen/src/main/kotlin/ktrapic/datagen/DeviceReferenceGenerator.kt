@@ -1,35 +1,42 @@
 package ktrapic.datagen
 
 /**
- * Generates `docs/DEVICES.md`, the reference of what programs can name: every typed device (its
- * prefab, entry point, type, logic types and slots), the device families, and the game's value
- * enums. It reads the generated runtime sources, so it lists exactly what the compiler accepts.
+ * Generates `docs/DEVICES.md`, the API reference of what programs can name, written as Kotlin
+ * declarations: every typed device (its logic types as `var` or `val`, its slots, and in a comment
+ * its prefab and entry point), the device families, the slot types, and the game's enums. It reads
+ * the generated runtime sources, so it lists exactly what the compiler accepts.
  */
 object DeviceReferenceGenerator {
   /** Where the file goes, relative to the workspace root. */
   const val PATH = "docs/DEVICES.md"
 
   private val DECLARATION =
-      Regex("""^(\s*)(?:abstract |sealed |open |data |enum )*(class|object|interface) (\w+)""")
-  private val PROPERTY = Regex("""^\s*(?:override )?(var|val) (\w+): (.+)$""")
+      Regex("""^(\s*)(?:abstract |sealed |open |data |enum )*(class|object|interface) (\w+)(.*)$""")
+  private val PROPERTY = Regex("""^\s*(override )?(var|val) (\w+): (.+)$""")
   private val PREFAB_NAME = Regex("""@PrefabName\("(\w+)"\)""")
-  private val SLOTS = Regex("""^\s*val slots: (.+)$""")
 
-  private class Property(val name: String, val writable: Boolean)
-
-  private class Device(
-      val prefab: String,
+  private class Property(
+      val name: String,
       val type: String,
+      val writable: Boolean,
+      val inherited: Boolean,
+  ) {
+    override fun toString() = "${if (writable) "var" else "val"} $name: $type"
+  }
+
+  private class Declaration(
+      val name: String,
       val properties: List<Property>,
-      val slots: String?,
+      val prefab: String? = null,
   )
 
   /** The reference for [prefabsSource], the generated `GeneratedPrefabs.kt`, and [enums]. */
   fun generate(prefabsSource: String, enums: LogicEnums, typing: Typing): String {
     val lines = prefabsSource.lines()
-    val devices = mutableMapOf<String, Device>()
+    val devices = mutableListOf<Declaration>()
     val entryPoints = mutableMapOf<String, String>()
-    val families = sortedMapOf<String, List<Property>>()
+    val families = mutableListOf<Declaration>()
+    val slots = mutableListOf<Declaration>()
     // The declarations enclosing the current line, by indentation.
     val enclosing = ArrayDeque<Pair<Int, String>>()
     var prefab: String? = null
@@ -40,21 +47,24 @@ object DeviceReferenceGenerator {
       while (enclosing.isNotEmpty() && enclosing.last().first >= indent) enclosing.removeLast()
       val name = (enclosing.map { it.second } + match.groupValues[3]).joinToString(".")
       enclosing.addLast(indent to match.groupValues[3])
-      val members = members(lines, index, indent)
       val kind = match.groupValues[2]
-      if (kind == "interface") families[name] = properties(members)
-      val named = prefab ?: continue
+      val properties = properties(members(lines, index, indent))
+      val named = prefab
       prefab = null
-      if (kind == "class") {
-        val slots = members.firstNotNullOfOrNull { SLOTS.find(it)?.groupValues?.get(1) }
-        devices[named] = Device(named, name, properties(members), slots)
-      } else {
-        entryPoints[named] = name
+      when {
+        kind == "interface" -> families += Declaration(name, properties)
+        kind == "class" && named != null -> devices += Declaration(name, properties, named)
+        kind == "class" && "DeviceSlot()" in match.groupValues[4] ->
+            slots += Declaration(name, properties)
+        kind == "object" && named != null -> entryPoints[named] = name
       }
     }
-    val missing = devices.keys - entryPoints.keys
+    val missing = devices.mapNotNull { it.prefab } - entryPoints.keys
     require(missing.isEmpty()) { "prefabs without an entry point: $missing" }
-    val sorted = devices.values.sortedBy { it.prefab.lowercase() }
+    fun entryPoint(device: Declaration) = entryPoints.getValue(device.prefab!!)
+
+    val topLevel = devices.filter { '.' !in it.name }.sortedBy { it.name.lowercase() }
+    val byLetter = topLevel.groupBy { it.name.first().uppercaseChar() }.toSortedMap()
 
     return buildString {
       append(
@@ -63,76 +73,133 @@ object DeviceReferenceGenerator {
       append("\n")
       append("# Devices\n")
       append("\n")
-      append("Every prefab a program can name, with its logic types, and the game's value enums. ")
-      append("The [language guide](LANGUAGE.md#devices) says how to use them.\n")
+      append("The typed devices, slots and enums a program can name, as Kotlin declarations: ")
+      append("${devices.size} prefabs in all. The [language guide](LANGUAGE.md#devices) says how ")
+      append("to use them. Search this page for a game prefab name (`StructureGrowLight`) to find ")
+      append("its type.\n")
       append("\n")
-      append("A prefab is used through its entry point: `GrowLights.at(d0)` is the grow light on ")
-      append("pin `d0`, `GrowLights.all` every one on the chip's network, and ")
-      append("`GrowLights.named(\"Potatoes\")` every one with that name. Logic types marked ")
-      append("**rw** can be written; the others can only be read. Any device can also be used ")
-      append("untyped, as `d0` to `d5` or `db`, with every logic type.\n")
-      append("\n")
-      append("- [Index](#index)\n")
+      append("- [Using a device](#using-a-device)\n")
       append("- [Families](#families)\n")
-      append("- [Devices by prefab](#devices-by-prefab)\n")
+      append("- Devices: ")
+      append(byLetter.keys.joinToString(" · ") { "[$it](#${it.lowercaseChar()})" })
+      append("\n")
+      append("- [Slots](#slots)\n")
       append("- [Enums](#enums)\n")
       append("\n")
-      append("## Index\n")
+      append("## Using a device\n")
       append("\n")
-      append("${sorted.size} prefabs.\n")
+      append("Each prefab has a device type, such as `GrowLight`, and an entry point named after ")
+      append("it in the plural, such as `GrowLights`, which every device below names in its ")
+      append("comment. Every entry point has the same three members:\n")
       append("\n")
-      append("| Prefab | Entry point | Type |\n")
-      append("|---|---|---|\n")
-      for (device in sorted) {
-        val entry = entryPoints.getValue(device.prefab)
-        append("| [${device.prefab}](#${anchor(device.prefab)}) | `$entry` | `${device.type}` |\n")
-      }
+      append("```kotlin\n")
+      append("object GrowLights {\n")
+      append("  /** The device on [pin], as a GrowLight. */\n")
+      append("  fun at(pin: Device): GrowLight\n")
+      append("\n")
+      append("  /** Every one on the chip's network. */\n")
+      append("  val all: DeviceBatch<GrowLight>\n")
+      append("\n")
+      append("  /** Every one on the network named [name], which must be a constant. */\n")
+      append("  fun named(name: String): DeviceBatch<GrowLight>\n")
+      append("}\n")
+      append("```\n")
+      append("\n")
+      append("A device's logic types are its properties: a `var` can be written, a `val` only ")
+      append("read. Every typed device also has `val PrefabHash: Prefab`, `val NameHash: Double` ")
+      append("and `val ReferenceId: Double`. Any device can also be used untyped, as `d0` to ")
+      append("`d5` or `db`, with every logic type.\n")
       append("\n")
       append("## Families\n")
       append("\n")
-      append("A family's prefabs share the logic types listed for it, so a function can take the ")
-      append("family's type for any of them.\n")
-      for ((family, properties) in families) {
-        val members = sorted.filter { it.type.startsWith("$family.") }
+      append("A family is a device that comes as several prefabs. Its interface holds the logic ")
+      append("types every member has, so a function can take any of them; each member is a ")
+      append("nested class, with an entry point nested the same way (`Batteries.Small`).\n")
+      for (family in families.sortedBy { it.name }) {
+        val members = devices.filter { it.name.startsWith("${family.name}.") }
         append("\n")
-        append("### $family\n")
+        append("### ${family.name}\n")
         append("\n")
-        append("Prefabs: ${members.joinToString { "`${it.type}` (${it.prefab})" }}.\n")
-        append("\n")
-        append("${list(properties)}\n")
+        append("```kotlin\n")
+        append("interface ${family.name} {\n")
+        for (property in family.properties) append("  $property\n")
+        for (member in members) {
+          val simple = member.name.substringAfter('.')
+          val extra = member.properties.filter { !it.inherited }
+          append("\n")
+          append("  /** ${member.prefab}. Entry point: ${entryPoint(member)}. */\n")
+          if (extra.isEmpty()) {
+            append("  class $simple : ${family.name}\n")
+          } else {
+            append("  class $simple : ${family.name} {\n")
+            for (property in extra) append("    $property\n")
+            append("  }\n")
+          }
+        }
+        append("}\n")
+        append("```\n")
       }
       append("\n")
-      append("## Devices by prefab\n")
-      for (device in sorted) {
+      append("## Devices\n")
+      for ((letter, group) in byLetter) {
         append("\n")
-        append("### ${device.prefab}\n")
+        append("### $letter\n")
         append("\n")
-        append("Entry point `${entryPoints.getValue(device.prefab)}`, type `${device.type}`")
-        device.slots?.let { append(", slots `$it`") }
-        append(".\n")
-        append("\n")
-        append(
-            if (device.properties.isEmpty()) "No logic types.\n" else "${list(device.properties)}\n"
-        )
+        append("```kotlin\n")
+        for ((i, device) in group.withIndex()) {
+          if (i > 0) append("\n")
+          append("/** ${device.prefab}. Entry point: ${entryPoint(device)}. */\n")
+          declaration("class ${device.name} : TypedDevice", device.properties)
+        }
+        append("```\n")
       }
+      append("\n")
+      append("## Slots\n")
+      append("\n")
+      append("A device's `slots` are numbered from 0: `d0.slots[0].Occupied`. A slot type has the ")
+      append("slot logic types that kind of slot can read, and `var` for those a program can ")
+      append("write.\n")
+      append("\n")
+      append("```kotlin\n")
+      for ((i, slot) in slots.sortedBy { it.name.lowercase() }.withIndex()) {
+        if (i > 0) append("\n")
+        declaration("class ${slot.name} : DeviceSlot", slot.properties)
+      }
+      append("```\n")
       append("\n")
       append("## Enums\n")
       append("\n")
-      append("Operand enums name logic types and batch methods, as in `d0[LogicType.Setting]`; ")
-      append("value enums are `Double` constants that can be written to a device, as in ")
+      append("Operand enums name logic types and batch methods, as in `d0[LogicType.Setting]`. ")
+      append("Value enums are `Double` constants that can be written to a device, as in ")
       append("`db.Color = Color.Red`.\n")
-      for ((name, entries) in enums.enums.toSortedMap()) {
-        append("\n")
-        append("### $name\n")
-        append("\n")
+      append("\n")
+      append("```kotlin\n")
+      for ((i, entry) in enums.enums.toSortedMap().entries.withIndex()) {
+        val (name, values) = entry
+        if (i > 0) append("\n")
         if (name in typing.operandEnums) {
-          append(entries.keys.filter { it != "None" }.sorted().joinToString { "`$it`" })
+          append("enum class $name {\n")
+          for (row in values.keys.filter { it != "None" }.sorted().chunked(6)) {
+            append("  ${row.joinToString(", ")},\n")
+          }
         } else {
-          append(entries.entries.joinToString { (entry, value) -> "`$entry` ($value)" })
+          append("object $name {\n")
+          for ((value, number) in values) append("  const val $value: Double = $number.0\n")
         }
-        append("\n")
+        append("}\n")
       }
+      append("```\n")
     }
+  }
+
+  private fun StringBuilder.declaration(header: String, properties: List<Property>) {
+    if (properties.isEmpty()) {
+      append("$header\n")
+      return
+    }
+    append("$header {\n")
+    for (property in properties) append("  $property\n")
+    append("}\n")
   }
 
   /** The lines declared directly inside the declaration on line [start], indented [indent]. */
@@ -148,17 +215,17 @@ object DeviceReferenceGenerator {
 
   private fun indentOf(line: String) = line.length - line.trimStart().length
 
+  /** The properties among [members], with the slots last. */
   private fun properties(members: List<String>) =
       members
           .mapNotNull { PROPERTY.find(it) }
-          .filter { it.groupValues[2] != "slots" }
-          .map { Property(it.groupValues[2], it.groupValues[1] == "var") }
-          .sortedBy { it.name }
-
-  private fun list(properties: List<Property>) = properties.joinToString {
-    "`${it.name}`" + if (it.writable) " **rw**" else ""
-  }
-
-  /** GitHub's heading anchor for a prefab name, which has only letters, digits and `_`. */
-  private fun anchor(heading: String) = heading.lowercase()
+          .map {
+            Property(
+                it.groupValues[3],
+                it.groupValues[4].trim(),
+                it.groupValues[2] == "var",
+                it.groupValues[1].isNotEmpty(),
+            )
+          }
+          .sortedWith(compareBy({ it.name == "slots" }, { it.name }))
 }
