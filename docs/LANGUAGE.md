@@ -186,8 +186,9 @@ LedDisplays.Large.all.Text = "OK"
 A device's slots are `slots`, numbered from 0: `d0.slots[0].Quantity` reads a slot's logic type
 (`ls`). The number may be computed, such as a loop's variable; it is fixed when the slot is
 taken, so a slot held in a `val` keeps its number when the variable changes. A constant number
-must be from 0 to 255 (255 is a robotic arm dock's target slot); a computed one outside a device's
-slots is an error on the chip.
+must be from 0 to 255 (255 is a robotic arm dock's target slot). That range is all the compiler
+checks, not the device's own slots: any number past a device's last slot, constant or computed, is
+an error on the chip.
 
 ```kotlin
 var plants = 0.0

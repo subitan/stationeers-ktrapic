@@ -268,6 +268,46 @@ class PrefabGeneratorTest {
   }
 
   @Test
+  fun `the consoles must be exactly the prefabs with Circuitboard slots`() {
+    fun prefab(name: String, vararg kinds: String) =
+        Prefab(
+            name,
+            hash(name),
+            mapOf("On" to Access(read = true, write = true)),
+            kinds.withIndex().associate { (number, kind) -> number to SlotInfo(kind) },
+        )
+    val kinds = mapOf("Circuitboard" to listOf("Quantity"), "Plant" to listOf("Quantity"))
+    fun generate(consoles: List<String>, vararg prefabs: Prefab) =
+        PrefabGenerator.generate(
+            Prefabs("test", prefabs.toList(), kinds),
+            Grouping(emptyMap(), emptyList()),
+            setOf("LogicType"),
+            typing.copy(consoles = consoles),
+        )
+
+    generate(
+        listOf("StructureConsole"),
+        prefab("StructureConsole", "Circuitboard"),
+        prefab("StructureTray", "Plant"),
+    )
+    for ((consoles, prefabs) in
+        listOf(
+            // A Circuitboard slot on a prefab that isn't a console.
+            emptyList<String>() to listOf(prefab("StructureConsole", "Circuitboard")),
+            // A console with a slot of another kind.
+            listOf("StructureConsole") to
+                listOf(prefab("StructureConsole", "Circuitboard", "Plant")),
+            // A console with no slots, or that isn't a prefab.
+            listOf("StructureConsole") to listOf(prefab("StructureConsole")),
+            listOf("Missing") to emptyList(),
+        )) {
+      assertThrows<IllegalArgumentException>("$consoles $prefabs") {
+        generate(consoles, *prefabs.toTypedArray())
+      }
+    }
+  }
+
+  @Test
   fun `plurals`() {
     assertThat(PrefabGenerator.plural("Battery")).isEqualTo("Batteries")
     assertThat(PrefabGenerator.plural("Relay")).isEqualTo("Relays")

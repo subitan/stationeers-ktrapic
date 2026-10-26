@@ -557,7 +557,9 @@ internal class Translator {
           else -> fail(call, "$name is not supported")
         }
       }
-      cls.isSubclassOf(DEVICE_BATCH) -> {
+      // A batch's and a batch reading's members are their properties: any other member (hashCode,
+      // ...) is left unsupported.
+      property != null && cls.isSubclassOf(DEVICE_BATCH) -> {
         val batch =
             aliasOrValue(args[0]!!) as? Batch
                 ?: fail(call, "this batch must be all, named(...), or a val holding one")
@@ -578,7 +580,7 @@ internal class Translator {
         }
         NoValue
       }
-      cls.isSubclassOf(BATCH_READING) -> {
+      property != null && cls.isSubclassOf(BATCH_READING) -> {
         val read =
             aliasOrValue(args[0]!!) as? BatchRead
                 ?: fail(call, "this batch reading must be a batch method's")

@@ -15,6 +15,7 @@ object PrefabGenerator {
   private const val FILE = "GeneratedPrefabs.kt"
   private val PREFIXES = listOf("Structure", "Item")
   private val BATCH_METHODS = listOf("average", "sum", "minimum", "maximum")
+  private const val CONSOLE_SLOT_KIND = "Circuitboard"
 
   /** Names declared elsewhere in the `ktrapic` package, which no prefab may take. */
   private val HAND_WRITTEN =
@@ -70,6 +71,7 @@ object PrefabGenerator {
         }
       }
     }
+    checkConsoles(prefabs, typing.consoles.toSet())
     for ((family, members) in grouping.families) {
       claim(family, "family $family")
       claim(members.plural, "family $family")
@@ -108,6 +110,28 @@ object PrefabGenerator {
       )
     }
     return FILE to out.toString()
+  }
+
+  /**
+   * Checks that [consoles] are exactly the prefabs with `Circuitboard` slots, and have only those.
+   * The game lets a console write `Mode` on any of its slots; the typed API gives `Mode` to the
+   * `Circuitboard` slot kind instead, which matches the game only while that holds.
+   */
+  private fun checkConsoles(prefabs: Prefabs, consoles: Set<String>) {
+    val names = prefabs.prefabs.map { it.name }.toSet()
+    for (console in consoles) require(console in names) { "console $console is not a prefab" }
+    for (prefab in prefabs.prefabs) {
+      val kinds = prefab.slots.values.map { it.kind }.toSet()
+      if (prefab.name in consoles) {
+        require(kinds == setOf(CONSOLE_SLOT_KIND)) {
+          "console ${prefab.name} has slots of kinds $kinds, not only $CONSOLE_SLOT_KIND"
+        }
+      } else {
+        require(CONSOLE_SLOT_KIND !in kinds) {
+          "${prefab.name} has a $CONSOLE_SLOT_KIND slot but is not a console"
+        }
+      }
+    }
   }
 
   private fun shortName(prefab: String): String =

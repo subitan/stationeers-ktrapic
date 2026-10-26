@@ -71,5 +71,10 @@
     "Tool": [
       "On"
     ]
-  }
+  },
+  "consoles": [
+    "StructureConsole",
+    "StructureConsoleDual",
+    "StructureConsoleMonitor"
+  ]
 }
