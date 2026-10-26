@@ -184,6 +184,29 @@ class BatchTest {
   }
 
   @Test
+  fun `a batch test negated, before an or, or as a loop condition branches as in Kotlin`() {
+    val source =
+        """
+        db.Setting = if (!GrowLights.all.any { it.On }) 1.0 else 0.0
+        db.Ratio = if (GrowLights.named("Tomatoes").all { it.On } || db.Setting > 5.0) 1.0 else 0.0
+        var i = 0
+        while (GrowLights.named("Potatoes").any { it.On }) {
+          i++
+          if (i == 3) GrowLights.named("Potatoes").forEach { it.On = false }
+        }
+        db.Mode = i.toDouble()
+        """
+    val code = compiled(source).code
+
+    assertThat(code).contains("lb r0 ${Hashes.hash(growLight)} On Maximum\nbgtz r0 ")
+    // Potatoes: one off, one on; Tomatoes: on.
+    val db = run(source, ::lights)[0]
+    assertThat(listOf(db["Setting"], db["Ratio"], db["Mode"]))
+        .containsExactly(0.0, 1.0, 3.0)
+        .inOrder()
+  }
+
+  @Test
   fun `on an empty batch, any is false and none true as in Kotlin, and all is false`() {
     val source =
         """

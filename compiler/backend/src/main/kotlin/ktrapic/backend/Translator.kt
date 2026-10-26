@@ -678,7 +678,9 @@ internal class Translator {
   /**
    * `any`, `all` or `none { it.On }`: one batch read and a comparison with 0. `any` and `none` read
    * the `Maximum` (negative infinity for no devices, so `any` is false and `none` true, as in
-   * Kotlin); `all` reads the `Minimum` (0 for no devices, so false, where Kotlin gives true).
+   * Kotlin); `all` reads the `Minimum` (0 for no devices, so false, where Kotlin gives true). The
+   * logic type is a Boolean one, which the game reports as 0 or 1, so the read is never NaN, and
+   * comparing it with 0 needs no [truth].
    */
   private fun batchTest(call: IrCall, source: Value, name: String): Comparison {
     val (method, op) = BATCH_TESTS.getValue(name)
@@ -857,7 +859,9 @@ internal class Translator {
 
   /**
    * A runtime function with a side effect that is not an assignment: a device's indexed write
-   * (`Device.set`), a batch's `forEach`, `sleep` or `yield`.
+   * (`Device.set`), a batch's `forEach`, `sleep` or `yield`. Every `forEach` that compiles assigns
+   * logic types in its lambda, which [assigns] finds on its own; the call is counted too, so that
+   * doesn't depend on what [batchWrites] accepts.
    */
   private fun IrSimpleFunction.isSideEffect(): Boolean =
       kotlinFqName.asString() in SIDE_EFFECTS ||
@@ -1683,7 +1687,6 @@ internal class Translator {
     const val SLOT_NUMBER = "ktrapic.SlotNumber"
     const val MAX_SLOT = 255
 
-    /** The functions ending a `map`, by the game's batch method they read with. */
     /** A batch's Boolean tests, by the batch method each reads and its comparison with 0. */
     val BATCH_TESTS =
         mapOf(
@@ -1692,6 +1695,7 @@ internal class Translator {
             "none" to ("Maximum" to "le"),
         )
 
+    /** The functions ending a `map`, by the game's batch method they read with. */
     val MAPPED_TERMINALS =
         mapOf(
             "ktrapic.average" to "Average",

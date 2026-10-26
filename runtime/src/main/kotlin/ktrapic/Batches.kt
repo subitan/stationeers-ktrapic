@@ -19,6 +19,10 @@ package ktrapic
  *
  * Unlike Kotlin's, `minOf` and `maxOf` don't throw for an empty batch: `maxOf` gives negative
  * infinity, and `minOf` and `sumOf` give 0.
+ *
+ * `count { ... }`, `any`, `all` and `none` take the Boolean logic type they read to be 0 or 1, as
+ * the game reports it (a value written to one is clamped to that range): `count` is its `Sum`, and
+ * the others compare its `Maximum` or `Minimum` with 0.
  */
 abstract class Batch<out T> internal constructor() {
   /**
