@@ -13,15 +13,19 @@ object DeviceReferenceGenerator {
   private val DECLARATION =
       Regex("""^(\s*)(?:abstract |sealed |open |data |enum )*(class|object|interface) (\w+)(.*)$""")
   private val PROPERTY = Regex("""^\s*(override )?(var|val) (\w+): (.+)$""")
-  private val PREFAB_NAME = Regex("""@PrefabName\("(\w+)"\)""")
+  private val PREFAB_NAME = Regex("""@PrefabName\("([^"]+)"\)""")
+  private val SLOT_NUMBER = Regex("""^\s*@SlotNumber\((\d+)\)$""")
 
+  /** A logic type, or with a [slot] number one of the slots the game names. */
   private class Property(
       val name: String,
       val type: String,
       val writable: Boolean,
       val inherited: Boolean,
+      val slot: Int? = null,
   ) {
-    override fun toString() = "${if (writable) "var" else "val"} $name: $type"
+    override fun toString() =
+        "${if (writable) "var" else "val"} $name: $type${slot?.let { " // slots[$it]" } ?: ""}"
   }
 
   private class Declaration(
@@ -40,6 +44,7 @@ object DeviceReferenceGenerator {
     // The declarations enclosing the current line, by indentation.
     val enclosing = ArrayDeque<Pair<Int, String>>()
     var prefab: String? = null
+    var typedDevices = 0
     for ((index, line) in lines.withIndex()) {
       PREFAB_NAME.find(line)?.let { prefab = it.groupValues[1] }
       val match = DECLARATION.find(line) ?: continue
@@ -51,6 +56,7 @@ object DeviceReferenceGenerator {
       val properties = properties(members(lines, index, indent))
       val named = prefab
       prefab = null
+      if (kind == "class" && "TypedDevice()" in match.groupValues[4]) typedDevices++
       when {
         kind == "interface" -> families += Declaration(name, properties)
         kind == "class" && named != null -> devices += Declaration(name, properties, named)
@@ -58,6 +64,10 @@ object DeviceReferenceGenerator {
             slots += Declaration(name, properties)
         kind == "object" && named != null -> entryPoints[named] = name
       }
+    }
+    // A typed device whose prefab name went unread would otherwise be left out silently.
+    require(typedDevices == devices.size) {
+      "${typedDevices - devices.size} typed device(s) without a recognized @PrefabName"
     }
     val missing = devices.mapNotNull { it.prefab } - entryPoints.keys
     require(missing.isEmpty()) { "prefabs without an entry point: $missing" }
@@ -105,6 +115,9 @@ object DeviceReferenceGenerator {
       append("}\n")
       append("```\n")
       append("\n")
+      append("For a device with slots, the batch from `all` or `named` also has `slots`, a slot ")
+      append("of every one in the batch: `BatteryChargers.all.slots[0]`.\n")
+      append("\n")
       append("A device's logic types are its properties: a `var` can be written, a `val` only ")
       append("read. Every typed device also has `val PrefabHash: Prefab`, `val NameHash: Double` ")
       append("and `val ReferenceId: Double`. Any device can also be used untyped, as `d0` to ")
@@ -129,9 +142,9 @@ object DeviceReferenceGenerator {
           append("\n")
           append("  /** ${member.prefab}. Entry point: ${entryPoint(member)}. */\n")
           if (extra.isEmpty()) {
-            append("  class $simple : ${family.name}\n")
+            append("  class $simple : TypedDevice, ${family.name}\n")
           } else {
-            append("  class $simple : ${family.name} {\n")
+            append("  class $simple : TypedDevice, ${family.name} {\n")
             for (property in extra) append("    $property\n")
             append("  }\n")
           }
@@ -156,9 +169,10 @@ object DeviceReferenceGenerator {
       append("\n")
       append("## Slots\n")
       append("\n")
-      append("A device's `slots` are numbered from 0: `d0.slots[0].Occupied`. A slot type has the ")
-      append("slot logic types that kind of slot can read, and `var` for those a program can ")
-      append("write.\n")
+      append("A device's `slots` are numbered from 0: `d0.slots[0].Occupied`. Slots the game ")
+      append("names are also properties of the device, listed after its logic types with their ")
+      append("number in a comment (`// slots[0]`). A slot type has the slot logic types that kind ")
+      append("of slot can read, and `var` for those a program can write.\n")
       append("\n")
       append("```kotlin\n")
       for ((i, slot) in slots.sortedBy { it.name.lowercase() }.withIndex()) {
@@ -169,7 +183,17 @@ object DeviceReferenceGenerator {
       append("\n")
       append("## Enums\n")
       append("\n")
-      append("Operand enums name logic types and batch methods, as in `d0[LogicType.Setting]`. ")
+      append("Operand enums name logic types and batch methods, as in `d0[LogicType.Setting]`; ")
+      val nones =
+          enums.enums
+              .filter { (name, values) -> name in typing.operandEnums && "None" in values }
+              .keys
+              .sorted()
+      if (nones.isNotEmpty()) {
+        append(nones.joinToString(" and ") { "`$it.None`" })
+        append(", which name${if (nones.size == 1) "s" else ""} nothing, ")
+        append("${if (nones.size == 1) "is" else "are"} not listed. ")
+      }
       append("Value enums are `Double` constants that can be written to a device, as in ")
       append("`db.Color = Color.Red`.\n")
       append("\n")
@@ -215,17 +239,32 @@ object DeviceReferenceGenerator {
 
   private fun indentOf(line: String) = line.length - line.trimStart().length
 
-  /** The properties among [members], with the slots last. */
-  private fun properties(members: List<String>) =
-      members
-          .mapNotNull { PROPERTY.find(it) }
-          .map {
-            Property(
-                it.groupValues[3],
-                it.groupValues[4].trim(),
-                it.groupValues[2] == "var",
-                it.groupValues[1].isNotEmpty(),
-            )
-          }
-          .sortedWith(compareBy({ it.name == "slots" }, { it.name }))
+  /**
+   * The properties among [members]: logic types by name, then the slots the game names by number,
+   * then `slots`.
+   */
+  private fun properties(members: List<String>): List<Property> {
+    val properties = mutableListOf<Property>()
+    var slot: Int? = null
+    for (member in members) {
+      val number = SLOT_NUMBER.find(member)
+      if (number != null) {
+        slot = number.groupValues[1].toInt()
+        continue
+      }
+      val match = PROPERTY.find(member) ?: continue
+      properties +=
+          Property(
+              match.groupValues[3],
+              match.groupValues[4].trim(),
+              match.groupValues[2] == "var",
+              match.groupValues[1].isNotEmpty(),
+              slot,
+          )
+      slot = null
+    }
+    return properties.sortedWith(
+        compareBy({ it.name == "slots" }, { it.slot != null }, { it.slot }, { it.name })
+    )
+  }
 }
