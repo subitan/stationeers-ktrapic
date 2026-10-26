@@ -268,6 +268,35 @@ class EmulatorTest {
   }
 
   @Test
+  fun maxAndMinReturnTheSecondOperandForZerosOfDifferentSign() {
+    val emu =
+        run(
+            """
+            |mul r1 0 -1
+            |max r2 0 r1
+            |max r3 r1 0
+            |min r4 r1 0
+            |min r5 0 r1
+            |clamp r6 r1 0 1
+            |clamp r7 0 -1 r1
+            |div r8 0 0
+            |max r9 1 r8
+            |min r10 r8 1
+            """
+                .trimMargin()
+        )
+
+    assertThat(emu.register("r2")).isEqualTo(-0.0)
+    assertThat(emu.register("r3")).isEqualTo(0.0)
+    assertThat(emu.register("r4")).isEqualTo(0.0)
+    assertThat(emu.register("r5")).isEqualTo(-0.0)
+    assertThat(emu.register("r6")).isEqualTo(0.0)
+    assertThat(emu.register("r7")).isEqualTo(-0.0)
+    assertThat(emu.register("r9")).isNaN()
+    assertThat(emu.register("r10")).isNaN()
+  }
+
+  @Test
   fun bitwiseOperationsWorkOn53BitIntegers() {
     val emu =
         run(

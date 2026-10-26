@@ -175,6 +175,11 @@ the chip can't match the JVM:
   than 0.09999999999999945, and `x % Double.POSITIVE_INFINITY` is NaN rather than `x`. A zero
   result is always 0.0, where the JVM gives it the dividend's sign: `-3.0 % 3.0` is 0.0, not
   -0.0.
+- `max(a, b)` and `min(a, b)` return `b` when `a` and `b` are 0.0 and -0.0 in either order,
+  where the JVM's `max` gives 0.0 and its `min` gives -0.0. `coerceAtLeast`, `coerceAtMost` and
+  `coerceIn` return the bound when it equals the receiver, so `(-0.0).coerceIn(0.0, 1.0)` is 0.0,
+  where the JVM keeps -0.0. A NaN bound makes their result NaN, where the JVM ignores it, and
+  `coerceIn` with a minimum greater than its maximum returns the maximum, where the JVM throws.
 
 Constant expressions fold to the same results the chip computes. A NaN constant appears in the
 output as `0 / 0`, since the chip rejects `nan` written as an operand, and a negative-zero

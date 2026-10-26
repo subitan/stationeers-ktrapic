@@ -497,6 +497,14 @@ internal class Translator {
   private fun stringConstant(call: IrCall, kind: StringConstant.Kind): Value {
     val text = (call.arguments[0] as? IrConst)?.value as? String
     if (text == null) fail(call, "${kind.name.lowercase()}(...) needs a constant string")
+    // The game would take a tab or another control character other than a line break, but in
+    // source text one is almost certainly a mistake.
+    if (text.any { it.isISOControl() }) {
+      fail(
+          call,
+          "${kind.name.lowercase()}(...) text can't contain a line break or another control character",
+      )
+    }
     // Both the constructor and numericValue reject text the game can't take (STR's length and
     // ASCII limits are checked when the value is computed).
     return try {

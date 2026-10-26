@@ -117,8 +117,10 @@ internal object Parser {
   }
 
   /**
-   * Splits a line into whitespace-separated tokens and a comment, keeping quoted text whole. As in
-   * the game, the first `#` starts the comment even inside quotes.
+   * Splits a line into whitespace-separated tokens and a comment, keeping quoted text whole. The
+   * game gets the same tokens another way: it replaces each `HASH("...")` and `STR("...")` with its
+   * number before splitting the line on whitespace. As in the game, the first `#` starts the
+   * comment even inside quotes.
    */
   private fun tokenize(lineNumber: Int, raw: String): Pair<List<String>, String?> {
     val tokens = mutableListOf<String>()

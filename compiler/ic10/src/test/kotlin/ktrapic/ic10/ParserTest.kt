@@ -54,11 +54,12 @@ class ParserTest {
 
   @Test
   fun followsTheGameOnExponentsCommentsAndRedefinitions() {
-    // The game reads no exponent, and cuts a line at its first #, even inside quotes.
+    // The game reads no exponent, cuts a line at its first #, even inside quotes, and reads
+    // HASH("...") only with text in the quotes.
     assertThrows<Ic10ParseException> { Program.parse("move r0 2e3") }
     assertThrows<Ic10ParseException> { Program.parse("""move r0 HASH("a#b")""") }
-    val tab = assertThrows<Ic10ParseException> { Program.parse("yield\nmove r0 HASH(\"a\tb\")") }
-    assertThat(tab.line).isEqualTo(2)
+    val empty = assertThrows<Ic10ParseException> { Program.parse("yield\nmove r0 HASH(\"\")") }
+    assertThat(empty.line).isEqualTo(2)
     val redefined = assertThrows<Ic10ParseException> { Program.parse("define A 1\ndefine A 2") }
     assertThat(redefined.line).isEqualTo(2)
   }
@@ -76,6 +77,13 @@ class ParserTest {
         )
         .inOrder()
     assertThat(line.comment).isEqualTo("note")
+  }
+
+  @Test
+  fun parsesStringConstantsWithTabs() {
+    val line = Program.parse("move r0 STR(\"a\tb\")").lines.single() as Line.Instruction
+
+    assertThat(line.operands[1]).isEqualTo(StringConstant(StringConstant.Kind.STR, "a\tb"))
   }
 
   @Test
