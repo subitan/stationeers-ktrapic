@@ -314,6 +314,15 @@ class Emulator(
         val slot = integer(ops[2])
         set(batch(devices, ops[4]) { it.readSlot(slot, logicType(ops[3])) })
       }
+      // As for `lbn`, `Count` counts by prefab only.
+      "lbns" -> {
+        val slot = integer(ops[3])
+        set(
+            batch(matching(ops[1], ops[2]), ops[5], count = matching(ops[1]).size) {
+              it.readSlot(slot, logicType(ops[4]))
+            }
+        )
+      }
       "sb" -> matching(ops[0]).forEach { it.write(logicType(ops[1]), v(2)) }
       "sbn" -> matching(ops[0], ops[1]).forEach { it.write(logicType(ops[2]), v(3)) }
       "sbs" -> matching(ops[0]).forEach { it.writeSlot(integer(ops[1]), logicType(ops[2]), v(3)) }

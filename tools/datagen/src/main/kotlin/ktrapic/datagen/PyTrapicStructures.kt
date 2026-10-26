@@ -20,12 +20,19 @@ object PyTrapicStructures {
   private val PREFAB_NAME = Regex("""^ {4}_prefab_name: int = "([^"]+)"\s*$""")
   private val GETTER = Regex("""^ {4}def (\w+)\(self\) -> float:\s*$""")
   private val SETTER = Regex("""^ {4}@(\w+)\.setter\s*$""")
+  private val SLOT = Regex("""^ {4}def slot(\d+)\(self\) -> (_SlotType\w*):\s*$""")
+  private val SLOT_ALIAS = Regex("""^ {4}def (\w+)\(self\) -> (_SlotType\w*):\s*$""")
+  private val RETURN_SLOT = Regex("""^ {8}return self\.slot(\d+)\s*$""")
+  private const val SLOT_KIND_ROOT = "_SlotTypeCommon"
 
   private class PyClass(val name: String, val bases: List<String>) {
     var hash: Int? = null
     var prefabName: String? = null
     val readable = linkedSetOf<String>()
     val writable = linkedSetOf<String>()
+    /** Slot kind classes by slot index, and slot names by index. */
+    val slots = sortedMapOf<Int, String>()
+    val slotNames = sortedMapOf<Int, String>()
   }
 
   fun prefabs(structuresGenerated: String, source: String): Prefabs {
@@ -33,6 +40,8 @@ object PyTrapicStructures {
     var current: PyClass? = null
     var pendingHeader: StringBuilder? = null
     var pendingName = ""
+    // A named slot's getter (`def Battery(self) -> _SlotTypeBattery:`) returns `self.slotN`.
+    var pendingAlias: String? = null
 
     // A class declared again replaces the earlier one, as in Python; PyTrapIC declares the
     // _ImportCount mixin twice, and every prefab class comes after both.
@@ -76,6 +85,16 @@ object PyTrapicStructures {
       PREFAB_NAME.matchEntire(line)?.let { cls.prefabName = it.groupValues[1] }
       GETTER.matchEntire(line)?.let { cls.readable += it.groupValues[1] }
       SETTER.matchEntire(line)?.let { cls.writable += it.groupValues[1] }
+      pendingAlias?.let { alias ->
+        RETURN_SLOT.matchEntire(line)?.let { cls.slotNames[it.groupValues[1].toInt()] = alias }
+        pendingAlias = null
+      }
+      val slot = SLOT.matchEntire(line)
+      if (slot != null) {
+        cls.slots[slot.groupValues[1].toInt()] = slot.groupValues[2]
+      } else {
+        SLOT_ALIAS.matchEntire(line)?.let { pendingAlias = it.groupValues[1] }
+      }
     }
     require(pendingHeader == null) { "unterminated class header for $pendingName" }
 
@@ -95,6 +114,10 @@ object PyTrapicStructures {
       return result
     }
 
+    // A slot kind is _SlotTypeCommon or a class built on it; the plural batch views are not.
+    fun isSlotKind(name: String): Boolean =
+        name == SLOT_KIND_ROOT || classes[name]?.bases?.any { isSlotKind(it) } == true
+
     val prefabs =
         classes.values
             .filter { !it.name.startsWith("_") && it.hash != null }
@@ -104,14 +127,35 @@ object PyTrapicStructures {
               require(cls.hash == gameHash(prefabName)) {
                 "${cls.name}: _hash ${cls.hash} is not the hash of $prefabName"
               }
-              Prefab(prefabName, cls.hash!!, access(cls.name, emptySet()).toSortedMap())
+              val slots =
+                  cls.slots.mapValues { (index, kindClass) ->
+                    require(isSlotKind(kindClass)) {
+                      "${cls.name} slot $index: $kindClass is not a slot kind"
+                    }
+                    SlotInfo(slotKindName(kindClass), cls.slotNames[index])
+                  }
+              Prefab(prefabName, cls.hash!!, access(cls.name, emptySet()).toSortedMap(), slots)
             }
             .sortedBy { it.name }
     require(prefabs.isNotEmpty()) { "no prefabs found" }
     val duplicates = prefabs.groupBy { it.name }.filterValues { it.size > 1 }.keys
     require(duplicates.isEmpty()) { "prefabs declared twice: $duplicates" }
-    return Prefabs(source, prefabs)
+    // PyTrapIC marks every slot logic type writable, which the game's aren't; only reads are kept.
+    val slotKinds =
+        classes.keys
+            .filter { isSlotKind(it) }
+            .associate { slotKindName(it) to access(it, emptySet()).keys.sorted() }
+            .toSortedMap()
+    return Prefabs(source, prefabs, slotKinds)
   }
+
+  /** `_SlotTypeCommon` is `Common`, `_SlotTypeBattery` is `Battery`, and `_SlotType` `Filtered`. */
+  private fun slotKindName(className: String): String =
+      when (className) {
+        SLOT_KIND_ROOT -> "Common"
+        "_SlotType" -> "Filtered"
+        else -> className.removePrefix("_SlotType")
+      }
 
   /** The game's hash of a name: the CRC-32 of its UTF-8 bytes, as a signed 32-bit integer. */
   fun gameHash(name: String): Int =

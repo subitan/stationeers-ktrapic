@@ -31,6 +31,28 @@ class PrefabGeneratorTest {
       |        return _DeviceLogicType(self, _LT.Charge)
       |
       |
+      |class _SlotTypeCommon(_BaseSlotType):
+      |    @property
+      |    def Quantity(self) -> float:
+      |        return _DeviceSlotType(self, _LST.Quantity)
+      |
+      |    @Quantity.setter
+      |    def Quantity(self, value: int | float):
+      |        pass
+      |
+      |
+      |class _SlotTypeCommons(_BaseSlotTypes):
+      |    @property
+      |    def Quantity(self) -> _DevicesSlotType:
+      |        return _DevicesSlotType(self, _LST.Quantity)
+      |
+      |
+      |class _SlotTypePlant(_SlotTypeCommon):
+      |    @property
+      |    def Growth(self) -> float:
+      |        return _DeviceSlotType(self, _LST.Growth)
+      |
+      |
       |class GrowLight(_BaseStructure, _On):
       |    _hash: int = ${hash("StructureGrowLight")}
       |    _prefab_name: int = "StructureGrowLight"
@@ -38,6 +60,14 @@ class PrefabGeneratorTest {
       |    @property
       |    def slot0(self) -> _SlotTypePlant:
       |        return _SlotTypePlant(self, 0)
+      |
+      |    @property
+      |    def Tray(self) -> _SlotTypePlant:
+      |        return self.slot0
+      |
+      |    @property
+      |    def slot255(self) -> _SlotTypeCommon:
+      |        return _SlotTypeCommon(self, 255)
       |
       |
       |class _GrowLights(_BaseStructures, _Ons):
@@ -86,7 +116,52 @@ class PrefabGeneratorTest {
       )
 
   private fun generate(grouping: Grouping = this.grouping) =
-      PrefabGenerator.generate(prefabs, grouping, setOf("LogicType"), setOf("On")).second
+      PrefabGenerator.generate(
+              prefabs,
+              grouping,
+              setOf("LogicType"),
+              typing,
+          )
+          .second
+
+  private val typing =
+      Typing(
+          operandEnums = emptyList(),
+          booleanLogicTypes = listOf("On"),
+          booleanSlotLogicTypes = listOf("Occupied"),
+          slotReadsAlways = listOf("Occupied"),
+          slotWrites = mapOf("Plant" to listOf("Open")),
+      )
+
+  @Test
+  fun `imports slots by number with their names, and what each kind of slot reads`() {
+    val light = prefabs.prefabs.single { it.name == "StructureGrowLight" }
+
+    assertThat(light.slots)
+        .containsExactly(0, SlotInfo("Plant", "Tray"), 255, SlotInfo("Common"))
+        .inOrder()
+    // PyTrapIC's setters on slot logic types are ignored: the game decides what slots write.
+    assertThat(prefabs.slotKinds)
+        .containsExactly("Common", listOf("Quantity"), "Plant", listOf("Growth", "Quantity"))
+  }
+
+  @Test
+  fun `slots are typed by kind, named where the game names them, and batched`() {
+    val code = generate()
+
+    assertThat(code).contains("class PlantSlot internal constructor() : DeviceSlot() {")
+    // Reads come from the data plus the always-readable set; writes only from the game's rule.
+    assertThat(code).contains("  val Growth: Double\n")
+    assertThat(code).contains("  val Occupied: Boolean\n")
+    assertThat(code).contains("  var Open: Double\n    @Deprecated(WRITE_ONLY")
+    assertThat(code).contains("  val Quantity: Double\n")
+    assertThat(code).contains("class CommonSlot internal constructor() : DeviceSlot() {")
+    // The grow light's slots are of two kinds, so slots[n] has what every slot reads.
+    assertThat(code).contains("  val slots: Slots<CommonSlot>\n")
+    assertThat(code).contains("  @SlotNumber(0)\n  val Tray: PlantSlot\n")
+    assertThat(code).contains("    val slots: Slots<CommonSlot.Batch>\n")
+    assertThat(code).contains("    val slots: Slots<CommonSlot.Reading>\n")
+  }
 
   @Test
   fun `imports prefabs with their own and inherited logic types`() {

@@ -61,6 +61,9 @@
         "Activate": "rw",
         "On": "rw",
         "Power": "r"
+      },
+      "slots": {
+        "0": "Battery:Battery"
       }
     },
     {
@@ -71,6 +74,9 @@
         "On": "rw",
         "Open": "rw",
         "Power": "r"
+      },
+      "slots": {
+        "0": "Battery:Battery"
       }
     },
     {
@@ -184,6 +190,9 @@
         "TotalMoles": "r",
         "TotalMolesInput": "r",
         "TotalMolesOutput": "r"
+      },
+      "slots": {
+        "0": "DataDisk:ProgrammableChip"
       }
     },
     {
@@ -197,6 +206,12 @@
         "Power": "r",
         "SoundAlert": "rw",
         "Volume": "rw"
+      },
+      "slots": {
+        "0": "Battery:Battery",
+        "1": "Common:Cartridge",
+        "2": "Common:Cartridge1",
+        "3": "Common:ProgrammableChip"
       }
     },
     {
@@ -205,6 +220,9 @@
       "logic": {
         "Activate": "rw",
         "Power": "r"
+      },
+      "slots": {
+        "0": "Battery:Battery"
       }
     },
     {
@@ -213,6 +231,9 @@
       "logic": {
         "Activate": "rw",
         "Power": "r"
+      },
+      "slots": {
+        "0": "Battery:Battery"
       }
     },
     {
@@ -243,6 +264,9 @@
         "Error": "r",
         "On": "rw",
         "Power": "r"
+      },
+      "slots": {
+        "0": "Battery:Battery"
       }
     },
     {
@@ -251,6 +275,9 @@
       "logic": {
         "Activate": "rw",
         "Power": "r"
+      },
+      "slots": {
+        "0": "Battery:Battery"
       }
     },
     {
@@ -259,6 +286,9 @@
       "logic": {
         "Activate": "rw",
         "Power": "r"
+      },
+      "slots": {
+        "0": "Battery:Battery"
       }
     },
     {
@@ -267,6 +297,9 @@
       "logic": {
         "Activate": "rw",
         "Power": "r"
+      },
+      "slots": {
+        "0": "Battery:Battery"
       }
     },
     {
@@ -275,6 +308,9 @@
       "logic": {
         "Activate": "rw",
         "Power": "r"
+      },
+      "slots": {
+        "0": "Battery:Battery"
       }
     },
     {
@@ -329,6 +365,9 @@
         "Mode": "rw",
         "On": "rw",
         "Power": "r"
+      },
+      "slots": {
+        "0": "Battery:Battery"
       }
     },
     {
@@ -370,6 +409,10 @@
         "Temperature": "r",
         "TotalMoles": "r",
         "Volume": "rw"
+      },
+      "slots": {
+        "0": "Filtered",
+        "1": "Filtered"
       }
     },
     {
@@ -378,6 +421,9 @@
       "logic": {
         "On": "rw",
         "Power": "r"
+      },
+      "slots": {
+        "0": "Battery:Battery"
       }
     },
     {
@@ -386,6 +432,23 @@
       "logic": {
         "Activate": "rw",
         "On": "rw"
+      },
+      "slots": {
+        "0": "AirTank:Propellant",
+        "1": "Common",
+        "2": "Common",
+        "3": "Common",
+        "4": "Common",
+        "5": "Common",
+        "6": "Common",
+        "7": "Common",
+        "8": "Common",
+        "9": "Common",
+        "10": "Common",
+        "11": "Common",
+        "12": "Common",
+        "13": "Common",
+        "14": "Common"
       }
     },
     {
@@ -453,6 +516,16 @@
         "VelocityY": "r",
         "VelocityZ": "r",
         "Volume": "rw"
+      },
+      "slots": {
+        "0": "AirTank:AirTank",
+        "1": "AirTank:WasteTank",
+        "2": "Battery:LifeSupport",
+        "3": "Common:ProgrammableChip",
+        "4": "Filtered",
+        "5": "Filtered",
+        "6": "Filtered",
+        "7": "Filtered"
       }
     },
     {
@@ -558,6 +631,18 @@
       "logic": {
         "Activate": "rw",
         "On": "rw"
+      },
+      "slots": {
+        "0": "AirTank:Propellant",
+        "1": "Common",
+        "2": "Common",
+        "3": "Common",
+        "4": "Common",
+        "5": "Common",
+        "6": "Common",
+        "7": "Common",
+        "8": "Common",
+        "9": "Common"
       }
     },
     {
@@ -567,6 +652,9 @@
         "Error": "r",
         "On": "rw",
         "Power": "r"
+      },
+      "slots": {
+        "0": "Battery:Battery"
       }
     },
     {
@@ -581,6 +669,11 @@
         "Power": "r",
         "PressureExternal": "r",
         "TemperatureExternal": "r"
+      },
+      "slots": {
+        "0": "Common:ProgrammableChip",
+        "1": "Battery:Battery",
+        "2": "Common:Motherboard"
       }
     },
     {
@@ -592,6 +685,9 @@
         "Mode": "rw",
         "On": "rw",
         "Power": "r"
+      },
+      "slots": {
+        "0": "Battery:Battery"
       }
     },
     {
@@ -600,6 +696,9 @@
       "logic": {
         "Activate": "rw",
         "Power": "r"
+      },
+      "slots": {
+        "0": "Battery:Battery"
       }
     },
     {
@@ -608,6 +707,9 @@
       "logic": {
         "Activate": "rw",
         "Power": "r"
+      },
+      "slots": {
+        "0": "Battery:Battery"
       }
     },
     {
@@ -616,6 +718,9 @@
       "logic": {
         "Activate": "rw",
         "Power": "r"
+      },
+      "slots": {
+        "0": "Battery:Battery"
       }
     },
     {
@@ -627,6 +732,9 @@
         "Mode": "rw",
         "On": "rw",
         "Power": "r"
+      },
+      "slots": {
+        "0": "Battery:Battery"
       }
     },
     {
@@ -638,6 +746,9 @@
         "Mode": "rw",
         "On": "rw",
         "Power": "r"
+      },
+      "slots": {
+        "0": "Battery:Battery"
       }
     },
     {
@@ -649,6 +760,9 @@
         "Mode": "rw",
         "On": "rw",
         "Power": "r"
+      },
+      "slots": {
+        "0": "Battery:Battery"
       }
     },
     {
@@ -658,6 +772,9 @@
         "Lock": "rw",
         "On": "rw",
         "Power": "r"
+      },
+      "slots": {
+        "0": "Battery:Battery"
       }
     },
     {
@@ -668,6 +785,9 @@
         "Mode": "rw",
         "On": "rw",
         "Power": "r"
+      },
+      "slots": {
+        "0": "Battery:Battery"
       }
     },
     {
@@ -678,6 +798,9 @@
         "Mode": "rw",
         "On": "rw",
         "Power": "r"
+      },
+      "slots": {
+        "0": "Battery:Battery"
       }
     },
     {
@@ -690,6 +813,9 @@
         "Mode": "rw",
         "On": "rw",
         "Power": "r"
+      },
+      "slots": {
+        "0": "Battery:Battery"
       }
     },
     {
@@ -698,6 +824,10 @@
       "logic": {
         "On": "rw",
         "Power": "r"
+      },
+      "slots": {
+        "0": "Battery:Battery",
+        "1": "Common:SensorProcessingUnit"
       }
     },
     {
@@ -751,6 +881,18 @@
       "logic": {
         "Activate": "rw",
         "On": "rw"
+      },
+      "slots": {
+        "0": "AirTank:Propellant",
+        "1": "Common",
+        "2": "Common",
+        "3": "Common",
+        "4": "Common",
+        "5": "Common",
+        "6": "Common",
+        "7": "Common",
+        "8": "Common",
+        "9": "Common"
       }
     },
     {
@@ -818,6 +960,18 @@
         "VelocityY": "r",
         "VelocityZ": "r",
         "Volume": "rw"
+      },
+      "slots": {
+        "0": "AirTank:AirTank",
+        "1": "AirTank:WasteTank",
+        "2": "Common:CoolantTank",
+        "3": "Battery:Battery",
+        "4": "Common:Chip",
+        "5": "Filtered:Filter1",
+        "6": "Filtered:Filter2",
+        "7": "Filtered:Filter3",
+        "8": "Filtered:Filter4",
+        "9": "Common:Back"
       }
     },
     {
@@ -872,6 +1026,10 @@
         "Error": "r",
         "On": "rw",
         "Power": "r"
+      },
+      "slots": {
+        "0": "Battery:Battery",
+        "1": "Common:Cartridge"
       }
     },
     {
@@ -883,6 +1041,10 @@
         "Mode": "rw",
         "On": "rw",
         "Power": "r"
+      },
+      "slots": {
+        "0": "Battery:Battery",
+        "1": "Common:DirtCanister"
       }
     },
     {
@@ -891,6 +1053,9 @@
       "logic": {
         "On": "rw",
         "Power": "r"
+      },
+      "slots": {
+        "0": "Battery:Battery"
       }
     },
     {
@@ -1045,6 +1210,9 @@
         "On": "rw",
         "Power": "r",
         "RequiredPower": "r"
+      },
+      "slots": {
+        "0": "DataDisk:PortableSlot"
       }
     },
     {
@@ -1146,6 +1314,9 @@
         "On": "rw",
         "Power": "r",
         "RequiredPower": "r"
+      },
+      "slots": {
+        "0": "DataDisk:PortableSlot"
       }
     },
     {
@@ -1169,6 +1340,9 @@
         "Power": "r",
         "RequiredPower": "r",
         "Time": "rw"
+      },
+      "slots": {
+        "0": "DataDisk:SoundCartridge"
       }
     },
     {
@@ -1184,6 +1358,9 @@
       "hash": 2043318949,
       "logic": {
         "Open": "rw"
+      },
+      "slots": {
+        "0": "Battery:Battery"
       }
     },
     {
@@ -1215,6 +1392,18 @@
         "VelocityX": "r",
         "VelocityY": "r",
         "VelocityZ": "r"
+      },
+      "slots": {
+        "0": "Battery:Battery",
+        "1": "Common:ProgrammableChip",
+        "2": "Common",
+        "3": "Common",
+        "4": "Common",
+        "5": "Common",
+        "6": "Common",
+        "7": "Common",
+        "8": "Common",
+        "9": "Common"
       }
     },
     {
@@ -1223,6 +1412,19 @@
       "logic": {
         "On": "rw",
         "Power": "r"
+      },
+      "slots": {
+        "0": "Common",
+        "1": "Common",
+        "2": "Battery",
+        "3": "Battery",
+        "4": "Battery",
+        "5": "Common",
+        "6": "Common",
+        "7": "Common",
+        "8": "Common",
+        "9": "Common",
+        "10": "Common"
       }
     },
     {
@@ -1290,6 +1492,9 @@
         "Setting": "rw",
         "TemperatureOutput": "r",
         "TotalMolesOutput": "r"
+      },
+      "slots": {
+        "0": "DataDisk:DataDisk"
       }
     },
     {
@@ -1311,6 +1516,10 @@
         "Ratio": "r",
         "RequiredPower": "r",
         "Setting": "rw"
+      },
+      "slots": {
+        "0": "DataDisk:Import",
+        "1": "DataDisk:Export"
       }
     },
     {
@@ -1367,6 +1576,10 @@
         "SettingOutput": "rw",
         "Temperature": "r",
         "TotalMoles": "r"
+      },
+      "slots": {
+        "0": "DataDisk:Import",
+        "1": "DataDisk:Export"
       }
     },
     {
@@ -1387,6 +1600,10 @@
         "RecipeHash": "rw",
         "RequiredPower": "r",
         "StackSize": "r"
+      },
+      "slots": {
+        "0": "DataDisk:Import",
+        "1": "DataDisk:Export"
       }
     },
     {
@@ -1502,6 +1719,9 @@
         "TotalMolesInput": "r",
         "TotalMolesOutput": "r",
         "TotalMolesOutput2": "r"
+      },
+      "slots": {
+        "0": "DataDisk:ProgrammableChip"
       }
     },
     {
@@ -1562,6 +1782,10 @@
         "Reagents": "r",
         "RecipeHash": "r",
         "RequiredPower": "r"
+      },
+      "slots": {
+        "0": "DataDisk:Import",
+        "1": "DataDisk:Export"
       }
     },
     {
@@ -1580,6 +1804,10 @@
         "PowerPotential": "r",
         "Ratio": "r",
         "RequiredPower": "r"
+      },
+      "slots": {
+        "0": "Battery:Battery",
+        "1": "DataDisk:DataDisk"
       }
     },
     {
@@ -1598,6 +1826,10 @@
         "PowerPotential": "r",
         "Ratio": "r",
         "RequiredPower": "r"
+      },
+      "slots": {
+        "0": "Battery:Battery",
+        "1": "DataDisk:DataDisk"
       }
     },
     {
@@ -1613,6 +1845,10 @@
         "Open": "rw",
         "Power": "r",
         "RequiredPower": "r"
+      },
+      "slots": {
+        "0": "DataDisk:Import",
+        "1": "DataDisk:Export"
       }
     },
     {
@@ -1633,6 +1869,10 @@
         "RecipeHash": "rw",
         "RequiredPower": "r",
         "StackSize": "r"
+      },
+      "slots": {
+        "0": "DataDisk:Import",
+        "1": "DataDisk:Export"
       }
     },
     {
@@ -1653,6 +1893,10 @@
         "RecipeHash": "rw",
         "RequiredPower": "r",
         "StackSize": "r"
+      },
+      "slots": {
+        "0": "DataDisk:Import",
+        "1": "DataDisk:Export"
       }
     },
     {
@@ -1719,6 +1963,13 @@
         "On": "rw",
         "Power": "r",
         "RequiredPower": "r"
+      },
+      "slots": {
+        "0": "Battery",
+        "1": "Battery",
+        "2": "Battery",
+        "3": "Battery",
+        "4": "Battery"
       }
     },
     {
@@ -1730,6 +1981,10 @@
         "On": "rw",
         "Power": "r",
         "RequiredPower": "r"
+      },
+      "slots": {
+        "0": "Battery",
+        "1": "Battery"
       }
     },
     {
@@ -1799,6 +2054,10 @@
         "On": "rw",
         "Power": "r",
         "RequiredPower": "r"
+      },
+      "slots": {
+        "0": "Appliance:Appliance1",
+        "1": "Appliance:Appliance2"
       }
     },
     {
@@ -1809,6 +2068,10 @@
         "On": "rw",
         "Power": "r",
         "RequiredPower": "r"
+      },
+      "slots": {
+        "0": "Appliance:Appliance1",
+        "1": "Appliance:Appliance2"
       }
     },
     {
@@ -1819,6 +2082,10 @@
         "On": "rw",
         "Power": "r",
         "RequiredPower": "r"
+      },
+      "slots": {
+        "0": "Appliance:Appliance1",
+        "1": "Appliance:Appliance2"
       }
     },
     {
@@ -1829,6 +2096,10 @@
         "On": "rw",
         "Power": "r",
         "RequiredPower": "r"
+      },
+      "slots": {
+        "0": "Appliance:Appliance1",
+        "1": "Appliance:Appliance2"
       }
     },
     {
@@ -1839,6 +2110,10 @@
         "On": "rw",
         "Power": "r",
         "RequiredPower": "r"
+      },
+      "slots": {
+        "0": "Appliance:Appliance1",
+        "1": "Appliance:Appliance2"
       }
     },
     {
@@ -1864,6 +2139,9 @@
         "On": "rw",
         "Power": "r",
         "RequiredPower": "r"
+      },
+      "slots": {
+        "0": "DataDisk:Bed"
       }
     },
     {
@@ -2034,6 +2312,110 @@
         "Quantity": "r",
         "Ratio": "r",
         "RequiredPower": "r"
+      },
+      "slots": {
+        "0": "DataDisk:Import",
+        "1": "DataDisk:Export",
+        "2": "DataDisk",
+        "3": "DataDisk",
+        "4": "DataDisk",
+        "5": "DataDisk",
+        "6": "DataDisk",
+        "7": "DataDisk",
+        "8": "DataDisk",
+        "9": "DataDisk",
+        "10": "DataDisk",
+        "11": "DataDisk",
+        "12": "DataDisk",
+        "13": "DataDisk",
+        "14": "DataDisk",
+        "15": "DataDisk",
+        "16": "DataDisk",
+        "17": "DataDisk",
+        "18": "DataDisk",
+        "19": "DataDisk",
+        "20": "DataDisk",
+        "21": "DataDisk",
+        "22": "DataDisk",
+        "23": "DataDisk",
+        "24": "DataDisk",
+        "25": "DataDisk",
+        "26": "DataDisk",
+        "27": "DataDisk",
+        "28": "DataDisk",
+        "29": "DataDisk",
+        "30": "DataDisk",
+        "31": "DataDisk",
+        "32": "DataDisk",
+        "33": "DataDisk",
+        "34": "DataDisk",
+        "35": "DataDisk",
+        "36": "DataDisk",
+        "37": "DataDisk",
+        "38": "DataDisk",
+        "39": "DataDisk",
+        "40": "DataDisk",
+        "41": "DataDisk",
+        "42": "DataDisk",
+        "43": "DataDisk",
+        "44": "DataDisk",
+        "45": "DataDisk",
+        "46": "DataDisk",
+        "47": "DataDisk",
+        "48": "DataDisk",
+        "49": "DataDisk",
+        "50": "DataDisk",
+        "51": "DataDisk",
+        "52": "DataDisk",
+        "53": "DataDisk",
+        "54": "DataDisk",
+        "55": "DataDisk",
+        "56": "DataDisk",
+        "57": "DataDisk",
+        "58": "DataDisk",
+        "59": "DataDisk",
+        "60": "DataDisk",
+        "61": "DataDisk",
+        "62": "DataDisk",
+        "63": "DataDisk",
+        "64": "DataDisk",
+        "65": "DataDisk",
+        "66": "DataDisk",
+        "67": "DataDisk",
+        "68": "DataDisk",
+        "69": "DataDisk",
+        "70": "DataDisk",
+        "71": "DataDisk",
+        "72": "DataDisk",
+        "73": "DataDisk",
+        "74": "DataDisk",
+        "75": "DataDisk",
+        "76": "DataDisk",
+        "77": "DataDisk",
+        "78": "DataDisk",
+        "79": "DataDisk",
+        "80": "DataDisk",
+        "81": "DataDisk",
+        "82": "DataDisk",
+        "83": "DataDisk",
+        "84": "DataDisk",
+        "85": "DataDisk",
+        "86": "DataDisk",
+        "87": "DataDisk",
+        "88": "DataDisk",
+        "89": "DataDisk",
+        "90": "DataDisk",
+        "91": "DataDisk",
+        "92": "DataDisk",
+        "93": "DataDisk",
+        "94": "DataDisk",
+        "95": "DataDisk",
+        "96": "DataDisk",
+        "97": "DataDisk",
+        "98": "DataDisk",
+        "99": "DataDisk",
+        "100": "DataDisk",
+        "101": "DataDisk"
       }
     },
     {
@@ -2051,6 +2433,60 @@
         "Quantity": "r",
         "Ratio": "r",
         "RequiredPower": "r"
+      },
+      "slots": {
+        "0": "DataDisk:Import",
+        "1": "DataDisk:Export",
+        "2": "DataDisk",
+        "3": "DataDisk",
+        "4": "DataDisk",
+        "5": "DataDisk",
+        "6": "DataDisk",
+        "7": "DataDisk",
+        "8": "DataDisk",
+        "9": "DataDisk",
+        "10": "DataDisk",
+        "11": "DataDisk",
+        "12": "DataDisk",
+        "13": "DataDisk",
+        "14": "DataDisk",
+        "15": "DataDisk",
+        "16": "DataDisk",
+        "17": "DataDisk",
+        "18": "DataDisk",
+        "19": "DataDisk",
+        "20": "DataDisk",
+        "21": "DataDisk",
+        "22": "DataDisk",
+        "23": "DataDisk",
+        "24": "DataDisk",
+        "25": "DataDisk",
+        "26": "DataDisk",
+        "27": "DataDisk",
+        "28": "DataDisk",
+        "29": "DataDisk",
+        "30": "DataDisk",
+        "31": "DataDisk",
+        "32": "DataDisk",
+        "33": "DataDisk",
+        "34": "DataDisk",
+        "35": "DataDisk",
+        "36": "DataDisk",
+        "37": "DataDisk",
+        "38": "DataDisk",
+        "39": "DataDisk",
+        "40": "DataDisk",
+        "41": "DataDisk",
+        "42": "DataDisk",
+        "43": "DataDisk",
+        "44": "DataDisk",
+        "45": "DataDisk",
+        "46": "DataDisk",
+        "47": "DataDisk",
+        "48": "DataDisk",
+        "49": "DataDisk",
+        "50": "DataDisk",
+        "51": "DataDisk"
       }
     },
     {
@@ -2066,6 +2502,10 @@
         "Power": "r",
         "Reagents": "r",
         "RequiredPower": "r"
+      },
+      "slots": {
+        "0": "DataDisk:Import",
+        "1": "DataDisk:Export"
       }
     },
     {
@@ -2078,6 +2518,9 @@
         "Open": "rw",
         "Power": "r",
         "RequiredPower": "r"
+      },
+      "slots": {
+        "0": "DataDisk:Input"
       }
     },
     {
@@ -2091,6 +2534,9 @@
         "RequiredPower": "r",
         "Setting": "rw",
         "SettingOutput": "rw"
+      },
+      "slots": {
+        "0": "DataDisk:TransportSlot"
       }
     },
     {
@@ -2104,6 +2550,9 @@
         "RequiredPower": "r",
         "Setting": "rw",
         "SettingOutput": "rw"
+      },
+      "slots": {
+        "0": "DataDisk:TransportSlot"
       }
     },
     {
@@ -2117,6 +2566,9 @@
         "Quantity": "rw",
         "RequiredPower": "r",
         "Setting": "rw"
+      },
+      "slots": {
+        "0": "DataDisk:TransportSlot"
       }
     },
     {
@@ -2130,6 +2582,9 @@
         "Quantity": "rw",
         "RequiredPower": "r",
         "Setting": "rw"
+      },
+      "slots": {
+        "0": "DataDisk:TransportSlot"
       }
     },
     {
@@ -2142,6 +2597,9 @@
         "Open": "rw",
         "Power": "r",
         "RequiredPower": "r"
+      },
+      "slots": {
+        "0": "DataDisk:Input"
       }
     },
     {
@@ -2151,6 +2609,9 @@
         "ClearMemory": "rw",
         "ImportCount": "r",
         "Lock": "rw"
+      },
+      "slots": {
+        "0": "DataDisk:Import"
       }
     },
     {
@@ -2161,6 +2622,9 @@
         "ExportCount": "r",
         "ImportCount": "r",
         "Lock": "rw"
+      },
+      "slots": {
+        "0": "DataDisk:Export"
       }
     },
     {
@@ -2174,6 +2638,9 @@
         "Open": "rw",
         "Power": "r",
         "RequiredPower": "r"
+      },
+      "slots": {
+        "0": "DataDisk:TransportSlot"
       }
     },
     {
@@ -2188,6 +2655,9 @@
         "RequiredPower": "r",
         "Setting": "rw",
         "StackSize": "r"
+      },
+      "slots": {
+        "0": "Common:ProgrammableChip"
       }
     },
     {
@@ -2202,6 +2672,9 @@
         "RequiredPower": "r",
         "Setting": "rw",
         "StackSize": "r"
+      },
+      "slots": {
+        "0": "ProgrammableChip:ProgrammableChip"
       }
     },
     {
@@ -2318,6 +2791,11 @@
         "TotalMoles": "r",
         "TotalMolesInput": "r",
         "TotalMolesOutput": "r"
+      },
+      "slots": {
+        "0": "DataDisk:Import",
+        "1": "DataDisk:Export",
+        "2": "DataDisk:ProgrammableChip"
       }
     },
     {
@@ -2433,6 +2911,10 @@
         "TotalMoles": "r",
         "TotalMolesInput": "r",
         "TotalMolesOutput": "r"
+      },
+      "slots": {
+        "0": "DataDisk:Export",
+        "1": "DataDisk:ProgrammableChip"
       }
     },
     {
@@ -2471,6 +2953,11 @@
         "Open": "rw",
         "Power": "r",
         "RequiredPower": "r"
+      },
+      "slots": {
+        "0": "DataDisk",
+        "1": "DataDisk",
+        "2": "DataDisk:Motherboard"
       }
     },
     {
@@ -2483,6 +2970,9 @@
         "Open": "rw",
         "Power": "r",
         "RequiredPower": "r"
+      },
+      "slots": {
+        "0": "DataDisk:Motherboard"
       }
     },
     {
@@ -2495,6 +2985,9 @@
         "Open": "rw",
         "Power": "r",
         "RequiredPower": "r"
+      },
+      "slots": {
+        "0": "DataDisk:Motherboard"
       }
     },
     {
@@ -2507,6 +3000,11 @@
         "Open": "rw",
         "Power": "r",
         "RequiredPower": "r"
+      },
+      "slots": {
+        "0": "DataDisk",
+        "1": "DataDisk",
+        "2": "DataDisk:Motherboard"
       }
     },
     {
@@ -2577,6 +3075,9 @@
         "Power": "r",
         "RequiredPower": "r",
         "Setting": "r"
+      },
+      "slots": {
+        "0": "Circuitboard:Circuitboard"
       }
     },
     {
@@ -2590,6 +3091,9 @@
         "Power": "r",
         "RequiredPower": "r",
         "Setting": "r"
+      },
+      "slots": {
+        "0": "Circuitboard:Circuitboard"
       }
     },
     {
@@ -2642,6 +3146,9 @@
         "Power": "r",
         "RequiredPower": "r",
         "Setting": "r"
+      },
+      "slots": {
+        "0": "Circuitboard:Circuitboard"
       }
     },
     {
@@ -2650,6 +3157,14 @@
       "logic": {
         "Lock": "rw",
         "Open": "rw"
+      },
+      "slots": {
+        "0": "DataDisk",
+        "1": "DataDisk",
+        "2": "DataDisk",
+        "3": "DataDisk",
+        "4": "DataDisk",
+        "5": "DataDisk"
       }
     },
     {
@@ -2683,6 +3198,10 @@
         "RequiredPower": "r",
         "Setting": "rw",
         "Temperature": "r"
+      },
+      "slots": {
+        "0": "DataDisk:Player",
+        "1": "Mask:Mask"
       }
     },
     {
@@ -2703,6 +3222,10 @@
         "RequiredPower": "r",
         "Setting": "rw",
         "Temperature": "r"
+      },
+      "slots": {
+        "0": "DataDisk:Player",
+        "1": "Mask:Mask"
       }
     },
     {
@@ -2732,6 +3255,9 @@
         "Ratio": "r",
         "RequiredPower": "r",
         "Setting": "rw"
+      },
+      "slots": {
+        "0": "DataDisk:Export"
       }
     },
     {
@@ -2859,6 +3385,9 @@
         "TemperatureOutput": "r",
         "TotalMolesInput": "r",
         "TotalMolesOutput": "r"
+      },
+      "slots": {
+        "0": "DataDisk:ProgrammableChip"
       }
     },
     {
@@ -2879,6 +3408,10 @@
         "RecipeHash": "rw",
         "RequiredPower": "r",
         "StackSize": "r"
+      },
+      "slots": {
+        "0": "DataDisk:Import",
+        "1": "DataDisk:Export"
       }
     },
     {
@@ -3114,6 +3647,10 @@
         "TotalMolesInput": "r",
         "TotalMolesInput2": "r",
         "TotalMolesOutput": "r"
+      },
+      "slots": {
+        "0": "DataDisk:Import",
+        "1": "DataDisk:ProgrammableChip"
       }
     },
     {
@@ -3226,6 +3763,11 @@
         "TotalMolesInput": "r",
         "TotalMolesOutput": "r",
         "TotalMolesOutput2": "r"
+      },
+      "slots": {
+        "0": "Filter",
+        "1": "Filter",
+        "2": "DataDisk:ProgrammableChip"
       }
     },
     {
@@ -3338,6 +3880,11 @@
         "TotalMolesInput": "r",
         "TotalMolesOutput": "r",
         "TotalMolesOutput2": "r"
+      },
+      "slots": {
+        "0": "Filter",
+        "1": "Filter",
+        "2": "DataDisk:ProgrammableChip"
       }
     },
     {
@@ -3419,6 +3966,23 @@
         "TemperatureOutput": "r",
         "TotalMoles": "r",
         "TotalMolesOutput": "r"
+      },
+      "slots": {
+        "0": "DataDisk",
+        "1": "DataDisk",
+        "2": "DataDisk",
+        "3": "DataDisk",
+        "4": "DataDisk",
+        "5": "DataDisk",
+        "6": "DataDisk",
+        "7": "DataDisk",
+        "8": "DataDisk",
+        "9": "DataDisk",
+        "10": "DataDisk",
+        "11": "DataDisk",
+        "12": "DataDisk",
+        "13": "DataDisk",
+        "14": "DataDisk"
       }
     },
     {
@@ -3486,6 +4050,10 @@
         "TemperatureOutput": "r",
         "TotalMoles": "r",
         "TotalMolesOutput": "r"
+      },
+      "slots": {
+        "0": "DataDisk",
+        "1": "DataDisk"
       }
     },
     {
@@ -3536,6 +4104,10 @@
         "Setting": "rw",
         "Temperature": "r",
         "TotalMoles": "r"
+      },
+      "slots": {
+        "0": "DataDisk:Import",
+        "1": "DataDisk:Export"
       }
     },
     {
@@ -3672,6 +4244,9 @@
         "RatioSteam": "r",
         "RatioWater": "r",
         "Temperature": "r"
+      },
+      "slots": {
+        "0": "GasCanister:GasCanister"
       }
     },
     {
@@ -3819,6 +4394,11 @@
         "Plant": "rw",
         "Power": "r",
         "RequiredPower": "r"
+      },
+      "slots": {
+        "0": "DataDisk:Import",
+        "1": "DataDisk:Export",
+        "2": "DataDisk:Hand"
       }
     },
     {
@@ -3835,6 +4415,10 @@
         "Open": "rw",
         "Power": "r",
         "RequiredPower": "r"
+      },
+      "slots": {
+        "0": "DataDisk:Import",
+        "1": "DataDisk:Export"
       }
     },
     {
@@ -3855,6 +4439,10 @@
         "RecipeHash": "rw",
         "RequiredPower": "r",
         "StackSize": "r"
+      },
+      "slots": {
+        "0": "DataDisk:Import",
+        "1": "DataDisk:Export"
       }
     },
     {
@@ -3925,6 +4513,16 @@
         "TemperatureOutput": "r",
         "TotalMoles": "r",
         "TotalMolesOutput": "r"
+      },
+      "slots": {
+        "0": "Plant",
+        "1": "Plant",
+        "2": "Plant",
+        "3": "Plant",
+        "4": "Plant",
+        "5": "Plant",
+        "6": "Plant",
+        "7": "Plant"
       }
     },
     {
@@ -3963,6 +4561,10 @@
         "RatioWater": "r",
         "Temperature": "r",
         "TotalMoles": "r"
+      },
+      "slots": {
+        "0": "Plant:Plant",
+        "1": "DataDisk:Fertiliser"
       }
     },
     {
@@ -3980,6 +4582,9 @@
         "Ratio": "r",
         "RequiredPower": "r",
         "Setting": "rw"
+      },
+      "slots": {
+        "0": "DataDisk:Import"
       }
     },
     {
@@ -4339,6 +4944,9 @@
         "TemperatureInput": "r",
         "TotalMoles": "r",
         "TotalMolesInput": "r"
+      },
+      "slots": {
+        "0": "Filter:Filter"
       }
     },
     {
@@ -4367,6 +4975,10 @@
         "Setting": "rw",
         "TargetPrefabHash": "r",
         "TargetSlotIndex": "rw"
+      },
+      "slots": {
+        "0": "DataDisk:ArmSlot",
+        "255": "Common:TargetSlot"
       }
     },
     {
@@ -4386,6 +4998,28 @@
         "Ratio": "r",
         "RequiredPower": "r",
         "Setting": "rw"
+      },
+      "slots": {
+        "0": "DataDisk",
+        "1": "DataDisk",
+        "2": "DataDisk",
+        "3": "DataDisk",
+        "4": "DataDisk",
+        "5": "DataDisk",
+        "6": "DataDisk",
+        "7": "DataDisk",
+        "8": "DataDisk",
+        "9": "DataDisk",
+        "10": "DataDisk",
+        "11": "DataDisk",
+        "12": "DataDisk",
+        "13": "DataDisk",
+        "14": "DataDisk",
+        "15": "DataDisk",
+        "16": "DataDisk",
+        "17": "DataDisk",
+        "18": "DataDisk",
+        "19": "DataDisk"
       }
     },
     {
@@ -4404,6 +5038,11 @@
         "Setting": "rw",
         "TargetPrefabHash": "r",
         "TargetSlotIndex": "r"
+      },
+      "slots": {
+        "0": "DataDisk:ArmSlot",
+        "1": "DataDisk:HopperSlot",
+        "255": "Common:TargetSlot"
       }
     },
     {
@@ -4611,6 +5250,9 @@
         "RatioSteam": "r",
         "RatioWater": "r",
         "Temperature": "r"
+      },
+      "slots": {
+        "0": "GasCanister:LiquidCanister"
       }
     },
     {
@@ -4692,6 +5334,12 @@
       "logic": {
         "Lock": "rw",
         "Open": "rw"
+      },
+      "slots": {
+        "0": "DataDisk",
+        "1": "DataDisk",
+        "2": "DataDisk",
+        "3": "DataDisk"
       }
     },
     {
@@ -4914,6 +5562,11 @@
         "Power": "r",
         "RequiredPower": "r",
         "StackSize": "r"
+      },
+      "slots": {
+        "0": "DataDisk:Import",
+        "1": "DataDisk:Export",
+        "2": "DataDisk:Export2"
       }
     },
     {
@@ -5318,6 +5971,9 @@
         "TotalMolesInput": "r",
         "TotalMolesInput2": "r",
         "TotalMolesOutput": "r"
+      },
+      "slots": {
+        "0": "DataDisk:ProgrammableChip"
       }
     },
     {
@@ -5335,6 +5991,10 @@
       "logic": {
         "Lock": "rw",
         "Open": "rw"
+      },
+      "slots": {
+        "0": "DataDisk",
+        "1": "DataDisk"
       }
     },
     {
@@ -5343,6 +6003,18 @@
       "logic": {
         "Lock": "rw",
         "Open": "rw"
+      },
+      "slots": {
+        "0": "DataDisk",
+        "1": "DataDisk",
+        "2": "DataDisk",
+        "3": "DataDisk",
+        "4": "DataDisk",
+        "5": "DataDisk",
+        "6": "DataDisk",
+        "7": "DataDisk",
+        "8": "DataDisk",
+        "9": "DataDisk"
       }
     },
     {
@@ -5356,6 +6028,11 @@
         "Open": "rw",
         "Power": "r",
         "RequiredPower": "r"
+      },
+      "slots": {
+        "0": "DataDisk:Payload",
+        "1": "DataDisk:Recipient",
+        "2": "DataDisk:Export"
       }
     },
     {
@@ -5498,6 +6175,9 @@
         "Open": "rw",
         "Ratio": "r",
         "Setting": "rw"
+      },
+      "slots": {
+        "0": "DataDisk:PortableSlot"
       }
     },
     {
@@ -5505,6 +6185,9 @@
       "hash": -782951720,
       "logic": {
         "Open": "rw"
+      },
+      "slots": {
+        "0": "DataDisk:Portableslot"
       }
     },
     {
@@ -5958,6 +6641,10 @@
         "Power": "r",
         "Reagents": "r",
         "RequiredPower": "r"
+      },
+      "slots": {
+        "0": "DataDisk:Import",
+        "1": "DataDisk:Export"
       }
     },
     {
@@ -6011,6 +6698,110 @@
         "TargetSlotIndex": "r",
         "Temperature": "r",
         "TotalMoles": "r"
+      },
+      "slots": {
+        "0": "DataDisk:Import",
+        "1": "DataDisk:Export",
+        "2": "DataDisk",
+        "3": "DataDisk",
+        "4": "DataDisk",
+        "5": "DataDisk",
+        "6": "DataDisk",
+        "7": "DataDisk",
+        "8": "DataDisk",
+        "9": "DataDisk",
+        "10": "DataDisk",
+        "11": "DataDisk",
+        "12": "DataDisk",
+        "13": "DataDisk",
+        "14": "DataDisk",
+        "15": "DataDisk",
+        "16": "DataDisk",
+        "17": "DataDisk",
+        "18": "DataDisk",
+        "19": "DataDisk",
+        "20": "DataDisk",
+        "21": "DataDisk",
+        "22": "DataDisk",
+        "23": "DataDisk",
+        "24": "DataDisk",
+        "25": "DataDisk",
+        "26": "DataDisk",
+        "27": "DataDisk",
+        "28": "DataDisk",
+        "29": "DataDisk",
+        "30": "DataDisk",
+        "31": "DataDisk",
+        "32": "DataDisk",
+        "33": "DataDisk",
+        "34": "DataDisk",
+        "35": "DataDisk",
+        "36": "DataDisk",
+        "37": "DataDisk",
+        "38": "DataDisk",
+        "39": "DataDisk",
+        "40": "DataDisk",
+        "41": "DataDisk",
+        "42": "DataDisk",
+        "43": "DataDisk",
+        "44": "DataDisk",
+        "45": "DataDisk",
+        "46": "DataDisk",
+        "47": "DataDisk",
+        "48": "DataDisk",
+        "49": "DataDisk",
+        "50": "DataDisk",
+        "51": "DataDisk",
+        "52": "DataDisk",
+        "53": "DataDisk",
+        "54": "DataDisk",
+        "55": "DataDisk",
+        "56": "DataDisk",
+        "57": "DataDisk",
+        "58": "DataDisk",
+        "59": "DataDisk",
+        "60": "DataDisk",
+        "61": "DataDisk",
+        "62": "DataDisk",
+        "63": "DataDisk",
+        "64": "DataDisk",
+        "65": "DataDisk",
+        "66": "DataDisk",
+        "67": "DataDisk",
+        "68": "DataDisk",
+        "69": "DataDisk",
+        "70": "DataDisk",
+        "71": "DataDisk",
+        "72": "DataDisk",
+        "73": "DataDisk",
+        "74": "DataDisk",
+        "75": "DataDisk",
+        "76": "DataDisk",
+        "77": "DataDisk",
+        "78": "DataDisk",
+        "79": "DataDisk",
+        "80": "DataDisk",
+        "81": "DataDisk",
+        "82": "DataDisk",
+        "83": "DataDisk",
+        "84": "DataDisk",
+        "85": "DataDisk",
+        "86": "DataDisk",
+        "87": "DataDisk",
+        "88": "DataDisk",
+        "89": "DataDisk",
+        "90": "DataDisk",
+        "91": "DataDisk",
+        "92": "DataDisk",
+        "93": "DataDisk",
+        "94": "DataDisk",
+        "95": "DataDisk",
+        "96": "DataDisk",
+        "97": "DataDisk",
+        "98": "DataDisk",
+        "99": "DataDisk",
+        "100": "DataDisk",
+        "101": "DataDisk"
       }
     },
     {
@@ -6035,6 +6826,9 @@
         "Power": "r",
         "RequiredPower": "r",
         "Setting": "rw"
+      },
+      "slots": {
+        "0": "DataDisk:ArmSlot"
       }
     },
     {
@@ -6137,6 +6931,9 @@
         "RequiredPower": "r",
         "Setting": "rw",
         "StackSize": "r"
+      },
+      "slots": {
+        "0": "ProgrammableChip:ProgrammableChip"
       }
     },
     {
@@ -6287,6 +7084,9 @@
         "TotalMolesInput": "r",
         "TotalMolesOutput": "r",
         "TotalMolesOutput2": "r"
+      },
+      "slots": {
+        "0": "Filter:GasFilter"
       }
     },
     {
@@ -6349,6 +7149,10 @@
         "RecipeHash": "rw",
         "RequiredPower": "r",
         "StackSize": "r"
+      },
+      "slots": {
+        "0": "DataDisk:Import",
+        "1": "DataDisk:Export"
       }
     },
     {
@@ -6365,6 +7169,10 @@
         "Power": "r",
         "Quantity": "r",
         "RequiredPower": "r"
+      },
+      "slots": {
+        "0": "DataDisk:Export",
+        "1": "DataDisk:DrillHeadSlot"
       }
     },
     {
@@ -6376,6 +7184,9 @@
         "On": "rw",
         "Power": "r",
         "RequiredPower": "r"
+      },
+      "slots": {
+        "0": "DataDisk:ScannerHeadSlot"
       }
     },
     {
@@ -6399,6 +7210,9 @@
         "ClearMemory": "rw",
         "ImportCount": "r",
         "Open": "rw"
+      },
+      "slots": {
+        "0": "DataDisk:Import"
       }
     },
     {
@@ -6409,6 +7223,9 @@
         "ImportCount": "r",
         "Lock": "rw",
         "Open": "rw"
+      },
+      "slots": {
+        "0": "DataDisk:Import"
       }
     },
     {
@@ -6427,6 +7244,10 @@
         "Power": "r",
         "Quantity": "r",
         "RequiredPower": "r"
+      },
+      "slots": {
+        "0": "DataDisk:Import",
+        "1": "DataDisk:Export"
       }
     },
     {
@@ -6474,6 +7295,10 @@
         "RecipeHash": "rw",
         "RequiredPower": "r",
         "StackSize": "r"
+      },
+      "slots": {
+        "0": "DataDisk:Import",
+        "1": "DataDisk:Export"
       }
     },
     {
@@ -6481,6 +7306,23 @@
       "hash": 182006674,
       "logic": {
         "Open": "rw"
+      },
+      "slots": {
+        "0": "DataDisk",
+        "1": "DataDisk",
+        "2": "DataDisk",
+        "3": "DataDisk",
+        "4": "DataDisk",
+        "5": "DataDisk",
+        "6": "DataDisk",
+        "7": "DataDisk",
+        "8": "DataDisk",
+        "9": "DataDisk",
+        "10": "DataDisk",
+        "11": "DataDisk",
+        "12": "DataDisk",
+        "13": "DataDisk",
+        "14": "DataDisk"
       }
     },
     {
@@ -6489,6 +7331,10 @@
       "logic": {
         "Lock": "rw",
         "Open": "rw"
+      },
+      "slots": {
+        "0": "DataDisk",
+        "1": "DataDisk"
       }
     },
     {
@@ -6497,6 +7343,18 @@
       "logic": {
         "Lock": "rw",
         "Open": "rw"
+      },
+      "slots": {
+        "0": "DataDisk",
+        "1": "DataDisk",
+        "2": "DataDisk",
+        "3": "DataDisk",
+        "4": "DataDisk",
+        "5": "DataDisk",
+        "6": "DataDisk",
+        "7": "DataDisk",
+        "8": "DataDisk",
+        "9": "DataDisk"
       }
     },
     {
@@ -6536,6 +7394,9 @@
         "Ratio": "r",
         "RequiredPower": "r",
         "Setting": "rw"
+      },
+      "slots": {
+        "0": "DataDisk:Bed"
       }
     },
     {
@@ -6554,6 +7415,9 @@
         "Ratio": "r",
         "RequiredPower": "r",
         "Setting": "rw"
+      },
+      "slots": {
+        "0": "DataDisk:Player"
       }
     },
     {
@@ -6572,6 +7436,9 @@
         "Ratio": "r",
         "RequiredPower": "r",
         "Setting": "rw"
+      },
+      "slots": {
+        "0": "DataDisk:Player"
       }
     },
     {
@@ -6590,6 +7457,9 @@
         "Ratio": "r",
         "RequiredPower": "r",
         "Setting": "rw"
+      },
+      "slots": {
+        "0": "DataDisk:Player"
       }
     },
     {
@@ -6603,6 +7473,9 @@
         "Open": "rw",
         "Power": "r",
         "RequiredPower": "r"
+      },
+      "slots": {
+        "0": "DataDisk:Player"
       }
     },
     {
@@ -6755,6 +7628,9 @@
         "Lock": "rw",
         "On": "rw",
         "PowerGeneration": "r"
+      },
+      "slots": {
+        "0": "DataDisk:Input"
       }
     },
     {
@@ -6771,6 +7647,11 @@
         "Output": "rw",
         "Power": "r",
         "RequiredPower": "r"
+      },
+      "slots": {
+        "0": "DataDisk:Import",
+        "1": "DataDisk:Export",
+        "2": "DataDisk:Export2"
       }
     },
     {
@@ -6789,6 +7670,11 @@
         "Power": "r",
         "RequiredPower": "r",
         "Setting": "rw"
+      },
+      "slots": {
+        "0": "DataDisk:Import",
+        "1": "DataDisk:Export",
+        "2": "DataDisk:Processing"
       }
     },
     {
@@ -6807,6 +7693,11 @@
         "Power": "r",
         "RequiredPower": "r",
         "Setting": "rw"
+      },
+      "slots": {
+        "0": "DataDisk:Import",
+        "1": "DataDisk:Export",
+        "2": "DataDisk:Processing"
       }
     },
     {
@@ -6857,6 +7748,9 @@
         "TotalMoles": "r",
         "Volume": "r",
         "WorkingGasEfficiency": "r"
+      },
+      "slots": {
+        "0": "GasCanister:GasCanister"
       }
     },
     {
@@ -6865,6 +7759,38 @@
       "logic": {
         "Lock": "rw",
         "Open": "rw"
+      },
+      "slots": {
+        "0": "DataDisk",
+        "1": "DataDisk",
+        "2": "DataDisk",
+        "3": "DataDisk",
+        "4": "DataDisk",
+        "5": "DataDisk",
+        "6": "DataDisk",
+        "7": "DataDisk",
+        "8": "DataDisk",
+        "9": "DataDisk",
+        "10": "DataDisk",
+        "11": "DataDisk",
+        "12": "DataDisk",
+        "13": "DataDisk",
+        "14": "DataDisk",
+        "15": "DataDisk",
+        "16": "DataDisk",
+        "17": "DataDisk",
+        "18": "DataDisk",
+        "19": "DataDisk",
+        "20": "DataDisk",
+        "21": "DataDisk",
+        "22": "DataDisk",
+        "23": "DataDisk",
+        "24": "DataDisk",
+        "25": "DataDisk",
+        "26": "DataDisk",
+        "27": "DataDisk",
+        "28": "DataDisk",
+        "29": "DataDisk"
       }
     },
     {
@@ -6878,6 +7804,11 @@
         "Ratio": "r",
         "RequiredPower": "r",
         "Setting": "rw"
+      },
+      "slots": {
+        "0": "Helmet:Helmet",
+        "1": "Suit:Suit",
+        "2": "Back:Back"
       }
     },
     {
@@ -6891,6 +7822,11 @@
         "Ratio": "r",
         "RequiredPower": "r",
         "Setting": "rw"
+      },
+      "slots": {
+        "0": "Helmet:Helmet",
+        "1": "Suit:Suit",
+        "2": "Back:Back"
       }
     },
     {
@@ -6904,6 +7840,11 @@
         "Ratio": "r",
         "RequiredPower": "r",
         "Setting": "rw"
+      },
+      "slots": {
+        "0": "Helmet:Helmet",
+        "1": "Suit:Suit",
+        "2": "Back:Back"
       }
     },
     {
@@ -6951,6 +7892,10 @@
         "RecipeHash": "rw",
         "RequiredPower": "r",
         "StackSize": "r"
+      },
+      "slots": {
+        "0": "DataDisk:Import",
+        "1": "DataDisk:Export"
       }
     },
     {
@@ -7062,6 +8007,10 @@
         "Output": "rw",
         "Power": "r",
         "RequiredPower": "r"
+      },
+      "slots": {
+        "0": "DataDisk:Import",
+        "1": "DataDisk:Export"
       }
     },
     {
@@ -7099,6 +8048,110 @@
         "RequiredPower": "r",
         "TargetPrefabHash": "r",
         "TargetSlotIndex": "r"
+      },
+      "slots": {
+        "0": "DataDisk:Import",
+        "1": "DataDisk:Export",
+        "2": "DataDisk",
+        "3": "DataDisk",
+        "4": "DataDisk",
+        "5": "DataDisk",
+        "6": "DataDisk",
+        "7": "DataDisk",
+        "8": "DataDisk",
+        "9": "DataDisk",
+        "10": "DataDisk",
+        "11": "DataDisk",
+        "12": "DataDisk",
+        "13": "DataDisk",
+        "14": "DataDisk",
+        "15": "DataDisk",
+        "16": "DataDisk",
+        "17": "DataDisk",
+        "18": "DataDisk",
+        "19": "DataDisk",
+        "20": "DataDisk",
+        "21": "DataDisk",
+        "22": "DataDisk",
+        "23": "DataDisk",
+        "24": "DataDisk",
+        "25": "DataDisk",
+        "26": "DataDisk",
+        "27": "DataDisk",
+        "28": "DataDisk",
+        "29": "DataDisk",
+        "30": "DataDisk",
+        "31": "DataDisk",
+        "32": "DataDisk",
+        "33": "DataDisk",
+        "34": "DataDisk",
+        "35": "DataDisk",
+        "36": "DataDisk",
+        "37": "DataDisk",
+        "38": "DataDisk",
+        "39": "DataDisk",
+        "40": "DataDisk",
+        "41": "DataDisk",
+        "42": "DataDisk",
+        "43": "DataDisk",
+        "44": "DataDisk",
+        "45": "DataDisk",
+        "46": "DataDisk",
+        "47": "DataDisk",
+        "48": "DataDisk",
+        "49": "DataDisk",
+        "50": "DataDisk",
+        "51": "DataDisk",
+        "52": "DataDisk",
+        "53": "DataDisk",
+        "54": "DataDisk",
+        "55": "DataDisk",
+        "56": "DataDisk",
+        "57": "DataDisk",
+        "58": "DataDisk",
+        "59": "DataDisk",
+        "60": "DataDisk",
+        "61": "DataDisk",
+        "62": "DataDisk",
+        "63": "DataDisk",
+        "64": "DataDisk",
+        "65": "DataDisk",
+        "66": "DataDisk",
+        "67": "DataDisk",
+        "68": "DataDisk",
+        "69": "DataDisk",
+        "70": "DataDisk",
+        "71": "DataDisk",
+        "72": "DataDisk",
+        "73": "DataDisk",
+        "74": "DataDisk",
+        "75": "DataDisk",
+        "76": "DataDisk",
+        "77": "DataDisk",
+        "78": "DataDisk",
+        "79": "DataDisk",
+        "80": "DataDisk",
+        "81": "DataDisk",
+        "82": "DataDisk",
+        "83": "DataDisk",
+        "84": "DataDisk",
+        "85": "DataDisk",
+        "86": "DataDisk",
+        "87": "DataDisk",
+        "88": "DataDisk",
+        "89": "DataDisk",
+        "90": "DataDisk",
+        "91": "DataDisk",
+        "92": "DataDisk",
+        "93": "DataDisk",
+        "94": "DataDisk",
+        "95": "DataDisk",
+        "96": "DataDisk",
+        "97": "DataDisk",
+        "98": "DataDisk",
+        "99": "DataDisk",
+        "100": "DataDisk",
+        "101": "DataDisk"
       }
     },
     {
@@ -7119,6 +8172,20 @@
         "RequiredPower": "r",
         "TargetPrefabHash": "r",
         "TargetSlotIndex": "r"
+      },
+      "slots": {
+        "0": "DataDisk:Import",
+        "1": "DataDisk:Export",
+        "2": "DataDisk",
+        "3": "DataDisk",
+        "4": "DataDisk",
+        "5": "DataDisk",
+        "6": "DataDisk",
+        "7": "DataDisk",
+        "8": "DataDisk",
+        "9": "DataDisk",
+        "10": "DataDisk",
+        "11": "DataDisk"
       }
     },
     {
@@ -7172,6 +8239,9 @@
         "Setting": "rw",
         "TemperatureOutput": "r",
         "TotalMolesOutput": "r"
+      },
+      "slots": {
+        "0": "DataDisk:DataDisk"
       }
     },
     {
@@ -7183,6 +8253,9 @@
         "On": "rw",
         "Power": "r",
         "RequiredPower": "r"
+      },
+      "slots": {
+        "0": "DataDisk:DataDisk"
       }
     },
     {
@@ -7203,6 +8276,9 @@
         "On": "rw",
         "Power": "r",
         "RequiredPower": "r"
+      },
+      "slots": {
+        "0": "Battery:Battery"
       }
     },
     {
@@ -7214,6 +8290,10 @@
         "On": "rw",
         "Power": "r",
         "RequiredPower": "r"
+      },
+      "slots": {
+        "0": "GasCanister",
+        "1": "GasCanister"
       }
     },
     {
@@ -7225,6 +8305,10 @@
         "On": "rw",
         "Power": "r",
         "RequiredPower": "r"
+      },
+      "slots": {
+        "0": "GasCanister",
+        "1": "GasCanister"
       }
     },
     {
@@ -7252,6 +8336,9 @@
         "On": "rw",
         "Power": "r",
         "RequiredPower": "r"
+      },
+      "slots": {
+        "0": "DataDisk:Import"
       }
     },
     {
@@ -7291,6 +8378,9 @@
         "Setting": "rw",
         "TemperatureOutput": "r",
         "TotalMolesOutput": "r"
+      },
+      "slots": {
+        "0": "DataDisk:DataDisk"
       }
     },
     {
@@ -7315,5 +8405,227 @@
         "PowerGeneration": "r"
       }
     }
-  ]
+  ],
+  "slotKinds": {
+    "AirTank": [
+      "Class",
+      "Damage",
+      "MaxQuantity",
+      "OccupantHash",
+      "Occupied",
+      "Pressure",
+      "Quantity",
+      "ReferenceId",
+      "Temperature"
+    ],
+    "Appliance": [
+      "Class",
+      "Damage",
+      "FreeSlots",
+      "MaxQuantity",
+      "OccupantHash",
+      "Occupied",
+      "On",
+      "PrefabHash",
+      "Quantity",
+      "ReferenceId",
+      "SortingClass",
+      "TotalSlots"
+    ],
+    "Back": [
+      "Charge",
+      "ChargeRatio",
+      "Class",
+      "Damage",
+      "FreeSlots",
+      "MaxQuantity",
+      "OccupantHash",
+      "Occupied",
+      "PrefabHash",
+      "Pressure",
+      "Quantity",
+      "ReferenceId",
+      "SortingClass",
+      "TotalSlots"
+    ],
+    "Battery": [
+      "Charge",
+      "ChargeRatio",
+      "Class",
+      "Damage",
+      "FreeSlots",
+      "MaxQuantity",
+      "OccupantHash",
+      "Occupied",
+      "PrefabHash",
+      "Quantity",
+      "ReferenceId",
+      "SortingClass",
+      "TotalSlots"
+    ],
+    "Circuitboard": [
+      "Class",
+      "Damage",
+      "FreeSlots",
+      "MaxQuantity",
+      "Mode",
+      "OccupantHash",
+      "Occupied",
+      "PrefabHash",
+      "Quantity",
+      "ReferenceId",
+      "SortingClass",
+      "TotalSlots"
+    ],
+    "Common": [
+      "Class",
+      "Damage",
+      "MaxQuantity",
+      "OccupantHash",
+      "Occupied",
+      "Quantity",
+      "ReferenceId"
+    ],
+    "DataDisk": [
+      "Class",
+      "Damage",
+      "FreeSlots",
+      "MaxQuantity",
+      "OccupantHash",
+      "Occupied",
+      "PrefabHash",
+      "Quantity",
+      "ReferenceId",
+      "SortingClass",
+      "TotalSlots"
+    ],
+    "Filter": [
+      "Class",
+      "Damage",
+      "FilterType",
+      "FreeSlots",
+      "MaxQuantity",
+      "OccupantHash",
+      "Occupied",
+      "PrefabHash",
+      "Quantity",
+      "ReferenceId",
+      "SortingClass",
+      "TotalSlots"
+    ],
+    "Filtered": [
+      "Class",
+      "Damage",
+      "FilterType",
+      "MaxQuantity",
+      "OccupantHash",
+      "Occupied",
+      "Quantity",
+      "ReferenceId"
+    ],
+    "GasCanister": [
+      "Class",
+      "Damage",
+      "FreeSlots",
+      "MaxQuantity",
+      "OccupantHash",
+      "Occupied",
+      "Open",
+      "PrefabHash",
+      "Pressure",
+      "Quantity",
+      "ReferenceId",
+      "SortingClass",
+      "Temperature",
+      "TotalSlots",
+      "Volume"
+    ],
+    "Helmet": [
+      "Charge",
+      "ChargeRatio",
+      "Class",
+      "Damage",
+      "FreeSlots",
+      "Lock",
+      "MaxQuantity",
+      "OccupantHash",
+      "Occupied",
+      "On",
+      "Open",
+      "PrefabHash",
+      "Pressure",
+      "Quantity",
+      "ReferenceId",
+      "SortingClass",
+      "TotalSlots"
+    ],
+    "Mask": [
+      "Class",
+      "Damage",
+      "FreeSlots",
+      "Lock",
+      "MaxQuantity",
+      "OccupantHash",
+      "Occupied",
+      "On",
+      "Open",
+      "PrefabHash",
+      "Quantity",
+      "ReferenceId",
+      "SortingClass",
+      "TotalSlots"
+    ],
+    "Plant": [
+      "Class",
+      "Damage",
+      "Efficiency",
+      "FreeSlots",
+      "Growth",
+      "Health",
+      "Mature",
+      "MaturityRatio",
+      "MaxQuantity",
+      "OccupantHash",
+      "Occupied",
+      "PrefabHash",
+      "Quantity",
+      "ReferenceId",
+      "Seeding",
+      "SeedingRatio",
+      "SortingClass",
+      "TotalSlots"
+    ],
+    "ProgrammableChip": [
+      "Class",
+      "Damage",
+      "FreeSlots",
+      "LineNumber",
+      "MaxQuantity",
+      "OccupantHash",
+      "Occupied",
+      "PrefabHash",
+      "Quantity",
+      "ReferenceId",
+      "SortingClass",
+      "TotalSlots"
+    ],
+    "Suit": [
+      "Charge",
+      "ChargeRatio",
+      "Class",
+      "Damage",
+      "FreeSlots",
+      "MaxQuantity",
+      "OccupantHash",
+      "Occupied",
+      "PrefabHash",
+      "Pressure",
+      "PressureAir",
+      "PressureWaste",
+      "Quantity",
+      "ReferenceId",
+      "SortingClass",
+      "TotalSlots"
+    ]
+  }
 }

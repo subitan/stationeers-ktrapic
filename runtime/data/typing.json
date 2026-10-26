@@ -21,5 +21,40 @@
     "AutoLand",
     "NetworkFault",
     "Reset"
-  ]
+  ],
+  "booleanSlotLogicTypes": [
+    "Occupied",
+    "On",
+    "Open",
+    "Lock"
+  ],
+  "slotReadsAlways": [
+    "Occupied",
+    "OccupantHash",
+    "Quantity",
+    "Damage",
+    "Class",
+    "MaxQuantity",
+    "PrefabHash",
+    "ReferenceId"
+  ],
+  "slotWrites": {
+    "any": [
+      "On",
+      "Open",
+      "Lock",
+      "Mode"
+    ],
+    "Appliance": [
+      "On"
+    ],
+    "GasCanister": [
+      "Open"
+    ],
+    "Helmet": [
+      "On",
+      "Lock",
+      "Open"
+    ]
+  }
 }

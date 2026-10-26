@@ -6,9 +6,9 @@ A system to allow IC10 programming using a constrained Kotlin (inspired by
 KTrapIC compiles a constrained subset of Kotlin to IC10, the assembly language of
 [Stationeers](https://store.steampowered.com/app/544550/Stationeers/)' programmable chips.
 It is at an early stage: programs using values, loops, conditions, functions, the devices on a
-chip's pins, typed devices and batch operations on the network compile (see
-`test/cases/satellite_tracker.ic10.kts`, a port of a chip from the game); slots and the IC10
-Editor plugin are next.
+chip's pins, typed devices, slots and batch operations on the network compile (see
+`test/cases/satellite_tracker.ic10.kts`, a port of a chip from the game); the IC10 Editor plugin
+is next.
 
 Programs are Kotlin scripts named `*.ic10.kts`. The `ktrapic` API needs no import, since
 `import ktrapic.*` is implied; writing it anyway is fine.
@@ -112,9 +112,11 @@ RULES_JVM_EXTERNAL_REPIN=1 bazel run @maven//:pin
 ### Game data
 
 `runtime/data/logic-enums.json` holds the game's logic enums and `runtime/data/prefabs.json` its
-prefabs with their logic types; `runtime/data/typing.json` says how the API types logic, and
-`runtime/data/grouping.json` which prefabs are grouped into kinds (`Battery.Small`) and which are
-text displays. After changing any of them, regenerate the runtime's sources (a test fails
+prefabs with their logic types and slots, and what each kind of slot can read;
+`runtime/data/typing.json` says how the API types logic and which slot logic types the game lets
+a program write (checked against the game's code, which allows far fewer than PyTrapIC's data
+claims), and `runtime/data/grouping.json` which prefabs are grouped into kinds (`Battery.Small`)
+and which are text displays. After changing any of them, regenerate the runtime's sources (a test fails
 until they match):
 
 ```

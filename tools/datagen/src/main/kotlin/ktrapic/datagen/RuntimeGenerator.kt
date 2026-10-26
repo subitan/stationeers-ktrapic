@@ -18,7 +18,13 @@ object RuntimeGenerator {
     require(unknownBooleans.isEmpty()) { "Boolean logic types not in LogicType: $unknownBooleans" }
     return mapOf(
         "GeneratedEnums.kt" to enumsFile(enums, typing),
-        "GenericDevice.kt" to deviceFile(logicTypes.keys, typing.booleanLogicTypes.toSet()),
+        "GenericDevice.kt" to
+            deviceFile(
+                logicTypes.keys,
+                typing.booleanLogicTypes.toSet(),
+                enums.enums["LogicSlotType"]?.keys.orEmpty(),
+                typing,
+            ),
     )
   }
 
@@ -32,9 +38,15 @@ object RuntimeGenerator {
     val logicTypes = requireNotNull(enums.enums["LogicType"]) { "the data has no LogicType" }
     val unknown = prefabs.prefabs.flatMap { it.logic.keys }.toSet() - logicTypes.keys
     require(unknown.isEmpty()) { "prefab logic types not in LogicType: $unknown" }
+    val slotLogicTypes = enums.enums["LogicSlotType"]?.keys.orEmpty()
+    val unknownSlot =
+        (prefabs.slotKinds.values.flatten() +
+                typing.slotReadsAlways +
+                typing.slotWrites.values.flatten())
+            .toSet() - slotLogicTypes
+    require(unknownSlot.isEmpty()) { "slot logic types not in LogicSlotType: $unknownSlot" }
     val enumNames = enums.enums.keys.map { identifier(it) }.toSet()
-    return generate(enums, typing) +
-        PrefabGenerator.generate(prefabs, grouping, enumNames, typing.booleanLogicTypes.toSet())
+    return generate(enums, typing) + PrefabGenerator.generate(prefabs, grouping, enumNames, typing)
   }
 
   private fun enumsFile(enums: LogicEnums, typing: Typing): String = buildString {
@@ -58,32 +70,62 @@ object RuntimeGenerator {
     }
   }
 
-  private fun deviceFile(logicTypes: Collection<String>, booleans: Set<String>): String =
-      buildString {
-        append(HEADER)
-        append('\n')
-        append("/**\n")
-        append(" * Every logic type the game has, as a property. A device has only some of them; ")
-        append("reading or writing\n")
-        append(" * one it lacks is an error on the chip.\n")
-        append(" */\n")
-        append("abstract class GenericDevice internal constructor() {\n")
-        // LogicType.None is the "no logic type" operand, not a property.
-        for ((index, logicType) in logicTypes.filter { it != "None" }.withIndex()) {
-          if (index > 0) append('\n')
-          // A device's prefab is a Prefab, compared with prefabs rather than used as a number.
-          if (logicType == "PrefabHash") {
-            append("  val PrefabHash: Prefab\n")
-            append("    get() = intrinsic()\n")
-            continue
-          }
-          val type = if (logicType in booleans) "Boolean" else "Double"
-          append("  var ${identifier(logicType)}: $type\n")
-          append("    get() = intrinsic()\n")
-          append("    set(value) = intrinsic()\n")
-        }
-        append("}\n")
+  private fun deviceFile(
+      logicTypes: Collection<String>,
+      booleans: Set<String>,
+      slotLogicTypes: Collection<String>,
+      typing: Typing,
+  ): String = buildString {
+    append(HEADER)
+    append('\n')
+    append("/**\n")
+    append(" * Every logic type the game has, as a property. A device has only some of them; ")
+    append("reading or writing\n")
+    append(" * one it lacks is an error on the chip.\n")
+    append(" */\n")
+    append("abstract class GenericDevice internal constructor() {\n")
+    // LogicType.None is the "no logic type" operand, not a property.
+    for ((index, logicType) in logicTypes.filter { it != "None" }.withIndex()) {
+      if (index > 0) append('\n')
+      // A device's prefab is a Prefab, compared with prefabs rather than used as a number.
+      if (logicType == "PrefabHash") {
+        append("  val PrefabHash: Prefab\n")
+        append("    get() = intrinsic()\n")
+        continue
       }
+      val type = if (logicType in booleans) "Boolean" else "Double"
+      append("  var ${identifier(logicType)}: $type\n")
+      append("    get() = intrinsic()\n")
+      append("    set(value) = intrinsic()\n")
+    }
+    if (slotLogicTypes.isNotEmpty()) {
+      append('\n')
+      append("  /** The device's slots, by number. */\n")
+      append("  val slots: Slots<Slot>\n")
+      append("    get() = intrinsic()\n")
+    }
+    append("}\n")
+    if (slotLogicTypes.isEmpty()) return@buildString
+    // The game lets a program write only a few slot logic types, whatever the slot.
+    val writes = typing.slotWrites["any"].orEmpty().toSet()
+    append('\n')
+    append("/**\n")
+    append(" * A slot of a device whose prefab isn't known, with every slot logic type the game ")
+    append("has. A slot can\n")
+    append(" * read only some of them, and the game lets a program write only ")
+    append("${writes.sorted().joinToString()}.\n")
+    append(" */\n")
+    append("class Slot internal constructor() : DeviceSlot() {\n")
+    for ((index, logicType) in slotLogicTypes.filter { it != "None" }.withIndex()) {
+      if (index > 0) append('\n')
+      val type = if (logicType in typing.booleanSlotLogicTypes) "Boolean" else "Double"
+      val keyword = if (logicType in writes) "var" else "val"
+      append("  $keyword ${identifier(logicType)}: $type\n")
+      append("    get() = intrinsic()\n")
+      if (logicType in writes) append("    set(value) = intrinsic()\n")
+    }
+    append("}\n")
+  }
 
   private val KEYWORDS =
       setOf(

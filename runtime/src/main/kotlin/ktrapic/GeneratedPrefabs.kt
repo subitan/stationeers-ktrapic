@@ -2,6 +2,1294 @@
 
 package ktrapic
 
+/** A AirTank slot. */
+class AirTankSlot internal constructor() : DeviceSlot() {
+  val Class: Double
+    get() = intrinsic()
+
+  val Damage: Double
+    get() = intrinsic()
+
+  val MaxQuantity: Double
+    get() = intrinsic()
+
+  val OccupantHash: Double
+    get() = intrinsic()
+
+  val Occupied: Boolean
+    get() = intrinsic()
+
+  val PrefabHash: Double
+    get() = intrinsic()
+
+  val Pressure: Double
+    get() = intrinsic()
+
+  val Quantity: Double
+    get() = intrinsic()
+
+  val ReferenceId: Double
+    get() = intrinsic()
+
+  val Temperature: Double
+    get() = intrinsic()
+
+  class Batch internal constructor() : SlotBatch() {}
+
+  class Reading internal constructor() : SlotReading() {
+    val Class: Double
+      get() = intrinsic()
+
+    val Damage: Double
+      get() = intrinsic()
+
+    val MaxQuantity: Double
+      get() = intrinsic()
+
+    val OccupantHash: Double
+      get() = intrinsic()
+
+    val Occupied: Double
+      get() = intrinsic()
+
+    val PrefabHash: Double
+      get() = intrinsic()
+
+    val Pressure: Double
+      get() = intrinsic()
+
+    val Quantity: Double
+      get() = intrinsic()
+
+    val ReferenceId: Double
+      get() = intrinsic()
+
+    val Temperature: Double
+      get() = intrinsic()
+  }
+}
+
+/** A Appliance slot. */
+class ApplianceSlot internal constructor() : DeviceSlot() {
+  val Class: Double
+    get() = intrinsic()
+
+  val Damage: Double
+    get() = intrinsic()
+
+  val FreeSlots: Double
+    get() = intrinsic()
+
+  val MaxQuantity: Double
+    get() = intrinsic()
+
+  val OccupantHash: Double
+    get() = intrinsic()
+
+  val Occupied: Boolean
+    get() = intrinsic()
+
+  var On: Boolean
+    get() = intrinsic()
+    set(value) = intrinsic()
+
+  val PrefabHash: Double
+    get() = intrinsic()
+
+  val Quantity: Double
+    get() = intrinsic()
+
+  val ReferenceId: Double
+    get() = intrinsic()
+
+  val SortingClass: Double
+    get() = intrinsic()
+
+  val TotalSlots: Double
+    get() = intrinsic()
+
+  class Batch internal constructor() : SlotBatch() {
+    var On: Boolean
+      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
+      set(value) = intrinsic()
+  }
+
+  class Reading internal constructor() : SlotReading() {
+    val Class: Double
+      get() = intrinsic()
+
+    val Damage: Double
+      get() = intrinsic()
+
+    val FreeSlots: Double
+      get() = intrinsic()
+
+    val MaxQuantity: Double
+      get() = intrinsic()
+
+    val OccupantHash: Double
+      get() = intrinsic()
+
+    val Occupied: Double
+      get() = intrinsic()
+
+    val On: Double
+      get() = intrinsic()
+
+    val PrefabHash: Double
+      get() = intrinsic()
+
+    val Quantity: Double
+      get() = intrinsic()
+
+    val ReferenceId: Double
+      get() = intrinsic()
+
+    val SortingClass: Double
+      get() = intrinsic()
+
+    val TotalSlots: Double
+      get() = intrinsic()
+  }
+}
+
+/** A Back slot. */
+class BackSlot internal constructor() : DeviceSlot() {
+  val Charge: Double
+    get() = intrinsic()
+
+  val ChargeRatio: Double
+    get() = intrinsic()
+
+  val Class: Double
+    get() = intrinsic()
+
+  val Damage: Double
+    get() = intrinsic()
+
+  val FreeSlots: Double
+    get() = intrinsic()
+
+  val MaxQuantity: Double
+    get() = intrinsic()
+
+  val OccupantHash: Double
+    get() = intrinsic()
+
+  val Occupied: Boolean
+    get() = intrinsic()
+
+  val PrefabHash: Double
+    get() = intrinsic()
+
+  val Pressure: Double
+    get() = intrinsic()
+
+  val Quantity: Double
+    get() = intrinsic()
+
+  val ReferenceId: Double
+    get() = intrinsic()
+
+  val SortingClass: Double
+    get() = intrinsic()
+
+  val TotalSlots: Double
+    get() = intrinsic()
+
+  class Batch internal constructor() : SlotBatch() {}
+
+  class Reading internal constructor() : SlotReading() {
+    val Charge: Double
+      get() = intrinsic()
+
+    val ChargeRatio: Double
+      get() = intrinsic()
+
+    val Class: Double
+      get() = intrinsic()
+
+    val Damage: Double
+      get() = intrinsic()
+
+    val FreeSlots: Double
+      get() = intrinsic()
+
+    val MaxQuantity: Double
+      get() = intrinsic()
+
+    val OccupantHash: Double
+      get() = intrinsic()
+
+    val Occupied: Double
+      get() = intrinsic()
+
+    val PrefabHash: Double
+      get() = intrinsic()
+
+    val Pressure: Double
+      get() = intrinsic()
+
+    val Quantity: Double
+      get() = intrinsic()
+
+    val ReferenceId: Double
+      get() = intrinsic()
+
+    val SortingClass: Double
+      get() = intrinsic()
+
+    val TotalSlots: Double
+      get() = intrinsic()
+  }
+}
+
+/** A Battery slot. */
+class BatterySlot internal constructor() : DeviceSlot() {
+  val Charge: Double
+    get() = intrinsic()
+
+  val ChargeRatio: Double
+    get() = intrinsic()
+
+  val Class: Double
+    get() = intrinsic()
+
+  val Damage: Double
+    get() = intrinsic()
+
+  val FreeSlots: Double
+    get() = intrinsic()
+
+  val MaxQuantity: Double
+    get() = intrinsic()
+
+  val OccupantHash: Double
+    get() = intrinsic()
+
+  val Occupied: Boolean
+    get() = intrinsic()
+
+  val PrefabHash: Double
+    get() = intrinsic()
+
+  val Quantity: Double
+    get() = intrinsic()
+
+  val ReferenceId: Double
+    get() = intrinsic()
+
+  val SortingClass: Double
+    get() = intrinsic()
+
+  val TotalSlots: Double
+    get() = intrinsic()
+
+  class Batch internal constructor() : SlotBatch() {}
+
+  class Reading internal constructor() : SlotReading() {
+    val Charge: Double
+      get() = intrinsic()
+
+    val ChargeRatio: Double
+      get() = intrinsic()
+
+    val Class: Double
+      get() = intrinsic()
+
+    val Damage: Double
+      get() = intrinsic()
+
+    val FreeSlots: Double
+      get() = intrinsic()
+
+    val MaxQuantity: Double
+      get() = intrinsic()
+
+    val OccupantHash: Double
+      get() = intrinsic()
+
+    val Occupied: Double
+      get() = intrinsic()
+
+    val PrefabHash: Double
+      get() = intrinsic()
+
+    val Quantity: Double
+      get() = intrinsic()
+
+    val ReferenceId: Double
+      get() = intrinsic()
+
+    val SortingClass: Double
+      get() = intrinsic()
+
+    val TotalSlots: Double
+      get() = intrinsic()
+  }
+}
+
+/** A Circuitboard slot. */
+class CircuitboardSlot internal constructor() : DeviceSlot() {
+  val Class: Double
+    get() = intrinsic()
+
+  val Damage: Double
+    get() = intrinsic()
+
+  val FreeSlots: Double
+    get() = intrinsic()
+
+  val MaxQuantity: Double
+    get() = intrinsic()
+
+  val Mode: Double
+    get() = intrinsic()
+
+  val OccupantHash: Double
+    get() = intrinsic()
+
+  val Occupied: Boolean
+    get() = intrinsic()
+
+  val PrefabHash: Double
+    get() = intrinsic()
+
+  val Quantity: Double
+    get() = intrinsic()
+
+  val ReferenceId: Double
+    get() = intrinsic()
+
+  val SortingClass: Double
+    get() = intrinsic()
+
+  val TotalSlots: Double
+    get() = intrinsic()
+
+  class Batch internal constructor() : SlotBatch() {}
+
+  class Reading internal constructor() : SlotReading() {
+    val Class: Double
+      get() = intrinsic()
+
+    val Damage: Double
+      get() = intrinsic()
+
+    val FreeSlots: Double
+      get() = intrinsic()
+
+    val MaxQuantity: Double
+      get() = intrinsic()
+
+    val Mode: Double
+      get() = intrinsic()
+
+    val OccupantHash: Double
+      get() = intrinsic()
+
+    val Occupied: Double
+      get() = intrinsic()
+
+    val PrefabHash: Double
+      get() = intrinsic()
+
+    val Quantity: Double
+      get() = intrinsic()
+
+    val ReferenceId: Double
+      get() = intrinsic()
+
+    val SortingClass: Double
+      get() = intrinsic()
+
+    val TotalSlots: Double
+      get() = intrinsic()
+  }
+}
+
+/** A Common slot. */
+class CommonSlot internal constructor() : DeviceSlot() {
+  val Class: Double
+    get() = intrinsic()
+
+  val Damage: Double
+    get() = intrinsic()
+
+  val MaxQuantity: Double
+    get() = intrinsic()
+
+  val OccupantHash: Double
+    get() = intrinsic()
+
+  val Occupied: Boolean
+    get() = intrinsic()
+
+  val PrefabHash: Double
+    get() = intrinsic()
+
+  val Quantity: Double
+    get() = intrinsic()
+
+  val ReferenceId: Double
+    get() = intrinsic()
+
+  class Batch internal constructor() : SlotBatch() {}
+
+  class Reading internal constructor() : SlotReading() {
+    val Class: Double
+      get() = intrinsic()
+
+    val Damage: Double
+      get() = intrinsic()
+
+    val MaxQuantity: Double
+      get() = intrinsic()
+
+    val OccupantHash: Double
+      get() = intrinsic()
+
+    val Occupied: Double
+      get() = intrinsic()
+
+    val PrefabHash: Double
+      get() = intrinsic()
+
+    val Quantity: Double
+      get() = intrinsic()
+
+    val ReferenceId: Double
+      get() = intrinsic()
+  }
+}
+
+/** A DataDisk slot. */
+class DataDiskSlot internal constructor() : DeviceSlot() {
+  val Class: Double
+    get() = intrinsic()
+
+  val Damage: Double
+    get() = intrinsic()
+
+  val FreeSlots: Double
+    get() = intrinsic()
+
+  val MaxQuantity: Double
+    get() = intrinsic()
+
+  val OccupantHash: Double
+    get() = intrinsic()
+
+  val Occupied: Boolean
+    get() = intrinsic()
+
+  val PrefabHash: Double
+    get() = intrinsic()
+
+  val Quantity: Double
+    get() = intrinsic()
+
+  val ReferenceId: Double
+    get() = intrinsic()
+
+  val SortingClass: Double
+    get() = intrinsic()
+
+  val TotalSlots: Double
+    get() = intrinsic()
+
+  class Batch internal constructor() : SlotBatch() {}
+
+  class Reading internal constructor() : SlotReading() {
+    val Class: Double
+      get() = intrinsic()
+
+    val Damage: Double
+      get() = intrinsic()
+
+    val FreeSlots: Double
+      get() = intrinsic()
+
+    val MaxQuantity: Double
+      get() = intrinsic()
+
+    val OccupantHash: Double
+      get() = intrinsic()
+
+    val Occupied: Double
+      get() = intrinsic()
+
+    val PrefabHash: Double
+      get() = intrinsic()
+
+    val Quantity: Double
+      get() = intrinsic()
+
+    val ReferenceId: Double
+      get() = intrinsic()
+
+    val SortingClass: Double
+      get() = intrinsic()
+
+    val TotalSlots: Double
+      get() = intrinsic()
+  }
+}
+
+/** A Filter slot. */
+class FilterSlot internal constructor() : DeviceSlot() {
+  val Class: Double
+    get() = intrinsic()
+
+  val Damage: Double
+    get() = intrinsic()
+
+  val FilterType: Double
+    get() = intrinsic()
+
+  val FreeSlots: Double
+    get() = intrinsic()
+
+  val MaxQuantity: Double
+    get() = intrinsic()
+
+  val OccupantHash: Double
+    get() = intrinsic()
+
+  val Occupied: Boolean
+    get() = intrinsic()
+
+  val PrefabHash: Double
+    get() = intrinsic()
+
+  val Quantity: Double
+    get() = intrinsic()
+
+  val ReferenceId: Double
+    get() = intrinsic()
+
+  val SortingClass: Double
+    get() = intrinsic()
+
+  val TotalSlots: Double
+    get() = intrinsic()
+
+  class Batch internal constructor() : SlotBatch() {}
+
+  class Reading internal constructor() : SlotReading() {
+    val Class: Double
+      get() = intrinsic()
+
+    val Damage: Double
+      get() = intrinsic()
+
+    val FilterType: Double
+      get() = intrinsic()
+
+    val FreeSlots: Double
+      get() = intrinsic()
+
+    val MaxQuantity: Double
+      get() = intrinsic()
+
+    val OccupantHash: Double
+      get() = intrinsic()
+
+    val Occupied: Double
+      get() = intrinsic()
+
+    val PrefabHash: Double
+      get() = intrinsic()
+
+    val Quantity: Double
+      get() = intrinsic()
+
+    val ReferenceId: Double
+      get() = intrinsic()
+
+    val SortingClass: Double
+      get() = intrinsic()
+
+    val TotalSlots: Double
+      get() = intrinsic()
+  }
+}
+
+/** A Filtered slot. */
+class FilteredSlot internal constructor() : DeviceSlot() {
+  val Class: Double
+    get() = intrinsic()
+
+  val Damage: Double
+    get() = intrinsic()
+
+  val FilterType: Double
+    get() = intrinsic()
+
+  val MaxQuantity: Double
+    get() = intrinsic()
+
+  val OccupantHash: Double
+    get() = intrinsic()
+
+  val Occupied: Boolean
+    get() = intrinsic()
+
+  val PrefabHash: Double
+    get() = intrinsic()
+
+  val Quantity: Double
+    get() = intrinsic()
+
+  val ReferenceId: Double
+    get() = intrinsic()
+
+  class Batch internal constructor() : SlotBatch() {}
+
+  class Reading internal constructor() : SlotReading() {
+    val Class: Double
+      get() = intrinsic()
+
+    val Damage: Double
+      get() = intrinsic()
+
+    val FilterType: Double
+      get() = intrinsic()
+
+    val MaxQuantity: Double
+      get() = intrinsic()
+
+    val OccupantHash: Double
+      get() = intrinsic()
+
+    val Occupied: Double
+      get() = intrinsic()
+
+    val PrefabHash: Double
+      get() = intrinsic()
+
+    val Quantity: Double
+      get() = intrinsic()
+
+    val ReferenceId: Double
+      get() = intrinsic()
+  }
+}
+
+/** A GasCanister slot. */
+class GasCanisterSlot internal constructor() : DeviceSlot() {
+  val Class: Double
+    get() = intrinsic()
+
+  val Damage: Double
+    get() = intrinsic()
+
+  val FreeSlots: Double
+    get() = intrinsic()
+
+  val MaxQuantity: Double
+    get() = intrinsic()
+
+  val OccupantHash: Double
+    get() = intrinsic()
+
+  val Occupied: Boolean
+    get() = intrinsic()
+
+  var Open: Boolean
+    get() = intrinsic()
+    set(value) = intrinsic()
+
+  val PrefabHash: Double
+    get() = intrinsic()
+
+  val Pressure: Double
+    get() = intrinsic()
+
+  val Quantity: Double
+    get() = intrinsic()
+
+  val ReferenceId: Double
+    get() = intrinsic()
+
+  val SortingClass: Double
+    get() = intrinsic()
+
+  val Temperature: Double
+    get() = intrinsic()
+
+  val TotalSlots: Double
+    get() = intrinsic()
+
+  val Volume: Double
+    get() = intrinsic()
+
+  class Batch internal constructor() : SlotBatch() {
+    var Open: Boolean
+      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
+      set(value) = intrinsic()
+  }
+
+  class Reading internal constructor() : SlotReading() {
+    val Class: Double
+      get() = intrinsic()
+
+    val Damage: Double
+      get() = intrinsic()
+
+    val FreeSlots: Double
+      get() = intrinsic()
+
+    val MaxQuantity: Double
+      get() = intrinsic()
+
+    val OccupantHash: Double
+      get() = intrinsic()
+
+    val Occupied: Double
+      get() = intrinsic()
+
+    val Open: Double
+      get() = intrinsic()
+
+    val PrefabHash: Double
+      get() = intrinsic()
+
+    val Pressure: Double
+      get() = intrinsic()
+
+    val Quantity: Double
+      get() = intrinsic()
+
+    val ReferenceId: Double
+      get() = intrinsic()
+
+    val SortingClass: Double
+      get() = intrinsic()
+
+    val Temperature: Double
+      get() = intrinsic()
+
+    val TotalSlots: Double
+      get() = intrinsic()
+
+    val Volume: Double
+      get() = intrinsic()
+  }
+}
+
+/** A Helmet slot. */
+class HelmetSlot internal constructor() : DeviceSlot() {
+  val Charge: Double
+    get() = intrinsic()
+
+  val ChargeRatio: Double
+    get() = intrinsic()
+
+  val Class: Double
+    get() = intrinsic()
+
+  val Damage: Double
+    get() = intrinsic()
+
+  val FreeSlots: Double
+    get() = intrinsic()
+
+  var Lock: Boolean
+    get() = intrinsic()
+    set(value) = intrinsic()
+
+  val MaxQuantity: Double
+    get() = intrinsic()
+
+  val OccupantHash: Double
+    get() = intrinsic()
+
+  val Occupied: Boolean
+    get() = intrinsic()
+
+  var On: Boolean
+    get() = intrinsic()
+    set(value) = intrinsic()
+
+  var Open: Boolean
+    get() = intrinsic()
+    set(value) = intrinsic()
+
+  val PrefabHash: Double
+    get() = intrinsic()
+
+  val Pressure: Double
+    get() = intrinsic()
+
+  val Quantity: Double
+    get() = intrinsic()
+
+  val ReferenceId: Double
+    get() = intrinsic()
+
+  val SortingClass: Double
+    get() = intrinsic()
+
+  val TotalSlots: Double
+    get() = intrinsic()
+
+  class Batch internal constructor() : SlotBatch() {
+    var Lock: Boolean
+      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
+      set(value) = intrinsic()
+
+    var On: Boolean
+      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
+      set(value) = intrinsic()
+
+    var Open: Boolean
+      @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
+      set(value) = intrinsic()
+  }
+
+  class Reading internal constructor() : SlotReading() {
+    val Charge: Double
+      get() = intrinsic()
+
+    val ChargeRatio: Double
+      get() = intrinsic()
+
+    val Class: Double
+      get() = intrinsic()
+
+    val Damage: Double
+      get() = intrinsic()
+
+    val FreeSlots: Double
+      get() = intrinsic()
+
+    val Lock: Double
+      get() = intrinsic()
+
+    val MaxQuantity: Double
+      get() = intrinsic()
+
+    val OccupantHash: Double
+      get() = intrinsic()
+
+    val Occupied: Double
+      get() = intrinsic()
+
+    val On: Double
+      get() = intrinsic()
+
+    val Open: Double
+      get() = intrinsic()
+
+    val PrefabHash: Double
+      get() = intrinsic()
+
+    val Pressure: Double
+      get() = intrinsic()
+
+    val Quantity: Double
+      get() = intrinsic()
+
+    val ReferenceId: Double
+      get() = intrinsic()
+
+    val SortingClass: Double
+      get() = intrinsic()
+
+    val TotalSlots: Double
+      get() = intrinsic()
+  }
+}
+
+/** A Mask slot. */
+class MaskSlot internal constructor() : DeviceSlot() {
+  val Class: Double
+    get() = intrinsic()
+
+  val Damage: Double
+    get() = intrinsic()
+
+  val FreeSlots: Double
+    get() = intrinsic()
+
+  val Lock: Boolean
+    get() = intrinsic()
+
+  val MaxQuantity: Double
+    get() = intrinsic()
+
+  val OccupantHash: Double
+    get() = intrinsic()
+
+  val Occupied: Boolean
+    get() = intrinsic()
+
+  val On: Boolean
+    get() = intrinsic()
+
+  val Open: Boolean
+    get() = intrinsic()
+
+  val PrefabHash: Double
+    get() = intrinsic()
+
+  val Quantity: Double
+    get() = intrinsic()
+
+  val ReferenceId: Double
+    get() = intrinsic()
+
+  val SortingClass: Double
+    get() = intrinsic()
+
+  val TotalSlots: Double
+    get() = intrinsic()
+
+  class Batch internal constructor() : SlotBatch() {}
+
+  class Reading internal constructor() : SlotReading() {
+    val Class: Double
+      get() = intrinsic()
+
+    val Damage: Double
+      get() = intrinsic()
+
+    val FreeSlots: Double
+      get() = intrinsic()
+
+    val Lock: Double
+      get() = intrinsic()
+
+    val MaxQuantity: Double
+      get() = intrinsic()
+
+    val OccupantHash: Double
+      get() = intrinsic()
+
+    val Occupied: Double
+      get() = intrinsic()
+
+    val On: Double
+      get() = intrinsic()
+
+    val Open: Double
+      get() = intrinsic()
+
+    val PrefabHash: Double
+      get() = intrinsic()
+
+    val Quantity: Double
+      get() = intrinsic()
+
+    val ReferenceId: Double
+      get() = intrinsic()
+
+    val SortingClass: Double
+      get() = intrinsic()
+
+    val TotalSlots: Double
+      get() = intrinsic()
+  }
+}
+
+/** A Plant slot. */
+class PlantSlot internal constructor() : DeviceSlot() {
+  val Class: Double
+    get() = intrinsic()
+
+  val Damage: Double
+    get() = intrinsic()
+
+  val Efficiency: Double
+    get() = intrinsic()
+
+  val FreeSlots: Double
+    get() = intrinsic()
+
+  val Growth: Double
+    get() = intrinsic()
+
+  val Health: Double
+    get() = intrinsic()
+
+  val Mature: Double
+    get() = intrinsic()
+
+  val MaturityRatio: Double
+    get() = intrinsic()
+
+  val MaxQuantity: Double
+    get() = intrinsic()
+
+  val OccupantHash: Double
+    get() = intrinsic()
+
+  val Occupied: Boolean
+    get() = intrinsic()
+
+  val PrefabHash: Double
+    get() = intrinsic()
+
+  val Quantity: Double
+    get() = intrinsic()
+
+  val ReferenceId: Double
+    get() = intrinsic()
+
+  val Seeding: Double
+    get() = intrinsic()
+
+  val SeedingRatio: Double
+    get() = intrinsic()
+
+  val SortingClass: Double
+    get() = intrinsic()
+
+  val TotalSlots: Double
+    get() = intrinsic()
+
+  class Batch internal constructor() : SlotBatch() {}
+
+  class Reading internal constructor() : SlotReading() {
+    val Class: Double
+      get() = intrinsic()
+
+    val Damage: Double
+      get() = intrinsic()
+
+    val Efficiency: Double
+      get() = intrinsic()
+
+    val FreeSlots: Double
+      get() = intrinsic()
+
+    val Growth: Double
+      get() = intrinsic()
+
+    val Health: Double
+      get() = intrinsic()
+
+    val Mature: Double
+      get() = intrinsic()
+
+    val MaturityRatio: Double
+      get() = intrinsic()
+
+    val MaxQuantity: Double
+      get() = intrinsic()
+
+    val OccupantHash: Double
+      get() = intrinsic()
+
+    val Occupied: Double
+      get() = intrinsic()
+
+    val PrefabHash: Double
+      get() = intrinsic()
+
+    val Quantity: Double
+      get() = intrinsic()
+
+    val ReferenceId: Double
+      get() = intrinsic()
+
+    val Seeding: Double
+      get() = intrinsic()
+
+    val SeedingRatio: Double
+      get() = intrinsic()
+
+    val SortingClass: Double
+      get() = intrinsic()
+
+    val TotalSlots: Double
+      get() = intrinsic()
+  }
+}
+
+/** A ProgrammableChip slot. */
+class ProgrammableChipSlot internal constructor() : DeviceSlot() {
+  val Class: Double
+    get() = intrinsic()
+
+  val Damage: Double
+    get() = intrinsic()
+
+  val FreeSlots: Double
+    get() = intrinsic()
+
+  val LineNumber: Double
+    get() = intrinsic()
+
+  val MaxQuantity: Double
+    get() = intrinsic()
+
+  val OccupantHash: Double
+    get() = intrinsic()
+
+  val Occupied: Boolean
+    get() = intrinsic()
+
+  val PrefabHash: Double
+    get() = intrinsic()
+
+  val Quantity: Double
+    get() = intrinsic()
+
+  val ReferenceId: Double
+    get() = intrinsic()
+
+  val SortingClass: Double
+    get() = intrinsic()
+
+  val TotalSlots: Double
+    get() = intrinsic()
+
+  class Batch internal constructor() : SlotBatch() {}
+
+  class Reading internal constructor() : SlotReading() {
+    val Class: Double
+      get() = intrinsic()
+
+    val Damage: Double
+      get() = intrinsic()
+
+    val FreeSlots: Double
+      get() = intrinsic()
+
+    val LineNumber: Double
+      get() = intrinsic()
+
+    val MaxQuantity: Double
+      get() = intrinsic()
+
+    val OccupantHash: Double
+      get() = intrinsic()
+
+    val Occupied: Double
+      get() = intrinsic()
+
+    val PrefabHash: Double
+      get() = intrinsic()
+
+    val Quantity: Double
+      get() = intrinsic()
+
+    val ReferenceId: Double
+      get() = intrinsic()
+
+    val SortingClass: Double
+      get() = intrinsic()
+
+    val TotalSlots: Double
+      get() = intrinsic()
+  }
+}
+
+/** A Suit slot. */
+class SuitSlot internal constructor() : DeviceSlot() {
+  val Charge: Double
+    get() = intrinsic()
+
+  val ChargeRatio: Double
+    get() = intrinsic()
+
+  val Class: Double
+    get() = intrinsic()
+
+  val Damage: Double
+    get() = intrinsic()
+
+  val FreeSlots: Double
+    get() = intrinsic()
+
+  val MaxQuantity: Double
+    get() = intrinsic()
+
+  val OccupantHash: Double
+    get() = intrinsic()
+
+  val Occupied: Boolean
+    get() = intrinsic()
+
+  val PrefabHash: Double
+    get() = intrinsic()
+
+  val Pressure: Double
+    get() = intrinsic()
+
+  val PressureAir: Double
+    get() = intrinsic()
+
+  val PressureWaste: Double
+    get() = intrinsic()
+
+  val Quantity: Double
+    get() = intrinsic()
+
+  val ReferenceId: Double
+    get() = intrinsic()
+
+  val SortingClass: Double
+    get() = intrinsic()
+
+  val TotalSlots: Double
+    get() = intrinsic()
+
+  class Batch internal constructor() : SlotBatch() {}
+
+  class Reading internal constructor() : SlotReading() {
+    val Charge: Double
+      get() = intrinsic()
+
+    val ChargeRatio: Double
+      get() = intrinsic()
+
+    val Class: Double
+      get() = intrinsic()
+
+    val Damage: Double
+      get() = intrinsic()
+
+    val FreeSlots: Double
+      get() = intrinsic()
+
+    val MaxQuantity: Double
+      get() = intrinsic()
+
+    val OccupantHash: Double
+      get() = intrinsic()
+
+    val Occupied: Double
+      get() = intrinsic()
+
+    val PrefabHash: Double
+      get() = intrinsic()
+
+    val Pressure: Double
+      get() = intrinsic()
+
+    val PressureAir: Double
+      get() = intrinsic()
+
+    val PressureWaste: Double
+      get() = intrinsic()
+
+    val Quantity: Double
+      get() = intrinsic()
+
+    val ReferenceId: Double
+      get() = intrinsic()
+
+    val SortingClass: Double
+      get() = intrinsic()
+
+    val TotalSlots: Double
+      get() = intrinsic()
+  }
+}
+
 /** A device that comes as several prefabs, each a nested class. */
 interface Battery {
   val Charge: Double
@@ -1179,6 +2467,15 @@ class DynamicGPR internal constructor() : TypedDevice() {
   val Power: Boolean
     get() = intrinsic()
 
+  /** The device's slots, by number. */
+  val slots: Slots<BatterySlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val Battery: BatterySlot
+    get() = intrinsic()
+
   /** The DynamicGPR prefab. */
   companion object : Prefab()
 }
@@ -1216,6 +2513,9 @@ object DynamicGPRs {
     var On: Boolean
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<BatterySlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -1226,6 +2526,9 @@ object DynamicGPRs {
       get() = intrinsic()
 
     val Power: Double
+      get() = intrinsic()
+
+    val slots: Slots<BatterySlot.Reading>
       get() = intrinsic()
   }
 }
@@ -1246,6 +2549,15 @@ class DynamicLight internal constructor() : TypedDevice() {
     set(value) = intrinsic()
 
   val Power: Boolean
+    get() = intrinsic()
+
+  /** The device's slots, by number. */
+  val slots: Slots<BatterySlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val Battery: BatterySlot
     get() = intrinsic()
 
   /** The DynamicLight prefab. */
@@ -1289,6 +2601,9 @@ object DynamicLights {
     var Open: Boolean
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<BatterySlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -1302,6 +2617,9 @@ object DynamicLights {
       get() = intrinsic()
 
     val Power: Double
+      get() = intrinsic()
+
+    val slots: Slots<BatterySlot.Reading>
       get() = intrinsic()
   }
 }
@@ -1636,6 +2954,15 @@ class H2Combustor internal constructor() : TypedDevice() {
   val TotalMolesOutput: Double
     get() = intrinsic()
 
+  /** The device's slots, by number. */
+  val slots: Slots<DataDiskSlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val ProgrammableChip: DataDiskSlot
+    get() = intrinsic()
+
   /** The H2Combustor prefab. */
   companion object : Prefab()
 }
@@ -1689,6 +3016,9 @@ object H2Combustors {
     var Setting: Double
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -2012,6 +3342,9 @@ object H2Combustors {
 
     val TotalMolesOutput: Double
       get() = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Reading>
+      get() = intrinsic()
   }
 }
 
@@ -2043,6 +3376,30 @@ class AdvancedTablet internal constructor() : TypedDevice() {
   var Volume: Double
     get() = intrinsic()
     set(value) = intrinsic()
+
+  /** The device's slots, by number. */
+  val slots: Slots<CommonSlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val Battery: BatterySlot
+    get() = intrinsic()
+
+  /** Slot 1. */
+  @SlotNumber(1)
+  val Cartridge: CommonSlot
+    get() = intrinsic()
+
+  /** Slot 2. */
+  @SlotNumber(2)
+  val Cartridge1: CommonSlot
+    get() = intrinsic()
+
+  /** Slot 3. */
+  @SlotNumber(3)
+  val ProgrammableChip: CommonSlot
+    get() = intrinsic()
 
   /** The ItemAdvancedTablet prefab. */
   companion object : Prefab()
@@ -2093,6 +3450,9 @@ object AdvancedTablets {
     var Volume: Double
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<CommonSlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -2116,6 +3476,9 @@ object AdvancedTablets {
 
     val Volume: Double
       get() = intrinsic()
+
+    val slots: Slots<CommonSlot.Reading>
+      get() = intrinsic()
   }
 }
 
@@ -2127,6 +3490,15 @@ class AngleGrinder internal constructor() : TypedDevice() {
     set(value) = intrinsic()
 
   val Power: Boolean
+    get() = intrinsic()
+
+  /** The device's slots, by number. */
+  val slots: Slots<BatterySlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val Battery: BatterySlot
     get() = intrinsic()
 
   /** The ItemAngleGrinder prefab. */
@@ -2162,6 +3534,9 @@ object AngleGrinders {
     var Activate: Boolean
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<BatterySlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -2169,6 +3544,9 @@ object AngleGrinders {
       get() = intrinsic()
 
     val Power: Double
+      get() = intrinsic()
+
+    val slots: Slots<BatterySlot.Reading>
       get() = intrinsic()
   }
 }
@@ -2181,6 +3559,15 @@ class ArcWelder internal constructor() : TypedDevice() {
     set(value) = intrinsic()
 
   val Power: Boolean
+    get() = intrinsic()
+
+  /** The device's slots, by number. */
+  val slots: Slots<BatterySlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val Battery: BatterySlot
     get() = intrinsic()
 
   /** The ItemArcWelder prefab. */
@@ -2216,6 +3603,9 @@ object ArcWelders {
     var Activate: Boolean
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<BatterySlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -2223,6 +3613,9 @@ object ArcWelders {
       get() = intrinsic()
 
     val Power: Double
+      get() = intrinsic()
+
+    val slots: Slots<BatterySlot.Reading>
       get() = intrinsic()
   }
 }
@@ -2384,6 +3777,15 @@ class ItemBeacon internal constructor() : TypedDevice() {
   val Power: Boolean
     get() = intrinsic()
 
+  /** The device's slots, by number. */
+  val slots: Slots<BatterySlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val Battery: BatterySlot
+    get() = intrinsic()
+
   /** The ItemBeacon prefab. */
   companion object : Prefab()
 }
@@ -2417,6 +3819,9 @@ object ItemBeacons {
     var On: Boolean
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<BatterySlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -2427,6 +3832,9 @@ object ItemBeacons {
       get() = intrinsic()
 
     val Power: Double
+      get() = intrinsic()
+
+    val slots: Slots<BatterySlot.Reading>
       get() = intrinsic()
   }
 }
@@ -2439,6 +3847,15 @@ class Drill internal constructor() : TypedDevice() {
     set(value) = intrinsic()
 
   val Power: Boolean
+    get() = intrinsic()
+
+  /** The device's slots, by number. */
+  val slots: Slots<BatterySlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val Battery: BatterySlot
     get() = intrinsic()
 
   /** The ItemDrill prefab. */
@@ -2474,6 +3891,9 @@ object Drills {
     var Activate: Boolean
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<BatterySlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -2481,6 +3901,9 @@ object Drills {
       get() = intrinsic()
 
     val Power: Double
+      get() = intrinsic()
+
+    val slots: Slots<BatterySlot.Reading>
       get() = intrinsic()
   }
 }
@@ -2493,6 +3916,15 @@ class EmergencyAngleGrinder internal constructor() : TypedDevice() {
     set(value) = intrinsic()
 
   val Power: Boolean
+    get() = intrinsic()
+
+  /** The device's slots, by number. */
+  val slots: Slots<BatterySlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val Battery: BatterySlot
     get() = intrinsic()
 
   /** The ItemEmergencyAngleGrinder prefab. */
@@ -2528,6 +3960,9 @@ object EmergencyAngleGrinders {
     var Activate: Boolean
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<BatterySlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -2535,6 +3970,9 @@ object EmergencyAngleGrinders {
       get() = intrinsic()
 
     val Power: Double
+      get() = intrinsic()
+
+    val slots: Slots<BatterySlot.Reading>
       get() = intrinsic()
   }
 }
@@ -2547,6 +3985,15 @@ class EmergencyArcWelder internal constructor() : TypedDevice() {
     set(value) = intrinsic()
 
   val Power: Boolean
+    get() = intrinsic()
+
+  /** The device's slots, by number. */
+  val slots: Slots<BatterySlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val Battery: BatterySlot
     get() = intrinsic()
 
   /** The ItemEmergencyArcWelder prefab. */
@@ -2582,6 +4029,9 @@ object EmergencyArcWelders {
     var Activate: Boolean
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<BatterySlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -2589,6 +4039,9 @@ object EmergencyArcWelders {
       get() = intrinsic()
 
     val Power: Double
+      get() = intrinsic()
+
+    val slots: Slots<BatterySlot.Reading>
       get() = intrinsic()
   }
 }
@@ -2601,6 +4054,15 @@ class EmergencyDrill internal constructor() : TypedDevice() {
     set(value) = intrinsic()
 
   val Power: Boolean
+    get() = intrinsic()
+
+  /** The device's slots, by number. */
+  val slots: Slots<BatterySlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val Battery: BatterySlot
     get() = intrinsic()
 
   /** The ItemEmergencyDrill prefab. */
@@ -2636,6 +4098,9 @@ object EmergencyDrills {
     var Activate: Boolean
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<BatterySlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -2643,6 +4108,9 @@ object EmergencyDrills {
       get() = intrinsic()
 
     val Power: Double
+      get() = intrinsic()
+
+    val slots: Slots<BatterySlot.Reading>
       get() = intrinsic()
   }
 }
@@ -2962,6 +4430,15 @@ class Flashlight internal constructor() : TypedDevice() {
   val Power: Boolean
     get() = intrinsic()
 
+  /** The device's slots, by number. */
+  val slots: Slots<BatterySlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val Battery: BatterySlot
+    get() = intrinsic()
+
   /** The ItemFlashlight prefab. */
   companion object : Prefab()
 }
@@ -2999,6 +4476,9 @@ object Flashlights {
     var On: Boolean
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<BatterySlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -3009,6 +4489,9 @@ object Flashlights {
       get() = intrinsic()
 
     val Power: Double
+      get() = intrinsic()
+
+    val slots: Slots<BatterySlot.Reading>
       get() = intrinsic()
   }
 }
@@ -3124,6 +4607,10 @@ class GasMask internal constructor() : TypedDevice() {
     get() = intrinsic()
     set(value) = intrinsic()
 
+  /** The device's slots, by number. */
+  val slots: Slots<FilteredSlot>
+    get() = intrinsic()
+
   /** The ItemGasMask prefab. */
   companion object : Prefab()
 }
@@ -3165,6 +4652,9 @@ object GasMasks {
     var Volume: Double
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<FilteredSlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -3272,6 +4762,9 @@ object GasMasks {
 
     val Volume: Double
       get() = intrinsic()
+
+    val slots: Slots<FilteredSlot.Reading>
+      get() = intrinsic()
   }
 }
 
@@ -3283,6 +4776,15 @@ class HardHat internal constructor() : TypedDevice() {
     set(value) = intrinsic()
 
   val Power: Boolean
+    get() = intrinsic()
+
+  /** The device's slots, by number. */
+  val slots: Slots<BatterySlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val Battery: BatterySlot
     get() = intrinsic()
 
   /** The ItemHardHat prefab. */
@@ -3318,6 +4820,9 @@ object HardHats {
     var On: Boolean
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<BatterySlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -3325,6 +4830,9 @@ object HardHats {
       get() = intrinsic()
 
     val Power: Double
+      get() = intrinsic()
+
+    val slots: Slots<BatterySlot.Reading>
       get() = intrinsic()
   }
 }
@@ -3339,6 +4847,15 @@ class HardJetpack internal constructor() : TypedDevice() {
   var On: Boolean
     get() = intrinsic()
     set(value) = intrinsic()
+
+  /** The device's slots, by number. */
+  val slots: Slots<CommonSlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val Propellant: AirTankSlot
+    get() = intrinsic()
 
   /** The ItemHardJetpack prefab. */
   companion object : Prefab()
@@ -3377,6 +4894,9 @@ object HardJetpacks {
     var On: Boolean
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<CommonSlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -3384,6 +4904,9 @@ object HardJetpacks {
       get() = intrinsic()
 
     val On: Double
+      get() = intrinsic()
+
+    val slots: Slots<CommonSlot.Reading>
       get() = intrinsic()
   }
 }
@@ -3585,6 +5108,30 @@ class HardSuit internal constructor() : TypedDevice() {
     get() = intrinsic()
     set(value) = intrinsic()
 
+  /** The device's slots, by number. */
+  val slots: Slots<CommonSlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val AirTank: AirTankSlot
+    get() = intrinsic()
+
+  /** Slot 1. */
+  @SlotNumber(1)
+  val WasteTank: AirTankSlot
+    get() = intrinsic()
+
+  /** Slot 2. */
+  @SlotNumber(2)
+  val LifeSupport: BatterySlot
+    get() = intrinsic()
+
+  /** Slot 3. */
+  @SlotNumber(3)
+  val ProgrammableChip: CommonSlot
+    get() = intrinsic()
+
   /** The ItemHardSuit prefab. */
   companion object : Prefab()
 }
@@ -3658,6 +5205,9 @@ object HardSuits {
     var Volume: Double
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<CommonSlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -3842,6 +5392,9 @@ object HardSuits {
       get() = intrinsic()
 
     val Volume: Double
+      get() = intrinsic()
+
+    val slots: Slots<CommonSlot.Reading>
       get() = intrinsic()
   }
 }
@@ -4502,6 +6055,15 @@ class JetpackBasic internal constructor() : TypedDevice() {
     get() = intrinsic()
     set(value) = intrinsic()
 
+  /** The device's slots, by number. */
+  val slots: Slots<CommonSlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val Propellant: AirTankSlot
+    get() = intrinsic()
+
   /** The ItemJetpackBasic prefab. */
   companion object : Prefab()
 }
@@ -4539,6 +6101,9 @@ object JetpackBasics {
     var On: Boolean
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<CommonSlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -4546,6 +6111,9 @@ object JetpackBasics {
       get() = intrinsic()
 
     val On: Double
+      get() = intrinsic()
+
+    val slots: Slots<CommonSlot.Reading>
       get() = intrinsic()
   }
 }
@@ -4561,6 +6129,15 @@ class Labeller internal constructor() : TypedDevice() {
     set(value) = intrinsic()
 
   val Power: Boolean
+    get() = intrinsic()
+
+  /** The device's slots, by number. */
+  val slots: Slots<BatterySlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val Battery: BatterySlot
     get() = intrinsic()
 
   /** The ItemLabeller prefab. */
@@ -4596,6 +6173,9 @@ object Labellers {
     var On: Boolean
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<BatterySlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -4606,6 +6186,9 @@ object Labellers {
       get() = intrinsic()
 
     val Power: Double
+      get() = intrinsic()
+
+    val slots: Slots<BatterySlot.Reading>
       get() = intrinsic()
   }
 }
@@ -4636,6 +6219,25 @@ class Laptop internal constructor() : TypedDevice() {
     get() = intrinsic()
 
   val TemperatureExternal: Double
+    get() = intrinsic()
+
+  /** The device's slots, by number. */
+  val slots: Slots<CommonSlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val ProgrammableChip: CommonSlot
+    get() = intrinsic()
+
+  /** Slot 1. */
+  @SlotNumber(1)
+  val Battery: BatterySlot
+    get() = intrinsic()
+
+  /** Slot 2. */
+  @SlotNumber(2)
+  val Motherboard: CommonSlot
     get() = intrinsic()
 
   /** The ItemLaptop prefab. */
@@ -4671,6 +6273,9 @@ object Laptops {
     var On: Boolean
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<CommonSlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -4697,6 +6302,9 @@ object Laptops {
 
     val TemperatureExternal: Double
       get() = intrinsic()
+
+    val slots: Slots<CommonSlot.Reading>
+      get() = intrinsic()
   }
 }
 
@@ -4719,6 +6327,15 @@ class LiquidVacuum internal constructor() : TypedDevice() {
     set(value) = intrinsic()
 
   val Power: Boolean
+    get() = intrinsic()
+
+  /** The device's slots, by number. */
+  val slots: Slots<BatterySlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val Battery: BatterySlot
     get() = intrinsic()
 
   /** The ItemLiquidVacuum prefab. */
@@ -4762,6 +6379,9 @@ object LiquidVacuums {
     var On: Boolean
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<BatterySlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -4779,6 +6399,9 @@ object LiquidVacuums {
 
     val Power: Double
       get() = intrinsic()
+
+    val slots: Slots<BatterySlot.Reading>
+      get() = intrinsic()
   }
 }
 
@@ -4790,6 +6413,15 @@ class MKIIAngleGrinder internal constructor() : TypedDevice() {
     set(value) = intrinsic()
 
   val Power: Boolean
+    get() = intrinsic()
+
+  /** The device's slots, by number. */
+  val slots: Slots<BatterySlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val Battery: BatterySlot
     get() = intrinsic()
 
   /** The ItemMKIIAngleGrinder prefab. */
@@ -4825,6 +6457,9 @@ object MKIIAngleGrinders {
     var Activate: Boolean
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<BatterySlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -4832,6 +6467,9 @@ object MKIIAngleGrinders {
       get() = intrinsic()
 
     val Power: Double
+      get() = intrinsic()
+
+    val slots: Slots<BatterySlot.Reading>
       get() = intrinsic()
   }
 }
@@ -4844,6 +6482,15 @@ class MKIIArcWelder internal constructor() : TypedDevice() {
     set(value) = intrinsic()
 
   val Power: Boolean
+    get() = intrinsic()
+
+  /** The device's slots, by number. */
+  val slots: Slots<BatterySlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val Battery: BatterySlot
     get() = intrinsic()
 
   /** The ItemMKIIArcWelder prefab. */
@@ -4879,6 +6526,9 @@ object MKIIArcWelders {
     var Activate: Boolean
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<BatterySlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -4886,6 +6536,9 @@ object MKIIArcWelders {
       get() = intrinsic()
 
     val Power: Double
+      get() = intrinsic()
+
+    val slots: Slots<BatterySlot.Reading>
       get() = intrinsic()
   }
 }
@@ -4898,6 +6551,15 @@ class MKIIDrill internal constructor() : TypedDevice() {
     set(value) = intrinsic()
 
   val Power: Boolean
+    get() = intrinsic()
+
+  /** The device's slots, by number. */
+  val slots: Slots<BatterySlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val Battery: BatterySlot
     get() = intrinsic()
 
   /** The ItemMKIIDrill prefab. */
@@ -4933,6 +6595,9 @@ object MKIIDrills {
     var Activate: Boolean
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<BatterySlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -4940,6 +6605,9 @@ object MKIIDrills {
       get() = intrinsic()
 
     val Power: Double
+      get() = intrinsic()
+
+    val slots: Slots<BatterySlot.Reading>
       get() = intrinsic()
   }
 }
@@ -4963,6 +6631,15 @@ class MKIIMiningDrill internal constructor() : TypedDevice() {
     set(value) = intrinsic()
 
   val Power: Boolean
+    get() = intrinsic()
+
+  /** The device's slots, by number. */
+  val slots: Slots<BatterySlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val Battery: BatterySlot
     get() = intrinsic()
 
   /** The ItemMKIIMiningDrill prefab. */
@@ -5006,6 +6683,9 @@ object MKIIMiningDrills {
     var On: Boolean
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<BatterySlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -5022,6 +6702,9 @@ object MKIIMiningDrills {
       get() = intrinsic()
 
     val Power: Double
+      get() = intrinsic()
+
+    val slots: Slots<BatterySlot.Reading>
       get() = intrinsic()
   }
 }
@@ -5045,6 +6728,15 @@ class MiningDrill internal constructor() : TypedDevice() {
     set(value) = intrinsic()
 
   val Power: Boolean
+    get() = intrinsic()
+
+  /** The device's slots, by number. */
+  val slots: Slots<BatterySlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val Battery: BatterySlot
     get() = intrinsic()
 
   /** The ItemMiningDrill prefab. */
@@ -5088,6 +6780,9 @@ object MiningDrills {
     var On: Boolean
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<BatterySlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -5104,6 +6799,9 @@ object MiningDrills {
       get() = intrinsic()
 
     val Power: Double
+      get() = intrinsic()
+
+    val slots: Slots<BatterySlot.Reading>
       get() = intrinsic()
   }
 }
@@ -5127,6 +6825,15 @@ class MiningDrillHeavy internal constructor() : TypedDevice() {
     set(value) = intrinsic()
 
   val Power: Boolean
+    get() = intrinsic()
+
+  /** The device's slots, by number. */
+  val slots: Slots<BatterySlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val Battery: BatterySlot
     get() = intrinsic()
 
   /** The ItemMiningDrillHeavy prefab. */
@@ -5170,6 +6877,9 @@ object MiningDrillHeavies {
     var On: Boolean
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<BatterySlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -5187,6 +6897,9 @@ object MiningDrillHeavies {
 
     val Power: Double
       get() = intrinsic()
+
+    val slots: Slots<BatterySlot.Reading>
+      get() = intrinsic()
   }
 }
 
@@ -5202,6 +6915,15 @@ class NVG internal constructor() : TypedDevice() {
     set(value) = intrinsic()
 
   val Power: Boolean
+    get() = intrinsic()
+
+  /** The device's slots, by number. */
+  val slots: Slots<BatterySlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val Battery: BatterySlot
     get() = intrinsic()
 
   /** The ItemNVG prefab. */
@@ -5241,6 +6963,9 @@ object NVGs {
     var On: Boolean
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<BatterySlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -5251,6 +6976,9 @@ object NVGs {
       get() = intrinsic()
 
     val Power: Double
+      get() = intrinsic()
+
+    val slots: Slots<BatterySlot.Reading>
       get() = intrinsic()
   }
 }
@@ -5270,6 +6998,15 @@ class OreDetector internal constructor() : TypedDevice() {
     set(value) = intrinsic()
 
   val Power: Boolean
+    get() = intrinsic()
+
+  /** The device's slots, by number. */
+  val slots: Slots<BatterySlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val Battery: BatterySlot
     get() = intrinsic()
 
   /** The ItemOreDetector prefab. */
@@ -5309,6 +7046,9 @@ object OreDetectors {
     var On: Boolean
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<BatterySlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -5322,6 +7062,9 @@ object OreDetectors {
       get() = intrinsic()
 
     val Power: Double
+      get() = intrinsic()
+
+    val slots: Slots<BatterySlot.Reading>
       get() = intrinsic()
   }
 }
@@ -5342,6 +7085,15 @@ class PlantSampler internal constructor() : TypedDevice() {
     set(value) = intrinsic()
 
   val Power: Boolean
+    get() = intrinsic()
+
+  /** The device's slots, by number. */
+  val slots: Slots<BatterySlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val Battery: BatterySlot
     get() = intrinsic()
 
   /** The ItemPlantSampler prefab. */
@@ -5385,6 +7137,9 @@ object PlantSamplers {
     var On: Boolean
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<BatterySlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -5398,6 +7153,9 @@ object PlantSamplers {
       get() = intrinsic()
 
     val Power: Double
+      get() = intrinsic()
+
+    val slots: Slots<BatterySlot.Reading>
       get() = intrinsic()
   }
 }
@@ -5425,6 +7183,15 @@ class RemoteDetonator internal constructor() : TypedDevice() {
     set(value) = intrinsic()
 
   val Power: Boolean
+    get() = intrinsic()
+
+  /** The device's slots, by number. */
+  val slots: Slots<BatterySlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val Battery: BatterySlot
     get() = intrinsic()
 
   /** The ItemRemoteDetonator prefab. */
@@ -5472,6 +7239,9 @@ object RemoteDetonators {
     var On: Boolean
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<BatterySlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -5492,6 +7262,9 @@ object RemoteDetonators {
 
     val Power: Double
       get() = intrinsic()
+
+    val slots: Slots<BatterySlot.Reading>
+      get() = intrinsic()
   }
 }
 
@@ -5503,6 +7276,20 @@ class SensorLenses internal constructor() : TypedDevice() {
     set(value) = intrinsic()
 
   val Power: Boolean
+    get() = intrinsic()
+
+  /** The device's slots, by number. */
+  val slots: Slots<CommonSlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val Battery: BatterySlot
+    get() = intrinsic()
+
+  /** Slot 1. */
+  @SlotNumber(1)
+  val SensorProcessingUnit: CommonSlot
     get() = intrinsic()
 
   /** The ItemSensorLenses prefab. */
@@ -5538,6 +7325,9 @@ object SensorLenseses {
     var On: Boolean
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<CommonSlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -5545,6 +7335,9 @@ object SensorLenseses {
       get() = intrinsic()
 
     val Power: Double
+      get() = intrinsic()
+
+    val slots: Slots<CommonSlot.Reading>
       get() = intrinsic()
   }
 }
@@ -5861,6 +7654,15 @@ class Spacepack internal constructor() : TypedDevice() {
     get() = intrinsic()
     set(value) = intrinsic()
 
+  /** The device's slots, by number. */
+  val slots: Slots<CommonSlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val Propellant: AirTankSlot
+    get() = intrinsic()
+
   /** The ItemSpacepack prefab. */
   companion object : Prefab()
 }
@@ -5898,6 +7700,9 @@ object Spacepacks {
     var On: Boolean
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<CommonSlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -5905,6 +7710,9 @@ object Spacepacks {
       get() = intrinsic()
 
     val On: Double
+      get() = intrinsic()
+
+    val slots: Slots<CommonSlot.Reading>
       get() = intrinsic()
   }
 }
@@ -6106,6 +7914,60 @@ class SuitHARM internal constructor() : TypedDevice() {
     get() = intrinsic()
     set(value) = intrinsic()
 
+  /** The device's slots, by number. */
+  val slots: Slots<CommonSlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val AirTank: AirTankSlot
+    get() = intrinsic()
+
+  /** Slot 1. */
+  @SlotNumber(1)
+  val WasteTank: AirTankSlot
+    get() = intrinsic()
+
+  /** Slot 2. */
+  @SlotNumber(2)
+  val CoolantTank: CommonSlot
+    get() = intrinsic()
+
+  /** Slot 3. */
+  @SlotNumber(3)
+  val Battery: BatterySlot
+    get() = intrinsic()
+
+  /** Slot 4. */
+  @SlotNumber(4)
+  val Chip: CommonSlot
+    get() = intrinsic()
+
+  /** Slot 5. */
+  @SlotNumber(5)
+  val Filter1: FilteredSlot
+    get() = intrinsic()
+
+  /** Slot 6. */
+  @SlotNumber(6)
+  val Filter2: FilteredSlot
+    get() = intrinsic()
+
+  /** Slot 7. */
+  @SlotNumber(7)
+  val Filter3: FilteredSlot
+    get() = intrinsic()
+
+  /** Slot 8. */
+  @SlotNumber(8)
+  val Filter4: FilteredSlot
+    get() = intrinsic()
+
+  /** Slot 9. */
+  @SlotNumber(9)
+  val Back: CommonSlot
+    get() = intrinsic()
+
   /** The ItemSuitHARM prefab. */
   companion object : Prefab()
 }
@@ -6179,6 +8041,9 @@ object SuitHARMs {
     var Volume: Double
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<CommonSlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -6363,6 +8228,9 @@ object SuitHARMs {
       get() = intrinsic()
 
     val Volume: Double
+      get() = intrinsic()
+
+    val slots: Slots<CommonSlot.Reading>
       get() = intrinsic()
   }
 }
@@ -6681,6 +8549,20 @@ class Tablet internal constructor() : TypedDevice() {
   val Power: Boolean
     get() = intrinsic()
 
+  /** The device's slots, by number. */
+  val slots: Slots<CommonSlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val Battery: BatterySlot
+    get() = intrinsic()
+
+  /** Slot 1. */
+  @SlotNumber(1)
+  val Cartridge: CommonSlot
+    get() = intrinsic()
+
   /** The ItemTablet prefab. */
   companion object : Prefab()
 }
@@ -6714,6 +8596,9 @@ object Tablets {
     var On: Boolean
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<CommonSlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -6724,6 +8609,9 @@ object Tablets {
       get() = intrinsic()
 
     val Power: Double
+      get() = intrinsic()
+
+    val slots: Slots<CommonSlot.Reading>
       get() = intrinsic()
   }
 }
@@ -6747,6 +8635,20 @@ class TerrainManipulator internal constructor() : TypedDevice() {
     set(value) = intrinsic()
 
   val Power: Boolean
+    get() = intrinsic()
+
+  /** The device's slots, by number. */
+  val slots: Slots<CommonSlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val Battery: BatterySlot
+    get() = intrinsic()
+
+  /** Slot 1. */
+  @SlotNumber(1)
+  val DirtCanister: CommonSlot
     get() = intrinsic()
 
   /** The ItemTerrainManipulator prefab. */
@@ -6790,6 +8692,9 @@ object TerrainManipulators {
     var On: Boolean
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<CommonSlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -6807,6 +8712,9 @@ object TerrainManipulators {
 
     val Power: Double
       get() = intrinsic()
+
+    val slots: Slots<CommonSlot.Reading>
+      get() = intrinsic()
   }
 }
 
@@ -6818,6 +8726,15 @@ class WearLamp internal constructor() : TypedDevice() {
     set(value) = intrinsic()
 
   val Power: Boolean
+    get() = intrinsic()
+
+  /** The device's slots, by number. */
+  val slots: Slots<BatterySlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val Battery: BatterySlot
     get() = intrinsic()
 
   /** The ItemWearLamp prefab. */
@@ -6853,6 +8770,9 @@ object WearLamps {
     var On: Boolean
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<BatterySlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -6860,6 +8780,9 @@ object WearLamps {
       get() = intrinsic()
 
     val Power: Double
+      get() = intrinsic()
+
+    val slots: Slots<BatterySlot.Reading>
       get() = intrinsic()
   }
 }
@@ -7786,6 +9709,15 @@ class Landingpad_GasTankConnectorPiece internal constructor() : TypedDevice() {
   val RequiredPower: Double
     get() = intrinsic()
 
+  /** The device's slots, by number. */
+  val slots: Slots<DataDiskSlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val PortableSlot: DataDiskSlot
+    get() = intrinsic()
+
   /** The Landingpad_GasTankConnectorPiece prefab. */
   companion object : Prefab()
 }
@@ -7823,6 +9755,9 @@ object Landingpad_GasTankConnectorPieces {
     var On: Boolean
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -7839,6 +9774,9 @@ object Landingpad_GasTankConnectorPieces {
       get() = intrinsic()
 
     val RequiredPower: Double
+      get() = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Reading>
       get() = intrinsic()
   }
 }
@@ -8425,6 +10363,15 @@ class Landingpad_LiquidTankConnectorPiece internal constructor() : TypedDevice()
   val RequiredPower: Double
     get() = intrinsic()
 
+  /** The device's slots, by number. */
+  val slots: Slots<DataDiskSlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val PortableSlot: DataDiskSlot
+    get() = intrinsic()
+
   /** The Landingpad_LiquidTankConnectorPiece prefab. */
   companion object : Prefab()
 }
@@ -8462,6 +10409,9 @@ object Landingpad_LiquidTankConnectorPieces {
     var On: Boolean
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -8478,6 +10428,9 @@ object Landingpad_LiquidTankConnectorPieces {
       get() = intrinsic()
 
     val RequiredPower: Double
+      get() = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Reading>
       get() = intrinsic()
   }
 }
@@ -8574,6 +10527,15 @@ class LogicStepSequencer8 internal constructor() : TypedDevice() {
     get() = intrinsic()
     set(value) = intrinsic()
 
+  /** The device's slots, by number. */
+  val slots: Slots<DataDiskSlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val SoundCartridge: DataDiskSlot
+    get() = intrinsic()
+
   /** The LogicStepSequencer8 prefab. */
   companion object : Prefab()
 }
@@ -8623,6 +10585,9 @@ object LogicStepSequencer8s {
     var Time: Double
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -8648,6 +10613,9 @@ object LogicStepSequencer8s {
       get() = intrinsic()
 
     val Time: Double
+      get() = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Reading>
       get() = intrinsic()
   }
 }
@@ -8718,6 +10686,15 @@ class PortableSolarPanel internal constructor() : TypedDevice() {
     get() = intrinsic()
     set(value) = intrinsic()
 
+  /** The device's slots, by number. */
+  val slots: Slots<BatterySlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val Battery: BatterySlot
+    get() = intrinsic()
+
   /** The PortableSolarPanel prefab. */
   companion object : Prefab()
 }
@@ -8751,10 +10728,16 @@ object PortableSolarPanels {
     var Open: Boolean
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<BatterySlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
     val Open: Double
+      get() = intrinsic()
+
+    val slots: Slots<BatterySlot.Reading>
       get() = intrinsic()
   }
 }
@@ -8842,6 +10825,20 @@ class Robot internal constructor() : TypedDevice() {
   val VelocityZ: Double
     get() = intrinsic()
 
+  /** The device's slots, by number. */
+  val slots: Slots<CommonSlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val Battery: BatterySlot
+    get() = intrinsic()
+
+  /** Slot 1. */
+  @SlotNumber(1)
+  val ProgrammableChip: CommonSlot
+    get() = intrinsic()
+
   /** The Robot prefab. */
   companion object : Prefab()
 }
@@ -8891,6 +10888,9 @@ object Robots {
     var TargetZ: Double
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<CommonSlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -8968,6 +10968,9 @@ object Robots {
 
     val VelocityZ: Double
       get() = intrinsic()
+
+    val slots: Slots<CommonSlot.Reading>
+      get() = intrinsic()
   }
 }
 
@@ -8979,6 +10982,10 @@ class Rover_MkI internal constructor() : TypedDevice() {
     set(value) = intrinsic()
 
   val Power: Boolean
+    get() = intrinsic()
+
+  /** The device's slots, by number. */
+  val slots: Slots<CommonSlot>
     get() = intrinsic()
 
   /** The Rover_MkI prefab. */
@@ -9014,6 +11021,9 @@ object Rover_MkIs {
     var On: Boolean
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<CommonSlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -9021,6 +11031,9 @@ object Rover_MkIs {
       get() = intrinsic()
 
     val Power: Double
+      get() = intrinsic()
+
+    val slots: Slots<CommonSlot.Reading>
       get() = intrinsic()
   }
 }
@@ -9322,6 +11335,15 @@ class ActiveVent internal constructor() : TypedDevice() {
   val TotalMolesOutput: Double
     get() = intrinsic()
 
+  /** The device's slots, by number. */
+  val slots: Slots<DataDiskSlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val DataDisk: DataDiskSlot
+    get() = intrinsic()
+
   /** The StructureActiveVent prefab. */
   companion object : Prefab()
 }
@@ -9379,6 +11401,9 @@ object ActiveVents {
     var Setting: Double
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -9492,6 +11517,9 @@ object ActiveVents {
 
     val TotalMolesOutput: Double
       get() = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Reading>
+      get() = intrinsic()
   }
 }
 
@@ -9550,6 +11578,20 @@ class AdvancedComposter internal constructor() : TypedDevice() {
     get() = intrinsic()
     set(value) = intrinsic()
 
+  /** The device's slots, by number. */
+  val slots: Slots<DataDiskSlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val Import: DataDiskSlot
+    get() = intrinsic()
+
+  /** Slot 1. */
+  @SlotNumber(1)
+  val Export: DataDiskSlot
+    get() = intrinsic()
+
   /** The StructureAdvancedComposter prefab. */
   companion object : Prefab()
 }
@@ -9607,6 +11649,9 @@ object AdvancedComposters {
     var Setting: Double
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -9653,6 +11698,9 @@ object AdvancedComposters {
       get() = intrinsic()
 
     val Setting: Double
+      get() = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Reading>
       get() = intrinsic()
   }
 }
@@ -9819,6 +11867,20 @@ class AdvancedFurnace internal constructor() : TypedDevice() {
   val TotalMoles: Double
     get() = intrinsic()
 
+  /** The device's slots, by number. */
+  val slots: Slots<DataDiskSlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val Import: DataDiskSlot
+    get() = intrinsic()
+
+  /** Slot 1. */
+  @SlotNumber(1)
+  val Export: DataDiskSlot
+    get() = intrinsic()
+
   /** The StructureAdvancedFurnace prefab. */
   companion object : Prefab()
 }
@@ -9884,6 +11946,9 @@ object AdvancedFurnaces {
     var SettingOutput: Double
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -10036,6 +12101,9 @@ object AdvancedFurnaces {
 
     val TotalMoles: Double
       get() = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Reading>
+      get() = intrinsic()
   }
 }
 
@@ -10088,6 +12156,20 @@ class AdvancedPackagingMachine internal constructor() : TypedDevice() {
     get() = intrinsic()
 
   val StackSize: Double
+    get() = intrinsic()
+
+  /** The device's slots, by number. */
+  val slots: Slots<DataDiskSlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val Import: DataDiskSlot
+    get() = intrinsic()
+
+  /** Slot 1. */
+  @SlotNumber(1)
+  val Export: DataDiskSlot
     get() = intrinsic()
 
   /** The StructureAdvancedPackagingMachine prefab. */
@@ -10143,6 +12225,9 @@ object AdvancedPackagingMachines {
     var RecipeHash: Double
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -10186,6 +12271,9 @@ object AdvancedPackagingMachines {
       get() = intrinsic()
 
     val StackSize: Double
+      get() = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Reading>
       get() = intrinsic()
   }
 }
@@ -10525,6 +12613,15 @@ class AirConditioner internal constructor() : TypedDevice() {
   val TotalMolesOutput2: Double
     get() = intrinsic()
 
+  /** The device's slots, by number. */
+  val slots: Slots<DataDiskSlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val ProgrammableChip: DataDiskSlot
+    get() = intrinsic()
+
   /** The StructureAirConditioner prefab. */
   companion object : Prefab()
 }
@@ -10574,6 +12671,9 @@ object AirConditioners {
     var Setting: Double
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -10902,6 +13002,9 @@ object AirConditioners {
       get() = intrinsic()
 
     val TotalMolesOutput2: Double
+      get() = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Reading>
       get() = intrinsic()
   }
 }
@@ -11279,6 +13382,20 @@ class ArcFurnace internal constructor() : TypedDevice() {
   val RequiredPower: Double
     get() = intrinsic()
 
+  /** The device's slots, by number. */
+  val slots: Slots<DataDiskSlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val Import: DataDiskSlot
+    get() = intrinsic()
+
+  /** Slot 1. */
+  @SlotNumber(1)
+  val Export: DataDiskSlot
+    get() = intrinsic()
+
   /** The StructureArcFurnace prefab. */
   companion object : Prefab()
 }
@@ -11324,6 +13441,9 @@ object ArcFurnaces {
     var On: Boolean
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -11361,6 +13481,9 @@ object ArcFurnaces {
       get() = intrinsic()
 
     val RequiredPower: Double
+      get() = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Reading>
       get() = intrinsic()
   }
 }
@@ -11408,6 +13531,20 @@ class AreaPowerControl internal constructor() : TypedDevice() {
   val RequiredPower: Double
     get() = intrinsic()
 
+  /** The device's slots, by number. */
+  val slots: Slots<CommonSlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val Battery: BatterySlot
+    get() = intrinsic()
+
+  /** Slot 1. */
+  @SlotNumber(1)
+  val DataDisk: DataDiskSlot
+    get() = intrinsic()
+
   /** The StructureAreaPowerControl prefab. */
   companion object : Prefab()
 }
@@ -11453,6 +13590,9 @@ object AreaPowerControls {
     var Open: Boolean
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<CommonSlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -11490,6 +13630,9 @@ object AreaPowerControls {
       get() = intrinsic()
 
     val RequiredPower: Double
+      get() = intrinsic()
+
+    val slots: Slots<CommonSlot.Reading>
       get() = intrinsic()
   }
 }
@@ -11537,6 +13680,20 @@ class AreaPowerControlReversed internal constructor() : TypedDevice() {
   val RequiredPower: Double
     get() = intrinsic()
 
+  /** The device's slots, by number. */
+  val slots: Slots<CommonSlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val Battery: BatterySlot
+    get() = intrinsic()
+
+  /** Slot 1. */
+  @SlotNumber(1)
+  val DataDisk: DataDiskSlot
+    get() = intrinsic()
+
   /** The StructureAreaPowerControlReversed prefab. */
   companion object : Prefab()
 }
@@ -11582,6 +13739,9 @@ object AreaPowerControlReverseds {
     var Open: Boolean
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<CommonSlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -11620,6 +13780,9 @@ object AreaPowerControlReverseds {
 
     val RequiredPower: Double
       get() = intrinsic()
+
+    val slots: Slots<CommonSlot.Reading>
+      get() = intrinsic()
   }
 }
 
@@ -11655,6 +13818,20 @@ class AutoMinerSmall internal constructor() : TypedDevice() {
     get() = intrinsic()
 
   val RequiredPower: Double
+    get() = intrinsic()
+
+  /** The device's slots, by number. */
+  val slots: Slots<DataDiskSlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val Import: DataDiskSlot
+    get() = intrinsic()
+
+  /** Slot 1. */
+  @SlotNumber(1)
+  val Export: DataDiskSlot
     get() = intrinsic()
 
   /** The StructureAutoMinerSmall prefab. */
@@ -11702,6 +13879,9 @@ object AutoMinerSmalls {
     var Open: Boolean
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -11730,6 +13910,9 @@ object AutoMinerSmalls {
       get() = intrinsic()
 
     val RequiredPower: Double
+      get() = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Reading>
       get() = intrinsic()
   }
 }
@@ -11785,6 +13968,20 @@ class Autolathe internal constructor() : TypedDevice() {
   val StackSize: Double
     get() = intrinsic()
 
+  /** The device's slots, by number. */
+  val slots: Slots<DataDiskSlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val Import: DataDiskSlot
+    get() = intrinsic()
+
+  /** Slot 1. */
+  @SlotNumber(1)
+  val Export: DataDiskSlot
+    get() = intrinsic()
+
   /** The StructureAutolathe prefab. */
   companion object : Prefab()
 }
@@ -11838,6 +14035,9 @@ object Autolathes {
     var RecipeHash: Double
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -11881,6 +14081,9 @@ object Autolathes {
       get() = intrinsic()
 
     val StackSize: Double
+      get() = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Reading>
       get() = intrinsic()
   }
 }
@@ -11936,6 +14139,20 @@ class AutomatedOven internal constructor() : TypedDevice() {
   val StackSize: Double
     get() = intrinsic()
 
+  /** The device's slots, by number. */
+  val slots: Slots<DataDiskSlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val Import: DataDiskSlot
+    get() = intrinsic()
+
+  /** Slot 1. */
+  @SlotNumber(1)
+  val Export: DataDiskSlot
+    get() = intrinsic()
+
   /** The StructureAutomatedOven prefab. */
   companion object : Prefab()
 }
@@ -11989,6 +14206,9 @@ object AutomatedOvens {
     var RecipeHash: Double
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -12032,6 +14252,9 @@ object AutomatedOvens {
       get() = intrinsic()
 
     val StackSize: Double
+      get() = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Reading>
       get() = intrinsic()
   }
 }
@@ -12338,6 +14561,10 @@ class BatteryCharger internal constructor() : TypedDevice() {
   val RequiredPower: Double
     get() = intrinsic()
 
+  /** The device's slots, by number. */
+  val slots: Slots<BatterySlot>
+    get() = intrinsic()
+
   /** The StructureBatteryCharger prefab. */
   companion object : Prefab()
 }
@@ -12375,6 +14602,9 @@ object BatteryChargers {
     var On: Boolean
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<BatterySlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -12391,6 +14621,9 @@ object BatteryChargers {
       get() = intrinsic()
 
     val RequiredPower: Double
+      get() = intrinsic()
+
+    val slots: Slots<BatterySlot.Reading>
       get() = intrinsic()
   }
 }
@@ -12413,6 +14646,10 @@ class BatteryChargerSmall internal constructor() : TypedDevice() {
     get() = intrinsic()
 
   val RequiredPower: Double
+    get() = intrinsic()
+
+  /** The device's slots, by number. */
+  val slots: Slots<BatterySlot>
     get() = intrinsic()
 
   /** The StructureBatteryChargerSmall prefab. */
@@ -12452,6 +14689,9 @@ object BatteryChargerSmalls {
     var On: Boolean
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<BatterySlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -12468,6 +14708,9 @@ object BatteryChargerSmalls {
       get() = intrinsic()
 
     val RequiredPower: Double
+      get() = intrinsic()
+
+    val slots: Slots<BatterySlot.Reading>
       get() = intrinsic()
   }
 }
@@ -12594,6 +14837,20 @@ class Bench internal constructor() : TypedDevice() {
   val RequiredPower: Double
     get() = intrinsic()
 
+  /** The device's slots, by number. */
+  val slots: Slots<ApplianceSlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val Appliance1: ApplianceSlot
+    get() = intrinsic()
+
+  /** Slot 1. */
+  @SlotNumber(1)
+  val Appliance2: ApplianceSlot
+    get() = intrinsic()
+
   /** The StructureBench prefab. */
   companion object : Prefab()
 }
@@ -12627,6 +14884,9 @@ object Benches {
     var On: Boolean
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<ApplianceSlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -12640,6 +14900,9 @@ object Benches {
       get() = intrinsic()
 
     val RequiredPower: Double
+      get() = intrinsic()
+
+    val slots: Slots<ApplianceSlot.Reading>
       get() = intrinsic()
   }
 }
@@ -12658,6 +14921,20 @@ class Bench1 internal constructor() : TypedDevice() {
     get() = intrinsic()
 
   val RequiredPower: Double
+    get() = intrinsic()
+
+  /** The device's slots, by number. */
+  val slots: Slots<ApplianceSlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val Appliance1: ApplianceSlot
+    get() = intrinsic()
+
+  /** Slot 1. */
+  @SlotNumber(1)
+  val Appliance2: ApplianceSlot
     get() = intrinsic()
 
   /** The StructureBench1 prefab. */
@@ -12693,6 +14970,9 @@ object Bench1s {
     var On: Boolean
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<ApplianceSlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -12706,6 +14986,9 @@ object Bench1s {
       get() = intrinsic()
 
     val RequiredPower: Double
+      get() = intrinsic()
+
+    val slots: Slots<ApplianceSlot.Reading>
       get() = intrinsic()
   }
 }
@@ -12724,6 +15007,20 @@ class Bench2 internal constructor() : TypedDevice() {
     get() = intrinsic()
 
   val RequiredPower: Double
+    get() = intrinsic()
+
+  /** The device's slots, by number. */
+  val slots: Slots<ApplianceSlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val Appliance1: ApplianceSlot
+    get() = intrinsic()
+
+  /** Slot 1. */
+  @SlotNumber(1)
+  val Appliance2: ApplianceSlot
     get() = intrinsic()
 
   /** The StructureBench2 prefab. */
@@ -12759,6 +15056,9 @@ object Bench2s {
     var On: Boolean
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<ApplianceSlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -12772,6 +15072,9 @@ object Bench2s {
       get() = intrinsic()
 
     val RequiredPower: Double
+      get() = intrinsic()
+
+    val slots: Slots<ApplianceSlot.Reading>
       get() = intrinsic()
   }
 }
@@ -12790,6 +15093,20 @@ class Bench3 internal constructor() : TypedDevice() {
     get() = intrinsic()
 
   val RequiredPower: Double
+    get() = intrinsic()
+
+  /** The device's slots, by number. */
+  val slots: Slots<ApplianceSlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val Appliance1: ApplianceSlot
+    get() = intrinsic()
+
+  /** Slot 1. */
+  @SlotNumber(1)
+  val Appliance2: ApplianceSlot
     get() = intrinsic()
 
   /** The StructureBench3 prefab. */
@@ -12825,6 +15142,9 @@ object Bench3s {
     var On: Boolean
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<ApplianceSlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -12838,6 +15158,9 @@ object Bench3s {
       get() = intrinsic()
 
     val RequiredPower: Double
+      get() = intrinsic()
+
+    val slots: Slots<ApplianceSlot.Reading>
       get() = intrinsic()
   }
 }
@@ -12856,6 +15179,20 @@ class Bench4 internal constructor() : TypedDevice() {
     get() = intrinsic()
 
   val RequiredPower: Double
+    get() = intrinsic()
+
+  /** The device's slots, by number. */
+  val slots: Slots<ApplianceSlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val Appliance1: ApplianceSlot
+    get() = intrinsic()
+
+  /** Slot 1. */
+  @SlotNumber(1)
+  val Appliance2: ApplianceSlot
     get() = intrinsic()
 
   /** The StructureBench4 prefab. */
@@ -12891,6 +15228,9 @@ object Bench4s {
     var On: Boolean
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<ApplianceSlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -12904,6 +15244,9 @@ object Bench4s {
       get() = intrinsic()
 
     val RequiredPower: Double
+      get() = intrinsic()
+
+    val slots: Slots<ApplianceSlot.Reading>
       get() = intrinsic()
   }
 }
@@ -13038,6 +15381,15 @@ class BlockBed internal constructor() : TypedDevice() {
   val RequiredPower: Double
     get() = intrinsic()
 
+  /** The device's slots, by number. */
+  val slots: Slots<DataDiskSlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val Bed: DataDiskSlot
+    get() = intrinsic()
+
   /** The StructureBlockBed prefab. */
   companion object : Prefab()
 }
@@ -13075,6 +15427,9 @@ object BlockBeds {
     var On: Boolean
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -13091,6 +15446,9 @@ object BlockBeds {
       get() = intrinsic()
 
     val RequiredPower: Double
+      get() = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Reading>
       get() = intrinsic()
   }
 }
@@ -14077,6 +16435,20 @@ class CargoStorageMedium internal constructor() : TypedDevice() {
   val RequiredPower: Double
     get() = intrinsic()
 
+  /** The device's slots, by number. */
+  val slots: Slots<DataDiskSlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val Import: DataDiskSlot
+    get() = intrinsic()
+
+  /** Slot 1. */
+  @SlotNumber(1)
+  val Export: DataDiskSlot
+    get() = intrinsic()
+
   /** The StructureCargoStorageMedium prefab. */
   companion object : Prefab()
 }
@@ -14122,6 +16494,9 @@ object CargoStorageMediums {
     var Open: Boolean
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -14156,6 +16531,9 @@ object CargoStorageMediums {
       get() = intrinsic()
 
     val RequiredPower: Double
+      get() = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Reading>
       get() = intrinsic()
   }
 }
@@ -14198,6 +16576,20 @@ class CargoStorageSmall internal constructor() : TypedDevice() {
     get() = intrinsic()
 
   val RequiredPower: Double
+    get() = intrinsic()
+
+  /** The device's slots, by number. */
+  val slots: Slots<DataDiskSlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val Import: DataDiskSlot
+    get() = intrinsic()
+
+  /** Slot 1. */
+  @SlotNumber(1)
+  val Export: DataDiskSlot
     get() = intrinsic()
 
   /** The StructureCargoStorageSmall prefab. */
@@ -14245,6 +16637,9 @@ object CargoStorageSmalls {
     var Open: Boolean
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -14280,6 +16675,9 @@ object CargoStorageSmalls {
 
     val RequiredPower: Double
       get() = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Reading>
+      get() = intrinsic()
   }
 }
 
@@ -14314,6 +16712,20 @@ class Centrifuge internal constructor() : TypedDevice() {
     get() = intrinsic()
 
   val RequiredPower: Double
+    get() = intrinsic()
+
+  /** The device's slots, by number. */
+  val slots: Slots<DataDiskSlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val Import: DataDiskSlot
+    get() = intrinsic()
+
+  /** Slot 1. */
+  @SlotNumber(1)
+  val Export: DataDiskSlot
     get() = intrinsic()
 
   /** The StructureCentrifuge prefab. */
@@ -14357,6 +16769,9 @@ object Centrifuges {
     var Open: Boolean
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -14386,6 +16801,9 @@ object Centrifuges {
 
     val RequiredPower: Double
       get() = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Reading>
+      get() = intrinsic()
   }
 }
 
@@ -14411,6 +16829,15 @@ class ChuteBin internal constructor() : TypedDevice() {
     get() = intrinsic()
 
   val RequiredPower: Double
+    get() = intrinsic()
+
+  /** The device's slots, by number. */
+  val slots: Slots<DataDiskSlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val Input: DataDiskSlot
     get() = intrinsic()
 
   /** The StructureChuteBin prefab. */
@@ -14454,6 +16881,9 @@ object ChuteBins {
     var Open: Boolean
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -14473,6 +16903,9 @@ object ChuteBins {
       get() = intrinsic()
 
     val RequiredPower: Double
+      get() = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Reading>
       get() = intrinsic()
   }
 }
@@ -14505,6 +16938,15 @@ class ChuteDigitalFlipFlopSplitterLeft internal constructor() : TypedDevice() {
   var SettingOutput: Double
     get() = intrinsic()
     set(value) = intrinsic()
+
+  /** The device's slots, by number. */
+  val slots: Slots<DataDiskSlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val TransportSlot: DataDiskSlot
+    get() = intrinsic()
 
   /** The StructureChuteDigitalFlipFlopSplitterLeft prefab. */
   companion object : Prefab()
@@ -14555,6 +16997,9 @@ object ChuteDigitalFlipFlopSplitterLefts {
     var SettingOutput: Double
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -14577,6 +17022,9 @@ object ChuteDigitalFlipFlopSplitterLefts {
       get() = intrinsic()
 
     val SettingOutput: Double
+      get() = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Reading>
       get() = intrinsic()
   }
 }
@@ -14609,6 +17057,15 @@ class ChuteDigitalFlipFlopSplitterRight internal constructor() : TypedDevice() {
   var SettingOutput: Double
     get() = intrinsic()
     set(value) = intrinsic()
+
+  /** The device's slots, by number. */
+  val slots: Slots<DataDiskSlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val TransportSlot: DataDiskSlot
+    get() = intrinsic()
 
   /** The StructureChuteDigitalFlipFlopSplitterRight prefab. */
   companion object : Prefab()
@@ -14659,6 +17116,9 @@ object ChuteDigitalFlipFlopSplitterRights {
     var SettingOutput: Double
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -14681,6 +17141,9 @@ object ChuteDigitalFlipFlopSplitterRights {
       get() = intrinsic()
 
     val SettingOutput: Double
+      get() = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Reading>
       get() = intrinsic()
   }
 }
@@ -14713,6 +17176,15 @@ class ChuteDigitalValveLeft internal constructor() : TypedDevice() {
   var Setting: Double
     get() = intrinsic()
     set(value) = intrinsic()
+
+  /** The device's slots, by number. */
+  val slots: Slots<DataDiskSlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val TransportSlot: DataDiskSlot
+    get() = intrinsic()
 
   /** The StructureChuteDigitalValveLeft prefab. */
   companion object : Prefab()
@@ -14763,6 +17235,9 @@ object ChuteDigitalValveLefts {
     var Setting: Double
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -14785,6 +17260,9 @@ object ChuteDigitalValveLefts {
       get() = intrinsic()
 
     val Setting: Double
+      get() = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Reading>
       get() = intrinsic()
   }
 }
@@ -14817,6 +17295,15 @@ class ChuteDigitalValveRight internal constructor() : TypedDevice() {
   var Setting: Double
     get() = intrinsic()
     set(value) = intrinsic()
+
+  /** The device's slots, by number. */
+  val slots: Slots<DataDiskSlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val TransportSlot: DataDiskSlot
+    get() = intrinsic()
 
   /** The StructureChuteDigitalValveRight prefab. */
   companion object : Prefab()
@@ -14867,6 +17354,9 @@ object ChuteDigitalValveRights {
     var Setting: Double
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -14889,6 +17379,9 @@ object ChuteDigitalValveRights {
       get() = intrinsic()
 
     val Setting: Double
+      get() = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Reading>
       get() = intrinsic()
   }
 }
@@ -14915,6 +17408,15 @@ class ChuteExportBin internal constructor() : TypedDevice() {
     get() = intrinsic()
 
   val RequiredPower: Double
+    get() = intrinsic()
+
+  /** The device's slots, by number. */
+  val slots: Slots<DataDiskSlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val Input: DataDiskSlot
     get() = intrinsic()
 
   /** The StructureChuteExportBin prefab. */
@@ -14958,6 +17460,9 @@ object ChuteExportBins {
     var Open: Boolean
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -14978,6 +17483,9 @@ object ChuteExportBins {
 
     val RequiredPower: Double
       get() = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Reading>
+      get() = intrinsic()
   }
 }
 
@@ -14994,6 +17502,15 @@ class ChuteInlet internal constructor() : TypedDevice() {
   var Lock: Boolean
     get() = intrinsic()
     set(value) = intrinsic()
+
+  /** The device's slots, by number. */
+  val slots: Slots<DataDiskSlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val Import: DataDiskSlot
+    get() = intrinsic()
 
   /** The StructureChuteInlet prefab. */
   companion object : Prefab()
@@ -15032,6 +17549,9 @@ object ChuteInlets {
     var Lock: Boolean
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -15042,6 +17562,9 @@ object ChuteInlets {
       get() = intrinsic()
 
     val Lock: Double
+      get() = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Reading>
       get() = intrinsic()
   }
 }
@@ -15062,6 +17585,15 @@ class ChuteOutlet internal constructor() : TypedDevice() {
   var Lock: Boolean
     get() = intrinsic()
     set(value) = intrinsic()
+
+  /** The device's slots, by number. */
+  val slots: Slots<DataDiskSlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val Export: DataDiskSlot
+    get() = intrinsic()
 
   /** The StructureChuteOutlet prefab. */
   companion object : Prefab()
@@ -15100,6 +17632,9 @@ object ChuteOutlets {
     var Lock: Boolean
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -15113,6 +17648,9 @@ object ChuteOutlets {
       get() = intrinsic()
 
     val Lock: Double
+      get() = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Reading>
       get() = intrinsic()
   }
 }
@@ -15142,6 +17680,15 @@ class ChuteUmbilicalMale internal constructor() : TypedDevice() {
     get() = intrinsic()
 
   val RequiredPower: Double
+    get() = intrinsic()
+
+  /** The device's slots, by number. */
+  val slots: Slots<DataDiskSlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val TransportSlot: DataDiskSlot
     get() = intrinsic()
 
   /** The StructureChuteUmbilicalMale prefab. */
@@ -15185,6 +17732,9 @@ object ChuteUmbilicalMales {
     var Open: Boolean
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -15207,6 +17757,9 @@ object ChuteUmbilicalMales {
       get() = intrinsic()
 
     val RequiredPower: Double
+      get() = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Reading>
       get() = intrinsic()
   }
 }
@@ -15240,6 +17793,15 @@ class CircuitHousing internal constructor() : TypedDevice() {
     set(value) = intrinsic()
 
   val StackSize: Double
+    get() = intrinsic()
+
+  /** The device's slots, by number. */
+  val slots: Slots<CommonSlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val ProgrammableChip: CommonSlot
     get() = intrinsic()
 
   /** The StructureCircuitHousing prefab. */
@@ -15287,6 +17849,9 @@ object CircuitHousings {
     var Setting: Double
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<CommonSlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -15312,6 +17877,9 @@ object CircuitHousings {
       get() = intrinsic()
 
     val StackSize: Double
+      get() = intrinsic()
+
+    val slots: Slots<CommonSlot.Reading>
       get() = intrinsic()
   }
 }
@@ -15345,6 +17913,15 @@ class CircuitHousingCompact internal constructor() : TypedDevice() {
     set(value) = intrinsic()
 
   val StackSize: Double
+    get() = intrinsic()
+
+  /** The device's slots, by number. */
+  val slots: Slots<ProgrammableChipSlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val ProgrammableChip: ProgrammableChipSlot
     get() = intrinsic()
 
   /** The StructureCircuitHousingCompact prefab. */
@@ -15392,6 +17969,9 @@ object CircuitHousingCompacts {
     var Setting: Double
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<ProgrammableChipSlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -15417,6 +17997,9 @@ object CircuitHousingCompacts {
       get() = intrinsic()
 
     val StackSize: Double
+      get() = intrinsic()
+
+    val slots: Slots<ProgrammableChipSlot.Reading>
       get() = intrinsic()
   }
 }
@@ -15760,6 +18343,25 @@ class CombustionCentrifuge internal constructor() : TypedDevice() {
   val TotalMolesOutput: Double
     get() = intrinsic()
 
+  /** The device's slots, by number. */
+  val slots: Slots<DataDiskSlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val Import: DataDiskSlot
+    get() = intrinsic()
+
+  /** Slot 1. */
+  @SlotNumber(1)
+  val Export: DataDiskSlot
+    get() = intrinsic()
+
+  /** Slot 2. */
+  @SlotNumber(2)
+  val ProgrammableChip: DataDiskSlot
+    get() = intrinsic()
+
   /** The StructureCombustionCentrifuge prefab. */
   companion object : Prefab()
 }
@@ -15813,6 +18415,9 @@ object CombustionCentrifuges {
     var Throttle: Double
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -16144,6 +18749,9 @@ object CombustionCentrifuges {
       get() = intrinsic()
 
     val TotalMolesOutput: Double
+      get() = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Reading>
       get() = intrinsic()
   }
 }
@@ -16484,6 +19092,20 @@ class CombustionDeepMiner internal constructor() : TypedDevice() {
   val TotalMolesOutput: Double
     get() = intrinsic()
 
+  /** The device's slots, by number. */
+  val slots: Slots<DataDiskSlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val Export: DataDiskSlot
+    get() = intrinsic()
+
+  /** Slot 1. */
+  @SlotNumber(1)
+  val ProgrammableChip: DataDiskSlot
+    get() = intrinsic()
+
   /** The StructureCombustionDeepMiner prefab. */
   companion object : Prefab()
 }
@@ -16537,6 +19159,9 @@ object CombustionDeepMiners {
     var Throttle: Double
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -16866,6 +19491,9 @@ object CombustionDeepMiners {
 
     val TotalMolesOutput: Double
       get() = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Reading>
+      get() = intrinsic()
   }
 }
 
@@ -17091,6 +19719,15 @@ class Computer internal constructor() : TypedDevice() {
   val RequiredPower: Double
     get() = intrinsic()
 
+  /** The device's slots, by number. */
+  val slots: Slots<DataDiskSlot>
+    get() = intrinsic()
+
+  /** Slot 2. */
+  @SlotNumber(2)
+  val Motherboard: DataDiskSlot
+    get() = intrinsic()
+
   /** The StructureComputer prefab. */
   companion object : Prefab()
 }
@@ -17132,6 +19769,9 @@ object Computers {
     var Open: Boolean
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -17151,6 +19791,9 @@ object Computers {
       get() = intrinsic()
 
     val RequiredPower: Double
+      get() = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Reading>
       get() = intrinsic()
   }
 }
@@ -17177,6 +19820,15 @@ class ComputerBigScreen internal constructor() : TypedDevice() {
     get() = intrinsic()
 
   val RequiredPower: Double
+    get() = intrinsic()
+
+  /** The device's slots, by number. */
+  val slots: Slots<DataDiskSlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val Motherboard: DataDiskSlot
     get() = intrinsic()
 
   /** The StructureComputerBigScreen prefab. */
@@ -17220,6 +19872,9 @@ object ComputerBigScreens {
     var Open: Boolean
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -17239,6 +19894,9 @@ object ComputerBigScreens {
       get() = intrinsic()
 
     val RequiredPower: Double
+      get() = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Reading>
       get() = intrinsic()
   }
 }
@@ -17265,6 +19923,15 @@ class ComputerBigScreenWallMounted internal constructor() : TypedDevice() {
     get() = intrinsic()
 
   val RequiredPower: Double
+    get() = intrinsic()
+
+  /** The device's slots, by number. */
+  val slots: Slots<DataDiskSlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val Motherboard: DataDiskSlot
     get() = intrinsic()
 
   /** The StructureComputerBigScreenWallMounted prefab. */
@@ -17308,6 +19975,9 @@ object ComputerBigScreenWallMounteds {
     var Open: Boolean
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -17327,6 +19997,9 @@ object ComputerBigScreenWallMounteds {
       get() = intrinsic()
 
     val RequiredPower: Double
+      get() = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Reading>
       get() = intrinsic()
   }
 }
@@ -17353,6 +20026,15 @@ class ComputerUpright internal constructor() : TypedDevice() {
     get() = intrinsic()
 
   val RequiredPower: Double
+    get() = intrinsic()
+
+  /** The device's slots, by number. */
+  val slots: Slots<DataDiskSlot>
+    get() = intrinsic()
+
+  /** Slot 2. */
+  @SlotNumber(2)
+  val Motherboard: DataDiskSlot
     get() = intrinsic()
 
   /** The StructureComputerUpright prefab. */
@@ -17396,6 +20078,9 @@ object ComputerUprights {
     var Open: Boolean
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -17415,6 +20100,9 @@ object ComputerUprights {
       get() = intrinsic()
 
     val RequiredPower: Double
+      get() = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Reading>
       get() = intrinsic()
   }
 }
@@ -17820,6 +20508,15 @@ class Console internal constructor() : TypedDevice() {
   val Setting: Double
     get() = intrinsic()
 
+  /** The device's slots, by number. */
+  val slots: Slots<CircuitboardSlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val Circuitboard: CircuitboardSlot
+    get() = intrinsic()
+
   /** The StructureConsole prefab. */
   companion object : Prefab()
 }
@@ -17861,6 +20558,9 @@ object Consoles {
     var Open: Boolean
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<CircuitboardSlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -17883,6 +20583,9 @@ object Consoles {
       get() = intrinsic()
 
     val Setting: Double
+      get() = intrinsic()
+
+    val slots: Slots<CircuitboardSlot.Reading>
       get() = intrinsic()
   }
 }
@@ -17912,6 +20615,15 @@ class ConsoleDual internal constructor() : TypedDevice() {
     get() = intrinsic()
 
   val Setting: Double
+    get() = intrinsic()
+
+  /** The device's slots, by number. */
+  val slots: Slots<CircuitboardSlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val Circuitboard: CircuitboardSlot
     get() = intrinsic()
 
   /** The StructureConsoleDual prefab. */
@@ -17955,6 +20667,9 @@ object ConsoleDuals {
     var Open: Boolean
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<CircuitboardSlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -17977,6 +20692,9 @@ object ConsoleDuals {
       get() = intrinsic()
 
     val Setting: Double
+      get() = intrinsic()
+
+    val slots: Slots<CircuitboardSlot.Reading>
       get() = intrinsic()
   }
 }
@@ -18006,6 +20724,15 @@ class ConsoleMonitor internal constructor() : TypedDevice() {
     get() = intrinsic()
 
   val Setting: Double
+    get() = intrinsic()
+
+  /** The device's slots, by number. */
+  val slots: Slots<CircuitboardSlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val Circuitboard: CircuitboardSlot
     get() = intrinsic()
 
   /** The StructureConsoleMonitor prefab. */
@@ -18049,6 +20776,9 @@ object ConsoleMonitors {
     var Open: Boolean
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<CircuitboardSlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -18072,6 +20802,9 @@ object ConsoleMonitors {
 
     val Setting: Double
       get() = intrinsic()
+
+    val slots: Slots<CircuitboardSlot.Reading>
+      get() = intrinsic()
   }
 }
 
@@ -18085,6 +20818,10 @@ class CornerLocker internal constructor() : TypedDevice() {
   var Open: Boolean
     get() = intrinsic()
     set(value) = intrinsic()
+
+  /** The device's slots, by number. */
+  val slots: Slots<DataDiskSlot>
+    get() = intrinsic()
 
   /** The StructureCornerLocker prefab. */
   companion object : Prefab()
@@ -18123,6 +20860,9 @@ object CornerLockers {
     var Open: Boolean
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -18130,6 +20870,9 @@ object CornerLockers {
       get() = intrinsic()
 
     val Open: Double
+      get() = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Reading>
       get() = intrinsic()
   }
 }
@@ -18284,6 +21027,20 @@ class CryoTubeHorizontal internal constructor() : TypedDevice() {
   val Temperature: Double
     get() = intrinsic()
 
+  /** The device's slots, by number. */
+  val slots: Slots<CommonSlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val Player: DataDiskSlot
+    get() = intrinsic()
+
+  /** Slot 1. */
+  @SlotNumber(1)
+  val Mask: MaskSlot
+    get() = intrinsic()
+
   /** The StructureCryoTubeHorizontal prefab. */
   companion object : Prefab()
 }
@@ -18337,6 +21094,9 @@ object CryoTubeHorizontals {
     var Setting: Double
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<CommonSlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -18380,6 +21140,9 @@ object CryoTubeHorizontals {
       get() = intrinsic()
 
     val Temperature: Double
+      get() = intrinsic()
+
+    val slots: Slots<CommonSlot.Reading>
       get() = intrinsic()
   }
 }
@@ -18435,6 +21198,20 @@ class CryoTubeVertical internal constructor() : TypedDevice() {
   val Temperature: Double
     get() = intrinsic()
 
+  /** The device's slots, by number. */
+  val slots: Slots<CommonSlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val Player: DataDiskSlot
+    get() = intrinsic()
+
+  /** Slot 1. */
+  @SlotNumber(1)
+  val Mask: MaskSlot
+    get() = intrinsic()
+
   /** The StructureCryoTubeVertical prefab. */
   companion object : Prefab()
 }
@@ -18488,6 +21265,9 @@ object CryoTubeVerticals {
     var Setting: Double
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<CommonSlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -18531,6 +21311,9 @@ object CryoTubeVerticals {
       get() = intrinsic()
 
     val Temperature: Double
+      get() = intrinsic()
+
+    val slots: Slots<CommonSlot.Reading>
       get() = intrinsic()
   }
 }
@@ -18665,6 +21448,15 @@ class DeepMiner internal constructor() : TypedDevice() {
     get() = intrinsic()
     set(value) = intrinsic()
 
+  /** The device's slots, by number. */
+  val slots: Slots<DataDiskSlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val Export: DataDiskSlot
+    get() = intrinsic()
+
   /** The StructureDeepMiner prefab. */
   companion object : Prefab()
 }
@@ -18706,6 +21498,9 @@ object DeepMiners {
     var Setting: Double
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -18737,6 +21532,9 @@ object DeepMiners {
       get() = intrinsic()
 
     val Setting: Double
+      get() = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Reading>
       get() = intrinsic()
   }
 }
@@ -19305,6 +22103,15 @@ class Electrolyzer internal constructor() : TypedDevice() {
   val TotalMolesOutput: Double
     get() = intrinsic()
 
+  /** The device's slots, by number. */
+  val slots: Slots<DataDiskSlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val ProgrammableChip: DataDiskSlot
+    get() = intrinsic()
+
   /** The StructureElectrolyzer prefab. */
   companion object : Prefab()
 }
@@ -19358,6 +22165,9 @@ object Electrolyzers {
     var Setting: Double
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -19585,6 +22395,9 @@ object Electrolyzers {
 
     val TotalMolesOutput: Double
       get() = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Reading>
+      get() = intrinsic()
   }
 }
 
@@ -19637,6 +22450,20 @@ class ElectronicsPrinter internal constructor() : TypedDevice() {
     get() = intrinsic()
 
   val StackSize: Double
+    get() = intrinsic()
+
+  /** The device's slots, by number. */
+  val slots: Slots<DataDiskSlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val Import: DataDiskSlot
+    get() = intrinsic()
+
+  /** Slot 1. */
+  @SlotNumber(1)
+  val Export: DataDiskSlot
     get() = intrinsic()
 
   /** The StructureElectronicsPrinter prefab. */
@@ -19692,6 +22519,9 @@ object ElectronicsPrinters {
     var RecipeHash: Double
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -19735,6 +22565,9 @@ object ElectronicsPrinters {
       get() = intrinsic()
 
     val StackSize: Double
+      get() = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Reading>
       get() = intrinsic()
   }
 }
@@ -20937,6 +23770,20 @@ class Fermenter internal constructor() : TypedDevice() {
   val TotalMolesOutput: Double
     get() = intrinsic()
 
+  /** The device's slots, by number. */
+  val slots: Slots<DataDiskSlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val Import: DataDiskSlot
+    get() = intrinsic()
+
+  /** Slot 1. */
+  @SlotNumber(1)
+  val ProgrammableChip: DataDiskSlot
+    get() = intrinsic()
+
   /** The StructureFermenter prefab. */
   companion object : Prefab()
 }
@@ -20990,6 +23837,9 @@ object Fermenters {
     var Setting: Double
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -21318,6 +24168,9 @@ object Fermenters {
       get() = intrinsic()
 
     val TotalMolesOutput: Double
+      get() = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Reading>
       get() = intrinsic()
   }
 }
@@ -21648,6 +24501,15 @@ class Filtration internal constructor() : TypedDevice() {
   val TotalMolesOutput2: Double
     get() = intrinsic()
 
+  /** The device's slots, by number. */
+  val slots: Slots<CommonSlot>
+    get() = intrinsic()
+
+  /** Slot 2. */
+  @SlotNumber(2)
+  val ProgrammableChip: DataDiskSlot
+    get() = intrinsic()
+
   /** The StructureFiltration prefab. */
   companion object : Prefab()
 }
@@ -21697,6 +24559,9 @@ object Filtrations {
     var Setting: Double
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<CommonSlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -22016,6 +24881,9 @@ object Filtrations {
       get() = intrinsic()
 
     val TotalMolesOutput2: Double
+      get() = intrinsic()
+
+    val slots: Slots<CommonSlot.Reading>
       get() = intrinsic()
   }
 }
@@ -22346,6 +25214,15 @@ class FiltrationLiquid internal constructor() : TypedDevice() {
   val TotalMolesOutput2: Double
     get() = intrinsic()
 
+  /** The device's slots, by number. */
+  val slots: Slots<CommonSlot>
+    get() = intrinsic()
+
+  /** Slot 2. */
+  @SlotNumber(2)
+  val ProgrammableChip: DataDiskSlot
+    get() = intrinsic()
+
   /** The StructureFiltrationLiquid prefab. */
   companion object : Prefab()
 }
@@ -22395,6 +25272,9 @@ object FiltrationLiquids {
     var Setting: Double
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<CommonSlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -22715,6 +25595,9 @@ object FiltrationLiquids {
 
     val TotalMolesOutput2: Double
       get() = intrinsic()
+
+    val slots: Slots<CommonSlot.Reading>
+      get() = intrinsic()
   }
 }
 
@@ -22990,6 +25873,10 @@ class FridgeBig internal constructor() : TypedDevice() {
   val TotalMolesOutput: Double
     get() = intrinsic()
 
+  /** The device's slots, by number. */
+  val slots: Slots<DataDiskSlot>
+    get() = intrinsic()
+
   /** The StructureFridgeBig prefab. */
   companion object : Prefab()
 }
@@ -23031,6 +25918,9 @@ object FridgeBigs {
     var Setting: Double
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -23228,6 +26118,9 @@ object FridgeBigs {
 
     val TotalMolesOutput: Double
       get() = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Reading>
+      get() = intrinsic()
   }
 }
 
@@ -23419,6 +26312,10 @@ class FridgeSmall internal constructor() : TypedDevice() {
   val TotalMolesOutput: Double
     get() = intrinsic()
 
+  /** The device's slots, by number. */
+  val slots: Slots<DataDiskSlot>
+    get() = intrinsic()
+
   /** The StructureFridgeSmall prefab. */
   companion object : Prefab()
 }
@@ -23456,6 +26353,9 @@ object FridgeSmalls {
     var Setting: Double
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -23641,6 +26541,9 @@ object FridgeSmalls {
 
     val TotalMolesOutput: Double
       get() = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Reading>
+      get() = intrinsic()
   }
 }
 
@@ -23785,6 +26688,20 @@ class Furnace internal constructor() : TypedDevice() {
   val TotalMoles: Double
     get() = intrinsic()
 
+  /** The device's slots, by number. */
+  val slots: Slots<DataDiskSlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val Import: DataDiskSlot
+    get() = intrinsic()
+
+  /** Slot 1. */
+  @SlotNumber(1)
+  val Export: DataDiskSlot
+    get() = intrinsic()
+
   /** The StructureFurnace prefab. */
   companion object : Prefab()
 }
@@ -23838,6 +26755,9 @@ object Furnaces {
     var Setting: Double
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -23971,6 +26891,9 @@ object Furnaces {
       get() = intrinsic()
 
     val TotalMoles: Double
+      get() = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Reading>
       get() = intrinsic()
   }
 }
@@ -24693,6 +27616,15 @@ class GasTankStorage internal constructor() : TypedDevice() {
   val Temperature: Double
     get() = intrinsic()
 
+  /** The device's slots, by number. */
+  val slots: Slots<GasCanisterSlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val GasCanister: GasCanisterSlot
+    get() = intrinsic()
+
   /** The StructureGasTankStorage prefab. */
   companion object : Prefab()
 }
@@ -24721,6 +27653,9 @@ object GasTankStorages {
       get() = intrinsic()
 
     val maximum: Reading
+      get() = intrinsic()
+
+    val slots: Slots<GasCanisterSlot.Batch>
       get() = intrinsic()
   }
 
@@ -24816,6 +27751,9 @@ object GasTankStorages {
       get() = intrinsic()
 
     val Temperature: Double
+      get() = intrinsic()
+
+    val slots: Slots<GasCanisterSlot.Reading>
       get() = intrinsic()
   }
 }
@@ -25762,6 +28700,25 @@ class Harvie internal constructor() : TypedDevice() {
   val RequiredPower: Double
     get() = intrinsic()
 
+  /** The device's slots, by number. */
+  val slots: Slots<DataDiskSlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val Import: DataDiskSlot
+    get() = intrinsic()
+
+  /** Slot 1. */
+  @SlotNumber(1)
+  val Export: DataDiskSlot
+    get() = intrinsic()
+
+  /** Slot 2. */
+  @SlotNumber(2)
+  val Hand: DataDiskSlot
+    get() = intrinsic()
+
   /** The StructureHarvie prefab. */
   companion object : Prefab()
 }
@@ -25819,6 +28776,9 @@ object Harvies {
     var Plant: Double
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -25856,6 +28816,9 @@ object Harvies {
       get() = intrinsic()
 
     val RequiredPower: Double
+      get() = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Reading>
       get() = intrinsic()
   }
 }
@@ -25896,6 +28859,20 @@ class HorizontalAutoMiner internal constructor() : TypedDevice() {
     get() = intrinsic()
 
   val RequiredPower: Double
+    get() = intrinsic()
+
+  /** The device's slots, by number. */
+  val slots: Slots<DataDiskSlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val Import: DataDiskSlot
+    get() = intrinsic()
+
+  /** Slot 1. */
+  @SlotNumber(1)
+  val Export: DataDiskSlot
     get() = intrinsic()
 
   /** The StructureHorizontalAutoMiner prefab. */
@@ -25947,6 +28924,9 @@ object HorizontalAutoMiners {
     var Open: Boolean
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -25978,6 +28958,9 @@ object HorizontalAutoMiners {
       get() = intrinsic()
 
     val RequiredPower: Double
+      get() = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Reading>
       get() = intrinsic()
   }
 }
@@ -26033,6 +29016,20 @@ class HydraulicPipeBender internal constructor() : TypedDevice() {
   val StackSize: Double
     get() = intrinsic()
 
+  /** The device's slots, by number. */
+  val slots: Slots<DataDiskSlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val Import: DataDiskSlot
+    get() = intrinsic()
+
+  /** Slot 1. */
+  @SlotNumber(1)
+  val Export: DataDiskSlot
+    get() = intrinsic()
+
   /** The StructureHydraulicPipeBender prefab. */
   companion object : Prefab()
 }
@@ -26086,6 +29083,9 @@ object HydraulicPipeBenders {
     var RecipeHash: Double
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -26129,6 +29129,9 @@ object HydraulicPipeBenders {
       get() = intrinsic()
 
     val StackSize: Double
+      get() = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Reading>
       get() = intrinsic()
   }
 }
@@ -26330,6 +29333,10 @@ class HydroponicsStation internal constructor() : TypedDevice() {
   val TotalMolesOutput: Double
     get() = intrinsic()
 
+  /** The device's slots, by number. */
+  val slots: Slots<PlantSlot>
+    get() = intrinsic()
+
   /** The StructureHydroponicsStation prefab. */
   companion object : Prefab()
 }
@@ -26367,6 +29374,9 @@ object HydroponicsStations {
     var Setting: Double
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<PlantSlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -26561,6 +29571,9 @@ object HydroponicsStations {
 
     val TotalMolesOutput: Double
       get() = intrinsic()
+
+    val slots: Slots<PlantSlot.Reading>
+      get() = intrinsic()
   }
 }
 
@@ -26663,6 +29676,20 @@ class HydroponicsTrayData internal constructor() : TypedDevice() {
   val TotalMoles: Double
     get() = intrinsic()
 
+  /** The device's slots, by number. */
+  val slots: Slots<CommonSlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val Plant: PlantSlot
+    get() = intrinsic()
+
+  /** Slot 1. */
+  @SlotNumber(1)
+  val Fertiliser: DataDiskSlot
+    get() = intrinsic()
+
   /** The StructureHydroponicsTrayData prefab. */
   companion object : Prefab()
 }
@@ -26691,6 +29718,9 @@ object HydroponicsTrayDatas {
       get() = intrinsic()
 
     val maximum: Reading
+      get() = intrinsic()
+
+    val slots: Slots<CommonSlot.Batch>
       get() = intrinsic()
   }
 
@@ -26790,6 +29820,9 @@ object HydroponicsTrayDatas {
 
     val TotalMoles: Double
       get() = intrinsic()
+
+    val slots: Slots<CommonSlot.Reading>
+      get() = intrinsic()
   }
 }
 
@@ -26833,6 +29866,15 @@ class IceCrusher internal constructor() : TypedDevice() {
   var Setting: Double
     get() = intrinsic()
     set(value) = intrinsic()
+
+  /** The device's slots, by number. */
+  val slots: Slots<DataDiskSlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val Import: DataDiskSlot
+    get() = intrinsic()
 
   /** The StructureIceCrusher prefab. */
   companion object : Prefab()
@@ -26883,6 +29925,9 @@ object IceCrushers {
     var Setting: Double
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -26917,6 +29962,9 @@ object IceCrushers {
       get() = intrinsic()
 
     val Setting: Double
+      get() = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Reading>
       get() = intrinsic()
   }
 }
@@ -29104,6 +32152,15 @@ class LarreDockAtmos internal constructor() : TypedDevice() {
   val TotalMolesInput: Double
     get() = intrinsic()
 
+  /** The device's slots, by number. */
+  val slots: Slots<FilterSlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val Filter: FilterSlot
+    get() = intrinsic()
+
   /** The StructureLarreDockAtmos prefab. */
   companion object : Prefab()
 }
@@ -29161,6 +32218,9 @@ object LarreDockAtmoses {
     var Setting: Double
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<FilterSlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -29352,6 +32412,9 @@ object LarreDockAtmoses {
 
     val TotalMolesInput: Double
       get() = intrinsic()
+
+    val slots: Slots<FilterSlot.Reading>
+      get() = intrinsic()
   }
 }
 
@@ -29470,6 +32533,20 @@ class LarreDockCargo internal constructor() : TypedDevice() {
     get() = intrinsic()
     set(value) = intrinsic()
 
+  /** The device's slots, by number. */
+  val slots: Slots<CommonSlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val ArmSlot: DataDiskSlot
+    get() = intrinsic()
+
+  /** Slot 255. */
+  @SlotNumber(255)
+  val TargetSlot: CommonSlot
+    get() = intrinsic()
+
   /** The StructureLarreDockCargo prefab. */
   companion object : Prefab()
 }
@@ -29519,6 +32596,9 @@ object LarreDockCargos {
     var TargetSlotIndex: Double
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<CommonSlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -29556,6 +32636,9 @@ object LarreDockCargos {
       get() = intrinsic()
 
     val TargetSlotIndex: Double
+      get() = intrinsic()
+
+    val slots: Slots<CommonSlot.Reading>
       get() = intrinsic()
   }
 }
@@ -29607,6 +32690,10 @@ class LarreDockCollector internal constructor() : TypedDevice() {
     get() = intrinsic()
     set(value) = intrinsic()
 
+  /** The device's slots, by number. */
+  val slots: Slots<DataDiskSlot>
+    get() = intrinsic()
+
   /** The StructureLarreDockCollector prefab. */
   companion object : Prefab()
 }
@@ -29656,6 +32743,9 @@ object LarreDockCollectors {
     var Setting: Double
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -29696,6 +32786,9 @@ object LarreDockCollectors {
       get() = intrinsic()
 
     val Setting: Double
+      get() = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Reading>
       get() = intrinsic()
   }
 }
@@ -29743,6 +32836,25 @@ class LarreDockHydroponics internal constructor() : TypedDevice() {
   val TargetSlotIndex: Double
     get() = intrinsic()
 
+  /** The device's slots, by number. */
+  val slots: Slots<CommonSlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val ArmSlot: DataDiskSlot
+    get() = intrinsic()
+
+  /** Slot 1. */
+  @SlotNumber(1)
+  val HopperSlot: DataDiskSlot
+    get() = intrinsic()
+
+  /** Slot 255. */
+  @SlotNumber(255)
+  val TargetSlot: CommonSlot
+    get() = intrinsic()
+
   /** The StructureLarreDockHydroponics prefab. */
   companion object : Prefab()
 }
@@ -29788,6 +32900,9 @@ object LarreDockHydroponicses {
     var Setting: Double
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<CommonSlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -29825,6 +32940,9 @@ object LarreDockHydroponicses {
       get() = intrinsic()
 
     val TargetSlotIndex: Double
+      get() = intrinsic()
+
+    val slots: Slots<CommonSlot.Reading>
       get() = intrinsic()
   }
 }
@@ -31065,6 +34183,15 @@ class LiquidTankStorage internal constructor() : TypedDevice() {
   val Temperature: Double
     get() = intrinsic()
 
+  /** The device's slots, by number. */
+  val slots: Slots<GasCanisterSlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val LiquidCanister: GasCanisterSlot
+    get() = intrinsic()
+
   /** The StructureLiquidTankStorage prefab. */
   companion object : Prefab()
 }
@@ -31093,6 +34220,9 @@ object LiquidTankStorages {
       get() = intrinsic()
 
     val maximum: Reading
+      get() = intrinsic()
+
+    val slots: Slots<GasCanisterSlot.Batch>
       get() = intrinsic()
   }
 
@@ -31188,6 +34318,9 @@ object LiquidTankStorages {
       get() = intrinsic()
 
     val Temperature: Double
+      get() = intrinsic()
+
+    val slots: Slots<GasCanisterSlot.Reading>
       get() = intrinsic()
   }
 }
@@ -31722,6 +34855,10 @@ class LockerSmall internal constructor() : TypedDevice() {
     get() = intrinsic()
     set(value) = intrinsic()
 
+  /** The device's slots, by number. */
+  val slots: Slots<DataDiskSlot>
+    get() = intrinsic()
+
   /** The StructureLockerSmall prefab. */
   companion object : Prefab()
 }
@@ -31759,6 +34896,9 @@ object LockerSmalls {
     var Open: Boolean
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -31766,6 +34906,9 @@ object LockerSmalls {
       get() = intrinsic()
 
     val Open: Double
+      get() = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Reading>
       get() = intrinsic()
   }
 }
@@ -33227,6 +36370,25 @@ class LogicSorter internal constructor() : TypedDevice() {
   val StackSize: Double
     get() = intrinsic()
 
+  /** The device's slots, by number. */
+  val slots: Slots<DataDiskSlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val Import: DataDiskSlot
+    get() = intrinsic()
+
+  /** Slot 1. */
+  @SlotNumber(1)
+  val Export: DataDiskSlot
+    get() = intrinsic()
+
+  /** Slot 2. */
+  @SlotNumber(2)
+  val Export2: DataDiskSlot
+    get() = intrinsic()
+
   /** The StructureLogicSorter prefab. */
   companion object : Prefab()
 }
@@ -33272,6 +36434,9 @@ object LogicSorters {
     var On: Boolean
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -33303,6 +36468,9 @@ object LogicSorters {
       get() = intrinsic()
 
     val StackSize: Double
+      get() = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Reading>
       get() = intrinsic()
   }
 }
@@ -35453,6 +38621,15 @@ class Nitrolyzer internal constructor() : TypedDevice() {
   val TotalMolesOutput: Double
     get() = intrinsic()
 
+  /** The device's slots, by number. */
+  val slots: Slots<DataDiskSlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val ProgrammableChip: DataDiskSlot
+    get() = intrinsic()
+
   /** The StructureNitrolyzer prefab. */
   companion object : Prefab()
 }
@@ -35502,6 +38679,9 @@ object Nitrolyzers {
     var Setting: Double
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -35918,6 +39098,9 @@ object Nitrolyzers {
 
     val TotalMolesOutput: Double
       get() = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Reading>
+      get() = intrinsic()
   }
 }
 
@@ -35987,6 +39170,10 @@ class OverheadShortCornerLocker internal constructor() : TypedDevice() {
     get() = intrinsic()
     set(value) = intrinsic()
 
+  /** The device's slots, by number. */
+  val slots: Slots<DataDiskSlot>
+    get() = intrinsic()
+
   /** The StructureOverheadShortCornerLocker prefab. */
   companion object : Prefab()
 }
@@ -36024,6 +39211,9 @@ object OverheadShortCornerLockers {
     var Open: Boolean
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -36031,6 +39221,9 @@ object OverheadShortCornerLockers {
       get() = intrinsic()
 
     val Open: Double
+      get() = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Reading>
       get() = intrinsic()
   }
 }
@@ -36045,6 +39238,10 @@ class OverheadShortLocker internal constructor() : TypedDevice() {
   var Open: Boolean
     get() = intrinsic()
     set(value) = intrinsic()
+
+  /** The device's slots, by number. */
+  val slots: Slots<DataDiskSlot>
+    get() = intrinsic()
 
   /** The StructureOverheadShortLocker prefab. */
   companion object : Prefab()
@@ -36083,6 +39280,9 @@ object OverheadShortLockers {
     var Open: Boolean
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -36090,6 +39290,9 @@ object OverheadShortLockers {
       get() = intrinsic()
 
     val Open: Double
+      get() = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Reading>
       get() = intrinsic()
   }
 }
@@ -36120,6 +39323,25 @@ class Packer internal constructor() : TypedDevice() {
     get() = intrinsic()
 
   val RequiredPower: Double
+    get() = intrinsic()
+
+  /** The device's slots, by number. */
+  val slots: Slots<DataDiskSlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val Payload: DataDiskSlot
+    get() = intrinsic()
+
+  /** Slot 1. */
+  @SlotNumber(1)
+  val Recipient: DataDiskSlot
+    get() = intrinsic()
+
+  /** Slot 2. */
+  @SlotNumber(2)
+  val Export: DataDiskSlot
     get() = intrinsic()
 
   /** The StructurePacker prefab. */
@@ -36167,6 +39389,9 @@ object Packers {
     var Open: Boolean
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -36189,6 +39414,9 @@ object Packers {
       get() = intrinsic()
 
     val RequiredPower: Double
+      get() = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Reading>
       get() = intrinsic()
   }
 }
@@ -37082,6 +40310,15 @@ class PortablesConnector internal constructor() : TypedDevice() {
     get() = intrinsic()
     set(value) = intrinsic()
 
+  /** The device's slots, by number. */
+  val slots: Slots<DataDiskSlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val PortableSlot: DataDiskSlot
+    get() = intrinsic()
+
   /** The StructurePortablesConnector prefab. */
   companion object : Prefab()
 }
@@ -37119,6 +40356,9 @@ object PortablesConnectors {
     var Setting: Double
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -37133,6 +40373,9 @@ object PortablesConnectors {
 
     val Setting: Double
       get() = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Reading>
+      get() = intrinsic()
   }
 }
 
@@ -37142,6 +40385,15 @@ class PowerConnector internal constructor() : TypedDevice() {
   var Open: Boolean
     get() = intrinsic()
     set(value) = intrinsic()
+
+  /** The device's slots, by number. */
+  val slots: Slots<DataDiskSlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val Portableslot: DataDiskSlot
+    get() = intrinsic()
 
   /** The StructurePowerConnector prefab. */
   companion object : Prefab()
@@ -37176,10 +40428,16 @@ object PowerConnectors {
     var Open: Boolean
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
     val Open: Double
+      get() = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Reading>
       get() = intrinsic()
   }
 }
@@ -40068,6 +43326,20 @@ class Recycler internal constructor() : TypedDevice() {
   val RequiredPower: Double
     get() = intrinsic()
 
+  /** The device's slots, by number. */
+  val slots: Slots<DataDiskSlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val Import: DataDiskSlot
+    get() = intrinsic()
+
+  /** Slot 1. */
+  @SlotNumber(1)
+  val Export: DataDiskSlot
+    get() = intrinsic()
+
   /** The StructureRecycler prefab. */
   companion object : Prefab()
 }
@@ -40109,6 +43381,9 @@ object Recyclers {
     var On: Boolean
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -40137,6 +43412,9 @@ object Recyclers {
       get() = intrinsic()
 
     val RequiredPower: Double
+      get() = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Reading>
       get() = intrinsic()
   }
 }
@@ -40291,6 +43569,20 @@ class RefrigeratedVendingMachine internal constructor() : TypedDevice() {
   val TotalMoles: Double
     get() = intrinsic()
 
+  /** The device's slots, by number. */
+  val slots: Slots<DataDiskSlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val Import: DataDiskSlot
+    get() = intrinsic()
+
+  /** Slot 1. */
+  @SlotNumber(1)
+  val Export: DataDiskSlot
+    get() = intrinsic()
+
   /** The StructureRefrigeratedVendingMachine prefab. */
   companion object : Prefab()
 }
@@ -40344,6 +43636,9 @@ object RefrigeratedVendingMachines {
     var Setting: Double
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -40487,6 +43782,9 @@ object RefrigeratedVendingMachines {
 
     val TotalMoles: Double
       get() = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Reading>
+      get() = intrinsic()
   }
 }
 
@@ -40583,6 +43881,15 @@ class RoboticArmDock internal constructor() : TypedDevice() {
     get() = intrinsic()
     set(value) = intrinsic()
 
+  /** The device's slots, by number. */
+  val slots: Slots<DataDiskSlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val ArmSlot: DataDiskSlot
+    get() = intrinsic()
+
   /** The StructureRoboticArmDock prefab. */
   companion object : Prefab()
 }
@@ -40624,6 +43931,9 @@ object RoboticArmDocks {
     var Setting: Double
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -40652,6 +43962,9 @@ object RoboticArmDocks {
       get() = intrinsic()
 
     val Setting: Double
+      get() = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Reading>
       get() = intrinsic()
   }
 }
@@ -41252,6 +44565,15 @@ class RocketCircuitHousing internal constructor() : TypedDevice() {
   val StackSize: Double
     get() = intrinsic()
 
+  /** The device's slots, by number. */
+  val slots: Slots<ProgrammableChipSlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val ProgrammableChip: ProgrammableChipSlot
+    get() = intrinsic()
+
   /** The StructureRocketCircuitHousing prefab. */
   companion object : Prefab()
 }
@@ -41297,6 +44619,9 @@ object RocketCircuitHousings {
     var Setting: Double
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<ProgrammableChipSlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -41322,6 +44647,9 @@ object RocketCircuitHousings {
       get() = intrinsic()
 
     val StackSize: Double
+      get() = intrinsic()
+
+    val slots: Slots<ProgrammableChipSlot.Reading>
       get() = intrinsic()
   }
 }
@@ -41898,6 +45226,15 @@ class RocketFiltrationGas internal constructor() : TypedDevice() {
   val TotalMolesOutput2: Double
     get() = intrinsic()
 
+  /** The device's slots, by number. */
+  val slots: Slots<FilterSlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val GasFilter: FilterSlot
+    get() = intrinsic()
+
   /** The StructureRocketFiltrationGas prefab. */
   companion object : Prefab()
 }
@@ -41943,6 +45280,9 @@ object RocketFiltrationGases {
     var Setting: Double
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<FilterSlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -42259,6 +45599,9 @@ object RocketFiltrationGases {
       get() = intrinsic()
 
     val TotalMolesOutput2: Double
+      get() = intrinsic()
+
+    val slots: Slots<FilterSlot.Reading>
       get() = intrinsic()
   }
 }
@@ -42577,6 +45920,20 @@ class RocketManufactory internal constructor() : TypedDevice() {
   val StackSize: Double
     get() = intrinsic()
 
+  /** The device's slots, by number. */
+  val slots: Slots<DataDiskSlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val Import: DataDiskSlot
+    get() = intrinsic()
+
+  /** Slot 1. */
+  @SlotNumber(1)
+  val Export: DataDiskSlot
+    get() = intrinsic()
+
   /** The StructureRocketManufactory prefab. */
   companion object : Prefab()
 }
@@ -42630,6 +45987,9 @@ object RocketManufactories {
     var RecipeHash: Double
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -42674,6 +46034,9 @@ object RocketManufactories {
 
     val StackSize: Double
       get() = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Reading>
+      get() = intrinsic()
   }
 }
 
@@ -42711,6 +46074,20 @@ class RocketMiner internal constructor() : TypedDevice() {
     get() = intrinsic()
 
   val RequiredPower: Double
+    get() = intrinsic()
+
+  /** The device's slots, by number. */
+  val slots: Slots<DataDiskSlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val Export: DataDiskSlot
+    get() = intrinsic()
+
+  /** Slot 1. */
+  @SlotNumber(1)
+  val DrillHeadSlot: DataDiskSlot
     get() = intrinsic()
 
   /** The StructureRocketMiner prefab. */
@@ -42754,6 +46131,9 @@ object RocketMiners {
     var On: Boolean
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -42786,6 +46166,9 @@ object RocketMiners {
 
     val RequiredPower: Double
       get() = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Reading>
+      get() = intrinsic()
   }
 }
 
@@ -42807,6 +46190,15 @@ class RocketScanner internal constructor() : TypedDevice() {
     get() = intrinsic()
 
   val RequiredPower: Double
+    get() = intrinsic()
+
+  /** The device's slots, by number. */
+  val slots: Slots<DataDiskSlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val ScannerHeadSlot: DataDiskSlot
     get() = intrinsic()
 
   /** The StructureRocketScanner prefab. */
@@ -42846,6 +46238,9 @@ object RocketScanners {
     var On: Boolean
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -42862,6 +46257,9 @@ object RocketScanners {
       get() = intrinsic()
 
     val RequiredPower: Double
+      get() = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Reading>
       get() = intrinsic()
   }
 }
@@ -42980,6 +46378,15 @@ class SDBHopper internal constructor() : TypedDevice() {
     get() = intrinsic()
     set(value) = intrinsic()
 
+  /** The device's slots, by number. */
+  val slots: Slots<DataDiskSlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val Import: DataDiskSlot
+    get() = intrinsic()
+
   /** The StructureSDBHopper prefab. */
   companion object : Prefab()
 }
@@ -43017,6 +46424,9 @@ object SDBHoppers {
     var Open: Boolean
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -43027,6 +46437,9 @@ object SDBHoppers {
       get() = intrinsic()
 
     val Open: Double
+      get() = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Reading>
       get() = intrinsic()
   }
 }
@@ -43048,6 +46461,15 @@ class SDBHopperAdvanced internal constructor() : TypedDevice() {
   var Open: Boolean
     get() = intrinsic()
     set(value) = intrinsic()
+
+  /** The device's slots, by number. */
+  val slots: Slots<DataDiskSlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val Import: DataDiskSlot
+    get() = intrinsic()
 
   /** The StructureSDBHopperAdvanced prefab. */
   companion object : Prefab()
@@ -43090,6 +46512,9 @@ object SDBHopperAdvanceds {
     var Open: Boolean
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -43103,6 +46528,9 @@ object SDBHopperAdvanceds {
       get() = intrinsic()
 
     val Open: Double
+      get() = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Reading>
       get() = intrinsic()
   }
 }
@@ -43150,6 +46578,20 @@ class SDBSilo internal constructor() : TypedDevice() {
     get() = intrinsic()
 
   val RequiredPower: Double
+    get() = intrinsic()
+
+  /** The device's slots, by number. */
+  val slots: Slots<DataDiskSlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val Import: DataDiskSlot
+    get() = intrinsic()
+
+  /** Slot 1. */
+  @SlotNumber(1)
+  val Export: DataDiskSlot
     get() = intrinsic()
 
   /** The StructureSDBSilo prefab. */
@@ -43205,6 +46647,9 @@ object SDBSilos {
     var Open: Boolean
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -43242,6 +46687,9 @@ object SDBSilos {
       get() = intrinsic()
 
     val RequiredPower: Double
+      get() = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Reading>
       get() = intrinsic()
   }
 }
@@ -43495,6 +46943,20 @@ class SecurityPrinter internal constructor() : TypedDevice() {
   val StackSize: Double
     get() = intrinsic()
 
+  /** The device's slots, by number. */
+  val slots: Slots<DataDiskSlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val Import: DataDiskSlot
+    get() = intrinsic()
+
+  /** Slot 1. */
+  @SlotNumber(1)
+  val Export: DataDiskSlot
+    get() = intrinsic()
+
   /** The StructureSecurityPrinter prefab. */
   companion object : Prefab()
 }
@@ -43548,6 +47010,9 @@ object SecurityPrinters {
     var RecipeHash: Double
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -43592,6 +47057,9 @@ object SecurityPrinters {
 
     val StackSize: Double
       get() = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Reading>
+      get() = intrinsic()
   }
 }
 
@@ -43601,6 +47069,10 @@ class ShelfMedium internal constructor() : TypedDevice() {
   var Open: Boolean
     get() = intrinsic()
     set(value) = intrinsic()
+
+  /** The device's slots, by number. */
+  val slots: Slots<DataDiskSlot>
+    get() = intrinsic()
 
   /** The StructureShelfMedium prefab. */
   companion object : Prefab()
@@ -43635,10 +47107,16 @@ object ShelfMediums {
     var Open: Boolean
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
     val Open: Double
+      get() = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Reading>
       get() = intrinsic()
   }
 }
@@ -43653,6 +47131,10 @@ class ShortCornerLocker internal constructor() : TypedDevice() {
   var Open: Boolean
     get() = intrinsic()
     set(value) = intrinsic()
+
+  /** The device's slots, by number. */
+  val slots: Slots<DataDiskSlot>
+    get() = intrinsic()
 
   /** The StructureShortCornerLocker prefab. */
   companion object : Prefab()
@@ -43691,6 +47173,9 @@ object ShortCornerLockers {
     var Open: Boolean
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -43698,6 +47183,9 @@ object ShortCornerLockers {
       get() = intrinsic()
 
     val Open: Double
+      get() = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Reading>
       get() = intrinsic()
   }
 }
@@ -43712,6 +47200,10 @@ class ShortLocker internal constructor() : TypedDevice() {
   var Open: Boolean
     get() = intrinsic()
     set(value) = intrinsic()
+
+  /** The device's slots, by number. */
+  val slots: Slots<DataDiskSlot>
+    get() = intrinsic()
 
   /** The StructureShortLocker prefab. */
   companion object : Prefab()
@@ -43750,6 +47242,9 @@ object ShortLockers {
     var Open: Boolean
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -43757,6 +47252,9 @@ object ShortLockers {
       get() = intrinsic()
 
     val Open: Double
+      get() = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Reading>
       get() = intrinsic()
   }
 }
@@ -43961,6 +47459,15 @@ class Sleeper internal constructor() : TypedDevice() {
     get() = intrinsic()
     set(value) = intrinsic()
 
+  /** The device's slots, by number. */
+  val slots: Slots<DataDiskSlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val Bed: DataDiskSlot
+    get() = intrinsic()
+
   /** The StructureSleeper prefab. */
   companion object : Prefab()
 }
@@ -44010,6 +47517,9 @@ object Sleepers {
     var Setting: Double
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -44044,6 +47554,9 @@ object Sleepers {
       get() = intrinsic()
 
     val Setting: Double
+      get() = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Reading>
       get() = intrinsic()
   }
 }
@@ -44092,6 +47605,15 @@ class SleeperLeft internal constructor() : TypedDevice() {
   var Setting: Double
     get() = intrinsic()
     set(value) = intrinsic()
+
+  /** The device's slots, by number. */
+  val slots: Slots<DataDiskSlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val Player: DataDiskSlot
+    get() = intrinsic()
 
   /** The StructureSleeperLeft prefab. */
   companion object : Prefab()
@@ -44146,6 +47668,9 @@ object SleeperLefts {
     var Setting: Double
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -44183,6 +47708,9 @@ object SleeperLefts {
       get() = intrinsic()
 
     val Setting: Double
+      get() = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Reading>
       get() = intrinsic()
   }
 }
@@ -44231,6 +47759,15 @@ class SleeperRight internal constructor() : TypedDevice() {
   var Setting: Double
     get() = intrinsic()
     set(value) = intrinsic()
+
+  /** The device's slots, by number. */
+  val slots: Slots<DataDiskSlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val Player: DataDiskSlot
+    get() = intrinsic()
 
   /** The StructureSleeperRight prefab. */
   companion object : Prefab()
@@ -44285,6 +47822,9 @@ object SleeperRights {
     var Setting: Double
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -44322,6 +47862,9 @@ object SleeperRights {
       get() = intrinsic()
 
     val Setting: Double
+      get() = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Reading>
       get() = intrinsic()
   }
 }
@@ -44370,6 +47913,15 @@ class SleeperVertical internal constructor() : TypedDevice() {
   var Setting: Double
     get() = intrinsic()
     set(value) = intrinsic()
+
+  /** The device's slots, by number. */
+  val slots: Slots<DataDiskSlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val Player: DataDiskSlot
+    get() = intrinsic()
 
   /** The StructureSleeperVertical prefab. */
   companion object : Prefab()
@@ -44424,6 +47976,9 @@ object SleeperVerticals {
     var Setting: Double
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -44462,6 +48017,9 @@ object SleeperVerticals {
 
     val Setting: Double
       get() = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Reading>
+      get() = intrinsic()
   }
 }
 
@@ -44491,6 +48049,15 @@ class SleeperVerticalDroid internal constructor() : TypedDevice() {
     get() = intrinsic()
 
   val RequiredPower: Double
+    get() = intrinsic()
+
+  /** The device's slots, by number. */
+  val slots: Slots<DataDiskSlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val Player: DataDiskSlot
     get() = intrinsic()
 
   /** The StructureSleeperVerticalDroid prefab. */
@@ -44538,6 +48105,9 @@ object SleeperVerticalDroids {
     var Open: Boolean
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -44560,6 +48130,9 @@ object SleeperVerticalDroids {
       get() = intrinsic()
 
     val RequiredPower: Double
+      get() = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Reading>
       get() = intrinsic()
   }
 }
@@ -45573,6 +49146,15 @@ class SolidFuelGenerator internal constructor() : TypedDevice() {
   val PowerGeneration: Double
     get() = intrinsic()
 
+  /** The device's slots, by number. */
+  val slots: Slots<DataDiskSlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val Input: DataDiskSlot
+    get() = intrinsic()
+
   /** The StructureSolidFuelGenerator prefab. */
   companion object : Prefab()
 }
@@ -45614,6 +49196,9 @@ object SolidFuelGenerators {
     var On: Boolean
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -45630,6 +49215,9 @@ object SolidFuelGenerators {
       get() = intrinsic()
 
     val PowerGeneration: Double
+      get() = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Reading>
       get() = intrinsic()
   }
 }
@@ -45670,6 +49258,25 @@ class Sorter internal constructor() : TypedDevice() {
     get() = intrinsic()
 
   val RequiredPower: Double
+    get() = intrinsic()
+
+  /** The device's slots, by number. */
+  val slots: Slots<DataDiskSlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val Import: DataDiskSlot
+    get() = intrinsic()
+
+  /** Slot 1. */
+  @SlotNumber(1)
+  val Export: DataDiskSlot
+    get() = intrinsic()
+
+  /** Slot 2. */
+  @SlotNumber(2)
+  val Export2: DataDiskSlot
     get() = intrinsic()
 
   /** The StructureSorter prefab. */
@@ -45721,6 +49328,9 @@ object Sorters {
     var Output: Double
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -45752,6 +49362,9 @@ object Sorters {
       get() = intrinsic()
 
     val RequiredPower: Double
+      get() = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Reading>
       get() = intrinsic()
   }
 }
@@ -45801,6 +49414,25 @@ class Stacker internal constructor() : TypedDevice() {
   var Setting: Double
     get() = intrinsic()
     set(value) = intrinsic()
+
+  /** The device's slots, by number. */
+  val slots: Slots<DataDiskSlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val Import: DataDiskSlot
+    get() = intrinsic()
+
+  /** Slot 1. */
+  @SlotNumber(1)
+  val Export: DataDiskSlot
+    get() = intrinsic()
+
+  /** Slot 2. */
+  @SlotNumber(2)
+  val Processing: DataDiskSlot
+    get() = intrinsic()
 
   /** The StructureStacker prefab. */
   companion object : Prefab()
@@ -45859,6 +49491,9 @@ object Stackers {
     var Setting: Double
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -45896,6 +49531,9 @@ object Stackers {
       get() = intrinsic()
 
     val Setting: Double
+      get() = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Reading>
       get() = intrinsic()
   }
 }
@@ -45945,6 +49583,25 @@ class StackerReverse internal constructor() : TypedDevice() {
   var Setting: Double
     get() = intrinsic()
     set(value) = intrinsic()
+
+  /** The device's slots, by number. */
+  val slots: Slots<DataDiskSlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val Import: DataDiskSlot
+    get() = intrinsic()
+
+  /** Slot 1. */
+  @SlotNumber(1)
+  val Export: DataDiskSlot
+    get() = intrinsic()
+
+  /** Slot 2. */
+  @SlotNumber(2)
+  val Processing: DataDiskSlot
+    get() = intrinsic()
 
   /** The StructureStackerReverse prefab. */
   companion object : Prefab()
@@ -46003,6 +49660,9 @@ object StackerReverses {
     var Setting: Double
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -46040,6 +49700,9 @@ object StackerReverses {
       get() = intrinsic()
 
     val Setting: Double
+      get() = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Reading>
       get() = intrinsic()
   }
 }
@@ -46181,6 +49844,15 @@ class StirlingEngine internal constructor() : TypedDevice() {
   val WorkingGasEfficiency: Double
     get() = intrinsic()
 
+  /** The device's slots, by number. */
+  val slots: Slots<GasCanisterSlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val GasCanister: GasCanisterSlot
+    get() = intrinsic()
+
   /** The StructureStirlingEngine prefab. */
   companion object : Prefab()
 }
@@ -46218,6 +49890,9 @@ object StirlingEngines {
     var Setting: Double
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<GasCanisterSlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -46352,6 +50027,9 @@ object StirlingEngines {
 
     val WorkingGasEfficiency: Double
       get() = intrinsic()
+
+    val slots: Slots<GasCanisterSlot.Reading>
+      get() = intrinsic()
   }
 }
 
@@ -46365,6 +50043,10 @@ class StorageLocker internal constructor() : TypedDevice() {
   var Open: Boolean
     get() = intrinsic()
     set(value) = intrinsic()
+
+  /** The device's slots, by number. */
+  val slots: Slots<DataDiskSlot>
+    get() = intrinsic()
 
   /** The StructureStorageLocker prefab. */
   companion object : Prefab()
@@ -46403,6 +50085,9 @@ object StorageLockers {
     var Open: Boolean
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -46410,6 +50095,9 @@ object StorageLockers {
       get() = intrinsic()
 
     val Open: Double
+      get() = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Reading>
       get() = intrinsic()
   }
 }
@@ -46439,6 +50127,25 @@ class SuitStorage internal constructor() : TypedDevice() {
   var Setting: Double
     get() = intrinsic()
     set(value) = intrinsic()
+
+  /** The device's slots, by number. */
+  val slots: Slots<CommonSlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val Helmet: HelmetSlot
+    get() = intrinsic()
+
+  /** Slot 1. */
+  @SlotNumber(1)
+  val Suit: SuitSlot
+    get() = intrinsic()
+
+  /** Slot 2. */
+  @SlotNumber(2)
+  val Back: BackSlot
+    get() = intrinsic()
 
   /** The StructureSuitStorage prefab. */
   companion object : Prefab()
@@ -46477,6 +50184,9 @@ object SuitStorages {
     var Setting: Double
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<CommonSlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -46499,6 +50209,9 @@ object SuitStorages {
       get() = intrinsic()
 
     val Setting: Double
+      get() = intrinsic()
+
+    val slots: Slots<CommonSlot.Reading>
       get() = intrinsic()
   }
 }
@@ -46528,6 +50241,25 @@ class SuitStorageFrame internal constructor() : TypedDevice() {
   var Setting: Double
     get() = intrinsic()
     set(value) = intrinsic()
+
+  /** The device's slots, by number. */
+  val slots: Slots<CommonSlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val Helmet: HelmetSlot
+    get() = intrinsic()
+
+  /** Slot 1. */
+  @SlotNumber(1)
+  val Suit: SuitSlot
+    get() = intrinsic()
+
+  /** Slot 2. */
+  @SlotNumber(2)
+  val Back: BackSlot
+    get() = intrinsic()
 
   /** The StructureSuitStorageFrame prefab. */
   companion object : Prefab()
@@ -46566,6 +50298,9 @@ object SuitStorageFrames {
     var Setting: Double
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<CommonSlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -46588,6 +50323,9 @@ object SuitStorageFrames {
       get() = intrinsic()
 
     val Setting: Double
+      get() = intrinsic()
+
+    val slots: Slots<CommonSlot.Reading>
       get() = intrinsic()
   }
 }
@@ -46617,6 +50355,25 @@ class SuitStorageLocker internal constructor() : TypedDevice() {
   var Setting: Double
     get() = intrinsic()
     set(value) = intrinsic()
+
+  /** The device's slots, by number. */
+  val slots: Slots<CommonSlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val Helmet: HelmetSlot
+    get() = intrinsic()
+
+  /** Slot 1. */
+  @SlotNumber(1)
+  val Suit: SuitSlot
+    get() = intrinsic()
+
+  /** Slot 2. */
+  @SlotNumber(2)
+  val Back: BackSlot
+    get() = intrinsic()
 
   /** The StructureSuitStorageLocker prefab. */
   companion object : Prefab()
@@ -46655,6 +50412,9 @@ object SuitStorageLockers {
     var Setting: Double
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<CommonSlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -46677,6 +50437,9 @@ object SuitStorageLockers {
       get() = intrinsic()
 
     val Setting: Double
+      get() = intrinsic()
+
+    val slots: Slots<CommonSlot.Reading>
       get() = intrinsic()
   }
 }
@@ -46912,6 +50675,20 @@ class ToolManufactory internal constructor() : TypedDevice() {
   val StackSize: Double
     get() = intrinsic()
 
+  /** The device's slots, by number. */
+  val slots: Slots<DataDiskSlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val Import: DataDiskSlot
+    get() = intrinsic()
+
+  /** Slot 1. */
+  @SlotNumber(1)
+  val Export: DataDiskSlot
+    get() = intrinsic()
+
   /** The StructureToolManufactory prefab. */
   companion object : Prefab()
 }
@@ -46965,6 +50742,9 @@ object ToolManufactories {
     var RecipeHash: Double
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -47008,6 +50788,9 @@ object ToolManufactories {
       get() = intrinsic()
 
     val StackSize: Double
+      get() = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Reading>
       get() = intrinsic()
   }
 }
@@ -47727,6 +51510,20 @@ class Unloader internal constructor() : TypedDevice() {
   val RequiredPower: Double
     get() = intrinsic()
 
+  /** The device's slots, by number. */
+  val slots: Slots<DataDiskSlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val Import: DataDiskSlot
+    get() = intrinsic()
+
+  /** Slot 1. */
+  @SlotNumber(1)
+  val Export: DataDiskSlot
+    get() = intrinsic()
+
   /** The StructureUnloader prefab. */
   companion object : Prefab()
 }
@@ -47776,6 +51573,9 @@ object Unloaders {
     var Output: Double
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -47807,6 +51607,9 @@ object Unloaders {
       get() = intrinsic()
 
     val RequiredPower: Double
+      get() = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Reading>
       get() = intrinsic()
   }
 }
@@ -47975,6 +51778,20 @@ class VendingMachine internal constructor() : TypedDevice() {
   val TargetSlotIndex: Double
     get() = intrinsic()
 
+  /** The device's slots, by number. */
+  val slots: Slots<DataDiskSlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val Import: DataDiskSlot
+    get() = intrinsic()
+
+  /** Slot 1. */
+  @SlotNumber(1)
+  val Export: DataDiskSlot
+    get() = intrinsic()
+
   /** The StructureVendingMachine prefab. */
   companion object : Prefab()
 }
@@ -48024,6 +51841,9 @@ object VendingMachines {
     var RequestHash: Double
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -48067,6 +51887,9 @@ object VendingMachines {
       get() = intrinsic()
 
     val TargetSlotIndex: Double
+      get() = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Reading>
       get() = intrinsic()
   }
 }
@@ -48121,6 +51944,20 @@ class VendingMachineSmall internal constructor() : TypedDevice() {
   val TargetSlotIndex: Double
     get() = intrinsic()
 
+  /** The device's slots, by number. */
+  val slots: Slots<DataDiskSlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val Import: DataDiskSlot
+    get() = intrinsic()
+
+  /** Slot 1. */
+  @SlotNumber(1)
+  val Export: DataDiskSlot
+    get() = intrinsic()
+
   /** The StructureVendingMachineSmall prefab. */
   companion object : Prefab()
 }
@@ -48170,6 +52007,9 @@ object VendingMachineSmalls {
     var RequestHash: Double
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -48213,6 +52053,9 @@ object VendingMachineSmalls {
       get() = intrinsic()
 
     val TargetSlotIndex: Double
+      get() = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Reading>
       get() = intrinsic()
   }
 }
@@ -48422,6 +52265,15 @@ class WallCooler internal constructor() : TypedDevice() {
   val TotalMolesOutput: Double
     get() = intrinsic()
 
+  /** The device's slots, by number. */
+  val slots: Slots<DataDiskSlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val DataDisk: DataDiskSlot
+    get() = intrinsic()
+
   /** The StructureWallCooler prefab. */
   companion object : Prefab()
 }
@@ -48463,6 +52315,9 @@ object WallCoolers {
     var Setting: Double
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -48564,6 +52419,9 @@ object WallCoolers {
 
     val TotalMolesOutput: Double
       get() = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Reading>
+      get() = intrinsic()
   }
 }
 
@@ -48585,6 +52443,15 @@ class WallHeater internal constructor() : TypedDevice() {
     get() = intrinsic()
 
   val RequiredPower: Double
+    get() = intrinsic()
+
+  /** The device's slots, by number. */
+  val slots: Slots<DataDiskSlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val DataDisk: DataDiskSlot
     get() = intrinsic()
 
   /** The StructureWallHeater prefab. */
@@ -48624,6 +52491,9 @@ object WallHeaters {
     var On: Boolean
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -48640,6 +52510,9 @@ object WallHeaters {
       get() = intrinsic()
 
     val RequiredPower: Double
+      get() = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Reading>
       get() = intrinsic()
   }
 }
@@ -48732,6 +52605,15 @@ class WallLightBattery internal constructor() : TypedDevice() {
   val RequiredPower: Double
     get() = intrinsic()
 
+  /** The device's slots, by number. */
+  val slots: Slots<BatterySlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val Battery: BatterySlot
+    get() = intrinsic()
+
   /** The StructureWallLightBattery prefab. */
   companion object : Prefab()
 }
@@ -48769,6 +52651,9 @@ object WallLightBatteries {
     var On: Boolean
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<BatterySlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -48782,6 +52667,9 @@ object WallLightBatteries {
       get() = intrinsic()
 
     val RequiredPower: Double
+      get() = intrinsic()
+
+    val slots: Slots<BatterySlot.Reading>
       get() = intrinsic()
   }
 }
@@ -48804,6 +52692,10 @@ class WaterBottleFillerPowered internal constructor() : TypedDevice() {
     get() = intrinsic()
 
   val RequiredPower: Double
+    get() = intrinsic()
+
+  /** The device's slots, by number. */
+  val slots: Slots<GasCanisterSlot>
     get() = intrinsic()
 
   /** The StructureWaterBottleFillerPowered prefab. */
@@ -48843,6 +52735,9 @@ object WaterBottleFillerPowereds {
     var On: Boolean
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<GasCanisterSlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -48859,6 +52754,9 @@ object WaterBottleFillerPowereds {
       get() = intrinsic()
 
     val RequiredPower: Double
+      get() = intrinsic()
+
+    val slots: Slots<GasCanisterSlot.Reading>
       get() = intrinsic()
   }
 }
@@ -48881,6 +52779,10 @@ class WaterBottleFillerPoweredBottom internal constructor() : TypedDevice() {
     get() = intrinsic()
 
   val RequiredPower: Double
+    get() = intrinsic()
+
+  /** The device's slots, by number. */
+  val slots: Slots<GasCanisterSlot>
     get() = intrinsic()
 
   /** The StructureWaterBottleFillerPoweredBottom prefab. */
@@ -48920,6 +52822,9 @@ object WaterBottleFillerPoweredBottoms {
     var On: Boolean
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<GasCanisterSlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -48936,6 +52841,9 @@ object WaterBottleFillerPoweredBottoms {
       get() = intrinsic()
 
     val RequiredPower: Double
+      get() = intrinsic()
+
+    val slots: Slots<GasCanisterSlot.Reading>
       get() = intrinsic()
   }
 }
@@ -49067,6 +52975,15 @@ class WaterPurifier internal constructor() : TypedDevice() {
   val RequiredPower: Double
     get() = intrinsic()
 
+  /** The device's slots, by number. */
+  val slots: Slots<DataDiskSlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val Import: DataDiskSlot
+    get() = intrinsic()
+
   /** The StructureWaterPurifier prefab. */
   companion object : Prefab()
 }
@@ -49108,6 +53025,9 @@ object WaterPurifiers {
     var On: Boolean
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -49130,6 +53050,9 @@ object WaterPurifiers {
       get() = intrinsic()
 
     val RequiredPower: Double
+      get() = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Reading>
       get() = intrinsic()
   }
 }
@@ -49239,6 +53162,15 @@ class WaterWallCooler internal constructor() : TypedDevice() {
   val TotalMolesOutput: Double
     get() = intrinsic()
 
+  /** The device's slots, by number. */
+  val slots: Slots<DataDiskSlot>
+    get() = intrinsic()
+
+  /** Slot 0. */
+  @SlotNumber(0)
+  val DataDisk: DataDiskSlot
+    get() = intrinsic()
+
   /** The StructureWaterWallCooler prefab. */
   companion object : Prefab()
 }
@@ -49280,6 +53212,9 @@ object WaterWallCoolers {
     var Setting: Double
       @Deprecated(PICK_A_BATCH_METHOD, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Batch>
+      get() = intrinsic()
   }
 
   class Reading internal constructor() : BatchReading() {
@@ -49380,6 +53315,9 @@ object WaterWallCoolers {
       get() = intrinsic()
 
     val TotalMolesOutput: Double
+      get() = intrinsic()
+
+    val slots: Slots<DataDiskSlot.Reading>
       get() = intrinsic()
   }
 }
