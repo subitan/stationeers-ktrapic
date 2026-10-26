@@ -57,6 +57,7 @@ data class LogicEnums(val source: String, val enums: Map<String, Map<String, Int
  *   thing that isn't a structure (an item, a robot, a rover): fewer than a structure's. A thing's
  *   slots can't be written at all.
  * @property thingSlotReadsByKind the further slot logic types a thing's slot of each kind can read.
+ *   Each kind must be one of the prefab data's slot kinds, which the generator checks.
  * @property slottedThings the prefabs with slots that are things rather than structures. Prefabs
  *   named `Structure...` are structures; every other prefab with slots must be listed here or in
  *   [slottedStructures], which the generator checks, since a name doesn't always say which it is.

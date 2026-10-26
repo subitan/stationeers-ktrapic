@@ -82,4 +82,46 @@ class RuntimeGeneratorTest {
       RuntimeGenerator.generate(enums, Typing(listOf("LogicType"), listOf("Missing")))
     }
   }
+
+  @Test
+  fun `rejects thing slot reads that name slot logic types or slot kinds the data lacks`() {
+    val slotEnums =
+        PyTrapicImport.enums(
+            """
+            |class LogicType(_IntEnum):
+            |    On = 28
+            |
+            |
+            |class LogicSlotType(_IntEnum):
+            |    Charge = 1
+            |    Occupied = 2
+            """
+                .trimMargin(),
+            "test",
+        )
+    val prefabs = Prefabs("test", emptyList(), mapOf("Battery" to listOf("Charge")))
+    val grouping = Grouping(emptyMap(), emptyList())
+    fun generate(always: List<String>, byKind: Map<String, List<String>>) =
+        RuntimeGenerator.generate(
+            slotEnums,
+            Typing(
+                listOf("LogicType"),
+                listOf("On"),
+                thingSlotReadsAlways = always,
+                thingSlotReadsByKind = byKind,
+            ),
+            prefabs,
+            grouping,
+        )
+
+    generate(listOf("Occupied"), mapOf("Battery" to listOf("Charge")))
+    for ((always, byKind) in
+        listOf(
+            listOf("Ocupied") to mapOf("Battery" to listOf("Charge")),
+            listOf("Occupied") to mapOf("Battery" to listOf("Charj")),
+            listOf("Occupied") to mapOf("Batery" to listOf("Charge")),
+        )) {
+      assertThrows<IllegalArgumentException>("$always $byKind") { generate(always, byKind) }
+    }
+  }
 }

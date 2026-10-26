@@ -316,15 +316,28 @@ class PrefabGeneratorTest {
             mapOf("On" to Access(true, true)),
             mapOf(0 to SlotInfo("Battery", "Battery"), 1 to SlotInfo("Common")),
         )
-    val data =
-        Prefabs(
-            "test",
-            listOf(tablet),
-            mapOf("Battery" to listOf("Charge", "Quantity"), "Common" to listOf("Quantity")),
+    // A prefab named as a structure, which can't be listed as a thing.
+    val dock =
+        Prefab(
+            "StructureDock",
+            hash("StructureDock"),
+            mapOf("On" to Access(true, true)),
+            mapOf(0 to SlotInfo("Common")),
         )
-    fun generate(things: List<String>, structures: List<String> = emptyList()) =
+    fun generate(
+        things: List<String>,
+        structures: List<String> = emptyList(),
+        prefabs: List<Prefab> = listOf(tablet),
+    ) =
         PrefabGenerator.generate(
-                data,
+                Prefabs(
+                    "test",
+                    prefabs,
+                    mapOf(
+                        "Battery" to listOf("Charge", "Quantity"),
+                        "Common" to listOf("Quantity"),
+                    ),
+                ),
                 Grouping(emptyMap(), emptyList()),
                 setOf("LogicType"),
                 typing.copy(
@@ -349,12 +362,19 @@ class PrefabGeneratorTest {
         )
     assertThat(code).contains("  val slots: Slots<ItemCommonSlot>\n")
     assertThat(code).contains("  @SlotNumber(0)\n  val Battery: ItemBatterySlot\n")
-    // Unlisted, listed twice, or listed without slots, the generator refuses.
+    // A batch of tablets reads its slots as things' slots too.
+    assertThat(code).contains("    val slots: Slots<SlotBatch<ItemCommonSlot>>\n")
+    // A structure among the prefabs keeps the structure rules.
+    assertThat(generate(listOf("ItemTablet"), prefabs = listOf(tablet, dock)))
+        .contains("    val slots: Slots<SlotBatch<CommonSlot>>\n")
+    // Unlisted, listed twice, listed without slots, or named as a structure, the generator
+    // refuses.
     for (bad in
         listOf(
             { generate(emptyList()) },
             { generate(listOf("ItemTablet"), listOf("ItemTablet")) },
             { generate(listOf("ItemTablet", "ItemMissing")) },
+            { generate(listOf("ItemTablet", "StructureDock"), prefabs = listOf(tablet, dock)) },
         )) {
       assertThrows<IllegalArgumentException> { bad() }
     }
