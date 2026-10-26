@@ -42,7 +42,7 @@ class DeviceReferenceGeneratorTest {
             "/** StructureTransformerMedium(Reversed). Entry point: TransformerMedium_Reverseds. */\n" +
                 "class TransformerMedium_Reversed : TypedDevice {\n"
         )
-    assertThat(reference).contains("1 prefabs in all")
+    assertThat(reference).contains("1 prefab in all")
   }
 
   @Test
@@ -62,6 +62,30 @@ class DeviceReferenceGeneratorTest {
         assertThrows<IllegalArgumentException> {
           DeviceReferenceGenerator.generate(source, enums, typing)
         }
-    assertThat(error).hasMessageThat().contains("without a recognized @PrefabName")
+    assertThat(error).hasMessageThat().contains("recognized @PrefabName")
+  }
+
+  @Test
+  fun `rejects a typed device whose header it cannot read`() {
+    val source =
+        device("StructureVent", "Vent") +
+            device("StructureHidden", "Hidden")
+                .replace("class Hidden internal", "internal class Hidden internal")
+
+    val error =
+        assertThrows<IllegalArgumentException> {
+          DeviceReferenceGenerator.generate(source, enums, typing)
+        }
+    assertThat(error).hasMessageThat().contains("2 typed device(s) but 1 were read")
+  }
+
+  @Test
+  fun `lists a typed device whose header is wrapped`() {
+    val source =
+        device("StructureHidden", "Hidden").replace(": TypedDevice() {", ":\n    TypedDevice() {")
+
+    val reference = DeviceReferenceGenerator.generate(source, enums, typing)
+
+    assertThat(reference).contains("/** StructureHidden. Entry point: Hiddens. */\n")
   }
 }

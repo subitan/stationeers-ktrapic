@@ -4,7 +4,8 @@ package ktrapic.datagen
  * Generates `docs/DEVICES.md`, the API reference of what programs can name, written as Kotlin
  * declarations: every typed device (its logic types as `var` or `val`, its slots, and in a comment
  * its prefab and entry point), the device families, the slot types, and the game's enums. It reads
- * the generated runtime sources, so it lists exactly what the compiler accepts.
+ * the generated runtime sources, so it lists what the compiler accepts, and fails if a typed device
+ * there goes unlisted.
  */
 object DeviceReferenceGenerator {
   /** Where the file goes, relative to the workspace root. */
@@ -44,7 +45,6 @@ object DeviceReferenceGenerator {
     // The declarations enclosing the current line, by indentation.
     val enclosing = ArrayDeque<Pair<Int, String>>()
     var prefab: String? = null
-    var typedDevices = 0
     for ((index, line) in lines.withIndex()) {
       PREFAB_NAME.find(line)?.let { prefab = it.groupValues[1] }
       val match = DECLARATION.find(line) ?: continue
@@ -56,7 +56,6 @@ object DeviceReferenceGenerator {
       val properties = properties(members(lines, index, indent))
       val named = prefab
       prefab = null
-      if (kind == "class" && "TypedDevice()" in match.groupValues[4]) typedDevices++
       when {
         kind == "interface" -> families += Declaration(name, properties)
         kind == "class" && named != null -> devices += Declaration(name, properties, named)
@@ -65,9 +64,12 @@ object DeviceReferenceGenerator {
         kind == "object" && named != null -> entryPoints[named] = name
       }
     }
-    // A typed device whose prefab name went unread would otherwise be left out silently.
+    // Counted from the raw source, not from the declarations parsed above, so a typed device whose
+    // header or prefab name went unread fails here instead of being left out silently.
+    val typedDevices = lines.count { "TypedDevice()" in it }
     require(typedDevices == devices.size) {
-      "${typedDevices - devices.size} typed device(s) without a recognized @PrefabName"
+      "the source has $typedDevices typed device(s) but ${devices.size} were read with a " +
+          "recognized @PrefabName"
     }
     val missing = devices.mapNotNull { it.prefab } - entryPoints.keys
     require(missing.isEmpty()) { "prefabs without an entry point: $missing" }
@@ -84,7 +86,9 @@ object DeviceReferenceGenerator {
       append("# Devices\n")
       append("\n")
       append("The typed devices, slots and enums a program can name, as Kotlin declarations: ")
-      append("${devices.size} prefabs in all. The [language guide](LANGUAGE.md#devices) says how ")
+      append(
+          "${devices.size} prefab${if (devices.size == 1) "" else "s"} in all. The [language guide](LANGUAGE.md#devices) says how "
+      )
       append("to use them. Search this page for a game prefab name (`StructureGrowLight`) to find ")
       append("its type.\n")
       append("\n")
