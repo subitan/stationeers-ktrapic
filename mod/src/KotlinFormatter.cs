@@ -1,0 +1,284 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using Cysharp.Threading.Tasks;
+using ImGuiNET;
+using StationeersIC10Editor;
+using StationeersIC10Editor.IC10;
+
+namespace KTrapIC
+{
+    /// <summary>
+    /// The IC10 Editor's "Kotlin" language: KTrapIC programs, highlighted, compiled as they're
+    /// edited, with the IC10 shown in a read-only editor beside them and the IC10 lines of the
+    /// caret's line highlighted there. Exporting writes the IC10 to the chip with the Kotlin
+    /// source appended as encoded comments, which <see cref="ResetCode"/> reads back, so reopening
+    /// the chip shows the Kotlin.
+    /// </summary>
+    public class KotlinFormatter : StaticFormatter
+    {
+        /// <summary>The tag of the Kotlin source encoded in the comments after the IC10.</summary>
+        private const string SourceTag = "KTRAPIC_SOURCE";
+
+        private const int DebounceMs = 150;
+
+        // Indices into the IC10 Editor's ColorTheme, as its other languages use them.
+        private const uint Keyword = 15;
+        private const uint ControlFlow = 23;
+        private const uint Constant = 19;
+        private const uint Type = 1;
+
+        private static readonly Dictionary<string, uint> KotlinKeywords = new Dictionary<string, uint>
+        {
+            ["val"] = Keyword,
+            ["var"] = Keyword,
+            ["fun"] = Keyword,
+            ["import"] = Keyword,
+            ["inline"] = Keyword,
+            ["in"] = Keyword,
+            ["is"] = Keyword,
+            ["as"] = Keyword,
+            ["until"] = Keyword,
+            ["downTo"] = Keyword,
+            ["step"] = Keyword,
+            ["if"] = ControlFlow,
+            ["else"] = ControlFlow,
+            ["when"] = ControlFlow,
+            ["for"] = ControlFlow,
+            ["while"] = ControlFlow,
+            ["do"] = ControlFlow,
+            ["return"] = ControlFlow,
+            ["break"] = ControlFlow,
+            ["continue"] = ControlFlow,
+            ["true"] = Constant,
+            ["false"] = Constant,
+            ["Int"] = Type,
+            ["Double"] = Type,
+            ["Boolean"] = Type,
+            ["Unit"] = Type,
+        };
+
+        private static readonly uint PreviewHighlight = ColorFromHTML("#000080");
+
+        /// <summary>Bumped on every edit, so a compile can tell whether the code changed since it began.</summary>
+        private int _version;
+
+        /// <summary>The latest compile's response and the <see cref="_version"/> it compiled, swapped together.</summary>
+        private volatile Compiled _compiled;
+
+        private Editor _preview;
+
+        private sealed class Compiled
+        {
+            public readonly int Version;
+            public readonly bool Compact;
+            public readonly CompileResponse Response;
+
+            public Compiled(int version, bool compact, CompileResponse response)
+            {
+                Version = version;
+                Compact = compact;
+                Response = response;
+            }
+        }
+
+        public KotlinFormatter()
+            : base(
+                TokenSeparators: " \t()[]{}:.,;+-*/%=<>!&|^~?@",
+                StringDelimiters: "\"'",
+                CommentPrefix: "//",
+                Keywords: KotlinKeywords,
+                KeepWhitespaces: false)
+        {
+            OnCodeChanged += () =>
+            {
+                Interlocked.Increment(ref _version);
+                // ICodeFormatter's own handler measured the code before the version changed.
+                UpdateCodeSize();
+                CompileSoon().Forget();
+            };
+            OnCaretMoved += HighlightPreview;
+        }
+
+        /// <summary>
+        /// How sure the IC10 Editor can be that <paramref name="input"/> is a KTrapIC program, which
+        /// it uses to pick a language for code it opens. A chip exported from here, or a program
+        /// starting with <c>import ktrapic</c>, is certain; otherwise the score is the share of lines
+        /// that look like Kotlin, below what IC10 scores for IC10.
+        /// </summary>
+        public static double MatchingScore(string input)
+        {
+            if (string.IsNullOrWhiteSpace(input))
+                return 0;
+            if (input.Contains("# " + SourceTag + ":"))
+                return 2;
+            var lines = input.Split('\n').Select(line => line.Trim()).Where(line => line.Length > 0).ToList();
+            if (lines[0].StartsWith("import ktrapic"))
+                return 2;
+            string[] kotlin = { "val ", "var ", "fun ", "if (", "while (", "for (", "when ", "//", "}", "import " };
+            double looksLikeKotlin = lines.Count(line => kotlin.Any(line.StartsWith) || line.EndsWith("{"));
+            return 0.9 * looksLikeKotlin / lines.Count;
+        }
+
+        public override void ResetCode(string code)
+        {
+            string source = ExtractEncodedSource(code, SourceTag);
+            base.ResetCode(string.IsNullOrEmpty(source) ? code : source);
+        }
+
+        /// <summary>
+        /// The IC10 to write to the chip, followed by the encoded Kotlin source. The editor exports on
+        /// the main thread and takes the answer at once, so this uses the latest compile if it's of
+        /// the current code, and otherwise compiles here, waiting for the compiler. If the program
+        /// doesn't compile, the chip gets the error as a comment (and runs nothing), still with the
+        /// source.
+        /// </summary>
+        public override string Compile()
+        {
+            string source = RawText;
+            bool compact = Plugin.Compact.Value;
+            var compiled = _compiled;
+            var response =
+                compiled != null && compiled.Version == _version && compiled.Compact == compact
+                    ? compiled.Response
+                    : Daemon.CompileNow(source, compact);
+            string code;
+            if (response == null)
+                code = "# KTrapIC: the compiler is still starting; export again in a moment.";
+            else if (response.error != null)
+                code = "# KTrapIC: " + Describe(response.error).Replace("\n", "\n# ");
+            else
+                code = response.code;
+            return code + "\n" + EncodeSource(source, SourceTag);
+        }
+
+        /// <summary>
+        /// The size the editor checks against the chip's limits: the compiled IC10's, once the current
+        /// code has compiled, as the IC10 language reports its minified code's; until then the
+        /// Kotlin source's. The encoded source appended on export isn't counted, as the chip skips
+        /// comment lines.
+        /// </summary>
+        public override void UpdateCodeSize()
+        {
+            var compiled = _compiled;
+            var response = compiled?.Response;
+            if (compiled == null || compiled.Version != _version || response.error != null || response.code == null)
+            {
+                base.UpdateCodeSize();
+                return;
+            }
+            CodeSize.NumLines = response.num_lines;
+            CodeSize.NumBytes = response.num_bytes;
+            CodeSize.MaxLineLength = response.code.Split('\n').Max(line => line.Length);
+        }
+
+        public override void DrawButtons()
+        {
+            bool compact = Plugin.Compact.Value;
+            if (ImGuiUtils.Checkbox("Compact", ref compact, Plugin.Compact.Description.Description))
+            {
+                Plugin.Compact.Value = compact;
+                Interlocked.Increment(ref _version);
+                CompileSoon().Forget();
+            }
+            ImGui.SameLine();
+            ImGui.TextUnformatted(StatusText());
+        }
+
+        private string StatusText()
+        {
+            if (Runtime.Progress != null)
+                return Runtime.Progress + "...";
+            var response = _compiled?.Response;
+            if (response == null)
+                return Daemon.StartError ?? "Compiling...";
+            if (response.error != null)
+                return "Doesn't compile";
+            return $"{response.num_lines} lines, {response.num_bytes} bytes, {response.num_registers} registers";
+        }
+
+        private static string Describe(CompileResponse.Problem problem) =>
+            problem.line > 0
+                ? $"line {problem.line}, column {problem.column}: {problem.description}"
+                : problem.description;
+
+        /// <summary>Compiles the code once edits pause, then shows the result.</summary>
+        private async UniTaskVoid CompileSoon()
+        {
+            // A library's read-only view in the Library window isn't compiled.
+            if (Editor == null || Editor.IsReadOnly)
+                return;
+            int version = _version;
+            await UniTask.Delay(DebounceMs);
+            if (version != _version)
+                return;
+            string source = RawText;
+            bool compact = Plugin.Compact.Value;
+            var response = await Daemon.Compile(source, compact);
+            // Recorded before returning to the main thread, which Compile() may be blocking.
+            if (version != _version)
+                return;
+            _compiled = new Compiled(version, compact, response);
+            await UniTask.SwitchToMainThread();
+            if (version == _version)
+            {
+                UpdateCodeSize();
+                ShowPreview(response);
+            }
+        }
+
+        private Editor Preview
+        {
+            get
+            {
+                if (_preview == null)
+                {
+                    var tab = Editor.ParentTab;
+                    tab.ClearExtraEditors();
+                    _preview = new Editor(Editor.KeyHandler) { IsReadOnly = true };
+                    tab.AddEditor(_preview);
+                    _preview.CodeFormatter = new IC10CodeFormatter { Editor = _preview };
+                }
+                return _preview;
+            }
+        }
+
+        private void ShowPreview(CompileResponse response)
+        {
+            if (Editor?.ParentTab == null)
+                return;
+            string text = response.error != null
+                ? "# Doesn't compile, at " + Describe(response.error).Replace("\n", "\n# ")
+                : response.code ?? "";
+            var preview = Preview;
+            preview.CaretPos = new TextPosition(0, 0);
+            preview.CodeFormatter.ResetCode(text);
+            HighlightPreview();
+        }
+
+        /// <summary>Highlights, in the preview, the IC10 lines that the caret's line compiled to.</summary>
+        private void HighlightPreview()
+        {
+            if (_preview == null)
+                return;
+            // The IC10 formatter may style a line's color too, which is kept.
+            var styles = _preview.CodeFormatter.LineStyles;
+            foreach (var entry in styles.Where(entry => entry.Value.Background == PreviewHighlight).ToList())
+            {
+                if (entry.Value.Color == 0)
+                    styles.Remove(entry.Key);
+                else
+                    styles[entry.Key] = new Style { Color = entry.Value.Color };
+            }
+            var mapping = _compiled?.Response?.source_mapping;
+            if (mapping == null || !mapping.TryGetValue(CaretPos.Line, out var lines))
+                return;
+            foreach (int line in lines)
+            {
+                uint color = styles.TryGetValue(line, out var style) ? style.Color : 0;
+                styles[line] = new Style { Color = color, Background = PreviewHighlight };
+            }
+        }
+    }
+}

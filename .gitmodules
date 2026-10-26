@@ -1,0 +1,3 @@
+[submodule "mod/Template"]
+	path = mod/Template
+	url = https://github.com/aproposmath/stationeers-modding-template.git

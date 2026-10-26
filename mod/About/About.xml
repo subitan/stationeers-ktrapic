@@ -1,0 +1,33 @@
+<ModMetadata>
+  <Name>KTrapIC - Kotlin to IC10 Compiler</Name>
+  <Author>Christian Jackson-Gruber</Author>
+  <ModID>com.github.subitan.stationeers-ktrapic</ModID>
+  <Version>0.1.0</Version>
+  <Description>
+Program IC10 chips in Kotlin. KTrapIC adds a "Kotlin" language to the IC10 Editor mod: write a program against typed devices, batches and slots, see the IC10 it compiles to as you type, and export it to the chip as IC10. The Kotlin source is kept with the chip, so it opens as Kotlin again.
+
+- Save-compatible: chips run plain IC10, so removing the mod leaves them working
+- Highlighting, a live IC10 preview with compile errors, and size and register counts
+- The IC10 lines of the line you're on are highlighted in the preview
+- Compact mode resolves labels to line numbers to save lines
+
+On first use the mod downloads the compiler and a Java runtime for it (about 110 MB) from the project's GitHub release.
+
+[b]Installation[/b]
+This is a StationeersLaunchPad plugin mod and needs the IC10 Editor mod.
+See: https://github.com/StationeersLaunchPad/StationeersLaunchPad
+
+Source code and language guide: https://github.com/subitan/stationeers-ktrapic
+  </Description>
+  <Tags>
+    <Tag>IC10</Tag>
+    <Tag>Kotlin</Tag>
+    <Tag>Editor</Tag>
+    <Tag>Code</Tag>
+    <Tag>BepInEx</Tag>
+    <Tag>Compiler</Tag>
+    <Tag>StationeersLaunchPad</Tag>
+  </Tags>
+  <DependsOn WorkshopHandle="3592775931" />
+  <OrderAfter WorkshopHandle="3592775931" />
+</ModMetadata>
