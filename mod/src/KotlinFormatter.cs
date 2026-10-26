@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using ImGuiNET;
 using StationeersIC10Editor;
@@ -64,6 +65,15 @@ namespace KTrapIC
 
         private static readonly uint PreviewHighlight = ColorFromHTML("#000080");
 
+        // The runtime's names, in the colors the editor's theme gives types, enums, variables,
+        // properties, enum members and functions.
+        private static readonly Style TypeStyle = new Style { Color = ColorFromHTML("#4EC9B0") };
+        private static readonly Style EnumStyle = new Style { Color = ColorFromHTML("#B8D7A3") };
+        private static readonly Style DeviceStyle = new Style { Color = ColorFromHTML("#9CDCFE") };
+        private static readonly Style LogicTypeStyle = new Style { Color = ColorFromHTML("#9CDCFE") };
+        private static readonly Style EnumValueStyle = new Style { Color = ColorFromHTML("#B5CEA8") };
+        private static readonly Style FunctionStyle = new Style { Color = ColorFromHTML("#DCDCAA") };
+
         /// <summary>Bumped on every edit, so a compile can tell whether the code changed since it began.</summary>
         private int _version;
 
@@ -121,6 +131,58 @@ namespace KTrapIC
                 CompileSoon().Forget();
             };
             OnCaretMoved += HighlightPreview;
+        }
+
+        /// <summary>
+        /// Highlights the Kotlin keywords and the runtime's names. A name after a dot is a member,
+        /// told apart by the name before the dot: an enum's value (<c>Color.Red</c>), a family's
+        /// prefab (<c>Batteries.Small</c>) or a logic type (<c>d0.Temperature</c>). Anywhere else it
+        /// is a type, an enum, a device or a function, so <c>db.Color = Color.Red</c> colors each
+        /// <c>Color</c> as what it is there. The editor parses one line at a time, so a member
+        /// starting a continuation line (<c>.Small</c> below <c>Batteries</c>) has no name before
+        /// its dot and is colored by its name alone.
+        /// </summary>
+        public override StyledLine ParseLine(string lineText)
+        {
+            var line = base.ParseLine(lineText);
+            Token qualifier = null;
+            Token previous = null;
+            foreach (var token in line)
+            {
+                if (!token.Text.StartsWith(CommentPrefix) && !KotlinKeywords.ContainsKey(token.Text))
+                {
+                    var kind = previous?.Text == "."
+                        ? RuntimeNameKinds.Member(qualifier?.Text, token.Text)
+                        : RuntimeNameKinds.Name(token.Text);
+                    var style = StyleOf(kind);
+                    if (style.HasValue)
+                        token.Style = style.Value;
+                }
+                qualifier = previous;
+                previous = token;
+            }
+            return line;
+        }
+
+        private static Style? StyleOf(NameKind kind)
+        {
+            switch (kind)
+            {
+                case NameKind.Type:
+                    return TypeStyle;
+                case NameKind.Enum:
+                    return EnumStyle;
+                case NameKind.EnumValue:
+                    return EnumValueStyle;
+                case NameKind.Device:
+                    return DeviceStyle;
+                case NameKind.LogicType:
+                    return LogicTypeStyle;
+                case NameKind.Function:
+                    return FunctionStyle;
+                default:
+                    return null;
+            }
         }
 
         /// <summary>
@@ -263,12 +325,24 @@ namespace KTrapIC
             if (Editor == null || Editor.IsReadOnly)
                 return;
             int version = _version;
-            await UniTask.Delay(DebounceMs);
-            if (version != _version)
-                return;
             string source = RawText;
             bool compact = Plugin.Compact.Value;
-            var response = await Daemon.Compile(source, compact);
+            // Waited out on the thread pool, as UniTask's own delays count game time, which can
+            // stand still while the editor is open.
+            await UniTask.SwitchToThreadPool();
+            await Task.Delay(DebounceMs);
+            if (version != _version)
+                return;
+            CompileResponse response;
+            try
+            {
+                response = await Daemon.Compile(source, compact);
+            }
+            catch (Exception e)
+            {
+                Log.Error($"Compiling failed: {e}");
+                response = CompileResponse.Failed($"Compiling failed: {e.Message}");
+            }
             // Recorded before returning to the main thread, which Compile() may be blocking.
             if (version != _version)
                 return;
