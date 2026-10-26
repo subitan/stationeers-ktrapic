@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
+using System.Threading.Tasks;
 using KTrapIC;
 using Xunit;
 
@@ -13,6 +15,9 @@ public class DaemonClientTest : IDisposable
     {
         string jar = Environment.GetEnvironmentVariable("KTRAPIC_DAEMON_JAR")
             ?? throw new InvalidOperationException("Set KTRAPIC_DAEMON_JAR to a built ktrapic-daemon_deploy.jar");
+        // java would resolve a relative path against the test's working directory, its build output.
+        if (!Path.IsPathRooted(jar) || !File.Exists(jar))
+            throw new InvalidOperationException($"KTRAPIC_DAEMON_JAR must be the absolute path of a jar that exists: {jar}");
         string javaHome = Environment.GetEnvironmentVariable("JAVA_HOME");
         string java = javaHome == null
             ? "java"
@@ -27,7 +32,7 @@ public class DaemonClientTest : IDisposable
     {
         var response = _client.Compile("var i = 0\nwhile (i < 3) i++\ndb.Setting = i.toDouble()\n", false);
 
-        Assert.Null(response.error);
+        AssertCompiled(response);
         Assert.Contains("s db Setting r0", response.code);
         Assert.Equal(response.code.Split('\n').Length, response.num_lines);
         Assert.Equal(1, response.num_registers);
@@ -41,9 +46,10 @@ public class DaemonClientTest : IDisposable
         var error = _client.Compile("db.Setting = nope\n", false);
         var compact = _client.Compile("var i = 0\nwhile (i < 3) i++\n", true);
 
+        Assert.True(error.error != null, DaemonLog());
         Assert.Equal(1, error.error.line);
         Assert.Contains("nope", error.error.description);
-        Assert.Null(compact.error);
+        AssertCompiled(compact);
         Assert.DoesNotContain(":", compact.code);
     }
 
@@ -56,5 +62,35 @@ public class DaemonClientTest : IDisposable
 
         Assert.NotNull(response.error);
         Assert.Null(response.code);
+    }
+
+    [Fact]
+    public async Task DisposingDuringACompileFailsItPromptly()
+    {
+        // Long enough to take many seconds to compile.
+        var program = new StringBuilder("var x = 0\n");
+        for (int i = 0; i < 40000; i++)
+            program.Append("x = x + 1\n");
+        program.Append("db.Setting = x.toDouble()\n");
+        var compile = Task.Run(() => _client.Compile(program.ToString(), false));
+        await Task.Delay(500);
+        Assert.False(compile.IsCompleted, "The compile finished before Dispose; it should take longer.");
+
+        _client.Dispose();
+
+        var done = await Task.WhenAny(compile, Task.Delay(TimeSpan.FromSeconds(10)));
+        Assert.True(done == compile, "Compile didn't return after Dispose.");
+        var response = await compile;
+        Assert.NotNull(response.error);
+        Assert.Null(response.code);
+    }
+
+    private void AssertCompiled(CompileResponse response) =>
+        Assert.True(response.error == null, $"{response.error?.description}\n{DaemonLog()}");
+
+    private string DaemonLog()
+    {
+        lock (_log)
+            return "Compiler's standard error:\n" + string.Join("\n", _log);
     }
 }

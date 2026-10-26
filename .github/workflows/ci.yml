@@ -79,5 +79,5 @@ jobs:
       - name: Test the daemon client, running the daemon on the packaged runtime
         run: |
           JAVA_HOME="$RUNNER_TEMP/runtime" \
-          KTRAPIC_DAEMON_JAR="$(bazel cquery --config=ci --output=files //daemon:ktrapic-daemon_deploy.jar 2>/dev/null)" \
+          KTRAPIC_DAEMON_JAR="$PWD/$(bazel cquery --config=ci --output=files //daemon:ktrapic-daemon_deploy.jar 2>/dev/null)" \
           dotnet test mod/tests/KTrapIC.Tests.csproj
