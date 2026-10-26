@@ -16,4 +16,15 @@ class GeneratedSourcesTest {
           .isEqualTo(text)
     }
   }
+
+  @Test
+  fun `the plugin's list of names matches the generated sources`() {
+    val expected = DataFiles.generateModNames(workspace, DataFiles.generate(workspace))
+    assertWithMessage(
+            "%s is stale; regenerate with: bazel run //tools/datagen -- generate",
+            ModNamesGenerator.PATH,
+        )
+        .that(DataFiles.modNames(workspace).readText().replace("\r\n", "\n"))
+        .isEqualTo(expected)
+  }
 }

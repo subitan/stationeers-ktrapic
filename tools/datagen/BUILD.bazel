@@ -21,6 +21,7 @@ kt_junit5_tests(
     associates = [":datagen_lib"],
     data = [
         "//runtime:data",
+        "//mod:src/RuntimeNames.g.cs",
         "//runtime:generated_srcs",
     ],
     deps = [

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using ImGuiNET;
 using StationeersIC10Editor;
@@ -64,6 +65,30 @@ namespace KTrapIC
 
         private static readonly uint PreviewHighlight = ColorFromHTML("#000080");
 
+        // The runtime's names, in the colors the editor's theme gives types, enums, variables,
+        // properties, enum members and functions.
+        private static readonly Style TypeStyle = new Style { Color = ColorFromHTML("#4EC9B0") };
+        private static readonly Style EnumStyle = new Style { Color = ColorFromHTML("#B8D7A3") };
+        private static readonly Style DeviceStyle = new Style { Color = ColorFromHTML("#9CDCFE") };
+        private static readonly Style LogicTypeStyle = new Style { Color = ColorFromHTML("#9CDCFE") };
+        private static readonly Style EnumValueStyle = new Style { Color = ColorFromHTML("#B5CEA8") };
+        private static readonly Style FunctionStyle = new Style { Color = ColorFromHTML("#DCDCAA") };
+
+        /// <summary>The runtime's hand-written types, beside its generated ones.</summary>
+        private static readonly HashSet<string> Types = new HashSet<string>(
+            RuntimeNames.Types.Concat(new[] { "Device", "Prefab", "TypedDevice", "GenericDevice", "Slot", "DeviceSlot" }));
+
+        private static readonly HashSet<string> Enums = new HashSet<string>(RuntimeNames.Enums);
+        private static readonly HashSet<string> EnumValues = new HashSet<string>(RuntimeNames.EnumValues);
+        private static readonly HashSet<string> LogicTypes = new HashSet<string>(RuntimeNames.LogicTypes);
+        private static readonly HashSet<string> Devices = new HashSet<string> { "d0", "d1", "d2", "d3", "d4", "d5", "db" };
+
+        private static readonly HashSet<string> Functions = new HashSet<string>
+        {
+            "sleep", "yield", "hash", "str", "at", "named", "map", "sumOf", "minOf", "maxOf", "count", "any",
+            "none", "forEach", "average", "sum", "min", "max", "toInt", "toDouble",
+        };
+
         /// <summary>Bumped on every edit, so a compile can tell whether the code changed since it began.</summary>
         private int _version;
 
@@ -121,6 +146,55 @@ namespace KTrapIC
                 CompileSoon().Forget();
             };
             OnCaretMoved += HighlightPreview;
+        }
+
+        /// <summary>
+        /// Highlights the Kotlin keywords and the runtime's names. A name after a dot is a member: a
+        /// logic type (<c>d0.Temperature</c>), an enum's value (<c>Color.Red</c>) or a family's
+        /// prefab (<c>Batteries.Small</c>). Anywhere else it is a type, an enum, a device or a
+        /// function, so <c>db.Color = Color.Red</c> colors each <c>Color</c> as what it is there.
+        /// </summary>
+        public override StyledLine ParseLine(string lineText)
+        {
+            var line = base.ParseLine(lineText);
+            Token previous = null;
+            foreach (var token in line)
+            {
+                if (!token.Text.StartsWith(CommentPrefix) && !KotlinKeywords.ContainsKey(token.Text))
+                {
+                    var style = previous?.Text == "." ? MemberStyle(token.Text) : NameStyle(token.Text);
+                    if (style.HasValue)
+                        token.Style = style.Value;
+                }
+                previous = token;
+            }
+            return line;
+        }
+
+        private static Style? MemberStyle(string name)
+        {
+            if (LogicTypes.Contains(name))
+                return LogicTypeStyle;
+            if (EnumValues.Contains(name))
+                return EnumValueStyle;
+            if (Types.Contains(name))
+                return TypeStyle;
+            if (Functions.Contains(name))
+                return FunctionStyle;
+            return null;
+        }
+
+        private static Style? NameStyle(string name)
+        {
+            if (Enums.Contains(name))
+                return EnumStyle;
+            if (Types.Contains(name))
+                return TypeStyle;
+            if (Devices.Contains(name))
+                return DeviceStyle;
+            if (Functions.Contains(name))
+                return FunctionStyle;
+            return null;
         }
 
         /// <summary>
@@ -263,12 +337,24 @@ namespace KTrapIC
             if (Editor == null || Editor.IsReadOnly)
                 return;
             int version = _version;
-            await UniTask.Delay(DebounceMs);
-            if (version != _version)
-                return;
             string source = RawText;
             bool compact = Plugin.Compact.Value;
-            var response = await Daemon.Compile(source, compact);
+            // Waited out on the thread pool, as UniTask's own delays count game time, which can
+            // stand still while the editor is open.
+            await UniTask.SwitchToThreadPool();
+            await Task.Delay(DebounceMs);
+            if (version != _version)
+                return;
+            CompileResponse response;
+            try
+            {
+                response = await Daemon.Compile(source, compact);
+            }
+            catch (Exception e)
+            {
+                Log.Error($"Compiling failed: {e}");
+                response = CompileResponse.Failed($"Compiling failed: {e.Message}");
+            }
             // Recorded before returning to the main thread, which Compile() may be blocking.
             if (version != _version)
                 return;

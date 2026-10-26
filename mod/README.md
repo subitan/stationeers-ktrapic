@@ -25,7 +25,9 @@ to `main` replaces. Only Windows x64 has a runtime release; elsewhere, set both 
 
 ## Using it
 
-In the IC10 Editor, pick "Kotlin" as the language. A program is compiled as it is edited, about a
+In the IC10 Editor, pick "Kotlin" as the language. Kotlin keywords and the runtime's names are highlighted:
+types and prefabs (`GrowLights`, `Batteries.Small`), enums and their values (`Color.Red`), logic
+types (`d0.Temperature`), devices and functions. A program is compiled as it is edited, about a
 moment after typing stops:
 
 - The IC10 it compiles to is shown in a read-only editor beside it, or the first error, with its

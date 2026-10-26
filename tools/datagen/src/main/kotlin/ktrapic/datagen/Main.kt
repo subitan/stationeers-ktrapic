@@ -10,7 +10,8 @@ private const val USAGE =
   datagen import-pytrapic-structures <structures_generated.py> <source description>
       Writes runtime/data/prefabs.json from PyTrapIC's generated structures.
   datagen generate
-      Writes the runtime's generated sources from runtime/data."""
+      Writes the runtime's generated sources, and the in-game plugin's list of their names,
+      from runtime/data."""
 
 /**
  * Maintains the runtime API's data and generated sources. Paths are relative to the workspace root
@@ -41,6 +42,8 @@ fun main(args: Array<String>) {
       val outDir = DataFiles.generatedDir(workspace)
       for ((name, text) in files) outDir.resolve(name).writeText(text)
       println("Wrote ${files.keys.joinToString()} to $outDir")
+      DataFiles.modNames(workspace).writeText(DataFiles.generateModNames(workspace, files))
+      println("Wrote ${DataFiles.modNames(workspace)}")
     }
     else -> usage()
   }
@@ -63,6 +66,8 @@ object DataFiles {
 
   fun generatedDir(root: File) = root.resolve("runtime/src/main/kotlin/ktrapic")
 
+  fun modNames(root: File) = root.resolve(ModNamesGenerator.PATH)
+
   /** The generated sources for the data under [root]. */
   fun generate(root: File): Map<String, String> =
       RuntimeGenerator.generate(
@@ -71,4 +76,8 @@ object DataFiles {
           Prefabs.fromJson(prefabs(root).readText()),
           Grouping.fromJson(grouping(root).readText()),
       )
+
+  /** The in-game plugin's list of the names in [generated], the generated sources for [root]. */
+  fun generateModNames(root: File, generated: Map<String, String>): String =
+      ModNamesGenerator.generate(generated, LogicEnums.fromJson(enums(root).readText()))
 }
