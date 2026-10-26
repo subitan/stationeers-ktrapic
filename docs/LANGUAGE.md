@@ -155,9 +155,9 @@ Devices that come in several prefabs are grouped by kind: `Batteries.Small.at(d0
 `Battery.Small`, and `Batteries.Large.all` every large one. On its own, `Battery` is no prefab: it
 is the interface its members share, with the logic types all of them can read, so an inlined
 function can take any battery. It has only those logic types: `PrefabHash`, `NameHash` and
-`ReferenceId` are read from a member (`Batteries.Small.at(d0)`) or its pin. The kinds grouped so far are `Battery` (`Station`, `Large`,
-`Medium`, `Small`) and `LedDisplay` (`Small`, `Medium`, `Large`); every other prefab has its own
-entry point.
+`ReferenceId` are read from a member (`Batteries.Small.at(d0)`) or its pin. The kinds grouped so
+far are `Battery` (`Station`, `Large`, `Medium`, `Small`) and `LedDisplay` (`Small`, `Medium`,
+`Large`); every other prefab has its own entry point.
 
 ```kotlin
 inline fun charge(battery: Battery): Double = battery.Ratio

@@ -351,11 +351,12 @@ internal class Translator {
    * What [expression] evaluates to, which must not be a [Batch] or [BatchRead]: those have no value
    * and are only held in a `val` or used directly ([aliasOrValue]).
    */
-  private fun value(expression: IrExpression): Value =
+  private fun value(
+      expression: IrExpression,
+      batchError: String = "a batch can only be used directly or held in a val",
+  ): Value =
       aliasOrValue(expression).also {
-        if (it is Batch || it is BatchRead) {
-          fail(expression, "a batch can only be used directly or held in a val")
-        }
+        if (it is Batch || it is BatchRead) fail(expression, batchError)
       }
 
   /** What [expression] evaluates to, a [Batch] or [BatchRead] included. */
@@ -551,6 +552,7 @@ internal class Translator {
             aliasOrValue(args[0]!!) as? Batch
                 ?: fail(call, "this batch must be all, named(...), or a val holding one")
         if (!isSetter) {
+          if (name == TEXT) fail(call, "Text can only be written")
           // The other getters are logic types', which can't be read from a batch directly.
           if (name !in BATCH_METHODS)
               fail(call, "read a batch through a method, as in all.average.X")
@@ -1163,7 +1165,8 @@ internal class Translator {
       if (never) continue
       val next = if (always) null else newLabel("else")
       if (next != null) branch(condition, false, next)
-      val value = value(branch.result)
+      // Kotlin types an if or when with an else by its branches even where it is a statement.
+      val value = value(branch.result, "a batch can't be the result of an if or when")
       if (result != null && value != NoValue) move(result, value)
       if (next == null) break
       emit("j", Fixed(LabelRef(end)))

@@ -141,6 +141,60 @@ class TypedDeviceTest {
   }
 
   @Test
+  fun `a batch held in a val or discarded works in a loop, an if and functions`() {
+    val source =
+        """
+        inline fun switchPotatoes(on: Boolean) {
+          val potatoes = GrowLights.named("Potatoes")
+          potatoes.On = on
+        }
+        fun switchTomatoes(on: Boolean) {
+          val tomatoes = GrowLights.named("Tomatoes")
+          tomatoes.On = on
+        }
+        inline fun countPotatoes() {
+          val reading = GrowLights.named("Potatoes").sum
+          db.Ratio = reading.On
+        }
+        fun countLights() {
+          val reading = GrowLights.all.sum
+          db.Mode = reading.On
+        }
+        for (i in 0..1) {
+          val lights = GrowLights.all
+          lights.On = true
+          val reading = lights.sum
+          db.Setting = reading.On
+          GrowLights.all
+        }
+        if (db.Setting > 0.0) {
+          val lights = GrowLights.all
+          lights.On = false
+          val reading = lights.sum
+          db.Maximum = reading.On
+        }
+        if (db.Setting > 0.0) GrowLights.all
+        switchPotatoes(true)
+        switchTomatoes(true)
+        switchTomatoes(false)
+        countPotatoes()
+        countPotatoes()
+        countLights()
+        countLights()
+        """
+
+    val devices = run(source, ::lights)
+
+    assertThat(compiled(source).code).contains("jal")
+    val db = devices[0]
+    assertThat(db["Setting"]).isEqualTo(3.0)
+    assertThat(db["Maximum"]).isEqualTo(0.0)
+    assertThat(db["Ratio"]).isEqualTo(2.0)
+    assertThat(db["Mode"]).isEqualTo(2.0)
+    assertThat(devices.drop(1).map { it["On"] }).containsExactly(1.0, 1.0, 0.0, 0.0).inOrder()
+  }
+
+  @Test
   fun `a batch used as a value is an error`() {
     for ((source, position) in
         listOf(
@@ -148,11 +202,15 @@ class TypedDeviceTest {
                 (1 to 42),
             "val b = when {\n  db.Setting > 0.0 -> GrowLights.all\n  else -> GrowLights.all\n}" to
                 (2 to 34),
+            "when {\n  db.Setting > 0.0 -> GrowLights.all\n  else -> GrowLights.named(\"x\")\n}" to
+                (2 to 34),
             "val r = if (db.Setting > 0.0) GrowLights.all.sum else GrowLights.all.average" to
                 (1 to 46),
         )) {
       val error = error(source)
-      assertWithMessage(source).that(error.message).contains("batch")
+      assertWithMessage(source)
+          .that(error.message)
+          .contains("a batch can't be the result of an if or when")
       assertWithMessage(source).that(error.line to error.column).isEqualTo(position)
     }
   }
@@ -175,8 +233,10 @@ class TypedDeviceTest {
       val error = error("val x = 1\nval t = $source")
       assertWithMessage(source).that(error.message).contains("written")
     }
-    val suppressed = error("@Suppress(\"DEPRECATION_ERROR\") val t = LedDisplays.Small.at(d0).Text")
-    assertThat(suppressed.message).contains("Text can only be written")
+    for (source in listOf("LedDisplays.Small.at(d0).Text", "LedDisplays.Small.all.Text")) {
+      val suppressed = error("@Suppress(\"DEPRECATION_ERROR\") val t = $source")
+      assertWithMessage(source).that(suppressed.message).contains("Text can only be written")
+    }
   }
 
   @Test
