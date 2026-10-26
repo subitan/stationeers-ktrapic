@@ -6,7 +6,7 @@ import java.io.File
 import org.junit.jupiter.api.Test
 
 /**
- * Compiles each `test/cases/X.kts` and compares the result with `X.ic10` and `X.compact.ic10`.
+ * Compiles each `test/cases/X.ic10.kts` and compares the result with `X.ic10` and `X.compact.ic10`.
  *
  * To write the expected files from the current compiler, run with the workspace's `test/cases`
  * directory in KTRAPIC_UPDATE_GOLDENS: `bazel test //compiler/api:GoldenTest
@@ -19,10 +19,10 @@ class GoldenTest {
 
   @Test
   fun `each case compiles to its expected IC10`() {
-    val sources = cases.listFiles { file -> file.name.endsWith(".kts") }.orEmpty().sorted()
+    val sources = cases.listFiles { file -> file.name.endsWith(".ic10.kts") }.orEmpty().sorted()
     assertThat(sources).isNotEmpty()
     for (source in sources) {
-      val name = source.name.removeSuffix(".kts")
+      val name = source.name.removeSuffix(".ic10.kts")
       for ((suffix, compact) in listOf(".ic10" to false, ".compact.ic10" to true)) {
         val result = Compiler.compile(source.readText(), CompileOptions(compact = compact))
         val actual =

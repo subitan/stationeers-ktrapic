@@ -824,6 +824,61 @@ class CompilerTest {
   }
 
   @Test
+  fun `the ktrapic API needs no import, and an explicit one is still fine`() {
+    for (source in listOf("db.Setting = 1.0", "import ktrapic.*\ndb.Setting = 1.0")) {
+      val result = Compiler.compile(source)
+      assertWithMessage(source).that(result).isInstanceOf(CompileResult.Success::class.java)
+    }
+    val error = (Compiler.compile("val x = 1\nd0.On = 1.0") as CompileResult.Failure).errors.first()
+    assertThat(error.line).isEqualTo(2)
+    assertThat(error.column).isEqualTo(7)
+  }
+
+  @Test
+  fun `the implied import comes after a shebang, file annotations and a package line`() {
+    val sources =
+        listOf(
+            "#!/usr/bin/env kotlin\nimport ktrapic.*\ndb.Setting = 1.0",
+            "#!/usr/bin/env kotlin\ndb.Setting = 1.0",
+            "@file:Suppress(\"UNUSED_VARIABLE\")\nimport ktrapic.*\nval x = 1\ndb.Setting = 1.0",
+            "@file:Suppress(\"UNUSED_VARIABLE\")\nval x = 1\ndb.Setting = 1.0",
+            "package foo\nimport ktrapic.*\ndb.Setting = 1.0",
+            "package foo\ndb.Setting = 1.0",
+        )
+    for (source in sources) {
+      assertWithMessage(source)
+          .that(Compiler.compile(source))
+          .isInstanceOf(CompileResult.Success::class.java)
+    }
+    val error =
+        (Compiler.compile("package foo\n\nd0.On = 1.0") as CompileResult.Failure).errors.first()
+    assertThat(error.line to error.column).isEqualTo(3 to 7)
+    val sameLineError =
+        (Compiler.compile("package p; d0.On = 1.0") as CompileResult.Failure).errors.first()
+    assertThat(sameLineError.line to sameLineError.column).isEqualTo(1 to 18)
+  }
+
+  @Test
+  fun `the implied import comes before semicolons and comments ahead of the first statement`() {
+    val sources =
+        listOf(
+            "; db.Setting = 1.0",
+            ";\ndb.Setting = 1.0",
+            "/* c */ ;\n;\ndb.Setting = 1.0",
+            "package foo;\n;\ndb.Setting = 1.0",
+            "#!/usr/bin/env kotlin\n;\ndb.Setting = 1.0",
+            "import kotlin.math.max;\n;\ndb.Setting = max(1.0, 2.0)",
+        )
+    for (source in sources) {
+      assertWithMessage(source)
+          .that(Compiler.compile(source))
+          .isInstanceOf(CompileResult.Success::class.java)
+    }
+    val error = (Compiler.compile("; d0.On = 1.0") as CompileResult.Failure).errors.first()
+    assertThat(error.line to error.column).isEqualTo(1 to 9)
+  }
+
+  @Test
   fun `kotlin errors are reported`() {
     assertThat(error("db.On = 1.0").line).isEqualTo(3)
   }

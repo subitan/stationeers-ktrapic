@@ -88,10 +88,29 @@ object ScriptWrapper {
         )
       }
 
-  fun wrap(script: KtFile): WrappedSource {
+  /**
+   * The script as a file. Each of [defaultImports] (such as `ktrapic.*`) is imported as if it were
+   * the script's first import. The imports go at the start of the script's import list, which the
+   * parser places after any shebang, `@file:` annotations and `package` line, and before anything
+   * in the script's body, including a stray leading `;`. A space separates them from a `package`
+   * line or annotation they would otherwise run into. They share a line with the user's text, so no
+   * line moves. A script with no imports and no statements has nothing that could use them, and
+   * gets none.
+   */
+  fun wrap(script: KtFile, defaultImports: List<String> = emptyList()): WrappedSource {
     val source = script.text
     val edits = mutableListOf<Pair<Int, String>>()
     val statements = statements(script).ifEmpty { null }
+    if (
+        defaultImports.isNotEmpty() && (script.importDirectives.isNotEmpty() || statements != null)
+    ) {
+      val importsAt =
+          requireNotNull(script.importList) { "${script.name} has no import list" }
+              .textRange
+              .startOffset
+      val separator = if (importsAt > 0 && !source[importsAt - 1].isWhitespace()) " " else ""
+      edits += importsAt to separator + defaultImports.joinToString("") { "import $it; " }
+    }
     if (statements != null) {
       edits += statements.first().textRange.startOffset to "object $PROGRAM_OBJECT { "
     }
@@ -108,6 +127,7 @@ object ScriptWrapper {
     val text = StringBuilder()
     val insertions = mutableMapOf<Int, MutableList<WrappedSource.Insertion>>()
     var cursor = 0
+    // sortedBy is stable, so the imports stay ahead of `object Program {` at the same offset.
     for ((offset, insert) in edits.sortedBy { it.first }) {
       text.append(source, cursor, offset)
       cursor = offset

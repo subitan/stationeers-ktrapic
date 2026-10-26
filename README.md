@@ -6,8 +6,11 @@ A system to allow IC10 programming using a constrained Kotlin (inspired by
 KTrapIC compiles a constrained subset of Kotlin to IC10, the assembly language of
 [Stationeers](https://store.steampowered.com/app/544550/Stationeers/)' programmable chips.
 It is at an early stage: programs using values, loops, conditions, functions and the devices
-on a chip's pins compile (see `test/cases/satellite_tracker.kts`, a port of a chip from the
+on a chip's pins compile (see `test/cases/satellite_tracker.ic10.kts`, a port of a chip from the
 game); batch operations and the IC10 Editor plugin are next.
+
+Programs are Kotlin scripts named `*.ic10.kts`. The `ktrapic` API needs no import, since
+`import ktrapic.*` is implied; writing it anyway is fine.
 
 A function called once, or marked `inline`, is compiled into the place it is called. Any other
 function gets one body, called with `jal`; its arguments and result travel in registers, and it
@@ -28,6 +31,8 @@ initializer has run.
 - `runtime`: the `ktrapic` API that programs compile against (devices, logic types, `sleep`,
   `hash`, ...). Part of it is generated from the game data in `runtime/data` by
   `tools/datagen`.
+- `runtime/script`: the Kotlin script definition for `*.ic10.kts`, so IDEs check programs against
+  the `ktrapic` API.
 
 ## Playground
 
@@ -45,6 +50,23 @@ then open http://127.0.0.1:8765/. The Open menu lists the programs in `test/case
 the compile daemon (`daemon/`) and sends it each compile; the daemon speaks PyTrapIC's protocol
 (one base64 JSON line per request and per response), which the IC10 Editor plugin will use too.
 The first compile after starting takes a few seconds while the compiler warms up.
+
+## Editing in IntelliJ
+
+IntelliJ IDEA's Kotlin plugin understands `*.ic10.kts` files through KTrapIC's script definition:
+it then completes and type-checks programs against the `ktrapic` API, with `import ktrapic.*`
+implied. Build the two jars it needs:
+
+```
+bazel build //runtime //runtime/script:ktrapic-script
+```
+
+and add `bazel-bin/runtime/runtime.jar` and `bazel-bin/runtime/script/ktrapic-script.jar` to
+your project as a library (Project Structure > Libraries; keep the file names, since the
+definition finds the runtime by the name `runtime`). IntelliJ discovers the definition from the
+jar; if it asks, allow it under Settings > Languages & Frameworks > Kotlin > Kotlin Scripting.
+IntelliJ checks Kotlin only: KTrapIC's own rules (supported constructs, register and size
+limits) come from the compiler, the playground or the CLI.
 
 ## Numbers
 
@@ -92,7 +114,7 @@ KTrapIC builds with [Bazel](https://bazel.build) (bzlmod), via
 
 ```
 bazel test //...
-bazel run //cli:ktrapic -- [--compact] program.kts
+bazel run //cli:ktrapic -- [--compact] program.ic10.kts
 ```
 
 ### Dependencies
@@ -151,7 +173,7 @@ java -jar ktfmt-0.64-with-dependencies.jar <files...>
 
 ## Tests
 
-Golden programs live in `test/cases`: each `X.kts` must compile to `X.ic10`, and to
+Golden programs live in `test/cases`: each `X.ic10.kts` must compile to `X.ic10`, and to
 `X.compact.ic10` with compact output. After a deliberate change to the output, rewrite them
 (the path must be absolute):
 

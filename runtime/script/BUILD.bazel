@@ -1,0 +1,27 @@
+load("@rules_kotlin//kotlin:jvm.bzl", "kt_jvm_library")
+load("//build_defs/kotlin:junit5.bzl", "kt_junit5_tests")
+
+# The *.ic10.kts script definition, for IDEs (see Ic10Script). The compiler doesn't use it.
+kt_jvm_library(
+    name = "ktrapic-script",
+    srcs = glob(["src/main/kotlin/**/*.kt"]),
+    resource_strip_prefix = "runtime/script/src/main/resources",
+    resources = glob(["src/main/resources/**"]),
+    visibility = ["//visibility:public"],
+    deps = [
+        "//runtime",
+        "@maven//:org_jetbrains_kotlin_kotlin_scripting_common",
+        "@maven//:org_jetbrains_kotlin_kotlin_scripting_jvm",
+    ],
+)
+
+kt_junit5_tests(
+    name = "script_tests",
+    srcs = glob(["src/test/kotlin/**/*.kt"]),
+    associates = [":ktrapic-script"],
+    deps = [
+        "@maven//:com_google_truth_truth",
+        "@maven//:org_jetbrains_kotlin_kotlin_scripting_common",
+        "@maven//:org_junit_jupiter_junit_jupiter_api",
+    ],
+)

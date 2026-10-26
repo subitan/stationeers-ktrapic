@@ -1,5 +1,3 @@
-import ktrapic.*
-
 // A thermostat: heat below 290 K, cool above 300 K, with the housing's light showing which.
 while (true) {
   val temperature = d0.Temperature
