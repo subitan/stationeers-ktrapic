@@ -163,14 +163,19 @@ class RuntimeGeneratorTest {
     val writes =
         mapOf("any" to listOf("On", "Open"), "Helmet" to listOf("Open"), "Tool" to listOf("On"))
     generate(listOf("On"), writes)
-    for ((booleans, bad) in
+    for ((case, reason) in
         listOf(
-            listOf("Onn") to writes,
-            listOf("On") to writes + ("Helmett" to listOf("Open")),
-            listOf("On") to writes + ("any" to listOf("On")),
-            listOf("On") to writes + ("any" to listOf("On", "Open", "Lock")),
+            (listOf("Onn") to writes) to "not in LogicSlotType",
+            (listOf("On") to writes + ("Helmett" to listOf("Open"))) to "not in SlotClass",
+            // "any" lacks a write some kind has.
+            (listOf("On") to writes + ("any" to listOf("On"))) to "slot writes for any",
+            // "any" has a write no kind has.
+            (listOf("On") to writes - "Tool") to "slot writes for any",
         )) {
-      assertThrows<IllegalArgumentException>("$booleans $bad") { generate(booleans, bad) }
+      val (booleans, bad) = case
+      val error =
+          assertThrows<IllegalArgumentException>("$booleans $bad") { generate(booleans, bad) }
+      assertThat(error).hasMessageThat().contains(reason)
     }
   }
 }
