@@ -169,6 +169,35 @@ class CompilerTest {
   }
 
   @Test
+  fun `a Unit variable holds nothing, but its initializer and assignments still run`() {
+    val db =
+        run(
+            """
+            fun bump() { db.Ratio = db.Ratio + 1.0 }
+            // Top-level, so properties.
+            val u: Unit = if (db.Setting > 0.0) { db.Mode = 1.0 } else { db.Mode = 2.0 }
+            var w = bump()
+            fun locals() {
+              val v = if (db.Setting > 0.0) bump() else {}
+              var x: Unit
+              x = when { db.Setting > 0.0 -> bump() else -> {} }
+              x = v
+              w = bump()
+            }
+            w = u
+            locals()
+            """,
+            FakeDevice().also {
+              it["Setting"] = 1.0
+              it["Ratio"] = 0.0
+            },
+        )
+
+    assertThat(db["Mode"]).isEqualTo(1.0)
+    assertThat(db["Ratio"]).isEqualTo(4.0)
+  }
+
+  @Test
   fun `reads and writes devices by property and by logic type`() {
     val d0 = FakeDevice().also { it["SignalStrength"] = 50.0 }
     val db =

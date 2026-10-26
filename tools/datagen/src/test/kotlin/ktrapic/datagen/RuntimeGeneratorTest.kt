@@ -124,4 +124,58 @@ class RuntimeGeneratorTest {
       assertThrows<IllegalArgumentException>("$always $byKind") { generate(always, byKind) }
     }
   }
+
+  @Test
+  fun `rejects slot typing that names slot logic types or slot classes the data lacks`() {
+    val slotEnums =
+        PyTrapicImport.enums(
+            """
+            |class LogicType(_IntEnum):
+            |    On = 28
+            |
+            |
+            |class LogicSlotType(_IntEnum):
+            |    Open = 2
+            |    On = 22
+            |
+            |
+            |class SlotClass(_IntEnum):
+            |    Helmet = 1
+            |    Tool = 17
+            """
+                .trimMargin(),
+            "test",
+        )
+    fun generate(booleans: List<String>, writes: Map<String, List<String>>) =
+        RuntimeGenerator.generate(
+            slotEnums,
+            Typing(
+                listOf("LogicType"),
+                listOf("On"),
+                booleanSlotLogicTypes = booleans,
+                slotWrites = writes,
+            ),
+            Prefabs("test", emptyList()),
+            Grouping(emptyMap(), emptyList()),
+        )
+
+    // Tool has no prefab's slot here, but is the game's slot class.
+    val writes =
+        mapOf("any" to listOf("On", "Open"), "Helmet" to listOf("Open"), "Tool" to listOf("On"))
+    generate(listOf("On"), writes)
+    for ((case, reason) in
+        listOf(
+            (listOf("Onn") to writes) to "not in LogicSlotType",
+            (listOf("On") to writes + ("Helmett" to listOf("Open"))) to "not in SlotClass",
+            // "any" lacks a write some kind has.
+            (listOf("On") to writes + ("any" to listOf("On"))) to "slot writes for any",
+            // "any" has a write no kind has.
+            (listOf("On") to writes - "Tool") to "slot writes for any",
+        )) {
+      val (booleans, bad) = case
+      val error =
+          assertThrows<IllegalArgumentException>("$booleans $bad") { generate(booleans, bad) }
+      assertThat(error).hasMessageThat().contains(reason)
+    }
+  }
 }
