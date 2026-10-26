@@ -754,6 +754,17 @@ class CompilerTest {
           if (done) break
         }
         db.Setting = n.toDouble()
+        when {
+          n > 20 ->
+            db.Ratio = 1.0
+          else -> db.Ratio = 2.0
+        }
+        while (
+          n < 30
+        ) n++
+        if (n > 1 &&
+            n < 50)
+          db.Setting = 1.0
         """
     for (compact in listOf(false, true)) {
       val result = compiled(source, CompileOptions(compact = compact))
@@ -772,6 +783,11 @@ class CompilerTest {
         // Each of these is a branch over a `j`, which lowering inverts into one branch.
         that(at(20).single()).matches("b(eq|ne) .* 9 .*")
         that(at(22).single()).matches("b(eq|ne)z .*")
+        that(at(26).map { it.substringBefore(" ") }).containsExactly("bgt", "j").inOrder()
+        that(at(27)).containsExactly("s db Ratio 1")
+        that(at(31).map { it.substringBefore(" ") }).containsExactly("blt", "j").inOrder()
+        that(at(33).map { it.substringBefore(" ") }).containsExactly("bgt", "j").inOrder()
+        that(at(34).map { it.substringBefore(" ") }).containsExactly("blt", "j").inOrder()
       }
     }
   }

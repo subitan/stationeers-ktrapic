@@ -356,7 +356,8 @@ internal class Translator {
    * Runs [translate] for [element], then gives the instructions it emitted [element]'s start offset
    * where a statement inside [element] hasn't already given them its own, so each instruction is
    * attributed to the innermost statement it comes from. An [element] with no place in the source
-   * (a negative offset, as compiler-made IR has) leaves them to the statement around it.
+   * (a negative offset, as compiler-made IR can have) leaves them to the statement around it. That
+   * check is defensive: no construct the backend compiles is known to reach it.
    */
   private inline fun <T> at(element: IrElement, translate: () -> T): T {
     val start = lines.size
@@ -1396,8 +1397,16 @@ internal class Translator {
   private val NEGATED =
       mapOf("lt" to "ge", "le" to "gt", "gt" to "le", "ge" to "lt", "eq" to "ne", "ne" to "eq")
 
-  /** Emits a jump to [target] taken when [condition] is [whenTrue]. */
+  /**
+   * Emits a jump to [target] taken when [condition] is [whenTrue]. A condition is an expression,
+   * not a statement, and is often on a line of its own (as is each operand of a multi-line `&&` or
+   * `||`), so its code is attributed to where it is.
+   */
   private fun branch(condition: IrExpression, whenTrue: Boolean, target: String) {
+    at(condition) { emitBranch(condition, whenTrue, target) }
+  }
+
+  private fun emitBranch(condition: IrExpression, whenTrue: Boolean, target: String) {
     if (condition is IrConst && condition.kind == IrConstKind.Boolean) {
       if (condition.value == whenTrue) emit("j", Fixed(LabelRef(target)))
       return
@@ -1500,9 +1509,9 @@ internal class Translator {
       val never = condition is IrConst && condition.value == false
       if (never) continue
       val next = if (always) null else newLabel("else")
-      // A branch's condition and result are expressions, not statements, and are often on lines
-      // of their own, so each is attributed to where it is.
-      if (next != null) at(condition) { branch(condition, false, next) }
+      if (next != null) branch(condition, false, next)
+      // A branch's result is an expression, not a statement, and is often on a line of its own,
+      // so it is attributed to where it is.
       at(branch.result) {
         // Kotlin types an if or when with an else by its branches even where it is a statement.
         val value = value(branch.result, "a batch can't be the result of an if or when")
@@ -1520,7 +1529,7 @@ internal class Translator {
     val top = newLabel("while")
     val end = newLabel("endwhile")
     label(top)
-    at(loop.condition) { branch(loop.condition, false, end) }
+    branch(loop.condition, false, end)
     loops[loop] = top to end
     loop.body?.let { value(it) }
     emit("j", Fixed(LabelRef(top)))
@@ -1536,7 +1545,7 @@ internal class Translator {
     loops[loop] = test to end
     loop.body?.let { value(it) }
     label(test)
-    at(loop.condition) { branch(loop.condition, true, top) }
+    branch(loop.condition, true, top)
     label(end)
     return NoValue
   }
