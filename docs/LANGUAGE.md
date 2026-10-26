@@ -126,16 +126,70 @@ The game's value enums are `Double` constants, so they can be written straight t
 A device can be held in a `val` (`val dish = d0`) and passed to an inlined function. Reading or
 writing a logic type a device doesn't have is an error on the chip.
 
-Batch operations (all devices of a type on the network), slots and typed devices are not
-supported yet; see [Not supported yet](#not-supported-yet).
+### Typed devices and batches
+
+Each prefab with logic types has an entry point named after it in the plural, without the
+game's `Structure` or `Item` prefix: `StructureGrowLight` is `GrowLights`. Where two prefabs
+would get the same name that way, both keep their full names, as `ItemBeacons` and
+`StructureBeacons` do. Through an entry point:
+
+- `GrowLights.at(d0)` is the device on `d0` as a `GrowLight`, which has only the logic types a
+  grow light has, as `val` where they can only be read. Using one it lacks is a compile error.
+- `GrowLights.all` is every grow light on the chip's network, and `GrowLights.named("Potatoes")`
+  every one with that name. Writing a logic type writes it to all of them (`sb`, `sbn`); reading
+  goes through a batch method, `average`, `sum`, `minimum` or `maximum`, and is always a `Double`
+  (`lb`, `lbn`). Reading a logic type straight from a batch is a compile error.
+
+```kotlin
+GrowLights.all.On = true
+GrowLights.named("Potatoes").On = false
+val lit = GrowLights.all.sum.On
+val sensor = GasSensors.at(d0)
+db.Setting = if (sensor.Temperature > 300.0) lit else 0.0
+```
+
+With no devices in a batch, `average` is NaN, `maximum` is negative infinity, and `sum` and
+`minimum` are 0. A typed device or a batch can be held in a `val`.
+
+Devices that come in several prefabs are grouped by kind: `Batteries.Small.at(d0)` is a
+`Battery.Small`, and `Batteries.Large.all` every large one. On its own, `Battery` is no prefab: it
+is the interface its members share, with the logic types all of them can read, so an inlined
+function can take any battery. It has only those logic types: `PrefabHash`, `NameHash` and
+`ReferenceId` are read from a member (`Batteries.Small.at(d0)`) or its pin. The kinds grouped so
+far are `Battery` (`Station`, `Large`, `Medium`, `Small`) and `LedDisplay` (`Small`, `Medium`,
+`Large`); every other prefab has its own entry point.
+
+```kotlin
+inline fun charge(battery: Battery): Double = battery.Ratio
+db.Setting = charge(Batteries.Small.at(d0)) + Batteries.Large.all.average.Ratio
+```
+
+A prefab's name is also its value: `GrowLight` and `Battery.Small` are the game's hashes of
+those prefabs, and a device's `PrefabHash` is a prefab, so `d0.PrefabHash == Battery.Small` asks
+whether `d0` is a small battery. A prefab is not a number and can only be compared; read
+`d0[LogicType.PrefabHash]` for the number. `"Name".hash()` is the hash of any other text, such as
+a modded prefab.
+
+LED displays have a `Text` property that writes one to six ASCII characters to their `Setting`,
+which they show while their `Mode` is `DisplayMode.String`. The text must be written out; longer
+text, or anything but printable ASCII, is a compile error.
+
+```kotlin
+val sign = LedDisplays.Small.at(d5)
+sign.Mode = DisplayMode.String
+sign.Text = "HOT"
+LedDisplays.Large.all.Text = "OK"
+```
+
+Slots are not supported yet; see [Not supported yet](#not-supported-yet).
 
 ## Intrinsics and maths
 
 - `sleep(seconds)` pauses the chip (`seconds` an `Int` or a `Double`); `yield()` ends the
   chip's work for the current tick (half a second).
-- `hash("text")` is the game's hash of `text`, such as a prefab name; `str("text")` packs one to
-  six ASCII characters into a number, for displays. Both need a constant string, which may not
-  contain `"`, `#`, a line break or another control character.
+- `hash("text")` (or `"text".hash()`) is the game's hash of `text`, such as a prefab or device
+  name; `str("text")` packs one to six ASCII characters into a number, for displays. Both need a
+  constant string, which may not contain `"`, `#`, a line break or another control character.
 - From `kotlin.math`: `abs`, `sqrt`, `floor`, `ceil`, `round` (halves to even), `truncate`,
   `sin`, `cos`, `tan`, `asin`, `acos`, `atan`, `atan2`, `exp`, `ln`, `max`, `min`, `pow`,
   `absoluteValue` and `roundToInt` (halves up), and the constants `PI` and `E`. From
@@ -202,13 +256,12 @@ has no line or column.
 
 Planned, roughly in this order:
 
-- Batch operations on all devices of a type, by name (`Batteries.all.Charge.Average`,
-  `GrowLights.named("Potatoes").On = true`), typed devices (`Batteries.at(d0)`), and slots.
+- Slots, on pins, typed devices and batches.
 - Your own enums and `when` over them; classes, interfaces and objects, compiled away at compile
   time; inline functions taking lambdas. Features are only added where their cost in lines is
   worth it on a 128-line chip.
 
-Not planned as such: strings beyond `hash`/`str`, collections, nullable types, exceptions,
+Not planned as such: strings beyond `hash`/`str` and `Text`, collections, nullable types, exceptions,
 casts and type checks, and coroutines.
 
 ## An example

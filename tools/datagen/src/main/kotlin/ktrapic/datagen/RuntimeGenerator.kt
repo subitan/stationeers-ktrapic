@@ -22,6 +22,21 @@ object RuntimeGenerator {
     )
   }
 
+  /** As above, plus the typed device API for [prefabs], grouped by [grouping]. */
+  fun generate(
+      enums: LogicEnums,
+      typing: Typing,
+      prefabs: Prefabs,
+      grouping: Grouping,
+  ): Map<String, String> {
+    val logicTypes = requireNotNull(enums.enums["LogicType"]) { "the data has no LogicType" }
+    val unknown = prefabs.prefabs.flatMap { it.logic.keys }.toSet() - logicTypes.keys
+    require(unknown.isEmpty()) { "prefab logic types not in LogicType: $unknown" }
+    val enumNames = enums.enums.keys.map { identifier(it) }.toSet()
+    return generate(enums, typing) +
+        PrefabGenerator.generate(prefabs, grouping, enumNames, typing.booleanLogicTypes.toSet())
+  }
+
   private fun enumsFile(enums: LogicEnums, typing: Typing): String = buildString {
     append(HEADER)
     for ((name, entries) in enums.enums) {
@@ -56,6 +71,12 @@ object RuntimeGenerator {
         // LogicType.None is the "no logic type" operand, not a property.
         for ((index, logicType) in logicTypes.filter { it != "None" }.withIndex()) {
           if (index > 0) append('\n')
+          // A device's prefab is a Prefab, compared with prefabs rather than used as a number.
+          if (logicType == "PrefabHash") {
+            append("  val PrefabHash: Prefab\n")
+            append("    get() = intrinsic()\n")
+            continue
+          }
           val type = if (logicType in booleans) "Boolean" else "Double"
           append("  var ${identifier(logicType)}: $type\n")
           append("    get() = intrinsic()\n")

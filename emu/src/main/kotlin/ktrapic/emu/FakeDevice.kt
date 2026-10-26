@@ -34,8 +34,14 @@ class FakeDevice(val prefabHash: Int = 0, val nameHash: Int = 0) {
 
   fun slot(index: Int): MutableMap<String, Double> = slots.getOrPut(index) { mutableMapOf() }
 
+  /** A logic type the device has; every device has its `PrefabHash` and `NameHash`. */
   internal fun read(type: String): Double =
-      logic[type] ?: throw IllegalArgumentException("device has no $type")
+      logic[type]
+          ?: when (type) {
+            "PrefabHash" -> prefabHash.toDouble()
+            "NameHash" -> nameHash.toDouble()
+            else -> throw IllegalArgumentException("device has no $type")
+          }
 
   internal fun write(type: String, value: Double) {
     logic[type] = value

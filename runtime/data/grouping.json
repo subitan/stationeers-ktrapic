@@ -1,0 +1,26 @@
+{
+  "families": {
+    "Battery": {
+      "plural": "Batteries",
+      "members": {
+        "Station": "StructureBattery",
+        "Large": "StructureBatteryLarge",
+        "Medium": "StructureBatteryMedium",
+        "Small": "StructureBatterySmall"
+      }
+    },
+    "LedDisplay": {
+      "plural": "LedDisplays",
+      "members": {
+        "Small": "StructureConsoleLED5",
+        "Medium": "StructureConsoleLED1x2",
+        "Large": "StructureConsoleLED1x3"
+      }
+    }
+  },
+  "textDisplays": [
+    "StructureConsoleLED5",
+    "StructureConsoleLED1x2",
+    "StructureConsoleLED1x3"
+  ]
+}

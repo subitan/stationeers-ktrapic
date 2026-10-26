@@ -7,6 +7,8 @@ private const val USAGE =
     """usage:
   datagen import-pytrapic <types_generated.py> <source description>
       Writes runtime/data/logic-enums.json from PyTrapIC's generated types.
+  datagen import-pytrapic-structures <structures_generated.py> <source description>
+      Writes runtime/data/prefabs.json from PyTrapIC's generated structures.
   datagen generate
       Writes the runtime's generated sources from runtime/data."""
 
@@ -25,6 +27,13 @@ fun main(args: Array<String>) {
       val enums = PyTrapicImport.enums(input.readText(), args[2])
       DataFiles.enums(workspace).writeText(enums.toJson())
       println("Wrote ${enums.enums.size} enums to ${DataFiles.enums(workspace)}")
+    }
+    "import-pytrapic-structures" -> {
+      if (args.size != 3) usage()
+      val input = workingDir.resolve(args[1])
+      val prefabs = PyTrapicStructures.prefabs(input.readText(), args[2])
+      DataFiles.prefabs(workspace).writeText(prefabs.toJson())
+      println("Wrote ${prefabs.prefabs.size} prefabs to ${DataFiles.prefabs(workspace)}")
     }
     "generate" -> {
       if (args.size != 1) usage()
@@ -48,6 +57,10 @@ object DataFiles {
 
   fun typing(root: File) = root.resolve("runtime/data/typing.json")
 
+  fun prefabs(root: File) = root.resolve("runtime/data/prefabs.json")
+
+  fun grouping(root: File) = root.resolve("runtime/data/grouping.json")
+
   fun generatedDir(root: File) = root.resolve("runtime/src/main/kotlin/ktrapic")
 
   /** The generated sources for the data under [root]. */
@@ -55,5 +68,7 @@ object DataFiles {
       RuntimeGenerator.generate(
           LogicEnums.fromJson(enums(root).readText()),
           Typing.fromJson(typing(root).readText()),
+          Prefabs.fromJson(prefabs(root).readText()),
+          Grouping.fromJson(grouping(root).readText()),
       )
 }
