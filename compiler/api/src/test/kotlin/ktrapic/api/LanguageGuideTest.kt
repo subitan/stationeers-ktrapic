@@ -17,10 +17,13 @@ class LanguageGuideTest {
 
   @Test
   fun `every code block in the language guide is a kotlin example`() {
-    // Fences alternate opening and closing; an opening fence spelled otherwise (```kt) would be
-    // skipped by the test below.
+    // Fences alternate opening and closing; an opening fence spelled otherwise (```kt, ~~~ or an
+    // indented one) would be skipped by the test below.
     val openingFences =
-        guide.lines().filter { it.startsWith("```") }.filterIndexed { i, _ -> i % 2 == 0 }
+        guide
+            .lines()
+            .filter { it.trimStart().startsWith("```") || it.trimStart().startsWith("~~~") }
+            .filterIndexed { i, _ -> i % 2 == 0 }
 
     assertThat(openingFences).isNotEmpty()
     assertThat(openingFences.distinct()).containsExactly("```kotlin")

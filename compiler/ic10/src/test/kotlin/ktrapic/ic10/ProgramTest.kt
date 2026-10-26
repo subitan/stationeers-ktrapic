@@ -132,6 +132,11 @@ class ProgramTest {
     assertThrows<IllegalArgumentException> { Hashes.str("é") }
     assertThrows<IllegalArgumentException> { StringConstant(StringConstant.Kind.HASH, "") }
     assertThrows<IllegalArgumentException> { StringConstant(StringConstant.Kind.STR, "a#b") }
+    for (text in listOf("a\nb", "a\rb", "a\tb", "a\u0000", "a\u007f")) {
+      assertThrows<IllegalArgumentException>(text) {
+        StringConstant(StringConstant.Kind.HASH, text)
+      }
+    }
   }
 
   @Test

@@ -20,6 +20,8 @@ class CompilerTest {
   /**
    * Compiles [source], runs it to the end with [db] as the housing, and returns [db]. The compact
    * program runs too, on copies of the devices as they were before, and must leave them the same.
+   * What runs is the emitted text parsed back, as the chip would get it, so a value the text
+   * doesn't carry (such as the sign of a zero) can't pass unnoticed.
    */
   private fun run(
       source: String,
@@ -30,7 +32,7 @@ class CompilerTest {
     val copies = devices.mapValues { (_, device) -> device.copy() }
     for ((compact, runDevices) in listOf(false to devices, true to copies)) {
       val result = compiled(source, CompileOptions(compact = compact))
-      val emulator = Emulator(result.program, runDevices).runUntilHalt()
+      val emulator = Emulator(Program.parse(result.code), runDevices).runUntilHalt()
       assertWithMessage("halted (compact=$compact)\n${result.code}").that(emulator.halted).isTrue()
     }
     for ((pin, device) in devices) {
@@ -215,7 +217,7 @@ class CompilerTest {
   fun `sleep and yield take ticks`() {
     val result = compiled("db.Setting = 1.0\nsleep(1)\nyield()\ndb.Setting = 2.0")
     val db = FakeDevice()
-    val emulator = Emulator(result.program, mapOf("db" to db)).runUntilHalt()
+    val emulator = Emulator(Program.parse(result.code), mapOf("db" to db)).runUntilHalt()
 
     assertThat(db["Setting"]).isEqualTo(2.0)
     assertThat(emulator.ticks).isAtLeast(3)
@@ -559,6 +561,23 @@ class CompilerTest {
   }
 
   @Test
+  fun `a negative-zero constant is compared as zero`() {
+    val source =
+        """
+        var x = 0.0
+        db.Setting = if (x == -0.0) 1.0 else 2.0
+        db.Ratio = when (x) { -0.0 -> 1.0; else -> 2.0 }
+        db.Mode = if (-0.0 < x) 1.0 else 2.0
+        """
+
+    assertThat(compiled(source).code).doesNotContain("mul")
+    val db = run(source)
+    assertThat(db["Setting"]).isEqualTo(1.0)
+    assertThat(db["Ratio"]).isEqualTo(1.0)
+    assertThat(db["Mode"]).isEqualTo(2.0)
+  }
+
+  @Test
   fun `an Int zero stays positive when negated or folded`() {
     val db =
         run(
@@ -583,11 +602,23 @@ class CompilerTest {
 
   @Test
   fun `str text the game can't take is reported where it is`() {
-    for (text in listOf("1234567", "é")) {
+    for (text in listOf("1234567", "é", "a\\nb", "a\\tb", "a\\u0000")) {
       val error = error("db.Setting = str(\"$text\")")
 
       assertWithMessage(text).that(error.line).isEqualTo(3)
       assertWithMessage(text).that(error.column).isEqualTo(14)
+    }
+  }
+
+  @Test
+  fun `hash text with a line break or another control character is reported where it is`() {
+    val q = "\"\"\""
+    for (argument in listOf("\"a\\nb\"", "\"a\\rb\"", "\"a\\u007f\"", "${q}a\nb$q")) {
+      val error = error("db.Setting = hash($argument)")
+
+      assertWithMessage(argument).that(error.line).isEqualTo(3)
+      assertWithMessage(argument).that(error.column).isEqualTo(14)
+      assertWithMessage(argument).that(error.message).contains("control character")
     }
   }
 

@@ -847,7 +847,16 @@ internal class Translator {
       }
     }
     val boolean = left.type.isBoolean()
-    val (a, b) = operands(listOf(left, right)).map { if (boolean) truth(it) else it }
+    // Comparisons can't tell -0.0 from 0.0, so a negative-zero constant is compared as 0, which
+    // needs no line to compute and can use the `z` forms.
+    val (a, b) =
+        operands(listOf(left, right)).map {
+          when {
+            boolean -> truth(it)
+            it is Const && it.number.toRawBits() == NEGATIVE_ZERO_BITS -> Const(0.0)
+            else -> it
+          }
+        }
     return Comparison(condition, a, b, mayBeNaN = condition != "eq" && !boolean)
   }
 
@@ -1161,7 +1170,8 @@ internal class Translator {
   private fun operand(value: Value): TirOperand =
       when (value) {
         // The chip rejects `nan` written as an operand, so NaN is computed as 0 / 0 instead, and
-        // negative zero, which a number literal can't be relied on to give, as 0 * -1.
+        // negative zero as 0 * -1: the chip reads a number with the runtime's decimal parser,
+        // which is not known to keep the sign of `-0`.
         is Const ->
             if (value.number.isNaN()) {
               newVReg().also { emit("div", it, Fixed(Number(0.0)), Fixed(Number(0.0))) }

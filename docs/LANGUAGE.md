@@ -135,7 +135,7 @@ supported yet; see [Not supported yet](#not-supported-yet).
   chip's work for the current tick (half a second).
 - `hash("text")` is the game's hash of `text`, such as a prefab name; `str("text")` packs one to
   six ASCII characters into a number, for displays. Both need a constant string, which may not
-  contain `"` or `#`.
+  contain `"`, `#`, a line break or another control character.
 - From `kotlin.math`: `abs`, `sqrt`, `floor`, `ceil`, `round` (halves to even), `truncate`,
   `sin`, `cos`, `tan`, `asin`, `acos`, `atan`, `atan2`, `exp`, `ln`, `max`, `min`, `pow`,
   `absoluteValue` and `roundToInt` (halves up), and the constants `PI` and `E`. From
@@ -164,18 +164,22 @@ the chip can't match the JVM:
   outside 0..31, or a constant bitwise expression whose result differs from the JVM's (such as
   `-1 ushr 28`), is a compile error.
 - `roundToInt()` of NaN gives 0, where the JVM throws.
-- An `Int` product or quotient that is zero can be a negative zero (`0 * -1`, `0 / -5`). It
-  equals 0, but the sign shows once it becomes a `Double`: `1.0 / n.toDouble()` is negative
-  infinity.
+- An `Int` product or quotient computed at run time that is zero can be a negative zero
+  (`n * -1` or `n / -5` with `n` 0); a constant one is 0. It equals 0, but the sign shows once
+  it becomes a `Double`: `1.0 / m.toDouble()` is negative infinity.
 - Dividing an `Int` by zero at run time gives NaN or infinity, where the JVM throws. An `Int`
   holding NaN compares as a `Double` NaN does: every ordered comparison is false, and a `for`
   loop with a NaN bound runs no iterations. Dividing by a constant zero is a compile error.
 - `Double` `%` is computed as `a - truncate(a / b) * b`, which rounds at the division and the
   multiplication, so it can differ from the JVM's exact remainder: `10.0 % 0.1` is 0.0 rather
-  than 0.09999999999999945, and `x % Double.POSITIVE_INFINITY` is NaN rather than `x`.
+  than 0.09999999999999945, and `x % Double.POSITIVE_INFINITY` is NaN rather than `x`. A zero
+  result is always 0.0, where the JVM gives it the dividend's sign: `-3.0 % 3.0` is 0.0, not
+  -0.0.
 
 Constant expressions fold to the same results the chip computes. A NaN constant appears in the
-output as `0 / 0`, since the chip rejects `nan` written as an operand.
+output as `0 / 0`, since the chip rejects `nan` written as an operand, and a negative-zero
+constant as `0 * -1`; each use of either costs a line and a temporary register, except that a
+negative zero is compared as 0.
 
 ## Size and registers
 

@@ -85,6 +85,10 @@ data class StringConstant(val kind: Kind, val value: String) : Operand {
     require('"' !in value && '#' !in value) {
       "string constants can't contain a double quote or a #"
     }
+    // A line break would split the instruction across two lines of IC10 text.
+    require(value.none { it.isISOControl() }) {
+      "string constants can't contain a line break or another control character"
+    }
   }
 
   val numericValue: Double

@@ -9,6 +9,7 @@ import ktrapic.emu.Emulator
 import ktrapic.emu.FakeDevice
 import ktrapic.ic10.Hashes
 import ktrapic.ic10.Ic10Limits
+import ktrapic.ic10.Program
 import org.junit.jupiter.api.Test
 
 /**
@@ -65,7 +66,7 @@ class SatelliteTrackerTest {
       val console = FakeDevice()
       val emulator =
           Emulator(
-              result.program,
+              Program.parse(result.code),
               mapOf(
                   "d0" to dish.device,
                   "d2" to FakeDevice(),

@@ -57,6 +57,8 @@ class ParserTest {
     // The game reads no exponent, and cuts a line at its first #, even inside quotes.
     assertThrows<Ic10ParseException> { Program.parse("move r0 2e3") }
     assertThrows<Ic10ParseException> { Program.parse("""move r0 HASH("a#b")""") }
+    val tab = assertThrows<Ic10ParseException> { Program.parse("yield\nmove r0 HASH(\"a\tb\")") }
+    assertThat(tab.line).isEqualTo(2)
     val redefined = assertThrows<Ic10ParseException> { Program.parse("define A 1\ndefine A 2") }
     assertThat(redefined.line).isEqualTo(2)
   }
