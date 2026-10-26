@@ -321,6 +321,12 @@ internal class Translator {
     val initializer =
         property.backingField?.initializer?.expression
             ?: fail(property, "Properties without an initializer are not supported")
+    // A Unit property holds nothing, like a Unit variable (see variable()).
+    if (property.backingField?.type?.isUnit() == true) {
+      value(initializer)
+      properties[property.symbol] = NoValue
+      return
+    }
     val value = aliasOrValue(initializer)
     properties[property.symbol] =
         when {
@@ -346,6 +352,13 @@ internal class Translator {
 
   private fun variable(variable: IrVariable) {
     val initializer = variable.initializer
+    // A Unit variable holds nothing: its initializer, like anything later assigned to it, is run
+    // only for what it does.
+    if (variable.type.isUnit()) {
+      initializer?.let { value(it) }
+      variables[variable] = NoValue
+      return
+    }
     if (initializer == null) {
       variables[variable] = Reg(newVReg(variable.name.asString()))
       return
@@ -385,6 +398,10 @@ internal class Translator {
             variables[expression.symbol.owner]
                 ?: fail(expression, "${expression.symbol.owner.name} is not available here")
         is IrSetValue -> {
+          if (variables[expression.symbol.owner] == NoValue) {
+            value(expression.value)
+            return NoValue
+          }
           val target = variables[expression.symbol.owner] as? Reg
           if (target == null) fail(expression, "${expression.symbol.owner.name} cannot be changed")
           move(target.reg, value(expression.value))
@@ -452,6 +469,10 @@ internal class Translator {
           ?: fail(element, "${symbol?.owner?.name ?: "this property"} is not available here")
 
   private fun setProperty(element: IrElement, symbol: IrPropertySymbol?, value: IrExpression) {
+    if (symbol?.let { properties[it] } == NoValue) {
+      value(value)
+      return
+    }
     val target = symbol?.let { properties[it] } as? Reg
     if (target == null) fail(element, "${symbol?.owner?.name ?: "this"} cannot be changed")
     move(target.reg, value(value))
