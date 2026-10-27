@@ -292,22 +292,30 @@ class StaticSetTest {
     fun local(statements: String) = "if (d0.On) {\n$statements\n}"
     for (source in
         listOf(
-            "var pin: Device\npin = d0",
-            "var sensor: GasSensor\nsensor = GasSensors.at(d0)",
-            "var lights: DeviceBatch<GrowLight>\nlights = GrowLights.all",
-            "var outlet: Port\noutlet = Filtrations.Gas.at(d1).Ports.Output",
-            "var gas: Substance\ngas = Substance.Oxygen",
-            "var gases: Set<Substance>\ngases = setOf(Substance.Oxygen)",
-            "var slot: DeviceSlot\nslot = d0.slots[0]",
+            local("var pin: Device\npin = d0"),
+            local("var pin: GenericDevice\npin = d0"),
+            local("var battery: Battery\nbattery = Batteries.Small.at(d0)"),
+            local("var sensor: GasSensor\nsensor = GasSensors.at(d0)"),
+            local("var lights: DeviceBatch<GrowLight>\nlights = GrowLights.all"),
+            local("var outlet: Port\noutlet = Filtrations.Gas.at(d1).Ports.Output"),
+            local("var gas: Substance\ngas = Substance.Oxygen"),
+            local("var gases: Set<Substance>\ngases = setOf(Substance.Oxygen)"),
+            local("var slots: Slots<DeviceSlot>\nslots = d0.slots"),
+            local("var slot: DeviceSlot\nslot = d0.slots[0]"),
+            "for (e in d0.Ratios) {\nvar x: Map.Entry<Substance, Double>\nx = e\ndb.Setting = x.value\n}",
         )) {
       assertWithMessage(source)
-          .that(error(local(source)).message)
+          .that(error(source).message)
           .contains("can only be held in a val, not a var")
     }
+    // A map can't be held even when declared first.
+    assertThat(error(local("var m: Mapped<Boolean>\nm = GrowLights.all.map { it.Power }")).message)
+        .contains("a map can't be held")
     // A val of one must be given it where it is declared.
     for (source in
         listOf(
             local("val pin: Device\npin = d0\npin.On = true"),
+            local("val pin: GenericDevice\npin = d0\npin.On = true"),
             local("val gas: Substance\ngas = Substance.Oxygen\ndb.Setting = d0.Ratios[gas]"),
             "for (e in d0.Ratios) {\nval x: Map.Entry<Substance, Double>\nx = e\ndb.Setting = x.value\n}",
         )) {

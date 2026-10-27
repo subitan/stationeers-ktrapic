@@ -518,6 +518,8 @@ internal class Translator(private val symbols: DeclarationFinder) {
     }
     if (initializer == null) {
       // What has no value is bound where it is declared, so a later assignment has nowhere to go.
+      // A map can't be held at all, deferred or not.
+      if (variable.type.classFqName?.asString() == MAPPED) fail(variable, MAPPED_HELD)
       if (variable.type.hasNoValue()) {
         fail(variable, if (variable.isVar) VAL_ONLY else HELD_WHERE_DECLARED)
       }
@@ -2298,6 +2300,7 @@ internal class Translator(private val symbols: DeclarationFinder) {
   private fun IrType.hasNoValue(): Boolean {
     val cls = classOrNull?.owner
     return isDevice() ||
+        classFqName?.asString() in DEVICE_CLASSES ||
         isViewOrKey() ||
         classFqName?.asString() in NO_VALUE_CLASSES ||
         cls?.isBatchClass() == true ||
@@ -2322,6 +2325,7 @@ internal class Translator(private val symbols: DeclarationFinder) {
     const val PREFAB_NAME = "ktrapic.PrefabName"
     const val TEXT = "Text"
     const val SLOTS = "slots"
+    const val MAPPED = "ktrapic.Mapped"
     const val MAPPED_HELD =
         "a map can't be held, only ended where it is made, as all.map { it.X }.sum()"
     const val VAL_ONLY =
