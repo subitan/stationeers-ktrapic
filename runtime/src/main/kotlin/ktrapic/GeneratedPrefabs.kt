@@ -10497,6 +10497,270 @@ object LogicReaders {
 }
 
 /** A device that comes as several prefabs, each a nested class. */
+interface LogicProcessor {
+  val Error: Boolean
+
+  var Mode: Double
+
+  var On: Boolean
+
+  val Power: Boolean
+
+  val RequiredPower: Double
+
+  val Setting: Double
+
+  /** A StructureLogicCompare. */
+  @PrefabName("StructureLogicCompare")
+  class Compare internal constructor() : TypedDevice(), LogicProcessor {
+    override val Error: Boolean
+      get() = intrinsic()
+
+    override var Mode: Double
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override var On: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override val Power: Boolean
+      get() = intrinsic()
+
+    override val RequiredPower: Double
+      get() = intrinsic()
+
+    override val Setting: Double
+      get() = intrinsic()
+
+    /** The StructureLogicCompare prefab. */
+    companion object : Prefab()
+  }
+
+  /** A StructureLogicGate. */
+  @PrefabName("StructureLogicGate")
+  class Gate internal constructor() : TypedDevice(), LogicProcessor {
+    override val Error: Boolean
+      get() = intrinsic()
+
+    override var Mode: Double
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override var On: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override val Power: Boolean
+      get() = intrinsic()
+
+    override val RequiredPower: Double
+      get() = intrinsic()
+
+    override val Setting: Double
+      get() = intrinsic()
+
+    /** The StructureLogicGate prefab. */
+    companion object : Prefab()
+  }
+
+  /** A StructureLogicMath. */
+  @PrefabName("StructureLogicMath")
+  class Math internal constructor() : TypedDevice(), LogicProcessor {
+    override val Error: Boolean
+      get() = intrinsic()
+
+    override var Mode: Double
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override var On: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override val Power: Boolean
+      get() = intrinsic()
+
+    override val RequiredPower: Double
+      get() = intrinsic()
+
+    override val Setting: Double
+      get() = intrinsic()
+
+    /** The StructureLogicMath prefab. */
+    companion object : Prefab()
+  }
+
+  /** A StructureLogicMathUnary. */
+  @PrefabName("StructureLogicMathUnary")
+  class MathUnary internal constructor() : TypedDevice(), LogicProcessor {
+    override val Error: Boolean
+      get() = intrinsic()
+
+    override var Mode: Double
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override var On: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override val Power: Boolean
+      get() = intrinsic()
+
+    override val RequiredPower: Double
+      get() = intrinsic()
+
+    override val Setting: Double
+      get() = intrinsic()
+
+    /** The StructureLogicMathUnary prefab. */
+    companion object : Prefab()
+  }
+
+  /** A StructureLogicMinMax. */
+  @PrefabName("StructureLogicMinMax")
+  class MinMax internal constructor() : TypedDevice(), LogicProcessor {
+    override val Error: Boolean
+      get() = intrinsic()
+
+    override var Mode: Double
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override var On: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override val Power: Boolean
+      get() = intrinsic()
+
+    override val RequiredPower: Double
+      get() = intrinsic()
+
+    override val Setting: Double
+      get() = intrinsic()
+
+    /** The StructureLogicMinMax prefab. */
+    companion object : Prefab()
+  }
+
+  /** A StructureLogicSelect. */
+  @PrefabName("StructureLogicSelect")
+  class Select internal constructor() : TypedDevice(), LogicProcessor {
+    override val Error: Boolean
+      get() = intrinsic()
+
+    override var Mode: Double
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override var On: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override val Power: Boolean
+      get() = intrinsic()
+
+    override val RequiredPower: Double
+      get() = intrinsic()
+
+    override val Setting: Double
+      get() = intrinsic()
+
+    /** The StructureLogicSelect prefab. */
+    companion object : Prefab()
+  }
+}
+
+/** The LogicProcessor devices on the chip's network, by prefab. */
+object LogicProcessors {
+  /** The StructureLogicCompare devices on the chip's network. */
+  @PrefabName("StructureLogicCompare")
+  object Compare {
+    /** The device on [pin], as a StructureLogicCompare. */
+    fun at(pin: Device): LogicProcessor.Compare = intrinsic()
+
+    /** Every one on the network. */
+    val all: DeviceBatch<LogicProcessor.Compare>
+      get() = intrinsic()
+
+    /** Every one on the network named [name], which must be a constant. */
+    fun named(name: String): DeviceBatch<LogicProcessor.Compare> = intrinsic()
+  }
+
+  /** The StructureLogicGate devices on the chip's network. */
+  @PrefabName("StructureLogicGate")
+  object Gate {
+    /** The device on [pin], as a StructureLogicGate. */
+    fun at(pin: Device): LogicProcessor.Gate = intrinsic()
+
+    /** Every one on the network. */
+    val all: DeviceBatch<LogicProcessor.Gate>
+      get() = intrinsic()
+
+    /** Every one on the network named [name], which must be a constant. */
+    fun named(name: String): DeviceBatch<LogicProcessor.Gate> = intrinsic()
+  }
+
+  /** The StructureLogicMath devices on the chip's network. */
+  @PrefabName("StructureLogicMath")
+  object Math {
+    /** The device on [pin], as a StructureLogicMath. */
+    fun at(pin: Device): LogicProcessor.Math = intrinsic()
+
+    /** Every one on the network. */
+    val all: DeviceBatch<LogicProcessor.Math>
+      get() = intrinsic()
+
+    /** Every one on the network named [name], which must be a constant. */
+    fun named(name: String): DeviceBatch<LogicProcessor.Math> = intrinsic()
+  }
+
+  /** The StructureLogicMathUnary devices on the chip's network. */
+  @PrefabName("StructureLogicMathUnary")
+  object MathUnary {
+    /** The device on [pin], as a StructureLogicMathUnary. */
+    fun at(pin: Device): LogicProcessor.MathUnary = intrinsic()
+
+    /** Every one on the network. */
+    val all: DeviceBatch<LogicProcessor.MathUnary>
+      get() = intrinsic()
+
+    /** Every one on the network named [name], which must be a constant. */
+    fun named(name: String): DeviceBatch<LogicProcessor.MathUnary> = intrinsic()
+  }
+
+  /** The StructureLogicMinMax devices on the chip's network. */
+  @PrefabName("StructureLogicMinMax")
+  object MinMax {
+    /** The device on [pin], as a StructureLogicMinMax. */
+    fun at(pin: Device): LogicProcessor.MinMax = intrinsic()
+
+    /** Every one on the network. */
+    val all: DeviceBatch<LogicProcessor.MinMax>
+      get() = intrinsic()
+
+    /** Every one on the network named [name], which must be a constant. */
+    fun named(name: String): DeviceBatch<LogicProcessor.MinMax> = intrinsic()
+  }
+
+  /** The StructureLogicSelect devices on the chip's network. */
+  @PrefabName("StructureLogicSelect")
+  object Select {
+    /** The device on [pin], as a StructureLogicSelect. */
+    fun at(pin: Device): LogicProcessor.Select = intrinsic()
+
+    /** Every one on the network. */
+    val all: DeviceBatch<LogicProcessor.Select>
+      get() = intrinsic()
+
+    /** Every one on the network named [name], which must be a constant. */
+    fun named(name: String): DeviceBatch<LogicProcessor.Select> = intrinsic()
+  }
+}
+
+/** A device that comes as several prefabs, each a nested class. */
 interface Door {
   val Idle: Boolean
 
@@ -18291,47 +18555,6 @@ object LogicButtons {
   fun named(name: String): DeviceBatch<LogicButton> = intrinsic()
 }
 
-/** A StructureLogicCompare. */
-@PrefabName("StructureLogicCompare")
-class LogicCompare internal constructor() : TypedDevice() {
-  val Error: Boolean
-    get() = intrinsic()
-
-  var Mode: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var On: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val Power: Boolean
-    get() = intrinsic()
-
-  val RequiredPower: Double
-    get() = intrinsic()
-
-  val Setting: Double
-    get() = intrinsic()
-
-  /** The StructureLogicCompare prefab. */
-  companion object : Prefab()
-}
-
-/** The StructureLogicCompare devices on the chip's network. */
-@PrefabName("StructureLogicCompare")
-object LogicCompares {
-  /** The device on [pin], as a StructureLogicCompare. */
-  fun at(pin: Device): LogicCompare = intrinsic()
-
-  /** Every one on the network. */
-  val all: DeviceBatch<LogicCompare>
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): DeviceBatch<LogicCompare> = intrinsic()
-}
-
 /** A StructureLogicDial. */
 @PrefabName("StructureLogicDial")
 class LogicDial internal constructor() : TypedDevice() {
@@ -18364,47 +18587,6 @@ object LogicDials {
   fun named(name: String): DeviceBatch<LogicDial> = intrinsic()
 }
 
-/** A StructureLogicGate. */
-@PrefabName("StructureLogicGate")
-class LogicGate internal constructor() : TypedDevice() {
-  val Error: Boolean
-    get() = intrinsic()
-
-  var Mode: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var On: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val Power: Boolean
-    get() = intrinsic()
-
-  val RequiredPower: Double
-    get() = intrinsic()
-
-  val Setting: Double
-    get() = intrinsic()
-
-  /** The StructureLogicGate prefab. */
-  companion object : Prefab()
-}
-
-/** The StructureLogicGate devices on the chip's network. */
-@PrefabName("StructureLogicGate")
-object LogicGates {
-  /** The device on [pin], as a StructureLogicGate. */
-  fun at(pin: Device): LogicGate = intrinsic()
-
-  /** Every one on the network. */
-  val all: DeviceBatch<LogicGate>
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): DeviceBatch<LogicGate> = intrinsic()
-}
-
 /** A StructureLogicHashGen. */
 @PrefabName("StructureLogicHashGen")
 class LogicHashGen internal constructor() : TypedDevice() {
@@ -18427,88 +18609,6 @@ object LogicHashGens {
 
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): DeviceBatch<LogicHashGen> = intrinsic()
-}
-
-/** A StructureLogicMath. */
-@PrefabName("StructureLogicMath")
-class LogicMath internal constructor() : TypedDevice() {
-  val Error: Boolean
-    get() = intrinsic()
-
-  var Mode: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var On: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val Power: Boolean
-    get() = intrinsic()
-
-  val RequiredPower: Double
-    get() = intrinsic()
-
-  val Setting: Double
-    get() = intrinsic()
-
-  /** The StructureLogicMath prefab. */
-  companion object : Prefab()
-}
-
-/** The StructureLogicMath devices on the chip's network. */
-@PrefabName("StructureLogicMath")
-object LogicMaths {
-  /** The device on [pin], as a StructureLogicMath. */
-  fun at(pin: Device): LogicMath = intrinsic()
-
-  /** Every one on the network. */
-  val all: DeviceBatch<LogicMath>
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): DeviceBatch<LogicMath> = intrinsic()
-}
-
-/** A StructureLogicMathUnary. */
-@PrefabName("StructureLogicMathUnary")
-class LogicMathUnary internal constructor() : TypedDevice() {
-  val Error: Boolean
-    get() = intrinsic()
-
-  var Mode: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var On: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val Power: Boolean
-    get() = intrinsic()
-
-  val RequiredPower: Double
-    get() = intrinsic()
-
-  val Setting: Double
-    get() = intrinsic()
-
-  /** The StructureLogicMathUnary prefab. */
-  companion object : Prefab()
-}
-
-/** The StructureLogicMathUnary devices on the chip's network. */
-@PrefabName("StructureLogicMathUnary")
-object LogicMathUnaries {
-  /** The device on [pin], as a StructureLogicMathUnary. */
-  fun at(pin: Device): LogicMathUnary = intrinsic()
-
-  /** Every one on the network. */
-  val all: DeviceBatch<LogicMathUnary>
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): DeviceBatch<LogicMathUnary> = intrinsic()
 }
 
 /** A StructureLogicMemory. */
@@ -18534,47 +18634,6 @@ object LogicMemories {
 
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): DeviceBatch<LogicMemory> = intrinsic()
-}
-
-/** A StructureLogicMinMax. */
-@PrefabName("StructureLogicMinMax")
-class LogicMinMax internal constructor() : TypedDevice() {
-  val Error: Boolean
-    get() = intrinsic()
-
-  var Mode: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var On: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val Power: Boolean
-    get() = intrinsic()
-
-  val RequiredPower: Double
-    get() = intrinsic()
-
-  val Setting: Double
-    get() = intrinsic()
-
-  /** The StructureLogicMinMax prefab. */
-  companion object : Prefab()
-}
-
-/** The StructureLogicMinMax devices on the chip's network. */
-@PrefabName("StructureLogicMinMax")
-object LogicMinMaxes {
-  /** The device on [pin], as a StructureLogicMinMax. */
-  fun at(pin: Device): LogicMinMax = intrinsic()
-
-  /** Every one on the network. */
-  val all: DeviceBatch<LogicMinMax>
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): DeviceBatch<LogicMinMax> = intrinsic()
 }
 
 /** A StructureLogicPidController. */
@@ -18701,47 +18760,6 @@ object LogicRocketUplinks {
 
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): DeviceBatch<LogicRocketUplink> = intrinsic()
-}
-
-/** A StructureLogicSelect. */
-@PrefabName("StructureLogicSelect")
-class LogicSelect internal constructor() : TypedDevice() {
-  val Error: Boolean
-    get() = intrinsic()
-
-  var Mode: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var On: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val Power: Boolean
-    get() = intrinsic()
-
-  val RequiredPower: Double
-    get() = intrinsic()
-
-  val Setting: Double
-    get() = intrinsic()
-
-  /** The StructureLogicSelect prefab. */
-  companion object : Prefab()
-}
-
-/** The StructureLogicSelect devices on the chip's network. */
-@PrefabName("StructureLogicSelect")
-object LogicSelects {
-  /** The device on [pin], as a StructureLogicSelect. */
-  fun at(pin: Device): LogicSelect = intrinsic()
-
-  /** Every one on the network. */
-  val all: DeviceBatch<LogicSelect>
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): DeviceBatch<LogicSelect> = intrinsic()
 }
 
 /** A StructureLogicSorter. */
