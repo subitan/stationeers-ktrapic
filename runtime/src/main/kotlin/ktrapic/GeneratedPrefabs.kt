@@ -10837,6 +10837,99 @@ object Switches {
 }
 
 /** A device that comes as several prefabs, each a nested class. */
+interface Button {
+  var Activate: Boolean
+
+  var Lock: Boolean
+
+  val Setting: Double
+
+  /** A StructureLogicButton. */
+  @PrefabName("StructureLogicButton")
+  class Standard internal constructor() : TypedDevice(), Button {
+    override var Activate: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override var Lock: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override val Setting: Double
+      get() = intrinsic()
+
+    /** The StructureLogicButton prefab. */
+    companion object : Prefab()
+  }
+
+  /** A StructureEmergencyButton. */
+  @PrefabName("StructureEmergencyButton")
+  class Important internal constructor() : TypedDevice(), Button {
+    override var Activate: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    val Error: Boolean
+      get() = intrinsic()
+
+    override var Lock: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    var On: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    var Open: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    val Power: Boolean
+      get() = intrinsic()
+
+    val RequiredPower: Double
+      get() = intrinsic()
+
+    override val Setting: Double
+      get() = intrinsic()
+
+    /** The StructureEmergencyButton prefab. */
+    companion object : Prefab()
+  }
+}
+
+/** The Button devices on the chip's network, by prefab. */
+object Buttons {
+  /** The StructureLogicButton devices on the chip's network. */
+  @PrefabName("StructureLogicButton")
+  object Standard {
+    /** The device on [pin], as a StructureLogicButton. */
+    fun at(pin: Device): Button.Standard = intrinsic()
+
+    /** Every one on the network. */
+    val all: DeviceBatch<Button.Standard>
+      get() = intrinsic()
+
+    /** Every one on the network named [name], which must be a constant. */
+    fun named(name: String): DeviceBatch<Button.Standard> = intrinsic()
+  }
+
+  /** The StructureEmergencyButton devices on the chip's network. */
+  @PrefabName("StructureEmergencyButton")
+  object Important {
+    /** The device on [pin], as a StructureEmergencyButton. */
+    fun at(pin: Device): Button.Important = intrinsic()
+
+    /** Every one on the network. */
+    val all: DeviceBatch<Button.Important>
+      get() = intrinsic()
+
+    /** Every one on the network named [name], which must be a constant. */
+    fun named(name: String): DeviceBatch<Button.Important> = intrinsic()
+  }
+}
+
+/** A device that comes as several prefabs, each a nested class. */
 interface Door {
   val Idle: Boolean
 
@@ -17326,55 +17419,6 @@ object ElectronicsPrinters {
   }
 }
 
-/** A StructureEmergencyButton. */
-@PrefabName("StructureEmergencyButton")
-class EmergencyButton internal constructor() : TypedDevice() {
-  var Activate: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val Error: Boolean
-    get() = intrinsic()
-
-  var Lock: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var On: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var Open: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val Power: Boolean
-    get() = intrinsic()
-
-  val RequiredPower: Double
-    get() = intrinsic()
-
-  val Setting: Double
-    get() = intrinsic()
-
-  /** The StructureEmergencyButton prefab. */
-  companion object : Prefab()
-}
-
-/** The StructureEmergencyButton devices on the chip's network. */
-@PrefabName("StructureEmergencyButton")
-object EmergencyButtons {
-  /** The device on [pin], as a StructureEmergencyButton. */
-  fun at(pin: Device): EmergencyButton = intrinsic()
-
-  /** Every one on the network. */
-  val all: DeviceBatch<EmergencyButton>
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): DeviceBatch<EmergencyButton> = intrinsic()
-}
-
 /** A StructureEvaporationChamber. */
 @PrefabName("StructureEvaporationChamber")
 class EvaporationChamber internal constructor() : TypedDevice() {
@@ -18597,38 +18641,6 @@ object LiquidDrains {
 
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): DeviceBatch<LiquidDrain> = intrinsic()
-}
-
-/** A StructureLogicButton. */
-@PrefabName("StructureLogicButton")
-class LogicButton internal constructor() : TypedDevice() {
-  var Activate: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var Lock: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val Setting: Double
-    get() = intrinsic()
-
-  /** The StructureLogicButton prefab. */
-  companion object : Prefab()
-}
-
-/** The StructureLogicButton devices on the chip's network. */
-@PrefabName("StructureLogicButton")
-object LogicButtons {
-  /** The device on [pin], as a StructureLogicButton. */
-  fun at(pin: Device): LogicButton = intrinsic()
-
-  /** Every one on the network. */
-  val all: DeviceBatch<LogicButton>
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): DeviceBatch<LogicButton> = intrinsic()
 }
 
 /** A StructureLogicDial. */

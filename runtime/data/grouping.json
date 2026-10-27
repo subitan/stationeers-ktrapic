@@ -474,6 +474,13 @@
         "Standard": "StructureLogicSwitch2"
       }
     },
+    "Button": {
+      "plural": "Buttons",
+      "members": {
+        "Standard": "StructureLogicButton",
+        "Important": "StructureEmergencyButton"
+      }
+    },
     "Door": {
       "plural": "Doors",
       "members": {
