@@ -55,6 +55,7 @@ import org.jetbrains.kotlin.ir.expressions.IrSetValue
 import org.jetbrains.kotlin.ir.expressions.IrStatementOrigin
 import org.jetbrains.kotlin.ir.expressions.IrTypeOperator
 import org.jetbrains.kotlin.ir.expressions.IrTypeOperatorCall
+import org.jetbrains.kotlin.ir.expressions.IrVararg
 import org.jetbrains.kotlin.ir.expressions.IrWhen
 import org.jetbrains.kotlin.ir.expressions.IrWhileLoop
 import org.jetbrains.kotlin.ir.symbols.IrPropertySymbol
@@ -142,6 +143,15 @@ internal data class Named(val logicType: String) : Value
 internal data class Key(val name: String) : Value
 
 /**
+ * A collection known whole when compiled (`setOf(Substance.Oxygen, Substance.Nitrogen)`, `listOf(0,
+ * 2)`, `Substance.entries`, a view's `keys`): it has no form on the chip, and is only looped over
+ * (each element a constant in its own copy of the loop), tested with `in`, measured with `size`,
+ * combined with `+`, `-` and `intersect`, held in a val or passed to an inlined function. Its
+ * [elements] are each a [Const] or a [Key].
+ */
+internal data class StaticSet(val elements: List<Value>) : Value
+
+/**
  * Translates the IR of a wrapped script-style program into [TirLine]s: the `Program` object's
  * property initializers and `init` blocks, in source order. [symbols] finds the runtime API's
  * declarations.
@@ -178,6 +188,26 @@ internal class Translator(private val symbols: DeclarationFinder) {
             .map { it.name.asString() }
             .toSet()
     ViewAccess("a device", names, names)
+  }
+
+  /** The [Substance] entries, by name, in declaration order. */
+  private val substances: List<String> by lazy {
+    val substance =
+        checkNotNull(symbols.findClass(SUBSTANCE_ID)) {
+          "the runtime has no ${SUBSTANCE_ID.asString()}"
+        }
+    substance.owner.declarations.filterIsInstance<IrEnumEntry>().map { it.name.asString() }
+  }
+
+  /**
+   * The substances a device's [Ratios] view reports, in [Substance]'s order: those whose logic type
+   * (`RatioOxygen`, `RatioOxygenOutput`) the view's device can read.
+   */
+  private fun ratioKeys(view: View): StaticSet {
+    val readable = (view.access ?: anyDeviceAccess).read
+    return StaticSet(
+        substances.filter { view.prefix + it + view.suffix in readable }.map { Key(it) }
+    )
   }
 
   private class FunctionExit(val label: String, val result: VReg?)
@@ -307,7 +337,7 @@ internal class Translator(private val symbols: DeclarationFinder) {
     if (parameters.any { it.type.isDevice() || it.type.isViewOrKey() }) {
       fail(
           call,
-          "A function with a device, view or substance parameter must be inline, or called only once",
+          "A function with a device, view, substance or set parameter must be inline, or called only once",
       )
     }
     val target =
@@ -478,6 +508,9 @@ internal class Translator(private val symbols: DeclarationFinder) {
           )
         }
         if (it is Key) fail(expression, "a substance can only be used as a key, as Ratios[it]")
+        if (it is StaticSet) {
+          fail(expression, "a static set can only be looped over, tested with in, or measured")
+        }
         if (it.isAlias() && it !is Dev) fail(expression, batchError)
       }
 
@@ -612,6 +645,9 @@ internal class Translator(private val symbols: DeclarationFinder) {
       }
     }
     val fqName = function.kotlinFqName.asString()
+    staticSetCall(call, function, fqName)?.let {
+      return it
+    }
     PIN_GETTERS[fqName]?.let {
       return Dev(Device(it))
     }
@@ -657,6 +693,124 @@ internal class Translator(private val symbols: DeclarationFinder) {
             else -> math(call, fqName) ?: fail(call, "calls to $fqName are not supported")
           }
     }
+  }
+
+  // Static sets: collections known whole when compiled.
+
+  /**
+   * A call making or using a [StaticSet], or null if [function] is none of those: `setOf`, `listOf`
+   * and their empty forms, an enum's `entries`, `+`, `-` and `intersect` of a static set, and its
+   * `contains` (`in`) and `size`.
+   */
+  private fun staticSetCall(call: IrCall, function: IrSimpleFunction, fqName: String): Value? {
+    val args = call.arguments
+    return when (fqName) {
+      in SET_BUILDERS -> {
+        val elements =
+            args.filterNotNull().flatMap { argument ->
+              if (argument is IrVararg) {
+                argument.elements.map {
+                  it as? IrExpression ?: fail(argument, "a set's elements must be written out")
+                }
+              } else {
+                listOf(argument)
+              }
+            }
+        val values = elements.map { setElement(it) }
+        StaticSet(if (fqName.endsWith("setOf")) values.distinct() else values)
+      }
+      in EMPTY_SET_BUILDERS -> StaticSet(emptyList())
+      "kotlin.collections.plus",
+      "kotlin.collections.minus",
+      "kotlin.collections.intersect" -> {
+        val left = aliasOrValue(args[0]!!) as? StaticSet ?: return null
+        val right =
+            when (val other = aliasOrValue(args[1]!!)) {
+              is StaticSet -> other.elements
+              is Const -> listOf(Const(other.number))
+              is Key -> listOf(other)
+              else -> fail(args[1]!!, "a static set combines only with constants or static sets")
+            }
+        StaticSet(
+            when (fqName) {
+              "kotlin.collections.plus" -> (left.elements + right).distinct()
+              "kotlin.collections.minus" -> left.elements.filter { it !in right }
+              else -> left.elements.filter { it in right }
+            }
+        )
+      }
+      else -> {
+        val owner = function.parentClassOrNull ?: return null
+        val name = function.correspondingPropertySymbol?.owner?.name?.asString()
+        when {
+          owner.kind == ClassKind.ENUM_CLASS && name == "entries" -> {
+            if (owner.kotlinFqName.asString() != SUBSTANCE) {
+              fail(call, "only Substance.entries can be looped over")
+            }
+            StaticSet(
+                owner.declarations.filterIsInstance<IrEnumEntry>().map {
+                  Key(it.name.asString())
+                }
+            )
+          }
+          owner.kotlinFqName.asString() in COLLECTION_CLASSES -> {
+            val set = aliasOrValue(args[0]!!) as? StaticSet ?: return null
+            when (name ?: function.name.asString()) {
+              "size" -> Const(set.elements.size.toDouble())
+              "contains" -> membership(set, args[1]!!)
+              "isEmpty" -> Const(if (set.elements.isEmpty()) 1.0 else 0.0)
+              else ->
+                  fail(
+                      call,
+                      "a static set is looped over, tested with in, or measured with size, " +
+                          "not ${function.name}",
+                  )
+            }
+          }
+          else -> null
+        }
+      }
+    }
+  }
+
+  /** An element of a set being made, which must be a constant number or a [Substance]. */
+  private fun setElement(expression: IrExpression): Value =
+      when (val value = aliasOrValue(expression)) {
+        // By its number alone, so a set's elements compare as numbers however they were written.
+        is Const -> Const(value.number)
+        is Key -> value
+        else ->
+            fail(
+                expression,
+                "a set's elements must be constants, as 2 or Substance.Oxygen, or vals holding them",
+            )
+      }
+
+  /**
+   * Whether [element] is in [set]: a constant when the element is one, else 1 if it equals any of
+   * the set's numbers (one `seq` and `or` each).
+   */
+  private fun membership(set: StaticSet, element: IrExpression): Value {
+    val value = aliasOrValue(element)
+    if (value is Const) {
+      return Const(if (set.elements.any { (it as? Const)?.number == value.number }) 1.0 else 0.0)
+    }
+    if (value is Key) return Const(if (value in set.elements) 1.0 else 0.0)
+    if (value !is Reg) fail(element, "this can't be tested against a set")
+    if (set.elements.any { it !is Const }) {
+      fail(element, "a number is tested only against a set of numbers")
+    }
+    val result = newVReg()
+    if (set.elements.isEmpty()) {
+      emit("move", result, Fixed(Number(0.0)))
+      return Reg(result)
+    }
+    for ((index, number) in set.elements.withIndex()) {
+      val equal = if (index == 0) result else newVReg()
+      emit("seq", equal, value.reg, operand(number))
+      if (index > 0) emit("or", result, result, equal)
+    }
+    return Reg(result)
   }
 
   private fun device(call: IrCall, argument: IrExpression?): Dev =
@@ -790,6 +944,7 @@ internal class Translator(private val symbols: DeclarationFinder) {
           if (name == "Ratios") View(view.owner, "Ratios", "Ratio", view.suffix, view.access)
           else viewLogicType(call, view, name, isSetter, args.getOrNull(1))
       "Ratios" -> {
+        if (name == "keys") return ratioKeys(view)
         val key =
             args[1]?.let { aliasOrValue(it) } as? Key
                 ?: fail(args[1] ?: call, "the substance must be written out, as Substance.Oxygen")
@@ -1234,7 +1389,8 @@ internal class Translator(private val symbols: DeclarationFinder) {
           this is SlotsOf ||
           this is SlotOf ||
           this is View ||
-          this is Key
+          this is Key ||
+          this is StaticSet
 
   private fun logicType(call: IrCall, argument: IrExpression?): Fixed {
     if (argument !is IrGetEnumValue) {
@@ -1378,10 +1534,10 @@ internal class Translator(private val symbols: DeclarationFinder) {
   ): List<Value> = expressions.mapIndexed { index, expression ->
     val value =
         if (aliases.getOrElse(index) { false }) {
-          aliasOrValue(expression).takeIf { it is View || it is Key }
+          aliasOrValue(expression).takeIf { it is View || it is Key || it is StaticSet }
               ?: fail(
                   expression,
-                  "this must be a device's view or a substance, or a val holding one",
+                  "this must be a device's view, a substance or a static set, or a val holding one",
               )
         } else {
           value(expression)
@@ -1845,8 +2001,21 @@ internal class Translator(private val symbols: DeclarationFinder) {
     val loopVariable = body?.statements?.firstOrNull() as? IrVariable
     val iteratorCall = iterator?.initializer as? IrCall
     val rangeExpression = iteratorCall?.arguments?.getOrNull(0)
-    if (loop == null || loopVariable == null || rangeExpression !is IrCall) {
-      fail(block, "Only for loops over Int ranges are supported")
+    if (loop == null || loopVariable == null || rangeExpression == null) {
+      fail(block, "Only for loops over Int ranges and static sets are supported")
+    }
+    if (
+        rangeExpression !is IrCall ||
+            rangeExpression.symbol.owner.kotlinFqName.asString() !in RANGE_FUNCTIONS
+    ) {
+      val set =
+          aliasOrValue(rangeExpression) as? StaticSet
+              ?: fail(
+                  rangeExpression,
+                  "a for loop goes over an Int range, or a set known when compiled, as " +
+                      "setOf(Substance.Oxygen, Substance.Nitrogen)",
+              )
+      return unrolledLoop(loop, loopVariable, body, set)
     }
     val range = range(rangeExpression)
     val counter = newVReg(loopVariable.name.asString())
@@ -1888,6 +2057,29 @@ internal class Translator(private val symbols: DeclarationFinder) {
     label(next)
     emit(if (range.descending) "sub" else "add", counter, counter, operand(step))
     emit("j", Fixed(LabelRef(top)))
+    label(done)
+    return NoValue
+  }
+
+  /**
+   * A for loop over a [StaticSet], one copy of [body] per element, in which the loop variable is
+   * that element, a constant: so it may key a view. `continue` goes on to the next copy, `break`
+   * past the last.
+   */
+  private fun unrolledLoop(
+      loop: IrWhileLoop,
+      loopVariable: IrVariable,
+      body: IrContainerExpression,
+      set: StaticSet,
+  ): Value {
+    val done = newLabel("endfor")
+    for (element in set.elements) {
+      val next = newLabel("next")
+      variables[loopVariable] = element
+      loops[loop] = next to done
+      for (statement in body.statements.drop(1)) statement(statement)
+      label(next)
+    }
     label(done)
     return NoValue
   }
@@ -1996,6 +2188,7 @@ internal class Translator(private val symbols: DeclarationFinder) {
         is SlotOf,
         is View,
         is Key,
+        is StaticSet,
         Element,
         is Named -> error("a batch, slot or view has no value")
         NoValue -> error("no value")
@@ -2008,7 +2201,9 @@ internal class Translator(private val symbols: DeclarationFinder) {
 
   /** A view class or [SUBSTANCE]: an argument named when compiled, as a device is. */
   private fun IrType.isViewOrKey() =
-      classFqName?.asString().let { it in VIEW_CLASSES || it == SUBSTANCE }
+      classFqName?.asString().let {
+        it in VIEW_CLASSES || it == SUBSTANCE || it in COLLECTION_CLASSES
+      }
 
   private fun IrType.isPrefab() =
       classOrNull?.owner?.let { it.kotlinFqName.asString() == PREFAB || it.isSubclassOf(PREFAB) } ==
@@ -2037,6 +2232,25 @@ internal class Translator(private val symbols: DeclarationFinder) {
     const val LOGIC_TYPES = "ktrapic.LogicTypes"
     const val SUBSTANCE = "ktrapic.Substance"
     val LOGIC_TYPE: ClassId = ClassId.topLevel(FqName("ktrapic.LogicType"))
+    val SUBSTANCE_ID: ClassId = ClassId.topLevel(FqName(SUBSTANCE))
+
+    /** The ranges a for loop counts through as a real loop; anything else must be a static set. */
+    val RANGE_FUNCTIONS =
+        setOf(
+            "kotlin.Int.rangeTo",
+            "kotlin.Int.rangeUntil",
+            "kotlin.ranges.until",
+            "kotlin.ranges.downTo",
+            "kotlin.ranges.step",
+        )
+
+    val SET_BUILDERS = setOf("kotlin.collections.setOf", "kotlin.collections.listOf")
+    val EMPTY_SET_BUILDERS = setOf("kotlin.collections.emptySet", "kotlin.collections.emptyList")
+
+    /** The collection interfaces a static set is typed as. */
+    val COLLECTION_CLASSES =
+        setOf("Set", "List", "Collection", "Iterable").map { "kotlin.collections.$it" }.toSet() +
+            "kotlin.enums.EnumEntries"
 
     /** The runtime's view classes, whose members name logic types ([View]). */
     val VIEW_CLASSES =

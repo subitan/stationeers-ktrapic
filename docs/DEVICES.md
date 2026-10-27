@@ -73,6 +73,8 @@ class Port {
  */
 class Ratios {
   operator fun get(substance: Substance): Double
+  /** The substances the device reports, a set known when compiled. */
+  val keys: Set<Substance>
 }
 
 /** A vector a device reports, by axis. */

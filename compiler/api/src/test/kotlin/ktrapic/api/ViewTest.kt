@@ -173,7 +173,7 @@ class ViewTest {
                 .message
         )
         .isEqualTo(
-            "A function with a device, view or substance parameter must be inline, or called only once"
+            "A function with a device, view, substance or set parameter must be inline, or called only once"
         )
   }
 

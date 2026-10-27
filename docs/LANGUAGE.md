@@ -83,7 +83,9 @@ the maths functions are not, even with constant arguments.
   `step n`. The bounds and the step are evaluated once, before the loop. A constant step must be
   positive; a step computed at run time isn't checked, and one of 0 or less loops forever where
   the JVM throws. A step applied to a stepped range is not supported.
-- `in` and ranges work only in a `for`: `x in a..b` in an `if` or a `when` branch is rejected.
+- `for` over a [static set](#static-sets), unrolled: one copy of the body for each element.
+- Ranges work only in a `for`: `x in a..b` in an `if` or a `when` branch is rejected; `in` a
+  static set works anywhere.
 - `break` and `continue`, including labelled ones (`break@outer`).
 
 ## Functions
@@ -95,7 +97,7 @@ properties.
 - A function called once, or marked `inline`, is compiled into the place it is called.
 - Any other function gets one body, called with `jal`. Its arguments and result travel in
   registers set aside for it, and it saves `ra` on the stack only if it calls another function.
-- Only an inlined function can take a `Device`, a view or a `Substance` parameter.
+- Only an inlined function can take a `Device`, a view, a `Substance` or a static set parameter.
 - Not supported: recursion, default arguments, `vararg`, and extension, generic and local
   functions.
 
@@ -243,6 +245,33 @@ sign.Mode = DisplayMode.String
 sign.Text = "HOT"
 LedDisplays.Large.all.forEach { it.Text = "OK" }
 ```
+
+### Static sets
+
+A static set is a collection the compiler knows whole: `setOf` or `listOf` of constants (numbers
+or `Substance` entries), `Substance.entries`, a view's `Ratios.keys` (the substances its device
+reports), sets made of these with `+`, `-` and `intersect`, and a `val` holding any of them. It
+never exists on the chip. A `for` over one is unrolled: the body is compiled once for each element,
+with the loop variable a constant in that copy, so it can key a view, and only the elements given
+cost lines:
+
+```kotlin
+val sensor = GasSensors.at(d0)
+val breathable = setOf(Substance.Oxygen, Substance.Nitrogen, Substance.CarbonDioxide)
+var other = 1.0
+for (gas in breathable) other -= sensor.Ratios[gas]
+var heaviest = 0.0
+for (gas in sensor.Ratios.keys - breathable) {
+  if (sensor.Ratios[gas] > heaviest) heaviest = sensor.Ratios[gas]
+}
+db.Setting = other + heaviest
+```
+
+`continue` goes on to the next element's copy, and `break` past the last. A set's `size` and an
+`in` test of a constant are constants; `in` with a number known only when the program runs
+compiles to one comparison per element. A static set can be held in a `val` and passed to an
+inlined function, but not stored in a `var` or used as a value otherwise. A `for` over an `Int`
+range is not unrolled: it stays a loop.
 
 ### Slots
 
