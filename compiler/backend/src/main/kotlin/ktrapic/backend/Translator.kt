@@ -467,11 +467,7 @@ internal class Translator(private val symbols: DeclarationFinder) {
         when {
           value is Mapped -> fail(initializer, MAPPED_HELD)
           value.isAlias() && !property.isVar -> value
-          value.isAlias() ->
-              fail(
-                  property,
-                  "a device, batch, slot, view, static set, substance or Ratios entry has no value on the chip, so it can only be held in a val, not a var",
-              )
+          value.isAlias() -> fail(property, VAL_ONLY)
           value is Const && !property.isReassigned() -> value
           else -> Reg(newVReg(property.name.asString())).also { move(it.reg, value) }
         }
@@ -521,6 +517,12 @@ internal class Translator(private val symbols: DeclarationFinder) {
       return
     }
     if (initializer == null) {
+      // What has no value is bound where it is declared, so a later assignment has nowhere to go.
+      // A map can't be held at all, deferred or not.
+      if (variable.type.classFqName?.asString() == MAPPED) fail(variable, MAPPED_HELD)
+      if (variable.type.hasNoValue()) {
+        fail(variable, if (variable.isVar) VAL_ONLY else HELD_WHERE_DECLARED)
+      }
       variables[variable] = Reg(newVReg(variable.name.asString()))
       return
     }
@@ -529,11 +531,7 @@ internal class Translator(private val symbols: DeclarationFinder) {
         when {
           value is Mapped -> fail(initializer, MAPPED_HELD)
           value.isAlias() && !variable.isVar -> value
-          value.isAlias() ->
-              fail(
-                  variable,
-                  "a device, batch, slot, view, static set, substance or Ratios entry has no value on the chip, so it can only be held in a val, not a var",
-              )
+          value.isAlias() -> fail(variable, VAL_ONLY)
           value is Const && !variable.isReassigned() -> value
           else -> Reg(newVReg(variable.name.asString())).also { move(it.reg, value) }
         }
@@ -2298,6 +2296,17 @@ internal class Translator(private val symbols: DeclarationFinder) {
         it in VIEW_CLASSES || it == SUBSTANCE || it in COLLECTION_CLASSES
       }
 
+  /** A type with no value on the chip, only a place it names (see [VAL_ONLY]). */
+  private fun IrType.hasNoValue(): Boolean {
+    val cls = classOrNull?.owner
+    return isDevice() ||
+        classFqName?.asString() in DEVICE_CLASSES ||
+        isViewOrKey() ||
+        classFqName?.asString() in NO_VALUE_CLASSES ||
+        cls?.isBatchClass() == true ||
+        cls?.isSubclassOf(DEVICE_SLOT) == true
+  }
+
   private fun IrType.isPrefab() =
       classOrNull?.owner?.let { it.kotlinFqName.asString() == PREFAB || it.isSubclassOf(PREFAB) } ==
           true
@@ -2316,8 +2325,13 @@ internal class Translator(private val symbols: DeclarationFinder) {
     const val PREFAB_NAME = "ktrapic.PrefabName"
     const val TEXT = "Text"
     const val SLOTS = "slots"
+    const val MAPPED = "ktrapic.Mapped"
     const val MAPPED_HELD =
         "a map can't be held, only ended where it is made, as all.map { it.X }.sum()"
+    const val VAL_ONLY =
+        "a device, batch, slot, view, static set, substance or Ratios entry has no value on the chip, so it can only be held in a val, not a var"
+    const val HELD_WHERE_DECLARED =
+        "a device, batch, slot, view, static set, substance or Ratios entry has no value on the chip, so a val of one must be given it where it is declared"
     const val SLOTS_CLASS = "ktrapic.Slots"
     const val DEVICE_SLOT = "ktrapic.DeviceSlot"
     const val SLOT_NUMBER = "ktrapic.SlotNumber"
@@ -2336,6 +2350,9 @@ internal class Translator(private val symbols: DeclarationFinder) {
             "kotlin.ranges.downTo",
             "kotlin.ranges.step",
         )
+
+    /** Classes besides devices, views and batches with no value on the chip. */
+    val NO_VALUE_CLASSES = setOf(SLOTS_CLASS, DEVICE_SLOT, "kotlin.collections.Map.Entry")
 
     val SET_BUILDERS = setOf("kotlin.collections.setOf", "kotlin.collections.listOf")
     val EMPTY_SET_BUILDERS = setOf("kotlin.collections.emptySet", "kotlin.collections.emptyList")
