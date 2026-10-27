@@ -998,7 +998,12 @@ internal class Translator(private val symbols: DeclarationFinder) {
             .split(',')
             .filter { it.isNotEmpty() }
             .toSet()
-    return ViewAccess(device.name.asString(), names(0), names(1))
+    // A family member is named with its family, as a program names it: SatelliteDish.Medium.
+    val name =
+        device.parentClassOrNull
+            ?.takeIf { it.kind == ClassKind.INTERFACE }
+            ?.let { "${it.name}.${device.name}" } ?: device.name.asString()
+    return ViewAccess(name, names(0), names(1))
   }
 
   /**

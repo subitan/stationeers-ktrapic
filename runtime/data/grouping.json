@@ -9,6 +9,14 @@
         "Small": "StructureBatterySmall"
       }
     },
+    "BatteryCell": {
+      "plural": "BatteryCells",
+      "members": {
+        "Standard": "ItemBatteryCell",
+        "Large": "ItemBatteryCellLarge",
+        "Nuclear": "ItemBatteryCellNuclear"
+      }
+    },
     "LedDisplay": {
       "plural": "LedDisplays",
       "members": {
@@ -16,7 +24,352 @@
         "Medium": "StructureConsoleLED1x2",
         "Large": "StructureConsoleLED1x3"
       }
+    },
+    "Transformer": {
+      "plural": "Transformers",
+      "members": {
+        "Large": "StructureTransformer",
+        "Medium": "StructureTransformerMedium",
+        "MediumReversed": "StructureTransformerMedium(Reversed)",
+        "Small": "StructureTransformerSmall",
+        "SmallReversed": "StructureTransformerSmallReversed"
+      }
+    },
+    "SatelliteDish": {
+      "plural": "SatelliteDishes",
+      "members": {
+        "Small": "StructureSmallSatelliteDish",
+        "Medium": "StructureSatelliteDish",
+        "Large": "StructureLargeSatelliteDish"
+      }
+    },
+    "PressurePlate": {
+      "plural": "PressurePlates",
+      "members": {
+        "Small": "StructurePressurePlateSmall",
+        "Medium": "StructurePressurePlateMedium",
+        "Large": "StructurePressurePlateLarge"
+      }
+    },
+    "Fridge": {
+      "plural": "Fridges",
+      "members": {
+        "Small": "StructureFridgeSmall",
+        "Big": "StructureFridgeBig"
+      }
+    },
+    "CargoStorage": {
+      "plural": "CargoStorages",
+      "members": {
+        "Small": "StructureCargoStorageSmall",
+        "Medium": "StructureCargoStorageMedium"
+      }
+    },
+    "HangarDoor": {
+      "plural": "HangarDoors",
+      "members": {
+        "Medium": "StructureMediumHangerDoor",
+        "Large": "StructureLargeHangerDoor"
+      }
+    },
+    "VendingMachine": {
+      "plural": "VendingMachines",
+      "members": {
+        "Standard": "StructureVendingMachine",
+        "Small": "StructureVendingMachineSmall",
+        "Refrigerated": "StructureRefrigeratedVendingMachine"
+      }
+    },
+    "LightRound": {
+      "plural": "LightRounds",
+      "members": {
+        "Standard": "StructureLightRound",
+        "Small": "StructureLightRoundSmall",
+        "Angled": "StructureLightRoundAngled"
+      }
+    },
+    "BatteryCharger": {
+      "plural": "BatteryChargers",
+      "members": {
+        "Standard": "StructureBatteryCharger",
+        "Small": "StructureBatteryChargerSmall"
+      }
+    },
+    "PoweredVent": {
+      "plural": "PoweredVents",
+      "members": {
+        "Standard": "StructurePoweredVent",
+        "Large": "StructurePoweredVentLarge"
+      }
+    },
+    "Valve": {
+      "plural": "Valves",
+      "members": {
+        "Gas": "StructureValve",
+        "Liquid": "StructureLiquidValve"
+      }
+    },
+    "VolumePump": {
+      "plural": "VolumePumps",
+      "members": {
+        "Gas": "StructureVolumePump",
+        "Liquid": "StructureLiquidVolumePump"
+      }
+    },
+    "TurboVolumePump": {
+      "plural": "TurboVolumePumps",
+      "members": {
+        "Gas": "StructureTurboVolumePump",
+        "Liquid": "StructureLiquidTurboVolumePump"
+      }
+    },
+    "PressureRegulator": {
+      "plural": "PressureRegulators",
+      "members": {
+        "Gas": "StructurePressureRegulator",
+        "Liquid": "StructureLiquidPressureRegulator"
+      }
+    },
+    "BackPressureRegulator": {
+      "plural": "BackPressureRegulators",
+      "members": {
+        "Gas": "StructureBackPressureRegulator",
+        "Liquid": "StructureBackLiquidPressureRegulator"
+      }
+    },
+    "PipeHeater": {
+      "plural": "PipeHeaters",
+      "members": {
+        "Gas": "StructurePipeHeater",
+        "Liquid": "StructureLiquidPipeHeater"
+      }
+    },
+    "TankStorage": {
+      "plural": "TankStorages",
+      "members": {
+        "Gas": "StructureGasTankStorage",
+        "Liquid": "StructureLiquidTankStorage"
+      }
+    },
+    "CapsuleTank": {
+      "plural": "CapsuleTanks",
+      "members": {
+        "Gas": "StructureCapsuleTankGas",
+        "Liquid": "StructureCapsuleTankLiquid"
+      }
+    },
+    "Filtration": {
+      "plural": "Filtrations",
+      "members": {
+        "Gas": "StructureFiltration",
+        "Liquid": "StructureFiltrationLiquid"
+      }
+    },
+    "UmbilicalMale": {
+      "plural": "UmbilicalMales",
+      "members": {
+        "Gas": "StructureGasUmbilicalMale",
+        "Liquid": "StructureLiquidUmbilicalMale"
+      }
+    },
+    "UmbilicalFemale": {
+      "plural": "UmbilicalFemales",
+      "members": {
+        "Gas": "StructureGasUmbilicalFemale",
+        "Liquid": "StructureLiquidUmbilicalFemale"
+      }
+    },
+    "UmbilicalFemaleSide": {
+      "plural": "UmbilicalFemaleSides",
+      "members": {
+        "Gas": "StructureGasUmbilicalFemaleSide",
+        "Liquid": "StructureLiquidUmbilicalFemaleSide"
+      }
+    },
+    "PressureFedEngine": {
+      "plural": "PressureFedEngines",
+      "members": {
+        "Gas": "StructurePressureFedGasEngine",
+        "Liquid": "StructurePressureFedLiquidEngine",
+        "GasHeavy": "StructurePressureFedGasEngineHeavy",
+        "LiquidHeavy": "StructurePressureFedLiquidEngineHeavy"
+      }
+    },
+    "MediumRadiator": {
+      "plural": "MediumRadiators",
+      "members": {
+        "Gas": "StructureMediumRadiator",
+        "Liquid": "StructureMediumRadiatorLiquid"
+      }
+    },
+    "MediumConvectionRadiator": {
+      "plural": "MediumConvectionRadiators",
+      "members": {
+        "Gas": "StructureMediumConvectionRadiator",
+        "Liquid": "StructureMediumConvectionRadiatorLiquid"
+      }
+    },
+    "PassiveLargeRadiator": {
+      "plural": "PassiveLargeRadiators",
+      "members": {
+        "Gas": "StructurePassiveLargeRadiatorGas",
+        "Liquid": "StructurePassiveLargeRadiatorLiquid"
+      }
+    },
+    "LandingPadInwardConnector": {
+      "plural": "LandingPadInwardConnectors",
+      "members": {
+        "Gas": "Landingpad_GasConnectorInwardPiece",
+        "Liquid": "Landingpad_LiquidConnectorInwardPiece"
+      }
+    },
+    "LandingPadOutwardConnector": {
+      "plural": "LandingPadOutwardConnectors",
+      "members": {
+        "Gas": "Landingpad_GasConnectorOutwardPiece",
+        "Liquid": "Landingpad_LiquidConnectorOutwardPiece"
+      }
+    },
+    "LandingPadTankConnector": {
+      "plural": "LandingPadTankConnectors",
+      "members": {
+        "Gas": "Landingpad_GasTankConnectorPiece",
+        "Liquid": "Landingpad_LiquidTankConnectorPiece"
+      }
+    },
+    "PipeOneWayValveLever": {
+      "plural": "PipeOneWayValveLevers",
+      "members": {
+        "Gas": "StructurePipeOneWayValveLever",
+        "Liquid": "StructurePipeLiquidOneWayValveLever"
+      }
+    },
+    "DirectHeatExchanger": {
+      "plural": "DirectHeatExchangers",
+      "members": {
+        "SmallGasToGas": "StructureSmallDirectHeatExchangeGastoGas",
+        "SmallLiquidToGas": "StructureSmallDirectHeatExchangeLiquidtoGas",
+        "SmallLiquidToLiquid": "StructureSmallDirectHeatExchangeLiquidtoLiquid",
+        "LargeGasToGas": "StructureLargeDirectHeatExchangeGastoGas",
+        "LargeGasToLiquid": "StructureLargeDirectHeatExchangeGastoLiquid",
+        "LargeLiquidToLiquid": "StructureLargeDirectHeatExchangeLiquidtoLiquid",
+        "SuperLargeGasToGas": "StructureSuperLargeDirectHeatExchangeGastoGas",
+        "SuperLargeGasToLiquid": "StructureSuperLargeDirectHeatExchangeGastoLiquid",
+        "SuperLargeLiquidToLiquid": "StructureSuperLargeDirectHeatExchangeLiquidToLiquid"
+      }
+    },
+    "PassthroughHeatExchanger": {
+      "plural": "PassthroughHeatExchangers",
+      "members": {
+        "GasToGas": "StructurePassthroughHeatExchangerGasToGas",
+        "GasToLiquid": "StructurePassthroughHeatExchangerGasToLiquid",
+        "LiquidToLiquid": "StructurePassthroughHeatExchangerLiquidToLiquid"
+      }
+    },
+    "SolarPanel": {
+      "plural": "SolarPanels",
+      "members": {
+        "Standard": "StructureSolarPanel",
+        "Angled45": "StructureSolarPanel45",
+        "Reinforced": "StructureSolarPanelReinforced",
+        "Angled45Reinforced": "StructureSolarPanel45Reinforced",
+        "Flat": "StructureSolarPanelFlat",
+        "FlatReinforced": "StructureSolarPanelFlatReinforced",
+        "Dual": "StructureSolarPanelDual",
+        "DualReinforced": "StructureSolarPanelDualReinforced"
+      }
+    },
+    "Furnace": {
+      "plural": "Furnaces",
+      "members": {
+        "Standard": "StructureFurnace",
+        "Advanced": "StructureAdvancedFurnace"
+      }
+    },
+    "Tablet": {
+      "plural": "Tablets",
+      "members": {
+        "Standard": "ItemTablet",
+        "Advanced": "ItemAdvancedTablet"
+      }
+    },
+    "SDBHopper": {
+      "plural": "SDBHoppers",
+      "members": {
+        "Standard": "StructureSDBHopper",
+        "Advanced": "StructureSDBHopperAdvanced"
+      }
+    },
+    "Bench": {
+      "plural": "Benches",
+      "members": {
+        "Powered": "StructureBench",
+        "CounterStyle": "StructureBench1",
+        "HighTechStyle": "StructureBench2",
+        "FrameStyle": "StructureBench3",
+        "WorkbenchStyle": "StructureBench4"
+      }
+    },
+    "Locker": {
+      "plural": "Lockers",
+      "members": {
+        "Small": "StructureLockerSmall",
+        "Corner": "StructureCornerLocker",
+        "Short": "StructureShortLocker",
+        "ShortCorner": "StructureShortCornerLocker",
+        "Overhead": "StructureOverheadShortLocker",
+        "OverheadCorner": "StructureOverheadShortCornerLocker"
+      }
+    },
+    "AreaPowerControl": {
+      "plural": "AreaPowerControls",
+      "members": {
+        "Standard": "StructureAreaPowerControl",
+        "Reversed": "StructureAreaPowerControlReversed"
+      }
+    },
+    "WirelessBatteryCell": {
+      "plural": "WirelessBatteryCells",
+      "members": {
+        "Standard": "Battery_Wireless_cell",
+        "Big": "Battery_Wireless_cell_Big",
+        "ExtraLarge": "ItemWirelessBatteryCellExtraLarge"
+      }
+    },
+    "Console": {
+      "plural": "Consoles",
+      "members": {
+        "Standard": "StructureConsole",
+        "Dual": "StructureConsoleDual"
+      }
+    },
+    "LightLong": {
+      "plural": "LightLongs",
+      "members": {
+        "Standard": "StructureLightLong",
+        "Angled": "StructureLightLongAngled"
+      }
+    },
+    "MiningDrill": {
+      "plural": "MiningDrills",
+      "members": {
+        "Standard": "ItemMiningDrill",
+        "Heavy": "ItemMiningDrillHeavy"
+      }
+    },
+    "RocketFuelTank": {
+      "plural": "RocketFuelTanks",
+      "members": {
+        "MediumGas": "StructureMediumRocketGasFuelTank",
+        "MediumLiquid": "StructureMediumRocketLiquidFuelTank",
+        "LargeGas": "StructureLargeRocketGasFuelTank",
+        "LargeLiquid": "StructureLargeRocketLiquidFuelTank"
+      }
     }
+  },
+  "notFamilies": {
+    "LogicSwitch": "the Lever (StructureLogicSwitch) and the Switch (StructureLogicSwitch2) are different devices",
+    "Beacon": "the Tracking Beacon (ItemBeacon) and the Beacon (StructureBeacon) are different devices"
   },
   "textDisplays": [
     "StructureConsoleLED5",

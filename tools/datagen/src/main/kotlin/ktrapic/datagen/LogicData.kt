@@ -214,8 +214,14 @@ data class Prefabs(
  *   a family is reachable only through it.
  * @property textDisplays prefabs whose `Setting` shows text (packed by `STR`) in their `String`
  *   mode, which get a `Text` setter.
+ * @property notFamilies base names that look like a family but aren't one, each with the reason:
+ *   checked by datagen's test of family candidates, so a new look-alike gets a decision.
  */
-data class Grouping(val families: Map<String, Family>, val textDisplays: List<String>) {
+data class Grouping(
+    val families: Map<String, Family>,
+    val textDisplays: List<String>,
+    val notFamilies: Map<String, String> = emptyMap(),
+) {
   data class Family(val plural: String, val members: Map<String, String>)
 
   companion object {
@@ -231,6 +237,8 @@ data class Grouping(val families: Map<String, Family>, val textDisplays: List<St
                 )
           },
           root["textDisplays"].asJsonArray.map { it.asString },
+          root["notFamilies"]?.asJsonObject?.entrySet()?.associate { (k, v) -> k to v.asString }
+              ?: emptyMap(),
       )
     }
   }

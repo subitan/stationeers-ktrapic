@@ -32,11 +32,11 @@ class ViewTest {
         lines(
             """
             db.Setting = GasSensors.at(d0).Ratios[Substance.Oxygen]
-            db.Setting = Filtrations.at(d0).Ports.Input.Pressure
-            db.Setting = Filtrations.at(d0).Ports.Output.Ratios[Substance.LiquidAlcohol]
+            db.Setting = Filtrations.Gas.at(d0).Ports.Input.Pressure
+            db.Setting = Filtrations.Gas.at(d0).Ports.Output.Ratios[Substance.LiquidAlcohol]
             db.Setting = Robots.at(d0).Position.X
-            db.Setting = SatelliteDishes.at(d0).Dimensions.Z
-            db.Setting = SDBHoppers.at(d0).Import.Count
+            db.Setting = SatelliteDishes.Medium.at(d0).Dimensions.Z
+            db.Setting = SDBHoppers.Standard.at(d0).Import.Count
             """
         )
 
@@ -58,7 +58,7 @@ class ViewTest {
     val code =
         compiled(
                 """
-                AdvancedFurnaces.at(d0).Ports.Output.Setting = 2.5
+                Furnaces.Advanced.at(d0).Ports.Output.Setting = 2.5
                 Robots.at(d0).Target.Y = 4.0
                 """
             )
@@ -133,7 +133,7 @@ class ViewTest {
                 inline fun pressure(port: Port) = port.Pressure
                 inline fun portRatio(port: Port, s: Substance) = port.Ratios[s]
                 db.Setting = o2(d0.Ratios) + ratio(Substance.Nitrogen)
-                db.Ratio = pressure(Filtrations.at(d1).Ports.Output)
+                db.Ratio = pressure(Filtrations.Gas.at(d1).Ports.Output)
                 db.Setting = portRatio(d2.Ports.Input2, Substance.Steam)
                 """
             )
@@ -151,13 +151,13 @@ class ViewTest {
             error(
                     """
                     inline fun pressure(port: Port) = port.Pressure
-                    db.Setting = pressure(Filtrations.at(d0).Ports.Input2)
+                    db.Setting = pressure(Filtrations.Gas.at(d0).Ports.Input2)
                     """
                         .trimIndent()
                 )
                 .message
         )
-        .isEqualTo("Filtration has no PressureInput2")
+        .isEqualTo("Filtration.Gas has no PressureInput2")
   }
 
   @Test
@@ -182,7 +182,7 @@ class ViewTest {
     val code =
         compiled(
                 """
-                val filtration = Filtrations.at(d0)
+                val filtration = Filtrations.Gas.at(d0)
                 val outlet = filtration.Ports.Output
                 val gas = Substance.Hydrogen
                 db.Setting = outlet.Ratios[gas] + outlet.Pressure
@@ -196,12 +196,12 @@ class ViewTest {
 
   @Test
   fun `a typed device's view has only what its prefab reports`() {
-    assertThat(error("db.Setting = SatelliteDishes.at(d0).Dimensions.Y").message)
-        .isEqualTo("SatelliteDish has no SizeY")
-    assertThat(error("db.Setting = Filtrations.at(d0).Ports.Input2.Pressure").message)
-        .isEqualTo("Filtration has no PressureInput2")
-    assertThat(error("Filtrations.at(d0).Ports.Input.Setting = 1.0").message)
-        .isEqualTo("Filtration has no SettingInput")
+    assertThat(error("db.Setting = SatelliteDishes.Medium.at(d0).Dimensions.Y").message)
+        .isEqualTo("SatelliteDish.Medium has no SizeY")
+    assertThat(error("db.Setting = Filtrations.Gas.at(d0).Ports.Input2.Pressure").message)
+        .isEqualTo("Filtration.Gas has no PressureInput2")
+    assertThat(error("Filtrations.Gas.at(d0).Ports.Input.Setting = 1.0").message)
+        .isEqualTo("Filtration.Gas has no SettingInput")
   }
 
   @Test
@@ -230,8 +230,8 @@ class ViewTest {
         compiled(
                 """
                 db.Setting = GasSensors.all.map { it.Ratios[Substance.Oxygen] }.average()
-                db.Ratio = Filtrations.all.maxOf { it.Ports.Output.Pressure }
-                AdvancedFurnaces.all.forEach { it.Ports.Output.Setting = 3.0 }
+                db.Ratio = Filtrations.Gas.all.maxOf { it.Ports.Output.Pressure }
+                Furnaces.Advanced.all.forEach { it.Ports.Output.Setting = 3.0 }
                 """
             )
             .code
@@ -246,8 +246,10 @@ class ViewTest {
 
   @Test
   fun `a batch's view is checked against the prefab too`() {
-    assertThat(error("db.Setting = Filtrations.all.map { it.Ports.Input2.Pressure }.sum()").message)
-        .isEqualTo("Filtration has no PressureInput2")
+    assertThat(
+            error("db.Setting = Filtrations.Gas.all.map { it.Ports.Input2.Pressure }.sum()").message
+        )
+        .isEqualTo("Filtration.Gas has no PressureInput2")
   }
 
   @Test

@@ -147,7 +147,7 @@ object DeviceReferenceGenerator {
       append("```\n")
       append("\n")
       append("For a device with slots, the batch from `all` or `named` also has `slots`, a slot ")
-      append("of every one in the batch: `BatteryChargers.all.slots[0]`.\n")
+      append("of every one in the batch: `BatteryChargers.Standard.all.slots[0]`.\n")
       append("\n")
       append("A device's logic types are its properties: a `var` can be written, a `val` only ")
       append("read. Every typed device also has `val PrefabHash: Prefab`, `val NameHash: Double` ")

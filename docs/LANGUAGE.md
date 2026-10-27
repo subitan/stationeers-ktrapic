@@ -187,9 +187,11 @@ Devices that come in several prefabs are grouped by kind: `Batteries.Small.at(d0
 `Battery.Small`, and `Batteries.Large.all` every large one. On its own, `Battery` is no prefab: it
 is the interface its members share, with the logic types all of them can read, so an inlined
 function can take any battery. It has only those logic types: `PrefabHash`, `NameHash` and
-`ReferenceId` are read from a member (`Batteries.Small.at(d0)`) or its pin. The kinds grouped so
-far are `Battery` (`Station`, `Large`, `Medium`, `Small`) and `LedDisplay` (`Small`, `Medium`,
-`Large`); every other prefab has its own entry point.
+`ReferenceId` are read from a member (`Batteries.Small.at(d0)`) or its pin. Prefabs are grouped
+this way wherever the game has one device in several sizes, fluids or styles: `Valves.Gas` and
+`Valves.Liquid`, `Transformers.Small`, `SolarPanels.Angled45Reinforced`,
+`DirectHeatExchangers.LargeGasToLiquid`. The [device reference](DEVICES.md#families) lists every
+family and its members; every other prefab has its own entry point.
 
 ### Views
 
@@ -204,7 +206,7 @@ Some logic types come in families, which a device groups as views rather than on
 - `Import` and `Export`: `Count`, `Quantity`, `SlotHash` and `SlotOccupant` (`ImportCount`).
 
 ```kotlin
-val filtration = Filtrations.at(d0)
+val filtration = Filtrations.Gas.at(d0)
 val outlet = filtration.Ports.Output
 val oxygen = outlet.Ratios[Substance.Oxygen]
 if (outlet.Pressure > 5000.0) filtration.On = false
@@ -219,8 +221,8 @@ such as `Substance.Oxygen`, must be written out, held in a `val` or passed to an
 Only a view's logic types can be used: `equals`, `hashCode` and `toString` are errors.
 
 A typed device has only the views its prefab has, so naming another is a type error, and the
-compiler checks the rest against the prefab: `SatelliteDishes.at(d0).Dimensions.Y` is an error,
-"SatelliteDish has no SizeY", as the dish reports only `SizeX` and `SizeZ`. The
+compiler checks the rest against the prefab: `SatelliteDishes.Medium.at(d0).Dimensions.Y` is an
+error, "SatelliteDish.Medium has no SizeY", as the dish reports only `SizeX` and `SizeZ`. The
 [device reference](DEVICES.md#views) says what each device's views reach. A pin used untyped
 (`d0`) has every view, as it has every logic type, and the compiler checks only that each name
 it makes is one the game has: `d0.Ports.Output2.Setting` is an error, as the game has no
@@ -319,9 +321,9 @@ a battery charger's battery slots, `slots[n]` is of that kind; otherwise it has 
 every slot can read. Slots the game names are also properties, of their own kind:
 
 ```kotlin
-val tanks = GasTankStorages.at(d2)
+val tanks = TankStorages.Gas.at(d2)
 tanks.GasCanister.Open = true
-db.Ratio = BatteryChargers.at(d3).slots[0].Charge
+db.Ratio = BatteryChargers.Standard.at(d3).slots[0].Charge
 ```
 
 A batch's `slots[n]` is that slot of every device in it, read and written like a batch (`lbs`,
@@ -329,10 +331,10 @@ A batch's `slots[n]` is that slot of every device in it, read and written like a
 slots of a named batch.
 
 ```kotlin
-val charge = BatteryChargers.all.slots[0].map { it.Charge }.average()
-val north = BatteryChargers.named("North").slots[1].maxOf { it.Charge }
-GasTankStorages.all.slots[0].forEach { it.Open = false }
-GasTankStorages.all.forEach { it.GasCanister.Open = true }
+val charge = BatteryChargers.Standard.all.slots[0].map { it.Charge }.average()
+val north = BatteryChargers.Standard.named("North").slots[1].maxOf { it.Charge }
+TankStorages.Gas.all.slots[0].forEach { it.Open = false }
+TankStorages.Gas.all.forEach { it.GasCanister.Open = true }
 ```
 
 A slot, or a device's or batch's `slots`, can be held in a `val`.
@@ -340,7 +342,7 @@ A slot, or a device's or batch's `slots`, can be held in a `val`.
 A thing that isn't a structure, such as a tablet, a suit, a tool, the AIMeE bot or a rover, has
 other rules: none of its slots can be written, and they read fewer logic types (not
 `SortingClass`, `FreeSlots` or `TotalSlots`). Its typed slots (`ItemBatterySlot`,
-`ItemCommonSlot`, ...) follow those rules, so `AdvancedTablets.at(db).Battery.Charge` compiles and
+`ItemCommonSlot`, ...) follow those rules, so `Tablets.Advanced.at(db).Battery.Charge` compiles and
 anything a thing's slot can't do is a compile error. A pin's untyped slots don't know which kind
 of device they're on, so they offer a structure's.
 
