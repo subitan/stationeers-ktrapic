@@ -279,6 +279,8 @@ internal class Translator(private val symbols: DeclarationFinder) {
             if (element is IrSimpleFunction && element.correspondingPropertySymbol != null) return
             when (element) {
               is IrSetValue -> assigned += element.symbol
+              // The frontend writes a property through its setter (the IrCall below); a direct
+              // field write is counted too, since aliasOrValue translates one as an assignment.
               is IrSetField ->
                   element.symbol.owner.correspondingPropertySymbol?.let { assigned += it }
               is IrCall -> {
@@ -1456,7 +1458,8 @@ internal class Translator(private val symbols: DeclarationFinder) {
           this is SlotOf ||
           this is View ||
           this is Key ||
-          this is StaticSet
+          this is StaticSet ||
+          this is RatioEntry
 
   private fun logicType(call: IrCall, argument: IrExpression?): Fixed {
     if (argument !is IrGetEnumValue) {
@@ -2278,9 +2281,9 @@ internal class Translator(private val symbols: DeclarationFinder) {
   private fun IrType.isDevice() =
       classFqName?.asString() == "ktrapic.Device" || classOrNull?.owner?.isTypedDevice() == true
 
-  /** A view class or [SUBSTANCE]: an argument named when compiled, as a device is. */
   private fun IrType.isSubstance() = classFqName?.asString() == SUBSTANCE
 
+  /** A view class or [SUBSTANCE]: an argument named when compiled, as a device is. */
   private fun IrType.isViewOrKey() =
       classFqName?.asString().let {
         it in VIEW_CLASSES || it == SUBSTANCE || it in COLLECTION_CLASSES

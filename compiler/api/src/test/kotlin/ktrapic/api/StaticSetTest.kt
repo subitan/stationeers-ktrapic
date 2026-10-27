@@ -274,6 +274,25 @@ class StaticSetTest {
   }
 
   @Test
+  fun `a Ratios entry can be held in a val, or in a var never reassigned`() {
+    val source =
+        """
+        var total = 0.0
+        for (e in GasSensors.at(d0).Ratios) {
+          val held = e
+          var alsoHeld = held
+          if (alsoHeld.key == Substance.Oxygen) total += held.value + alsoHeld.value
+        }
+        db.Setting = total
+        """
+    val code = compiled(source).code
+
+    assertThat(loads(code)).containsExactly("RatioOxygen", "RatioOxygen")
+    assertThat(error("for (e in d0.Ratios) { var x = e\nx = e\ndb.Setting = x.value }").message)
+        .contains("never reassigned")
+  }
+
+  @Test
   fun `what isn't known when compiled is an error`() {
     assertThat(error("val x = d0.Mode\nval s = setOf(1.0, x)").message).contains("constants")
     assertThat(error("var s = setOf(1, 2)\ns = setOf(3)").message).contains("never reassigned")
