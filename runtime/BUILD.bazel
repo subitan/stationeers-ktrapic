@@ -22,6 +22,7 @@ filegroup(
         "src/main/kotlin/ktrapic/GeneratedEnums.kt",
         "src/main/kotlin/ktrapic/GenericDevice.kt",
         "src/main/kotlin/ktrapic/GeneratedPrefabs.kt",
+        "src/main/kotlin/ktrapic/GeneratedViews.kt",
     ],
     visibility = ["//tools/datagen:__pkg__"],
 )

@@ -16,18 +16,30 @@ object DeviceReferenceGenerator {
   private val PROPERTY = Regex("""^\s*(override )?(var|val) (\w+): (.+)$""")
   private val PREFAB_NAME = Regex("""@PrefabName\("([^"]+)"\)""")
   private val SLOT_NUMBER = Regex("""^\s*@SlotNumber\((\d+)\)$""")
+  private val LOGIC_TYPES = Regex("""^\s*@LogicTypes\(read = "([^"]*)", written = "([^"]*)"\)$""")
 
-  /** A logic type, or with a [slot] number one of the slots the game names. */
+  /** A view's `@LogicTypes` as ktfmt breaks a long one over lines, to be joined into one. */
+  private val BROKEN_LOGIC_TYPES =
+      Regex("""@LogicTypes\(\s*read =\s*"([^"]*)",\s*written =\s*"([^"]*)",\s*\)""")
+
+  /**
+   * A logic type, a view (with [reach], the logic types it reaches on the device), or with a [slot]
+   * number one of the slots the game names.
+   */
   private class Property(
       val name: String,
       val type: String,
       val writable: Boolean,
       val inherited: Boolean,
       val slot: Int? = null,
+      val reach: Reach? = null,
   ) {
     override fun toString() =
         "${if (writable) "var" else "val"} $name: $type${slot?.let { " // slots[$it]" } ?: ""}"
   }
+
+  /** The logic types a device's view reaches: those it can read and those it can write. */
+  private class Reach(val read: List<String>, val written: List<String>)
 
   private class Declaration(
       val name: String,
@@ -35,9 +47,23 @@ object DeviceReferenceGenerator {
       val prefab: String? = null,
   )
 
-  /** The reference for [prefabsSource], the generated `GeneratedPrefabs.kt`, and [enums]. */
-  fun generate(prefabsSource: String, enums: LogicEnums, typing: Typing): String {
-    val lines = prefabsSource.lines()
+  /**
+   * The reference for [prefabsSource] and [viewsSource], the generated `GeneratedPrefabs.kt` and
+   * `GeneratedViews.kt`, and [enums].
+   */
+  fun generate(
+      prefabsSource: String,
+      enums: LogicEnums,
+      typing: Typing,
+      viewsSource: String = "",
+  ): String {
+    val lines =
+        prefabsSource
+            .replace(BROKEN_LOGIC_TYPES) {
+              "@LogicTypes(read = \"${it.groupValues[1]}\", written = \"${it.groupValues[2]}\")"
+            }
+            .lines()
+    val substances = LogicViews.substances(enums.enums["LogicType"].orEmpty().keys)
     val devices = mutableListOf<Declaration>()
     val entryPoints = mutableMapOf<String, String>()
     val families = mutableListOf<Declaration>()
@@ -93,6 +119,7 @@ object DeviceReferenceGenerator {
       append("its type.\n")
       append("\n")
       append("- [Using a device](#using-a-device)\n")
+      if (viewsSource.isNotEmpty()) append("- [Views](#views)\n")
       append("- [Families](#families)\n")
       append("- Devices: ")
       append(byLetter.keys.joinToString(" · ") { "[$it](#${it.lowercaseChar()})" })
@@ -127,6 +154,29 @@ object DeviceReferenceGenerator {
       append("and `val ReferenceId: Double`. Any device can also be used untyped, as `d0` to ")
       append("`d5` or `db`, with every logic type.\n")
       append("\n")
+      if (viewsSource.isNotEmpty()) {
+        append("## Views\n")
+        append("\n")
+        append("Some logic types come in families, which a device groups as views: ")
+        append("`filtration.Ports.Output.Pressure` is `PressureOutput`, ")
+        append("`sensor.Ratios[Substance.Oxygen]` is `RatioOxygen`, `robot.Position.X` is ")
+        append(
+            "`PositionX`, and `hopper.Import.Count` is `ImportCount`. A view compiles to the same "
+        )
+        append("one instruction as the logic type it names, and can be held in a `val` or passed ")
+        append("to an inline function like a device. A key, such as `Substance.Oxygen`, must be ")
+        append("written out or held in a `val`.\n")
+        append("\n")
+        append("A typed device has only the views its prefab has, and the comment by each says ")
+        append("what it reaches there; naming anything else is an error saying what the device ")
+        append("lacks. An untyped pin (`d0`) has every view, unchecked. A batch reads and writes ")
+        append("views too: `GasSensors.all.map { it.Ratios[Substance.Oxygen] }.average()`.\n")
+        append("\n")
+        append("```kotlin\n")
+        append(viewDeclarations(viewsSource))
+        append("```\n")
+        append("\n")
+      }
       append("## Families\n")
       append("\n")
       append("A family is a device that comes as several prefabs. Its interface holds the logic ")
@@ -166,7 +216,7 @@ object DeviceReferenceGenerator {
         for ((i, device) in group.withIndex()) {
           if (i > 0) append("\n")
           append("/** ${device.prefab}. Entry point: ${entryPoint(device)}. */\n")
-          declaration("class ${device.name} : TypedDevice", device.properties)
+          declaration("class ${device.name} : TypedDevice", device.properties, substances)
         }
         append("```\n")
       }
@@ -220,14 +270,101 @@ object DeviceReferenceGenerator {
     }
   }
 
-  private fun StringBuilder.declaration(header: String, properties: List<Property>) {
+  private fun StringBuilder.declaration(
+      header: String,
+      properties: List<Property>,
+      substances: List<String> = emptyList(),
+  ) {
     if (properties.isEmpty()) {
       append("$header\n")
       return
     }
     append("$header {\n")
-    for (property in properties) append("  $property\n")
+    for (property in properties) {
+      append("  $property")
+      val reach = property.reach
+      if (reach == null) {
+        append("\n")
+        continue
+      }
+      val lines = reachLines(property.name, reach, substances)
+      if (lines.size == 1) {
+        append(" // ${lines.single()}\n")
+      } else {
+        append("\n")
+        for (line in lines) append("  //   $line\n")
+      }
+    }
     append("}\n")
+  }
+
+  /**
+   * What a view reaches on a device, in the view's own terms: a ratio by its substance, a port's
+   * members, a vector's axes, an import's or export's members; `var` marks what can be written.
+   */
+  private fun reachLines(view: String, reach: Reach, substances: List<String>): List<String> {
+    fun ratios(names: List<String>, suffix: String): String {
+      val keys = names.map { it.removePrefix("Ratio").removeSuffix(suffix) }
+      return if (keys.toSet() == substances.toSet()) "every Substance" else keys.joinToString(", ")
+    }
+    fun members(names: List<String>, prefix: String, suffix: String) = names.map {
+      val member = it.removePrefix(prefix).removeSuffix(suffix)
+      if (it in reach.written) "var $member" else member
+    }
+    return when (view) {
+      "Ratios" -> listOf(ratios(reach.read, ""))
+      "Ports" ->
+          LogicViews.PORTS.mapNotNull { port ->
+            // `PressureInput2` doesn't end with `Input`, so each name falls to one port.
+            val names = (reach.read + reach.written).distinct().filter { it.endsWith(port) }
+            if (names.isEmpty()) return@mapNotNull null
+            val (ratioNames, others) = names.partition { it.startsWith("Ratio") }
+            val parts =
+                members(others.sorted(), "", port) +
+                    if (ratioNames.isEmpty()) emptyList()
+                    else listOf("Ratios[${ratios(ratioNames, port)}]")
+            "$port: ${parts.joinToString(", ")}"
+          }
+      else -> {
+        val prefix = LogicViews.VECTORS[view] ?: view
+        listOf(
+            members((reach.read + reach.written).distinct().sorted(), prefix, "").joinToString(", ")
+        )
+      }
+    }
+  }
+
+  /**
+   * The view classes and the `Substance` enum of `GeneratedViews.kt`, as declarations: without the
+   * file header, bodies, constructors or blank lines inside a class, and an enum's entries in rows.
+   */
+  private fun viewDeclarations(source: String): String {
+    val lines =
+        source
+            .lines()
+            .dropWhile { !it.startsWith("/**") }
+            .filter { it.trim() !in setOf("get() = intrinsic()", "set(value) = intrinsic()") }
+            .map { it.replace(" internal constructor()", "").replace(" = intrinsic()", "") }
+    val out = StringBuilder()
+    var depth = 0
+    val entries = mutableListOf<String>()
+    for (line in lines) {
+      if (line.isBlank()) {
+        if (depth == 0 && out.isNotEmpty() && !out.endsWith("\n\n")) out.append("\n")
+        continue
+      }
+      if (depth > 0 && line.trim().matches(Regex("""\w+,"""))) {
+        entries += line.trim().removeSuffix(",")
+        continue
+      }
+      if (line == "}" && entries.isNotEmpty()) {
+        for (row in entries.chunked(6)) out.append("  ${row.joinToString(", ")},\n")
+        entries.clear()
+      }
+      out.append(line).append("\n")
+      depth += line.count { it == '{' } - line.count { it == '}' }
+    }
+    return out.toString().trimEnd('\n') + "\n"
   }
 
   /** The lines declared directly inside the declaration on line [start], indented [indent]. */
@@ -250,10 +387,17 @@ object DeviceReferenceGenerator {
   private fun properties(members: List<String>): List<Property> {
     val properties = mutableListOf<Property>()
     var slot: Int? = null
+    var reach: Reach? = null
     for (member in members) {
       val number = SLOT_NUMBER.find(member)
       if (number != null) {
         slot = number.groupValues[1].toInt()
+        continue
+      }
+      val logicTypes = LOGIC_TYPES.find(member)
+      if (logicTypes != null) {
+        fun names(group: Int) = logicTypes.groupValues[group].split(',').filter { it.isNotEmpty() }
+        reach = Reach(names(1), names(2))
         continue
       }
       val match = PROPERTY.find(member) ?: continue
@@ -264,8 +408,10 @@ object DeviceReferenceGenerator {
               match.groupValues[2] == "var",
               match.groupValues[1].isNotEmpty(),
               slot,
+              reach,
           )
       slot = null
+      reach = null
     }
     return properties.sortedWith(
         compareBy({ it.name == "slots" }, { it.slot != null }, { it.slot }, { it.name })

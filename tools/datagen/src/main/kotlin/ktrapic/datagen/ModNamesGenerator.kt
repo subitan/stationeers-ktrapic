@@ -16,7 +16,17 @@ object ModNamesGenerator {
       Regex("""^\s*(?:abstract |sealed |open |data |enum )*(?:class|object|interface) (\w+)""")
 
   /** The C# source for [generated], the runtime's generated sources, made from [enums]. */
-  fun generate(generated: Map<String, String>, enums: LogicEnums): String {
+  fun generate(generated: Map<String, String>, gameEnums: LogicEnums): String {
+    // The views' Substance is an enum of the runtime's own, keyed by name rather than a number.
+    val substances = LogicViews.substances(gameEnums.enums["LogicType"].orEmpty().keys)
+    val enums =
+        if (substances.isEmpty()) gameEnums
+        else
+            gameEnums.copy(
+                enums =
+                    gameEnums.enums +
+                        ("Substance" to substances.withIndex().associate { it.value to it.index })
+            )
     val enumNames = enums.enums.keys.toSortedSet()
     val logicTypes =
         OPERAND_ENUMS.flatMap { enums.enums[it].orEmpty().keys }

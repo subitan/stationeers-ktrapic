@@ -62,7 +62,10 @@ object RuntimeGenerator {
       "slot writes for any ($anyWrites) aren't those of every kind together ($kindWrites)"
     }
     val enumNames = enums.enums.keys.map { identifier(it) }.toSet()
-    return generate(enums, typing) + PrefabGenerator.generate(prefabs, grouping, enumNames, typing)
+    val substances = LogicViews.substances(logicTypes.keys).toSet()
+    return generate(enums, typing) +
+        (ViewsGenerator.FILE to ViewsGenerator.generate(logicTypes.keys, typing, prefabs)) +
+        PrefabGenerator.generate(prefabs, grouping, enumNames, typing, substances)
   }
 
   private fun enumsFile(enums: LogicEnums, typing: Typing): String = buildString {
@@ -100,8 +103,12 @@ object RuntimeGenerator {
     append(" * one it lacks is an error on the chip.\n")
     append(" */\n")
     append("abstract class GenericDevice internal constructor() {\n")
-    // LogicType.None is the "no logic type" operand, not a property.
-    for ((index, logicType) in logicTypes.filter { it != "None" }.withIndex()) {
+    val substances = LogicViews.substances(logicTypes).toSet()
+    val views = logicTypes.mapNotNull { LogicViews.viewOf(it, substances) }.distinct()
+    // LogicType.None is the "no logic type" operand, not a property; a view's logic types are
+    // reached through the view.
+    val flat = logicTypes.filter { it != "None" && LogicViews.viewOf(it, substances) == null }
+    for ((index, logicType) in flat.withIndex()) {
       if (index > 0) append('\n')
       // A device's prefab is a Prefab, compared with prefabs rather than used as a number.
       if (logicType == "PrefabHash") {
@@ -113,6 +120,12 @@ object RuntimeGenerator {
       append("  var ${identifier(logicType)}: $type\n")
       append("    get() = intrinsic()\n")
       append("    set(value) = intrinsic()\n")
+    }
+    // Unchecked, as the flat logic types are: every view, with its settable members.
+    for (view in views) {
+      append('\n')
+      append("  val $view: ${ViewsGenerator.viewType(view, listOf("any"))}\n")
+      append("    get() = intrinsic()\n")
     }
     if (slotLogicTypes.isNotEmpty()) {
       append('\n')
