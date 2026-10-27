@@ -724,20 +724,29 @@ internal class Translator(private val symbols: DeclarationFinder) {
       "kotlin.collections.minus",
       "kotlin.collections.intersect" -> {
         val left = aliasOrValue(args[0]!!) as? StaticSet ?: return null
+        val other = aliasOrValue(args[1]!!)
         val right =
-            when (val other = aliasOrValue(args[1]!!)) {
+            when (other) {
               is StaticSet -> other.elements
               is Const -> listOf(Const(other.number))
               is Key -> listOf(other)
               else -> fail(args[1]!!, "a static set combines only with constants or static sets")
             }
-        StaticSet(
+        // As in Kotlin: a Set's `+` and `-` give a Set and `intersect` always does, while a
+        // list's `+` keeps duplicates and its `-` of one element drops only the first match.
+        val isSet = call.type.classFqName?.asString() == "kotlin.collections.Set"
+        val elements =
             when (fqName) {
-              "kotlin.collections.plus" -> (left.elements + right).distinct()
-              "kotlin.collections.minus" -> left.elements.filter { it !in right }
+              "kotlin.collections.plus" -> left.elements + right
+              "kotlin.collections.minus" ->
+                  if (other is StaticSet) {
+                    left.elements.filter { it !in right }
+                  } else {
+                    left.elements.toMutableList().apply { remove(right.single()) }
+                  }
               else -> left.elements.filter { it in right }
             }
-        )
+        StaticSet(if (isSet) elements.distinct() else elements)
       }
       else -> {
         val owner = function.parentClassOrNull ?: return null

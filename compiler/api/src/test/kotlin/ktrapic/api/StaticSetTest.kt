@@ -90,6 +90,34 @@ class StaticSetTest {
   }
 
   @Test
+  fun `a list combines as a Kotlin list does, keeping duplicates`() {
+    fun size(expression: String) =
+        compiled("db.Setting = ($expression).size.toDouble()")
+            .code
+            .lines()
+            .single { it.startsWith("s db Setting") }
+            .substringAfterLast(' ')
+
+    assertThat(size("listOf(1, 2) + 2")).isEqualTo("3")
+    assertThat(size("listOf(1, 2) + listOf(2, 1)")).isEqualTo("4")
+    assertThat(size("listOf(1, 2, 1) - 1")).isEqualTo("2")
+    assertThat(size("listOf(1, 2, 1) - setOf(1)")).isEqualTo("1")
+    assertThat(size("listOf(1, 1, 2) intersect listOf(1)")).isEqualTo("1")
+    assertThat(size("Substance.entries + Substance.Oxygen")).isEqualTo("29")
+    assertThat(size("setOf(1, 2) + 2")).isEqualTo("2")
+    assertThat(size("setOf(1, 2) + listOf(3, 3)")).isEqualTo("3")
+
+    val loop =
+        compiled(
+                "var n = 0.0\nfor (i in listOf(0, 2) + 0) n += d1.slots[i].Quantity\ndb.Setting = n"
+            )
+            .code
+    assertThat(loop.lines().filter { it.startsWith("ls ") }.map { it.split(' ')[3] })
+        .containsExactly("0", "2", "0")
+        .inOrder()
+  }
+
+  @Test
   fun `a view's keys are the substances its device reports`() {
     val code =
         compiled(

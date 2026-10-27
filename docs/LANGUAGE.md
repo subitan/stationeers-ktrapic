@@ -48,9 +48,9 @@ There are three types of value:
   the device reported, and is true when that value isn't 0; conditions, `!`, `&&`, `||`, `==`
   and `!=` treat it so, but writing it to another device writes the value as it was read.
 
-Other types (`Long`, `Float`, `String`, nullable types, collections, arrays, objects) are not
-supported. Kotlin converts nothing implicitly: write `1.0`, not `1`, where a `Double` is needed,
-and use `toDouble()` (which costs nothing) or `toInt()` to convert.
+Other types (`Long`, `Float`, `String`, nullable types, collections other than
+[static sets](#static-sets), arrays, objects) are not supported. Kotlin converts nothing
+implicitly: write `1.0`, not `1`, where a `Double` is needed, and use `toDouble()` (which costs nothing) or `toInt()` to convert.
 
 `val` and `var` work as in Kotlin, at the top level and in blocks. A top-level property needs an
 initializer and the default getter and setter; a `val` whose initializer is a constant costs no
@@ -250,10 +250,11 @@ LedDisplays.Large.all.forEach { it.Text = "OK" }
 
 A static set is a collection the compiler knows whole: `setOf` or `listOf` of constants (numbers
 or `Substance` entries), `Substance.entries`, a view's `Ratios.keys` (the substances its device
-reports), sets made of these with `+`, `-` and `intersect`, and a `val` holding any of them. It
-never exists on the chip. A `for` over one is unrolled: the body is compiled once for each element,
-with the loop variable a constant in that copy, so it can key a view, and only the elements given
-cost lines:
+reports), sets made of these with `+`, `-` and `intersect` (which act as in Kotlin, so a list's `+`
+keeps duplicates), and a `val` holding any of them. It never exists on the chip. A `for` over one
+is unrolled: the body is compiled once for each element, with the loop variable a constant in that
+copy, so it can key a view, and only the elements given cost lines. A loop over `keys` or
+`Substance.entries` is one copy per substance, up to 28, so its body should be short:
 
 ```kotlin
 val sensor = GasSensors.at(d0)
@@ -270,8 +271,9 @@ db.Setting = other + heaviest
 `continue` goes on to the next element's copy, and `break` past the last. A set's `size` and an
 `in` test of a constant are constants; `in` with a number known only when the program runs
 compiles to one comparison per element. A static set can be held in a `val` and passed to an
-inlined function, but not stored in a `var` or used as a value otherwise. A `for` over an `Int`
-range is not unrolled: it stays a loop.
+inlined function, but not stored in a `var` or used as a value otherwise. Elements compare as
+numbers, unlike Kotlin's: `2` and `2.0` are the same element. A `for` over an `Int` range is not
+unrolled: it stays a loop.
 
 ### Slots
 
@@ -402,8 +404,8 @@ Planned, roughly in this order:
   time; inline functions taking lambdas. Features are only added where their cost in lines is
   worth it on a 128-line chip.
 
-Not planned as such: strings beyond `hash`/`str` and `Text`, collections, nullable types, exceptions,
-casts and type checks, and coroutines.
+Not planned as such: strings beyond `hash`/`str` and `Text`, collections beyond static sets,
+nullable types, exceptions, casts and type checks, and coroutines.
 
 ## An example
 
