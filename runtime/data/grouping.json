@@ -462,6 +462,35 @@
         "Powered": "StructureWaterBottleFillerPowered",
         "PoweredBottom": "StructureWaterBottleFillerPoweredBottom"
       }
+    },
+    "PipeAnalyzer": {
+      "plural": "PipeAnalyzers",
+      "members": {
+        "Gas": "StructurePipeAnalysizer",
+        "Liquid": "StructureLiquidPipeAnalyzer"
+      }
+    },
+    "CircuitHousing": {
+      "plural": "CircuitHousings",
+      "members": {
+        "Standard": "StructureCircuitHousing",
+        "Compact": "StructureCircuitHousingCompact",
+        "Rocket": "StructureRocketCircuitHousing"
+      }
+    },
+    "ElevatorLevel": {
+      "plural": "ElevatorLevels",
+      "members": {
+        "Standard": "StructureElevatorLevelIndustrial",
+        "Cabled": "StructureElevatorLevelFront"
+      }
+    },
+    "ElevatorShaft": {
+      "plural": "ElevatorShafts",
+      "members": {
+        "Standard": "StructureElevatorShaftIndustrial",
+        "Cabled": "StructureElevatorShaft"
+      }
     }
   },
   "notFamilies": [

@@ -15,8 +15,12 @@ package ktrapic.datagen
  *
  * Neither sees kinds whose prefab names don't share their words (`StructureCapsuleTankGas` and
  * `StructureMediumRocketGasFuelTank` are the game's "Gas Capsule Tank Small" and "... Medium";
- * `StructureWallLight` and `StructureLightLong` are "Wall Light" and "Wall Light (Long)"): those
- * families come from the game's English names.
+ * `StructureWallLight` and `StructureLightLong` are "Wall Light" and "Wall Light (Long)";
+ * `StructureElevatorLevelIndustrial` and `StructureElevatorLevelFront` are "Elevator Level" and
+ * "Elevator Level (Cabled)"; the game misspells `StructurePipeAnalysizer`, the gas twin of
+ * `StructureLiquidPipeAnalyzer`), nor kinds whose slots hold the same thing but are of different
+ * kinds (`StructureCircuitHousing`'s chip slot is `Common`, `StructureCircuitHousingCompact`'s is
+ * `ProgrammableChip`): those families come from the game's English names.
  */
 object FamilyCandidates {
   private val PREFIXES = listOf("Structure", "Item", "Landingpad_")

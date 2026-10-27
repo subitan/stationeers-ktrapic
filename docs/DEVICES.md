@@ -435,6 +435,39 @@ interface CargoStorage {
 }
 ```
 
+### CircuitHousing
+
+```kotlin
+interface CircuitHousing {
+  val Error: Boolean
+  var LineNumber: Double
+  var Mode: Double
+  var On: Boolean
+  val Power: Boolean
+  val RequiredPower: Double
+  var Setting: Double
+  val StackSize: Double
+
+  /** StructureCircuitHousing. Entry point: CircuitHousings.Standard. */
+  class Standard : TypedDevice, CircuitHousing {
+    val ProgrammableChip: CommonSlot // slots[0]
+    val slots: Slots<CommonSlot>
+  }
+
+  /** StructureCircuitHousingCompact. Entry point: CircuitHousings.Compact. */
+  class Compact : TypedDevice, CircuitHousing {
+    val ProgrammableChip: ProgrammableChipSlot // slots[0]
+    val slots: Slots<ProgrammableChipSlot>
+  }
+
+  /** StructureRocketCircuitHousing. Entry point: CircuitHousings.Rocket. */
+  class Rocket : TypedDevice, CircuitHousing {
+    val ProgrammableChip: ProgrammableChipSlot // slots[0]
+    val slots: Slots<ProgrammableChipSlot>
+  }
+}
+```
+
 ### Computer
 
 ```kotlin
@@ -559,6 +592,47 @@ interface DirectHeatExchanger {
 
   /** StructureSuperLargeDirectHeatExchangeLiquidToLiquid. Entry point: DirectHeatExchangers.SuperLargeLiquidToLiquid. */
   class SuperLargeLiquidToLiquid : TypedDevice, DirectHeatExchanger
+}
+```
+
+### ElevatorLevel
+
+```kotlin
+interface ElevatorLevel {
+  var Activate: Boolean
+  var ElevatorLevel: Double
+  var ElevatorSpeed: Double
+  val Error: Boolean
+  var Lock: Boolean
+  var On: Boolean
+  var Open: Boolean
+  val Power: Boolean
+  val RequiredPower: Double
+
+  /** StructureElevatorLevelIndustrial. Entry point: ElevatorLevels.Standard. */
+  class Standard : TypedDevice, ElevatorLevel
+
+  /** StructureElevatorLevelFront. Entry point: ElevatorLevels.Cabled. */
+  class Cabled : TypedDevice, ElevatorLevel
+}
+```
+
+### ElevatorShaft
+
+```kotlin
+interface ElevatorShaft {
+  var ElevatorLevel: Double
+  var ElevatorSpeed: Double
+
+  /** StructureElevatorShaftIndustrial. Entry point: ElevatorShafts.Standard. */
+  class Standard : TypedDevice, ElevatorShaft
+
+  /** StructureElevatorShaft. Entry point: ElevatorShafts.Cabled. */
+  class Cabled : TypedDevice, ElevatorShaft {
+    var On: Boolean
+    val Power: Boolean
+    val RequiredPower: Double
+  }
 }
 ```
 
@@ -1013,6 +1087,35 @@ interface PassthroughHeatExchanger {
 
   /** StructurePassthroughHeatExchangerLiquidToLiquid. Entry point: PassthroughHeatExchangers.LiquidToLiquid. */
   class LiquidToLiquid : TypedDevice, PassthroughHeatExchanger
+}
+```
+
+### PipeAnalyzer
+
+```kotlin
+interface PipeAnalyzer {
+  val Combustion: Boolean
+  val Error: Boolean
+  var Lock: Boolean
+  val NetworkFault: Boolean
+  var On: Boolean
+  val Power: Boolean
+  val Pressure: Double
+  val RequiredPower: Double
+  val Temperature: Double
+  val TotalMoles: Double
+  val Volume: Double
+  val VolumeOfLiquid: Double
+
+  /** StructurePipeAnalysizer. Entry point: PipeAnalyzers.Gas. */
+  class Gas : TypedDevice, PipeAnalyzer {
+    val Ratios: Ratios
+  }
+
+  /** StructureLiquidPipeAnalyzer. Entry point: PipeAnalyzers.Liquid. */
+  class Liquid : TypedDevice, PipeAnalyzer {
+    val Ratios: Ratios
+  }
 }
 ```
 
@@ -2041,34 +2144,6 @@ class ChuteUmbilicalMale : TypedDevice {
   val slots: Slots<DataDiskSlot>
 }
 
-/** StructureCircuitHousing. Entry point: CircuitHousings. */
-class CircuitHousing : TypedDevice {
-  val Error: Boolean
-  var LineNumber: Double
-  var Mode: Double
-  var On: Boolean
-  val Power: Boolean
-  val RequiredPower: Double
-  var Setting: Double
-  val StackSize: Double
-  val ProgrammableChip: CommonSlot // slots[0]
-  val slots: Slots<CommonSlot>
-}
-
-/** StructureCircuitHousingCompact. Entry point: CircuitHousingCompacts. */
-class CircuitHousingCompact : TypedDevice {
-  val Error: Boolean
-  var LineNumber: Double
-  var Mode: Double
-  var On: Boolean
-  val Power: Boolean
-  val RequiredPower: Double
-  var Setting: Double
-  val StackSize: Double
-  val ProgrammableChip: ProgrammableChipSlot // slots[0]
-  val slots: Slots<ProgrammableChipSlot>
-}
-
 /** StructureCombustionCentrifuge. Entry point: CombustionCentrifuges. */
 class CombustionCentrifuge : TypedDevice {
   var ClearMemory: Boolean
@@ -2374,47 +2449,6 @@ class ElectronicsPrinter : TypedDevice {
   val RequiredPower: Double
   val StackSize: Double
   val slots: Slots<DataDiskSlot>
-}
-
-/** StructureElevatorLevelFront. Entry point: ElevatorLevelFronts. */
-class ElevatorLevelFront : TypedDevice {
-  var Activate: Boolean
-  var ElevatorLevel: Double
-  var ElevatorSpeed: Double
-  val Error: Boolean
-  var Lock: Boolean
-  var On: Boolean
-  var Open: Boolean
-  val Power: Boolean
-  val RequiredPower: Double
-}
-
-/** StructureElevatorLevelIndustrial. Entry point: ElevatorLevelIndustrials. */
-class ElevatorLevelIndustrial : TypedDevice {
-  var Activate: Boolean
-  var ElevatorLevel: Double
-  var ElevatorSpeed: Double
-  val Error: Boolean
-  var Lock: Boolean
-  var On: Boolean
-  var Open: Boolean
-  val Power: Boolean
-  val RequiredPower: Double
-}
-
-/** StructureElevatorShaft. Entry point: ElevatorShafts. */
-class ElevatorShaft : TypedDevice {
-  var ElevatorLevel: Double
-  var ElevatorSpeed: Double
-  var On: Boolean
-  val Power: Boolean
-  val RequiredPower: Double
-}
-
-/** StructureElevatorShaftIndustrial. Entry point: ElevatorShaftIndustrials. */
-class ElevatorShaftIndustrial : TypedDevice {
-  var ElevatorLevel: Double
-  var ElevatorSpeed: Double
 }
 
 /** StructureEmergencyButton. Entry point: EmergencyButtons. */
@@ -3038,23 +3072,6 @@ class LiquidDrain : TypedDevice {
   var Setting: Double
 }
 
-/** StructureLiquidPipeAnalyzer. Entry point: LiquidPipeAnalyzers. */
-class LiquidPipeAnalyzer : TypedDevice {
-  val Combustion: Boolean
-  val Error: Boolean
-  var Lock: Boolean
-  val NetworkFault: Boolean
-  var On: Boolean
-  val Power: Boolean
-  val Pressure: Double
-  val Ratios: Ratios // every Substance
-  val RequiredPower: Double
-  val Temperature: Double
-  val TotalMoles: Double
-  val Volume: Double
-  val VolumeOfLiquid: Double
-}
-
 /** ItemLiquidVacuum. Entry point: LiquidVacuums. */
 class LiquidVacuum : TypedDevice {
   var Activate: Boolean
@@ -3412,23 +3429,6 @@ class PassiveSpeaker : TypedDevice {
   var Volume: Double
 }
 
-/** StructurePipeAnalysizer. Entry point: PipeAnalysizers. */
-class PipeAnalysizer : TypedDevice {
-  val Combustion: Boolean
-  val Error: Boolean
-  var Lock: Boolean
-  val NetworkFault: Boolean
-  var On: Boolean
-  val Power: Boolean
-  val Pressure: Double
-  val Ratios: Ratios // every Substance
-  val RequiredPower: Double
-  val Temperature: Double
-  val TotalMoles: Double
-  val Volume: Double
-  val VolumeOfLiquid: Double
-}
-
 /** StructurePipeIgniter. Entry point: PipeIgniters. */
 class PipeIgniter : TypedDevice {
   var Activate: Boolean
@@ -3698,20 +3698,6 @@ class RocketCelestialTracker : TypedDevice {
   val RequiredPower: Double
   val StackSize: Double
   val Vertical: Double
-}
-
-/** StructureRocketCircuitHousing. Entry point: RocketCircuitHousings. */
-class RocketCircuitHousing : TypedDevice {
-  val Error: Boolean
-  var LineNumber: Double
-  var Mode: Double
-  var On: Boolean
-  val Power: Boolean
-  val RequiredPower: Double
-  var Setting: Double
-  val StackSize: Double
-  val ProgrammableChip: ProgrammableChipSlot // slots[0]
-  val slots: Slots<ProgrammableChipSlot>
 }
 
 /** StructureRocketEngineTiny. Entry point: RocketEngineTinies. */
