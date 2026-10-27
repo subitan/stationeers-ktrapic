@@ -404,6 +404,13 @@
         "Wide": "StructureAirlockWide"
       }
     },
+    "ManualHatch": {
+      "plural": "ManualHatches",
+      "members": {
+        "Standard": "StructureManualHatch",
+        "Floor": "StructureManualFloorHatch"
+      }
+    },
     "Door": {
       "plural": "Doors",
       "members": {
