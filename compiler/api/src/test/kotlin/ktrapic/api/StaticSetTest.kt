@@ -280,6 +280,8 @@ class StaticSetTest {
             "var pin = d0",
             "var outlet = Filtrations.at(d1).Ports.Output",
             "var gas = Substance.Oxygen",
+            "var lights = GrowLights.named(\"P\")",
+            "var slot = d0.slots[0]",
         )) {
       assertWithMessage(source)
           .that(error(source).message)
@@ -296,6 +298,19 @@ class StaticSetTest {
 
     // scale is the constant 2, multiplied in place, with no register of its own.
     assertThat(code).contains("mul r0 r0 2")
+    // The same holds for a var in a block.
+    val inBlock =
+        compiled(
+                """
+                if (d0.Setting > 0) {
+                  var scale = 2.0
+                  db.Setting = d0.Setting * scale
+                }
+                """
+            )
+            .code
+    assertThat(inBlock.lines().none { it.startsWith("move ") && it.endsWith(" 2") }).isTrue()
+    assertThat(inBlock.lines().any { it.startsWith("mul ") && it.endsWith(" 2") }).isTrue()
   }
 
   @Test

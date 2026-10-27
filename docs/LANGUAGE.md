@@ -57,7 +57,7 @@ and use `toDouble()` (which costs nothing) or `toInt()` to convert.
 initializer and the default getter and setter; a `val` whose initializer is a constant costs no
 register, and so does a `var` the program never assigns again. A `val` may also hold a device, as
 an alias: `val sensor = d0`. What has no value on the chip (a device, a view, a static set, a
-`Substance`, a slot or a batch) can only be held in a `val`, never a `var`.
+`Substance`, a slot, a batch or a `Ratios` entry) can only be held in a `val`, never a `var`.
 
 ## Operators
 
