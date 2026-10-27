@@ -189,7 +189,7 @@ is the interface its members share, with the logic types all of them can read, s
 function can take any battery. It has only those logic types: `PrefabHash`, `NameHash` and
 `ReferenceId` are read from a member (`Batteries.Small.at(d0)`) or its pin. Prefabs are grouped
 this way wherever the game has one device in several sizes, fluids or styles: `Valves.Gas` and
-`Valves.Liquid`, `Transformers.Small`, `SolarPanels.Angled45Reinforced`,
+`Valves.Liquid`, `Transformers.Small`, `SolarPanels.HeavyAngled`,
 `DirectHeatExchangers.LargeGasToLiquid`. The [device reference](DEVICES.md#families) lists every
 family and its members; every other prefab has its own entry point.
 

@@ -1,10 +1,20 @@
 package ktrapic.datagen
 
 /**
- * Prefabs that look like one device in several kinds: names that are the same once sizes, fluids
- * and variants are taken out (`StructureLiquidValve` and `StructureValve` are both `Valve`). Such a
- * group should be a family in `grouping.json`, or be listed there as not one, with the reason: the
- * check that keeps new game prefabs from being left out of a family by oversight.
+ * Prefabs that look like one device in several kinds, which should be a family in `grouping.json`
+ * or be listed there as not one, with the reason: the check that keeps new game prefabs from being
+ * left out of a family by oversight.
+ *
+ * Two prefabs look alike when either
+ * - their names are the same once sizes, fluids and variants are taken out ([baseName]:
+ *   `StructureLiquidValve` and `StructureValve` are both `Valve`), or
+ * - they have the same logic types and slots, and one's name has every word of the other's
+ *   ([words]: `StructureLightLongWide` has those of `StructureLightLong`). This finds kinds told
+ *   apart by a word not yet in [VARIANT_WORDS], such as `Wide` or `MKII`.
+ *
+ * Neither sees kinds whose prefab names don't share their words (`StructureCapsuleTankGas` and
+ * `StructureMediumRocketGasFuelTank` are the game's "Gas Capsule Tank Small" and "... Medium"):
+ * those families come from the game's English names.
  */
 object FamilyCandidates {
   private val PREFIXES = listOf("Structure", "Item", "Landingpad_")
@@ -31,7 +41,6 @@ object FamilyCandidates {
           "Short",
           "Overhead",
           "Nuclear",
-          "to",
           "To",
       )
 
@@ -39,6 +48,8 @@ object FamilyCandidates {
   fun baseName(prefab: String): String {
     var name =
         PREFIXES.firstOrNull { prefab.startsWith(it) }?.let { prefab.removePrefix(it) } ?: prefab
+    // A word after punctuation starts one, as in "Battery_Wireless_cell".
+    name = name.replace(Regex("[^A-Za-z]+([a-z])")) { it.groupValues[1].uppercase() }
     name = name.replace(Regex("[^A-Za-z]"), "")
     // Some prefabs write "GastoLiquid": make "to" a word of its own, so the words around it are
     // too.
@@ -47,22 +58,40 @@ object FamilyCandidates {
     return name
   }
 
+  /** The words of a prefab's [baseName]: `MKIIMiningDrill` is `MKII`, `Mining` and `Drill`. */
+  fun words(prefab: String): Set<String> =
+      Regex("[A-Z]+(?![a-z])|[A-Z][a-z]*").findAll(baseName(prefab)).map { it.value }.toSet()
+
+  /** Whether [a] and [b] look like one device in two kinds. */
+  fun lookAlike(a: Prefab, b: Prefab): Boolean {
+    if (baseName(a.name) == baseName(b.name)) return true
+    if (a.logic != b.logic || a.slots != b.slots) return false
+    val (wordsA, wordsB) = words(a.name) to words(b.name)
+    return wordsA.containsAll(wordsB) || wordsB.containsAll(wordsA)
+  }
+
   /**
-   * The groups of [prefabs] sharing a base name, two or more, that [grouping] neither makes one
-   * family of nor lists as not one: by base name, with their prefabs.
+   * The groups of [prefabs] that look alike but that [grouping] neither puts in one family nor
+   * lists together as not one: each group's prefab names, sorted. Two prefabs are in a group when a
+   * chain of such look-alike pairs links them.
    */
-  fun ungrouped(prefabs: Collection<String>, grouping: Grouping): Map<String, List<String>> {
+  fun ungrouped(prefabs: List<Prefab>, grouping: Grouping): List<List<String>> {
     val familyOf =
         grouping.families
             .flatMap { (family, members) -> members.members.values.map { it to family } }
             .toMap()
-    return prefabs
-        .groupBy { baseName(it) }
-        .filterValues { it.size > 1 }
-        .filterKeys { it !in grouping.notFamilies }
-        .filterValues { group ->
-          group.map { familyOf[it] }.distinct().let { it.size != 1 || it[0] == null }
-        }
-        .toSortedMap()
+    fun decided(a: String, b: String) =
+        familyOf[a]?.let { it == familyOf[b] } == true ||
+            grouping.notFamilies.any { a in it.prefabs && b in it.prefabs }
+
+    val group = prefabs.associate { it.name to mutableSetOf(it.name) }.toMutableMap()
+    for ((i, a) in prefabs.withIndex()) {
+      for (b in prefabs.subList(i + 1, prefabs.size)) {
+        if (!lookAlike(a, b) || decided(a.name, b.name)) continue
+        val merged = group.getValue(a.name).apply { addAll(group.getValue(b.name)) }
+        for (name in merged) group[name] = merged
+      }
+    }
+    return group.values.distinct().filter { it.size > 1 }.map { it.sorted() }.sortedBy { it[0] }
   }
 }

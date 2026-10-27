@@ -214,15 +214,19 @@ data class Prefabs(
  *   a family is reachable only through it.
  * @property textDisplays prefabs whose `Setting` shows text (packed by `STR`) in their `String`
  *   mode, which get a `Text` setter.
- * @property notFamilies base names that look like a family but aren't one, each with the reason:
- *   checked by datagen's test of family candidates, so a new look-alike gets a decision.
+ * @property notFamilies prefabs that look like one device in several kinds but aren't, each group
+ *   with the reason: checked by datagen's test of family candidates, so a new look-alike gets a
+ *   decision.
  */
 data class Grouping(
     val families: Map<String, Family>,
     val textDisplays: List<String>,
-    val notFamilies: Map<String, String> = emptyMap(),
+    val notFamilies: List<NotFamily> = emptyList(),
 ) {
   data class Family(val plural: String, val members: Map<String, String>)
+
+  /** Prefabs that look alike but are different devices, and why. */
+  data class NotFamily(val prefabs: List<String>, val reason: String)
 
   companion object {
     fun fromJson(text: String): Grouping {
@@ -237,8 +241,10 @@ data class Grouping(
                 )
           },
           root["textDisplays"].asJsonArray.map { it.asString },
-          root["notFamilies"]?.asJsonObject?.entrySet()?.associate { (k, v) -> k to v.asString }
-              ?: emptyMap(),
+          root["notFamilies"]?.asJsonArray?.map { element ->
+            val obj = element.asJsonObject
+            NotFamily(obj["prefabs"].asJsonArray.map { it.asString }, obj["reason"].asString)
+          } ?: emptyList(),
       )
     }
   }

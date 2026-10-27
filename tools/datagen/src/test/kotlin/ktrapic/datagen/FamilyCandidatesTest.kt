@@ -8,9 +8,12 @@ import org.junit.jupiter.api.Test
 class FamilyCandidatesTest {
   private val workspace = File(System.getenv("TEST_SRCDIR"), System.getenv("TEST_WORKSPACE"))
 
+  private fun prefab(name: String, vararg logic: String) =
+      Prefab(name, 0, logic.associateWith { Access.parse("r") })
+
   @Test
   fun `every look-alike group of prefabs is a family, or listed as not one`() {
-    val prefabs = Prefabs.fromJson(DataFiles.prefabs(workspace).readText()).prefabs.map { it.name }
+    val prefabs = Prefabs.fromJson(DataFiles.prefabs(workspace).readText()).prefabs
     val grouping = Grouping.fromJson(DataFiles.grouping(workspace).readText())
 
     assertWithMessage(
@@ -18,6 +21,9 @@ class FamilyCandidatesTest {
                 "or to notFamilies with the reason"
         )
         .that(FamilyCandidates.ungrouped(prefabs, grouping))
+        .isEmpty()
+    assertWithMessage("notFamilies names prefabs the game doesn't have")
+        .that(grouping.notFamilies.flatMap { it.prefabs } - prefabs.map { it.name }.toSet())
         .isEmpty()
   }
 
@@ -30,8 +36,23 @@ class FamilyCandidatesTest {
         .isEqualTo("DirectHeatExchange")
     assertThat(FamilyCandidates.baseName("Landingpad_GasTankConnectorPiece"))
         .isEqualTo("TankConnectorPiece")
-    // A word inside another isn't a variant: Gasket isn't Gas + ket.
+    assertThat(FamilyCandidates.baseName("Battery_Wireless_cell_Big"))
+        .isEqualTo("BatteryWirelessCell")
+    // A word inside another isn't a variant: Gasket isn't Gas + ket, Tomato isn't Toma + to.
     assertThat(FamilyCandidates.baseName("StructureGasket")).isEqualTo("Gasket")
+    assertThat(FamilyCandidates.baseName("ItemTomato")).isEqualTo("Tomato")
+  }
+
+  @Test
+  fun `prefabs with the same logic look alike when one name has every word of the other`() {
+    val long = prefab("StructureLightLong", "On", "Power")
+    val wide = prefab("StructureLightLongWide", "On", "Power")
+    val wallLight = prefab("StructureWallLight", "On", "Power")
+    val otherLogic = prefab("StructureLightLongTall", "On")
+
+    assertThat(FamilyCandidates.lookAlike(long, wide)).isTrue()
+    assertThat(FamilyCandidates.lookAlike(long, wallLight)).isFalse()
+    assertThat(FamilyCandidates.lookAlike(long, otherLogic)).isFalse()
   }
 
   @Test
@@ -43,8 +64,27 @@ class FamilyCandidatesTest {
         )
 
     assertThat(
-            FamilyCandidates.ungrouped(listOf("StructureValve", "StructureLiquidValve"), grouping)
+            FamilyCandidates.ungrouped(
+                listOf(prefab("StructureValve"), prefab("StructureLiquidValve")),
+                grouping,
+            )
         )
-        .containsExactly("Valve", listOf("StructureValve", "StructureLiquidValve"))
+        .containsExactly(listOf("StructureLiquidValve", "StructureValve"))
+  }
+
+  @Test
+  fun `a not-family entry covers only the prefabs it lists`() {
+    val switches = listOf("StructureLogicSwitch", "StructureLogicSwitch2")
+    val grouping =
+        Grouping(emptyMap(), emptyList(), listOf(Grouping.NotFamily(switches, "different")))
+
+    assertThat(FamilyCandidates.ungrouped(switches.map { prefab(it) }, grouping)).isEmpty()
+    assertThat(
+            FamilyCandidates.ungrouped(
+                (switches + "StructureLogicSwitch3").map { prefab(it) },
+                grouping,
+            )
+        )
+        .containsExactly(switches + "StructureLogicSwitch3")
   }
 }
