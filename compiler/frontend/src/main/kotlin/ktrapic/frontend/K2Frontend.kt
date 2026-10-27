@@ -109,6 +109,9 @@ object K2Frontend {
       val ir =
           FrontendIr(
               captured.fir2ir.result.irModuleFragment,
+              // Despite its name, the builtins finder searches every class on the classpath (it is
+              // the source finder with no file to record lookups against), so it also finds the
+              // runtime library's classes such as ktrapic.LogicType.
               captured.fir2ir.result.pluginContext.finderForBuiltins(),
               wrapped,
           )
