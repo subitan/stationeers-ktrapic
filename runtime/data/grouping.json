@@ -109,7 +109,11 @@
       "plural": "Valves",
       "members": {
         "Gas": "StructureValve",
-        "Liquid": "StructureLiquidValve"
+        "Liquid": "StructureLiquidValve",
+        "OneWayGas": "StructurePipeOneWayValveLever",
+        "OneWayLiquid": "StructurePipeLiquidOneWayValveLever",
+        "Condensation": "StructureCondensationValve",
+        "Expansion": "StructureExpansionValve"
       }
     },
     "VolumePump": {
@@ -232,13 +236,6 @@
       "members": {
         "Gas": "Landingpad_GasTankConnectorPiece",
         "Liquid": "Landingpad_LiquidTankConnectorPiece"
-      }
-    },
-    "PipeOneWayValveLever": {
-      "plural": "PipeOneWayValveLevers",
-      "members": {
-        "Gas": "StructurePipeOneWayValveLever",
-        "Liquid": "StructurePipeLiquidOneWayValveLever"
       }
     },
     "DirectHeatExchanger": {
@@ -505,6 +502,7 @@
     },
     "DigitalValve": {
       "plural": "DigitalValves",
+      "extends": ["Valve"],
       "members": {
         "Gas": "StructureDigitalValve",
         "Liquid": "StructureWaterDigitalValve"
@@ -599,15 +597,6 @@
         ["StructureInteriorDoorGlass", "StructureInteriorDoorPadded", "StructureInteriorDoorPaddedThin", "StructureInteriorDoorTriangle"]
       ],
       "reason": "the Glass Door is one of the Doors, like the Blast and Composite Doors, and not one of the Interior Doors, which extend them"
-    },
-    {
-      "prefabs": [
-        ["StructureValve", "StructureLiquidValve"],
-        ["StructurePipeOneWayValveLever", "StructurePipeLiquidOneWayValveLever"],
-        "StructureCondensationValve",
-        "StructureExpansionValve"
-      ],
-      "reason": "the Valve, the One Way Valve, the Condensation Valve and the Expansion Valve are different devices with a valve's logic"
     },
     {
       "prefabs": [

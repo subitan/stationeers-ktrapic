@@ -3156,6 +3156,90 @@ interface Valve {
     /** The StructureLiquidValve prefab. */
     companion object : Prefab()
   }
+
+  /** A StructurePipeOneWayValveLever. */
+  @PrefabName("StructurePipeOneWayValveLever")
+  class OneWayGas internal constructor() : TypedDevice(), Valve {
+    override val Maximum: Double
+      get() = intrinsic()
+
+    override var On: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override val Ratio: Double
+      get() = intrinsic()
+
+    override var Setting: Double
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    /** The StructurePipeOneWayValveLever prefab. */
+    companion object : Prefab()
+  }
+
+  /** A StructurePipeLiquidOneWayValveLever. */
+  @PrefabName("StructurePipeLiquidOneWayValveLever")
+  class OneWayLiquid internal constructor() : TypedDevice(), Valve {
+    override val Maximum: Double
+      get() = intrinsic()
+
+    override var On: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override val Ratio: Double
+      get() = intrinsic()
+
+    override var Setting: Double
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    /** The StructurePipeLiquidOneWayValveLever prefab. */
+    companion object : Prefab()
+  }
+
+  /** A StructureCondensationValve. */
+  @PrefabName("StructureCondensationValve")
+  class Condensation internal constructor() : TypedDevice(), Valve {
+    override val Maximum: Double
+      get() = intrinsic()
+
+    override var On: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override val Ratio: Double
+      get() = intrinsic()
+
+    override var Setting: Double
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    /** The StructureCondensationValve prefab. */
+    companion object : Prefab()
+  }
+
+  /** A StructureExpansionValve. */
+  @PrefabName("StructureExpansionValve")
+  class Expansion internal constructor() : TypedDevice(), Valve {
+    override val Maximum: Double
+      get() = intrinsic()
+
+    override var On: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override val Ratio: Double
+      get() = intrinsic()
+
+    override var Setting: Double
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    /** The StructureExpansionValve prefab. */
+    companion object : Prefab()
+  }
 }
 
 /** The Valve devices on the chip's network, by prefab. */
@@ -3186,6 +3270,62 @@ object Valves {
 
     /** Every one on the network named [name], which must be a constant. */
     fun named(name: String): DeviceBatch<Valve.Liquid> = intrinsic()
+  }
+
+  /** The StructurePipeOneWayValveLever devices on the chip's network. */
+  @PrefabName("StructurePipeOneWayValveLever")
+  object OneWayGas {
+    /** The device on [pin], as a StructurePipeOneWayValveLever. */
+    fun at(pin: Device): Valve.OneWayGas = intrinsic()
+
+    /** Every one on the network. */
+    val all: DeviceBatch<Valve.OneWayGas>
+      get() = intrinsic()
+
+    /** Every one on the network named [name], which must be a constant. */
+    fun named(name: String): DeviceBatch<Valve.OneWayGas> = intrinsic()
+  }
+
+  /** The StructurePipeLiquidOneWayValveLever devices on the chip's network. */
+  @PrefabName("StructurePipeLiquidOneWayValveLever")
+  object OneWayLiquid {
+    /** The device on [pin], as a StructurePipeLiquidOneWayValveLever. */
+    fun at(pin: Device): Valve.OneWayLiquid = intrinsic()
+
+    /** Every one on the network. */
+    val all: DeviceBatch<Valve.OneWayLiquid>
+      get() = intrinsic()
+
+    /** Every one on the network named [name], which must be a constant. */
+    fun named(name: String): DeviceBatch<Valve.OneWayLiquid> = intrinsic()
+  }
+
+  /** The StructureCondensationValve devices on the chip's network. */
+  @PrefabName("StructureCondensationValve")
+  object Condensation {
+    /** The device on [pin], as a StructureCondensationValve. */
+    fun at(pin: Device): Valve.Condensation = intrinsic()
+
+    /** Every one on the network. */
+    val all: DeviceBatch<Valve.Condensation>
+      get() = intrinsic()
+
+    /** Every one on the network named [name], which must be a constant. */
+    fun named(name: String): DeviceBatch<Valve.Condensation> = intrinsic()
+  }
+
+  /** The StructureExpansionValve devices on the chip's network. */
+  @PrefabName("StructureExpansionValve")
+  object Expansion {
+    /** The device on [pin], as a StructureExpansionValve. */
+    fun at(pin: Device): Valve.Expansion = intrinsic()
+
+    /** Every one on the network. */
+    val all: DeviceBatch<Valve.Expansion>
+      get() = intrinsic()
+
+    /** Every one on the network named [name], which must be a constant. */
+    fun named(name: String): DeviceBatch<Valve.Expansion> = intrinsic()
   }
 }
 
@@ -5672,90 +5812,6 @@ object LandingPadTankConnectors {
       val slots: Slots<SlotBatch<DataDiskSlot>>
         get() = intrinsic()
     }
-  }
-}
-
-/** A device that comes as several prefabs, each a nested class. */
-interface PipeOneWayValveLever {
-  val Maximum: Double
-
-  var On: Boolean
-
-  val Ratio: Double
-
-  var Setting: Double
-
-  /** A StructurePipeOneWayValveLever. */
-  @PrefabName("StructurePipeOneWayValveLever")
-  class Gas internal constructor() : TypedDevice(), PipeOneWayValveLever {
-    override val Maximum: Double
-      get() = intrinsic()
-
-    override var On: Boolean
-      get() = intrinsic()
-      set(value) = intrinsic()
-
-    override val Ratio: Double
-      get() = intrinsic()
-
-    override var Setting: Double
-      get() = intrinsic()
-      set(value) = intrinsic()
-
-    /** The StructurePipeOneWayValveLever prefab. */
-    companion object : Prefab()
-  }
-
-  /** A StructurePipeLiquidOneWayValveLever. */
-  @PrefabName("StructurePipeLiquidOneWayValveLever")
-  class Liquid internal constructor() : TypedDevice(), PipeOneWayValveLever {
-    override val Maximum: Double
-      get() = intrinsic()
-
-    override var On: Boolean
-      get() = intrinsic()
-      set(value) = intrinsic()
-
-    override val Ratio: Double
-      get() = intrinsic()
-
-    override var Setting: Double
-      get() = intrinsic()
-      set(value) = intrinsic()
-
-    /** The StructurePipeLiquidOneWayValveLever prefab. */
-    companion object : Prefab()
-  }
-}
-
-/** The PipeOneWayValveLever devices on the chip's network, by prefab. */
-object PipeOneWayValveLevers {
-  /** The StructurePipeOneWayValveLever devices on the chip's network. */
-  @PrefabName("StructurePipeOneWayValveLever")
-  object Gas {
-    /** The device on [pin], as a StructurePipeOneWayValveLever. */
-    fun at(pin: Device): PipeOneWayValveLever.Gas = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<PipeOneWayValveLever.Gas>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<PipeOneWayValveLever.Gas> = intrinsic()
-  }
-
-  /** The StructurePipeLiquidOneWayValveLever devices on the chip's network. */
-  @PrefabName("StructurePipeLiquidOneWayValveLever")
-  object Liquid {
-    /** The device on [pin], as a StructurePipeLiquidOneWayValveLever. */
-    fun at(pin: Device): PipeOneWayValveLever.Liquid = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<PipeOneWayValveLever.Liquid>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<PipeOneWayValveLever.Liquid> = intrinsic()
   }
 }
 
@@ -11532,22 +11588,14 @@ object Computers {
 }
 
 /** A device that comes as several prefabs, each a nested class. */
-interface DigitalValve {
+interface DigitalValve : Valve {
   val Error: Boolean
 
   var Lock: Boolean
 
-  val Maximum: Double
-
-  var On: Boolean
-
   val Power: Boolean
 
-  val Ratio: Double
-
   val RequiredPower: Double
-
-  var Setting: Double
 
   /** A StructureDigitalValve. */
   @PrefabName("StructureDigitalValve")
@@ -16929,41 +16977,6 @@ object CondensationChambers {
   fun named(name: String): DeviceBatch<CondensationChamber> = intrinsic()
 }
 
-/** A StructureCondensationValve. */
-@PrefabName("StructureCondensationValve")
-class CondensationValve internal constructor() : TypedDevice() {
-  val Maximum: Double
-    get() = intrinsic()
-
-  var On: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val Ratio: Double
-    get() = intrinsic()
-
-  var Setting: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  /** The StructureCondensationValve prefab. */
-  companion object : Prefab()
-}
-
-/** The StructureCondensationValve devices on the chip's network. */
-@PrefabName("StructureCondensationValve")
-object CondensationValves {
-  /** The device on [pin], as a StructureCondensationValve. */
-  fun at(pin: Device): CondensationValve = intrinsic()
-
-  /** Every one on the network. */
-  val all: DeviceBatch<CondensationValve>
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): DeviceBatch<CondensationValve> = intrinsic()
-}
-
 /** A StructureCrewUmbilical. */
 @PrefabName("StructureCrewUmbilical")
 class CrewUmbilical internal constructor() : TypedDevice() {
@@ -17467,41 +17480,6 @@ object EvaporationChambers {
 
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): DeviceBatch<EvaporationChamber> = intrinsic()
-}
-
-/** A StructureExpansionValve. */
-@PrefabName("StructureExpansionValve")
-class ExpansionValve internal constructor() : TypedDevice() {
-  val Maximum: Double
-    get() = intrinsic()
-
-  var On: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val Ratio: Double
-    get() = intrinsic()
-
-  var Setting: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  /** The StructureExpansionValve prefab. */
-  companion object : Prefab()
-}
-
-/** The StructureExpansionValve devices on the chip's network. */
-@PrefabName("StructureExpansionValve")
-object ExpansionValves {
-  /** The device on [pin], as a StructureExpansionValve. */
-  fun at(pin: Device): ExpansionValve = intrinsic()
-
-  /** Every one on the network. */
-  val all: DeviceBatch<ExpansionValve>
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): DeviceBatch<ExpansionValve> = intrinsic()
 }
 
 /** A StructureFermenter. */
