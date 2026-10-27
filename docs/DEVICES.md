@@ -252,6 +252,15 @@ interface BatteryCell {
 
   /** ItemBatteryCellNuclear. Entry point: BatteryCells.Nuclear. */
   class Nuclear : TypedDevice, BatteryCell
+
+  /** Battery_Wireless_cell. Entry point: BatteryCells.Wireless. */
+  class Wireless : TypedDevice, BatteryCell
+
+  /** Battery_Wireless_cell_Big. Entry point: BatteryCells.WirelessBig. */
+  class WirelessBig : TypedDevice, BatteryCell
+
+  /** ItemWirelessBatteryCellExtraLarge. Entry point: BatteryCells.WirelessExtraLarge. */
+  class WirelessExtraLarge : TypedDevice, BatteryCell
 }
 ```
 
@@ -2078,23 +2087,6 @@ interface WindTurbine {
 
   /** StructureUprightWindTurbine. Entry point: WindTurbines.Upright. */
   class Upright : TypedDevice, WindTurbine
-}
-```
-
-### WirelessBatteryCell
-
-```kotlin
-interface WirelessBatteryCell {
-  var Mode: Double
-
-  /** Battery_Wireless_cell. Entry point: WirelessBatteryCells.Standard. */
-  class Standard : TypedDevice, WirelessBatteryCell
-
-  /** Battery_Wireless_cell_Big. Entry point: WirelessBatteryCells.Big. */
-  class Big : TypedDevice, WirelessBatteryCell
-
-  /** ItemWirelessBatteryCellExtraLarge. Entry point: WirelessBatteryCells.ExtraLarge. */
-  class ExtraLarge : TypedDevice, WirelessBatteryCell
 }
 ```
 

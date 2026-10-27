@@ -1038,6 +1038,39 @@ interface BatteryCell {
     /** The ItemBatteryCellNuclear prefab. */
     companion object : Prefab()
   }
+
+  /** A Battery_Wireless_cell. */
+  @PrefabName("Battery_Wireless_cell")
+  class Wireless internal constructor() : TypedDevice(), BatteryCell {
+    override var Mode: Double
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    /** The Battery_Wireless_cell prefab. */
+    companion object : Prefab()
+  }
+
+  /** A Battery_Wireless_cell_Big. */
+  @PrefabName("Battery_Wireless_cell_Big")
+  class WirelessBig internal constructor() : TypedDevice(), BatteryCell {
+    override var Mode: Double
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    /** The Battery_Wireless_cell_Big prefab. */
+    companion object : Prefab()
+  }
+
+  /** A ItemWirelessBatteryCellExtraLarge. */
+  @PrefabName("ItemWirelessBatteryCellExtraLarge")
+  class WirelessExtraLarge internal constructor() : TypedDevice(), BatteryCell {
+    override var Mode: Double
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    /** The ItemWirelessBatteryCellExtraLarge prefab. */
+    companion object : Prefab()
+  }
 }
 
 /** The BatteryCell devices on the chip's network, by prefab. */
@@ -1082,6 +1115,48 @@ object BatteryCells {
 
     /** Every one on the network named [name], which must be a constant. */
     fun named(name: String): DeviceBatch<BatteryCell.Nuclear> = intrinsic()
+  }
+
+  /** The Battery_Wireless_cell devices on the chip's network. */
+  @PrefabName("Battery_Wireless_cell")
+  object Wireless {
+    /** The device on [pin], as a Battery_Wireless_cell. */
+    fun at(pin: Device): BatteryCell.Wireless = intrinsic()
+
+    /** Every one on the network. */
+    val all: DeviceBatch<BatteryCell.Wireless>
+      get() = intrinsic()
+
+    /** Every one on the network named [name], which must be a constant. */
+    fun named(name: String): DeviceBatch<BatteryCell.Wireless> = intrinsic()
+  }
+
+  /** The Battery_Wireless_cell_Big devices on the chip's network. */
+  @PrefabName("Battery_Wireless_cell_Big")
+  object WirelessBig {
+    /** The device on [pin], as a Battery_Wireless_cell_Big. */
+    fun at(pin: Device): BatteryCell.WirelessBig = intrinsic()
+
+    /** Every one on the network. */
+    val all: DeviceBatch<BatteryCell.WirelessBig>
+      get() = intrinsic()
+
+    /** Every one on the network named [name], which must be a constant. */
+    fun named(name: String): DeviceBatch<BatteryCell.WirelessBig> = intrinsic()
+  }
+
+  /** The ItemWirelessBatteryCellExtraLarge devices on the chip's network. */
+  @PrefabName("ItemWirelessBatteryCellExtraLarge")
+  object WirelessExtraLarge {
+    /** The device on [pin], as a ItemWirelessBatteryCellExtraLarge. */
+    fun at(pin: Device): BatteryCell.WirelessExtraLarge = intrinsic()
+
+    /** Every one on the network. */
+    val all: DeviceBatch<BatteryCell.WirelessExtraLarge>
+      get() = intrinsic()
+
+    /** Every one on the network named [name], which must be a constant. */
+    fun named(name: String): DeviceBatch<BatteryCell.WirelessExtraLarge> = intrinsic()
   }
 }
 
@@ -7787,89 +7862,6 @@ object AreaPowerControls {
       val slots: Slots<SlotBatch<CommonSlot>>
         get() = intrinsic()
     }
-  }
-}
-
-/** A device that comes as several prefabs, each a nested class. */
-interface WirelessBatteryCell {
-  var Mode: Double
-
-  /** A Battery_Wireless_cell. */
-  @PrefabName("Battery_Wireless_cell")
-  class Standard internal constructor() : TypedDevice(), WirelessBatteryCell {
-    override var Mode: Double
-      get() = intrinsic()
-      set(value) = intrinsic()
-
-    /** The Battery_Wireless_cell prefab. */
-    companion object : Prefab()
-  }
-
-  /** A Battery_Wireless_cell_Big. */
-  @PrefabName("Battery_Wireless_cell_Big")
-  class Big internal constructor() : TypedDevice(), WirelessBatteryCell {
-    override var Mode: Double
-      get() = intrinsic()
-      set(value) = intrinsic()
-
-    /** The Battery_Wireless_cell_Big prefab. */
-    companion object : Prefab()
-  }
-
-  /** A ItemWirelessBatteryCellExtraLarge. */
-  @PrefabName("ItemWirelessBatteryCellExtraLarge")
-  class ExtraLarge internal constructor() : TypedDevice(), WirelessBatteryCell {
-    override var Mode: Double
-      get() = intrinsic()
-      set(value) = intrinsic()
-
-    /** The ItemWirelessBatteryCellExtraLarge prefab. */
-    companion object : Prefab()
-  }
-}
-
-/** The WirelessBatteryCell devices on the chip's network, by prefab. */
-object WirelessBatteryCells {
-  /** The Battery_Wireless_cell devices on the chip's network. */
-  @PrefabName("Battery_Wireless_cell")
-  object Standard {
-    /** The device on [pin], as a Battery_Wireless_cell. */
-    fun at(pin: Device): WirelessBatteryCell.Standard = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<WirelessBatteryCell.Standard>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<WirelessBatteryCell.Standard> = intrinsic()
-  }
-
-  /** The Battery_Wireless_cell_Big devices on the chip's network. */
-  @PrefabName("Battery_Wireless_cell_Big")
-  object Big {
-    /** The device on [pin], as a Battery_Wireless_cell_Big. */
-    fun at(pin: Device): WirelessBatteryCell.Big = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<WirelessBatteryCell.Big>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<WirelessBatteryCell.Big> = intrinsic()
-  }
-
-  /** The ItemWirelessBatteryCellExtraLarge devices on the chip's network. */
-  @PrefabName("ItemWirelessBatteryCellExtraLarge")
-  object ExtraLarge {
-    /** The device on [pin], as a ItemWirelessBatteryCellExtraLarge. */
-    fun at(pin: Device): WirelessBatteryCell.ExtraLarge = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<WirelessBatteryCell.ExtraLarge>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<WirelessBatteryCell.ExtraLarge> = intrinsic()
   }
 }
 
