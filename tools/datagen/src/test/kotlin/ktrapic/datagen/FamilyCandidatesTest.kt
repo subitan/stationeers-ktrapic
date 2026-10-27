@@ -28,6 +28,9 @@ class FamilyCandidatesTest {
     assertWithMessage("notFamilies groups prefabs together that aren't one family")
         .that(FamilyCandidates.groupsOutsideAFamily(grouping))
         .isEmpty()
+    assertWithMessage("notFamilies puts members of one family in different groups")
+        .that(FamilyCandidates.familiesSplitByAnEntry(grouping))
+        .isEmpty()
   }
 
   @Test
@@ -51,12 +54,40 @@ class FamilyCandidatesTest {
   fun `prefabs with the same logic look alike when one name has every word of the other`() {
     val long = prefab("StructureLightLong", "On", "Power")
     val wide = prefab("StructureLightLongWide", "On", "Power")
-    val wallLight = prefab("StructureWallLight", "On", "Power")
+    val floodLight = prefab("StructureFloodLight", "On", "Power")
     val otherLogic = prefab("StructureLightLongTall", "On")
 
     assertThat(FamilyCandidates.lookAlike(long, wide)).isTrue()
-    assertThat(FamilyCandidates.lookAlike(long, wallLight)).isFalse()
+    assertThat(FamilyCandidates.lookAlike(long, floodLight)).isFalse()
     assertThat(FamilyCandidates.lookAlike(long, otherLogic)).isFalse()
+  }
+
+  @Test
+  fun `prefabs with the same kinds of slot look alike however many slots they have`() {
+    fun locker(name: String, slots: Int, kind: String = "DataDisk") =
+        Prefab(
+            name,
+            0,
+            mapOf("Open" to Access.parse("rw")),
+            (0 until slots).associateWith {
+              SlotInfo.parse(kind)
+            },
+        )
+
+    assertThat(
+            FamilyCandidates.lookAlike(
+                locker("StructureStorageLocker", 30),
+                locker("StructureLockerSmall", 4),
+            )
+        )
+        .isTrue()
+    assertThat(
+            FamilyCandidates.lookAlike(
+                locker("StructureStorageLocker", 30),
+                locker("StructureLockerSmall", 4, "Battery"),
+            )
+        )
+        .isFalse()
   }
 
   private val valves = listOf(prefab("StructureValve"), prefab("StructureLiquidValve"))
@@ -116,6 +147,37 @@ class FamilyCandidatesTest {
     assertThat(FamilyCandidates.groupsOutsideAFamily(valvesTogether))
         .containsExactly(listOf("StructureValve", "StructureLiquidValve"))
     assertThat(FamilyCandidates.ungrouped(valves, valvesApart)).isEmpty()
+  }
+
+  @Test
+  fun `a not-family entry can't put one family's members in different groups`() {
+    val valveFamily =
+        Grouping.Family(
+            "Valves",
+            mapOf("Gas" to "StructureValve", "Liquid" to "StructureLiquidValve"),
+        )
+    fun grouping(vararg groups: List<String>) =
+        Grouping(
+            mapOf("Valve" to valveFamily),
+            emptyList(),
+            listOf(Grouping.NotFamily(groups.toList(), "different")),
+        )
+
+    assertThat(
+            FamilyCandidates.familiesSplitByAnEntry(
+                grouping(listOf("StructureValve"), listOf("StructureLiquidValve"))
+            )
+        )
+        .containsExactly("Valve" to "different")
+    assertThat(
+            FamilyCandidates.familiesSplitByAnEntry(
+                grouping(
+                    listOf("StructureValve", "StructureLiquidValve"),
+                    listOf("StructureGasket"),
+                )
+            )
+        )
+        .isEmpty()
   }
 
   @Test

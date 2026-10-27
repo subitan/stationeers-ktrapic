@@ -8,13 +8,15 @@ package ktrapic.datagen
  * Two prefabs look alike when either
  * - their names are the same once sizes, fluids and variants are taken out ([baseName]:
  *   `StructureLiquidValve` and `StructureValve` are both `Valve`), or
- * - they have the same logic types and slots, and one's name has every word of the other's
- *   ([words]: `StructureLightLongWide` has those of `StructureLightLong`). This finds kinds told
- *   apart by a word not yet in [VARIANT_WORDS], such as `Wide` or `MKII`.
+ * - they have the same logic types and the same kinds of slot, though maybe not as many, and one's
+ *   name has every word of the other's ([words]: `StructureLightLongWide` has those of
+ *   `StructureLightLong`, `StructureStorageLocker` those of `StructureLockerSmall`). This finds
+ *   kinds told apart by a word not yet in [VARIANT_WORDS], such as `Wide` or `MKII`.
  *
  * Neither sees kinds whose prefab names don't share their words (`StructureCapsuleTankGas` and
- * `StructureMediumRocketGasFuelTank` are the game's "Gas Capsule Tank Small" and "... Medium"):
- * those families come from the game's English names.
+ * `StructureMediumRocketGasFuelTank` are the game's "Gas Capsule Tank Small" and "... Medium";
+ * `StructureWallLight` and `StructureLightLong` are "Wall Light" and "Wall Light (Long)"): those
+ * families come from the game's English names.
  */
 object FamilyCandidates {
   private val PREFIXES = listOf("Structure", "Item", "Landingpad_")
@@ -65,7 +67,7 @@ object FamilyCandidates {
   /** Whether [a] and [b] look like one device in two kinds. */
   fun lookAlike(a: Prefab, b: Prefab): Boolean {
     if (baseName(a.name) == baseName(b.name)) return true
-    if (a.logic != b.logic || a.slots != b.slots) return false
+    if (a.logic != b.logic || a.slots.values.toSet() != b.slots.values.toSet()) return false
     val (wordsA, wordsB) = words(a.name) to words(b.name)
     return wordsA.containsAll(wordsB) || wordsB.containsAll(wordsA)
   }
@@ -105,6 +107,23 @@ object FamilyCandidates {
           val families = group.map { familyOf[it] }.distinct()
           group.size > 1 && (families.size != 1 || families[0] == null)
         }
+  }
+
+  /**
+   * The families whose members [grouping] puts in different groups of one not-family entry, which
+   * says they are different devices: each with the entry's reason.
+   */
+  fun familiesSplitByAnEntry(grouping: Grouping): List<Pair<String, String>> {
+    val familyOf = familyOf(grouping)
+    return grouping.notFamilies.flatMap { notFamily ->
+      notFamily.groups
+          .flatMap { group -> group.mapNotNull { familyOf[it] }.distinct() }
+          .groupingBy { it }
+          .eachCount()
+          .filterValues { it > 1 }
+          .keys
+          .map { it to notFamily.reason }
+    }
   }
 
   private fun familyOf(grouping: Grouping): Map<String, String> =

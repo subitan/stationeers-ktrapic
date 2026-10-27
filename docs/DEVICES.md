@@ -855,26 +855,6 @@ interface LedDisplay {
 }
 ```
 
-### LightLong
-
-```kotlin
-interface LightLong {
-  var Lock: Boolean
-  var On: Boolean
-  val Power: Boolean
-  val RequiredPower: Double
-
-  /** StructureLightLong. Entry point: LightLongs.Standard. */
-  class Standard : TypedDevice, LightLong
-
-  /** StructureLightLongAngled. Entry point: LightLongs.Angled. */
-  class Angled : TypedDevice, LightLong
-
-  /** StructureLightLongWide. Entry point: LightLongs.Wide. */
-  class Wide : TypedDevice, LightLong
-}
-```
-
 ### LightRound
 
 ```kotlin
@@ -901,6 +881,11 @@ interface LightRound {
 interface Locker {
   var Lock: Boolean
   var Open: Boolean
+
+  /** StructureStorageLocker. Entry point: Lockers.Standard. */
+  class Standard : TypedDevice, Locker {
+    val slots: Slots<DataDiskSlot>
+  }
 
   /** StructureLockerSmall. Entry point: Lockers.Small. */
   class Small : TypedDevice, Locker {
@@ -1632,6 +1617,35 @@ interface WallCooler {
     val Ports: Ports
     val DataDisk: DataDiskSlot // slots[0]
     val slots: Slots<DataDiskSlot>
+  }
+}
+```
+
+### WallLight
+
+```kotlin
+interface WallLight {
+  var Lock: Boolean
+  var On: Boolean
+  val Power: Boolean
+  val RequiredPower: Double
+
+  /** StructureWallLight. Entry point: WallLights.Standard. */
+  class Standard : TypedDevice, WallLight
+
+  /** StructureLightLong. Entry point: WallLights.Long. */
+  class Long : TypedDevice, WallLight
+
+  /** StructureLightLongAngled. Entry point: WallLights.LongAngled. */
+  class LongAngled : TypedDevice, WallLight
+
+  /** StructureLightLongWide. Entry point: WallLights.LongWide. */
+  class LongWide : TypedDevice, WallLight
+
+  /** StructureWallLightBattery. Entry point: WallLights.Battery. */
+  class Battery : TypedDevice, WallLight {
+    val Battery: BatterySlot // slots[0]
+    val slots: Slots<BatterySlot>
   }
 }
 ```
@@ -4023,13 +4037,6 @@ class StopWatch : TypedDevice {
   val Time: Double
 }
 
-/** StructureStorageLocker. Entry point: StorageLockers. */
-class StorageLocker : TypedDevice {
-  var Lock: Boolean
-  var Open: Boolean
-  val slots: Slots<DataDiskSlot>
-}
-
 /** StructureBeacon. Entry point: StructureBeacons. */
 class StructureBeacon : TypedDevice {
   var Color: Double
@@ -4173,24 +4180,6 @@ class WallHeater : TypedDevice {
   val RequiredPower: Double
   val DataDisk: DataDiskSlot // slots[0]
   val slots: Slots<DataDiskSlot>
-}
-
-/** StructureWallLight. Entry point: WallLights. */
-class WallLight : TypedDevice {
-  var Lock: Boolean
-  var On: Boolean
-  val Power: Boolean
-  val RequiredPower: Double
-}
-
-/** StructureWallLightBattery. Entry point: WallLightBatteries. */
-class WallLightBattery : TypedDevice {
-  var Lock: Boolean
-  var On: Boolean
-  val Power: Boolean
-  val RequiredPower: Double
-  val Battery: BatterySlot // slots[0]
-  val slots: Slots<BatterySlot>
 }
 
 /** StructureWaterPurifier. Entry point: WaterPurifiers. */

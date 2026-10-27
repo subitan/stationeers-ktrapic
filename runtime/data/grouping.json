@@ -314,6 +314,7 @@
     "Locker": {
       "plural": "Lockers",
       "members": {
+        "Standard": "StructureStorageLocker",
         "Small": "StructureLockerSmall",
         "Corner": "StructureCornerLocker",
         "Short": "StructureShortLocker",
@@ -345,12 +346,14 @@
         "Monitor": "StructureConsoleMonitor"
       }
     },
-    "LightLong": {
-      "plural": "LightLongs",
+    "WallLight": {
+      "plural": "WallLights",
       "members": {
-        "Standard": "StructureLightLong",
-        "Angled": "StructureLightLongAngled",
-        "Wide": "StructureLightLongWide"
+        "Standard": "StructureWallLight",
+        "Long": "StructureLightLong",
+        "LongAngled": "StructureLightLongAngled",
+        "LongWide": "StructureLightLongWide",
+        "Battery": "StructureWallLightBattery"
       }
     },
     "MiningDrill": {

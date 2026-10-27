@@ -231,7 +231,7 @@ data class Grouping(
    *
    * @property groups the different devices: each group is one prefab, or the prefabs of one family.
    *   Only prefabs in different groups are decided as not one family; prefabs in one group must be
-   *   one family.
+   *   one family, and one family's members must be in one group.
    */
   data class NotFamily(val groups: List<List<String>>, val reason: String) {
     val prefabs: List<String>

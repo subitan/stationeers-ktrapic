@@ -7284,6 +7284,25 @@ interface Locker {
 
   var Open: Boolean
 
+  /** A StructureStorageLocker. */
+  @PrefabName("StructureStorageLocker")
+  class Standard internal constructor() : TypedDevice(), Locker {
+    override var Lock: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override var Open: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    /** The device's slots, by number. */
+    val slots: Slots<DataDiskSlot>
+      get() = intrinsic()
+
+    /** The StructureStorageLocker prefab. */
+    companion object : Prefab()
+  }
+
   /** A StructureLockerSmall. */
   @PrefabName("StructureLockerSmall")
   class Small internal constructor() : TypedDevice(), Locker {
@@ -7401,6 +7420,26 @@ interface Locker {
 
 /** The Locker devices on the chip's network, by prefab. */
 object Lockers {
+  /** The StructureStorageLocker devices on the chip's network. */
+  @PrefabName("StructureStorageLocker")
+  object Standard {
+    /** The device on [pin], as a StructureStorageLocker. */
+    fun at(pin: Device): Locker.Standard = intrinsic()
+
+    /** Every one on the network. */
+    val all: Batch
+      get() = intrinsic()
+
+    /** Every one on the network named [name], which must be a constant. */
+    fun named(name: String): Batch = intrinsic()
+
+    class Batch internal constructor() : DeviceBatch<Locker.Standard>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+  }
+
   /** The StructureLockerSmall devices on the chip's network. */
   @PrefabName("StructureLockerSmall")
   object Small {
@@ -7998,7 +8037,7 @@ object Consoles {
 }
 
 /** A device that comes as several prefabs, each a nested class. */
-interface LightLong {
+interface WallLight {
   var Lock: Boolean
 
   var On: Boolean
@@ -8007,9 +8046,30 @@ interface LightLong {
 
   val RequiredPower: Double
 
+  /** A StructureWallLight. */
+  @PrefabName("StructureWallLight")
+  class Standard internal constructor() : TypedDevice(), WallLight {
+    override var Lock: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override var On: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override val Power: Boolean
+      get() = intrinsic()
+
+    override val RequiredPower: Double
+      get() = intrinsic()
+
+    /** The StructureWallLight prefab. */
+    companion object : Prefab()
+  }
+
   /** A StructureLightLong. */
   @PrefabName("StructureLightLong")
-  class Standard internal constructor() : TypedDevice(), LightLong {
+  class Long internal constructor() : TypedDevice(), WallLight {
     override var Lock: Boolean
       get() = intrinsic()
       set(value) = intrinsic()
@@ -8030,7 +8090,7 @@ interface LightLong {
 
   /** A StructureLightLongAngled. */
   @PrefabName("StructureLightLongAngled")
-  class Angled internal constructor() : TypedDevice(), LightLong {
+  class LongAngled internal constructor() : TypedDevice(), WallLight {
     override var Lock: Boolean
       get() = intrinsic()
       set(value) = intrinsic()
@@ -8051,7 +8111,7 @@ interface LightLong {
 
   /** A StructureLightLongWide. */
   @PrefabName("StructureLightLongWide")
-  class Wide internal constructor() : TypedDevice(), LightLong {
+  class LongWide internal constructor() : TypedDevice(), WallLight {
     override var Lock: Boolean
       get() = intrinsic()
       set(value) = intrinsic()
@@ -8069,50 +8129,114 @@ interface LightLong {
     /** The StructureLightLongWide prefab. */
     companion object : Prefab()
   }
+
+  /** A StructureWallLightBattery. */
+  @PrefabName("StructureWallLightBattery")
+  class Battery internal constructor() : TypedDevice(), WallLight {
+    override var Lock: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override var On: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override val Power: Boolean
+      get() = intrinsic()
+
+    override val RequiredPower: Double
+      get() = intrinsic()
+
+    /** The device's slots, by number. */
+    val slots: Slots<BatterySlot>
+      get() = intrinsic()
+
+    /** Slot 0. */
+    @SlotNumber(0)
+    val Battery: BatterySlot
+      get() = intrinsic()
+
+    /** The StructureWallLightBattery prefab. */
+    companion object : Prefab()
+  }
 }
 
-/** The LightLong devices on the chip's network, by prefab. */
-object LightLongs {
-  /** The StructureLightLong devices on the chip's network. */
-  @PrefabName("StructureLightLong")
+/** The WallLight devices on the chip's network, by prefab. */
+object WallLights {
+  /** The StructureWallLight devices on the chip's network. */
+  @PrefabName("StructureWallLight")
   object Standard {
-    /** The device on [pin], as a StructureLightLong. */
-    fun at(pin: Device): LightLong.Standard = intrinsic()
+    /** The device on [pin], as a StructureWallLight. */
+    fun at(pin: Device): WallLight.Standard = intrinsic()
 
     /** Every one on the network. */
-    val all: DeviceBatch<LightLong.Standard>
+    val all: DeviceBatch<WallLight.Standard>
       get() = intrinsic()
 
     /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<LightLong.Standard> = intrinsic()
+    fun named(name: String): DeviceBatch<WallLight.Standard> = intrinsic()
+  }
+
+  /** The StructureLightLong devices on the chip's network. */
+  @PrefabName("StructureLightLong")
+  object Long {
+    /** The device on [pin], as a StructureLightLong. */
+    fun at(pin: Device): WallLight.Long = intrinsic()
+
+    /** Every one on the network. */
+    val all: DeviceBatch<WallLight.Long>
+      get() = intrinsic()
+
+    /** Every one on the network named [name], which must be a constant. */
+    fun named(name: String): DeviceBatch<WallLight.Long> = intrinsic()
   }
 
   /** The StructureLightLongAngled devices on the chip's network. */
   @PrefabName("StructureLightLongAngled")
-  object Angled {
+  object LongAngled {
     /** The device on [pin], as a StructureLightLongAngled. */
-    fun at(pin: Device): LightLong.Angled = intrinsic()
+    fun at(pin: Device): WallLight.LongAngled = intrinsic()
 
     /** Every one on the network. */
-    val all: DeviceBatch<LightLong.Angled>
+    val all: DeviceBatch<WallLight.LongAngled>
       get() = intrinsic()
 
     /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<LightLong.Angled> = intrinsic()
+    fun named(name: String): DeviceBatch<WallLight.LongAngled> = intrinsic()
   }
 
   /** The StructureLightLongWide devices on the chip's network. */
   @PrefabName("StructureLightLongWide")
-  object Wide {
+  object LongWide {
     /** The device on [pin], as a StructureLightLongWide. */
-    fun at(pin: Device): LightLong.Wide = intrinsic()
+    fun at(pin: Device): WallLight.LongWide = intrinsic()
 
     /** Every one on the network. */
-    val all: DeviceBatch<LightLong.Wide>
+    val all: DeviceBatch<WallLight.LongWide>
       get() = intrinsic()
 
     /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<LightLong.Wide> = intrinsic()
+    fun named(name: String): DeviceBatch<WallLight.LongWide> = intrinsic()
+  }
+
+  /** The StructureWallLightBattery devices on the chip's network. */
+  @PrefabName("StructureWallLightBattery")
+  object Battery {
+    /** The device on [pin], as a StructureWallLightBattery. */
+    fun at(pin: Device): WallLight.Battery = intrinsic()
+
+    /** Every one on the network. */
+    val all: Batch
+      get() = intrinsic()
+
+    /** Every one on the network named [name], which must be a constant. */
+    fun named(name: String): Batch = intrinsic()
+
+    class Batch internal constructor() : DeviceBatch<WallLight.Battery>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<BatterySlot>>
+        get() = intrinsic()
+    }
   }
 }
 
@@ -20579,45 +20703,6 @@ object StirlingEngines {
   }
 }
 
-/** A StructureStorageLocker. */
-@PrefabName("StructureStorageLocker")
-class StorageLocker internal constructor() : TypedDevice() {
-  var Lock: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var Open: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  /** The device's slots, by number. */
-  val slots: Slots<DataDiskSlot>
-    get() = intrinsic()
-
-  /** The StructureStorageLocker prefab. */
-  companion object : Prefab()
-}
-
-/** The StructureStorageLocker devices on the chip's network. */
-@PrefabName("StructureStorageLocker")
-object StorageLockers {
-  /** The device on [pin], as a StructureStorageLocker. */
-  fun at(pin: Device): StorageLocker = intrinsic()
-
-  /** Every one on the network. */
-  val all: Batch
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch<StorageLocker>() {
-    /** A slot of every one in the batch, by number. */
-    val slots: Slots<SlotBatch<DataDiskSlot>>
-      get() = intrinsic()
-  }
-}
-
 /** A StructureToolManufactory. */
 @PrefabName("StructureToolManufactory")
 class ToolManufactory internal constructor() : TypedDevice() {
@@ -20850,91 +20935,6 @@ object WallHeaters {
   class Batch internal constructor() : DeviceBatch<WallHeater>() {
     /** A slot of every one in the batch, by number. */
     val slots: Slots<SlotBatch<DataDiskSlot>>
-      get() = intrinsic()
-  }
-}
-
-/** A StructureWallLight. */
-@PrefabName("StructureWallLight")
-class WallLight internal constructor() : TypedDevice() {
-  var Lock: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var On: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val Power: Boolean
-    get() = intrinsic()
-
-  val RequiredPower: Double
-    get() = intrinsic()
-
-  /** The StructureWallLight prefab. */
-  companion object : Prefab()
-}
-
-/** The StructureWallLight devices on the chip's network. */
-@PrefabName("StructureWallLight")
-object WallLights {
-  /** The device on [pin], as a StructureWallLight. */
-  fun at(pin: Device): WallLight = intrinsic()
-
-  /** Every one on the network. */
-  val all: DeviceBatch<WallLight>
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): DeviceBatch<WallLight> = intrinsic()
-}
-
-/** A StructureWallLightBattery. */
-@PrefabName("StructureWallLightBattery")
-class WallLightBattery internal constructor() : TypedDevice() {
-  var Lock: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var On: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val Power: Boolean
-    get() = intrinsic()
-
-  val RequiredPower: Double
-    get() = intrinsic()
-
-  /** The device's slots, by number. */
-  val slots: Slots<BatterySlot>
-    get() = intrinsic()
-
-  /** Slot 0. */
-  @SlotNumber(0)
-  val Battery: BatterySlot
-    get() = intrinsic()
-
-  /** The StructureWallLightBattery prefab. */
-  companion object : Prefab()
-}
-
-/** The StructureWallLightBattery devices on the chip's network. */
-@PrefabName("StructureWallLightBattery")
-object WallLightBatteries {
-  /** The device on [pin], as a StructureWallLightBattery. */
-  fun at(pin: Device): WallLightBattery = intrinsic()
-
-  /** Every one on the network. */
-  val all: Batch
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch<WallLightBattery>() {
-    /** A slot of every one in the batch, by number. */
-    val slots: Slots<SlotBatch<BatterySlot>>
       get() = intrinsic()
   }
 }
