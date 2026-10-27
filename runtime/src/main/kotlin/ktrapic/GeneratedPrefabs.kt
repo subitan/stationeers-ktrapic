@@ -10296,6 +10296,207 @@ object LogicWriters {
 }
 
 /** A device that comes as several prefabs, each a nested class. */
+interface LogicReader {
+  val Error: Boolean
+
+  var On: Boolean
+
+  val Power: Boolean
+
+  val RequiredPower: Double
+
+  val Setting: Double
+
+  /** A StructureLogicReader. */
+  @PrefabName("StructureLogicReader")
+  class Standard internal constructor() : TypedDevice(), LogicReader {
+    override val Error: Boolean
+      get() = intrinsic()
+
+    override var On: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override val Power: Boolean
+      get() = intrinsic()
+
+    override val RequiredPower: Double
+      get() = intrinsic()
+
+    override val Setting: Double
+      get() = intrinsic()
+
+    /** The StructureLogicReader prefab. */
+    companion object : Prefab()
+  }
+
+  /** A StructureLogicSlotReader. */
+  @PrefabName("StructureLogicSlotReader")
+  class Slot internal constructor() : TypedDevice(), LogicReader {
+    override val Error: Boolean
+      get() = intrinsic()
+
+    override var On: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override val Power: Boolean
+      get() = intrinsic()
+
+    override val RequiredPower: Double
+      get() = intrinsic()
+
+    override val Setting: Double
+      get() = intrinsic()
+
+    /** The StructureLogicSlotReader prefab. */
+    companion object : Prefab()
+  }
+
+  /** A StructureLogicReagentReader. */
+  @PrefabName("StructureLogicReagentReader")
+  class Reagent internal constructor() : TypedDevice(), LogicReader {
+    override val Error: Boolean
+      get() = intrinsic()
+
+    override var On: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override val Power: Boolean
+      get() = intrinsic()
+
+    override val RequiredPower: Double
+      get() = intrinsic()
+
+    override val Setting: Double
+      get() = intrinsic()
+
+    /** The StructureLogicReagentReader prefab. */
+    companion object : Prefab()
+  }
+
+  /** A StructureLogicBatchReader. */
+  @PrefabName("StructureLogicBatchReader")
+  class Batch internal constructor() : TypedDevice(), LogicReader {
+    override val Error: Boolean
+      get() = intrinsic()
+
+    override var On: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override val Power: Boolean
+      get() = intrinsic()
+
+    override val RequiredPower: Double
+      get() = intrinsic()
+
+    override val Setting: Double
+      get() = intrinsic()
+
+    /** The StructureLogicBatchReader prefab. */
+    companion object : Prefab()
+  }
+
+  /** A StructureLogicBatchSlotReader. */
+  @PrefabName("StructureLogicBatchSlotReader")
+  class BatchSlot internal constructor() : TypedDevice(), LogicReader {
+    override val Error: Boolean
+      get() = intrinsic()
+
+    override var On: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override val Power: Boolean
+      get() = intrinsic()
+
+    override val RequiredPower: Double
+      get() = intrinsic()
+
+    override val Setting: Double
+      get() = intrinsic()
+
+    /** The StructureLogicBatchSlotReader prefab. */
+    companion object : Prefab()
+  }
+}
+
+/** The LogicReader devices on the chip's network, by prefab. */
+object LogicReaders {
+  /** The StructureLogicReader devices on the chip's network. */
+  @PrefabName("StructureLogicReader")
+  object Standard {
+    /** The device on [pin], as a StructureLogicReader. */
+    fun at(pin: Device): LogicReader.Standard = intrinsic()
+
+    /** Every one on the network. */
+    val all: DeviceBatch<LogicReader.Standard>
+      get() = intrinsic()
+
+    /** Every one on the network named [name], which must be a constant. */
+    fun named(name: String): DeviceBatch<LogicReader.Standard> = intrinsic()
+  }
+
+  /** The StructureLogicSlotReader devices on the chip's network. */
+  @PrefabName("StructureLogicSlotReader")
+  object Slot {
+    /** The device on [pin], as a StructureLogicSlotReader. */
+    fun at(pin: Device): LogicReader.Slot = intrinsic()
+
+    /** Every one on the network. */
+    val all: DeviceBatch<LogicReader.Slot>
+      get() = intrinsic()
+
+    /** Every one on the network named [name], which must be a constant. */
+    fun named(name: String): DeviceBatch<LogicReader.Slot> = intrinsic()
+  }
+
+  /** The StructureLogicReagentReader devices on the chip's network. */
+  @PrefabName("StructureLogicReagentReader")
+  object Reagent {
+    /** The device on [pin], as a StructureLogicReagentReader. */
+    fun at(pin: Device): LogicReader.Reagent = intrinsic()
+
+    /** Every one on the network. */
+    val all: DeviceBatch<LogicReader.Reagent>
+      get() = intrinsic()
+
+    /** Every one on the network named [name], which must be a constant. */
+    fun named(name: String): DeviceBatch<LogicReader.Reagent> = intrinsic()
+  }
+
+  /** The StructureLogicBatchReader devices on the chip's network. */
+  @PrefabName("StructureLogicBatchReader")
+  object Batch {
+    /** The device on [pin], as a StructureLogicBatchReader. */
+    fun at(pin: Device): LogicReader.Batch = intrinsic()
+
+    /** Every one on the network. */
+    val all: DeviceBatch<LogicReader.Batch>
+      get() = intrinsic()
+
+    /** Every one on the network named [name], which must be a constant. */
+    fun named(name: String): DeviceBatch<LogicReader.Batch> = intrinsic()
+  }
+
+  /** The StructureLogicBatchSlotReader devices on the chip's network. */
+  @PrefabName("StructureLogicBatchSlotReader")
+  object BatchSlot {
+    /** The device on [pin], as a StructureLogicBatchSlotReader. */
+    fun at(pin: Device): LogicReader.BatchSlot = intrinsic()
+
+    /** Every one on the network. */
+    val all: DeviceBatch<LogicReader.BatchSlot>
+      get() = intrinsic()
+
+    /** Every one on the network named [name], which must be a constant. */
+    fun named(name: String): DeviceBatch<LogicReader.BatchSlot> = intrinsic()
+  }
+}
+
+/** A device that comes as several prefabs, each a nested class. */
 interface Door {
   val Idle: Boolean
 
@@ -18058,80 +18259,6 @@ object LiquidDrains {
   fun named(name: String): DeviceBatch<LiquidDrain> = intrinsic()
 }
 
-/** A StructureLogicBatchReader. */
-@PrefabName("StructureLogicBatchReader")
-class LogicBatchReader internal constructor() : TypedDevice() {
-  val Error: Boolean
-    get() = intrinsic()
-
-  var On: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val Power: Boolean
-    get() = intrinsic()
-
-  val RequiredPower: Double
-    get() = intrinsic()
-
-  val Setting: Double
-    get() = intrinsic()
-
-  /** The StructureLogicBatchReader prefab. */
-  companion object : Prefab()
-}
-
-/** The StructureLogicBatchReader devices on the chip's network. */
-@PrefabName("StructureLogicBatchReader")
-object LogicBatchReaders {
-  /** The device on [pin], as a StructureLogicBatchReader. */
-  fun at(pin: Device): LogicBatchReader = intrinsic()
-
-  /** Every one on the network. */
-  val all: DeviceBatch<LogicBatchReader>
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): DeviceBatch<LogicBatchReader> = intrinsic()
-}
-
-/** A StructureLogicBatchSlotReader. */
-@PrefabName("StructureLogicBatchSlotReader")
-class LogicBatchSlotReader internal constructor() : TypedDevice() {
-  val Error: Boolean
-    get() = intrinsic()
-
-  var On: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val Power: Boolean
-    get() = intrinsic()
-
-  val RequiredPower: Double
-    get() = intrinsic()
-
-  val Setting: Double
-    get() = intrinsic()
-
-  /** The StructureLogicBatchSlotReader prefab. */
-  companion object : Prefab()
-}
-
-/** The StructureLogicBatchSlotReader devices on the chip's network. */
-@PrefabName("StructureLogicBatchSlotReader")
-object LogicBatchSlotReaders {
-  /** The device on [pin], as a StructureLogicBatchSlotReader. */
-  fun at(pin: Device): LogicBatchSlotReader = intrinsic()
-
-  /** Every one on the network. */
-  val all: DeviceBatch<LogicBatchSlotReader>
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): DeviceBatch<LogicBatchSlotReader> = intrinsic()
-}
-
 /** A StructureLogicButton. */
 @PrefabName("StructureLogicButton")
 class LogicButton internal constructor() : TypedDevice() {
@@ -18515,80 +18642,6 @@ object LogicPidControllers {
   fun named(name: String): DeviceBatch<LogicPidController> = intrinsic()
 }
 
-/** A StructureLogicReader. */
-@PrefabName("StructureLogicReader")
-class LogicReader internal constructor() : TypedDevice() {
-  val Error: Boolean
-    get() = intrinsic()
-
-  var On: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val Power: Boolean
-    get() = intrinsic()
-
-  val RequiredPower: Double
-    get() = intrinsic()
-
-  val Setting: Double
-    get() = intrinsic()
-
-  /** The StructureLogicReader prefab. */
-  companion object : Prefab()
-}
-
-/** The StructureLogicReader devices on the chip's network. */
-@PrefabName("StructureLogicReader")
-object LogicReaders {
-  /** The device on [pin], as a StructureLogicReader. */
-  fun at(pin: Device): LogicReader = intrinsic()
-
-  /** Every one on the network. */
-  val all: DeviceBatch<LogicReader>
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): DeviceBatch<LogicReader> = intrinsic()
-}
-
-/** A StructureLogicReagentReader. */
-@PrefabName("StructureLogicReagentReader")
-class LogicReagentReader internal constructor() : TypedDevice() {
-  val Error: Boolean
-    get() = intrinsic()
-
-  var On: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val Power: Boolean
-    get() = intrinsic()
-
-  val RequiredPower: Double
-    get() = intrinsic()
-
-  val Setting: Double
-    get() = intrinsic()
-
-  /** The StructureLogicReagentReader prefab. */
-  companion object : Prefab()
-}
-
-/** The StructureLogicReagentReader devices on the chip's network. */
-@PrefabName("StructureLogicReagentReader")
-object LogicReagentReaders {
-  /** The device on [pin], as a StructureLogicReagentReader. */
-  fun at(pin: Device): LogicReagentReader = intrinsic()
-
-  /** Every one on the network. */
-  val all: DeviceBatch<LogicReagentReader>
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): DeviceBatch<LogicReagentReader> = intrinsic()
-}
-
 /** A StructureLogicRocketDownlink. */
 @PrefabName("StructureLogicRocketDownlink")
 class LogicRocketDownlink internal constructor() : TypedDevice() {
@@ -18689,43 +18742,6 @@ object LogicSelects {
 
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): DeviceBatch<LogicSelect> = intrinsic()
-}
-
-/** A StructureLogicSlotReader. */
-@PrefabName("StructureLogicSlotReader")
-class LogicSlotReader internal constructor() : TypedDevice() {
-  val Error: Boolean
-    get() = intrinsic()
-
-  var On: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val Power: Boolean
-    get() = intrinsic()
-
-  val RequiredPower: Double
-    get() = intrinsic()
-
-  val Setting: Double
-    get() = intrinsic()
-
-  /** The StructureLogicSlotReader prefab. */
-  companion object : Prefab()
-}
-
-/** The StructureLogicSlotReader devices on the chip's network. */
-@PrefabName("StructureLogicSlotReader")
-object LogicSlotReaders {
-  /** The device on [pin], as a StructureLogicSlotReader. */
-  fun at(pin: Device): LogicSlotReader = intrinsic()
-
-  /** Every one on the network. */
-  val all: DeviceBatch<LogicSlotReader>
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): DeviceBatch<LogicSlotReader> = intrinsic()
 }
 
 /** A StructureLogicSorter. */

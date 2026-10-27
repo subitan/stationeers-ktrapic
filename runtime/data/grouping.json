@@ -446,6 +446,16 @@
         "Switch": "StructureLogicWriterSwitch"
       }
     },
+    "LogicReader": {
+      "plural": "LogicReaders",
+      "members": {
+        "Standard": "StructureLogicReader",
+        "Slot": "StructureLogicSlotReader",
+        "Reagent": "StructureLogicReagentReader",
+        "Batch": "StructureLogicBatchReader",
+        "BatchSlot": "StructureLogicBatchSlotReader"
+      }
+    },
     "Door": {
       "plural": "Doors",
       "members": {
@@ -601,16 +611,6 @@
     {
       "prefabs": ["StructureChuteBin", "StructureChuteExportBin"],
       "reason": "the Chute Import Bin passes items into a chute network, the Chute Export Bin takes them out of it"
-    },
-    {
-      "prefabs": [
-        "StructureLogicReader",
-        "StructureLogicSlotReader",
-        "StructureLogicReagentReader",
-        "StructureLogicBatchReader",
-        "StructureLogicBatchSlotReader"
-      ],
-      "reason": "each reader reads something different: a device, a slot, reagents, a batch of devices, or a batch of slots"
     },
     {
       "prefabs": ["StructureLogicMath", "StructureLogicMathUnary"],
