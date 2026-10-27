@@ -50,7 +50,8 @@ There are three types of value:
 
 Other types (`Long`, `Float`, `String`, nullable types, collections other than
 [static sets](#static-sets), arrays, objects) are not supported. Kotlin converts nothing
-implicitly: write `1.0`, not `1`, where a `Double` is needed, and use `toDouble()` (which costs nothing) or `toInt()` to convert.
+implicitly: write `1.0`, not `1`, where a `Double` is needed,
+and use `toDouble()` (which costs nothing) or `toInt()` to convert.
 
 `val` and `var` work as in Kotlin, at the top level and in blocks. A top-level property needs an
 initializer and the default getter and setter; a `val` whose initializer is a constant costs no
