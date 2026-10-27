@@ -69,12 +69,12 @@ class ViewTest {
   }
 
   @Test
-  fun `an untyped pin has every view, unchecked`() {
+  fun `an untyped pin has every view`() {
     val code =
         compiled(
                 """
                 db.Setting = d0.Ratios[Substance.Steam] + d0.Ports.Input2.Temperature
-                d1.Ports.Output2.Setting = 1.0
+                d1.Ports.Output.Setting = 1.0
                 db.Ratio = d0.Dimensions.Y
                 """
             )
@@ -82,8 +82,84 @@ class ViewTest {
 
     assertThat(code).contains("d0 RatioSteam")
     assertThat(code).contains("d0 TemperatureInput2")
-    assertThat(code).contains("s d1 SettingOutput2 1")
+    assertThat(code).contains("s d1 SettingOutput 1")
     assertThat(code).contains("d0 SizeY")
+  }
+
+  @Test
+  fun `an untyped pin's view names only logic types the game has`() {
+    assertThat(error("d1.Ports.Output2.Setting = 1.0").message)
+        .isEqualTo("a device has no SettingOutput2")
+    assertThat(error("db.Setting = d0.Ports.Input2.Setting").message)
+        .isEqualTo("a device has no SettingInput2")
+  }
+
+  @Test
+  fun `a view's other members are not logic types`() {
+    assertThat(
+            error("db.Setting = if (d0.Ports.Input.equals(d1.Ports.Input)) 1.0 else 0.0").message
+        )
+        .isEqualTo("equals is not supported on a view, only its logic types")
+    assertThat(error("db.Setting = d0.Position.hashCode().toDouble()").message)
+        .isEqualTo("hashCode is not supported on a view, only its logic types")
+    assertThat(error("db.Setting = Robots.at(d0).Position.hashCode().toDouble()").message)
+        .isEqualTo("hashCode is not supported on a view, only its logic types")
+    assertThat(error("db.Setting = if (d0.Ratios.equals(d1)) 1.0 else 0.0").message)
+        .isEqualTo("equals is not supported on a view, only its logic types")
+  }
+
+  @Test
+  fun `views and keys can be passed to inline functions`() {
+    val code =
+        compiled(
+                """
+                inline fun o2(r: Ratios) = r[Substance.Oxygen]
+                inline fun ratio(s: Substance) = d0.Ratios[s]
+                inline fun pressure(port: Port) = port.Pressure
+                inline fun portRatio(port: Port, s: Substance) = port.Ratios[s]
+                db.Setting = o2(d0.Ratios) + ratio(Substance.Nitrogen)
+                db.Ratio = pressure(Filtrations.at(d1).Ports.Output)
+                db.Setting = portRatio(d2.Ports.Input2, Substance.Steam)
+                """
+            )
+            .code
+
+    assertThat(code).contains("d0 RatioOxygen")
+    assertThat(code).contains("d0 RatioNitrogen")
+    assertThat(code).contains("d1 PressureOutput")
+    assertThat(code).contains("d2 RatioSteamInput2")
+  }
+
+  @Test
+  fun `a view passed to an inline function is still checked against the prefab`() {
+    assertThat(
+            error(
+                    """
+                    inline fun pressure(port: Port) = port.Pressure
+                    db.Setting = pressure(Filtrations.at(d0).Ports.Input2)
+                    """
+                        .trimIndent()
+                )
+                .message
+        )
+        .isEqualTo("Filtration has no PressureInput2")
+  }
+
+  @Test
+  fun `a function taking a view or a key must be inlined`() {
+    assertThat(
+            error(
+                    """
+                    fun o2(r: Ratios) = r[Substance.Oxygen]
+                    db.Setting = o2(d0.Ratios) + o2(d1.Ratios)
+                    """
+                        .trimIndent()
+                )
+                .message
+        )
+        .isEqualTo(
+            "A function with a device, view or substance parameter must be inline, or called only once"
+        )
   }
 
   @Test
@@ -110,7 +186,7 @@ class ViewTest {
     assertThat(error("db.Setting = Filtrations.at(d0).Ports.Input2.Pressure").message)
         .isEqualTo("Filtration has no PressureInput2")
     assertThat(error("Filtrations.at(d0).Ports.Input.Setting = 1.0").message)
-        .contains("SettingInput")
+        .isEqualTo("Filtration has no SettingInput")
   }
 
   @Test

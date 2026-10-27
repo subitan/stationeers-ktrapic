@@ -22,6 +22,7 @@ import org.jetbrains.kotlin.ir.declarations.IrAnonymousInitializer
 import org.jetbrains.kotlin.ir.declarations.IrClass
 import org.jetbrains.kotlin.ir.declarations.IrConstructor
 import org.jetbrains.kotlin.ir.declarations.IrDeclarationOrigin
+import org.jetbrains.kotlin.ir.declarations.IrEnumEntry
 import org.jetbrains.kotlin.ir.declarations.IrModuleFragment
 import org.jetbrains.kotlin.ir.declarations.IrParameterKind
 import org.jetbrains.kotlin.ir.declarations.IrProperty
@@ -115,7 +116,7 @@ internal data object NoValue : Value
  * resolved when compiled: a member or key of it names the logic type [prefix] + the member or
  * key + [suffix]. Its [shape] is the view's runtime class, by simple name. [owner] is the device
  * ([Dev]), or a batch's element ([Element]). [access] is what a typed device's prefab has in this
- * view; an untyped pin's views are unchecked, as its logic types are.
+ * view, or for an untyped pin every logic type the game has.
  */
 internal data class View(
     val owner: Value,
@@ -155,6 +156,8 @@ internal class Translator {
   private val exits = mutableMapOf<IrSimpleFunction, FunctionExit>()
   /** Functions that have a body of their own, called with `jal`, in the order first called. */
   private val called = linkedMapOf<IrSimpleFunction, CalledFunction>()
+  /** What an untyped pin's views reach ([anyDeviceAccess]), once looked up. */
+  private var anyDevice: ViewAccess? = null
 
   private class FunctionExit(val label: String, val result: VReg?)
 
@@ -215,7 +218,7 @@ internal class Translator {
     val arguments = parameters.map { (index, _) ->
       call.arguments[index] ?: fail(call, "Default arguments are not supported")
     }
-    val values = operands(arguments)
+    val values = operands(arguments, aliases = parameters.map { it.value.type.isViewOrKey() })
     return if (function.isInline || graph.callCount(function) == 1) {
       inlineCall(function, parameters.map { it.value }, values)
     } else {
@@ -234,7 +237,13 @@ internal class Translator {
       val type = parameter.type
       if (parameter.varargElementType != null)
           fail(parameter, "vararg parameters are not supported")
-      if (!type.isInt() && !type.isDouble() && !type.isBoolean() && !type.isDevice()) {
+      if (
+          !type.isInt() &&
+              !type.isDouble() &&
+              !type.isBoolean() &&
+              !type.isDevice() &&
+              !type.isViewOrKey()
+      ) {
         fail(parameter, "Parameters of type ${type.render()} are not supported")
       }
     }
@@ -274,8 +283,11 @@ internal class Translator {
       parameters: List<IrValueParameter>,
       values: List<Value>,
   ): Value {
-    if (parameters.any { it.type.isDevice() }) {
-      fail(call, "A function with a device parameter must be inline, or called only once")
+    if (parameters.any { it.type.isDevice() || it.type.isViewOrKey() }) {
+      fail(
+          call,
+          "A function with a device, view or substance parameter must be inline, or called only once",
+      )
     }
     val target =
         called.getOrPut(function) {
@@ -564,7 +576,7 @@ internal class Translator {
     }
     if (property != null && owner in DEVICE_CLASSES) {
       if (function.returnType.classFqName?.asString() in VIEW_CLASSES) {
-        return startView(call, property.owner, viewOwner(call, args[0]), access = null)
+        return startView(call, property.owner, viewOwner(call, args[0]), anyDeviceAccess(call))
       }
       val device = device(call, args[0])
       if (property.owner.name.asString() == SLOTS) return SlotsOf(device)
@@ -665,7 +677,14 @@ internal class Translator {
         // A copy of a computed number, so a later change to its variable doesn't move the slot.
         SlotOf(owner.owner, operand(snapshot(slotNumber(args[1]!!))))
       }
-      cls.kotlinFqName.asString() in VIEW_CLASSES -> viewCall(call, cls, name, isSetter)
+      cls.kotlinFqName.asString() in VIEW_CLASSES -> {
+        // Only a view's own members and Ratios' key: any other (equals, hashCode, ...) names no
+        // logic type.
+        if (property == null && !(name == "get" && cls.name.asString() == "Ratios")) {
+          fail(call, "$name is not supported on a view, only its logic types")
+        }
+        viewCall(call, cls, name, isSetter)
+      }
       property != null &&
           cls.isTypedDevice() &&
           function.returnType.classFqName?.asString() in VIEW_CLASSES ->
@@ -720,6 +739,37 @@ internal class Translator {
       "Transfer" -> View(owner, "Transfer", name, "", access)
       else -> fail(call, "$name is not supported")
     }
+  }
+
+  /**
+   * What an untyped pin's views reach: every logic type the game has, read and written, as its flat
+   * logic types are. A view's members combine (`Ports.Output2.Setting`) into names the game may not
+   * have, which this rules out. The game's logic types are the entries of the `LogicType` a
+   * [DEVICE] is indexed by, found from [call]'s device.
+   */
+  private fun anyDeviceAccess(call: IrCall): ViewAccess {
+    val access =
+        anyDevice
+            ?: run {
+              val device =
+                  call.arguments[0]?.type?.classOrNull?.owner?.takeIf {
+                    it.kotlinFqName.asString() == DEVICE
+                  } ?: fail(call, "this device must be a pin, or a val holding one")
+              val index =
+                  device.declarations.filterIsInstance<IrSimpleFunction>().first {
+                    it.name.asString() == "get"
+                  }
+              val logicType =
+                  index.parameters.first { it.kind == IrParameterKind.Regular }.type.classOrNull!!
+              val names =
+                  logicType.owner.declarations
+                      .filterIsInstance<IrEnumEntry>()
+                      .map { it.name.asString() }
+                      .toSet()
+              ViewAccess("a device", names, names)
+            }
+    anyDevice = access
+    return access
   }
 
   /** The logic types a typed device's view reaches, from its `@LogicTypes`. */
@@ -959,7 +1009,8 @@ internal class Translator {
 
   /**
    * Whether this is a chain of view members, keys and indexes from [parameter] that ends at a logic
-   * type: calls on view classes, or a device's view property, with constant keys.
+   * type: calls on view classes, or a device's view property, whose keys don't depend on the
+   * element.
    */
   private fun IrExpression.isViewChainOf(parameter: IrValueParameter): Boolean {
     val call = this as? IrCall ?: return false
@@ -1328,13 +1379,25 @@ internal class Translator {
   /**
    * Evaluates [expressions] in order. A register one of them yields is copied first if a later one
    * may assign it, since Kotlin uses the value an operand had when it was evaluated (`x + x++` adds
-   * the old `x`).
+   * the old `x`). Where [aliases] is set, the expression is a view or a substance, an inline
+   * function's argument, kept as the [View] or [Key] it is.
    */
-  private fun operands(expressions: List<IrExpression>): List<Value> =
-      expressions.mapIndexed { index, expression ->
-        val value = value(expression)
-        if (expressions.drop(index + 1).any { it.mayAssign() }) snapshot(value) else value
-      }
+  private fun operands(
+      expressions: List<IrExpression>,
+      aliases: List<Boolean> = emptyList(),
+  ): List<Value> = expressions.mapIndexed { index, expression ->
+    val value =
+        if (aliases.getOrElse(index) { false }) {
+          aliasOrValue(expression).takeIf { it is View || it is Key }
+              ?: fail(
+                  expression,
+                  "this must be a device's view or a substance, or a val holding one",
+              )
+        } else {
+          value(expression)
+        }
+    if (expressions.drop(index + 1).any { it.mayAssign() }) snapshot(value) else value
+  }
 
   /** [value] in a register of its own if it is in one, so later assignments leave it alone. */
   private fun snapshot(value: Value): Value =
@@ -1953,6 +2016,10 @@ internal class Translator {
   private fun IrType.isDevice() =
       classFqName?.asString() == "ktrapic.Device" || classOrNull?.owner?.isTypedDevice() == true
 
+  /** A view class or [SUBSTANCE]: an argument named when compiled, as a device is. */
+  private fun IrType.isViewOrKey() =
+      classFqName?.asString().let { it in VIEW_CLASSES || it == SUBSTANCE }
+
   private fun IrType.isPrefab() =
       classOrNull?.owner?.let { it.kotlinFqName.asString() == PREFAB || it.isSubclassOf(PREFAB) } ==
           true
@@ -1963,7 +2030,8 @@ internal class Translator {
       throw CompileException(element, message)
 
   private companion object {
-    val DEVICE_CLASSES = setOf("ktrapic.Device", "ktrapic.GenericDevice")
+    const val DEVICE = "ktrapic.Device"
+    val DEVICE_CLASSES = setOf(DEVICE, "ktrapic.GenericDevice")
     const val TYPED_DEVICE = "ktrapic.TypedDevice"
     const val BATCH_CLASS = "ktrapic.Batch"
     const val PREFAB = "ktrapic.Prefab"

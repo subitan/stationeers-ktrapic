@@ -34,9 +34,9 @@ A device's logic types are its properties: a `var` can be written, a `val` only 
 
 ## Views
 
-Some logic types come in families, which a device groups as views: `filtration.Ports.Output.Pressure` is `PressureOutput`, `sensor.Ratios[Substance.Oxygen]` is `RatioOxygen`, `robot.Position.X` is `PositionX`, and `hopper.Import.Count` is `ImportCount`. A view compiles to the same one instruction as the logic type it names, and can be held in a `val` or passed to an inline function like a device. A key, such as `Substance.Oxygen`, must be written out or held in a `val`.
+Some logic types come in families, which a device groups as views: `filtration.Ports.Output.Pressure` is `PressureOutput`, `sensor.Ratios[Substance.Oxygen]` is `RatioOxygen`, `robot.Position.X` is `PositionX`, and `hopper.Import.Count` is `ImportCount`. A view compiles to the same one instruction as the logic type it names, and can be held in a `val` or passed to an inline function like a device. A key, such as `Substance.Oxygen`, must be written out, held in a `val` or passed to an inline function.
 
-A typed device has only the views its prefab has, and the comment by each says what it reaches there; naming anything else is an error saying what the device lacks. An untyped pin (`d0`) has every view, unchecked. A batch reads and writes views too: `GasSensors.all.map { it.Ratios[Substance.Oxygen] }.average()`.
+A typed device has only the views its prefab has, and the comment by each says what it reaches there; naming anything else is an error saying what the device lacks. An untyped pin (`d0`) has every view, checked only against the logic types the game has. A batch reads and writes views too: `GasSensors.all.map { it.Ratios[Substance.Oxygen] }.average()`.
 
 ```kotlin
 /** The substances whose ratios a device reports, the keys of [Ratios]. */

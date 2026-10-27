@@ -95,7 +95,7 @@ properties.
 - A function called once, or marked `inline`, is compiled into the place it is called.
 - Any other function gets one body, called with `jal`. Its arguments and result travel in
   registers set aside for it, and it saves `ra` on the stack only if it calls another function.
-- Only an inlined function can take a `Device` parameter.
+- Only an inlined function can take a `Device`, a view or a `Substance` parameter.
 - Not supported: recursion, default arguments, `vararg`, and extension, generic and local
   functions.
 
@@ -210,14 +210,17 @@ db.Setting = oxygen + sensors
 A view is resolved when the program is compiled: each logic type it names is the same one
 instruction the logic type's own name would be, and a view takes no register. It can be held in a
 `val` or passed to an inlined function, as a device can, but it has no value of its own. A key,
-such as `Substance.Oxygen`, must be written out or held in a `val`.
+such as `Substance.Oxygen`, must be written out, held in a `val` or passed to an inlined function.
+Only a view's logic types can be used: `equals`, `hashCode` and `toString` are errors.
 
 A typed device has only the views its prefab has, so naming another is a type error, and the
 compiler checks the rest against the prefab: `SatelliteDishes.at(d0).Dimensions.Y` is an error,
 "SatelliteDish has no SizeY", as the dish reports only `SizeX` and `SizeZ`. The
 [device reference](DEVICES.md#views) says what each device's views reach. A pin used untyped
-(`d0`) has every view, unchecked, as it has every logic type. The flat names are still reached
-through a pin's index: `d0[LogicType.PressureOutput]`.
+(`d0`) has every view, as it has every logic type, and the compiler checks only that each name
+it makes is one the game has: `d0.Ports.Output2.Setting` is an error, as the game has no
+`SettingOutput2`. The flat names are still reached through a pin's index:
+`d0[LogicType.PressureOutput]`.
 
 ```kotlin
 inline fun charge(battery: Battery): Double = battery.Ratio
