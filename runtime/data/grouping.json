@@ -471,6 +471,13 @@
         "Export": "StructureChuteExportBin"
       }
     },
+    "PowerTransmitter": {
+      "plural": "PowerTransmitters",
+      "members": {
+        "Microwave": "StructurePowerTransmitter",
+        "MicrowaveReceiver": "StructurePowerTransmitterReceiver"
+      }
+    },
     "Door": {
       "plural": "Doors",
       "members": {
@@ -595,10 +602,6 @@
         ["StructureInteriorDoorGlass", "StructureInteriorDoorPadded", "StructureInteriorDoorPaddedThin", "StructureInteriorDoorTriangle"]
       ],
       "reason": "the Glass Door is one of the Doors, like the Blast and Composite Doors, and not one of the Interior Doors, which extend them"
-    },
-    {
-      "prefabs": ["StructurePowerTransmitter", "StructurePowerTransmitterReceiver"],
-      "reason": "the Microwave Power Transmitter sends power, the Microwave Power Receiver takes it in"
     },
     {
       "prefabs": [["StructureSleeper", "StructureSleeperLeft", "StructureSleeperRight", "StructureSleeperVertical"], "StructureSleeperVerticalDroid"],

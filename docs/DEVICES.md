@@ -1305,6 +1305,33 @@ interface PipeHeater {
 }
 ```
 
+### PowerTransmitter
+
+```kotlin
+interface PowerTransmitter {
+  val Charge: Double
+  val Error: Boolean
+  var Horizontal: Double
+  val Mode: Double
+  var On: Boolean
+  val Power: Boolean
+  val PowerActual: Double
+  val PowerPotential: Double
+  val RequiredPower: Double
+  var Vertical: Double
+
+  /** StructurePowerTransmitter. Entry point: PowerTransmitters.Microwave. */
+  class Microwave : TypedDevice, PowerTransmitter {
+    val Position: Vector
+  }
+
+  /** StructurePowerTransmitterReceiver. Entry point: PowerTransmitters.MicrowaveReceiver. */
+  class MicrowaveReceiver : TypedDevice, PowerTransmitter {
+    val Position: Vector
+  }
+}
+```
+
 ### PoweredVent
 
 ```kotlin
@@ -3340,42 +3367,12 @@ class PowerConnector : TypedDevice {
   val slots: Slots<DataDiskSlot>
 }
 
-/** StructurePowerTransmitter. Entry point: PowerTransmitters. */
-class PowerTransmitter : TypedDevice {
-  val Charge: Double
-  val Error: Boolean
-  var Horizontal: Double
-  val Mode: Double
-  var On: Boolean
-  val Position: Vector // X, Y, Z
-  val Power: Boolean
-  val PowerActual: Double
-  val PowerPotential: Double
-  val RequiredPower: Double
-  var Vertical: Double
-}
-
 /** StructurePowerTransmitterOmni. Entry point: PowerTransmitterOmnis. */
 class PowerTransmitterOmni : TypedDevice {
   val Error: Boolean
   var On: Boolean
   val Power: Boolean
   val RequiredPower: Double
-}
-
-/** StructurePowerTransmitterReceiver. Entry point: PowerTransmitterReceivers. */
-class PowerTransmitterReceiver : TypedDevice {
-  val Charge: Double
-  val Error: Boolean
-  var Horizontal: Double
-  val Mode: Double
-  var On: Boolean
-  val Position: Vector // X, Y, Z
-  val Power: Boolean
-  val PowerActual: Double
-  val PowerPotential: Double
-  val RequiredPower: Double
-  var Vertical: Double
 }
 
 /** StructurePowerUmbilicalMale. Entry point: PowerUmbilicalMales. */

@@ -11115,6 +11115,148 @@ object ChuteBins {
 }
 
 /** A device that comes as several prefabs, each a nested class. */
+interface PowerTransmitter {
+  val Charge: Double
+
+  val Error: Boolean
+
+  var Horizontal: Double
+
+  val Mode: Double
+
+  var On: Boolean
+
+  val Power: Boolean
+
+  val PowerActual: Double
+
+  val PowerPotential: Double
+
+  val RequiredPower: Double
+
+  var Vertical: Double
+
+  /** A StructurePowerTransmitter. */
+  @PrefabName("StructurePowerTransmitter")
+  class Microwave internal constructor() : TypedDevice(), PowerTransmitter {
+    override val Charge: Double
+      get() = intrinsic()
+
+    override val Error: Boolean
+      get() = intrinsic()
+
+    override var Horizontal: Double
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override val Mode: Double
+      get() = intrinsic()
+
+    override var On: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override val Power: Boolean
+      get() = intrinsic()
+
+    override val PowerActual: Double
+      get() = intrinsic()
+
+    override val PowerPotential: Double
+      get() = intrinsic()
+
+    override val RequiredPower: Double
+      get() = intrinsic()
+
+    override var Vertical: Double
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    @LogicTypes(read = "PositionX,PositionY,PositionZ", written = "")
+    val Position: Vector
+      get() = intrinsic()
+
+    /** The StructurePowerTransmitter prefab. */
+    companion object : Prefab()
+  }
+
+  /** A StructurePowerTransmitterReceiver. */
+  @PrefabName("StructurePowerTransmitterReceiver")
+  class MicrowaveReceiver internal constructor() : TypedDevice(), PowerTransmitter {
+    override val Charge: Double
+      get() = intrinsic()
+
+    override val Error: Boolean
+      get() = intrinsic()
+
+    override var Horizontal: Double
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override val Mode: Double
+      get() = intrinsic()
+
+    override var On: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override val Power: Boolean
+      get() = intrinsic()
+
+    override val PowerActual: Double
+      get() = intrinsic()
+
+    override val PowerPotential: Double
+      get() = intrinsic()
+
+    override val RequiredPower: Double
+      get() = intrinsic()
+
+    override var Vertical: Double
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    @LogicTypes(read = "PositionX,PositionY,PositionZ", written = "")
+    val Position: Vector
+      get() = intrinsic()
+
+    /** The StructurePowerTransmitterReceiver prefab. */
+    companion object : Prefab()
+  }
+}
+
+/** The PowerTransmitter devices on the chip's network, by prefab. */
+object PowerTransmitters {
+  /** The StructurePowerTransmitter devices on the chip's network. */
+  @PrefabName("StructurePowerTransmitter")
+  object Microwave {
+    /** The device on [pin], as a StructurePowerTransmitter. */
+    fun at(pin: Device): PowerTransmitter.Microwave = intrinsic()
+
+    /** Every one on the network. */
+    val all: DeviceBatch<PowerTransmitter.Microwave>
+      get() = intrinsic()
+
+    /** Every one on the network named [name], which must be a constant. */
+    fun named(name: String): DeviceBatch<PowerTransmitter.Microwave> = intrinsic()
+  }
+
+  /** The StructurePowerTransmitterReceiver devices on the chip's network. */
+  @PrefabName("StructurePowerTransmitterReceiver")
+  object MicrowaveReceiver {
+    /** The device on [pin], as a StructurePowerTransmitterReceiver. */
+    fun at(pin: Device): PowerTransmitter.MicrowaveReceiver = intrinsic()
+
+    /** Every one on the network. */
+    val all: DeviceBatch<PowerTransmitter.MicrowaveReceiver>
+      get() = intrinsic()
+
+    /** Every one on the network named [name], which must be a constant. */
+    fun named(name: String): DeviceBatch<PowerTransmitter.MicrowaveReceiver> = intrinsic()
+  }
+}
+
+/** A device that comes as several prefabs, each a nested class. */
 interface Door {
   val Idle: Boolean
 
@@ -19228,64 +19370,6 @@ object PowerConnectors {
   }
 }
 
-/** A StructurePowerTransmitter. */
-@PrefabName("StructurePowerTransmitter")
-class PowerTransmitter internal constructor() : TypedDevice() {
-  val Charge: Double
-    get() = intrinsic()
-
-  val Error: Boolean
-    get() = intrinsic()
-
-  var Horizontal: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val Mode: Double
-    get() = intrinsic()
-
-  var On: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val Power: Boolean
-    get() = intrinsic()
-
-  val PowerActual: Double
-    get() = intrinsic()
-
-  val PowerPotential: Double
-    get() = intrinsic()
-
-  val RequiredPower: Double
-    get() = intrinsic()
-
-  var Vertical: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  @LogicTypes(read = "PositionX,PositionY,PositionZ", written = "")
-  val Position: Vector
-    get() = intrinsic()
-
-  /** The StructurePowerTransmitter prefab. */
-  companion object : Prefab()
-}
-
-/** The StructurePowerTransmitter devices on the chip's network. */
-@PrefabName("StructurePowerTransmitter")
-object PowerTransmitters {
-  /** The device on [pin], as a StructurePowerTransmitter. */
-  fun at(pin: Device): PowerTransmitter = intrinsic()
-
-  /** Every one on the network. */
-  val all: DeviceBatch<PowerTransmitter>
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): DeviceBatch<PowerTransmitter> = intrinsic()
-}
-
 /** A StructurePowerTransmitterOmni. */
 @PrefabName("StructurePowerTransmitterOmni")
 class PowerTransmitterOmni internal constructor() : TypedDevice() {
@@ -19318,64 +19402,6 @@ object PowerTransmitterOmnis {
 
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): DeviceBatch<PowerTransmitterOmni> = intrinsic()
-}
-
-/** A StructurePowerTransmitterReceiver. */
-@PrefabName("StructurePowerTransmitterReceiver")
-class PowerTransmitterReceiver internal constructor() : TypedDevice() {
-  val Charge: Double
-    get() = intrinsic()
-
-  val Error: Boolean
-    get() = intrinsic()
-
-  var Horizontal: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val Mode: Double
-    get() = intrinsic()
-
-  var On: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val Power: Boolean
-    get() = intrinsic()
-
-  val PowerActual: Double
-    get() = intrinsic()
-
-  val PowerPotential: Double
-    get() = intrinsic()
-
-  val RequiredPower: Double
-    get() = intrinsic()
-
-  var Vertical: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  @LogicTypes(read = "PositionX,PositionY,PositionZ", written = "")
-  val Position: Vector
-    get() = intrinsic()
-
-  /** The StructurePowerTransmitterReceiver prefab. */
-  companion object : Prefab()
-}
-
-/** The StructurePowerTransmitterReceiver devices on the chip's network. */
-@PrefabName("StructurePowerTransmitterReceiver")
-object PowerTransmitterReceivers {
-  /** The device on [pin], as a StructurePowerTransmitterReceiver. */
-  fun at(pin: Device): PowerTransmitterReceiver = intrinsic()
-
-  /** Every one on the network. */
-  val all: DeviceBatch<PowerTransmitterReceiver>
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): DeviceBatch<PowerTransmitterReceiver> = intrinsic()
 }
 
 /** A StructurePowerUmbilicalMale. */
