@@ -428,6 +428,16 @@
         "Vertical": "StructureCryoTubeVertical"
       }
     },
+    "LarreDock": {
+      "plural": "LarreDocks",
+      "members": {
+        "Standard": "StructureRoboticArmDock",
+        "Atmos": "StructureLarreDockAtmos",
+        "Cargo": "StructureLarreDockCargo",
+        "Collector": "StructureLarreDockCollector",
+        "Hydroponics": "StructureLarreDockHydroponics"
+      }
+    },
     "LogicWriter": {
       "plural": "LogicWriters",
       "members": {
@@ -613,6 +623,10 @@
     {
       "prefabs": [["StructureSleeper", "StructureSleeperLeft", "StructureSleeperRight", "StructureSleeperVertical"], "StructureSleeperVerticalDroid"],
       "reason": "the Droid Sleeper recharges robots and harms anyone else who enters, so it is not a sleeper for players; it has no EntityState, Maximum, Ratio or Setting"
+    },
+    {
+      "prefabs": [["StructureRoboticArmDock", "StructureLarreDockAtmos", "StructureLarreDockCargo", "StructureLarreDockCollector", "StructureLarreDockHydroponics"], "StructureLarreDockBypass"],
+      "reason": "the LArRE Dock (Bypass) is a siding an arm moves into so others can pass, not a dock that works; it has no Activate, Error, Extended, Idle, Position or Setting"
     }
   ],
   "textDisplays": [

@@ -919,6 +919,78 @@ interface LandingPadTankConnector {
 }
 ```
 
+### LarreDock
+
+```kotlin
+interface LarreDock {
+  var Activate: Boolean
+  val Error: Boolean
+  val Extended: Double
+  val Idle: Boolean
+  var On: Boolean
+  val Power: Boolean
+  val RequiredPower: Double
+  var Setting: Double
+
+  /** StructureRoboticArmDock. Entry point: LarreDocks.Standard. */
+  class Standard : TypedDevice, LarreDock {
+    val Position: Vector
+    val ArmSlot: DataDiskSlot // slots[0]
+    val slots: Slots<DataDiskSlot>
+  }
+
+  /** StructureLarreDockAtmos. Entry point: LarreDocks.Atmos. */
+  class Atmos : TypedDevice, LarreDock {
+    val Combustion: Boolean
+    var Mode: Double
+    var Open: Boolean
+    val Ports: Ports
+    val Position: Vector
+    val Pressure: Double
+    var PressureExternal: Double
+    var PressureInternal: Double
+    val Ratios: Ratios
+    val Temperature: Double
+    val TotalMoles: Double
+    val Filter: FilterSlot // slots[0]
+    val slots: Slots<FilterSlot>
+  }
+
+  /** StructureLarreDockCargo. Entry point: LarreDocks.Cargo. */
+  class Cargo : TypedDevice, LarreDock {
+    var Open: Boolean
+    val Position: Vector
+    val TargetPrefabHash: Double
+    var TargetSlotIndex: Double
+    val ArmSlot: DataDiskSlot // slots[0]
+    val TargetSlot: CommonSlot // slots[255]
+    val slots: Slots<CommonSlot>
+  }
+
+  /** StructureLarreDockCollector. Entry point: LarreDocks.Collector. */
+  class Collector : TypedDevice, LarreDock {
+    var Mode: Double
+    var Open: Boolean
+    val Position: Vector
+    val Quantity: Double
+    val Ratio: Double
+    val slots: Slots<DataDiskSlot>
+  }
+
+  /** StructureLarreDockHydroponics. Entry point: LarreDocks.Hydroponics. */
+  class Hydroponics : TypedDevice, LarreDock {
+    var Open: Boolean
+    val Position: Vector
+    val TargetPrefabHash: Double
+    val TargetSlotIndex: Double
+    val ArmSlot: DataDiskSlot // slots[0]
+    val HopperSlot: DataDiskSlot // slots[1]
+    val TargetSlot: CommonSlot // slots[255]
+    val slots: Slots<CommonSlot>
+  }
+}
+```
+
 ### LedDisplay
 
 ```kotlin
@@ -3000,94 +3072,12 @@ class LargeExtendableRadiator : TypedDevice {
   var Setting: Double
 }
 
-/** StructureLarreDockAtmos. Entry point: LarreDockAtmoses. */
-class LarreDockAtmos : TypedDevice {
-  var Activate: Boolean
-  val Combustion: Boolean
-  val Error: Boolean
-  val Extended: Double
-  val Idle: Boolean
-  var Mode: Double
-  var On: Boolean
-  var Open: Boolean
-  val Ports: Ports // Input: Combustion, Pressure, Temperature, TotalMoles, Ratios[CarbonDioxide, LiquidCarbonDioxide, LiquidMethane, LiquidNitrogen, LiquidNitrousOxide, LiquidOxygen, LiquidPollutant, Methane, Nitrogen, NitrousOxide, Oxygen, Pollutant, Steam, Water]
-  val Position: Vector // X
-  val Power: Boolean
-  val Pressure: Double
-  var PressureExternal: Double
-  var PressureInternal: Double
-  val Ratios: Ratios // every Substance
-  val RequiredPower: Double
-  var Setting: Double
-  val Temperature: Double
-  val TotalMoles: Double
-  val Filter: FilterSlot // slots[0]
-  val slots: Slots<FilterSlot>
-}
-
 /** StructureLarreDockBypass. Entry point: LarreDockBypasses. */
 class LarreDockBypass : TypedDevice {
   var On: Boolean
   var Open: Boolean
   val Power: Boolean
   val RequiredPower: Double
-}
-
-/** StructureLarreDockCargo. Entry point: LarreDockCargos. */
-class LarreDockCargo : TypedDevice {
-  var Activate: Boolean
-  val Error: Boolean
-  val Extended: Double
-  val Idle: Boolean
-  var On: Boolean
-  var Open: Boolean
-  val Position: Vector // X
-  val Power: Boolean
-  val RequiredPower: Double
-  var Setting: Double
-  val TargetPrefabHash: Double
-  var TargetSlotIndex: Double
-  val ArmSlot: DataDiskSlot // slots[0]
-  val TargetSlot: CommonSlot // slots[255]
-  val slots: Slots<CommonSlot>
-}
-
-/** StructureLarreDockCollector. Entry point: LarreDockCollectors. */
-class LarreDockCollector : TypedDevice {
-  var Activate: Boolean
-  val Error: Boolean
-  val Extended: Double
-  val Idle: Boolean
-  var Mode: Double
-  var On: Boolean
-  var Open: Boolean
-  val Position: Vector // X
-  val Power: Boolean
-  val Quantity: Double
-  val Ratio: Double
-  val RequiredPower: Double
-  var Setting: Double
-  val slots: Slots<DataDiskSlot>
-}
-
-/** StructureLarreDockHydroponics. Entry point: LarreDockHydroponicses. */
-class LarreDockHydroponics : TypedDevice {
-  var Activate: Boolean
-  val Error: Boolean
-  val Extended: Double
-  val Idle: Boolean
-  var On: Boolean
-  var Open: Boolean
-  val Position: Vector // X
-  val Power: Boolean
-  val RequiredPower: Double
-  var Setting: Double
-  val TargetPrefabHash: Double
-  val TargetSlotIndex: Double
-  val ArmSlot: DataDiskSlot // slots[0]
-  val HopperSlot: DataDiskSlot // slots[1]
-  val TargetSlot: CommonSlot // slots[255]
-  val slots: Slots<CommonSlot>
 }
 
 /** StructureLiquidDrain. Entry point: LiquidDrains. */
@@ -3609,21 +3599,6 @@ class RobotArmDoor : TypedDevice {
   var Open: Boolean
   val Power: Boolean
   val RequiredPower: Double
-}
-
-/** StructureRoboticArmDock. Entry point: RoboticArmDocks. */
-class RoboticArmDock : TypedDevice {
-  var Activate: Boolean
-  val Error: Boolean
-  val Extended: Double
-  val Idle: Boolean
-  var On: Boolean
-  val Position: Vector // X
-  val Power: Boolean
-  val RequiredPower: Double
-  var Setting: Double
-  val ArmSlot: DataDiskSlot // slots[0]
-  val slots: Slots<DataDiskSlot>
 }
 
 /** StructureRocketAvionics. Entry point: RocketAvionicses. */

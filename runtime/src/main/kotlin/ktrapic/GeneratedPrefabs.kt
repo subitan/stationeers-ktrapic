@@ -9716,6 +9716,452 @@ object CryoTubes {
 }
 
 /** A device that comes as several prefabs, each a nested class. */
+interface LarreDock {
+  var Activate: Boolean
+
+  val Error: Boolean
+
+  val Extended: Double
+
+  val Idle: Boolean
+
+  var On: Boolean
+
+  val Power: Boolean
+
+  val RequiredPower: Double
+
+  var Setting: Double
+
+  /** A StructureRoboticArmDock. */
+  @PrefabName("StructureRoboticArmDock")
+  class Standard internal constructor() : TypedDevice(), LarreDock {
+    override var Activate: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override val Error: Boolean
+      get() = intrinsic()
+
+    override val Extended: Double
+      get() = intrinsic()
+
+    override val Idle: Boolean
+      get() = intrinsic()
+
+    override var On: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override val Power: Boolean
+      get() = intrinsic()
+
+    override val RequiredPower: Double
+      get() = intrinsic()
+
+    override var Setting: Double
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    @LogicTypes(read = "PositionX", written = "")
+    val Position: Vector
+      get() = intrinsic()
+
+    /** The device's slots, by number. */
+    val slots: Slots<DataDiskSlot>
+      get() = intrinsic()
+
+    /** Slot 0. */
+    @SlotNumber(0)
+    val ArmSlot: DataDiskSlot
+      get() = intrinsic()
+
+    /** The StructureRoboticArmDock prefab. */
+    companion object : Prefab()
+  }
+
+  /** A StructureLarreDockAtmos. */
+  @PrefabName("StructureLarreDockAtmos")
+  class Atmos internal constructor() : TypedDevice(), LarreDock {
+    override var Activate: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    val Combustion: Boolean
+      get() = intrinsic()
+
+    override val Error: Boolean
+      get() = intrinsic()
+
+    override val Extended: Double
+      get() = intrinsic()
+
+    override val Idle: Boolean
+      get() = intrinsic()
+
+    var Mode: Double
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override var On: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    var Open: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override val Power: Boolean
+      get() = intrinsic()
+
+    val Pressure: Double
+      get() = intrinsic()
+
+    var PressureExternal: Double
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    var PressureInternal: Double
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override val RequiredPower: Double
+      get() = intrinsic()
+
+    override var Setting: Double
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    val Temperature: Double
+      get() = intrinsic()
+
+    val TotalMoles: Double
+      get() = intrinsic()
+
+    @LogicTypes(
+        read =
+            "CombustionInput,PressureInput,RatioCarbonDioxideInput,RatioLiquidCarbonDioxideInput,RatioLiquidMethaneInput,RatioLiquidNitrogenInput,RatioLiquidNitrousOxideInput,RatioLiquidOxygenInput,RatioLiquidPollutantInput,RatioMethaneInput,RatioNitrogenInput,RatioNitrousOxideInput,RatioOxygenInput,RatioPollutantInput,RatioSteamInput,RatioWaterInput,TemperatureInput,TotalMolesInput",
+        written = "",
+    )
+    val Ports: Ports
+      get() = intrinsic()
+
+    @LogicTypes(
+        read =
+            "RatioCarbonDioxide,RatioHelium,RatioHydrazine,RatioHydrochloricAcid,RatioHydrogen,RatioLiquidAlcohol,RatioLiquidCarbonDioxide,RatioLiquidHydrazine,RatioLiquidHydrochloricAcid,RatioLiquidHydrogen,RatioLiquidMethane,RatioLiquidNitrogen,RatioLiquidNitrousOxide,RatioLiquidOxygen,RatioLiquidOzone,RatioLiquidPollutant,RatioLiquidSilanol,RatioLiquidSodiumChloride,RatioMethane,RatioNitrogen,RatioNitrousOxide,RatioOxygen,RatioOzone,RatioPollutant,RatioPollutedWater,RatioSilanol,RatioSteam,RatioWater",
+        written = "",
+    )
+    val Ratios: Ratios
+      get() = intrinsic()
+
+    @LogicTypes(read = "PositionX", written = "")
+    val Position: Vector
+      get() = intrinsic()
+
+    /** The device's slots, by number. */
+    val slots: Slots<FilterSlot>
+      get() = intrinsic()
+
+    /** Slot 0. */
+    @SlotNumber(0)
+    val Filter: FilterSlot
+      get() = intrinsic()
+
+    /** The StructureLarreDockAtmos prefab. */
+    companion object : Prefab()
+  }
+
+  /** A StructureLarreDockCargo. */
+  @PrefabName("StructureLarreDockCargo")
+  class Cargo internal constructor() : TypedDevice(), LarreDock {
+    override var Activate: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override val Error: Boolean
+      get() = intrinsic()
+
+    override val Extended: Double
+      get() = intrinsic()
+
+    override val Idle: Boolean
+      get() = intrinsic()
+
+    override var On: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    var Open: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override val Power: Boolean
+      get() = intrinsic()
+
+    override val RequiredPower: Double
+      get() = intrinsic()
+
+    override var Setting: Double
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    val TargetPrefabHash: Double
+      get() = intrinsic()
+
+    var TargetSlotIndex: Double
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    @LogicTypes(read = "PositionX", written = "")
+    val Position: Vector
+      get() = intrinsic()
+
+    /** The device's slots, by number. */
+    val slots: Slots<CommonSlot>
+      get() = intrinsic()
+
+    /** Slot 0. */
+    @SlotNumber(0)
+    val ArmSlot: DataDiskSlot
+      get() = intrinsic()
+
+    /** Slot 255. */
+    @SlotNumber(255)
+    val TargetSlot: CommonSlot
+      get() = intrinsic()
+
+    /** The StructureLarreDockCargo prefab. */
+    companion object : Prefab()
+  }
+
+  /** A StructureLarreDockCollector. */
+  @PrefabName("StructureLarreDockCollector")
+  class Collector internal constructor() : TypedDevice(), LarreDock {
+    override var Activate: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override val Error: Boolean
+      get() = intrinsic()
+
+    override val Extended: Double
+      get() = intrinsic()
+
+    override val Idle: Boolean
+      get() = intrinsic()
+
+    var Mode: Double
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override var On: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    var Open: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override val Power: Boolean
+      get() = intrinsic()
+
+    val Quantity: Double
+      get() = intrinsic()
+
+    val Ratio: Double
+      get() = intrinsic()
+
+    override val RequiredPower: Double
+      get() = intrinsic()
+
+    override var Setting: Double
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    @LogicTypes(read = "PositionX", written = "")
+    val Position: Vector
+      get() = intrinsic()
+
+    /** The device's slots, by number. */
+    val slots: Slots<DataDiskSlot>
+      get() = intrinsic()
+
+    /** The StructureLarreDockCollector prefab. */
+    companion object : Prefab()
+  }
+
+  /** A StructureLarreDockHydroponics. */
+  @PrefabName("StructureLarreDockHydroponics")
+  class Hydroponics internal constructor() : TypedDevice(), LarreDock {
+    override var Activate: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override val Error: Boolean
+      get() = intrinsic()
+
+    override val Extended: Double
+      get() = intrinsic()
+
+    override val Idle: Boolean
+      get() = intrinsic()
+
+    override var On: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    var Open: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override val Power: Boolean
+      get() = intrinsic()
+
+    override val RequiredPower: Double
+      get() = intrinsic()
+
+    override var Setting: Double
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    val TargetPrefabHash: Double
+      get() = intrinsic()
+
+    val TargetSlotIndex: Double
+      get() = intrinsic()
+
+    @LogicTypes(read = "PositionX", written = "")
+    val Position: Vector
+      get() = intrinsic()
+
+    /** The device's slots, by number. */
+    val slots: Slots<CommonSlot>
+      get() = intrinsic()
+
+    /** Slot 0. */
+    @SlotNumber(0)
+    val ArmSlot: DataDiskSlot
+      get() = intrinsic()
+
+    /** Slot 1. */
+    @SlotNumber(1)
+    val HopperSlot: DataDiskSlot
+      get() = intrinsic()
+
+    /** Slot 255. */
+    @SlotNumber(255)
+    val TargetSlot: CommonSlot
+      get() = intrinsic()
+
+    /** The StructureLarreDockHydroponics prefab. */
+    companion object : Prefab()
+  }
+}
+
+/** The LarreDock devices on the chip's network, by prefab. */
+object LarreDocks {
+  /** The StructureRoboticArmDock devices on the chip's network. */
+  @PrefabName("StructureRoboticArmDock")
+  object Standard {
+    /** The device on [pin], as a StructureRoboticArmDock. */
+    fun at(pin: Device): LarreDock.Standard = intrinsic()
+
+    /** Every one on the network. */
+    val all: Batch
+      get() = intrinsic()
+
+    /** Every one on the network named [name], which must be a constant. */
+    fun named(name: String): Batch = intrinsic()
+
+    class Batch internal constructor() : DeviceBatch<LarreDock.Standard>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+  }
+
+  /** The StructureLarreDockAtmos devices on the chip's network. */
+  @PrefabName("StructureLarreDockAtmos")
+  object Atmos {
+    /** The device on [pin], as a StructureLarreDockAtmos. */
+    fun at(pin: Device): LarreDock.Atmos = intrinsic()
+
+    /** Every one on the network. */
+    val all: Batch
+      get() = intrinsic()
+
+    /** Every one on the network named [name], which must be a constant. */
+    fun named(name: String): Batch = intrinsic()
+
+    class Batch internal constructor() : DeviceBatch<LarreDock.Atmos>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<FilterSlot>>
+        get() = intrinsic()
+    }
+  }
+
+  /** The StructureLarreDockCargo devices on the chip's network. */
+  @PrefabName("StructureLarreDockCargo")
+  object Cargo {
+    /** The device on [pin], as a StructureLarreDockCargo. */
+    fun at(pin: Device): LarreDock.Cargo = intrinsic()
+
+    /** Every one on the network. */
+    val all: Batch
+      get() = intrinsic()
+
+    /** Every one on the network named [name], which must be a constant. */
+    fun named(name: String): Batch = intrinsic()
+
+    class Batch internal constructor() : DeviceBatch<LarreDock.Cargo>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<CommonSlot>>
+        get() = intrinsic()
+    }
+  }
+
+  /** The StructureLarreDockCollector devices on the chip's network. */
+  @PrefabName("StructureLarreDockCollector")
+  object Collector {
+    /** The device on [pin], as a StructureLarreDockCollector. */
+    fun at(pin: Device): LarreDock.Collector = intrinsic()
+
+    /** Every one on the network. */
+    val all: Batch
+      get() = intrinsic()
+
+    /** Every one on the network named [name], which must be a constant. */
+    fun named(name: String): Batch = intrinsic()
+
+    class Batch internal constructor() : DeviceBatch<LarreDock.Collector>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+  }
+
+  /** The StructureLarreDockHydroponics devices on the chip's network. */
+  @PrefabName("StructureLarreDockHydroponics")
+  object Hydroponics {
+    /** The device on [pin], as a StructureLarreDockHydroponics. */
+    fun at(pin: Device): LarreDock.Hydroponics = intrinsic()
+
+    /** Every one on the network. */
+    val all: Batch
+      get() = intrinsic()
+
+    /** Every one on the network named [name], which must be a constant. */
+    fun named(name: String): Batch = intrinsic()
+
+    class Batch internal constructor() : DeviceBatch<LarreDock.Hydroponics>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<CommonSlot>>
+        get() = intrinsic()
+    }
+  }
+}
+
+/** A device that comes as several prefabs, each a nested class. */
 interface LogicWriter {
   val Error: Boolean
 
@@ -17521,117 +17967,6 @@ object LargeExtendableRadiators {
   fun named(name: String): DeviceBatch<LargeExtendableRadiator> = intrinsic()
 }
 
-/** A StructureLarreDockAtmos. */
-@PrefabName("StructureLarreDockAtmos")
-class LarreDockAtmos internal constructor() : TypedDevice() {
-  var Activate: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val Combustion: Boolean
-    get() = intrinsic()
-
-  val Error: Boolean
-    get() = intrinsic()
-
-  val Extended: Double
-    get() = intrinsic()
-
-  val Idle: Boolean
-    get() = intrinsic()
-
-  var Mode: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var On: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var Open: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val Power: Boolean
-    get() = intrinsic()
-
-  val Pressure: Double
-    get() = intrinsic()
-
-  var PressureExternal: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var PressureInternal: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val RequiredPower: Double
-    get() = intrinsic()
-
-  var Setting: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val Temperature: Double
-    get() = intrinsic()
-
-  val TotalMoles: Double
-    get() = intrinsic()
-
-  @LogicTypes(
-      read =
-          "CombustionInput,PressureInput,RatioCarbonDioxideInput,RatioLiquidCarbonDioxideInput,RatioLiquidMethaneInput,RatioLiquidNitrogenInput,RatioLiquidNitrousOxideInput,RatioLiquidOxygenInput,RatioLiquidPollutantInput,RatioMethaneInput,RatioNitrogenInput,RatioNitrousOxideInput,RatioOxygenInput,RatioPollutantInput,RatioSteamInput,RatioWaterInput,TemperatureInput,TotalMolesInput",
-      written = "",
-  )
-  val Ports: Ports
-    get() = intrinsic()
-
-  @LogicTypes(
-      read =
-          "RatioCarbonDioxide,RatioHelium,RatioHydrazine,RatioHydrochloricAcid,RatioHydrogen,RatioLiquidAlcohol,RatioLiquidCarbonDioxide,RatioLiquidHydrazine,RatioLiquidHydrochloricAcid,RatioLiquidHydrogen,RatioLiquidMethane,RatioLiquidNitrogen,RatioLiquidNitrousOxide,RatioLiquidOxygen,RatioLiquidOzone,RatioLiquidPollutant,RatioLiquidSilanol,RatioLiquidSodiumChloride,RatioMethane,RatioNitrogen,RatioNitrousOxide,RatioOxygen,RatioOzone,RatioPollutant,RatioPollutedWater,RatioSilanol,RatioSteam,RatioWater",
-      written = "",
-  )
-  val Ratios: Ratios
-    get() = intrinsic()
-
-  @LogicTypes(read = "PositionX", written = "")
-  val Position: Vector
-    get() = intrinsic()
-
-  /** The device's slots, by number. */
-  val slots: Slots<FilterSlot>
-    get() = intrinsic()
-
-  /** Slot 0. */
-  @SlotNumber(0)
-  val Filter: FilterSlot
-    get() = intrinsic()
-
-  /** The StructureLarreDockAtmos prefab. */
-  companion object : Prefab()
-}
-
-/** The StructureLarreDockAtmos devices on the chip's network. */
-@PrefabName("StructureLarreDockAtmos")
-object LarreDockAtmoses {
-  /** The device on [pin], as a StructureLarreDockAtmos. */
-  fun at(pin: Device): LarreDockAtmos = intrinsic()
-
-  /** Every one on the network. */
-  val all: Batch
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch<LarreDockAtmos>() {
-    /** A slot of every one in the batch, by number. */
-    val slots: Slots<SlotBatch<FilterSlot>>
-      get() = intrinsic()
-  }
-}
-
 /** A StructureLarreDockBypass. */
 @PrefabName("StructureLarreDockBypass")
 class LarreDockBypass internal constructor() : TypedDevice() {
@@ -17665,252 +18000,6 @@ object LarreDockBypasses {
 
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): DeviceBatch<LarreDockBypass> = intrinsic()
-}
-
-/** A StructureLarreDockCargo. */
-@PrefabName("StructureLarreDockCargo")
-class LarreDockCargo internal constructor() : TypedDevice() {
-  var Activate: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val Error: Boolean
-    get() = intrinsic()
-
-  val Extended: Double
-    get() = intrinsic()
-
-  val Idle: Boolean
-    get() = intrinsic()
-
-  var On: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var Open: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val Power: Boolean
-    get() = intrinsic()
-
-  val RequiredPower: Double
-    get() = intrinsic()
-
-  var Setting: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val TargetPrefabHash: Double
-    get() = intrinsic()
-
-  var TargetSlotIndex: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  @LogicTypes(read = "PositionX", written = "")
-  val Position: Vector
-    get() = intrinsic()
-
-  /** The device's slots, by number. */
-  val slots: Slots<CommonSlot>
-    get() = intrinsic()
-
-  /** Slot 0. */
-  @SlotNumber(0)
-  val ArmSlot: DataDiskSlot
-    get() = intrinsic()
-
-  /** Slot 255. */
-  @SlotNumber(255)
-  val TargetSlot: CommonSlot
-    get() = intrinsic()
-
-  /** The StructureLarreDockCargo prefab. */
-  companion object : Prefab()
-}
-
-/** The StructureLarreDockCargo devices on the chip's network. */
-@PrefabName("StructureLarreDockCargo")
-object LarreDockCargos {
-  /** The device on [pin], as a StructureLarreDockCargo. */
-  fun at(pin: Device): LarreDockCargo = intrinsic()
-
-  /** Every one on the network. */
-  val all: Batch
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch<LarreDockCargo>() {
-    /** A slot of every one in the batch, by number. */
-    val slots: Slots<SlotBatch<CommonSlot>>
-      get() = intrinsic()
-  }
-}
-
-/** A StructureLarreDockCollector. */
-@PrefabName("StructureLarreDockCollector")
-class LarreDockCollector internal constructor() : TypedDevice() {
-  var Activate: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val Error: Boolean
-    get() = intrinsic()
-
-  val Extended: Double
-    get() = intrinsic()
-
-  val Idle: Boolean
-    get() = intrinsic()
-
-  var Mode: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var On: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var Open: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val Power: Boolean
-    get() = intrinsic()
-
-  val Quantity: Double
-    get() = intrinsic()
-
-  val Ratio: Double
-    get() = intrinsic()
-
-  val RequiredPower: Double
-    get() = intrinsic()
-
-  var Setting: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  @LogicTypes(read = "PositionX", written = "")
-  val Position: Vector
-    get() = intrinsic()
-
-  /** The device's slots, by number. */
-  val slots: Slots<DataDiskSlot>
-    get() = intrinsic()
-
-  /** The StructureLarreDockCollector prefab. */
-  companion object : Prefab()
-}
-
-/** The StructureLarreDockCollector devices on the chip's network. */
-@PrefabName("StructureLarreDockCollector")
-object LarreDockCollectors {
-  /** The device on [pin], as a StructureLarreDockCollector. */
-  fun at(pin: Device): LarreDockCollector = intrinsic()
-
-  /** Every one on the network. */
-  val all: Batch
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch<LarreDockCollector>() {
-    /** A slot of every one in the batch, by number. */
-    val slots: Slots<SlotBatch<DataDiskSlot>>
-      get() = intrinsic()
-  }
-}
-
-/** A StructureLarreDockHydroponics. */
-@PrefabName("StructureLarreDockHydroponics")
-class LarreDockHydroponics internal constructor() : TypedDevice() {
-  var Activate: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val Error: Boolean
-    get() = intrinsic()
-
-  val Extended: Double
-    get() = intrinsic()
-
-  val Idle: Boolean
-    get() = intrinsic()
-
-  var On: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var Open: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val Power: Boolean
-    get() = intrinsic()
-
-  val RequiredPower: Double
-    get() = intrinsic()
-
-  var Setting: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val TargetPrefabHash: Double
-    get() = intrinsic()
-
-  val TargetSlotIndex: Double
-    get() = intrinsic()
-
-  @LogicTypes(read = "PositionX", written = "")
-  val Position: Vector
-    get() = intrinsic()
-
-  /** The device's slots, by number. */
-  val slots: Slots<CommonSlot>
-    get() = intrinsic()
-
-  /** Slot 0. */
-  @SlotNumber(0)
-  val ArmSlot: DataDiskSlot
-    get() = intrinsic()
-
-  /** Slot 1. */
-  @SlotNumber(1)
-  val HopperSlot: DataDiskSlot
-    get() = intrinsic()
-
-  /** Slot 255. */
-  @SlotNumber(255)
-  val TargetSlot: CommonSlot
-    get() = intrinsic()
-
-  /** The StructureLarreDockHydroponics prefab. */
-  companion object : Prefab()
-}
-
-/** The StructureLarreDockHydroponics devices on the chip's network. */
-@PrefabName("StructureLarreDockHydroponics")
-object LarreDockHydroponicses {
-  /** The device on [pin], as a StructureLarreDockHydroponics. */
-  fun at(pin: Device): LarreDockHydroponics = intrinsic()
-
-  /** Every one on the network. */
-  val all: Batch
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch<LarreDockHydroponics>() {
-    /** A slot of every one in the batch, by number. */
-    val slots: Slots<SlotBatch<CommonSlot>>
-      get() = intrinsic()
-  }
 }
 
 /** A StructureLiquidDrain. */
@@ -19616,73 +19705,6 @@ object RobotArmDoors {
 
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): DeviceBatch<RobotArmDoor> = intrinsic()
-}
-
-/** A StructureRoboticArmDock. */
-@PrefabName("StructureRoboticArmDock")
-class RoboticArmDock internal constructor() : TypedDevice() {
-  var Activate: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val Error: Boolean
-    get() = intrinsic()
-
-  val Extended: Double
-    get() = intrinsic()
-
-  val Idle: Boolean
-    get() = intrinsic()
-
-  var On: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val Power: Boolean
-    get() = intrinsic()
-
-  val RequiredPower: Double
-    get() = intrinsic()
-
-  var Setting: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  @LogicTypes(read = "PositionX", written = "")
-  val Position: Vector
-    get() = intrinsic()
-
-  /** The device's slots, by number. */
-  val slots: Slots<DataDiskSlot>
-    get() = intrinsic()
-
-  /** Slot 0. */
-  @SlotNumber(0)
-  val ArmSlot: DataDiskSlot
-    get() = intrinsic()
-
-  /** The StructureRoboticArmDock prefab. */
-  companion object : Prefab()
-}
-
-/** The StructureRoboticArmDock devices on the chip's network. */
-@PrefabName("StructureRoboticArmDock")
-object RoboticArmDocks {
-  /** The device on [pin], as a StructureRoboticArmDock. */
-  fun at(pin: Device): RoboticArmDock = intrinsic()
-
-  /** Every one on the network. */
-  val all: Batch
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch<RoboticArmDock>() {
-    /** A slot of every one in the batch, by number. */
-    val slots: Slots<SlotBatch<DataDiskSlot>>
-      get() = intrinsic()
-  }
 }
 
 /** A StructureRocketAvionics. */
