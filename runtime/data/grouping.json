@@ -411,6 +411,23 @@
         "Floor": "StructureManualFloorHatch"
       }
     },
+    "Sleeper": {
+      "plural": "Sleepers",
+      "members": {
+        "Standard": "StructureSleeper",
+        "Left": "StructureSleeperLeft",
+        "Right": "StructureSleeperRight",
+        "Vertical": "StructureSleeperVertical"
+      }
+    },
+    "CryoTube": {
+      "plural": "CryoTubes",
+      "extends": ["Sleeper"],
+      "members": {
+        "Horizontal": "StructureCryoTubeHorizontal",
+        "Vertical": "StructureCryoTubeVertical"
+      }
+    },
     "Door": {
       "plural": "Doors",
       "members": {
@@ -588,6 +605,10 @@
     {
       "prefabs": ["StructurePowerTransmitter", "StructurePowerTransmitterReceiver"],
       "reason": "the Microwave Power Transmitter sends power, the Microwave Power Receiver takes it in"
+    },
+    {
+      "prefabs": [["StructureSleeper", "StructureSleeperLeft", "StructureSleeperRight", "StructureSleeperVertical"], "StructureSleeperVerticalDroid"],
+      "reason": "the Droid Sleeper recharges robots and harms anyone else who enters, so it is not a sleeper for players; it has no EntityState, Maximum, Ratio or Setting"
     }
   ],
   "textDisplays": [

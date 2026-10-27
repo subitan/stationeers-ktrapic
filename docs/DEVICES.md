@@ -528,6 +528,30 @@ interface Console {
 }
 ```
 
+### CryoTube
+
+```kotlin
+interface CryoTube : Sleeper {
+  var Mode: Double
+  val Pressure: Double
+  val Temperature: Double
+
+  /** StructureCryoTubeHorizontal. Entry point: CryoTubes.Horizontal. */
+  class Horizontal : TypedDevice, CryoTube {
+    val Player: DataDiskSlot // slots[0]
+    val Mask: MaskSlot // slots[1]
+    val slots: Slots<CommonSlot>
+  }
+
+  /** StructureCryoTubeVertical. Entry point: CryoTubes.Vertical. */
+  class Vertical : TypedDevice, CryoTube {
+    val Player: DataDiskSlot // slots[0]
+    val Mask: MaskSlot // slots[1]
+    val slots: Slots<CommonSlot>
+  }
+}
+```
+
 ### DigitalValve
 
 ```kotlin
@@ -1335,6 +1359,51 @@ interface SatelliteDish {
   /** StructureLargeSatelliteDish. Entry point: SatelliteDishes.Large. */
   class Large : TypedDevice, SatelliteDish {
     val Dimensions: Vector
+  }
+}
+```
+
+### Sleeper
+
+```kotlin
+interface Sleeper {
+  var Activate: Boolean
+  val EntityState: Double
+  val Error: Boolean
+  var Lock: Boolean
+  val Maximum: Double
+  var On: Boolean
+  var Open: Boolean
+  val Power: Boolean
+  val Ratio: Double
+  val RequiredPower: Double
+  var Setting: Double
+
+  /** StructureSleeper. Entry point: Sleepers.Standard. */
+  class Standard : TypedDevice, Sleeper {
+    val Bed: DataDiskSlot // slots[0]
+    val slots: Slots<DataDiskSlot>
+  }
+
+  /** StructureSleeperLeft. Entry point: Sleepers.Left. */
+  class Left : TypedDevice, Sleeper {
+    var Mode: Double
+    val Player: DataDiskSlot // slots[0]
+    val slots: Slots<DataDiskSlot>
+  }
+
+  /** StructureSleeperRight. Entry point: Sleepers.Right. */
+  class Right : TypedDevice, Sleeper {
+    var Mode: Double
+    val Player: DataDiskSlot // slots[0]
+    val slots: Slots<DataDiskSlot>
+  }
+
+  /** StructureSleeperVertical. Entry point: Sleepers.Vertical. */
+  class Vertical : TypedDevice, Sleeper {
+    var Mode: Double
+    val Player: DataDiskSlot // slots[0]
+    val slots: Slots<DataDiskSlot>
   }
 }
 ```
@@ -2259,48 +2328,6 @@ class CrewUmbilical : TypedDevice {
   var Open: Boolean
   val Power: Boolean
   val RequiredPower: Double
-}
-
-/** StructureCryoTubeHorizontal. Entry point: CryoTubeHorizontals. */
-class CryoTubeHorizontal : TypedDevice {
-  var Activate: Boolean
-  val EntityState: Double
-  val Error: Boolean
-  var Lock: Boolean
-  val Maximum: Double
-  var Mode: Double
-  var On: Boolean
-  var Open: Boolean
-  val Power: Boolean
-  val Pressure: Double
-  val Ratio: Double
-  val RequiredPower: Double
-  var Setting: Double
-  val Temperature: Double
-  val Player: DataDiskSlot // slots[0]
-  val Mask: MaskSlot // slots[1]
-  val slots: Slots<CommonSlot>
-}
-
-/** StructureCryoTubeVertical. Entry point: CryoTubeVerticals. */
-class CryoTubeVertical : TypedDevice {
-  var Activate: Boolean
-  val EntityState: Double
-  val Error: Boolean
-  var Lock: Boolean
-  val Maximum: Double
-  var Mode: Double
-  var On: Boolean
-  var Open: Boolean
-  val Power: Boolean
-  val Pressure: Double
-  val Ratio: Double
-  val RequiredPower: Double
-  var Setting: Double
-  val Temperature: Double
-  val Player: DataDiskSlot // slots[0]
-  val Mask: MaskSlot // slots[1]
-  val slots: Slots<CommonSlot>
 }
 ```
 
@@ -3830,77 +3857,6 @@ class ShowerPowered : TypedDevice {
   var Open: Boolean
   val Power: Boolean
   val RequiredPower: Double
-}
-
-/** StructureSleeper. Entry point: Sleepers. */
-class Sleeper : TypedDevice {
-  var Activate: Boolean
-  val EntityState: Double
-  val Error: Boolean
-  var Lock: Boolean
-  val Maximum: Double
-  var On: Boolean
-  var Open: Boolean
-  val Power: Boolean
-  val Ratio: Double
-  val RequiredPower: Double
-  var Setting: Double
-  val Bed: DataDiskSlot // slots[0]
-  val slots: Slots<DataDiskSlot>
-}
-
-/** StructureSleeperLeft. Entry point: SleeperLefts. */
-class SleeperLeft : TypedDevice {
-  var Activate: Boolean
-  val EntityState: Double
-  val Error: Boolean
-  var Lock: Boolean
-  val Maximum: Double
-  var Mode: Double
-  var On: Boolean
-  var Open: Boolean
-  val Power: Boolean
-  val Ratio: Double
-  val RequiredPower: Double
-  var Setting: Double
-  val Player: DataDiskSlot // slots[0]
-  val slots: Slots<DataDiskSlot>
-}
-
-/** StructureSleeperRight. Entry point: SleeperRights. */
-class SleeperRight : TypedDevice {
-  var Activate: Boolean
-  val EntityState: Double
-  val Error: Boolean
-  var Lock: Boolean
-  val Maximum: Double
-  var Mode: Double
-  var On: Boolean
-  var Open: Boolean
-  val Power: Boolean
-  val Ratio: Double
-  val RequiredPower: Double
-  var Setting: Double
-  val Player: DataDiskSlot // slots[0]
-  val slots: Slots<DataDiskSlot>
-}
-
-/** StructureSleeperVertical. Entry point: SleeperVerticals. */
-class SleeperVertical : TypedDevice {
-  var Activate: Boolean
-  val EntityState: Double
-  val Error: Boolean
-  var Lock: Boolean
-  val Maximum: Double
-  var Mode: Double
-  var On: Boolean
-  var Open: Boolean
-  val Power: Boolean
-  val Ratio: Double
-  val RequiredPower: Double
-  var Setting: Double
-  val Player: DataDiskSlot // slots[0]
-  val slots: Slots<DataDiskSlot>
 }
 
 /** StructureSleeperVerticalDroid. Entry point: SleeperVerticalDroids. */
