@@ -365,6 +365,7 @@ class CompilerTest {
         run(
             """
             var z = 0
+            z += 0 // assigned, so z is a register and z / z NaN when run, not folded
             val n = z / z
             db.Setting = if (n > 5) 1.0 else 2.0
             db.Ratio = if (n <= 5) 1.0 else 2.0
@@ -406,6 +407,7 @@ class CompilerTest {
         run(
             """
             var z = 0
+            z += 0 // assigned, so z is a register and z / z NaN when run, not folded
             val n = z / z
             var count = 0
             for (i in 0..n) count++

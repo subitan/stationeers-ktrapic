@@ -220,7 +220,8 @@ class ViewTest {
   fun `a view or a key is not a value`() {
     assertThat(error("val x = d0.Ports.Input\ndb.Setting = if (x == x) 1.0 else 0.0").message)
         .contains("Port")
-    assertThat(error("var gas = Substance.Oxygen").message).contains("held in a val")
+    assertThat(error("var gas = Substance.Oxygen\ngas = Substance.Water").message)
+        .contains("held in a val")
   }
 
   @Test

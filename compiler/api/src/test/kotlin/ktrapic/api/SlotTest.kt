@@ -167,7 +167,7 @@ class SlotTest {
       val error = error(source)
       assertWithMessage(source).that(error.line to error.column).isEqualTo(at)
     }
-    assertThat(error("var s = d0.slots[0]").message).contains("slot")
+    assertThat(error("var s = d0.slots[0]\ns = d0.slots[1]").message).contains("slot")
   }
 
   @Test

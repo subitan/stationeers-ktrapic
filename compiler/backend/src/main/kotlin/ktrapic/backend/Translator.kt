@@ -59,6 +59,7 @@ import org.jetbrains.kotlin.ir.expressions.IrVararg
 import org.jetbrains.kotlin.ir.expressions.IrWhen
 import org.jetbrains.kotlin.ir.expressions.IrWhileLoop
 import org.jetbrains.kotlin.ir.symbols.IrPropertySymbol
+import org.jetbrains.kotlin.ir.symbols.IrSymbol
 import org.jetbrains.kotlin.ir.types.IrType
 import org.jetbrains.kotlin.ir.types.classFqName
 import org.jetbrains.kotlin.ir.types.classOrNull
@@ -152,6 +153,12 @@ internal data class Key(val name: String) : Value
 internal data class StaticSet(val elements: List<Value>) : Value
 
 /**
+ * One entry of a [View] of `Ratios` in a loop over it (`for ((gas, ratio) in sensor.Ratios)`): its
+ * key is [key], and its value the ratio the view names for it, read where it is used.
+ */
+internal data class RatioEntry(val view: View, val key: Key) : Value
+
+/**
  * Translates the IR of a wrapped script-style program into [TirLine]s: the `Program` object's
  * property initializers and `init` blocks, in source order. [symbols] finds the runtime API's
  * declarations.
@@ -223,6 +230,7 @@ internal class Translator(private val symbols: DeclarationFinder) {
             .singleOrNull { it.name.asString() == PROGRAM_OBJECT } ?: return
     graph = CallGraph(program)
     graph.recursiveCall()?.let { fail(it, "Recursive calls are not supported") }
+    collectAssigned(program)
     takenLabels += END_LABEL
     for (function in graph.functions) {
       var label = labelName(function.name.asString())
@@ -259,6 +267,42 @@ internal class Translator(private val symbols: DeclarationFinder) {
       label(END_LABEL)
     }
   }
+
+  /** The variables and properties the program assigns anywhere after declaring them. */
+  private val assigned = mutableSetOf<IrSymbol>()
+
+  private fun collectAssigned(program: IrClass) {
+    program.acceptVoid(
+        object : IrVisitorVoid() {
+          override fun visitElement(element: IrElement) {
+            // A property's own setter sets its backing field; only the program's code counts.
+            if (element is IrSimpleFunction && element.correspondingPropertySymbol != null) return
+            when (element) {
+              is IrSetValue -> assigned += element.symbol
+              // The frontend writes a property through its setter (the IrCall below); a direct
+              // field write is counted too, since aliasOrValue translates one as an assignment.
+              is IrSetField ->
+                  element.symbol.owner.correspondingPropertySymbol?.let { assigned += it }
+              is IrCall -> {
+                val property = element.symbol.owner.correspondingPropertySymbol
+                if (property != null && element.symbol.owner == property.owner.setter) {
+                  assigned += property
+                }
+              }
+            }
+            element.acceptChildrenVoid(this)
+          }
+        }
+    )
+  }
+
+  /**
+   * Whether this is a `var` the program assigns after declaring it. One it never does is a `val` in
+   * all but name: it may hold what a `val` may (a device, a view, a static set) and folds as one.
+   */
+  private fun IrVariable.isReassigned() = isVar && symbol in assigned
+
+  private fun IrProperty.isReassigned() = isVar && symbol in assigned
 
   // Functions.
 
@@ -421,10 +465,13 @@ internal class Translator(private val symbols: DeclarationFinder) {
     properties[property.symbol] =
         when {
           value is Mapped -> fail(initializer, MAPPED_HELD)
-          value.isAlias() && !property.isVar -> value
+          value.isAlias() && !property.isReassigned() -> value
           value.isAlias() ->
-              fail(property, "a device, batch, slot or view can only be held in a val")
-          value is Const && !property.isVar -> value
+              fail(
+                  property,
+                  "a device, batch, slot, view, static set or Ratios entry can only be held in a val, or in a var never reassigned",
+              )
+          value is Const && !property.isReassigned() -> value
           else -> Reg(newVReg(property.name.asString())).also { move(it.reg, value) }
         }
   }
@@ -480,10 +527,13 @@ internal class Translator(private val symbols: DeclarationFinder) {
     variables[variable] =
         when {
           value is Mapped -> fail(initializer, MAPPED_HELD)
-          value.isAlias() && !variable.isVar -> value
+          value.isAlias() && !variable.isReassigned() -> value
           value.isAlias() ->
-              fail(variable, "a device, batch, slot or view can only be held in a val")
-          value is Const && !variable.isVar -> value
+              fail(
+                  variable,
+                  "a device, batch, slot, view, static set or Ratios entry can only be held in a val, or in a var never reassigned",
+              )
+          value is Const && !variable.isReassigned() -> value
           else -> Reg(newVReg(variable.name.asString())).also { move(it.reg, value) }
         }
   }
@@ -510,6 +560,9 @@ internal class Translator(private val symbols: DeclarationFinder) {
         if (it is Key) fail(expression, "a substance can only be used as a key, as Ratios[it]")
         if (it is StaticSet) {
           fail(expression, "a static set can only be looped over, tested with in, or measured")
+        }
+        if (it is RatioEntry) {
+          fail(expression, "a Ratios entry is used through its key or value, as entry.value")
         }
         if (it.isAlias() && it !is Dev) fail(expression, batchError)
       }
@@ -747,6 +800,15 @@ internal class Translator(private val symbols: DeclarationFinder) {
               else -> left.elements.filter { it in right }
             }
         StaticSet(if (isSet) elements.distinct() else elements)
+      }
+      // A Ratios entry's parts, by destructuring or by name.
+      "kotlin.collections.component1",
+      "kotlin.collections.component2",
+      "kotlin.collections.Map.Entry.<get-key>",
+      "kotlin.collections.Map.Entry.<get-value>" -> {
+        val entry = aliasOrValue(args[0]!!) as? RatioEntry ?: return null
+        if (fqName.endsWith("component1") || fqName.endsWith("key>")) entry.key
+        else viewLogicType(call, entry.view, entry.key.name, isSetter = false, written = null)
       }
       else -> {
         val owner = function.parentClassOrNull ?: return null
@@ -1399,7 +1461,8 @@ internal class Translator(private val symbols: DeclarationFinder) {
           this is SlotOf ||
           this is View ||
           this is Key ||
-          this is StaticSet
+          this is StaticSet ||
+          this is RatioEntry
 
   private fun logicType(call: IrCall, argument: IrExpression?): Fixed {
     if (argument !is IrGetEnumValue) {
@@ -1795,6 +1858,12 @@ internal class Translator(private val symbols: DeclarationFinder) {
         }
     val left = call.arguments[0] ?: return null
     val right = call.arguments[1] ?: return null
+    // Substances are constants (a loop variable is one per copy), so `==` between two folds.
+    if (condition == "eq" && left.type.isSubstance() && right.type.isSubstance()) {
+      val (a, b) = listOf(left, right).map { aliasOrValue(it) }
+      if (a !is Key || b !is Key) fail(call, "a substance compared must be a constant")
+      return Comparison("eq", Const(if (a == b) 1.0 else 0.0), Const(1.0), mayBeNaN = false)
+    }
     for (side in listOf(left, right)) {
       val type = side.type
       // A prefab is its hash; Kotlin allows only == and != on one.
@@ -2018,12 +2087,18 @@ internal class Translator(private val symbols: DeclarationFinder) {
             rangeExpression.symbol.owner.kotlinFqName.asString() !in RANGE_FUNCTIONS
     ) {
       val set =
-          aliasOrValue(rangeExpression) as? StaticSet
-              ?: fail(
-                  rangeExpression,
-                  "a for loop goes over an Int range, or a set known when compiled, as " +
-                      "setOf(Substance.Oxygen, Substance.Nitrogen)",
-              )
+          when (val source = aliasOrValue(rangeExpression)) {
+            is StaticSet -> source
+            // A Ratios view's entries, each a substance it reports with its ratio.
+            is View if source.shape == "Ratios" ->
+                StaticSet(ratioKeys(source).elements.map { RatioEntry(source, it as Key) })
+            else ->
+                fail(
+                    rangeExpression,
+                    "a for loop goes over an Int range, a set known when compiled (as " +
+                        "setOf(Substance.Oxygen, Substance.Nitrogen)), or a view's Ratios",
+                )
+          }
       return unrolledLoop(loop, loopVariable, body, set)
     }
     val range = range(rangeExpression)
@@ -2198,6 +2273,7 @@ internal class Translator(private val symbols: DeclarationFinder) {
         is View,
         is Key,
         is StaticSet,
+        is RatioEntry,
         Element,
         is Named -> error("a batch, slot or view has no value")
         NoValue -> error("no value")
@@ -2207,6 +2283,8 @@ internal class Translator(private val symbols: DeclarationFinder) {
 
   private fun IrType.isDevice() =
       classFqName?.asString() == "ktrapic.Device" || classOrNull?.owner?.isTypedDevice() == true
+
+  private fun IrType.isSubstance() = classFqName?.asString() == SUBSTANCE
 
   /** A view class or [SUBSTANCE]: an argument named when compiled, as a device is. */
   private fun IrType.isViewOrKey() =

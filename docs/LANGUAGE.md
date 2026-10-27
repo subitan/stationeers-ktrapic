@@ -55,7 +55,8 @@ and use `toDouble()` (which costs nothing) or `toInt()` to convert.
 
 `val` and `var` work as in Kotlin, at the top level and in blocks. A top-level property needs an
 initializer and the default getter and setter; a `val` whose initializer is a constant costs no
-register. A `val` may also hold a device, as an alias: `val sensor = d0`.
+register. A `val` may also hold a device, as an alias: `val sensor = d0`. A `var` the program
+never assigns again is a `val` in all but name: it may hold the same things, and costs the same.
 
 ## Operators
 
@@ -271,10 +272,24 @@ db.Setting = other + heaviest
 
 `continue` goes on to the next element's copy, and `break` past the last. A set's `size` and an
 `in` test of a constant are constants; `in` with a number known only when the program runs
-compiles to one comparison per element. A static set can be held in a `val` and passed to an
-inlined function, but not stored in a `var` or used as a value otherwise. Elements compare as
-numbers, unlike Kotlin's: `2` and `2.0` are the same element. A `for` over an `Int` range is not
-unrolled: it stays a loop.
+compiles to one comparison per element. A static set can be held in a `val` (or a `var` never
+reassigned) and passed to an inlined function, but not used as a value otherwise. Elements
+compare as numbers, unlike Kotlin's: `2` and `2.0` are the same element. A `for` over an `Int`
+range is not unrolled: it stays a loop.
+
+A loop over a view's `Ratios` itself gives each substance its device reports with its ratio, by
+destructuring (`(gas, ratio)`) or as an entry's `key` and `value`, unrolled the same way. Two
+substances compare with `==` and `!=` when compiled, so a test of the loop's substance costs
+nothing:
+
+```kotlin
+var other = 0.0
+for ((gas, ratio) in GasSensors.at(d0).Ratios) {
+  if (gas == Substance.Oxygen || gas == Substance.Nitrogen) continue
+  other += ratio
+}
+db.Setting = other
+```
 
 ### Slots
 
