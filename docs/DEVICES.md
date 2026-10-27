@@ -205,27 +205,6 @@ interface AreaPowerControl {
 }
 ```
 
-### BackPressureRegulator
-
-```kotlin
-interface BackPressureRegulator {
-  val Error: Boolean
-  var Lock: Boolean
-  val Maximum: Double
-  var On: Boolean
-  val Power: Boolean
-  val Ratio: Double
-  val RequiredPower: Double
-  var Setting: Double
-
-  /** StructureBackPressureRegulator. Entry point: BackPressureRegulators.Gas. */
-  class Gas : TypedDevice, BackPressureRegulator
-
-  /** StructureBackLiquidPressureRegulator. Entry point: BackPressureRegulators.Liquid. */
-  class Liquid : TypedDevice, BackPressureRegulator
-}
-```
-
 ### Battery
 
 ```kotlin
@@ -1472,6 +1451,12 @@ interface PressureRegulator {
 
   /** StructureLiquidPressureRegulator. Entry point: PressureRegulators.Liquid. */
   class Liquid : TypedDevice, PressureRegulator
+
+  /** StructureBackPressureRegulator. Entry point: PressureRegulators.BackGas. */
+  class BackGas : TypedDevice, PressureRegulator
+
+  /** StructureBackLiquidPressureRegulator. Entry point: PressureRegulators.BackLiquid. */
+  class BackLiquid : TypedDevice, PressureRegulator
 }
 ```
 
