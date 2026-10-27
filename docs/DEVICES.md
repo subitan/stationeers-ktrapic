@@ -988,6 +988,28 @@ interface Locker {
 }
 ```
 
+### ManualHatch
+
+```kotlin
+interface ManualHatch {
+  val Idle: Boolean
+  var Lock: Boolean
+  var Open: Boolean
+  var Setting: Double
+
+  /** StructureManualHatch. Entry point: ManualHatches.Standard. */
+  class Standard : TypedDevice, ManualHatch {
+    var Mode: Double
+    var On: Boolean
+    val Power: Boolean
+    val RequiredPower: Double
+  }
+
+  /** StructureManualFloorHatch. Entry point: ManualHatches.Floor. */
+  class Floor : TypedDevice, ManualHatch
+}
+```
+
 ### MediumConvectionRadiator
 
 ```kotlin
@@ -3277,26 +3299,6 @@ class LogicWriterSwitch : TypedDevice {
 ### M
 
 ```kotlin
-/** StructureManualFloorHatch. Entry point: ManualFloorHatches. */
-class ManualFloorHatch : TypedDevice {
-  val Idle: Boolean
-  var Lock: Boolean
-  var Open: Boolean
-  var Setting: Double
-}
-
-/** StructureManualHatch. Entry point: ManualHatches. */
-class ManualHatch : TypedDevice {
-  val Idle: Boolean
-  var Lock: Boolean
-  var Mode: Double
-  var On: Boolean
-  var Open: Boolean
-  val Power: Boolean
-  val RequiredPower: Double
-  var Setting: Double
-}
-
 /** StructureMotionSensor. Entry point: MotionSensors. */
 class MotionSensor : TypedDevice {
   var Activate: Boolean

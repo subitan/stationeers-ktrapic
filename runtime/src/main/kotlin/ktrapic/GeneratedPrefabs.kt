@@ -9090,6 +9090,106 @@ object Airlocks {
 }
 
 /** A device that comes as several prefabs, each a nested class. */
+interface ManualHatch {
+  val Idle: Boolean
+
+  var Lock: Boolean
+
+  var Open: Boolean
+
+  var Setting: Double
+
+  /** A StructureManualHatch. */
+  @PrefabName("StructureManualHatch")
+  class Standard internal constructor() : TypedDevice(), ManualHatch {
+    override val Idle: Boolean
+      get() = intrinsic()
+
+    override var Lock: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    var Mode: Double
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    var On: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override var Open: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    val Power: Boolean
+      get() = intrinsic()
+
+    val RequiredPower: Double
+      get() = intrinsic()
+
+    override var Setting: Double
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    /** The StructureManualHatch prefab. */
+    companion object : Prefab()
+  }
+
+  /** A StructureManualFloorHatch. */
+  @PrefabName("StructureManualFloorHatch")
+  class Floor internal constructor() : TypedDevice(), ManualHatch {
+    override val Idle: Boolean
+      get() = intrinsic()
+
+    override var Lock: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override var Open: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override var Setting: Double
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    /** The StructureManualFloorHatch prefab. */
+    companion object : Prefab()
+  }
+}
+
+/** The ManualHatch devices on the chip's network, by prefab. */
+object ManualHatches {
+  /** The StructureManualHatch devices on the chip's network. */
+  @PrefabName("StructureManualHatch")
+  object Standard {
+    /** The device on [pin], as a StructureManualHatch. */
+    fun at(pin: Device): ManualHatch.Standard = intrinsic()
+
+    /** Every one on the network. */
+    val all: DeviceBatch<ManualHatch.Standard>
+      get() = intrinsic()
+
+    /** Every one on the network named [name], which must be a constant. */
+    fun named(name: String): DeviceBatch<ManualHatch.Standard> = intrinsic()
+  }
+
+  /** The StructureManualFloorHatch devices on the chip's network. */
+  @PrefabName("StructureManualFloorHatch")
+  object Floor {
+    /** The device on [pin], as a StructureManualFloorHatch. */
+    fun at(pin: Device): ManualHatch.Floor = intrinsic()
+
+    /** Every one on the network. */
+    val all: DeviceBatch<ManualHatch.Floor>
+      get() = intrinsic()
+
+    /** Every one on the network named [name], which must be a constant. */
+    fun named(name: String): DeviceBatch<ManualHatch.Floor> = intrinsic()
+  }
+}
+
+/** A device that comes as several prefabs, each a nested class. */
 interface Door {
   val Idle: Boolean
 
@@ -18309,92 +18409,6 @@ object LogicWriterSwitches {
 
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): DeviceBatch<LogicWriterSwitch> = intrinsic()
-}
-
-/** A StructureManualFloorHatch. */
-@PrefabName("StructureManualFloorHatch")
-class ManualFloorHatch internal constructor() : TypedDevice() {
-  val Idle: Boolean
-    get() = intrinsic()
-
-  var Lock: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var Open: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var Setting: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  /** The StructureManualFloorHatch prefab. */
-  companion object : Prefab()
-}
-
-/** The StructureManualFloorHatch devices on the chip's network. */
-@PrefabName("StructureManualFloorHatch")
-object ManualFloorHatches {
-  /** The device on [pin], as a StructureManualFloorHatch. */
-  fun at(pin: Device): ManualFloorHatch = intrinsic()
-
-  /** Every one on the network. */
-  val all: DeviceBatch<ManualFloorHatch>
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): DeviceBatch<ManualFloorHatch> = intrinsic()
-}
-
-/** A StructureManualHatch. */
-@PrefabName("StructureManualHatch")
-class ManualHatch internal constructor() : TypedDevice() {
-  val Idle: Boolean
-    get() = intrinsic()
-
-  var Lock: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var Mode: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var On: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var Open: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val Power: Boolean
-    get() = intrinsic()
-
-  val RequiredPower: Double
-    get() = intrinsic()
-
-  var Setting: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  /** The StructureManualHatch prefab. */
-  companion object : Prefab()
-}
-
-/** The StructureManualHatch devices on the chip's network. */
-@PrefabName("StructureManualHatch")
-object ManualHatches {
-  /** The device on [pin], as a StructureManualHatch. */
-  fun at(pin: Device): ManualHatch = intrinsic()
-
-  /** Every one on the network. */
-  val all: DeviceBatch<ManualHatch>
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): DeviceBatch<ManualHatch> = intrinsic()
 }
 
 /** A StructureMotionSensor. */
