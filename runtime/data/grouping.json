@@ -68,6 +68,7 @@
     },
     "HangarDoor": {
       "plural": "HangarDoors",
+      "extends": ["Door"],
       "members": {
         "Small": "StructureAirlockGate",
         "Medium":"StructureMediumHangerDoor",
@@ -397,13 +398,23 @@
     },
     "Airlock": {
       "plural": "Airlocks",
+      "extends": ["Door"],
       "members": {
         "Standard": "StructureAirlock",
         "Wide": "StructureAirlockWide"
       }
     },
+    "Door": {
+      "plural": "Doors",
+      "members": {
+        "Glass": "StructureGlassDoor",
+        "Blast": "StructureBlastDoor",
+        "Composite": "StructureCompositeDoor"
+      }
+    },
     "InteriorDoor": {
       "plural": "InteriorDoors",
+      "extends": ["Door"],
       "members": {
         "Glass": "StructureInteriorDoorGlass",
         "Padded": "StructureInteriorDoorPadded",
@@ -515,8 +526,11 @@
       "reason": "StructureAirlockGate is the game's Small Hangar Door, a 1 x 1 hangar door piece, not an airlock"
     },
     {
-      "prefabs": ["StructureGlassDoor", "StructureInteriorDoorGlass"],
-      "reason": "the Glass Door is a door of its own, like the Composite Door, and not one of the Interior Doors"
+      "prefabs": [
+        ["StructureGlassDoor", "StructureBlastDoor", "StructureCompositeDoor"],
+        ["StructureInteriorDoorGlass", "StructureInteriorDoorPadded", "StructureInteriorDoorPaddedThin", "StructureInteriorDoorTriangle"]
+      ],
+      "reason": "the Glass Door is one of the Doors, like the Blast and Composite Doors, and not one of the Interior Doors, which extend them"
     },
     {
       "prefabs": [

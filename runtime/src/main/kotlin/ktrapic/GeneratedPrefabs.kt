@@ -2297,23 +2297,7 @@ object CargoStorages {
 }
 
 /** A device that comes as several prefabs, each a nested class. */
-interface HangarDoor {
-  val Idle: Boolean
-
-  var Lock: Boolean
-
-  var Mode: Double
-
-  var On: Boolean
-
-  var Open: Boolean
-
-  val Power: Boolean
-
-  val RequiredPower: Double
-
-  var Setting: Double
-
+interface HangarDoor : Door {
   /** A StructureAirlockGate. */
   @PrefabName("StructureAirlockGate")
   class Small internal constructor() : TypedDevice(), HangarDoor {
@@ -9000,23 +8984,7 @@ object SpaceHelmets {
 }
 
 /** A device that comes as several prefabs, each a nested class. */
-interface Airlock {
-  val Idle: Boolean
-
-  var Lock: Boolean
-
-  var Mode: Double
-
-  var On: Boolean
-
-  var Open: Boolean
-
-  val Power: Boolean
-
-  val RequiredPower: Double
-
-  var Setting: Double
-
+interface Airlock : Door {
   /** A StructureAirlock. */
   @PrefabName("StructureAirlock")
   class Standard internal constructor() : TypedDevice(), Airlock {
@@ -9122,7 +9090,7 @@ object Airlocks {
 }
 
 /** A device that comes as several prefabs, each a nested class. */
-interface InteriorDoor {
+interface Door {
   val Idle: Boolean
 
   var Lock: Boolean
@@ -9139,6 +9107,162 @@ interface InteriorDoor {
 
   var Setting: Double
 
+  /** A StructureGlassDoor. */
+  @PrefabName("StructureGlassDoor")
+  class Glass internal constructor() : TypedDevice(), Door {
+    override val Idle: Boolean
+      get() = intrinsic()
+
+    override var Lock: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override var Mode: Double
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override var On: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override var Open: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override val Power: Boolean
+      get() = intrinsic()
+
+    override val RequiredPower: Double
+      get() = intrinsic()
+
+    override var Setting: Double
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    /** The StructureGlassDoor prefab. */
+    companion object : Prefab()
+  }
+
+  /** A StructureBlastDoor. */
+  @PrefabName("StructureBlastDoor")
+  class Blast internal constructor() : TypedDevice(), Door {
+    override val Idle: Boolean
+      get() = intrinsic()
+
+    override var Lock: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override var Mode: Double
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override var On: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override var Open: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override val Power: Boolean
+      get() = intrinsic()
+
+    override val RequiredPower: Double
+      get() = intrinsic()
+
+    override var Setting: Double
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    /** The StructureBlastDoor prefab. */
+    companion object : Prefab()
+  }
+
+  /** A StructureCompositeDoor. */
+  @PrefabName("StructureCompositeDoor")
+  class Composite internal constructor() : TypedDevice(), Door {
+    override val Idle: Boolean
+      get() = intrinsic()
+
+    override var Lock: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override var Mode: Double
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override var On: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override var Open: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override val Power: Boolean
+      get() = intrinsic()
+
+    override val RequiredPower: Double
+      get() = intrinsic()
+
+    override var Setting: Double
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    /** The StructureCompositeDoor prefab. */
+    companion object : Prefab()
+  }
+}
+
+/** The Door devices on the chip's network, by prefab. */
+object Doors {
+  /** The StructureGlassDoor devices on the chip's network. */
+  @PrefabName("StructureGlassDoor")
+  object Glass {
+    /** The device on [pin], as a StructureGlassDoor. */
+    fun at(pin: Device): Door.Glass = intrinsic()
+
+    /** Every one on the network. */
+    val all: DeviceBatch<Door.Glass>
+      get() = intrinsic()
+
+    /** Every one on the network named [name], which must be a constant. */
+    fun named(name: String): DeviceBatch<Door.Glass> = intrinsic()
+  }
+
+  /** The StructureBlastDoor devices on the chip's network. */
+  @PrefabName("StructureBlastDoor")
+  object Blast {
+    /** The device on [pin], as a StructureBlastDoor. */
+    fun at(pin: Device): Door.Blast = intrinsic()
+
+    /** Every one on the network. */
+    val all: DeviceBatch<Door.Blast>
+      get() = intrinsic()
+
+    /** Every one on the network named [name], which must be a constant. */
+    fun named(name: String): DeviceBatch<Door.Blast> = intrinsic()
+  }
+
+  /** The StructureCompositeDoor devices on the chip's network. */
+  @PrefabName("StructureCompositeDoor")
+  object Composite {
+    /** The device on [pin], as a StructureCompositeDoor. */
+    fun at(pin: Device): Door.Composite = intrinsic()
+
+    /** Every one on the network. */
+    val all: DeviceBatch<Door.Composite>
+      get() = intrinsic()
+
+    /** Every one on the network named [name], which must be a constant. */
+    fun named(name: String): DeviceBatch<Door.Composite> = intrinsic()
+  }
+}
+
+/** A device that comes as several prefabs, each a nested class. */
+interface InteriorDoor : Door {
   /** A StructureInteriorDoorGlass. */
   @PrefabName("StructureInteriorDoorGlass")
   class Glass internal constructor() : TypedDevice(), InteriorDoor {
@@ -13961,56 +14085,6 @@ object StructureBeacons {
   fun named(name: String): DeviceBatch<StructureBeacon> = intrinsic()
 }
 
-/** A StructureBlastDoor. */
-@PrefabName("StructureBlastDoor")
-class BlastDoor internal constructor() : TypedDevice() {
-  val Idle: Boolean
-    get() = intrinsic()
-
-  var Lock: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var Mode: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var On: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var Open: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val Power: Boolean
-    get() = intrinsic()
-
-  val RequiredPower: Double
-    get() = intrinsic()
-
-  var Setting: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  /** The StructureBlastDoor prefab. */
-  companion object : Prefab()
-}
-
-/** The StructureBlastDoor devices on the chip's network. */
-@PrefabName("StructureBlastDoor")
-object BlastDoors {
-  /** The device on [pin], as a StructureBlastDoor. */
-  fun at(pin: Device): BlastDoor = intrinsic()
-
-  /** Every one on the network. */
-  val all: DeviceBatch<BlastDoor>
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): DeviceBatch<BlastDoor> = intrinsic()
-}
-
 /** A StructureBlockBed. */
 @PrefabName("StructureBlockBed")
 class BlockBed internal constructor() : TypedDevice() {
@@ -14921,56 +14995,6 @@ object CombustionDeepMiners {
     val slots: Slots<SlotBatch<DataDiskSlot>>
       get() = intrinsic()
   }
-}
-
-/** A StructureCompositeDoor. */
-@PrefabName("StructureCompositeDoor")
-class CompositeDoor internal constructor() : TypedDevice() {
-  val Idle: Boolean
-    get() = intrinsic()
-
-  var Lock: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var Mode: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var On: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var Open: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val Power: Boolean
-    get() = intrinsic()
-
-  val RequiredPower: Double
-    get() = intrinsic()
-
-  var Setting: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  /** The StructureCompositeDoor prefab. */
-  companion object : Prefab()
-}
-
-/** The StructureCompositeDoor devices on the chip's network. */
-@PrefabName("StructureCompositeDoor")
-object CompositeDoors {
-  /** The device on [pin], as a StructureCompositeDoor. */
-  fun at(pin: Device): CompositeDoor = intrinsic()
-
-  /** Every one on the network. */
-  val all: DeviceBatch<CompositeDoor>
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): DeviceBatch<CompositeDoor> = intrinsic()
 }
 
 /** A StructureCompositeWindowShutterController. */
@@ -16171,56 +16195,6 @@ object GasSensors {
 
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): DeviceBatch<GasSensor> = intrinsic()
-}
-
-/** A StructureGlassDoor. */
-@PrefabName("StructureGlassDoor")
-class GlassDoor internal constructor() : TypedDevice() {
-  val Idle: Boolean
-    get() = intrinsic()
-
-  var Lock: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var Mode: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var On: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var Open: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val Power: Boolean
-    get() = intrinsic()
-
-  val RequiredPower: Double
-    get() = intrinsic()
-
-  var Setting: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  /** The StructureGlassDoor prefab. */
-  companion object : Prefab()
-}
-
-/** The StructureGlassDoor devices on the chip's network. */
-@PrefabName("StructureGlassDoor")
-object GlassDoors {
-  /** The device on [pin], as a StructureGlassDoor. */
-  fun at(pin: Device): GlassDoor = intrinsic()
-
-  /** Every one on the network. */
-  val all: DeviceBatch<GlassDoor>
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): DeviceBatch<GlassDoor> = intrinsic()
 }
 
 /** A StructureGovernedGasEngine. */

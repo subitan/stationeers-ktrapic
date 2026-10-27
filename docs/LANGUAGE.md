@@ -194,6 +194,8 @@ this way wherever the game has one device in several sizes, fluids or styles: `V
 `DirectHeatExchangers.LargeGasToLiquid`. A family that is a special case of another extends its
 interface: an elevator level is a shaft with doors and power, so `ElevatorLevel` extends
 `ElevatorShaft`, and a function taking an `ElevatorShaft` takes an `ElevatorLevels.Standard` too.
+Likewise interior doors, hangar doors and airlocks extend `Door`, the family of the glass, blast
+and composite doors, so `inline fun close(door: Door)` closes any of them.
 The [device reference](DEVICES.md#families) lists every family and its members; every other prefab
 has its own entry point.
 

@@ -185,6 +185,28 @@ class TypedDeviceTest {
   }
 
   @Test
+  fun `every door is a Door`() {
+    val source =
+        """
+        inline fun close(door: Door) {
+          door.Open = false
+        }
+        close(Doors.Glass.at(d0))
+        close(InteriorDoors.Padded.at(d0))
+        close(HangarDoors.Large.at(d0))
+        close(Airlocks.Wide.at(d0))
+        db.Setting = 1.0
+        """
+    val devices =
+        run(source) {
+          listOf(FakeDevice(), FakeDevice("StructureGlassDoor").apply { this["Open"] = 1.0 })
+        }
+
+    assertThat(devices[1]["Open"]).isEqualTo(0.0)
+    assertThat(devices[0]["Setting"]).isEqualTo(1.0)
+  }
+
+  @Test
   fun `a logic type the prefab lacks is an error`() {
     val error = error("GrowLights.at(d0).Charge")
 
