@@ -64,6 +64,11 @@ object ViewsGenerator {
       append("  /** The substances the device reports, a set known when compiled. */\n")
       append("  val keys: Set<Substance>\n")
       append("    get() = intrinsic()\n")
+      append("\n")
+      append(
+          "  /** Each substance the device reports with its ratio: `for ((gas, ratio) in ratios)`. */\n"
+      )
+      append("  operator fun iterator(): Iterator<Map.Entry<Substance, Double>> = intrinsic()\n")
       append("}\n")
       append("\n")
       append("/** A vector a device reports, by axis. */\n")

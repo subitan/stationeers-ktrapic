@@ -211,12 +211,110 @@ class StaticSetTest {
   }
 
   @Test
+  fun `a var never reassigned holds what a val holds, and folds as one`() {
+    val code =
+        compiled(
+                """
+                var gases = setOf(Substance.Oxygen, Substance.Nitrogen)
+                var sensor = GasSensors.at(d0)
+                var outlet = Filtrations.at(d1).Ports.Output
+                var scale = 2.0
+                var total = 0.0
+                for (gas in gases) total += sensor.Ratios[gas] * scale + outlet.Ratios[gas]
+                db.Setting = total
+                """
+            )
+            .code
+
+    assertThat(loads(code))
+        .containsExactly("RatioOxygen", "RatioOxygenOutput", "RatioNitrogen", "RatioNitrogenOutput")
+        .inOrder()
+    // scale is the constant 2, multiplied in place; it gets no register of its own.
+    assertThat(code).contains("mul")
+    assertThat(
+            code.lines().none { it == "move r1 2" || it.endsWith(" 2") && it.startsWith("move") }
+        )
+        .isTrue()
+  }
+
+  @Test
+  fun `a loop over a view's Ratios gives each substance it reports with its ratio`() {
+    val source =
+        """
+        var other = 0.0
+        for ((gas, ratio) in GasSensors.at(d0).Ratios) {
+          if (gas == Substance.Oxygen || gas == Substance.Nitrogen) continue
+          other += ratio
+        }
+        var oxygen = 0.0
+        for (entry in GasSensors.at(d0).Ratios) {
+          if (entry.key == Substance.Oxygen) oxygen = entry.value
+        }
+        db.Setting = other
+        db.Ratio = oxygen
+        """
+    val code = compiled(source).code
+
+    // Oxygen and nitrogen are skipped when compiled; the second loop reads only oxygen.
+    assertThat(loads(code).count { it == "RatioOxygen" }).isEqualTo(1)
+    assertThat(loads(code)).doesNotContain("RatioNitrogen")
+    assertThat(loads(code)).hasSize(27)
+    // A gas sensor reports every substance's ratio; those not set here are 0.
+    val db =
+        run(
+            source,
+            {
+              sensor().apply {
+                for (gas in ALL_SUBSTANCES) if ("Ratio$gas" !in logic) this["Ratio$gas"] = 0.0
+              }
+            },
+        )
+    assertThat(db["Setting"]).isWithin(1e-9).of(0.05)
+    assertThat(db["Ratio"]).isWithin(1e-9).of(0.2)
+  }
+
+  @Test
   fun `what isn't known when compiled is an error`() {
     assertThat(error("val x = d0.Mode\nval s = setOf(1.0, x)").message).contains("constants")
-    assertThat(error("var s = setOf(1, 2)").message).contains("held in a val")
+    assertThat(error("var s = setOf(1, 2)\ns = setOf(3)").message).contains("never reassigned")
     assertThat(error("for (s in LogicType.entries) db.Setting = 1.0").message)
         .contains("Substance.entries")
     assertThat(error("val s = setOf(1, 2)\ndb.Setting = s.first().toDouble()").message)
         .contains("first")
+  }
+
+  private companion object {
+    /** Every substance with a ratio, as `Substance` declares them. */
+    val ALL_SUBSTANCES =
+        listOf(
+            "Oxygen",
+            "CarbonDioxide",
+            "Nitrogen",
+            "Pollutant",
+            "Methane",
+            "Water",
+            "NitrousOxide",
+            "LiquidNitrogen",
+            "LiquidOxygen",
+            "LiquidMethane",
+            "Steam",
+            "LiquidCarbonDioxide",
+            "LiquidPollutant",
+            "LiquidNitrousOxide",
+            "Hydrogen",
+            "LiquidHydrogen",
+            "PollutedWater",
+            "Hydrazine",
+            "LiquidHydrazine",
+            "LiquidAlcohol",
+            "Helium",
+            "LiquidSodiumChloride",
+            "Silanol",
+            "LiquidSilanol",
+            "HydrochloricAcid",
+            "LiquidHydrochloricAcid",
+            "Ozone",
+            "LiquidOzone",
+        )
   }
 }

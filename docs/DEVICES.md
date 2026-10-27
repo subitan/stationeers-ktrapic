@@ -75,6 +75,8 @@ class Ratios {
   operator fun get(substance: Substance): Double
   /** The substances the device reports, a set known when compiled. */
   val keys: Set<Substance>
+  /** Each substance the device reports with its ratio: `for ((gas, ratio) in ratios)`. */
+  operator fun iterator(): Iterator<Map.Entry<Substance, Double>>
 }
 
 /** A vector a device reports, by axis. */

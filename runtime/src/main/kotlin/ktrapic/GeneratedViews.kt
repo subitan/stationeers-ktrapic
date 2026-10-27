@@ -82,6 +82,9 @@ class Ratios internal constructor() {
   /** The substances the device reports, a set known when compiled. */
   val keys: Set<Substance>
     get() = intrinsic()
+
+  /** Each substance the device reports with its ratio: `for ((gas, ratio) in ratios)`. */
+  operator fun iterator(): Iterator<Map.Entry<Substance, Double>> = intrinsic()
 }
 
 /** A vector a device reports, by axis. */
