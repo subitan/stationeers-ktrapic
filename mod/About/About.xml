@@ -17,6 +17,11 @@ On first use the mod downloads the compiler and a Java runtime for it (about 110
 This is a StationeersLaunchPad plugin mod and needs the IC10 Editor mod.
 See: https://github.com/StationeersLaunchPad/StationeersLaunchPad
 
+[b]Credits[/b]
+KTrapIC is modelled on aproposmath's PyTrapIC, which does the same for Python, and is built on aproposmath's IC10 Editor mod. Thank you to aproposmath for both.
+PyTrapIC: https://github.com/aproposmath/stationeers-pytrapic
+IC10 Editor: https://github.com/aproposmath/StationeersIC10Editor
+
 Source code and language guide: https://github.com/subitan/stationeers-ktrapic
   </Description>
   <Tags>

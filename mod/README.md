@@ -6,6 +6,13 @@ a "Kotlin" language to it, so chips can be programmed in KTrapIC's Kotlin (see t
 [PyTrapIC](https://github.com/aproposmath/stationeers-pytrapic)'s plugin, which does the same for
 Python.
 
+It is modelled on PyTrapIC's plugin and is built on and needs the IC10 Editor, both by
+[aproposmath](https://github.com/aproposmath), and tries to behave and look like PyTrapIC in game:
+the same daemon protocol, the same compile-as-you-type preview, and the same export to the chip.
+Thank you to aproposmath for both, and for the
+[modding template](https://github.com/aproposmath/stationeers-modding-template) this plugin is built
+with.
+
 ## Installing
 
 KTrapIC is a [StationeersLaunchPad](https://github.com/StationeersLaunchPad/StationeersLaunchPad)

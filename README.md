@@ -3,6 +3,25 @@
 A system to allow IC10 programming using a constrained Kotlin (inspired by
 [PyTrapIC](https://github.com/aproposmath/stationeers-pytrapic)).
 
+## Credits
+
+KTrapIC exists because of [aproposmath](https://github.com/aproposmath)'s work, and owes it a great
+deal:
+
+- **[PyTrapIC](https://github.com/aproposmath/stationeers-pytrapic)** is the project this one
+  follows. Its idea of writing chips in a familiar language and compiling them to IC10, its compile
+  options and result format, its daemon protocol, and its IC10 Editor plugin are the model for
+  KTrapIC's; KTrapIC aims to behave and look like PyTrapIC in game, with Kotlin in place of
+  Python. Its generated device data is, for now, the source of KTrapIC's (MIT License; see
+  [Game data](#game-data)).
+- **[IC10 Editor](https://github.com/aproposmath/StationeersIC10Editor)** is the mod KTrapIC's
+  plugin is built on and needs: it provides the editor, the language plugins and the in-game
+  experience that KTrapIC adds a language to.
+- **[stationeers-modding-template](https://github.com/aproposmath/stationeers-modding-template)**
+  is how the plugin is built.
+
+Thank you.
+
 KTrapIC compiles a constrained subset of Kotlin to IC10, the assembly language of
 [Stationeers](https://store.steampowered.com/app/544550/Stationeers/)' programmable chips.
 It is at an early stage: programs using values, loops, conditions, functions, the devices on a
