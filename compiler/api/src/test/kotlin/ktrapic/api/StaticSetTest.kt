@@ -124,7 +124,7 @@ class StaticSetTest {
                 """
                 var total = 0.0
                 for (s in GasSensors.at(d0).Ratios.keys) total += GasSensors.at(d0).Ratios[s]
-                for (s in Filtrations.at(d1).Ports.Output.Ratios.keys) total += Filtrations.at(d1).Ports.Output.Ratios[s]
+                for (s in Filtrations.Gas.at(d1).Ports.Output.Ratios.keys) total += Filtrations.Gas.at(d1).Ports.Output.Ratios[s]
                 db.Setting = total + Substance.entries.size
                 """
             )
@@ -278,7 +278,7 @@ class StaticSetTest {
             "var gases = setOf(Substance.Oxygen)",
             "var sensor = GasSensors.at(d0)",
             "var pin = d0",
-            "var outlet = Filtrations.at(d1).Ports.Output",
+            "var outlet = Filtrations.Gas.at(d1).Ports.Output",
             "var gas = Substance.Oxygen",
             "var lights = GrowLights.named(\"P\")",
             "var slot = d0.slots[0]",

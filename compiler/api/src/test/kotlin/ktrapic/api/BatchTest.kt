@@ -100,8 +100,8 @@ class BatchTest {
           it.On = level > 1.0
           it.Lock = true
         }
-        GasTankStorages.all.forEach { it.GasCanister.Open = true }
-        GasTankStorages.all.forEach { it.slots[0].Open = false }
+        TankStorages.Gas.all.forEach { it.GasCanister.Open = true }
+        TankStorages.Gas.all.forEach { it.slots[0].Open = false }
         LedDisplays.Large.all.forEach { it.Text = "OK" }
         """
     val code = compiled(source).code
@@ -240,8 +240,8 @@ class BatchTest {
   fun `a batch's slots read with lbs and lbns`() {
     val source =
         """
-        db.Setting = BatteryChargers.all.slots[0].map { it.Charge }.average()
-        db.Ratio = BatteryChargers.named("North").slots[1].maxOf { it.Charge }
+        db.Setting = BatteryChargers.Standard.all.slots[0].map { it.Charge }.average()
+        db.Ratio = BatteryChargers.Standard.named("North").slots[1].maxOf { it.Charge }
         """
     val code = compiled(source).code
 
@@ -267,7 +267,7 @@ class BatchTest {
         val lights = GrowLights.named("Potatoes")
         lights.forEach { it.On = false }
         var i = 1
-        val charges = BatteryChargers.all.slots[i]
+        val charges = BatteryChargers.Standard.all.slots[i]
         i = 0
         db.Setting = charges.map { it.Charge }.sum()
         """
@@ -296,8 +296,8 @@ class BatchTest {
                 (2 to 41),
             "val x = 1\nGrowLights.all.forEach { val v = true; it.On = v }" to (2 to 26),
             "var n = 0.0\nGrowLights.all.forEach { n = 1.0 }" to (2 to 26),
-            "val x = 1\nGasTankStorages.all.forEach { it.slots[it.ReferenceId.toInt()].Open = true }" to
-                (2 to 31),
+            "val x = 1\nTankStorages.Gas.all.forEach { it.slots[it.ReferenceId.toInt()].Open = true }" to
+                (2 to 32),
             "val x = 1\nBatteries.Small.all.forEach { it.On = Batteries.Small.all.sumOf { b -> it.Charge } > 0 }" to
                 (2 to 39),
             "val x = 1\nval f = { l: GrowLight -> l.On = true }\nGrowLights.all.forEach(f)" to
@@ -306,12 +306,12 @@ class BatchTest {
             // A lambda that can't return, nor run a written value or slot number more than once.
             "val x = 1\nGrowLights.all.forEach {\n  return@forEach\n  it.On = true\n}" to (3 to 3),
             "var n = 0\nGrowLights.all.forEach { it.Lock = n++ > 100 }" to (2 to 36),
-            "var n = 0\nGasTankStorages.all.forEach { it.slots[n++].Open = true }" to (2 to 40),
+            "var n = 0\nTankStorages.Gas.all.forEach { it.slots[n++].Open = true }" to (2 to 41),
             "fun w(): Boolean {\n  yield()\n  return true\n}\nGrowLights.all.forEach { it.On = w() }" to
                 (5 to 34),
             // The game has no named batch slot write, nor count of a named batch.
-            "val x = 1\nGasTankStorages.named(\"N\").forEach { it.slots[0].Open = true }" to
-                (2 to 50),
+            "val x = 1\nTankStorages.Gas.named(\"N\").forEach { it.slots[0].Open = true }" to
+                (2 to 51),
             "val x = 1\nval c = GrowLights.named(\"N\").count()" to (2 to 31),
             // A batch is not a value, nor are its other members, and a map can't be held.
             "val x = 1\nval b = if (db.On) GrowLights.all else GrowLights.named(\"x\")" to
@@ -330,7 +330,7 @@ class BatchTest {
     for ((source, message) in
         listOf(
             "var n = 0\nGrowLights.all.forEach { it.Lock = n++ > 100 }" to "computed once",
-            "var n = 0\nGasTankStorages.all.forEach { it.slots[n++].Open = true }" to
+            "var n = 0\nTankStorages.Gas.all.forEach { it.slots[n++].Open = true }" to
                 "computed once",
             "fun on(): Boolean {\n  db.On = true\n  return true\n}\nGrowLights.all.forEach { it.On = on() }" to
                 "computed once",
@@ -338,7 +338,7 @@ class BatchTest {
                 "  return true\n}\nGrowLights.all.forEach { it.On = bump() }" to "computed once",
             "fun w(): Boolean {\n  yield()\n  return true\n}\nGrowLights.all.forEach { it.On = w() }" to
                 "computed once",
-            "fun n(): Int {\n  sleep(1)\n  return 0\n}\nGasTankStorages.all.forEach { it.slots[n()].Open = true }" to
+            "fun n(): Int {\n  sleep(1)\n  return 0\n}\nTankStorages.Gas.all.forEach { it.slots[n()].Open = true }" to
                 "computed once",
             "fun g(): Boolean {\n  GrowLights.all.forEach { it.Lock = true }\n  return true\n}\n" +
                 "GrowLights.all.forEach { it.On = g() }" to "computed once",

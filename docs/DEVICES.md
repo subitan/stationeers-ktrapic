@@ -7,7 +7,7 @@ The typed devices, slots and enums a program can name, as Kotlin declarations: 3
 - [Using a device](#using-a-device)
 - [Views](#views)
 - [Families](#families)
-- Devices: [A](#a) · [B](#b) · [C](#c) · [D](#d) · [E](#e) · [F](#f) · [G](#g) · [H](#h) · [I](#i) · [J](#j) · [K](#k) · [L](#l) · [M](#m) · [N](#n) · [O](#o) · [P](#p) · [R](#r) · [S](#s) · [T](#t) · [U](#u) · [V](#v) · [W](#w)
+- Devices: [A](#a) · [B](#b) · [C](#c) · [D](#d) · [E](#e) · [F](#f) · [G](#g) · [H](#h) · [I](#i) · [J](#j) · [K](#k) · [L](#l) · [M](#m) · [N](#n) · [O](#o) · [P](#p) · [R](#r) · [S](#s) · [T](#t) · [U](#u) · [W](#w)
 - [Slots](#slots)
 - [Enums](#enums)
 
@@ -28,7 +28,7 @@ object GrowLights {
 }
 ```
 
-For a device with slots, the batch from `all` or `named` also has `slots`, a slot of every one in the batch: `BatteryChargers.all.slots[0]`.
+For a device with slots, the batch from `all` or `named` also has `slots`, a slot of every one in the batch: `BatteryChargers.Standard.all.slots[0]`.
 
 A device's logic types are its properties: a `var` can be written, a `val` only read. Every typed device also has `val PrefabHash: Prefab`, `val NameHash: Double` and `val ReferenceId: Double`. Any device can also be used untyped, as `d0` to `d5` or `db`, with every logic type.
 
@@ -106,6 +106,135 @@ class Transfer {
 
 A family is a device that comes as several prefabs. Its interface holds the logic types every member has, so a function can take any of them; each member is a nested class, with an entry point nested the same way (`Batteries.Small`).
 
+### Airlock
+
+```kotlin
+interface Airlock {
+  val Idle: Boolean
+  var Lock: Boolean
+  var Mode: Double
+  var On: Boolean
+  var Open: Boolean
+  val Power: Boolean
+  val RequiredPower: Double
+  var Setting: Double
+
+  /** StructureAirlock. Entry point: Airlocks.Standard. */
+  class Standard : TypedDevice, Airlock
+
+  /** StructureAirlockWide. Entry point: Airlocks.Wide. */
+  class Wide : TypedDevice, Airlock
+}
+```
+
+### AngleGrinder
+
+```kotlin
+interface AngleGrinder {
+  var Activate: Boolean
+  val Power: Boolean
+
+  /** ItemAngleGrinder. Entry point: AngleGrinders.Standard. */
+  class Standard : TypedDevice, AngleGrinder {
+    val Battery: ItemBatterySlot // slots[0]
+    val slots: Slots<ItemBatterySlot>
+  }
+
+  /** ItemEmergencyAngleGrinder. Entry point: AngleGrinders.Emergency. */
+  class Emergency : TypedDevice, AngleGrinder {
+    val Battery: ItemBatterySlot // slots[0]
+    val slots: Slots<ItemBatterySlot>
+  }
+
+  /** ItemMKIIAngleGrinder. Entry point: AngleGrinders.MkII. */
+  class MkII : TypedDevice, AngleGrinder {
+    val Battery: ItemBatterySlot // slots[0]
+    val slots: Slots<ItemBatterySlot>
+  }
+}
+```
+
+### ArcWelder
+
+```kotlin
+interface ArcWelder {
+  var Activate: Boolean
+  val Power: Boolean
+
+  /** ItemArcWelder. Entry point: ArcWelders.Standard. */
+  class Standard : TypedDevice, ArcWelder {
+    val Battery: ItemBatterySlot // slots[0]
+    val slots: Slots<ItemBatterySlot>
+  }
+
+  /** ItemEmergencyArcWelder. Entry point: ArcWelders.Emergency. */
+  class Emergency : TypedDevice, ArcWelder {
+    val Battery: ItemBatterySlot // slots[0]
+    val slots: Slots<ItemBatterySlot>
+  }
+
+  /** ItemMKIIArcWelder. Entry point: ArcWelders.MkII. */
+  class MkII : TypedDevice, ArcWelder {
+    val Battery: ItemBatterySlot // slots[0]
+    val slots: Slots<ItemBatterySlot>
+  }
+}
+```
+
+### AreaPowerControl
+
+```kotlin
+interface AreaPowerControl {
+  val Charge: Double
+  val Error: Boolean
+  var Lock: Boolean
+  val Maximum: Double
+  var Mode: Double
+  var On: Boolean
+  var Open: Boolean
+  val Power: Boolean
+  val PowerActual: Double
+  val PowerPotential: Double
+  val Ratio: Double
+  val RequiredPower: Double
+
+  /** StructureAreaPowerControl. Entry point: AreaPowerControls.Standard. */
+  class Standard : TypedDevice, AreaPowerControl {
+    val Battery: BatterySlot // slots[0]
+    val DataDisk: DataDiskSlot // slots[1]
+    val slots: Slots<CommonSlot>
+  }
+
+  /** StructureAreaPowerControlReversed. Entry point: AreaPowerControls.Reversed. */
+  class Reversed : TypedDevice, AreaPowerControl {
+    val Battery: BatterySlot // slots[0]
+    val DataDisk: DataDiskSlot // slots[1]
+    val slots: Slots<CommonSlot>
+  }
+}
+```
+
+### BackPressureRegulator
+
+```kotlin
+interface BackPressureRegulator {
+  val Error: Boolean
+  var Lock: Boolean
+  val Maximum: Double
+  var On: Boolean
+  val Power: Boolean
+  val Ratio: Double
+  val RequiredPower: Double
+  var Setting: Double
+
+  /** StructureBackPressureRegulator. Entry point: BackPressureRegulators.Gas. */
+  class Gas : TypedDevice, BackPressureRegulator
+
+  /** StructureBackLiquidPressureRegulator. Entry point: BackPressureRegulators.Liquid. */
+  class Liquid : TypedDevice, BackPressureRegulator
+}
+```
+
 ### Battery
 
 ```kotlin
@@ -139,6 +268,638 @@ interface Battery {
 }
 ```
 
+### BatteryCell
+
+```kotlin
+interface BatteryCell {
+  var Mode: Double
+
+  /** ItemBatteryCell. Entry point: BatteryCells.Small. */
+  class Small : TypedDevice, BatteryCell
+
+  /** ItemBatteryCellLarge. Entry point: BatteryCells.Large. */
+  class Large : TypedDevice, BatteryCell
+
+  /** ItemBatteryCellNuclear. Entry point: BatteryCells.Nuclear. */
+  class Nuclear : TypedDevice, BatteryCell
+}
+```
+
+### BatteryCharger
+
+```kotlin
+interface BatteryCharger {
+  var Activate: Boolean
+  val Error: Boolean
+  var On: Boolean
+  val Power: Boolean
+  val RequiredPower: Double
+
+  /** StructureBatteryCharger. Entry point: BatteryChargers.Standard. */
+  class Standard : TypedDevice, BatteryCharger {
+    val slots: Slots<BatterySlot>
+  }
+
+  /** StructureBatteryChargerSmall. Entry point: BatteryChargers.Small. */
+  class Small : TypedDevice, BatteryCharger {
+    val slots: Slots<BatterySlot>
+  }
+}
+```
+
+### Bench
+
+```kotlin
+interface Bench {
+  val Error: Boolean
+  var On: Boolean
+  val Power: Boolean
+  val RequiredPower: Double
+
+  /** StructureBench. Entry point: Benches.Powered. */
+  class Powered : TypedDevice, Bench {
+    val Appliance1: ApplianceSlot // slots[0]
+    val Appliance2: ApplianceSlot // slots[1]
+    val slots: Slots<ApplianceSlot>
+  }
+
+  /** StructureBench1. Entry point: Benches.CounterStyle. */
+  class CounterStyle : TypedDevice, Bench {
+    val Appliance1: ApplianceSlot // slots[0]
+    val Appliance2: ApplianceSlot // slots[1]
+    val slots: Slots<ApplianceSlot>
+  }
+
+  /** StructureBench2. Entry point: Benches.HighTechStyle. */
+  class HighTechStyle : TypedDevice, Bench {
+    val Appliance1: ApplianceSlot // slots[0]
+    val Appliance2: ApplianceSlot // slots[1]
+    val slots: Slots<ApplianceSlot>
+  }
+
+  /** StructureBench3. Entry point: Benches.FrameStyle. */
+  class FrameStyle : TypedDevice, Bench {
+    val Appliance1: ApplianceSlot // slots[0]
+    val Appliance2: ApplianceSlot // slots[1]
+    val slots: Slots<ApplianceSlot>
+  }
+
+  /** StructureBench4. Entry point: Benches.WorkbenchStyle. */
+  class WorkbenchStyle : TypedDevice, Bench {
+    val Appliance1: ApplianceSlot // slots[0]
+    val Appliance2: ApplianceSlot // slots[1]
+    val slots: Slots<ApplianceSlot>
+  }
+}
+```
+
+### CapsuleTank
+
+```kotlin
+interface CapsuleTank {
+  val Combustion: Boolean
+  val Maximum: Double
+  val Pressure: Double
+  val Ratio: Double
+  var Setting: Double
+  val Temperature: Double
+  val TotalMoles: Double
+  val Volume: Double
+  val VolumeOfLiquid: Double
+
+  /** StructureCapsuleTankGas. Entry point: CapsuleTanks.SmallGas. */
+  class SmallGas : TypedDevice, CapsuleTank {
+    val Ports: Ports
+    val Ratios: Ratios
+  }
+
+  /** StructureCapsuleTankLiquid. Entry point: CapsuleTanks.SmallLiquid. */
+  class SmallLiquid : TypedDevice, CapsuleTank {
+    val Ports: Ports
+    val Ratios: Ratios
+  }
+
+  /** StructureMediumRocketGasFuelTank. Entry point: CapsuleTanks.MediumGas. */
+  class MediumGas : TypedDevice, CapsuleTank {
+    val Ports: Ports
+    val Ratios: Ratios
+  }
+
+  /** StructureMediumRocketLiquidFuelTank. Entry point: CapsuleTanks.MediumLiquid. */
+  class MediumLiquid : TypedDevice, CapsuleTank {
+    val Ports: Ports
+    val Ratios: Ratios
+  }
+
+  /** StructureLargeRocketGasFuelTank. Entry point: CapsuleTanks.LargeGas. */
+  class LargeGas : TypedDevice, CapsuleTank {
+    val Ports: Ports
+    val Ratios: Ratios
+  }
+
+  /** StructureLargeRocketLiquidFuelTank. Entry point: CapsuleTanks.LargeLiquid. */
+  class LargeLiquid : TypedDevice, CapsuleTank {
+    val Ports: Ports
+    val Ratios: Ratios
+  }
+}
+```
+
+### CargoStorage
+
+```kotlin
+interface CargoStorage {
+  var ClearMemory: Boolean
+  val Error: Boolean
+  var Lock: Boolean
+  var On: Boolean
+  var Open: Boolean
+  val Power: Boolean
+  val Quantity: Double
+  val Ratio: Double
+  val RequiredPower: Double
+
+  /** StructureCargoStorageSmall. Entry point: CargoStorages.Small. */
+  class Small : TypedDevice, CargoStorage {
+    val Export: Transfer
+    val Import: Transfer
+    val slots: Slots<DataDiskSlot>
+  }
+
+  /** StructureCargoStorageMedium. Entry point: CargoStorages.Medium. */
+  class Medium : TypedDevice, CargoStorage {
+    val Export: Transfer
+    val Import: Transfer
+    val slots: Slots<DataDiskSlot>
+  }
+}
+```
+
+### CircuitHousing
+
+```kotlin
+interface CircuitHousing {
+  val Error: Boolean
+  var LineNumber: Double
+  var Mode: Double
+  var On: Boolean
+  val Power: Boolean
+  val RequiredPower: Double
+  var Setting: Double
+  val StackSize: Double
+
+  /** StructureCircuitHousing. Entry point: CircuitHousings.Standard. */
+  class Standard : TypedDevice, CircuitHousing {
+    val ProgrammableChip: CommonSlot // slots[0]
+    val slots: Slots<CommonSlot>
+  }
+
+  /** StructureCircuitHousingCompact. Entry point: CircuitHousings.Compact. */
+  class Compact : TypedDevice, CircuitHousing {
+    val ProgrammableChip: ProgrammableChipSlot // slots[0]
+    val slots: Slots<ProgrammableChipSlot>
+  }
+
+  /** StructureRocketCircuitHousing. Entry point: CircuitHousings.Rocket. */
+  class Rocket : TypedDevice, CircuitHousing {
+    val ProgrammableChip: ProgrammableChipSlot // slots[0]
+    val slots: Slots<ProgrammableChipSlot>
+  }
+}
+```
+
+### Computer
+
+```kotlin
+interface Computer {
+  val Error: Boolean
+  var Lock: Boolean
+  var On: Boolean
+  var Open: Boolean
+  val Power: Boolean
+  val RequiredPower: Double
+
+  /** StructureComputer. Entry point: Computers.Modern. */
+  class Modern : TypedDevice, Computer {
+    val Motherboard: DataDiskSlot // slots[2]
+    val slots: Slots<DataDiskSlot>
+  }
+
+  /** StructureComputerUpright. Entry point: Computers.Retro. */
+  class Retro : TypedDevice, Computer {
+    val Motherboard: DataDiskSlot // slots[2]
+    val slots: Slots<DataDiskSlot>
+  }
+
+  /** StructureComputerBigScreen. Entry point: Computers.BigScreen. */
+  class BigScreen : TypedDevice, Computer {
+    val Motherboard: DataDiskSlot // slots[0]
+    val slots: Slots<DataDiskSlot>
+  }
+
+  /** StructureComputerBigScreenWallMounted. Entry point: Computers.BigScreenWallMounted. */
+  class BigScreenWallMounted : TypedDevice, Computer {
+    val Motherboard: DataDiskSlot // slots[0]
+    val slots: Slots<DataDiskSlot>
+  }
+}
+```
+
+### Console
+
+```kotlin
+interface Console {
+  var Activate: Boolean
+  val Error: Boolean
+  var On: Boolean
+  var Open: Boolean
+  val Power: Boolean
+  val RequiredPower: Double
+  val Setting: Double
+
+  /** StructureConsole. Entry point: Consoles.Standard. */
+  class Standard : TypedDevice, Console {
+    val Circuitboard: CircuitboardSlot // slots[0]
+    val slots: Slots<CircuitboardSlot>
+  }
+
+  /** StructureConsoleDual. Entry point: Consoles.Dual. */
+  class Dual : TypedDevice, Console {
+    val Circuitboard: CircuitboardSlot // slots[0]
+    val slots: Slots<CircuitboardSlot>
+  }
+
+  /** StructureConsoleMonitor. Entry point: Consoles.Monitor. */
+  class Monitor : TypedDevice, Console {
+    val Circuitboard: CircuitboardSlot // slots[0]
+    val slots: Slots<CircuitboardSlot>
+  }
+}
+```
+
+### DigitalValve
+
+```kotlin
+interface DigitalValve {
+  val Error: Boolean
+  var Lock: Boolean
+  val Maximum: Double
+  var On: Boolean
+  val Power: Boolean
+  val Ratio: Double
+  val RequiredPower: Double
+  var Setting: Double
+
+  /** StructureDigitalValve. Entry point: DigitalValves.Gas. */
+  class Gas : TypedDevice, DigitalValve
+
+  /** StructureWaterDigitalValve. Entry point: DigitalValves.Liquid. */
+  class Liquid : TypedDevice, DigitalValve
+}
+```
+
+### DirectHeatExchanger
+
+```kotlin
+interface DirectHeatExchanger {
+  val Maximum: Double
+  val Ratio: Double
+  var Setting: Double
+
+  /** StructureSmallDirectHeatExchangeGastoGas. Entry point: DirectHeatExchangers.SmallGasToGas. */
+  class SmallGasToGas : TypedDevice, DirectHeatExchanger
+
+  /** StructureSmallDirectHeatExchangeLiquidtoGas. Entry point: DirectHeatExchangers.SmallLiquidToGas. */
+  class SmallLiquidToGas : TypedDevice, DirectHeatExchanger
+
+  /** StructureSmallDirectHeatExchangeLiquidtoLiquid. Entry point: DirectHeatExchangers.SmallLiquidToLiquid. */
+  class SmallLiquidToLiquid : TypedDevice, DirectHeatExchanger
+
+  /** StructureLargeDirectHeatExchangeGastoGas. Entry point: DirectHeatExchangers.LargeGasToGas. */
+  class LargeGasToGas : TypedDevice, DirectHeatExchanger
+
+  /** StructureLargeDirectHeatExchangeGastoLiquid. Entry point: DirectHeatExchangers.LargeGasToLiquid. */
+  class LargeGasToLiquid : TypedDevice, DirectHeatExchanger
+
+  /** StructureLargeDirectHeatExchangeLiquidtoLiquid. Entry point: DirectHeatExchangers.LargeLiquidToLiquid. */
+  class LargeLiquidToLiquid : TypedDevice, DirectHeatExchanger
+
+  /** StructureSuperLargeDirectHeatExchangeGastoGas. Entry point: DirectHeatExchangers.SuperLargeGasToGas. */
+  class SuperLargeGasToGas : TypedDevice, DirectHeatExchanger
+
+  /** StructureSuperLargeDirectHeatExchangeGastoLiquid. Entry point: DirectHeatExchangers.SuperLargeGasToLiquid. */
+  class SuperLargeGasToLiquid : TypedDevice, DirectHeatExchanger
+
+  /** StructureSuperLargeDirectHeatExchangeLiquidToLiquid. Entry point: DirectHeatExchangers.SuperLargeLiquidToLiquid. */
+  class SuperLargeLiquidToLiquid : TypedDevice, DirectHeatExchanger
+}
+```
+
+### ElevatorLevel
+
+```kotlin
+interface ElevatorLevel {
+  var Activate: Boolean
+  var ElevatorLevel: Double
+  var ElevatorSpeed: Double
+  val Error: Boolean
+  var Lock: Boolean
+  var On: Boolean
+  var Open: Boolean
+  val Power: Boolean
+  val RequiredPower: Double
+
+  /** StructureElevatorLevelIndustrial. Entry point: ElevatorLevels.Standard. */
+  class Standard : TypedDevice, ElevatorLevel
+
+  /** StructureElevatorLevelFront. Entry point: ElevatorLevels.Cabled. */
+  class Cabled : TypedDevice, ElevatorLevel
+}
+```
+
+### ElevatorShaft
+
+```kotlin
+interface ElevatorShaft {
+  var ElevatorLevel: Double
+  var ElevatorSpeed: Double
+
+  /** StructureElevatorShaftIndustrial. Entry point: ElevatorShafts.Standard. */
+  class Standard : TypedDevice, ElevatorShaft
+
+  /** StructureElevatorShaft. Entry point: ElevatorShafts.Cabled. */
+  class Cabled : TypedDevice, ElevatorShaft {
+    var On: Boolean
+    val Power: Boolean
+    val RequiredPower: Double
+  }
+}
+```
+
+### Filtration
+
+```kotlin
+interface Filtration {
+  val Error: Boolean
+  var Lock: Boolean
+  val Maximum: Double
+  var Mode: Double
+  var On: Boolean
+  var Open: Boolean
+  val Power: Boolean
+  val Ratio: Double
+  val RequiredPower: Double
+  var Setting: Double
+
+  /** StructureFiltration. Entry point: Filtrations.Gas. */
+  class Gas : TypedDevice, Filtration {
+    val Ports: Ports
+    val ProgrammableChip: DataDiskSlot // slots[2]
+    val slots: Slots<CommonSlot>
+  }
+
+  /** StructureFiltrationLiquid. Entry point: Filtrations.Liquid. */
+  class Liquid : TypedDevice, Filtration {
+    val Ports: Ports
+    val ProgrammableChip: DataDiskSlot // slots[2]
+    val slots: Slots<CommonSlot>
+  }
+}
+```
+
+### Fridge
+
+```kotlin
+interface Fridge {
+  val Combustion: Boolean
+  val Maximum: Double
+  var Open: Boolean
+  val Pressure: Double
+  val Ratio: Double
+  var Setting: Double
+  val Temperature: Double
+  val TotalMoles: Double
+
+  /** StructureFridgeSmall. Entry point: Fridges.Small. */
+  class Small : TypedDevice, Fridge {
+    val Ports: Ports
+    val Ratios: Ratios
+    val slots: Slots<DataDiskSlot>
+  }
+
+  /** StructureFridgeBig. Entry point: Fridges.Large. */
+  class Large : TypedDevice, Fridge {
+    val Error: Boolean
+    var On: Boolean
+    val Ports: Ports
+    val Power: Boolean
+    val Ratios: Ratios
+    val RequiredPower: Double
+    val slots: Slots<DataDiskSlot>
+  }
+}
+```
+
+### Furnace
+
+```kotlin
+interface Furnace {
+  var Activate: Boolean
+  var ClearMemory: Boolean
+  val Combustion: Boolean
+  var Lock: Boolean
+  val Maximum: Double
+  var Mode: Double
+  var Open: Boolean
+  val Pressure: Double
+  val Ratio: Double
+  val Reagents: Double
+  val RecipeHash: Double
+  var Setting: Double
+  val Temperature: Double
+  val TotalMoles: Double
+
+  /** StructureFurnace. Entry point: Furnaces.Standard. */
+  class Standard : TypedDevice, Furnace {
+    val Export: Transfer
+    val Import: Transfer
+    val Ratios: Ratios
+    val slots: Slots<DataDiskSlot>
+  }
+
+  /** StructureAdvancedFurnace. Entry point: Furnaces.Advanced. */
+  class Advanced : TypedDevice, Furnace {
+    val Error: Boolean
+    val Export: Transfer
+    val Import: Transfer
+    var On: Boolean
+    val Ports: Ports
+    val Power: Boolean
+    val Ratios: Ratios
+    val RequiredPower: Double
+    val slots: Slots<DataDiskSlot>
+  }
+}
+```
+
+### HandDrill
+
+```kotlin
+interface HandDrill {
+  var Activate: Boolean
+  val Power: Boolean
+
+  /** ItemDrill. Entry point: HandDrills.Standard. */
+  class Standard : TypedDevice, HandDrill {
+    val Battery: ItemBatterySlot // slots[0]
+    val slots: Slots<ItemBatterySlot>
+  }
+
+  /** ItemEmergencyDrill. Entry point: HandDrills.Emergency. */
+  class Emergency : TypedDevice, HandDrill {
+    val Battery: ItemBatterySlot // slots[0]
+    val slots: Slots<ItemBatterySlot>
+  }
+
+  /** ItemMKIIDrill. Entry point: HandDrills.MkII. */
+  class MkII : TypedDevice, HandDrill {
+    val Battery: ItemBatterySlot // slots[0]
+    val slots: Slots<ItemBatterySlot>
+  }
+}
+```
+
+### HangarDoor
+
+```kotlin
+interface HangarDoor {
+  val Idle: Boolean
+  var Lock: Boolean
+  var Mode: Double
+  var On: Boolean
+  var Open: Boolean
+  val Power: Boolean
+  val RequiredPower: Double
+  var Setting: Double
+
+  /** StructureAirlockGate. Entry point: HangarDoors.Small. */
+  class Small : TypedDevice, HangarDoor
+
+  /** StructureMediumHangerDoor. Entry point: HangarDoors.Medium. */
+  class Medium : TypedDevice, HangarDoor
+
+  /** StructureLargeHangerDoor. Entry point: HangarDoors.Large. */
+  class Large : TypedDevice, HangarDoor
+}
+```
+
+### InteriorDoor
+
+```kotlin
+interface InteriorDoor {
+  val Idle: Boolean
+  var Lock: Boolean
+  var Mode: Double
+  var On: Boolean
+  var Open: Boolean
+  val Power: Boolean
+  val RequiredPower: Double
+  var Setting: Double
+
+  /** StructureInteriorDoorGlass. Entry point: InteriorDoors.Glass. */
+  class Glass : TypedDevice, InteriorDoor
+
+  /** StructureInteriorDoorPadded. Entry point: InteriorDoors.Padded. */
+  class Padded : TypedDevice, InteriorDoor
+
+  /** StructureInteriorDoorPaddedThin. Entry point: InteriorDoors.PaddedThin. */
+  class PaddedThin : TypedDevice, InteriorDoor
+
+  /** StructureInteriorDoorTriangle. Entry point: InteriorDoors.Triangle. */
+  class Triangle : TypedDevice, InteriorDoor
+}
+```
+
+### LandingPadInwardConnector
+
+```kotlin
+interface LandingPadInwardConnector {
+  val Combustion: Boolean
+  val Error: Boolean
+  val Maximum: Double
+  var On: Boolean
+  val Power: Boolean
+  val Pressure: Double
+  val Ratio: Double
+  val RequiredPower: Double
+  var Setting: Double
+  val Temperature: Double
+  val TotalMoles: Double
+
+  /** Landingpad_GasConnectorInwardPiece. Entry point: LandingPadInwardConnectors.Gas. */
+  class Gas : TypedDevice, LandingPadInwardConnector {
+    val Ratios: Ratios
+  }
+
+  /** Landingpad_LiquidConnectorInwardPiece. Entry point: LandingPadInwardConnectors.Liquid. */
+  class Liquid : TypedDevice, LandingPadInwardConnector {
+    val Ratios: Ratios
+  }
+}
+```
+
+### LandingPadOutwardConnector
+
+```kotlin
+interface LandingPadOutwardConnector {
+  val Combustion: Boolean
+  val Error: Boolean
+  val Maximum: Double
+  var On: Boolean
+  val Power: Boolean
+  val Pressure: Double
+  val Ratio: Double
+  val RequiredPower: Double
+  var Setting: Double
+  val Temperature: Double
+  val TotalMoles: Double
+
+  /** Landingpad_GasConnectorOutwardPiece. Entry point: LandingPadOutwardConnectors.Gas. */
+  class Gas : TypedDevice, LandingPadOutwardConnector {
+    val Ratios: Ratios
+  }
+
+  /** Landingpad_LiquidConnectorOutwardPiece. Entry point: LandingPadOutwardConnectors.Liquid. */
+  class Liquid : TypedDevice, LandingPadOutwardConnector {
+    val Ratios: Ratios
+  }
+}
+```
+
+### LandingPadTankConnector
+
+```kotlin
+interface LandingPadTankConnector {
+  val Error: Boolean
+  var Mode: Double
+  var On: Boolean
+  val Power: Boolean
+  val RequiredPower: Double
+
+  /** Landingpad_GasTankConnectorPiece. Entry point: LandingPadTankConnectors.Gas. */
+  class Gas : TypedDevice, LandingPadTankConnector {
+    val PortableSlot: DataDiskSlot // slots[0]
+    val slots: Slots<DataDiskSlot>
+  }
+
+  /** Landingpad_LiquidTankConnectorPiece. Entry point: LandingPadTankConnectors.Liquid. */
+  class Liquid : TypedDevice, LandingPadTankConnector {
+    val PortableSlot: DataDiskSlot // slots[0]
+    val slots: Slots<DataDiskSlot>
+  }
+}
+```
+
 ### LedDisplay
 
 ```kotlin
@@ -165,6 +926,883 @@ interface LedDisplay {
   class Large : TypedDevice, LedDisplay {
     var Text: String
   }
+}
+```
+
+### LightRound
+
+```kotlin
+interface LightRound {
+  var Lock: Boolean
+  var On: Boolean
+  val Power: Boolean
+  val RequiredPower: Double
+
+  /** StructureLightRound. Entry point: LightRounds.Standard. */
+  class Standard : TypedDevice, LightRound
+
+  /** StructureLightRoundSmall. Entry point: LightRounds.Small. */
+  class Small : TypedDevice, LightRound
+
+  /** StructureLightRoundAngled. Entry point: LightRounds.Angled. */
+  class Angled : TypedDevice, LightRound
+}
+```
+
+### Locker
+
+```kotlin
+interface Locker {
+  var Lock: Boolean
+  var Open: Boolean
+
+  /** StructureStorageLocker. Entry point: Lockers.Standard. */
+  class Standard : TypedDevice, Locker {
+    val slots: Slots<DataDiskSlot>
+  }
+
+  /** StructureLockerSmall. Entry point: Lockers.Small. */
+  class Small : TypedDevice, Locker {
+    val slots: Slots<DataDiskSlot>
+  }
+
+  /** StructureCornerLocker. Entry point: Lockers.Corner. */
+  class Corner : TypedDevice, Locker {
+    val slots: Slots<DataDiskSlot>
+  }
+
+  /** StructureShortLocker. Entry point: Lockers.Short. */
+  class Short : TypedDevice, Locker {
+    val slots: Slots<DataDiskSlot>
+  }
+
+  /** StructureShortCornerLocker. Entry point: Lockers.ShortCorner. */
+  class ShortCorner : TypedDevice, Locker {
+    val slots: Slots<DataDiskSlot>
+  }
+
+  /** StructureOverheadShortLocker. Entry point: Lockers.Overhead. */
+  class Overhead : TypedDevice, Locker {
+    val slots: Slots<DataDiskSlot>
+  }
+
+  /** StructureOverheadShortCornerLocker. Entry point: Lockers.OverheadCorner. */
+  class OverheadCorner : TypedDevice, Locker {
+    val slots: Slots<DataDiskSlot>
+  }
+}
+```
+
+### MediumConvectionRadiator
+
+```kotlin
+interface MediumConvectionRadiator {
+  val Maximum: Double
+  val Ratio: Double
+  var Setting: Double
+
+  /** StructureMediumConvectionRadiator. Entry point: MediumConvectionRadiators.Gas. */
+  class Gas : TypedDevice, MediumConvectionRadiator
+
+  /** StructureMediumConvectionRadiatorLiquid. Entry point: MediumConvectionRadiators.Liquid. */
+  class Liquid : TypedDevice, MediumConvectionRadiator
+}
+```
+
+### MediumRadiator
+
+```kotlin
+interface MediumRadiator {
+  val Maximum: Double
+  val Ratio: Double
+  var Setting: Double
+
+  /** StructureMediumRadiator. Entry point: MediumRadiators.Gas. */
+  class Gas : TypedDevice, MediumRadiator
+
+  /** StructureMediumRadiatorLiquid. Entry point: MediumRadiators.Liquid. */
+  class Liquid : TypedDevice, MediumRadiator
+}
+```
+
+### MiningDrill
+
+```kotlin
+interface MiningDrill {
+  var Activate: Boolean
+  val Error: Boolean
+  var Mode: Double
+  var On: Boolean
+  val Power: Boolean
+
+  /** ItemMiningDrill. Entry point: MiningDrills.Standard. */
+  class Standard : TypedDevice, MiningDrill {
+    val Battery: ItemBatterySlot // slots[0]
+    val slots: Slots<ItemBatterySlot>
+  }
+
+  /** ItemMiningDrillHeavy. Entry point: MiningDrills.Heavy. */
+  class Heavy : TypedDevice, MiningDrill {
+    val Battery: ItemBatterySlot // slots[0]
+    val slots: Slots<ItemBatterySlot>
+  }
+
+  /** ItemMKIIMiningDrill. Entry point: MiningDrills.MkII. */
+  class MkII : TypedDevice, MiningDrill {
+    val Battery: ItemBatterySlot // slots[0]
+    val slots: Slots<ItemBatterySlot>
+  }
+}
+```
+
+### PassiveLargeRadiator
+
+```kotlin
+interface PassiveLargeRadiator {
+  val Maximum: Double
+  val Ratio: Double
+  var Setting: Double
+
+  /** StructurePassiveLargeRadiatorGas. Entry point: PassiveLargeRadiators.Gas. */
+  class Gas : TypedDevice, PassiveLargeRadiator
+
+  /** StructurePassiveLargeRadiatorLiquid. Entry point: PassiveLargeRadiators.Liquid. */
+  class Liquid : TypedDevice, PassiveLargeRadiator
+}
+```
+
+### PassthroughHeatExchanger
+
+```kotlin
+interface PassthroughHeatExchanger {
+  val Maximum: Double
+  val Ratio: Double
+  var Setting: Double
+
+  /** StructurePassthroughHeatExchangerGasToGas. Entry point: PassthroughHeatExchangers.GasToGas. */
+  class GasToGas : TypedDevice, PassthroughHeatExchanger
+
+  /** StructurePassthroughHeatExchangerGasToLiquid. Entry point: PassthroughHeatExchangers.GasToLiquid. */
+  class GasToLiquid : TypedDevice, PassthroughHeatExchanger
+
+  /** StructurePassthroughHeatExchangerLiquidToLiquid. Entry point: PassthroughHeatExchangers.LiquidToLiquid. */
+  class LiquidToLiquid : TypedDevice, PassthroughHeatExchanger
+}
+```
+
+### PipeAnalyzer
+
+```kotlin
+interface PipeAnalyzer {
+  val Combustion: Boolean
+  val Error: Boolean
+  var Lock: Boolean
+  val NetworkFault: Boolean
+  var On: Boolean
+  val Power: Boolean
+  val Pressure: Double
+  val RequiredPower: Double
+  val Temperature: Double
+  val TotalMoles: Double
+  val Volume: Double
+  val VolumeOfLiquid: Double
+
+  /** StructurePipeAnalysizer. Entry point: PipeAnalyzers.Gas. */
+  class Gas : TypedDevice, PipeAnalyzer {
+    val Ratios: Ratios
+  }
+
+  /** StructureLiquidPipeAnalyzer. Entry point: PipeAnalyzers.Liquid. */
+  class Liquid : TypedDevice, PipeAnalyzer {
+    val Ratios: Ratios
+  }
+}
+```
+
+### PipeHeater
+
+```kotlin
+interface PipeHeater {
+  val Error: Boolean
+  var Lock: Boolean
+  var On: Boolean
+  val Power: Boolean
+  val RequiredPower: Double
+
+  /** StructurePipeHeater. Entry point: PipeHeaters.Gas. */
+  class Gas : TypedDevice, PipeHeater
+
+  /** StructureLiquidPipeHeater. Entry point: PipeHeaters.Liquid. */
+  class Liquid : TypedDevice, PipeHeater
+}
+```
+
+### PipeOneWayValveLever
+
+```kotlin
+interface PipeOneWayValveLever {
+  val Maximum: Double
+  var On: Boolean
+  val Ratio: Double
+  var Setting: Double
+
+  /** StructurePipeOneWayValveLever. Entry point: PipeOneWayValveLevers.Gas. */
+  class Gas : TypedDevice, PipeOneWayValveLever
+
+  /** StructurePipeLiquidOneWayValveLever. Entry point: PipeOneWayValveLevers.Liquid. */
+  class Liquid : TypedDevice, PipeOneWayValveLever
+}
+```
+
+### PoweredVent
+
+```kotlin
+interface PoweredVent {
+  val Error: Boolean
+  var Lock: Boolean
+  var Mode: Double
+  var On: Boolean
+  val Power: Boolean
+  var PressureExternal: Double
+  val RequiredPower: Double
+
+  /** StructurePoweredVent. Entry point: PoweredVents.Standard. */
+  class Standard : TypedDevice, PoweredVent {
+    val Ports: Ports
+  }
+
+  /** StructurePoweredVentLarge. Entry point: PoweredVents.Large. */
+  class Large : TypedDevice, PoweredVent {
+    val Ports: Ports
+  }
+}
+```
+
+### PressureFedEngine
+
+```kotlin
+interface PressureFedEngine {
+  val Combustion: Boolean
+  val Error: Boolean
+  var On: Boolean
+  val PassedMoles: Double
+  val Power: Boolean
+  val Pressure: Double
+  val RequiredPower: Double
+  val Temperature: Double
+  var Throttle: Double
+  val TotalMoles: Double
+
+  /** StructurePressureFedGasEngine. Entry point: PressureFedEngines.Gas. */
+  class Gas : TypedDevice, PressureFedEngine {
+    val Ratios: Ratios
+  }
+
+  /** StructurePressureFedLiquidEngine. Entry point: PressureFedEngines.Liquid. */
+  class Liquid : TypedDevice, PressureFedEngine {
+    val Maximum: Double
+    val Ratio: Double
+    val Ratios: Ratios
+    var Setting: Double
+  }
+
+  /** StructurePressureFedGasEngineHeavy. Entry point: PressureFedEngines.GasHeavy. */
+  class GasHeavy : TypedDevice, PressureFedEngine {
+    val Ratios: Ratios
+  }
+
+  /** StructurePressureFedLiquidEngineHeavy. Entry point: PressureFedEngines.LiquidHeavy. */
+  class LiquidHeavy : TypedDevice, PressureFedEngine {
+    val Maximum: Double
+    val Ratio: Double
+    val Ratios: Ratios
+    var Setting: Double
+  }
+}
+```
+
+### PressurePlate
+
+```kotlin
+interface PressurePlate {
+  val Setting: Double
+
+  /** StructurePressurePlateSmall. Entry point: PressurePlates.Small. */
+  class Small : TypedDevice, PressurePlate
+
+  /** StructurePressurePlateMedium. Entry point: PressurePlates.Medium. */
+  class Medium : TypedDevice, PressurePlate
+
+  /** StructurePressurePlateLarge. Entry point: PressurePlates.Large. */
+  class Large : TypedDevice, PressurePlate
+}
+```
+
+### PressureRegulator
+
+```kotlin
+interface PressureRegulator {
+  val Error: Boolean
+  var Lock: Boolean
+  val Maximum: Double
+  var On: Boolean
+  val Power: Boolean
+  val Ratio: Double
+  val RequiredPower: Double
+  var Setting: Double
+
+  /** StructurePressureRegulator. Entry point: PressureRegulators.Gas. */
+  class Gas : TypedDevice, PressureRegulator
+
+  /** StructureLiquidPressureRegulator. Entry point: PressureRegulators.Liquid. */
+  class Liquid : TypedDevice, PressureRegulator
+}
+```
+
+### SDBHopper
+
+```kotlin
+interface SDBHopper {
+  var ClearMemory: Boolean
+  var Open: Boolean
+
+  /** StructureSDBHopper. Entry point: SDBHoppers.Standard. */
+  class Standard : TypedDevice, SDBHopper {
+    val Import: Transfer
+    val slots: Slots<DataDiskSlot>
+  }
+
+  /** StructureSDBHopperAdvanced. Entry point: SDBHoppers.Advanced. */
+  class Advanced : TypedDevice, SDBHopper {
+    val Import: Transfer
+    var Lock: Boolean
+    val slots: Slots<DataDiskSlot>
+  }
+}
+```
+
+### SatelliteDish
+
+```kotlin
+interface SatelliteDish {
+  var Activate: Boolean
+  var BestContactFilter: Double
+  val ContactSlotIndex: Double
+  val ContactTypeId: Double
+  val Error: Boolean
+  var Horizontal: Double
+  val Idle: Boolean
+  val InterrogationProgress: Double
+  val MinimumWattsToContact: Double
+  var On: Boolean
+  val Power: Boolean
+  val RequiredPower: Double
+  var Setting: Double
+  val SignalID: Double
+  val SignalStrength: Double
+  var TargetPadIndex: Double
+  var Vertical: Double
+  val WattsReachingContact: Double
+
+  /** StructureSmallSatelliteDish. Entry point: SatelliteDishes.Small. */
+  class Small : TypedDevice, SatelliteDish {
+    val Dimensions: Vector
+  }
+
+  /** StructureSatelliteDish. Entry point: SatelliteDishes.Medium. */
+  class Medium : TypedDevice, SatelliteDish {
+    val Dimensions: Vector
+    val StackSize: Double
+  }
+
+  /** StructureLargeSatelliteDish. Entry point: SatelliteDishes.Large. */
+  class Large : TypedDevice, SatelliteDish {
+    val Dimensions: Vector
+  }
+}
+```
+
+### SolarPanel
+
+```kotlin
+interface SolarPanel {
+  val Charge: Double
+  var Horizontal: Double
+  val Maximum: Double
+  val Ratio: Double
+  var Vertical: Double
+
+  /** StructureSolarPanel. Entry point: SolarPanels.Standard. */
+  class Standard : TypedDevice, SolarPanel
+
+  /** StructureSolarPanel45. Entry point: SolarPanels.Angled. */
+  class Angled : TypedDevice, SolarPanel
+
+  /** StructureSolarPanelReinforced. Entry point: SolarPanels.Heavy. */
+  class Heavy : TypedDevice, SolarPanel
+
+  /** StructureSolarPanel45Reinforced. Entry point: SolarPanels.HeavyAngled. */
+  class HeavyAngled : TypedDevice, SolarPanel
+
+  /** StructureSolarPanelFlat. Entry point: SolarPanels.Flat. */
+  class Flat : TypedDevice, SolarPanel
+
+  /** StructureSolarPanelFlatReinforced. Entry point: SolarPanels.HeavyFlat. */
+  class HeavyFlat : TypedDevice, SolarPanel
+
+  /** StructureSolarPanelDual. Entry point: SolarPanels.Dual. */
+  class Dual : TypedDevice, SolarPanel
+
+  /** StructureSolarPanelDualReinforced. Entry point: SolarPanels.HeavyDual. */
+  class HeavyDual : TypedDevice, SolarPanel
+}
+```
+
+### SpaceHelmet
+
+```kotlin
+interface SpaceHelmet {
+  val Combustion: Boolean
+  var Flush: Boolean
+  var Lock: Boolean
+  var On: Boolean
+  var Open: Boolean
+  val Power: Boolean
+  val Pressure: Double
+  var SoundAlert: Double
+  val Temperature: Double
+  val TotalMoles: Double
+  var Volume: Double
+
+  /** ItemSpaceHelmet. Entry point: SpaceHelmets.Standard. */
+  class Standard : TypedDevice, SpaceHelmet {
+    val Ratios: Ratios
+  }
+
+  /** ItemEmergencySpaceHelmet. Entry point: SpaceHelmets.Emergency. */
+  class Emergency : TypedDevice, SpaceHelmet {
+    val Ratios: Ratios
+  }
+}
+```
+
+### Stacker
+
+```kotlin
+interface Stacker {
+  var Activate: Boolean
+  var ClearMemory: Boolean
+  val Error: Boolean
+  var Lock: Boolean
+  var Mode: Double
+  var On: Boolean
+  var Output: Double
+  val Power: Boolean
+  val RequiredPower: Double
+  var Setting: Double
+
+  /** StructureStacker. Entry point: Stackers.Standard. */
+  class Standard : TypedDevice, Stacker {
+    val Export: Transfer
+    val Import: Transfer
+    val Processing: DataDiskSlot // slots[2]
+    val slots: Slots<DataDiskSlot>
+  }
+
+  /** StructureStackerReverse. Entry point: Stackers.Reversed. */
+  class Reversed : TypedDevice, Stacker {
+    val Export: Transfer
+    val Import: Transfer
+    val Processing: DataDiskSlot // slots[2]
+    val slots: Slots<DataDiskSlot>
+  }
+}
+```
+
+### SuitStorage
+
+```kotlin
+interface SuitStorage {
+  val Error: Boolean
+  val Maximum: Double
+  var On: Boolean
+  val Power: Boolean
+  val Ratio: Double
+  val RequiredPower: Double
+  var Setting: Double
+
+  /** StructureSuitStorage. Entry point: SuitStorages.Standard. */
+  class Standard : TypedDevice, SuitStorage {
+    val Helmet: HelmetSlot // slots[0]
+    val Suit: SuitSlot // slots[1]
+    val Back: BackSlot // slots[2]
+    val slots: Slots<CommonSlot>
+  }
+
+  /** StructureSuitStorageFrame. Entry point: SuitStorages.Frame. */
+  class Frame : TypedDevice, SuitStorage {
+    val Helmet: HelmetSlot // slots[0]
+    val Suit: SuitSlot // slots[1]
+    val Back: BackSlot // slots[2]
+    val slots: Slots<CommonSlot>
+  }
+
+  /** StructureSuitStorageLocker. Entry point: SuitStorages.Locker. */
+  class Locker : TypedDevice, SuitStorage {
+    val Helmet: HelmetSlot // slots[0]
+    val Suit: SuitSlot // slots[1]
+    val Back: BackSlot // slots[2]
+    val slots: Slots<CommonSlot>
+  }
+}
+```
+
+### Tablet
+
+```kotlin
+interface Tablet {
+  val Error: Boolean
+  var On: Boolean
+  val Power: Boolean
+
+  /** ItemTablet. Entry point: Tablets.Standard. */
+  class Standard : TypedDevice, Tablet {
+    val Battery: ItemBatterySlot // slots[0]
+    val Cartridge: ItemCommonSlot // slots[1]
+    val slots: Slots<ItemCommonSlot>
+  }
+
+  /** ItemAdvancedTablet. Entry point: Tablets.Advanced. */
+  class Advanced : TypedDevice, Tablet {
+    var Activate: Boolean
+    var Mode: Double
+    var SoundAlert: Double
+    var Volume: Double
+    val Battery: ItemBatterySlot // slots[0]
+    val Cartridge: ItemCommonSlot // slots[1]
+    val Cartridge1: ItemCommonSlot // slots[2]
+    val ProgrammableChip: ItemCommonSlot // slots[3]
+    val slots: Slots<ItemCommonSlot>
+  }
+}
+```
+
+### TankStorage
+
+```kotlin
+interface TankStorage {
+  val Pressure: Double
+  val Quantity: Double
+  val Temperature: Double
+
+  /** StructureGasTankStorage. Entry point: TankStorages.Gas. */
+  class Gas : TypedDevice, TankStorage {
+    val Ratios: Ratios
+    val GasCanister: GasCanisterSlot // slots[0]
+    val slots: Slots<GasCanisterSlot>
+  }
+
+  /** StructureLiquidTankStorage. Entry point: TankStorages.Liquid. */
+  class Liquid : TypedDevice, TankStorage {
+    val Ratios: Ratios
+    val LiquidCanister: GasCanisterSlot // slots[0]
+    val slots: Slots<GasCanisterSlot>
+  }
+}
+```
+
+### Transformer
+
+```kotlin
+interface Transformer {
+  val Error: Boolean
+  var Lock: Boolean
+  val Maximum: Double
+  var On: Boolean
+  val Power: Boolean
+  val Ratio: Double
+  val RequiredPower: Double
+  var Setting: Double
+
+  /** StructureTransformer. Entry point: Transformers.Large. */
+  class Large : TypedDevice, Transformer
+
+  /** StructureTransformerMedium. Entry point: Transformers.Medium. */
+  class Medium : TypedDevice, Transformer
+
+  /** StructureTransformerMedium(Reversed). Entry point: Transformers.MediumReversed. */
+  class MediumReversed : TypedDevice, Transformer
+
+  /** StructureTransformerSmall. Entry point: Transformers.Small. */
+  class Small : TypedDevice, Transformer
+
+  /** StructureTransformerSmallReversed. Entry point: Transformers.SmallReversed. */
+  class SmallReversed : TypedDevice, Transformer
+
+  /** StructureRocketTransformerSmall. Entry point: Transformers.SmallRocket. */
+  class SmallRocket : TypedDevice, Transformer
+}
+```
+
+### TurboVolumePump
+
+```kotlin
+interface TurboVolumePump {
+  val Error: Boolean
+  var Lock: Boolean
+  val Maximum: Double
+  var Mode: Double
+  var On: Boolean
+  val Power: Boolean
+  val Ratio: Double
+  val RequiredPower: Double
+  var Setting: Double
+
+  /** StructureTurboVolumePump. Entry point: TurboVolumePumps.Gas. */
+  class Gas : TypedDevice, TurboVolumePump
+
+  /** StructureLiquidTurboVolumePump. Entry point: TurboVolumePumps.Liquid. */
+  class Liquid : TypedDevice, TurboVolumePump
+}
+```
+
+### UmbilicalFemale
+
+```kotlin
+interface UmbilicalFemale {
+  val Maximum: Double
+  val Ratio: Double
+  var Setting: Double
+
+  /** StructureGasUmbilicalFemale. Entry point: UmbilicalFemales.Gas. */
+  class Gas : TypedDevice, UmbilicalFemale
+
+  /** StructureLiquidUmbilicalFemale. Entry point: UmbilicalFemales.Liquid. */
+  class Liquid : TypedDevice, UmbilicalFemale
+
+  /** StructureGasUmbilicalFemaleSide. Entry point: UmbilicalFemales.GasAngle. */
+  class GasAngle : TypedDevice, UmbilicalFemale
+
+  /** StructureLiquidUmbilicalFemaleSide. Entry point: UmbilicalFemales.LiquidAngle. */
+  class LiquidAngle : TypedDevice, UmbilicalFemale
+}
+```
+
+### UmbilicalMale
+
+```kotlin
+interface UmbilicalMale {
+  val Error: Boolean
+  var Lock: Boolean
+  val Maximum: Double
+  val Mode: Double
+  var On: Boolean
+  var Open: Boolean
+  val Power: Boolean
+  val Ratio: Double
+  val RequiredPower: Double
+  var Setting: Double
+
+  /** StructureGasUmbilicalMale. Entry point: UmbilicalMales.Gas. */
+  class Gas : TypedDevice, UmbilicalMale
+
+  /** StructureLiquidUmbilicalMale. Entry point: UmbilicalMales.Liquid. */
+  class Liquid : TypedDevice, UmbilicalMale
+}
+```
+
+### Valve
+
+```kotlin
+interface Valve {
+  val Maximum: Double
+  var On: Boolean
+  val Ratio: Double
+  var Setting: Double
+
+  /** StructureValve. Entry point: Valves.Gas. */
+  class Gas : TypedDevice, Valve
+
+  /** StructureLiquidValve. Entry point: Valves.Liquid. */
+  class Liquid : TypedDevice, Valve
+}
+```
+
+### VendingMachine
+
+```kotlin
+interface VendingMachine {
+  var Activate: Boolean
+  var ClearMemory: Boolean
+  val Error: Boolean
+  var Lock: Boolean
+  var On: Boolean
+  val Power: Boolean
+  val Quantity: Double
+  val Ratio: Double
+  var RequestHash: Double
+  val RequiredPower: Double
+  val TargetPrefabHash: Double
+  val TargetSlotIndex: Double
+
+  /** StructureVendingMachine. Entry point: VendingMachines.Standard. */
+  class Standard : TypedDevice, VendingMachine {
+    val Export: Transfer
+    val Import: Transfer
+    val slots: Slots<DataDiskSlot>
+  }
+
+  /** StructureVendingMachineSmall. Entry point: VendingMachines.Small. */
+  class Small : TypedDevice, VendingMachine {
+    val Export: Transfer
+    val Import: Transfer
+    val slots: Slots<DataDiskSlot>
+  }
+
+  /** StructureRefrigeratedVendingMachine. Entry point: VendingMachines.Refrigerated. */
+  class Refrigerated : TypedDevice, VendingMachine {
+    val Combustion: Boolean
+    val Export: Transfer
+    val Import: Transfer
+    val Pressure: Double
+    val Ratios: Ratios
+    var Setting: Double
+    val Temperature: Double
+    val TotalMoles: Double
+    val slots: Slots<DataDiskSlot>
+  }
+}
+```
+
+### VolumePump
+
+```kotlin
+interface VolumePump {
+  val Error: Boolean
+  var Lock: Boolean
+  val Maximum: Double
+  var On: Boolean
+  val Power: Boolean
+  val Ratio: Double
+  val RequiredPower: Double
+  var Setting: Double
+
+  /** StructureVolumePump. Entry point: VolumePumps.Gas. */
+  class Gas : TypedDevice, VolumePump
+
+  /** StructureLiquidVolumePump. Entry point: VolumePumps.Liquid. */
+  class Liquid : TypedDevice, VolumePump
+}
+```
+
+### WallCooler
+
+```kotlin
+interface WallCooler {
+  val Error: Boolean
+  var Lock: Boolean
+  val Maximum: Double
+  var On: Boolean
+  val Power: Boolean
+  val Ratio: Double
+  val RequiredPower: Double
+  var Setting: Double
+
+  /** StructureWallCooler. Entry point: WallCoolers.Gas. */
+  class Gas : TypedDevice, WallCooler {
+    val Ports: Ports
+    val DataDisk: DataDiskSlot // slots[0]
+    val slots: Slots<DataDiskSlot>
+  }
+
+  /** StructureWaterWallCooler. Entry point: WallCoolers.Liquid. */
+  class Liquid : TypedDevice, WallCooler {
+    val Ports: Ports
+    val DataDisk: DataDiskSlot // slots[0]
+    val slots: Slots<DataDiskSlot>
+  }
+}
+```
+
+### WallLight
+
+```kotlin
+interface WallLight {
+  var Lock: Boolean
+  var On: Boolean
+  val Power: Boolean
+  val RequiredPower: Double
+
+  /** StructureWallLight. Entry point: WallLights.Standard. */
+  class Standard : TypedDevice, WallLight
+
+  /** StructureLightLong. Entry point: WallLights.Long. */
+  class Long : TypedDevice, WallLight
+
+  /** StructureLightLongAngled. Entry point: WallLights.LongAngled. */
+  class LongAngled : TypedDevice, WallLight
+
+  /** StructureLightLongWide. Entry point: WallLights.LongWide. */
+  class LongWide : TypedDevice, WallLight
+
+  /** StructureWallLightBattery. Entry point: WallLights.Battery. */
+  class Battery : TypedDevice, WallLight {
+    val Battery: BatterySlot // slots[0]
+    val slots: Slots<BatterySlot>
+  }
+}
+```
+
+### WaterBottleFiller
+
+```kotlin
+interface WaterBottleFiller {
+  var Activate: Boolean
+  val Error: Boolean
+  var On: Boolean
+  val Power: Boolean
+  val RequiredPower: Double
+
+  /** StructureWaterBottleFillerPowered. Entry point: WaterBottleFillers.Powered. */
+  class Powered : TypedDevice, WaterBottleFiller {
+    val slots: Slots<GasCanisterSlot>
+  }
+
+  /** StructureWaterBottleFillerPoweredBottom. Entry point: WaterBottleFillers.PoweredBottom. */
+  class PoweredBottom : TypedDevice, WaterBottleFiller {
+    val slots: Slots<GasCanisterSlot>
+  }
+}
+```
+
+### WindTurbine
+
+```kotlin
+interface WindTurbine {
+  val PowerGeneration: Double
+
+  /** StructureWindTurbine. Entry point: WindTurbines.Standard. */
+  class Standard : TypedDevice, WindTurbine
+
+  /** StructureUprightWindTurbine. Entry point: WindTurbines.Upright. */
+  class Upright : TypedDevice, WindTurbine
+}
+```
+
+### WirelessBatteryCell
+
+```kotlin
+interface WirelessBatteryCell {
+  var Mode: Double
+
+  /** Battery_Wireless_cell. Entry point: WirelessBatteryCells.Standard. */
+  class Standard : TypedDevice, WirelessBatteryCell
+
+  /** Battery_Wireless_cell_Big. Entry point: WirelessBatteryCells.Big. */
+  class Big : TypedDevice, WirelessBatteryCell
+
+  /** ItemWirelessBatteryCellExtraLarge. Entry point: WirelessBatteryCells.ExtraLarge. */
+  class ExtraLarge : TypedDevice, WirelessBatteryCell
 }
 ```
 
@@ -222,35 +1860,6 @@ class AdvancedComposter : TypedDevice {
   val slots: Slots<DataDiskSlot>
 }
 
-/** StructureAdvancedFurnace. Entry point: AdvancedFurnaces. */
-class AdvancedFurnace : TypedDevice {
-  var Activate: Boolean
-  var ClearMemory: Boolean
-  val Combustion: Boolean
-  val Error: Boolean
-  val Export: Transfer // Count
-  val Import: Transfer // Count
-  var Lock: Boolean
-  val Maximum: Double
-  var Mode: Double
-  var On: Boolean
-  var Open: Boolean
-  val Ports: Ports
-  //   Input: var Setting
-  //   Output: var Setting
-  val Power: Boolean
-  val Pressure: Double
-  val Ratio: Double
-  val Ratios: Ratios // every Substance
-  val Reagents: Double
-  val RecipeHash: Double
-  val RequiredPower: Double
-  var Setting: Double
-  val Temperature: Double
-  val TotalMoles: Double
-  val slots: Slots<DataDiskSlot>
-}
-
 /** StructureAdvancedPackagingMachine. Entry point: AdvancedPackagingMachines. */
 class AdvancedPackagingMachine : TypedDevice {
   var Activate: Boolean
@@ -268,22 +1877,6 @@ class AdvancedPackagingMachine : TypedDevice {
   val RequiredPower: Double
   val StackSize: Double
   val slots: Slots<DataDiskSlot>
-}
-
-/** ItemAdvancedTablet. Entry point: AdvancedTablets. */
-class AdvancedTablet : TypedDevice {
-  var Activate: Boolean
-  val Error: Boolean
-  var Mode: Double
-  var On: Boolean
-  val Power: Boolean
-  var SoundAlert: Double
-  var Volume: Double
-  val Battery: ItemBatterySlot // slots[0]
-  val Cartridge: ItemCommonSlot // slots[1]
-  val Cartridge1: ItemCommonSlot // slots[2]
-  val ProgrammableChip: ItemCommonSlot // slots[3]
-  val slots: Slots<ItemCommonSlot>
 }
 
 /** StructureAirConditioner. Entry point: AirConditioners. */
@@ -309,50 +1902,6 @@ class AirConditioner : TypedDevice {
   val slots: Slots<DataDiskSlot>
 }
 
-/** StructureAirlock. Entry point: Airlocks. */
-class Airlock : TypedDevice {
-  val Idle: Boolean
-  var Lock: Boolean
-  var Mode: Double
-  var On: Boolean
-  var Open: Boolean
-  val Power: Boolean
-  val RequiredPower: Double
-  var Setting: Double
-}
-
-/** StructureAirlockGate. Entry point: AirlockGates. */
-class AirlockGate : TypedDevice {
-  val Idle: Boolean
-  var Lock: Boolean
-  var Mode: Double
-  var On: Boolean
-  var Open: Boolean
-  val Power: Boolean
-  val RequiredPower: Double
-  var Setting: Double
-}
-
-/** StructureAirlockWide. Entry point: AirlockWides. */
-class AirlockWide : TypedDevice {
-  val Idle: Boolean
-  var Lock: Boolean
-  var Mode: Double
-  var On: Boolean
-  var Open: Boolean
-  val Power: Boolean
-  val RequiredPower: Double
-  var Setting: Double
-}
-
-/** ItemAngleGrinder. Entry point: AngleGrinders. */
-class AngleGrinder : TypedDevice {
-  var Activate: Boolean
-  val Power: Boolean
-  val Battery: ItemBatterySlot // slots[0]
-  val slots: Slots<ItemBatterySlot>
-}
-
 /** StructureArcFurnace. Entry point: ArcFurnaces. */
 class ArcFurnace : TypedDevice {
   var Activate: Boolean
@@ -368,52 +1917,6 @@ class ArcFurnace : TypedDevice {
   val RecipeHash: Double
   val RequiredPower: Double
   val slots: Slots<DataDiskSlot>
-}
-
-/** ItemArcWelder. Entry point: ArcWelders. */
-class ArcWelder : TypedDevice {
-  var Activate: Boolean
-  val Power: Boolean
-  val Battery: ItemBatterySlot // slots[0]
-  val slots: Slots<ItemBatterySlot>
-}
-
-/** StructureAreaPowerControl. Entry point: AreaPowerControls. */
-class AreaPowerControl : TypedDevice {
-  val Charge: Double
-  val Error: Boolean
-  var Lock: Boolean
-  val Maximum: Double
-  var Mode: Double
-  var On: Boolean
-  var Open: Boolean
-  val Power: Boolean
-  val PowerActual: Double
-  val PowerPotential: Double
-  val Ratio: Double
-  val RequiredPower: Double
-  val Battery: BatterySlot // slots[0]
-  val DataDisk: DataDiskSlot // slots[1]
-  val slots: Slots<CommonSlot>
-}
-
-/** StructureAreaPowerControlReversed. Entry point: AreaPowerControlReverseds. */
-class AreaPowerControlReversed : TypedDevice {
-  val Charge: Double
-  val Error: Boolean
-  var Lock: Boolean
-  val Maximum: Double
-  var Mode: Double
-  var On: Boolean
-  var Open: Boolean
-  val Power: Boolean
-  val PowerActual: Double
-  val PowerPotential: Double
-  val Ratio: Double
-  val RequiredPower: Double
-  val Battery: BatterySlot // slots[0]
-  val DataDisk: DataDiskSlot // slots[1]
-  val slots: Slots<CommonSlot>
 }
 
 /** StructureAutolathe. Entry point: Autolathes. */
@@ -472,30 +1975,6 @@ class AutoMinerSmall : TypedDevice {
 ### B
 
 ```kotlin
-/** StructureBackLiquidPressureRegulator. Entry point: BackLiquidPressureRegulators. */
-class BackLiquidPressureRegulator : TypedDevice {
-  val Error: Boolean
-  var Lock: Boolean
-  val Maximum: Double
-  var On: Boolean
-  val Power: Boolean
-  val Ratio: Double
-  val RequiredPower: Double
-  var Setting: Double
-}
-
-/** StructureBackPressureRegulator. Entry point: BackPressureRegulators. */
-class BackPressureRegulator : TypedDevice {
-  val Error: Boolean
-  var Lock: Boolean
-  val Maximum: Double
-  var On: Boolean
-  val Power: Boolean
-  val Ratio: Double
-  val RequiredPower: Double
-  var Setting: Double
-}
-
 /** StructureBasketHoop. Entry point: BasketHoops. */
 class BasketHoop : TypedDevice {
   var Lock: Boolean
@@ -503,106 +1982,6 @@ class BasketHoop : TypedDevice {
   val Power: Boolean
   val RequiredPower: Double
   var Setting: Double
-}
-
-/** Battery_Wireless_cell. Entry point: Battery_Wireless_cells. */
-class Battery_Wireless_cell : TypedDevice {
-  var Mode: Double
-}
-
-/** Battery_Wireless_cell_Big. Entry point: Battery_Wireless_cell_Bigs. */
-class Battery_Wireless_cell_Big : TypedDevice {
-  var Mode: Double
-}
-
-/** ItemBatteryCell. Entry point: BatteryCells. */
-class BatteryCell : TypedDevice {
-  var Mode: Double
-}
-
-/** ItemBatteryCellLarge. Entry point: BatteryCellLarges. */
-class BatteryCellLarge : TypedDevice {
-  var Mode: Double
-}
-
-/** ItemBatteryCellNuclear. Entry point: BatteryCellNuclears. */
-class BatteryCellNuclear : TypedDevice {
-  var Mode: Double
-}
-
-/** StructureBatteryCharger. Entry point: BatteryChargers. */
-class BatteryCharger : TypedDevice {
-  var Activate: Boolean
-  val Error: Boolean
-  var On: Boolean
-  val Power: Boolean
-  val RequiredPower: Double
-  val slots: Slots<BatterySlot>
-}
-
-/** StructureBatteryChargerSmall. Entry point: BatteryChargerSmalls. */
-class BatteryChargerSmall : TypedDevice {
-  var Activate: Boolean
-  val Error: Boolean
-  var On: Boolean
-  val Power: Boolean
-  val RequiredPower: Double
-  val slots: Slots<BatterySlot>
-}
-
-/** StructureBench. Entry point: Benches. */
-class Bench : TypedDevice {
-  val Error: Boolean
-  var On: Boolean
-  val Power: Boolean
-  val RequiredPower: Double
-  val Appliance1: ApplianceSlot // slots[0]
-  val Appliance2: ApplianceSlot // slots[1]
-  val slots: Slots<ApplianceSlot>
-}
-
-/** StructureBench1. Entry point: Bench1s. */
-class Bench1 : TypedDevice {
-  val Error: Boolean
-  var On: Boolean
-  val Power: Boolean
-  val RequiredPower: Double
-  val Appliance1: ApplianceSlot // slots[0]
-  val Appliance2: ApplianceSlot // slots[1]
-  val slots: Slots<ApplianceSlot>
-}
-
-/** StructureBench2. Entry point: Bench2s. */
-class Bench2 : TypedDevice {
-  val Error: Boolean
-  var On: Boolean
-  val Power: Boolean
-  val RequiredPower: Double
-  val Appliance1: ApplianceSlot // slots[0]
-  val Appliance2: ApplianceSlot // slots[1]
-  val slots: Slots<ApplianceSlot>
-}
-
-/** StructureBench3. Entry point: Bench3s. */
-class Bench3 : TypedDevice {
-  val Error: Boolean
-  var On: Boolean
-  val Power: Boolean
-  val RequiredPower: Double
-  val Appliance1: ApplianceSlot // slots[0]
-  val Appliance2: ApplianceSlot // slots[1]
-  val slots: Slots<ApplianceSlot>
-}
-
-/** StructureBench4. Entry point: Bench4s. */
-class Bench4 : TypedDevice {
-  val Error: Boolean
-  var On: Boolean
-  val Power: Boolean
-  val RequiredPower: Double
-  val Appliance1: ApplianceSlot // slots[0]
-  val Appliance2: ApplianceSlot // slots[1]
-  val slots: Slots<ApplianceSlot>
 }
 
 /** StructureBlastDoor. Entry point: BlastDoors. */
@@ -643,68 +2022,6 @@ class CableAnalysizer : TypedDevice {
 class Camera : TypedDevice {
   var Mode: Double
   var On: Boolean
-}
-
-/** StructureCapsuleTankGas. Entry point: CapsuleTankGases. */
-class CapsuleTankGas : TypedDevice {
-  val Combustion: Boolean
-  val Maximum: Double
-  val Ports: Ports // Output: Combustion, Pressure, Temperature, TotalMoles, Ratios[CarbonDioxide, Helium, Hydrazine, HydrochloricAcid, Hydrogen, LiquidAlcohol, LiquidHydrazine, LiquidHydrochloricAcid, LiquidHydrogen, LiquidOzone, LiquidSilanol, LiquidSodiumChloride, Methane, Nitrogen, NitrousOxide, Oxygen, Ozone, Pollutant, PollutedWater, Silanol, Water]
-  val Pressure: Double
-  val Ratio: Double
-  val Ratios: Ratios // every Substance
-  var Setting: Double
-  val Temperature: Double
-  val TotalMoles: Double
-  val Volume: Double
-  val VolumeOfLiquid: Double
-}
-
-/** StructureCapsuleTankLiquid. Entry point: CapsuleTankLiquids. */
-class CapsuleTankLiquid : TypedDevice {
-  val Combustion: Boolean
-  val Maximum: Double
-  val Ports: Ports // Output: Combustion, Pressure, Temperature, TotalMoles, Ratios[CarbonDioxide, Helium, Hydrazine, HydrochloricAcid, Hydrogen, LiquidAlcohol, LiquidHydrazine, LiquidHydrochloricAcid, LiquidHydrogen, LiquidOzone, LiquidSilanol, LiquidSodiumChloride, Methane, Nitrogen, NitrousOxide, Oxygen, Ozone, Pollutant, PollutedWater, Silanol, Water]
-  val Pressure: Double
-  val Ratio: Double
-  val Ratios: Ratios // every Substance
-  var Setting: Double
-  val Temperature: Double
-  val TotalMoles: Double
-  val Volume: Double
-  val VolumeOfLiquid: Double
-}
-
-/** StructureCargoStorageMedium. Entry point: CargoStorageMediums. */
-class CargoStorageMedium : TypedDevice {
-  var ClearMemory: Boolean
-  val Error: Boolean
-  val Export: Transfer // Count
-  val Import: Transfer // Count
-  var Lock: Boolean
-  var On: Boolean
-  var Open: Boolean
-  val Power: Boolean
-  val Quantity: Double
-  val Ratio: Double
-  val RequiredPower: Double
-  val slots: Slots<DataDiskSlot>
-}
-
-/** StructureCargoStorageSmall. Entry point: CargoStorageSmalls. */
-class CargoStorageSmall : TypedDevice {
-  var ClearMemory: Boolean
-  val Error: Boolean
-  val Export: Transfer // Count
-  val Import: Transfer // Count
-  var Lock: Boolean
-  var On: Boolean
-  var Open: Boolean
-  val Power: Boolean
-  val Quantity: Double
-  val Ratio: Double
-  val RequiredPower: Double
-  val slots: Slots<DataDiskSlot>
 }
 
 /** StructureCentrifuge. Entry point: Centrifuges. */
@@ -827,34 +2144,6 @@ class ChuteUmbilicalMale : TypedDevice {
   val slots: Slots<DataDiskSlot>
 }
 
-/** StructureCircuitHousing. Entry point: CircuitHousings. */
-class CircuitHousing : TypedDevice {
-  val Error: Boolean
-  var LineNumber: Double
-  var Mode: Double
-  var On: Boolean
-  val Power: Boolean
-  val RequiredPower: Double
-  var Setting: Double
-  val StackSize: Double
-  val ProgrammableChip: CommonSlot // slots[0]
-  val slots: Slots<CommonSlot>
-}
-
-/** StructureCircuitHousingCompact. Entry point: CircuitHousingCompacts. */
-class CircuitHousingCompact : TypedDevice {
-  val Error: Boolean
-  var LineNumber: Double
-  var Mode: Double
-  var On: Boolean
-  val Power: Boolean
-  val RequiredPower: Double
-  var Setting: Double
-  val StackSize: Double
-  val ProgrammableChip: ProgrammableChipSlot // slots[0]
-  val slots: Slots<ProgrammableChipSlot>
-}
-
 /** StructureCombustionCentrifuge. Entry point: CombustionCentrifuges. */
 class CombustionCentrifuge : TypedDevice {
   var ClearMemory: Boolean
@@ -942,54 +2231,6 @@ class CompositeWindowShutterController : TypedDevice {
   val RequiredPower: Double
 }
 
-/** StructureComputer. Entry point: Computers. */
-class Computer : TypedDevice {
-  val Error: Boolean
-  var Lock: Boolean
-  var On: Boolean
-  var Open: Boolean
-  val Power: Boolean
-  val RequiredPower: Double
-  val Motherboard: DataDiskSlot // slots[2]
-  val slots: Slots<DataDiskSlot>
-}
-
-/** StructureComputerBigScreen. Entry point: ComputerBigScreens. */
-class ComputerBigScreen : TypedDevice {
-  val Error: Boolean
-  var Lock: Boolean
-  var On: Boolean
-  var Open: Boolean
-  val Power: Boolean
-  val RequiredPower: Double
-  val Motherboard: DataDiskSlot // slots[0]
-  val slots: Slots<DataDiskSlot>
-}
-
-/** StructureComputerBigScreenWallMounted. Entry point: ComputerBigScreenWallMounteds. */
-class ComputerBigScreenWallMounted : TypedDevice {
-  val Error: Boolean
-  var Lock: Boolean
-  var On: Boolean
-  var Open: Boolean
-  val Power: Boolean
-  val RequiredPower: Double
-  val Motherboard: DataDiskSlot // slots[0]
-  val slots: Slots<DataDiskSlot>
-}
-
-/** StructureComputerUpright. Entry point: ComputerUprights. */
-class ComputerUpright : TypedDevice {
-  val Error: Boolean
-  var Lock: Boolean
-  var On: Boolean
-  var Open: Boolean
-  val Power: Boolean
-  val RequiredPower: Double
-  val Motherboard: DataDiskSlot // slots[2]
-  val slots: Slots<DataDiskSlot>
-}
-
 /** StructureCondensationChamber. Entry point: CondensationChambers. */
 class CondensationChamber : TypedDevice {
   val Combustion: Boolean
@@ -1014,52 +2255,6 @@ class CondensationValve : TypedDevice {
   var On: Boolean
   val Ratio: Double
   var Setting: Double
-}
-
-/** StructureConsole. Entry point: Consoles. */
-class Console : TypedDevice {
-  var Activate: Boolean
-  val Error: Boolean
-  var On: Boolean
-  var Open: Boolean
-  val Power: Boolean
-  val RequiredPower: Double
-  val Setting: Double
-  val Circuitboard: CircuitboardSlot // slots[0]
-  val slots: Slots<CircuitboardSlot>
-}
-
-/** StructureConsoleDual. Entry point: ConsoleDuals. */
-class ConsoleDual : TypedDevice {
-  var Activate: Boolean
-  val Error: Boolean
-  var On: Boolean
-  var Open: Boolean
-  val Power: Boolean
-  val RequiredPower: Double
-  val Setting: Double
-  val Circuitboard: CircuitboardSlot // slots[0]
-  val slots: Slots<CircuitboardSlot>
-}
-
-/** StructureConsoleMonitor. Entry point: ConsoleMonitors. */
-class ConsoleMonitor : TypedDevice {
-  var Activate: Boolean
-  val Error: Boolean
-  var On: Boolean
-  var Open: Boolean
-  val Power: Boolean
-  val RequiredPower: Double
-  val Setting: Double
-  val Circuitboard: CircuitboardSlot // slots[0]
-  val slots: Slots<CircuitboardSlot>
-}
-
-/** StructureCornerLocker. Entry point: CornerLockers. */
-class CornerLocker : TypedDevice {
-  var Lock: Boolean
-  var Open: Boolean
-  val slots: Slots<DataDiskSlot>
 }
 
 /** StructureCrewUmbilical. Entry point: CrewUmbilicals. */
@@ -1168,18 +2363,6 @@ class DeviceStepUnit : TypedDevice {
   var Volume: Double
 }
 
-/** StructureDigitalValve. Entry point: DigitalValves. */
-class DigitalValve : TypedDevice {
-  val Error: Boolean
-  var Lock: Boolean
-  val Maximum: Double
-  var On: Boolean
-  val Power: Boolean
-  val Ratio: Double
-  val RequiredPower: Double
-  var Setting: Double
-}
-
 /** StructureDiode. Entry point: Diodes. */
 class Diode : TypedDevice {
   var Color: Double
@@ -1196,14 +2379,6 @@ class DiodeSlide : TypedDevice {
   val Power: Boolean
   val RequiredPower: Double
   var Setting: Double
-}
-
-/** ItemDrill. Entry point: Drills. */
-class Drill : TypedDevice {
-  var Activate: Boolean
-  val Power: Boolean
-  val Battery: ItemBatterySlot // slots[0]
-  val slots: Slots<ItemBatterySlot>
 }
 
 /** StructureDrinkingFountain2x1. Entry point: DrinkingFountain2x1s. */
@@ -1276,63 +2451,6 @@ class ElectronicsPrinter : TypedDevice {
   val slots: Slots<DataDiskSlot>
 }
 
-/** StructureElevatorLevelFront. Entry point: ElevatorLevelFronts. */
-class ElevatorLevelFront : TypedDevice {
-  var Activate: Boolean
-  var ElevatorLevel: Double
-  var ElevatorSpeed: Double
-  val Error: Boolean
-  var Lock: Boolean
-  var On: Boolean
-  var Open: Boolean
-  val Power: Boolean
-  val RequiredPower: Double
-}
-
-/** StructureElevatorLevelIndustrial. Entry point: ElevatorLevelIndustrials. */
-class ElevatorLevelIndustrial : TypedDevice {
-  var Activate: Boolean
-  var ElevatorLevel: Double
-  var ElevatorSpeed: Double
-  val Error: Boolean
-  var Lock: Boolean
-  var On: Boolean
-  var Open: Boolean
-  val Power: Boolean
-  val RequiredPower: Double
-}
-
-/** StructureElevatorShaft. Entry point: ElevatorShafts. */
-class ElevatorShaft : TypedDevice {
-  var ElevatorLevel: Double
-  var ElevatorSpeed: Double
-  var On: Boolean
-  val Power: Boolean
-  val RequiredPower: Double
-}
-
-/** StructureElevatorShaftIndustrial. Entry point: ElevatorShaftIndustrials. */
-class ElevatorShaftIndustrial : TypedDevice {
-  var ElevatorLevel: Double
-  var ElevatorSpeed: Double
-}
-
-/** ItemEmergencyAngleGrinder. Entry point: EmergencyAngleGrinders. */
-class EmergencyAngleGrinder : TypedDevice {
-  var Activate: Boolean
-  val Power: Boolean
-  val Battery: ItemBatterySlot // slots[0]
-  val slots: Slots<ItemBatterySlot>
-}
-
-/** ItemEmergencyArcWelder. Entry point: EmergencyArcWelders. */
-class EmergencyArcWelder : TypedDevice {
-  var Activate: Boolean
-  val Power: Boolean
-  val Battery: ItemBatterySlot // slots[0]
-  val slots: Slots<ItemBatterySlot>
-}
-
 /** StructureEmergencyButton. Entry point: EmergencyButtons. */
 class EmergencyButton : TypedDevice {
   var Activate: Boolean
@@ -1343,30 +2461,6 @@ class EmergencyButton : TypedDevice {
   val Power: Boolean
   val RequiredPower: Double
   val Setting: Double
-}
-
-/** ItemEmergencyDrill. Entry point: EmergencyDrills. */
-class EmergencyDrill : TypedDevice {
-  var Activate: Boolean
-  val Power: Boolean
-  val Battery: ItemBatterySlot // slots[0]
-  val slots: Slots<ItemBatterySlot>
-}
-
-/** ItemEmergencySpaceHelmet. Entry point: EmergencySpaceHelmets. */
-class EmergencySpaceHelmet : TypedDevice {
-  val Combustion: Boolean
-  var Flush: Boolean
-  var Lock: Boolean
-  var On: Boolean
-  var Open: Boolean
-  val Power: Boolean
-  val Pressure: Double
-  val Ratios: Ratios // every Substance
-  var SoundAlert: Double
-  val Temperature: Double
-  val TotalMoles: Double
-  var Volume: Double
 }
 
 /** StructureEvaporationChamber. Entry point: EvaporationChambers. */
@@ -1422,46 +2516,6 @@ class Fermenter : TypedDevice {
   val slots: Slots<DataDiskSlot>
 }
 
-/** StructureFiltration. Entry point: Filtrations. */
-class Filtration : TypedDevice {
-  val Error: Boolean
-  var Lock: Boolean
-  val Maximum: Double
-  var Mode: Double
-  var On: Boolean
-  var Open: Boolean
-  val Ports: Ports
-  //   Input: Combustion, Pressure, Temperature, TotalMoles, Ratios[every Substance]
-  //   Output: Combustion, Pressure, Temperature, TotalMoles, Ratios[every Substance]
-  //   Output2: Combustion, Pressure, Temperature, TotalMoles, Ratios[every Substance]
-  val Power: Boolean
-  val Ratio: Double
-  val RequiredPower: Double
-  var Setting: Double
-  val ProgrammableChip: DataDiskSlot // slots[2]
-  val slots: Slots<CommonSlot>
-}
-
-/** StructureFiltrationLiquid. Entry point: FiltrationLiquids. */
-class FiltrationLiquid : TypedDevice {
-  val Error: Boolean
-  var Lock: Boolean
-  val Maximum: Double
-  var Mode: Double
-  var On: Boolean
-  var Open: Boolean
-  val Ports: Ports
-  //   Input: Combustion, Pressure, Temperature, TotalMoles, Ratios[every Substance]
-  //   Output: Combustion, Pressure, Temperature, TotalMoles, Ratios[every Substance]
-  //   Output2: Combustion, Pressure, Temperature, TotalMoles, Ratios[every Substance]
-  val Power: Boolean
-  val Ratio: Double
-  val RequiredPower: Double
-  var Setting: Double
-  val ProgrammableChip: DataDiskSlot // slots[2]
-  val slots: Slots<CommonSlot>
-}
-
 /** StructureFlashingLight. Entry point: FlashingLights. */
 class FlashingLight : TypedDevice {
   var Lock: Boolean
@@ -1477,62 +2531,6 @@ class Flashlight : TypedDevice {
   val Power: Boolean
   val Battery: ItemBatterySlot // slots[0]
   val slots: Slots<ItemBatterySlot>
-}
-
-/** StructureFridgeBig. Entry point: FridgeBigs. */
-class FridgeBig : TypedDevice {
-  val Combustion: Boolean
-  val Error: Boolean
-  val Maximum: Double
-  var On: Boolean
-  var Open: Boolean
-  val Ports: Ports // Output: Combustion, Pressure, Temperature, TotalMoles, Ratios[CarbonDioxide, Helium, Hydrazine, HydrochloricAcid, Hydrogen, LiquidAlcohol, LiquidHydrazine, LiquidHydrochloricAcid, LiquidHydrogen, LiquidOzone, LiquidSilanol, LiquidSodiumChloride, Methane, Nitrogen, NitrousOxide, Oxygen, Ozone, Pollutant, PollutedWater, Silanol, Water]
-  val Power: Boolean
-  val Pressure: Double
-  val Ratio: Double
-  val Ratios: Ratios // every Substance
-  val RequiredPower: Double
-  var Setting: Double
-  val Temperature: Double
-  val TotalMoles: Double
-  val slots: Slots<DataDiskSlot>
-}
-
-/** StructureFridgeSmall. Entry point: FridgeSmalls. */
-class FridgeSmall : TypedDevice {
-  val Combustion: Boolean
-  val Maximum: Double
-  var Open: Boolean
-  val Ports: Ports // Output: Combustion, Pressure, Temperature, TotalMoles, Ratios[CarbonDioxide, Helium, Hydrazine, HydrochloricAcid, Hydrogen, LiquidAlcohol, LiquidHydrazine, LiquidHydrochloricAcid, LiquidHydrogen, LiquidOzone, LiquidSilanol, LiquidSodiumChloride, Methane, Nitrogen, NitrousOxide, Oxygen, Ozone, Pollutant, PollutedWater, Silanol, Water]
-  val Pressure: Double
-  val Ratio: Double
-  val Ratios: Ratios // every Substance
-  var Setting: Double
-  val Temperature: Double
-  val TotalMoles: Double
-  val slots: Slots<DataDiskSlot>
-}
-
-/** StructureFurnace. Entry point: Furnaces. */
-class Furnace : TypedDevice {
-  var Activate: Boolean
-  var ClearMemory: Boolean
-  val Combustion: Boolean
-  val Export: Transfer // Count
-  val Import: Transfer // Count
-  var Lock: Boolean
-  val Maximum: Double
-  var Mode: Double
-  var Open: Boolean
-  val Pressure: Double
-  val Ratio: Double
-  val Ratios: Ratios // every Substance
-  val Reagents: Double
-  val RecipeHash: Double
-  var Setting: Double
-  val Temperature: Double
-  val TotalMoles: Double
-  val slots: Slots<DataDiskSlot>
 }
 ```
 
@@ -1589,44 +2587,6 @@ class GasSensor : TypedDevice {
   val Temperature: Double
   val TotalMoles: Double
   val VolumeOfLiquid: Double
-}
-
-/** StructureGasTankStorage. Entry point: GasTankStorages. */
-class GasTankStorage : TypedDevice {
-  val Pressure: Double
-  val Quantity: Double
-  val Ratios: Ratios // every Substance
-  val Temperature: Double
-  val GasCanister: GasCanisterSlot // slots[0]
-  val slots: Slots<GasCanisterSlot>
-}
-
-/** StructureGasUmbilicalFemale. Entry point: GasUmbilicalFemales. */
-class GasUmbilicalFemale : TypedDevice {
-  val Maximum: Double
-  val Ratio: Double
-  var Setting: Double
-}
-
-/** StructureGasUmbilicalFemaleSide. Entry point: GasUmbilicalFemaleSides. */
-class GasUmbilicalFemaleSide : TypedDevice {
-  val Maximum: Double
-  val Ratio: Double
-  var Setting: Double
-}
-
-/** StructureGasUmbilicalMale. Entry point: GasUmbilicalMales. */
-class GasUmbilicalMale : TypedDevice {
-  val Error: Boolean
-  var Lock: Boolean
-  val Maximum: Double
-  val Mode: Double
-  var On: Boolean
-  var Open: Boolean
-  val Power: Boolean
-  val Ratio: Double
-  val RequiredPower: Double
-  var Setting: Double
 }
 
 /** StructureGlassDoor. Entry point: GlassDoors. */
@@ -1913,54 +2873,6 @@ class IntegratedCircuit10 : TypedDevice {
   val LineNumber: Double
 }
 
-/** StructureInteriorDoorGlass. Entry point: InteriorDoorGlasses. */
-class InteriorDoorGlass : TypedDevice {
-  val Idle: Boolean
-  var Lock: Boolean
-  var Mode: Double
-  var On: Boolean
-  var Open: Boolean
-  val Power: Boolean
-  val RequiredPower: Double
-  var Setting: Double
-}
-
-/** StructureInteriorDoorPadded. Entry point: InteriorDoorPaddeds. */
-class InteriorDoorPadded : TypedDevice {
-  val Idle: Boolean
-  var Lock: Boolean
-  var Mode: Double
-  var On: Boolean
-  var Open: Boolean
-  val Power: Boolean
-  val RequiredPower: Double
-  var Setting: Double
-}
-
-/** StructureInteriorDoorPaddedThin. Entry point: InteriorDoorPaddedThins. */
-class InteriorDoorPaddedThin : TypedDevice {
-  val Idle: Boolean
-  var Lock: Boolean
-  var Mode: Double
-  var On: Boolean
-  var Open: Boolean
-  val Power: Boolean
-  val RequiredPower: Double
-  var Setting: Double
-}
-
-/** StructureInteriorDoorTriangle. Entry point: InteriorDoorTriangles. */
-class InteriorDoorTriangle : TypedDevice {
-  val Idle: Boolean
-  var Lock: Boolean
-  var Mode: Double
-  var On: Boolean
-  var Open: Boolean
-  val Power: Boolean
-  val RequiredPower: Double
-  var Setting: Double
-}
-
 /** ItemBeacon. Entry point: ItemBeacons. */
 class ItemBeacon : TypedDevice {
   val Error: Boolean
@@ -2026,92 +2938,6 @@ class Landingpad_DataConnectionPiece : TypedDevice {
   var Vertical: Double
 }
 
-/** Landingpad_GasConnectorInwardPiece. Entry point: Landingpad_GasConnectorInwardPieces. */
-class Landingpad_GasConnectorInwardPiece : TypedDevice {
-  val Combustion: Boolean
-  val Error: Boolean
-  val Maximum: Double
-  var On: Boolean
-  val Power: Boolean
-  val Pressure: Double
-  val Ratio: Double
-  val Ratios: Ratios // every Substance
-  val RequiredPower: Double
-  var Setting: Double
-  val Temperature: Double
-  val TotalMoles: Double
-}
-
-/** Landingpad_GasConnectorOutwardPiece. Entry point: Landingpad_GasConnectorOutwardPieces. */
-class Landingpad_GasConnectorOutwardPiece : TypedDevice {
-  val Combustion: Boolean
-  val Error: Boolean
-  val Maximum: Double
-  var On: Boolean
-  val Power: Boolean
-  val Pressure: Double
-  val Ratio: Double
-  val Ratios: Ratios // every Substance
-  val RequiredPower: Double
-  var Setting: Double
-  val Temperature: Double
-  val TotalMoles: Double
-}
-
-/** Landingpad_GasTankConnectorPiece. Entry point: Landingpad_GasTankConnectorPieces. */
-class Landingpad_GasTankConnectorPiece : TypedDevice {
-  val Error: Boolean
-  var Mode: Double
-  var On: Boolean
-  val Power: Boolean
-  val RequiredPower: Double
-  val PortableSlot: DataDiskSlot // slots[0]
-  val slots: Slots<DataDiskSlot>
-}
-
-/** Landingpad_LiquidConnectorInwardPiece. Entry point: Landingpad_LiquidConnectorInwardPieces. */
-class Landingpad_LiquidConnectorInwardPiece : TypedDevice {
-  val Combustion: Boolean
-  val Error: Boolean
-  val Maximum: Double
-  var On: Boolean
-  val Power: Boolean
-  val Pressure: Double
-  val Ratio: Double
-  val Ratios: Ratios // every Substance
-  val RequiredPower: Double
-  var Setting: Double
-  val Temperature: Double
-  val TotalMoles: Double
-}
-
-/** Landingpad_LiquidConnectorOutwardPiece. Entry point: Landingpad_LiquidConnectorOutwardPieces. */
-class Landingpad_LiquidConnectorOutwardPiece : TypedDevice {
-  val Combustion: Boolean
-  val Error: Boolean
-  val Maximum: Double
-  var On: Boolean
-  val Power: Boolean
-  val Pressure: Double
-  val Ratio: Double
-  val Ratios: Ratios // every Substance
-  val RequiredPower: Double
-  var Setting: Double
-  val Temperature: Double
-  val TotalMoles: Double
-}
-
-/** Landingpad_LiquidTankConnectorPiece. Entry point: Landingpad_LiquidTankConnectorPieces. */
-class Landingpad_LiquidTankConnectorPiece : TypedDevice {
-  val Error: Boolean
-  var Mode: Double
-  var On: Boolean
-  val Power: Boolean
-  val RequiredPower: Double
-  val PortableSlot: DataDiskSlot // slots[0]
-  val slots: Slots<DataDiskSlot>
-}
-
 /** Landingpad_ThreshholdPiece. Entry point: Landingpad_ThreshholdPieces. */
 class Landingpad_ThreshholdPiece : TypedDevice {
   var On: Boolean
@@ -2133,27 +2959,6 @@ class Laptop : TypedDevice {
   val slots: Slots<ItemCommonSlot>
 }
 
-/** StructureLargeDirectHeatExchangeGastoGas. Entry point: LargeDirectHeatExchangeGastoGases. */
-class LargeDirectHeatExchangeGastoGas : TypedDevice {
-  val Maximum: Double
-  val Ratio: Double
-  var Setting: Double
-}
-
-/** StructureLargeDirectHeatExchangeGastoLiquid. Entry point: LargeDirectHeatExchangeGastoLiquids. */
-class LargeDirectHeatExchangeGastoLiquid : TypedDevice {
-  val Maximum: Double
-  val Ratio: Double
-  var Setting: Double
-}
-
-/** StructureLargeDirectHeatExchangeLiquidtoLiquid. Entry point: LargeDirectHeatExchangeLiquidtoLiquids. */
-class LargeDirectHeatExchangeLiquidtoLiquid : TypedDevice {
-  val Maximum: Double
-  val Ratio: Double
-  var Setting: Double
-}
-
 /** StructureLargeExtendableRadiator. Entry point: LargeExtendableRadiators. */
 class LargeExtendableRadiator : TypedDevice {
   var Horizontal: Double
@@ -2162,71 +2967,6 @@ class LargeExtendableRadiator : TypedDevice {
   var Open: Boolean
   val Ratio: Double
   var Setting: Double
-}
-
-/** StructureLargeHangerDoor. Entry point: LargeHangerDoors. */
-class LargeHangerDoor : TypedDevice {
-  val Idle: Boolean
-  var Lock: Boolean
-  var Mode: Double
-  var On: Boolean
-  var Open: Boolean
-  val Power: Boolean
-  val RequiredPower: Double
-  var Setting: Double
-}
-
-/** StructureLargeRocketGasFuelTank. Entry point: LargeRocketGasFuelTanks. */
-class LargeRocketGasFuelTank : TypedDevice {
-  val Combustion: Boolean
-  val Maximum: Double
-  val Ports: Ports // Output: Combustion, Pressure, Temperature, TotalMoles, Ratios[CarbonDioxide, Helium, Hydrazine, HydrochloricAcid, Hydrogen, LiquidAlcohol, LiquidHydrazine, LiquidHydrochloricAcid, LiquidHydrogen, LiquidOzone, LiquidSilanol, LiquidSodiumChloride, Methane, Nitrogen, NitrousOxide, Oxygen, Ozone, Pollutant, PollutedWater, Silanol, Water]
-  val Pressure: Double
-  val Ratio: Double
-  val Ratios: Ratios // every Substance
-  var Setting: Double
-  val Temperature: Double
-  val TotalMoles: Double
-  val Volume: Double
-  val VolumeOfLiquid: Double
-}
-
-/** StructureLargeRocketLiquidFuelTank. Entry point: LargeRocketLiquidFuelTanks. */
-class LargeRocketLiquidFuelTank : TypedDevice {
-  val Combustion: Boolean
-  val Maximum: Double
-  val Ports: Ports // Output: Combustion, Pressure, Temperature, TotalMoles, Ratios[CarbonDioxide, Helium, Hydrazine, HydrochloricAcid, Hydrogen, LiquidAlcohol, LiquidHydrazine, LiquidHydrochloricAcid, LiquidHydrogen, LiquidOzone, LiquidSilanol, LiquidSodiumChloride, Methane, Nitrogen, NitrousOxide, Oxygen, Ozone, Pollutant, PollutedWater, Silanol, Water]
-  val Pressure: Double
-  val Ratio: Double
-  val Ratios: Ratios // every Substance
-  var Setting: Double
-  val Temperature: Double
-  val TotalMoles: Double
-  val Volume: Double
-  val VolumeOfLiquid: Double
-}
-
-/** StructureLargeSatelliteDish. Entry point: LargeSatelliteDishes. */
-class LargeSatelliteDish : TypedDevice {
-  var Activate: Boolean
-  var BestContactFilter: Double
-  val ContactSlotIndex: Double
-  val ContactTypeId: Double
-  val Dimensions: Vector // X, Z
-  val Error: Boolean
-  var Horizontal: Double
-  val Idle: Boolean
-  val InterrogationProgress: Double
-  val MinimumWattsToContact: Double
-  var On: Boolean
-  val Power: Boolean
-  val RequiredPower: Double
-  var Setting: Double
-  val SignalID: Double
-  val SignalStrength: Double
-  var TargetPadIndex: Double
-  var Vertical: Double
-  val WattsReachingContact: Double
 }
 
 /** StructureLarreDockAtmos. Entry point: LarreDockAtmoses. */
@@ -2319,54 +3059,6 @@ class LarreDockHydroponics : TypedDevice {
   val slots: Slots<CommonSlot>
 }
 
-/** StructureLightLong. Entry point: LightLongs. */
-class LightLong : TypedDevice {
-  var Lock: Boolean
-  var On: Boolean
-  val Power: Boolean
-  val RequiredPower: Double
-}
-
-/** StructureLightLongAngled. Entry point: LightLongAngleds. */
-class LightLongAngled : TypedDevice {
-  var Lock: Boolean
-  var On: Boolean
-  val Power: Boolean
-  val RequiredPower: Double
-}
-
-/** StructureLightLongWide. Entry point: LightLongWides. */
-class LightLongWide : TypedDevice {
-  var Lock: Boolean
-  var On: Boolean
-  val Power: Boolean
-  val RequiredPower: Double
-}
-
-/** StructureLightRound. Entry point: LightRounds. */
-class LightRound : TypedDevice {
-  var Lock: Boolean
-  var On: Boolean
-  val Power: Boolean
-  val RequiredPower: Double
-}
-
-/** StructureLightRoundAngled. Entry point: LightRoundAngleds. */
-class LightRoundAngled : TypedDevice {
-  var Lock: Boolean
-  var On: Boolean
-  val Power: Boolean
-  val RequiredPower: Double
-}
-
-/** StructureLightRoundSmall. Entry point: LightRoundSmalls. */
-class LightRoundSmall : TypedDevice {
-  var Lock: Boolean
-  var On: Boolean
-  val Power: Boolean
-  val RequiredPower: Double
-}
-
 /** StructureLiquidDrain. Entry point: LiquidDrains. */
 class LiquidDrain : TypedDevice {
   val Error: Boolean
@@ -2374,95 +3066,6 @@ class LiquidDrain : TypedDevice {
   val Maximum: Double
   var On: Boolean
   val Ports: Ports // Output: Combustion, Pressure, Temperature, TotalMoles, Ratios[CarbonDioxide, Helium, Hydrazine, HydrochloricAcid, Hydrogen, LiquidAlcohol, LiquidHydrazine, LiquidHydrochloricAcid, LiquidHydrogen, LiquidOzone, LiquidSilanol, LiquidSodiumChloride, Methane, Nitrogen, NitrousOxide, Oxygen, Ozone, Pollutant, PollutedWater, Silanol, Water]
-  val Power: Boolean
-  val Ratio: Double
-  val RequiredPower: Double
-  var Setting: Double
-}
-
-/** StructureLiquidPipeAnalyzer. Entry point: LiquidPipeAnalyzers. */
-class LiquidPipeAnalyzer : TypedDevice {
-  val Combustion: Boolean
-  val Error: Boolean
-  var Lock: Boolean
-  val NetworkFault: Boolean
-  var On: Boolean
-  val Power: Boolean
-  val Pressure: Double
-  val Ratios: Ratios // every Substance
-  val RequiredPower: Double
-  val Temperature: Double
-  val TotalMoles: Double
-  val Volume: Double
-  val VolumeOfLiquid: Double
-}
-
-/** StructureLiquidPipeHeater. Entry point: LiquidPipeHeaters. */
-class LiquidPipeHeater : TypedDevice {
-  val Error: Boolean
-  var Lock: Boolean
-  var On: Boolean
-  val Power: Boolean
-  val RequiredPower: Double
-}
-
-/** StructureLiquidPressureRegulator. Entry point: LiquidPressureRegulators. */
-class LiquidPressureRegulator : TypedDevice {
-  val Error: Boolean
-  var Lock: Boolean
-  val Maximum: Double
-  var On: Boolean
-  val Power: Boolean
-  val Ratio: Double
-  val RequiredPower: Double
-  var Setting: Double
-}
-
-/** StructureLiquidTankStorage. Entry point: LiquidTankStorages. */
-class LiquidTankStorage : TypedDevice {
-  val Pressure: Double
-  val Quantity: Double
-  val Ratios: Ratios // every Substance
-  val Temperature: Double
-  val LiquidCanister: GasCanisterSlot // slots[0]
-  val slots: Slots<GasCanisterSlot>
-}
-
-/** StructureLiquidTurboVolumePump. Entry point: LiquidTurboVolumePumps. */
-class LiquidTurboVolumePump : TypedDevice {
-  val Error: Boolean
-  var Lock: Boolean
-  val Maximum: Double
-  var Mode: Double
-  var On: Boolean
-  val Power: Boolean
-  val Ratio: Double
-  val RequiredPower: Double
-  var Setting: Double
-}
-
-/** StructureLiquidUmbilicalFemale. Entry point: LiquidUmbilicalFemales. */
-class LiquidUmbilicalFemale : TypedDevice {
-  val Maximum: Double
-  val Ratio: Double
-  var Setting: Double
-}
-
-/** StructureLiquidUmbilicalFemaleSide. Entry point: LiquidUmbilicalFemaleSides. */
-class LiquidUmbilicalFemaleSide : TypedDevice {
-  val Maximum: Double
-  val Ratio: Double
-  var Setting: Double
-}
-
-/** StructureLiquidUmbilicalMale. Entry point: LiquidUmbilicalMales. */
-class LiquidUmbilicalMale : TypedDevice {
-  val Error: Boolean
-  var Lock: Boolean
-  val Maximum: Double
-  val Mode: Double
-  var On: Boolean
-  var Open: Boolean
   val Power: Boolean
   val Ratio: Double
   val RequiredPower: Double
@@ -2478,33 +3081,6 @@ class LiquidVacuum : TypedDevice {
   val Power: Boolean
   val Battery: ItemBatterySlot // slots[0]
   val slots: Slots<ItemBatterySlot>
-}
-
-/** StructureLiquidValve. Entry point: LiquidValves. */
-class LiquidValve : TypedDevice {
-  val Maximum: Double
-  var On: Boolean
-  val Ratio: Double
-  var Setting: Double
-}
-
-/** StructureLiquidVolumePump. Entry point: LiquidVolumePumps. */
-class LiquidVolumePump : TypedDevice {
-  val Error: Boolean
-  var Lock: Boolean
-  val Maximum: Double
-  var On: Boolean
-  val Power: Boolean
-  val Ratio: Double
-  val RequiredPower: Double
-  var Setting: Double
-}
-
-/** StructureLockerSmall. Entry point: LockerSmalls. */
-class LockerSmall : TypedDevice {
-  var Lock: Boolean
-  var Open: Boolean
-  val slots: Slots<DataDiskSlot>
 }
 
 /** StructureLogicBatchReader. Entry point: LogicBatchReaders. */
@@ -2762,133 +3338,6 @@ class ManualHatch : TypedDevice {
   var Setting: Double
 }
 
-/** StructureMediumConvectionRadiator. Entry point: MediumConvectionRadiators. */
-class MediumConvectionRadiator : TypedDevice {
-  val Maximum: Double
-  val Ratio: Double
-  var Setting: Double
-}
-
-/** StructureMediumConvectionRadiatorLiquid. Entry point: MediumConvectionRadiatorLiquids. */
-class MediumConvectionRadiatorLiquid : TypedDevice {
-  val Maximum: Double
-  val Ratio: Double
-  var Setting: Double
-}
-
-/** StructureMediumHangerDoor. Entry point: MediumHangerDoors. */
-class MediumHangerDoor : TypedDevice {
-  val Idle: Boolean
-  var Lock: Boolean
-  var Mode: Double
-  var On: Boolean
-  var Open: Boolean
-  val Power: Boolean
-  val RequiredPower: Double
-  var Setting: Double
-}
-
-/** StructureMediumRadiator. Entry point: MediumRadiators. */
-class MediumRadiator : TypedDevice {
-  val Maximum: Double
-  val Ratio: Double
-  var Setting: Double
-}
-
-/** StructureMediumRadiatorLiquid. Entry point: MediumRadiatorLiquids. */
-class MediumRadiatorLiquid : TypedDevice {
-  val Maximum: Double
-  val Ratio: Double
-  var Setting: Double
-}
-
-/** StructureMediumRocketGasFuelTank. Entry point: MediumRocketGasFuelTanks. */
-class MediumRocketGasFuelTank : TypedDevice {
-  val Combustion: Boolean
-  val Maximum: Double
-  val Ports: Ports // Output: Combustion, Pressure, Temperature, TotalMoles, Ratios[CarbonDioxide, Helium, Hydrazine, HydrochloricAcid, Hydrogen, LiquidAlcohol, LiquidHydrazine, LiquidHydrochloricAcid, LiquidHydrogen, LiquidOzone, LiquidSilanol, LiquidSodiumChloride, Methane, Nitrogen, NitrousOxide, Oxygen, Ozone, Pollutant, PollutedWater, Silanol, Water]
-  val Pressure: Double
-  val Ratio: Double
-  val Ratios: Ratios // every Substance
-  var Setting: Double
-  val Temperature: Double
-  val TotalMoles: Double
-  val Volume: Double
-  val VolumeOfLiquid: Double
-}
-
-/** StructureMediumRocketLiquidFuelTank. Entry point: MediumRocketLiquidFuelTanks. */
-class MediumRocketLiquidFuelTank : TypedDevice {
-  val Combustion: Boolean
-  val Maximum: Double
-  val Ports: Ports // Output: Combustion, Pressure, Temperature, TotalMoles, Ratios[CarbonDioxide, Helium, Hydrazine, HydrochloricAcid, Hydrogen, LiquidAlcohol, LiquidHydrazine, LiquidHydrochloricAcid, LiquidHydrogen, LiquidOzone, LiquidSilanol, LiquidSodiumChloride, Methane, Nitrogen, NitrousOxide, Oxygen, Ozone, Pollutant, PollutedWater, Silanol, Water]
-  val Pressure: Double
-  val Ratio: Double
-  val Ratios: Ratios // every Substance
-  var Setting: Double
-  val Temperature: Double
-  val TotalMoles: Double
-  val Volume: Double
-  val VolumeOfLiquid: Double
-}
-
-/** ItemMiningDrill. Entry point: MiningDrills. */
-class MiningDrill : TypedDevice {
-  var Activate: Boolean
-  val Error: Boolean
-  var Mode: Double
-  var On: Boolean
-  val Power: Boolean
-  val Battery: ItemBatterySlot // slots[0]
-  val slots: Slots<ItemBatterySlot>
-}
-
-/** ItemMiningDrillHeavy. Entry point: MiningDrillHeavies. */
-class MiningDrillHeavy : TypedDevice {
-  var Activate: Boolean
-  val Error: Boolean
-  var Mode: Double
-  var On: Boolean
-  val Power: Boolean
-  val Battery: ItemBatterySlot // slots[0]
-  val slots: Slots<ItemBatterySlot>
-}
-
-/** ItemMKIIAngleGrinder. Entry point: MKIIAngleGrinders. */
-class MKIIAngleGrinder : TypedDevice {
-  var Activate: Boolean
-  val Power: Boolean
-  val Battery: ItemBatterySlot // slots[0]
-  val slots: Slots<ItemBatterySlot>
-}
-
-/** ItemMKIIArcWelder. Entry point: MKIIArcWelders. */
-class MKIIArcWelder : TypedDevice {
-  var Activate: Boolean
-  val Power: Boolean
-  val Battery: ItemBatterySlot // slots[0]
-  val slots: Slots<ItemBatterySlot>
-}
-
-/** ItemMKIIDrill. Entry point: MKIIDrills. */
-class MKIIDrill : TypedDevice {
-  var Activate: Boolean
-  val Power: Boolean
-  val Battery: ItemBatterySlot // slots[0]
-  val slots: Slots<ItemBatterySlot>
-}
-
-/** ItemMKIIMiningDrill. Entry point: MKIIMiningDrills. */
-class MKIIMiningDrill : TypedDevice {
-  var Activate: Boolean
-  val Error: Boolean
-  var Mode: Double
-  var On: Boolean
-  val Power: Boolean
-  val Battery: ItemBatterySlot // slots[0]
-  val slots: Slots<ItemBatterySlot>
-}
-
 /** StructureMotionSensor. Entry point: MotionSensors. */
 class MotionSensor : TypedDevice {
   var Activate: Boolean
@@ -2954,20 +3403,6 @@ class OreDetector : TypedDevice {
   val Battery: ItemBatterySlot // slots[0]
   val slots: Slots<ItemBatterySlot>
 }
-
-/** StructureOverheadShortCornerLocker. Entry point: OverheadShortCornerLockers. */
-class OverheadShortCornerLocker : TypedDevice {
-  var Lock: Boolean
-  var Open: Boolean
-  val slots: Slots<DataDiskSlot>
-}
-
-/** StructureOverheadShortLocker. Entry point: OverheadShortLockers. */
-class OverheadShortLocker : TypedDevice {
-  var Lock: Boolean
-  var Open: Boolean
-  val slots: Slots<DataDiskSlot>
-}
 ```
 
 ### P
@@ -2988,71 +3423,10 @@ class Packer : TypedDevice {
   val slots: Slots<DataDiskSlot>
 }
 
-/** StructurePassiveLargeRadiatorGas. Entry point: PassiveLargeRadiatorGases. */
-class PassiveLargeRadiatorGas : TypedDevice {
-  val Maximum: Double
-  val Ratio: Double
-  var Setting: Double
-}
-
-/** StructurePassiveLargeRadiatorLiquid. Entry point: PassiveLargeRadiatorLiquids. */
-class PassiveLargeRadiatorLiquid : TypedDevice {
-  val Maximum: Double
-  val Ratio: Double
-  var Setting: Double
-}
-
 /** PassiveSpeaker. Entry point: PassiveSpeakers. */
 class PassiveSpeaker : TypedDevice {
   var SoundAlert: Double
   var Volume: Double
-}
-
-/** StructurePassthroughHeatExchangerGasToGas. Entry point: PassthroughHeatExchangerGasToGases. */
-class PassthroughHeatExchangerGasToGas : TypedDevice {
-  val Maximum: Double
-  val Ratio: Double
-  var Setting: Double
-}
-
-/** StructurePassthroughHeatExchangerGasToLiquid. Entry point: PassthroughHeatExchangerGasToLiquids. */
-class PassthroughHeatExchangerGasToLiquid : TypedDevice {
-  val Maximum: Double
-  val Ratio: Double
-  var Setting: Double
-}
-
-/** StructurePassthroughHeatExchangerLiquidToLiquid. Entry point: PassthroughHeatExchangerLiquidToLiquids. */
-class PassthroughHeatExchangerLiquidToLiquid : TypedDevice {
-  val Maximum: Double
-  val Ratio: Double
-  var Setting: Double
-}
-
-/** StructurePipeAnalysizer. Entry point: PipeAnalysizers. */
-class PipeAnalysizer : TypedDevice {
-  val Combustion: Boolean
-  val Error: Boolean
-  var Lock: Boolean
-  val NetworkFault: Boolean
-  var On: Boolean
-  val Power: Boolean
-  val Pressure: Double
-  val Ratios: Ratios // every Substance
-  val RequiredPower: Double
-  val Temperature: Double
-  val TotalMoles: Double
-  val Volume: Double
-  val VolumeOfLiquid: Double
-}
-
-/** StructurePipeHeater. Entry point: PipeHeaters. */
-class PipeHeater : TypedDevice {
-  val Error: Boolean
-  var Lock: Boolean
-  var On: Boolean
-  val Power: Boolean
-  val RequiredPower: Double
 }
 
 /** StructurePipeIgniter. Entry point: PipeIgniters. */
@@ -3061,22 +3435,6 @@ class PipeIgniter : TypedDevice {
   val Error: Boolean
   val Power: Boolean
   val RequiredPower: Double
-}
-
-/** StructurePipeLiquidOneWayValveLever. Entry point: PipeLiquidOneWayValveLevers. */
-class PipeLiquidOneWayValveLever : TypedDevice {
-  val Maximum: Double
-  var On: Boolean
-  val Ratio: Double
-  var Setting: Double
-}
-
-/** StructurePipeOneWayValveLever. Entry point: PipeOneWayValveLevers. */
-class PipeOneWayValveLever : TypedDevice {
-  val Maximum: Double
-  var On: Boolean
-  val Ratio: Double
-  var Setting: Double
 }
 
 /** ItemPlantSampler. Entry point: PlantSamplers. */
@@ -3111,30 +3469,6 @@ class PowerConnector : TypedDevice {
   var Open: Boolean
   val Portableslot: DataDiskSlot // slots[0]
   val slots: Slots<DataDiskSlot>
-}
-
-/** StructurePoweredVent. Entry point: PoweredVents. */
-class PoweredVent : TypedDevice {
-  val Error: Boolean
-  var Lock: Boolean
-  var Mode: Double
-  var On: Boolean
-  val Ports: Ports // Output: Combustion, Pressure, Temperature, TotalMoles, Ratios[CarbonDioxide, Helium, Hydrazine, HydrochloricAcid, Hydrogen, LiquidAlcohol, LiquidHydrazine, LiquidHydrochloricAcid, LiquidHydrogen, LiquidOzone, LiquidSilanol, LiquidSodiumChloride, Methane, Nitrogen, NitrousOxide, Oxygen, Ozone, Pollutant, PollutedWater, Silanol, Water]
-  val Power: Boolean
-  var PressureExternal: Double
-  val RequiredPower: Double
-}
-
-/** StructurePoweredVentLarge. Entry point: PoweredVentLarges. */
-class PoweredVentLarge : TypedDevice {
-  val Error: Boolean
-  var Lock: Boolean
-  var Mode: Double
-  var On: Boolean
-  val Ports: Ports // Output: Combustion, Pressure, Temperature, TotalMoles, Ratios[CarbonDioxide, Helium, Hydrazine, HydrochloricAcid, Hydrogen, LiquidAlcohol, LiquidHydrazine, LiquidHydrochloricAcid, LiquidHydrogen, LiquidOzone, LiquidSilanol, LiquidSodiumChloride, Methane, Nitrogen, NitrousOxide, Oxygen, Ozone, Pollutant, PollutedWater, Silanol, Water]
-  val Power: Boolean
-  var PressureExternal: Double
-  val RequiredPower: Double
 }
 
 /** StructurePowerTransmitter. Entry point: PowerTransmitters. */
@@ -3198,99 +3532,6 @@ class PressurantValve : TypedDevice {
   var Setting: Double
 }
 
-/** StructurePressureFedGasEngine. Entry point: PressureFedGasEngines. */
-class PressureFedGasEngine : TypedDevice {
-  val Combustion: Boolean
-  val Error: Boolean
-  var On: Boolean
-  val PassedMoles: Double
-  val Power: Boolean
-  val Pressure: Double
-  val Ratios: Ratios // every Substance
-  val RequiredPower: Double
-  val Temperature: Double
-  var Throttle: Double
-  val TotalMoles: Double
-}
-
-/** StructurePressureFedGasEngineHeavy. Entry point: PressureFedGasEngineHeavies. */
-class PressureFedGasEngineHeavy : TypedDevice {
-  val Combustion: Boolean
-  val Error: Boolean
-  var On: Boolean
-  val PassedMoles: Double
-  val Power: Boolean
-  val Pressure: Double
-  val Ratios: Ratios // every Substance
-  val RequiredPower: Double
-  val Temperature: Double
-  var Throttle: Double
-  val TotalMoles: Double
-}
-
-/** StructurePressureFedLiquidEngine. Entry point: PressureFedLiquidEngines. */
-class PressureFedLiquidEngine : TypedDevice {
-  val Combustion: Boolean
-  val Error: Boolean
-  val Maximum: Double
-  var On: Boolean
-  val PassedMoles: Double
-  val Power: Boolean
-  val Pressure: Double
-  val Ratio: Double
-  val Ratios: Ratios // every Substance
-  val RequiredPower: Double
-  var Setting: Double
-  val Temperature: Double
-  var Throttle: Double
-  val TotalMoles: Double
-}
-
-/** StructurePressureFedLiquidEngineHeavy. Entry point: PressureFedLiquidEngineHeavies. */
-class PressureFedLiquidEngineHeavy : TypedDevice {
-  val Combustion: Boolean
-  val Error: Boolean
-  val Maximum: Double
-  var On: Boolean
-  val PassedMoles: Double
-  val Power: Boolean
-  val Pressure: Double
-  val Ratio: Double
-  val Ratios: Ratios // every Substance
-  val RequiredPower: Double
-  var Setting: Double
-  val Temperature: Double
-  var Throttle: Double
-  val TotalMoles: Double
-}
-
-/** StructurePressurePlateLarge. Entry point: PressurePlateLarges. */
-class PressurePlateLarge : TypedDevice {
-  val Setting: Double
-}
-
-/** StructurePressurePlateMedium. Entry point: PressurePlateMediums. */
-class PressurePlateMedium : TypedDevice {
-  val Setting: Double
-}
-
-/** StructurePressurePlateSmall. Entry point: PressurePlateSmalls. */
-class PressurePlateSmall : TypedDevice {
-  val Setting: Double
-}
-
-/** StructurePressureRegulator. Entry point: PressureRegulators. */
-class PressureRegulator : TypedDevice {
-  val Error: Boolean
-  var Lock: Boolean
-  val Maximum: Double
-  var On: Boolean
-  val Power: Boolean
-  val Ratio: Double
-  val RequiredPower: Double
-  var Setting: Double
-}
-
 /** StructureProximitySensor. Entry point: ProximitySensors. */
 class ProximitySensor : TypedDevice {
   val Activate: Boolean
@@ -3343,31 +3584,6 @@ class Recycler : TypedDevice {
   val Power: Boolean
   val Reagents: Double
   val RequiredPower: Double
-  val slots: Slots<DataDiskSlot>
-}
-
-/** StructureRefrigeratedVendingMachine. Entry point: RefrigeratedVendingMachines. */
-class RefrigeratedVendingMachine : TypedDevice {
-  var Activate: Boolean
-  var ClearMemory: Boolean
-  val Combustion: Boolean
-  val Error: Boolean
-  val Export: Transfer // Count
-  val Import: Transfer // Count
-  var Lock: Boolean
-  var On: Boolean
-  val Power: Boolean
-  val Pressure: Double
-  val Quantity: Double
-  val Ratio: Double
-  val Ratios: Ratios // every Substance
-  var RequestHash: Double
-  val RequiredPower: Double
-  var Setting: Double
-  val TargetPrefabHash: Double
-  val TargetSlotIndex: Double
-  val Temperature: Double
-  val TotalMoles: Double
   val slots: Slots<DataDiskSlot>
 }
 
@@ -3484,20 +3700,6 @@ class RocketCelestialTracker : TypedDevice {
   val Vertical: Double
 }
 
-/** StructureRocketCircuitHousing. Entry point: RocketCircuitHousings. */
-class RocketCircuitHousing : TypedDevice {
-  val Error: Boolean
-  var LineNumber: Double
-  var Mode: Double
-  var On: Boolean
-  val Power: Boolean
-  val RequiredPower: Double
-  var Setting: Double
-  val StackSize: Double
-  val ProgrammableChip: ProgrammableChipSlot // slots[0]
-  val slots: Slots<ProgrammableChipSlot>
-}
-
 /** StructureRocketEngineTiny. Entry point: RocketEngineTinies. */
 class RocketEngineTiny : TypedDevice {
   val Error: Boolean
@@ -3589,18 +3791,6 @@ class RocketScanner : TypedDevice {
   val slots: Slots<DataDiskSlot>
 }
 
-/** StructureRocketTransformerSmall. Entry point: RocketTransformerSmalls. */
-class RocketTransformerSmall : TypedDevice {
-  val Error: Boolean
-  var Lock: Boolean
-  val Maximum: Double
-  var On: Boolean
-  val Power: Boolean
-  val Ratio: Double
-  val RequiredPower: Double
-  var Setting: Double
-}
-
 /** Rover_MkI. Entry point: Rover_MkIs. */
 class Rover_MkI : TypedDevice {
   var On: Boolean
@@ -3612,47 +3802,6 @@ class Rover_MkI : TypedDevice {
 ### S
 
 ```kotlin
-/** StructureSatelliteDish. Entry point: SatelliteDishes. */
-class SatelliteDish : TypedDevice {
-  var Activate: Boolean
-  var BestContactFilter: Double
-  val ContactSlotIndex: Double
-  val ContactTypeId: Double
-  val Dimensions: Vector // X, Z
-  val Error: Boolean
-  var Horizontal: Double
-  val Idle: Boolean
-  val InterrogationProgress: Double
-  val MinimumWattsToContact: Double
-  var On: Boolean
-  val Power: Boolean
-  val RequiredPower: Double
-  var Setting: Double
-  val SignalID: Double
-  val SignalStrength: Double
-  val StackSize: Double
-  var TargetPadIndex: Double
-  var Vertical: Double
-  val WattsReachingContact: Double
-}
-
-/** StructureSDBHopper. Entry point: SDBHoppers. */
-class SDBHopper : TypedDevice {
-  var ClearMemory: Boolean
-  val Import: Transfer // Count
-  var Open: Boolean
-  val slots: Slots<DataDiskSlot>
-}
-
-/** StructureSDBHopperAdvanced. Entry point: SDBHopperAdvanceds. */
-class SDBHopperAdvanced : TypedDevice {
-  var ClearMemory: Boolean
-  val Import: Transfer // Count
-  var Lock: Boolean
-  var Open: Boolean
-  val slots: Slots<DataDiskSlot>
-}
-
 /** StructureSDBSilo. Entry point: SDBSilos. */
 class SDBSilo : TypedDevice {
   var Activate: Boolean
@@ -3700,20 +3849,6 @@ class SensorLenses : TypedDevice {
 
 /** StructureShelfMedium. Entry point: ShelfMediums. */
 class ShelfMedium : TypedDevice {
-  var Open: Boolean
-  val slots: Slots<DataDiskSlot>
-}
-
-/** StructureShortCornerLocker. Entry point: ShortCornerLockers. */
-class ShortCornerLocker : TypedDevice {
-  var Lock: Boolean
-  var Open: Boolean
-  val slots: Slots<DataDiskSlot>
-}
-
-/** StructureShortLocker. Entry point: ShortLockers. */
-class ShortLocker : TypedDevice {
-  var Lock: Boolean
   var Open: Boolean
   val slots: Slots<DataDiskSlot>
 }
@@ -3820,122 +3955,6 @@ class SleeperVerticalDroid : TypedDevice {
   val slots: Slots<DataDiskSlot>
 }
 
-/** StructureSmallDirectHeatExchangeGastoGas. Entry point: SmallDirectHeatExchangeGastoGases. */
-class SmallDirectHeatExchangeGastoGas : TypedDevice {
-  val Maximum: Double
-  val Ratio: Double
-  var Setting: Double
-}
-
-/** StructureSmallDirectHeatExchangeLiquidtoGas. Entry point: SmallDirectHeatExchangeLiquidtoGases. */
-class SmallDirectHeatExchangeLiquidtoGas : TypedDevice {
-  val Maximum: Double
-  val Ratio: Double
-  var Setting: Double
-}
-
-/** StructureSmallDirectHeatExchangeLiquidtoLiquid. Entry point: SmallDirectHeatExchangeLiquidtoLiquids. */
-class SmallDirectHeatExchangeLiquidtoLiquid : TypedDevice {
-  val Maximum: Double
-  val Ratio: Double
-  var Setting: Double
-}
-
-/** StructureSmallSatelliteDish. Entry point: SmallSatelliteDishes. */
-class SmallSatelliteDish : TypedDevice {
-  var Activate: Boolean
-  var BestContactFilter: Double
-  val ContactSlotIndex: Double
-  val ContactTypeId: Double
-  val Dimensions: Vector // X, Z
-  val Error: Boolean
-  var Horizontal: Double
-  val Idle: Boolean
-  val InterrogationProgress: Double
-  val MinimumWattsToContact: Double
-  var On: Boolean
-  val Power: Boolean
-  val RequiredPower: Double
-  var Setting: Double
-  val SignalID: Double
-  val SignalStrength: Double
-  var TargetPadIndex: Double
-  var Vertical: Double
-  val WattsReachingContact: Double
-}
-
-/** StructureSolarPanel. Entry point: SolarPanels. */
-class SolarPanel : TypedDevice {
-  val Charge: Double
-  var Horizontal: Double
-  val Maximum: Double
-  val Ratio: Double
-  var Vertical: Double
-}
-
-/** StructureSolarPanel45. Entry point: SolarPanel45s. */
-class SolarPanel45 : TypedDevice {
-  val Charge: Double
-  var Horizontal: Double
-  val Maximum: Double
-  val Ratio: Double
-  var Vertical: Double
-}
-
-/** StructureSolarPanel45Reinforced. Entry point: SolarPanel45Reinforceds. */
-class SolarPanel45Reinforced : TypedDevice {
-  val Charge: Double
-  var Horizontal: Double
-  val Maximum: Double
-  val Ratio: Double
-  var Vertical: Double
-}
-
-/** StructureSolarPanelDual. Entry point: SolarPanelDuals. */
-class SolarPanelDual : TypedDevice {
-  val Charge: Double
-  var Horizontal: Double
-  val Maximum: Double
-  val Ratio: Double
-  var Vertical: Double
-}
-
-/** StructureSolarPanelDualReinforced. Entry point: SolarPanelDualReinforceds. */
-class SolarPanelDualReinforced : TypedDevice {
-  val Charge: Double
-  var Horizontal: Double
-  val Maximum: Double
-  val Ratio: Double
-  var Vertical: Double
-}
-
-/** StructureSolarPanelFlat. Entry point: SolarPanelFlats. */
-class SolarPanelFlat : TypedDevice {
-  val Charge: Double
-  var Horizontal: Double
-  val Maximum: Double
-  val Ratio: Double
-  var Vertical: Double
-}
-
-/** StructureSolarPanelFlatReinforced. Entry point: SolarPanelFlatReinforceds. */
-class SolarPanelFlatReinforced : TypedDevice {
-  val Charge: Double
-  var Horizontal: Double
-  val Maximum: Double
-  val Ratio: Double
-  var Vertical: Double
-}
-
-/** StructureSolarPanelReinforced. Entry point: SolarPanelReinforceds. */
-class SolarPanelReinforced : TypedDevice {
-  val Charge: Double
-  var Horizontal: Double
-  val Maximum: Double
-  val Ratio: Double
-  var Vertical: Double
-}
-
 /** StructureSolidFuelGenerator. Entry point: SolidFuelGenerators. */
 class SolidFuelGenerator : TypedDevice {
   var ClearMemory: Boolean
@@ -3963,64 +3982,12 @@ class Sorter : TypedDevice {
   val slots: Slots<DataDiskSlot>
 }
 
-/** ItemSpaceHelmet. Entry point: SpaceHelmets. */
-class SpaceHelmet : TypedDevice {
-  val Combustion: Boolean
-  var Flush: Boolean
-  var Lock: Boolean
-  var On: Boolean
-  var Open: Boolean
-  val Power: Boolean
-  val Pressure: Double
-  val Ratios: Ratios // every Substance
-  var SoundAlert: Double
-  val Temperature: Double
-  val TotalMoles: Double
-  var Volume: Double
-}
-
 /** ItemSpacepack. Entry point: Spacepacks. */
 class Spacepack : TypedDevice {
   var Activate: Boolean
   var On: Boolean
   val Propellant: ItemAirTankSlot // slots[0]
   val slots: Slots<ItemCommonSlot>
-}
-
-/** StructureStacker. Entry point: Stackers. */
-class Stacker : TypedDevice {
-  var Activate: Boolean
-  var ClearMemory: Boolean
-  val Error: Boolean
-  val Export: Transfer // Count
-  val Import: Transfer // Count
-  var Lock: Boolean
-  var Mode: Double
-  var On: Boolean
-  var Output: Double
-  val Power: Boolean
-  val RequiredPower: Double
-  var Setting: Double
-  val Processing: DataDiskSlot // slots[2]
-  val slots: Slots<DataDiskSlot>
-}
-
-/** StructureStackerReverse. Entry point: StackerReverses. */
-class StackerReverse : TypedDevice {
-  var Activate: Boolean
-  var ClearMemory: Boolean
-  val Error: Boolean
-  val Export: Transfer // Count
-  val Import: Transfer // Count
-  var Lock: Boolean
-  var Mode: Double
-  var On: Boolean
-  var Output: Double
-  val Power: Boolean
-  val RequiredPower: Double
-  var Setting: Double
-  val Processing: DataDiskSlot // slots[2]
-  val slots: Slots<DataDiskSlot>
 }
 
 /** StructureStirlingEngine. Entry point: StirlingEngines. */
@@ -4054,13 +4021,6 @@ class StopWatch : TypedDevice {
   val Power: Boolean
   val RequiredPower: Double
   val Time: Double
-}
-
-/** StructureStorageLocker. Entry point: StorageLockers. */
-class StorageLocker : TypedDevice {
-  var Lock: Boolean
-  var Open: Boolean
-  val slots: Slots<DataDiskSlot>
 }
 
 /** StructureBeacon. Entry point: StructureBeacons. */
@@ -4130,87 +4090,11 @@ class SuitHelmetHARM : TypedDevice {
   val TotalMoles: Double
   var Volume: Double
 }
-
-/** StructureSuitStorage. Entry point: SuitStorages. */
-class SuitStorage : TypedDevice {
-  val Error: Boolean
-  val Maximum: Double
-  var On: Boolean
-  val Power: Boolean
-  val Ratio: Double
-  val RequiredPower: Double
-  var Setting: Double
-  val Helmet: HelmetSlot // slots[0]
-  val Suit: SuitSlot // slots[1]
-  val Back: BackSlot // slots[2]
-  val slots: Slots<CommonSlot>
-}
-
-/** StructureSuitStorageFrame. Entry point: SuitStorageFrames. */
-class SuitStorageFrame : TypedDevice {
-  val Error: Boolean
-  val Maximum: Double
-  var On: Boolean
-  val Power: Boolean
-  val Ratio: Double
-  val RequiredPower: Double
-  var Setting: Double
-  val Helmet: HelmetSlot // slots[0]
-  val Suit: SuitSlot // slots[1]
-  val Back: BackSlot // slots[2]
-  val slots: Slots<CommonSlot>
-}
-
-/** StructureSuitStorageLocker. Entry point: SuitStorageLockers. */
-class SuitStorageLocker : TypedDevice {
-  val Error: Boolean
-  val Maximum: Double
-  var On: Boolean
-  val Power: Boolean
-  val Ratio: Double
-  val RequiredPower: Double
-  var Setting: Double
-  val Helmet: HelmetSlot // slots[0]
-  val Suit: SuitSlot // slots[1]
-  val Back: BackSlot // slots[2]
-  val slots: Slots<CommonSlot>
-}
-
-/** StructureSuperLargeDirectHeatExchangeGastoGas. Entry point: SuperLargeDirectHeatExchangeGastoGases. */
-class SuperLargeDirectHeatExchangeGastoGas : TypedDevice {
-  val Maximum: Double
-  val Ratio: Double
-  var Setting: Double
-}
-
-/** StructureSuperLargeDirectHeatExchangeGastoLiquid. Entry point: SuperLargeDirectHeatExchangeGastoLiquids. */
-class SuperLargeDirectHeatExchangeGastoLiquid : TypedDevice {
-  val Maximum: Double
-  val Ratio: Double
-  var Setting: Double
-}
-
-/** StructureSuperLargeDirectHeatExchangeLiquidToLiquid. Entry point: SuperLargeDirectHeatExchangeLiquidToLiquids. */
-class SuperLargeDirectHeatExchangeLiquidToLiquid : TypedDevice {
-  val Maximum: Double
-  val Ratio: Double
-  var Setting: Double
-}
 ```
 
 ### T
 
 ```kotlin
-/** ItemTablet. Entry point: Tablets. */
-class Tablet : TypedDevice {
-  val Error: Boolean
-  var On: Boolean
-  val Power: Boolean
-  val Battery: ItemBatterySlot // slots[0]
-  val Cartridge: ItemCommonSlot // slots[1]
-  val slots: Slots<ItemCommonSlot>
-}
-
 /** ItemTerrainManipulator. Entry point: TerrainManipulators. */
 class TerrainManipulator : TypedDevice {
   var Activate: Boolean
@@ -4249,79 +4133,6 @@ class TraderWaypoint : TypedDevice {
   val Power: Boolean
   val RequiredPower: Double
 }
-
-/** StructureTransformer. Entry point: Transformers. */
-class Transformer : TypedDevice {
-  val Error: Boolean
-  var Lock: Boolean
-  val Maximum: Double
-  var On: Boolean
-  val Power: Boolean
-  val Ratio: Double
-  val RequiredPower: Double
-  var Setting: Double
-}
-
-/** StructureTransformerMedium. Entry point: TransformerMediums. */
-class TransformerMedium : TypedDevice {
-  val Error: Boolean
-  var Lock: Boolean
-  val Maximum: Double
-  var On: Boolean
-  val Power: Boolean
-  val Ratio: Double
-  val RequiredPower: Double
-  var Setting: Double
-}
-
-/** StructureTransformerMedium(Reversed). Entry point: TransformerMedium_Reverseds. */
-class TransformerMedium_Reversed : TypedDevice {
-  val Error: Boolean
-  var Lock: Boolean
-  val Maximum: Double
-  var On: Boolean
-  val Power: Boolean
-  val Ratio: Double
-  val RequiredPower: Double
-  var Setting: Double
-}
-
-/** StructureTransformerSmall. Entry point: TransformerSmalls. */
-class TransformerSmall : TypedDevice {
-  val Error: Boolean
-  var Lock: Boolean
-  val Maximum: Double
-  var On: Boolean
-  val Power: Boolean
-  val Ratio: Double
-  val RequiredPower: Double
-  var Setting: Double
-}
-
-/** StructureTransformerSmallReversed. Entry point: TransformerSmallReverseds. */
-class TransformerSmallReversed : TypedDevice {
-  val Error: Boolean
-  var Lock: Boolean
-  val Maximum: Double
-  var On: Boolean
-  val Power: Boolean
-  val Ratio: Double
-  val RequiredPower: Double
-  var Setting: Double
-}
-
-/** StructureTurboVolumePump. Entry point: TurboVolumePumps. */
-class TurboVolumePump : TypedDevice {
-  val Error: Boolean
-  var Lock: Boolean
-  val Maximum: Double
-  var Mode: Double
-  var On: Boolean
-  val Power: Boolean
-  val Ratio: Double
-  val RequiredPower: Double
-  var Setting: Double
-}
 ```
 
 ### U
@@ -4341,93 +4152,11 @@ class Unloader : TypedDevice {
   val RequiredPower: Double
   val slots: Slots<DataDiskSlot>
 }
-
-/** StructureUprightWindTurbine. Entry point: UprightWindTurbines. */
-class UprightWindTurbine : TypedDevice {
-  val PowerGeneration: Double
-}
-```
-
-### V
-
-```kotlin
-/** StructureValve. Entry point: Valves. */
-class Valve : TypedDevice {
-  val Maximum: Double
-  var On: Boolean
-  val Ratio: Double
-  var Setting: Double
-}
-
-/** StructureVendingMachine. Entry point: VendingMachines. */
-class VendingMachine : TypedDevice {
-  var Activate: Boolean
-  var ClearMemory: Boolean
-  val Error: Boolean
-  val Export: Transfer // Count
-  val Import: Transfer // Count
-  var Lock: Boolean
-  var On: Boolean
-  val Power: Boolean
-  val Quantity: Double
-  val Ratio: Double
-  var RequestHash: Double
-  val RequiredPower: Double
-  val TargetPrefabHash: Double
-  val TargetSlotIndex: Double
-  val slots: Slots<DataDiskSlot>
-}
-
-/** StructureVendingMachineSmall. Entry point: VendingMachineSmalls. */
-class VendingMachineSmall : TypedDevice {
-  var Activate: Boolean
-  var ClearMemory: Boolean
-  val Error: Boolean
-  val Export: Transfer // Count
-  val Import: Transfer // Count
-  var Lock: Boolean
-  var On: Boolean
-  val Power: Boolean
-  val Quantity: Double
-  val Ratio: Double
-  var RequestHash: Double
-  val RequiredPower: Double
-  val TargetPrefabHash: Double
-  val TargetSlotIndex: Double
-  val slots: Slots<DataDiskSlot>
-}
-
-/** StructureVolumePump. Entry point: VolumePumps. */
-class VolumePump : TypedDevice {
-  val Error: Boolean
-  var Lock: Boolean
-  val Maximum: Double
-  var On: Boolean
-  val Power: Boolean
-  val Ratio: Double
-  val RequiredPower: Double
-  var Setting: Double
-}
 ```
 
 ### W
 
 ```kotlin
-/** StructureWallCooler. Entry point: WallCoolers. */
-class WallCooler : TypedDevice {
-  val Error: Boolean
-  var Lock: Boolean
-  val Maximum: Double
-  var On: Boolean
-  val Ports: Ports // Output: Combustion, Pressure, Temperature, TotalMoles, Ratios[CarbonDioxide, Helium, Hydrazine, HydrochloricAcid, Hydrogen, LiquidAlcohol, LiquidHydrazine, LiquidHydrochloricAcid, LiquidHydrogen, LiquidOzone, LiquidSilanol, LiquidSodiumChloride, Methane, Nitrogen, NitrousOxide, Oxygen, Ozone, Pollutant, PollutedWater, Silanol, Water]
-  val Power: Boolean
-  val Ratio: Double
-  val RequiredPower: Double
-  var Setting: Double
-  val DataDisk: DataDiskSlot // slots[0]
-  val slots: Slots<DataDiskSlot>
-}
-
 /** StructureWallHeater. Entry point: WallHeaters. */
 class WallHeater : TypedDevice {
   val Error: Boolean
@@ -4439,56 +4168,6 @@ class WallHeater : TypedDevice {
   val slots: Slots<DataDiskSlot>
 }
 
-/** StructureWallLight. Entry point: WallLights. */
-class WallLight : TypedDevice {
-  var Lock: Boolean
-  var On: Boolean
-  val Power: Boolean
-  val RequiredPower: Double
-}
-
-/** StructureWallLightBattery. Entry point: WallLightBatteries. */
-class WallLightBattery : TypedDevice {
-  var Lock: Boolean
-  var On: Boolean
-  val Power: Boolean
-  val RequiredPower: Double
-  val Battery: BatterySlot // slots[0]
-  val slots: Slots<BatterySlot>
-}
-
-/** StructureWaterBottleFillerPowered. Entry point: WaterBottleFillerPowereds. */
-class WaterBottleFillerPowered : TypedDevice {
-  var Activate: Boolean
-  val Error: Boolean
-  var On: Boolean
-  val Power: Boolean
-  val RequiredPower: Double
-  val slots: Slots<GasCanisterSlot>
-}
-
-/** StructureWaterBottleFillerPoweredBottom. Entry point: WaterBottleFillerPoweredBottoms. */
-class WaterBottleFillerPoweredBottom : TypedDevice {
-  var Activate: Boolean
-  val Error: Boolean
-  var On: Boolean
-  val Power: Boolean
-  val RequiredPower: Double
-  val slots: Slots<GasCanisterSlot>
-}
-
-/** StructureWaterDigitalValve. Entry point: WaterDigitalValves. */
-class WaterDigitalValve : TypedDevice {
-  val Error: Boolean
-  var Lock: Boolean
-  val Maximum: Double
-  var On: Boolean
-  val Power: Boolean
-  val Ratio: Double
-  val RequiredPower: Double
-  var Setting: Double
-}
-
 /** StructureWaterPurifier. Entry point: WaterPurifiers. */
 class WaterPurifier : TypedDevice {
   var ClearMemory: Boolean
@@ -4498,21 +4177,6 @@ class WaterPurifier : TypedDevice {
   var On: Boolean
   val Power: Boolean
   val RequiredPower: Double
-  val slots: Slots<DataDiskSlot>
-}
-
-/** StructureWaterWallCooler. Entry point: WaterWallCoolers. */
-class WaterWallCooler : TypedDevice {
-  val Error: Boolean
-  var Lock: Boolean
-  val Maximum: Double
-  var On: Boolean
-  val Ports: Ports // Output: Combustion, Pressure, Temperature, TotalMoles, Ratios[CarbonDioxide, Helium, Hydrazine, HydrochloricAcid, Hydrogen, LiquidAlcohol, LiquidHydrazine, LiquidHydrochloricAcid, LiquidHydrogen, LiquidOzone, LiquidSilanol, LiquidSodiumChloride, Methane, Nitrogen, NitrousOxide, Oxygen, Ozone, Pollutant, PollutedWater, Silanol, Water]
-  val Power: Boolean
-  val Ratio: Double
-  val RequiredPower: Double
-  var Setting: Double
-  val DataDisk: DataDiskSlot // slots[0]
   val slots: Slots<DataDiskSlot>
 }
 
@@ -4535,16 +4199,6 @@ class WeatherStation : TypedDevice {
   var On: Boolean
   val Power: Boolean
   val RequiredPower: Double
-}
-
-/** StructureWindTurbine. Entry point: WindTurbines. */
-class WindTurbine : TypedDevice {
-  val PowerGeneration: Double
-}
-
-/** ItemWirelessBatteryCellExtraLarge. Entry point: WirelessBatteryCellExtraLarges. */
-class WirelessBatteryCellExtraLarge : TypedDevice {
-  var Mode: Double
 }
 ```
 

@@ -82,7 +82,7 @@ class SlotTest {
     val source =
         """
         var total = 0.0
-        for (i in 0..<3) total += BatteryChargers.at(d0).slots[i].Charge
+        for (i in 0..<3) total += BatteryChargers.Standard.at(d0).slots[i].Charge
         db.Setting = total
         """
     val db = run(source) { listOf(FakeDevice(), chargerWith(1.0, 2.0, 4.0)) }[0]
@@ -94,7 +94,7 @@ class SlotTest {
   fun `a named slot is its number`() {
     val source =
         """
-        val tanks = GasTankStorages.at(d0)
+        val tanks = TankStorages.Gas.at(d0)
         db.Setting = tanks.GasCanister.Pressure
         tanks.GasCanister.Open = true
         """
@@ -115,7 +115,7 @@ class SlotTest {
     val source =
         """
         var i = 0
-        val slot = BatteryChargers.at(d0).slots[i]
+        val slot = BatteryChargers.Standard.at(d0).slots[i]
         i = 1
         db.Setting = slot.Charge
         """
@@ -128,9 +128,9 @@ class SlotTest {
   fun `a console writes Mode on its slots`() {
     val source =
         """
-        Consoles.at(d0).slots[0].Mode = 1.0
-        Consoles.at(d0).Circuitboard.Mode = 2.0
-        Consoles.all.slots[0].forEach { it.Mode = 3.0 }
+        Consoles.Standard.at(d0).slots[0].Mode = 1.0
+        Consoles.Standard.at(d0).Circuitboard.Mode = 2.0
+        Consoles.Standard.all.slots[0].forEach { it.Mode = 3.0 }
         """
     val code = compiled(source).code
 
@@ -159,7 +159,7 @@ class SlotTest {
     for ((source, at) in
         listOf(
             "val x = 1\ndb.Setting = d0.slots[0].hashCode().toDouble()" to (2 to 26),
-            "val x = 1\nval h = BatteryChargers.all.slots[0].toString()" to (2 to 38),
+            "val x = 1\nval h = BatteryChargers.Standard.all.slots[0].toString()" to (2 to 47),
             "val x = 1\nval h = d0.slots.hashCode()" to (2 to 18),
             "val x = 1\nval q = d0.slots[-1].Quantity" to (2 to 18),
             "val x = 1\nval q = d0.slots[256].Quantity" to (2 to 18),
@@ -175,7 +175,7 @@ class SlotTest {
     val code =
         compiled(
                 """
-                val tablet = AdvancedTablets.at(db)
+                val tablet = Tablets.Advanced.at(db)
                 db.Setting = tablet.Battery.Charge + tablet.slots[1].Quantity
                 """
             )
@@ -186,10 +186,10 @@ class SlotTest {
     for ((source, at) in
         listOf(
             // A structure's slot reads these; a thing's slot can't.
-            "val x = 1\nval s = AdvancedTablets.at(db).slots[0].SortingClass" to (2 to 41),
+            "val x = 1\nval s = Tablets.Advanced.at(db).slots[0].SortingClass" to (2 to 42),
             "val x = 1\nval s = Robots.at(d0).slots[0].TotalSlots" to (2 to 32),
             // A thing's slots can't be written at all.
-            "val x = 1\nAdvancedTablets.at(db).slots[1].On = true" to (2 to 33),
+            "val x = 1\nTablets.Advanced.at(db).slots[1].On = true" to (2 to 34),
         )) {
       val error = error(source)
       assertWithMessage(source).that(error.line to error.column).isEqualTo(at)
@@ -201,11 +201,11 @@ class SlotTest {
     // A battery slot can't write Charge; a named batch has no slot writes; a slot has no value.
     for ((source, at) in
         listOf(
-            "val x = 1\nBatteryChargers.at(d0).slots[0].Charge = 1.0" to (2 to 33),
-            "val x = 1\nGasTankStorages.named(\"A\").slots[0].forEach { it.Open = true }" to
-                (2 to 50),
+            "val x = 1\nBatteryChargers.Standard.at(d0).slots[0].Charge = 1.0" to (2 to 42),
+            "val x = 1\nTankStorages.Gas.named(\"A\").slots[0].forEach { it.Open = true }" to
+                (2 to 51),
             "val x = 1\nval s = if (db.On) d0.slots[0] else d0.slots[1]" to (2 to 20),
-            "val x = 1\nval c = BatteryChargers.all.slots[0].Charge" to (2 to 38),
+            "val x = 1\nval c = BatteryChargers.Standard.all.slots[0].Charge" to (2 to 47),
         )) {
       val error = error(source)
       assertWithMessage(source).that(error.line to error.column).isEqualTo(at)
