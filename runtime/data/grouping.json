@@ -411,6 +411,23 @@
         "Floor": "StructureManualFloorHatch"
       }
     },
+    "Sleeper": {
+      "plural": "Sleepers",
+      "members": {
+        "Standard": "StructureSleeper",
+        "Left": "StructureSleeperLeft",
+        "Right": "StructureSleeperRight",
+        "Vertical": "StructureSleeperVertical"
+      }
+    },
+    "CryoTube": {
+      "plural": "CryoTubes",
+      "extends": ["Sleeper"],
+      "members": {
+        "Horizontal": "StructureCryoTubeHorizontal",
+        "Vertical": "StructureCryoTubeVertical"
+      }
+    },
     "Door": {
       "plural": "Doors",
       "members": {
