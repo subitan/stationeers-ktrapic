@@ -164,6 +164,27 @@ class TypedDeviceTest {
   }
 
   @Test
+  fun `a family that extends another is taken where the other is`() {
+    val source =
+        """
+        inline fun speed(shaft: ElevatorShaft): Double = shaft.ElevatorSpeed
+        val shaft: ElevatorShaft = ElevatorLevels.Cabled.at(d0)
+        shaft.ElevatorLevel = 3.0
+        db.Setting = speed(ElevatorLevels.Cabled.at(d0)) + speed(shaft)
+        """
+    val devices =
+        run(source) {
+          listOf(
+              FakeDevice(),
+              FakeDevice("StructureElevatorLevelFront").apply { this["ElevatorSpeed"] = 2.0 },
+          )
+        }
+
+    assertThat(devices[1]["ElevatorLevel"]).isEqualTo(3.0)
+    assertThat(devices[0]["Setting"]).isEqualTo(4.0)
+  }
+
+  @Test
   fun `a logic type the prefab lacks is an error`() {
     val error = error("GrowLights.at(d0).Charge")
 

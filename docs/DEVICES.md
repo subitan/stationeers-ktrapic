@@ -104,7 +104,7 @@ class Transfer {
 
 ## Families
 
-A family is a device that comes as several prefabs. Its interface holds the logic types every member has, so a function can take any of them; each member is a nested class, with an entry point nested the same way (`Batteries.Small`).
+A family is a device that comes as several prefabs. Its interface holds the logic types every member has, so a function can take any of them; each member is a nested class, with an entry point nested the same way (`Batteries.Small`). A family that is a special case of another extends its interface, so a function taking the other takes it too: an `ElevatorLevel` is an `ElevatorShaft`.
 
 ### Airlock
 
@@ -598,10 +598,8 @@ interface DirectHeatExchanger {
 ### ElevatorLevel
 
 ```kotlin
-interface ElevatorLevel {
+interface ElevatorLevel : ElevatorShaft {
   var Activate: Boolean
-  var ElevatorLevel: Double
-  var ElevatorSpeed: Double
   val Error: Boolean
   var Lock: Boolean
   var On: Boolean

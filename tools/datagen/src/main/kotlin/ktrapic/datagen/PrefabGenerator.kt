@@ -112,9 +112,19 @@ object PrefabGenerator {
     out.line("package ktrapic")
     for (kind in prefabs.slotKinds.keys) out.slotKind(kind)
     for (kind in thingKinds) out.thingSlotKind(kind)
+    val common =
+        grouping.families.mapValues { (_, members) ->
+          out.common(members.members.values.map { byName.getValue(it) })
+        }
     for ((family, members) in grouping.families) {
       val memberPrefabs = members.members.mapValues { byName.getValue(it.value) }
-      out.family(family, members.plural, memberPrefabs)
+      out.family(
+          family,
+          members.plural,
+          memberPrefabs,
+          members.extends,
+          inherited(family, grouping, common),
+      )
     }
     for (prefab in flat) {
       out.line()
@@ -127,6 +137,45 @@ object PrefabGenerator {
       )
     }
     return FILE to out.toString()
+  }
+
+  /**
+   * The logic types [family] inherits from the families it extends, directly or through them, with
+   * their access there. Checks that it extends only other families, without a cycle, and that all
+   * of its members can read each logic type it inherits and write each one inherited as a `var`.
+   */
+  private fun inherited(
+      family: String,
+      grouping: Grouping,
+      common: Map<String, Map<String, Access>>,
+  ): Map<String, Access> {
+    val ancestors = mutableListOf<String>()
+    fun visit(name: String, path: List<String>) {
+      for (parent in grouping.families.getValue(name).extends) {
+        require(parent in grouping.families) { "family $name extends $parent, which is no family" }
+        require(parent != family && parent !in path) {
+          "family $family extends itself, through ${(path + parent).joinToString(" -> ")}"
+        }
+        if (parent !in ancestors) ancestors += parent
+        visit(parent, path + parent)
+      }
+    }
+    visit(family, listOf(family))
+    val own = common.getValue(family)
+    val inherited = mutableMapOf<String, Access>()
+    for (ancestor in ancestors) {
+      for ((logicType, access) in common.getValue(ancestor)) {
+        val mine = own[logicType]
+        require(mine != null && (mine.write || !access.write)) {
+          "family $family extends $ancestor, but not all of its members can " +
+              "${if (access.write) "write" else "read"} $logicType"
+        }
+        inherited.merge(logicType, access) { a, b ->
+          Access(read = true, write = a.write || b.write)
+        }
+      }
+    }
+    return inherited
   }
 
   /**
@@ -388,22 +437,41 @@ object PrefabGenerator {
       }
     }
 
-    fun family(name: String, plural: String, members: Map<String, Prefab>) {
-      val logic = members.values.map { logic(it) }
-      val common =
-          logic
-              .first()
-              .keys
-              .filter { key -> logic.all { it[key]?.read == true } }
-              .associateWith { key ->
-                Access(read = true, write = logic.all { it.getValue(key).write })
-              }
+    /** The logic types all of [members] can read, writable where all of them can write it. */
+    fun common(members: List<Prefab>): Map<String, Access> {
+      val logic = members.map { logic(it) }
+      return logic
+          .first()
+          .keys
+          .filter { key -> logic.all { it[key]?.read == true } }
+          .associateWith { key ->
+            Access(read = true, write = logic.all { it.getValue(key).write })
+          }
+    }
+
+    /**
+     * A family's interface, its members nested in it, and its entry point. A logic type it
+     * [inherited] from the families it [extends] is declared there, and again here only where it is
+     * a `var` here and a `val` there.
+     */
+    fun family(
+        name: String,
+        plural: String,
+        members: Map<String, Prefab>,
+        extends: List<String> = emptyList(),
+        inherited: Map<String, Access> = emptyMap(),
+    ) {
+      val common = common(members.values.toList())
       line()
       line("/** A device that comes as several prefabs, each a nested class. */")
-      block("interface $name") {
+      val supertypes = if (extends.isEmpty()) "" else " : ${extends.joinToString(", ")}"
+      block("interface $name$supertypes") {
         for ((logicType, access) in common) {
+          val parent = inherited[logicType]
+          if (parent != null && parent.write == access.write) continue
+          val modifier = if (parent != null) "override " else ""
           line(
-              if (access.write) "var $logicType: ${type(logicType)}"
+              if (access.write) "${modifier}var $logicType: ${type(logicType)}"
               else "val $logicType: ${type(logicType)}"
           )
           line()

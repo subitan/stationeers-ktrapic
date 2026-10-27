@@ -480,6 +480,7 @@
     },
     "ElevatorLevel": {
       "plural": "ElevatorLevels",
+      "extends": ["ElevatorShaft"],
       "members": {
         "Standard": "StructureElevatorLevelIndustrial",
         "Cabled": "StructureElevatorLevelFront"

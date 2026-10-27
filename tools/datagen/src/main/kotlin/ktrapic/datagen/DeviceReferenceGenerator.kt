@@ -45,6 +45,8 @@ object DeviceReferenceGenerator {
       val name: String,
       val properties: List<Property>,
       val prefab: String? = null,
+      /** For an interface, the interfaces it extends: `" : ElevatorShaft"`, or empty. */
+      val supertypes: String = "",
   )
 
   /**
@@ -83,7 +85,13 @@ object DeviceReferenceGenerator {
       val named = prefab
       prefab = null
       when {
-        kind == "interface" -> families += Declaration(name, properties)
+        kind == "interface" ->
+            families +=
+                Declaration(
+                    name,
+                    properties,
+                    supertypes = match.groupValues[4].substringBefore(" {").trimEnd(),
+                )
         kind == "class" && named != null -> devices += Declaration(name, properties, named)
         kind == "class" && "DeviceSlot()" in match.groupValues[4] ->
             slots += Declaration(name, properties)
@@ -182,14 +190,16 @@ object DeviceReferenceGenerator {
       append("\n")
       append("A family is a device that comes as several prefabs. Its interface holds the logic ")
       append("types every member has, so a function can take any of them; each member is a ")
-      append("nested class, with an entry point nested the same way (`Batteries.Small`).\n")
+      append("nested class, with an entry point nested the same way (`Batteries.Small`). A family ")
+      append("that is a special case of another extends its interface, so a function taking the ")
+      append("other takes it too: an `ElevatorLevel` is an `ElevatorShaft`.\n")
       for (family in families.sortedBy { it.name }) {
         val members = devices.filter { it.name.startsWith("${family.name}.") }
         append("\n")
         append("### ${family.name}\n")
         append("\n")
         append("```kotlin\n")
-        append("interface ${family.name} {\n")
+        append("interface ${family.name}${family.supertypes} {\n")
         for (property in family.properties) append("  $property\n")
         for (member in members) {
           val simple = member.name.substringAfter('.')
