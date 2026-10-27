@@ -467,6 +467,13 @@
         "Select": "StructureLogicSelect"
       }
     },
+    "Switch": {
+      "plural": "Switches",
+      "members": {
+        "Lever": "StructureLogicSwitch",
+        "Standard": "StructureLogicSwitch2"
+      }
+    },
     "Door": {
       "plural": "Doors",
       "members": {
@@ -569,10 +576,6 @@
     }
   },
   "notFamilies": [
-    {
-      "prefabs": ["StructureLogicSwitch", "StructureLogicSwitch2"],
-      "reason": "the game names the Lever and the Switch as two devices, not two kinds of one; they differ only in model, with the same logic"
-    },
     {
       "prefabs": ["ItemBeacon", "StructureBeacon"],
       "reason": "the Tracking Beacon (an item) and the Beacon (a structure) are different devices"

@@ -1696,6 +1696,22 @@ interface SuitStorage {
 }
 ```
 
+### Switch
+
+```kotlin
+interface Switch {
+  var Lock: Boolean
+  var Open: Boolean
+  val Setting: Double
+
+  /** StructureLogicSwitch. Entry point: Switches.Lever. */
+  class Lever : TypedDevice, Switch
+
+  /** StructureLogicSwitch2. Entry point: Switches.Standard. */
+  class Standard : TypedDevice, Switch
+}
+```
+
 ### Tablet
 
 ```kotlin
@@ -3244,20 +3260,6 @@ class LogicStepSequencer8 : TypedDevice {
   var Time: Double
   val SoundCartridge: DataDiskSlot // slots[0]
   val slots: Slots<DataDiskSlot>
-}
-
-/** StructureLogicSwitch. Entry point: LogicSwitches. */
-class LogicSwitch : TypedDevice {
-  var Lock: Boolean
-  var Open: Boolean
-  val Setting: Double
-}
-
-/** StructureLogicSwitch2. Entry point: LogicSwitch2s. */
-class LogicSwitch2 : TypedDevice {
-  var Lock: Boolean
-  var Open: Boolean
-  val Setting: Double
 }
 ```
 

@@ -10761,6 +10761,82 @@ object LogicProcessors {
 }
 
 /** A device that comes as several prefabs, each a nested class. */
+interface Switch {
+  var Lock: Boolean
+
+  var Open: Boolean
+
+  val Setting: Double
+
+  /** A StructureLogicSwitch. */
+  @PrefabName("StructureLogicSwitch")
+  class Lever internal constructor() : TypedDevice(), Switch {
+    override var Lock: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override var Open: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override val Setting: Double
+      get() = intrinsic()
+
+    /** The StructureLogicSwitch prefab. */
+    companion object : Prefab()
+  }
+
+  /** A StructureLogicSwitch2. */
+  @PrefabName("StructureLogicSwitch2")
+  class Standard internal constructor() : TypedDevice(), Switch {
+    override var Lock: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override var Open: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override val Setting: Double
+      get() = intrinsic()
+
+    /** The StructureLogicSwitch2 prefab. */
+    companion object : Prefab()
+  }
+}
+
+/** The Switch devices on the chip's network, by prefab. */
+object Switches {
+  /** The StructureLogicSwitch devices on the chip's network. */
+  @PrefabName("StructureLogicSwitch")
+  object Lever {
+    /** The device on [pin], as a StructureLogicSwitch. */
+    fun at(pin: Device): Switch.Lever = intrinsic()
+
+    /** Every one on the network. */
+    val all: DeviceBatch<Switch.Lever>
+      get() = intrinsic()
+
+    /** Every one on the network named [name], which must be a constant. */
+    fun named(name: String): DeviceBatch<Switch.Lever> = intrinsic()
+  }
+
+  /** The StructureLogicSwitch2 devices on the chip's network. */
+  @PrefabName("StructureLogicSwitch2")
+  object Standard {
+    /** The device on [pin], as a StructureLogicSwitch2. */
+    fun at(pin: Device): Switch.Standard = intrinsic()
+
+    /** Every one on the network. */
+    val all: DeviceBatch<Switch.Standard>
+      get() = intrinsic()
+
+    /** Every one on the network named [name], which must be a constant. */
+    fun named(name: String): DeviceBatch<Switch.Standard> = intrinsic()
+  }
+}
+
+/** A device that comes as several prefabs, each a nested class. */
 interface Door {
   val Idle: Boolean
 
@@ -18832,70 +18908,6 @@ object LogicSorters {
     val slots: Slots<SlotBatch<DataDiskSlot>>
       get() = intrinsic()
   }
-}
-
-/** A StructureLogicSwitch. */
-@PrefabName("StructureLogicSwitch")
-class LogicSwitch internal constructor() : TypedDevice() {
-  var Lock: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var Open: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val Setting: Double
-    get() = intrinsic()
-
-  /** The StructureLogicSwitch prefab. */
-  companion object : Prefab()
-}
-
-/** The StructureLogicSwitch devices on the chip's network. */
-@PrefabName("StructureLogicSwitch")
-object LogicSwitches {
-  /** The device on [pin], as a StructureLogicSwitch. */
-  fun at(pin: Device): LogicSwitch = intrinsic()
-
-  /** Every one on the network. */
-  val all: DeviceBatch<LogicSwitch>
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): DeviceBatch<LogicSwitch> = intrinsic()
-}
-
-/** A StructureLogicSwitch2. */
-@PrefabName("StructureLogicSwitch2")
-class LogicSwitch2 internal constructor() : TypedDevice() {
-  var Lock: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var Open: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val Setting: Double
-    get() = intrinsic()
-
-  /** The StructureLogicSwitch2 prefab. */
-  companion object : Prefab()
-}
-
-/** The StructureLogicSwitch2 devices on the chip's network. */
-@PrefabName("StructureLogicSwitch2")
-object LogicSwitch2s {
-  /** The device on [pin], as a StructureLogicSwitch2. */
-  fun at(pin: Device): LogicSwitch2 = intrinsic()
-
-  /** Every one on the network. */
-  val all: DeviceBatch<LogicSwitch2>
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): DeviceBatch<LogicSwitch2> = intrinsic()
 }
 
 /** A StructureMotionSensor. */
