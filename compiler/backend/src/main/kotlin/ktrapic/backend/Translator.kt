@@ -16,12 +16,14 @@ import ktrapic.ic10.Number
 import ktrapic.ic10.Operand
 import ktrapic.ic10.Register
 import ktrapic.ic10.StringConstant
+import org.jetbrains.kotlin.backend.common.extensions.DeclarationFinder
 import org.jetbrains.kotlin.descriptors.ClassKind
 import org.jetbrains.kotlin.ir.IrElement
 import org.jetbrains.kotlin.ir.declarations.IrAnonymousInitializer
 import org.jetbrains.kotlin.ir.declarations.IrClass
 import org.jetbrains.kotlin.ir.declarations.IrConstructor
 import org.jetbrains.kotlin.ir.declarations.IrDeclarationOrigin
+import org.jetbrains.kotlin.ir.declarations.IrEnumEntry
 import org.jetbrains.kotlin.ir.declarations.IrModuleFragment
 import org.jetbrains.kotlin.ir.declarations.IrParameterKind
 import org.jetbrains.kotlin.ir.declarations.IrProperty
@@ -70,6 +72,8 @@ import org.jetbrains.kotlin.ir.util.parentClassOrNull
 import org.jetbrains.kotlin.ir.visitors.IrVisitorVoid
 import org.jetbrains.kotlin.ir.visitors.acceptChildrenVoid
 import org.jetbrains.kotlin.ir.visitors.acceptVoid
+import org.jetbrains.kotlin.name.ClassId
+import org.jetbrains.kotlin.name.FqName
 
 /** A construct the backend cannot compile, at [offset] in the wrapped source (-1 if unknown). */
 class CompileException(val offset: Int, message: String) : Exception(message) {
@@ -111,10 +115,38 @@ internal data class SlotOf(val owner: Value, val number: TirOperand) : Value
 internal data object NoValue : Value
 
 /**
- * Translates the IR of a wrapped script-style program into [TirLine]s: the `Program` object's
- * property initializers and `init` blocks, in source order.
+ * A view of a device's logic types (`Ports`, `Ratios`, `Position`, `Import` and their parts),
+ * resolved when compiled: a member or key of it names the logic type [prefix] + the member or
+ * key + [suffix]. Its [shape] is the view's runtime class, by simple name. [owner] is the device
+ * ([Dev]), or a batch's element ([Element]). [access] is what a typed device's prefab has in this
+ * view, or for an untyped pin every logic type the game has.
  */
-internal class Translator {
+internal data class View(
+    val owner: Value,
+    val shape: String,
+    val prefix: String,
+    val suffix: String,
+    val access: ViewAccess?,
+) : Value
+
+/** The logic types a typed device ([device], its type's name) can read and write in a view. */
+internal data class ViewAccess(val device: String, val read: Set<String>, val written: Set<String>)
+
+/** A batch's element, `it` in a batch's lambda, whose views name logic types without reading. */
+internal data object Element : Value
+
+/** A logic type an [Element]'s view names, for a batch to read. */
+internal data class Named(val logicType: String) : Value
+
+/** An enum entry used as a view's key, such as `Substance.Oxygen`. */
+internal data class Key(val name: String) : Value
+
+/**
+ * Translates the IR of a wrapped script-style program into [TirLine]s: the `Program` object's
+ * property initializers and `init` blocks, in source order. [symbols] finds the runtime API's
+ * declarations.
+ */
+internal class Translator(private val symbols: DeclarationFinder) {
   val lines = mutableListOf<TirLine>()
   private var vregs = 0
   private val labelCounts = mutableMapOf<String, Int>()
@@ -128,6 +160,25 @@ internal class Translator {
   private val exits = mutableMapOf<IrSimpleFunction, FunctionExit>()
   /** Functions that have a body of their own, called with `jal`, in the order first called. */
   private val called = linkedMapOf<IrSimpleFunction, CalledFunction>()
+
+  /**
+   * What an untyped device's views reach: every logic type the game has, read and written, as its
+   * flat logic types are. A view's members combine (`Ports.Output2.Setting`) into names the game
+   * may not have, which this rules out. The game's logic types are the entries of the runtime's
+   * `LogicType`.
+   */
+  private val anyDeviceAccess: ViewAccess by lazy {
+    val logicType =
+        checkNotNull(symbols.findClass(LOGIC_TYPE)) {
+          "the runtime has no ${LOGIC_TYPE.asString()}"
+        }
+    val names =
+        logicType.owner.declarations
+            .filterIsInstance<IrEnumEntry>()
+            .map { it.name.asString() }
+            .toSet()
+    ViewAccess("a device", names, names)
+  }
 
   private class FunctionExit(val label: String, val result: VReg?)
 
@@ -188,7 +239,7 @@ internal class Translator {
     val arguments = parameters.map { (index, _) ->
       call.arguments[index] ?: fail(call, "Default arguments are not supported")
     }
-    val values = operands(arguments)
+    val values = operands(arguments, aliases = parameters.map { it.value.type.isViewOrKey() })
     return if (function.isInline || graph.callCount(function) == 1) {
       inlineCall(function, parameters.map { it.value }, values)
     } else {
@@ -207,7 +258,13 @@ internal class Translator {
       val type = parameter.type
       if (parameter.varargElementType != null)
           fail(parameter, "vararg parameters are not supported")
-      if (!type.isInt() && !type.isDouble() && !type.isBoolean() && !type.isDevice()) {
+      if (
+          !type.isInt() &&
+              !type.isDouble() &&
+              !type.isBoolean() &&
+              !type.isDevice() &&
+              !type.isViewOrKey()
+      ) {
         fail(parameter, "Parameters of type ${type.render()} are not supported")
       }
     }
@@ -247,8 +304,11 @@ internal class Translator {
       parameters: List<IrValueParameter>,
       values: List<Value>,
   ): Value {
-    if (parameters.any { it.type.isDevice() }) {
-      fail(call, "A function with a device parameter must be inline, or called only once")
+    if (parameters.any { it.type.isDevice() || it.type.isViewOrKey() }) {
+      fail(
+          call,
+          "A function with a device, view or substance parameter must be inline, or called only once",
+      )
     }
     val target =
         called.getOrPut(function) {
@@ -332,7 +392,8 @@ internal class Translator {
         when {
           value is Mapped -> fail(initializer, MAPPED_HELD)
           value.isAlias() && !property.isVar -> value
-          value.isAlias() -> fail(property, "a device, batch or slot can only be held in a val")
+          value.isAlias() ->
+              fail(property, "a device, batch, slot or view can only be held in a val")
           value is Const && !property.isVar -> value
           else -> Reg(newVReg(property.name.asString())).also { move(it.reg, value) }
         }
@@ -390,7 +451,8 @@ internal class Translator {
         when {
           value is Mapped -> fail(initializer, MAPPED_HELD)
           value.isAlias() && !variable.isVar -> value
-          value.isAlias() -> fail(variable, "a device, batch or slot can only be held in a val")
+          value.isAlias() ->
+              fail(variable, "a device, batch, slot or view can only be held in a val")
           value is Const && !variable.isVar -> value
           else -> Reg(newVReg(variable.name.asString())).also { move(it.reg, value) }
         }
@@ -409,6 +471,13 @@ internal class Translator {
         if (it is SlotsOf || it is SlotOf) {
           fail(expression, "a slot can only be used directly or held in a val")
         }
+        if (it is View) {
+          fail(
+              expression,
+              "a view is used by naming one of its logic types, as Ports.Input.Pressure",
+          )
+        }
+        if (it is Key) fail(expression, "a substance can only be used as a key, as Ratios[it]")
         if (it.isAlias() && it !is Dev) fail(expression, batchError)
       }
 
@@ -441,6 +510,7 @@ internal class Translator {
         }
         is IrCall -> call(expression)
         is IrGetObjectValue -> prefab(expression)
+        is IrGetEnumValue -> key(expression)
         is IrReturn -> returnFrom(expression)
         is IrWhen -> whenExpression(expression)
         is IrWhileLoop -> whileLoop(expression)
@@ -526,6 +596,9 @@ internal class Translator {
       }
     }
     if (property != null && owner in DEVICE_CLASSES) {
+      if (function.returnType.classFqName?.asString() in VIEW_CLASSES) {
+        return startView(call, property.owner, viewOwner(call, args[0]), anyDeviceAccess)
+      }
       val device = device(call, args[0])
       if (property.owner.name.asString() == SLOTS) return SlotsOf(device)
       val logicType = Fixed(Name(property.owner.name.asString()))
@@ -625,6 +698,18 @@ internal class Translator {
         // A copy of a computed number, so a later change to its variable doesn't move the slot.
         SlotOf(owner.owner, operand(snapshot(slotNumber(args[1]!!))))
       }
+      cls.kotlinFqName.asString() in VIEW_CLASSES -> {
+        // Only a view's own members and Ratios' key: any other (equals, hashCode, ...) names no
+        // logic type.
+        if (property == null && !(name == "get" && cls.name.asString() == "Ratios")) {
+          fail(call, "$name is not supported on a view, only its logic types")
+        }
+        viewCall(call, cls, name, isSetter)
+      }
+      property != null &&
+          cls.isTypedDevice() &&
+          function.returnType.classFqName?.asString() in VIEW_CLASSES ->
+          startView(call, property, viewOwner(call, args[0]), property.viewAccess(cls))
       // Only a slot's logic types: any other member (hashCode, ...) is left unsupported.
       property != null && cls.isSubclassOf(DEVICE_SLOT) -> slotCall(call, name, isSetter)
       property != null && cls.isTypedDevice() && name == SLOTS -> SlotsOf(device(call, args[0]))
@@ -649,6 +734,129 @@ internal class Translator {
       }
       else -> null
     }
+  }
+
+  // Views: a device's logic types grouped (`Ports.Input.Pressure`, `Ratios[Substance.Oxygen]`).
+
+  /** The device or batch element a view is taken of. */
+  private fun viewOwner(call: IrCall, argument: IrExpression?): Value =
+      argument?.let { aliasOrValue(it) }?.takeIf { it is Dev || it is Element }
+          ?: fail(argument ?: call, "this device must be a pin, or a val holding one")
+
+  /** A device's view [property] of [owner], checked against [access] if the device is typed. */
+  private fun startView(
+      call: IrCall,
+      property: IrProperty,
+      owner: Value,
+      access: ViewAccess?,
+  ): View {
+    val name = property.name.asString()
+    val shape = property.getter?.returnType?.classFqName?.shortName()?.asString()
+    return when (shape) {
+      "Ports" -> View(owner, "Ports", "", "", access)
+      "Ratios" -> View(owner, "Ratios", "Ratio", "", access)
+      "Vector",
+      "MutableVector" -> View(owner, "Vector", VECTOR_PREFIXES[name] ?: name, "", access)
+      "Transfer" -> View(owner, "Transfer", name, "", access)
+      else -> fail(call, "$name is not supported")
+    }
+  }
+
+  /** The logic types a typed device's view reaches, from its `@LogicTypes`. */
+  private fun IrProperty.viewAccess(device: IrClass): ViewAccess? {
+    val annotation =
+        annotations.firstOrNull { it.type.classFqName?.asString() == LOGIC_TYPES } ?: return null
+    fun names(index: Int) =
+        ((annotation.arguments[index] as? IrConst)?.value as? String)
+            .orEmpty()
+            .split(',')
+            .filter { it.isNotEmpty() }
+            .toSet()
+    return ViewAccess(device.name.asString(), names(0), names(1))
+  }
+
+  /**
+   * A member, key or index of a view: another view (`Ports.Input`), or the logic type it names,
+   * read or written there.
+   */
+  private fun viewCall(call: IrCall, cls: IrClass, name: String, isSetter: Boolean): Value {
+    val args = call.arguments
+    val view =
+        aliasOrValue(args[0]!!) as? View
+            ?: fail(call, "this must be a device's ${cls.name}, or a val holding one")
+    return when (view.shape) {
+      "Ports" -> View(view.owner, "Port", "", name, view.access)
+      "Port" ->
+          if (name == "Ratios") View(view.owner, "Ratios", "Ratio", view.suffix, view.access)
+          else viewLogicType(call, view, name, isSetter, args.getOrNull(1))
+      "Ratios" -> {
+        val key =
+            args[1]?.let { aliasOrValue(it) } as? Key
+                ?: fail(args[1] ?: call, "the substance must be written out, as Substance.Oxygen")
+        viewLogicType(call, view, key.name, isSetter = false, written = null)
+      }
+      else -> viewLogicType(call, view, name, isSetter, args.getOrNull(1))
+    }
+  }
+
+  /**
+   * The logic type [member] of [view] names, read, or written with [written]: an `l` or `s` on a
+   * device, or the name alone ([Named]) on a batch's element, for the batch to read.
+   */
+  private fun viewLogicType(
+      call: IrCall,
+      view: View,
+      member: String,
+      isSetter: Boolean,
+      written: IrExpression?,
+  ): Value {
+    val logicType = view.prefix + member + view.suffix
+    checkViewAccess(call, view.access, logicType, isSetter)
+    val owner = view.owner
+    if (owner is Element) {
+      if (isSetter) fail(call, "a batch is written with forEach { ... }")
+      return Named(logicType)
+    }
+    val device = Fixed((owner as Dev).device)
+    return if (isSetter) {
+      emit("s", device, Fixed(Name(logicType)), operand(value(written!!)))
+      NoValue
+    } else {
+      Reg(newVReg()).also { emit("l", it.reg, device, Fixed(Name(logicType))) }
+    }
+  }
+
+  /** Fails unless a typed device's view has [logicType] to read, or to write if [isSetter]. */
+  private fun checkViewAccess(
+      element: IrElement,
+      access: ViewAccess?,
+      logicType: String,
+      isSetter: Boolean,
+  ) {
+    if (access == null) return
+    when {
+      isSetter && logicType !in access.written ->
+          fail(
+              element,
+              if (logicType in access.read) "${access.device}'s $logicType can only be read"
+              else "${access.device} has no $logicType",
+          )
+      !isSetter && logicType !in access.read ->
+          fail(
+              element,
+              if (logicType in access.written) "${access.device}'s $logicType can only be written"
+              else "${access.device} has no $logicType",
+          )
+    }
+  }
+
+  /** An enum entry, which is only a view's key: a [Substance]. */
+  private fun key(expression: IrGetEnumValue): Value {
+    val entry = expression.symbol.owner
+    if (entry.parentAsClass.kotlinFqName.asString() != SUBSTANCE) {
+      fail(expression, "${entry.parentAsClass.name} entries can only be used as d0[LogicType.X]")
+    }
+    return Key(entry.name.asString())
   }
 
   /** `Text` stores its string, packed by `STR`, to `Setting`. */
@@ -766,7 +974,45 @@ internal class Translator {
       is IrPropertyReference -> return argument.symbol.owner.name.asString()
       else -> {}
     }
+    // A view's logic type: { it.Ports.Input.Pressure }, { it.Ratios[Substance.Oxygen] }.
+    (argument as? IrFunctionExpression)?.function?.let { lambda ->
+      val parameter = lambda.parameters.single { it.kind == IrParameterKind.Regular }
+      val statement = (lambda.body as? IrBlockBody)?.statements?.singleOrNull()
+      val expression = ((statement as? IrReturn)?.value ?: statement) as? IrExpression
+      if (expression != null && expression.isViewChainOf(parameter)) {
+        val named = elementView(parameter) { aliasOrValue(expression) } as? Named
+        if (named != null) return named.logicType
+      }
+    }
     fail(argument ?: call, "a batch is read by picking a logic type, as { it.Charge }")
+  }
+
+  /** [block]'s result with the batch lambda's [parameter] standing for a batch's element. */
+  private fun <T> elementView(parameter: IrValueParameter, block: () -> T): T {
+    variables[parameter] = Element
+    try {
+      return block()
+    } finally {
+      variables.remove(parameter)
+    }
+  }
+
+  /**
+   * Whether this is a chain of view members, keys and indexes from [parameter] that ends at a logic
+   * type: calls on view classes, or a device's view property, whose keys don't depend on the
+   * element.
+   */
+  private fun IrExpression.isViewChainOf(parameter: IrValueParameter): Boolean {
+    val call = this as? IrCall ?: return false
+    val function = call.symbol.owner
+    val cls = function.parentClassOrNull ?: return false
+    val receiver = call.arguments[0] ?: return false
+    val onView = cls.kotlinFqName.asString() in VIEW_CLASSES
+    val viewProperty = function.returnType.classFqName?.asString() in VIEW_CLASSES
+    if (!onView && !viewProperty) return false
+    if (call.arguments.drop(1).any { it != null && it.mentions(parameter) }) return false
+    return (receiver is IrGetValue && receiver.symbol == parameter.symbol && viewProperty) ||
+        (onView && receiver.isViewChainOf(parameter))
   }
 
   /** The `lb`, `lbn`, `lbs` or `lbns` reading [logicType] of [source] with batch [method]. */
@@ -816,21 +1062,39 @@ internal class Translator {
       if (property == null || set.symbol.owner != property.setter) {
         fail(statement, "forEach may only assign logic types, as it.On = true")
       }
-      val slot = writeTarget(set.arguments[0]!!, parameter)
       val written = set.arguments.last()!!
-      if (written.mentions(parameter)) {
-        fail(written, "a value written to a batch can't use the batch's devices (it)")
+      val receiver = set.arguments[0]!!
+      // A view's logic type: it.Ports.Output.Setting = x.
+      if (
+          set.symbol.owner.parentClassOrNull?.kotlinFqName?.asString() in VIEW_CLASSES &&
+              receiver.isViewChainOf(parameter)
+      ) {
+        val view = elementView(parameter) { aliasOrValue(receiver) } as View
+        val logicType = view.prefix + property.name.asString() + view.suffix
+        checkViewAccess(set, view.access, logicType, isSetter = true)
+        checkBatchValue(written, parameter)
+        batchWrite(set, source, null, Fixed(Name(logicType)), operand(value(written)))
+        continue
       }
-      if (written.hasSideEffects()) {
-        fail(
-            written,
-            "a value written to a batch is computed once, so it can't have side effects " +
-                "(assign, write a device, sleep or yield)",
-        )
-      }
+      val slot = writeTarget(receiver, parameter)
+      checkBatchValue(written, parameter)
       val name = property.name.asString()
       val stored = Fixed(Name(storedLogicType(name)))
       batchWrite(set, source, slot, stored, storedValue(set, name, written))
+    }
+  }
+
+  /** Fails unless [written] can be computed once for every device of the batch. */
+  private fun checkBatchValue(written: IrExpression, parameter: IrValueParameter) {
+    if (written.mentions(parameter)) {
+      fail(written, "a value written to a batch can't use the batch's devices (it)")
+    }
+    if (written.hasSideEffects()) {
+      fail(
+          written,
+          "a value written to a batch is computed once, so it can't have side effects " +
+              "(assign, write a device, sleep or yield)",
+      )
     }
   }
 
@@ -964,7 +1228,13 @@ internal class Translator {
 
   /** A value that names something on the chip rather than holding a number: kept as is in a val. */
   private fun Value.isAlias() =
-      this is Dev || this is Batch || this is Mapped || this is SlotsOf || this is SlotOf
+      this is Dev ||
+          this is Batch ||
+          this is Mapped ||
+          this is SlotsOf ||
+          this is SlotOf ||
+          this is View ||
+          this is Key
 
   private fun logicType(call: IrCall, argument: IrExpression?): Fixed {
     if (argument !is IrGetEnumValue) {
@@ -1099,13 +1369,25 @@ internal class Translator {
   /**
    * Evaluates [expressions] in order. A register one of them yields is copied first if a later one
    * may assign it, since Kotlin uses the value an operand had when it was evaluated (`x + x++` adds
-   * the old `x`).
+   * the old `x`). Where [aliases] is set, the expression is a view or a substance, an inline
+   * function's argument, kept as the [View] or [Key] it is.
    */
-  private fun operands(expressions: List<IrExpression>): List<Value> =
-      expressions.mapIndexed { index, expression ->
-        val value = value(expression)
-        if (expressions.drop(index + 1).any { it.mayAssign() }) snapshot(value) else value
-      }
+  private fun operands(
+      expressions: List<IrExpression>,
+      aliases: List<Boolean> = emptyList(),
+  ): List<Value> = expressions.mapIndexed { index, expression ->
+    val value =
+        if (aliases.getOrElse(index) { false }) {
+          aliasOrValue(expression).takeIf { it is View || it is Key }
+              ?: fail(
+                  expression,
+                  "this must be a device's view or a substance, or a val holding one",
+              )
+        } else {
+          value(expression)
+        }
+    if (expressions.drop(index + 1).any { it.mayAssign() }) snapshot(value) else value
+  }
 
   /** [value] in a register of its own if it is in one, so later assignments leave it alone. */
   private fun snapshot(value: Value): Value =
@@ -1711,7 +1993,11 @@ internal class Translator {
         is Batch,
         is Mapped,
         is SlotsOf,
-        is SlotOf -> error("a batch or slot has no value")
+        is SlotOf,
+        is View,
+        is Key,
+        Element,
+        is Named -> error("a batch, slot or view has no value")
         NoValue -> error("no value")
       }
 
@@ -1719,6 +2005,10 @@ internal class Translator {
 
   private fun IrType.isDevice() =
       classFqName?.asString() == "ktrapic.Device" || classOrNull?.owner?.isTypedDevice() == true
+
+  /** A view class or [SUBSTANCE]: an argument named when compiled, as a device is. */
+  private fun IrType.isViewOrKey() =
+      classFqName?.asString().let { it in VIEW_CLASSES || it == SUBSTANCE }
 
   private fun IrType.isPrefab() =
       classOrNull?.owner?.let { it.kotlinFqName.asString() == PREFAB || it.isSubclassOf(PREFAB) } ==
@@ -1730,7 +2020,8 @@ internal class Translator {
       throw CompileException(element, message)
 
   private companion object {
-    val DEVICE_CLASSES = setOf("ktrapic.Device", "ktrapic.GenericDevice")
+    const val DEVICE = "ktrapic.Device"
+    val DEVICE_CLASSES = setOf(DEVICE, "ktrapic.GenericDevice")
     const val TYPED_DEVICE = "ktrapic.TypedDevice"
     const val BATCH_CLASS = "ktrapic.Batch"
     const val PREFAB = "ktrapic.Prefab"
@@ -1743,6 +2034,25 @@ internal class Translator {
     const val DEVICE_SLOT = "ktrapic.DeviceSlot"
     const val SLOT_NUMBER = "ktrapic.SlotNumber"
     const val MAX_SLOT = 255
+    const val LOGIC_TYPES = "ktrapic.LogicTypes"
+    const val SUBSTANCE = "ktrapic.Substance"
+    val LOGIC_TYPE: ClassId = ClassId.topLevel(FqName("ktrapic.LogicType"))
+
+    /** The runtime's view classes, whose members name logic types ([View]). */
+    val VIEW_CLASSES =
+        setOf(
+                "Ports",
+                "Port",
+                "Ratios",
+                "Vector",
+                "MutableVector",
+                "Transfer",
+            )
+            .map { "ktrapic.$it" }
+            .toSet()
+
+    /** A vector view's logic types' prefix, where it isn't the view's name. */
+    val VECTOR_PREFIXES = mapOf("Dimensions" to "Size")
 
     /** A batch's Boolean tests, by the batch method each reads and its comparison with 0. */
     val BATCH_TESTS =

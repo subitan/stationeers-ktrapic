@@ -95,7 +95,7 @@ properties.
 - A function called once, or marked `inline`, is compiled into the place it is called.
 - Any other function gets one body, called with `jal`. Its arguments and result travel in
   registers set aside for it, and it saves `ra` on the stack only if it calls another function.
-- Only an inlined function can take a `Device` parameter.
+- Only an inlined function can take a `Device`, a view or a `Substance` parameter.
 - Not supported: recursion, default arguments, `vararg`, and extension, generic and local
   functions.
 
@@ -185,6 +185,42 @@ function can take any battery. It has only those logic types: `PrefabHash`, `Nam
 `ReferenceId` are read from a member (`Batteries.Small.at(d0)`) or its pin. The kinds grouped so
 far are `Battery` (`Station`, `Large`, `Medium`, `Small`) and `LedDisplay` (`Small`, `Medium`,
 `Large`); every other prefab has its own entry point.
+
+### Views
+
+Some logic types come in families, which a device groups as views rather than one property each:
+
+- `Ports`: a device's `Input`, `Input2`, `Output` and `Output2` ports, each with `Pressure`,
+  `Temperature`, `TotalMoles`, `Combustion`, `Setting` and `Ratios` (`PressureOutput`,
+  `SettingInput`, `RatioOxygenOutput2`).
+- `Ratios`: the ratio of each `Substance` in the device, by key (`RatioOxygen`).
+- `Position`, `Velocity`, `VelocityRelative`, `Forward`, `Dimensions` and `Target`: vectors, by
+  `X`, `Y` and `Z` (`PositionX`, `SizeZ`).
+- `Import` and `Export`: `Count`, `Quantity`, `SlotHash` and `SlotOccupant` (`ImportCount`).
+
+```kotlin
+val filtration = Filtrations.at(d0)
+val outlet = filtration.Ports.Output
+val oxygen = outlet.Ratios[Substance.Oxygen]
+if (outlet.Pressure > 5000.0) filtration.On = false
+val sensors = GasSensors.all.map { it.Ratios[Substance.Nitrogen] }.average()
+db.Setting = oxygen + sensors
+```
+
+A view is resolved when the program is compiled: each logic type it names is the same one
+instruction the logic type's own name would be, and a view takes no register. It can be held in a
+`val` or passed to an inlined function, as a device can, but it has no value of its own. A key,
+such as `Substance.Oxygen`, must be written out, held in a `val` or passed to an inlined function.
+Only a view's logic types can be used: `equals`, `hashCode` and `toString` are errors.
+
+A typed device has only the views its prefab has, so naming another is a type error, and the
+compiler checks the rest against the prefab: `SatelliteDishes.at(d0).Dimensions.Y` is an error,
+"SatelliteDish has no SizeY", as the dish reports only `SizeX` and `SizeZ`. The
+[device reference](DEVICES.md#views) says what each device's views reach. A pin used untyped
+(`d0`) has every view, as it has every logic type, and the compiler checks only that each name
+it makes is one the game has: `d0.Ports.Output2.Setting` is an error, as the game has no
+`SettingOutput2`. The flat names are still reached through a pin's index:
+`d0[LogicType.PressureOutput]`.
 
 ```kotlin
 inline fun charge(battery: Battery): Double = battery.Ratio

@@ -30,6 +30,15 @@ fun String.hash(): Double = intrinsic()
 
 internal const val WRITE_ONLY = "this logic type can only be written"
 
+/**
+ * The logic types a typed device's view (`Ports`, `Ratios`, `Position`, ...) reaches on its prefab,
+ * comma-separated: those it can [read], and those it can be [written]. The compiler checks each use
+ * of the view against them, as Kotlin's types can't say which keys a device has.
+ */
+@Target(AnnotationTarget.PROPERTY)
+@Retention(AnnotationRetention.BINARY)
+annotation class LogicTypes(val read: String, val written: String)
+
 /** The game's name of the prefab a generated typed device or entry point stands for. */
 @Target(AnnotationTarget.CLASS)
 @Retention(AnnotationRetention.BINARY)

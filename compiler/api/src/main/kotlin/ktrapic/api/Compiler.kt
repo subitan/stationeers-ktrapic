@@ -46,7 +46,7 @@ object Compiler {
     val result =
         K2Frontend.compile(source, listOf(runtimeJar()), listOf("ktrapic.*")) { ir ->
           try {
-            val lowered = Backend.compile(ir.module)
+            val lowered = Backend.compile(ir.module, ir.symbols)
             // The 0-based line of the user's source that each line of the program comes from.
             val sourceLines =
                 lowered.offsets.map { offset -> offset?.let { ir.position(it) }?.first?.minus(1) }

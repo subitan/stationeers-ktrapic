@@ -1473,12 +1473,6 @@ class H2Combustor internal constructor() : TypedDevice() {
   val Combustion: Boolean
     get() = intrinsic()
 
-  val CombustionInput: Double
-    get() = intrinsic()
-
-  val CombustionOutput: Double
-    get() = intrinsic()
-
   val Error: Boolean
     get() = intrinsic()
 
@@ -1507,265 +1501,7 @@ class H2Combustor internal constructor() : TypedDevice() {
   val Pressure: Double
     get() = intrinsic()
 
-  val PressureInput: Double
-    get() = intrinsic()
-
-  val PressureOutput: Double
-    get() = intrinsic()
-
   val Ratio: Double
-    get() = intrinsic()
-
-  val RatioCarbonDioxide: Double
-    get() = intrinsic()
-
-  val RatioCarbonDioxideInput: Double
-    get() = intrinsic()
-
-  val RatioCarbonDioxideOutput: Double
-    get() = intrinsic()
-
-  val RatioHelium: Double
-    get() = intrinsic()
-
-  val RatioHeliumInput: Double
-    get() = intrinsic()
-
-  val RatioHeliumOutput: Double
-    get() = intrinsic()
-
-  val RatioHydrazine: Double
-    get() = intrinsic()
-
-  val RatioHydrazineInput: Double
-    get() = intrinsic()
-
-  val RatioHydrazineOutput: Double
-    get() = intrinsic()
-
-  val RatioHydrochloricAcid: Double
-    get() = intrinsic()
-
-  val RatioHydrochloricAcidInput: Double
-    get() = intrinsic()
-
-  val RatioHydrochloricAcidOutput: Double
-    get() = intrinsic()
-
-  val RatioHydrogen: Double
-    get() = intrinsic()
-
-  val RatioHydrogenInput: Double
-    get() = intrinsic()
-
-  val RatioHydrogenOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidAlcohol: Double
-    get() = intrinsic()
-
-  val RatioLiquidAlcoholInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidAlcoholOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidCarbonDioxide: Double
-    get() = intrinsic()
-
-  val RatioLiquidCarbonDioxideInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidCarbonDioxideOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrazine: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrazineInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrazineOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrochloricAcid: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrochloricAcidInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrochloricAcidOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrogenInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrogenOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidMethane: Double
-    get() = intrinsic()
-
-  val RatioLiquidMethaneInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidMethaneOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrogenInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrogenOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrousOxide: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrousOxideInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrousOxideOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidOxygen: Double
-    get() = intrinsic()
-
-  val RatioLiquidOxygenInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidOxygenOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidOzone: Double
-    get() = intrinsic()
-
-  val RatioLiquidOzoneInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidOzoneOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidPollutant: Double
-    get() = intrinsic()
-
-  val RatioLiquidPollutantInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidPollutantOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidSilanol: Double
-    get() = intrinsic()
-
-  val RatioLiquidSilanolInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidSilanolOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidSodiumChloride: Double
-    get() = intrinsic()
-
-  val RatioLiquidSodiumChlorideInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidSodiumChlorideOutput: Double
-    get() = intrinsic()
-
-  val RatioMethane: Double
-    get() = intrinsic()
-
-  val RatioMethaneInput: Double
-    get() = intrinsic()
-
-  val RatioMethaneOutput: Double
-    get() = intrinsic()
-
-  val RatioNitrogen: Double
-    get() = intrinsic()
-
-  val RatioNitrogenInput: Double
-    get() = intrinsic()
-
-  val RatioNitrogenOutput: Double
-    get() = intrinsic()
-
-  val RatioNitrousOxide: Double
-    get() = intrinsic()
-
-  val RatioNitrousOxideInput: Double
-    get() = intrinsic()
-
-  val RatioNitrousOxideOutput: Double
-    get() = intrinsic()
-
-  val RatioOxygen: Double
-    get() = intrinsic()
-
-  val RatioOxygenInput: Double
-    get() = intrinsic()
-
-  val RatioOxygenOutput: Double
-    get() = intrinsic()
-
-  val RatioOzone: Double
-    get() = intrinsic()
-
-  val RatioOzoneInput: Double
-    get() = intrinsic()
-
-  val RatioOzoneOutput: Double
-    get() = intrinsic()
-
-  val RatioPollutant: Double
-    get() = intrinsic()
-
-  val RatioPollutantInput: Double
-    get() = intrinsic()
-
-  val RatioPollutantOutput: Double
-    get() = intrinsic()
-
-  val RatioPollutedWater: Double
-    get() = intrinsic()
-
-  val RatioPollutedWaterInput: Double
-    get() = intrinsic()
-
-  val RatioPollutedWaterOutput: Double
-    get() = intrinsic()
-
-  val RatioSilanol: Double
-    get() = intrinsic()
-
-  val RatioSilanolInput: Double
-    get() = intrinsic()
-
-  val RatioSilanolOutput: Double
-    get() = intrinsic()
-
-  val RatioSteam: Double
-    get() = intrinsic()
-
-  val RatioSteamInput: Double
-    get() = intrinsic()
-
-  val RatioSteamOutput: Double
-    get() = intrinsic()
-
-  val RatioWater: Double
-    get() = intrinsic()
-
-  val RatioWaterInput: Double
-    get() = intrinsic()
-
-  val RatioWaterOutput: Double
     get() = intrinsic()
 
   val RequiredPower: Double
@@ -1778,19 +1514,23 @@ class H2Combustor internal constructor() : TypedDevice() {
   val Temperature: Double
     get() = intrinsic()
 
-  val TemperatureInput: Double
-    get() = intrinsic()
-
-  val TemperatureOutput: Double
-    get() = intrinsic()
-
   val TotalMoles: Double
     get() = intrinsic()
 
-  val TotalMolesInput: Double
+  @LogicTypes(
+      read =
+          "CombustionInput,CombustionOutput,PressureInput,PressureOutput,RatioCarbonDioxideInput,RatioCarbonDioxideOutput,RatioHeliumInput,RatioHeliumOutput,RatioHydrazineInput,RatioHydrazineOutput,RatioHydrochloricAcidInput,RatioHydrochloricAcidOutput,RatioHydrogenInput,RatioHydrogenOutput,RatioLiquidAlcoholInput,RatioLiquidAlcoholOutput,RatioLiquidCarbonDioxideInput,RatioLiquidCarbonDioxideOutput,RatioLiquidHydrazineInput,RatioLiquidHydrazineOutput,RatioLiquidHydrochloricAcidInput,RatioLiquidHydrochloricAcidOutput,RatioLiquidHydrogenInput,RatioLiquidHydrogenOutput,RatioLiquidMethaneInput,RatioLiquidMethaneOutput,RatioLiquidNitrogenInput,RatioLiquidNitrogenOutput,RatioLiquidNitrousOxideInput,RatioLiquidNitrousOxideOutput,RatioLiquidOxygenInput,RatioLiquidOxygenOutput,RatioLiquidOzoneInput,RatioLiquidOzoneOutput,RatioLiquidPollutantInput,RatioLiquidPollutantOutput,RatioLiquidSilanolInput,RatioLiquidSilanolOutput,RatioLiquidSodiumChlorideInput,RatioLiquidSodiumChlorideOutput,RatioMethaneInput,RatioMethaneOutput,RatioNitrogenInput,RatioNitrogenOutput,RatioNitrousOxideInput,RatioNitrousOxideOutput,RatioOxygenInput,RatioOxygenOutput,RatioOzoneInput,RatioOzoneOutput,RatioPollutantInput,RatioPollutantOutput,RatioPollutedWaterInput,RatioPollutedWaterOutput,RatioSilanolInput,RatioSilanolOutput,RatioSteamInput,RatioSteamOutput,RatioWaterInput,RatioWaterOutput,TemperatureInput,TemperatureOutput,TotalMolesInput,TotalMolesOutput",
+      written = "",
+  )
+  val Ports: Ports
     get() = intrinsic()
 
-  val TotalMolesOutput: Double
+  @LogicTypes(
+      read =
+          "RatioCarbonDioxide,RatioHelium,RatioHydrazine,RatioHydrochloricAcid,RatioHydrogen,RatioLiquidAlcohol,RatioLiquidCarbonDioxide,RatioLiquidHydrazine,RatioLiquidHydrochloricAcid,RatioLiquidHydrogen,RatioLiquidMethane,RatioLiquidNitrogen,RatioLiquidNitrousOxide,RatioLiquidOxygen,RatioLiquidOzone,RatioLiquidPollutant,RatioLiquidSilanol,RatioLiquidSodiumChloride,RatioMethane,RatioNitrogen,RatioNitrousOxide,RatioOxygen,RatioOzone,RatioPollutant,RatioPollutedWater,RatioSilanol,RatioSteam,RatioWater",
+      written = "",
+  )
+  val Ratios: Ratios
     get() = intrinsic()
 
   /** The device's slots, by number. */
@@ -2310,90 +2050,6 @@ class EmergencySpaceHelmet internal constructor() : TypedDevice() {
   val Pressure: Double
     get() = intrinsic()
 
-  val RatioCarbonDioxide: Double
-    get() = intrinsic()
-
-  val RatioHelium: Double
-    get() = intrinsic()
-
-  val RatioHydrazine: Double
-    get() = intrinsic()
-
-  val RatioHydrochloricAcid: Double
-    get() = intrinsic()
-
-  val RatioHydrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidAlcohol: Double
-    get() = intrinsic()
-
-  val RatioLiquidCarbonDioxide: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrazine: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrochloricAcid: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidMethane: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrousOxide: Double
-    get() = intrinsic()
-
-  val RatioLiquidOxygen: Double
-    get() = intrinsic()
-
-  val RatioLiquidOzone: Double
-    get() = intrinsic()
-
-  val RatioLiquidPollutant: Double
-    get() = intrinsic()
-
-  val RatioLiquidSilanol: Double
-    get() = intrinsic()
-
-  val RatioLiquidSodiumChloride: Double
-    get() = intrinsic()
-
-  val RatioMethane: Double
-    get() = intrinsic()
-
-  val RatioNitrogen: Double
-    get() = intrinsic()
-
-  val RatioNitrousOxide: Double
-    get() = intrinsic()
-
-  val RatioOxygen: Double
-    get() = intrinsic()
-
-  val RatioOzone: Double
-    get() = intrinsic()
-
-  val RatioPollutant: Double
-    get() = intrinsic()
-
-  val RatioPollutedWater: Double
-    get() = intrinsic()
-
-  val RatioSilanol: Double
-    get() = intrinsic()
-
-  val RatioSteam: Double
-    get() = intrinsic()
-
-  val RatioWater: Double
-    get() = intrinsic()
-
   var SoundAlert: Double
     get() = intrinsic()
     set(value) = intrinsic()
@@ -2407,6 +2063,14 @@ class EmergencySpaceHelmet internal constructor() : TypedDevice() {
   var Volume: Double
     get() = intrinsic()
     set(value) = intrinsic()
+
+  @LogicTypes(
+      read =
+          "RatioCarbonDioxide,RatioHelium,RatioHydrazine,RatioHydrochloricAcid,RatioHydrogen,RatioLiquidAlcohol,RatioLiquidCarbonDioxide,RatioLiquidHydrazine,RatioLiquidHydrochloricAcid,RatioLiquidHydrogen,RatioLiquidMethane,RatioLiquidNitrogen,RatioLiquidNitrousOxide,RatioLiquidOxygen,RatioLiquidOzone,RatioLiquidPollutant,RatioLiquidSilanol,RatioLiquidSodiumChloride,RatioMethane,RatioNitrogen,RatioNitrousOxide,RatioOxygen,RatioOzone,RatioPollutant,RatioPollutedWater,RatioSilanol,RatioSteam,RatioWater",
+      written = "",
+  )
+  val Ratios: Ratios
+    get() = intrinsic()
 
   /** The ItemEmergencySpaceHelmet prefab. */
   companion object : Prefab()
@@ -2486,90 +2150,6 @@ class GasMask internal constructor() : TypedDevice() {
   val Pressure: Double
     get() = intrinsic()
 
-  val RatioCarbonDioxide: Double
-    get() = intrinsic()
-
-  val RatioHelium: Double
-    get() = intrinsic()
-
-  val RatioHydrazine: Double
-    get() = intrinsic()
-
-  val RatioHydrochloricAcid: Double
-    get() = intrinsic()
-
-  val RatioHydrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidAlcohol: Double
-    get() = intrinsic()
-
-  val RatioLiquidCarbonDioxide: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrazine: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrochloricAcid: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidMethane: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrousOxide: Double
-    get() = intrinsic()
-
-  val RatioLiquidOxygen: Double
-    get() = intrinsic()
-
-  val RatioLiquidOzone: Double
-    get() = intrinsic()
-
-  val RatioLiquidPollutant: Double
-    get() = intrinsic()
-
-  val RatioLiquidSilanol: Double
-    get() = intrinsic()
-
-  val RatioLiquidSodiumChloride: Double
-    get() = intrinsic()
-
-  val RatioMethane: Double
-    get() = intrinsic()
-
-  val RatioNitrogen: Double
-    get() = intrinsic()
-
-  val RatioNitrousOxide: Double
-    get() = intrinsic()
-
-  val RatioOxygen: Double
-    get() = intrinsic()
-
-  val RatioOzone: Double
-    get() = intrinsic()
-
-  val RatioPollutant: Double
-    get() = intrinsic()
-
-  val RatioPollutedWater: Double
-    get() = intrinsic()
-
-  val RatioSilanol: Double
-    get() = intrinsic()
-
-  val RatioSteam: Double
-    get() = intrinsic()
-
-  val RatioWater: Double
-    get() = intrinsic()
-
   var SoundAlert: Double
     get() = intrinsic()
     set(value) = intrinsic()
@@ -2583,6 +2163,14 @@ class GasMask internal constructor() : TypedDevice() {
   var Volume: Double
     get() = intrinsic()
     set(value) = intrinsic()
+
+  @LogicTypes(
+      read =
+          "RatioCarbonDioxide,RatioHelium,RatioHydrazine,RatioHydrochloricAcid,RatioHydrogen,RatioLiquidAlcohol,RatioLiquidCarbonDioxide,RatioLiquidHydrazine,RatioLiquidHydrochloricAcid,RatioLiquidHydrogen,RatioLiquidMethane,RatioLiquidNitrogen,RatioLiquidNitrousOxide,RatioLiquidOxygen,RatioLiquidOzone,RatioLiquidPollutant,RatioLiquidSilanol,RatioLiquidSodiumChloride,RatioMethane,RatioNitrogen,RatioNitrousOxide,RatioOxygen,RatioOzone,RatioPollutant,RatioPollutedWater,RatioSilanol,RatioSteam,RatioWater",
+      written = "",
+  )
+  val Ratios: Ratios
+    get() = intrinsic()
 
   /** The device's slots, by number. */
   val slots: Slots<ItemFilteredSlot>
@@ -2724,15 +2312,6 @@ class HardSuit internal constructor() : TypedDevice() {
     get() = intrinsic()
     set(value) = intrinsic()
 
-  val ForwardX: Double
-    get() = intrinsic()
-
-  val ForwardY: Double
-    get() = intrinsic()
-
-  val ForwardZ: Double
-    get() = intrinsic()
-
   var Lock: Boolean
     get() = intrinsic()
     set(value) = intrinsic()
@@ -2742,15 +2321,6 @@ class HardSuit internal constructor() : TypedDevice() {
     set(value) = intrinsic()
 
   val Orientation: Double
-    get() = intrinsic()
-
-  val PositionX: Double
-    get() = intrinsic()
-
-  val PositionY: Double
-    get() = intrinsic()
-
-  val PositionZ: Double
     get() = intrinsic()
 
   val Power: Boolean
@@ -2765,90 +2335,6 @@ class HardSuit internal constructor() : TypedDevice() {
   var PressureSetting: Double
     get() = intrinsic()
     set(value) = intrinsic()
-
-  val RatioCarbonDioxide: Double
-    get() = intrinsic()
-
-  val RatioHelium: Double
-    get() = intrinsic()
-
-  val RatioHydrazine: Double
-    get() = intrinsic()
-
-  val RatioHydrochloricAcid: Double
-    get() = intrinsic()
-
-  val RatioHydrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidAlcohol: Double
-    get() = intrinsic()
-
-  val RatioLiquidCarbonDioxide: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrazine: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrochloricAcid: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidMethane: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrousOxide: Double
-    get() = intrinsic()
-
-  val RatioLiquidOxygen: Double
-    get() = intrinsic()
-
-  val RatioLiquidOzone: Double
-    get() = intrinsic()
-
-  val RatioLiquidPollutant: Double
-    get() = intrinsic()
-
-  val RatioLiquidSilanol: Double
-    get() = intrinsic()
-
-  val RatioLiquidSodiumChloride: Double
-    get() = intrinsic()
-
-  val RatioMethane: Double
-    get() = intrinsic()
-
-  val RatioNitrogen: Double
-    get() = intrinsic()
-
-  val RatioNitrousOxide: Double
-    get() = intrinsic()
-
-  val RatioOxygen: Double
-    get() = intrinsic()
-
-  val RatioOzone: Double
-    get() = intrinsic()
-
-  val RatioPollutant: Double
-    get() = intrinsic()
-
-  val RatioPollutedWater: Double
-    get() = intrinsic()
-
-  val RatioSilanol: Double
-    get() = intrinsic()
-
-  val RatioSteam: Double
-    get() = intrinsic()
-
-  val RatioWater: Double
-    get() = intrinsic()
 
   var Setting: Double
     get() = intrinsic()
@@ -2874,27 +2360,33 @@ class HardSuit internal constructor() : TypedDevice() {
   val VelocityMagnitude: Double
     get() = intrinsic()
 
-  val VelocityRelativeX: Double
-    get() = intrinsic()
-
-  val VelocityRelativeY: Double
-    get() = intrinsic()
-
-  val VelocityRelativeZ: Double
-    get() = intrinsic()
-
-  val VelocityX: Double
-    get() = intrinsic()
-
-  val VelocityY: Double
-    get() = intrinsic()
-
-  val VelocityZ: Double
-    get() = intrinsic()
-
   var Volume: Double
     get() = intrinsic()
     set(value) = intrinsic()
+
+  @LogicTypes(
+      read =
+          "RatioCarbonDioxide,RatioHelium,RatioHydrazine,RatioHydrochloricAcid,RatioHydrogen,RatioLiquidAlcohol,RatioLiquidCarbonDioxide,RatioLiquidHydrazine,RatioLiquidHydrochloricAcid,RatioLiquidHydrogen,RatioLiquidMethane,RatioLiquidNitrogen,RatioLiquidNitrousOxide,RatioLiquidOxygen,RatioLiquidOzone,RatioLiquidPollutant,RatioLiquidSilanol,RatioLiquidSodiumChloride,RatioMethane,RatioNitrogen,RatioNitrousOxide,RatioOxygen,RatioOzone,RatioPollutant,RatioPollutedWater,RatioSilanol,RatioSteam,RatioWater",
+      written = "",
+  )
+  val Ratios: Ratios
+    get() = intrinsic()
+
+  @LogicTypes(read = "PositionX,PositionY,PositionZ", written = "")
+  val Position: Vector
+    get() = intrinsic()
+
+  @LogicTypes(read = "VelocityX,VelocityY,VelocityZ", written = "")
+  val Velocity: Vector
+    get() = intrinsic()
+
+  @LogicTypes(read = "VelocityRelativeX,VelocityRelativeY,VelocityRelativeZ", written = "")
+  val VelocityRelative: Vector
+    get() = intrinsic()
+
+  @LogicTypes(read = "ForwardX,ForwardY,ForwardZ", written = "")
+  val Forward: Vector
+    get() = intrinsic()
 
   /** The device's slots, by number. */
   val slots: Slots<ItemCommonSlot>
@@ -2972,90 +2464,6 @@ class HardsuitHelmet internal constructor() : TypedDevice() {
   val Pressure: Double
     get() = intrinsic()
 
-  val RatioCarbonDioxide: Double
-    get() = intrinsic()
-
-  val RatioHelium: Double
-    get() = intrinsic()
-
-  val RatioHydrazine: Double
-    get() = intrinsic()
-
-  val RatioHydrochloricAcid: Double
-    get() = intrinsic()
-
-  val RatioHydrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidAlcohol: Double
-    get() = intrinsic()
-
-  val RatioLiquidCarbonDioxide: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrazine: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrochloricAcid: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidMethane: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrousOxide: Double
-    get() = intrinsic()
-
-  val RatioLiquidOxygen: Double
-    get() = intrinsic()
-
-  val RatioLiquidOzone: Double
-    get() = intrinsic()
-
-  val RatioLiquidPollutant: Double
-    get() = intrinsic()
-
-  val RatioLiquidSilanol: Double
-    get() = intrinsic()
-
-  val RatioLiquidSodiumChloride: Double
-    get() = intrinsic()
-
-  val RatioMethane: Double
-    get() = intrinsic()
-
-  val RatioNitrogen: Double
-    get() = intrinsic()
-
-  val RatioNitrousOxide: Double
-    get() = intrinsic()
-
-  val RatioOxygen: Double
-    get() = intrinsic()
-
-  val RatioOzone: Double
-    get() = intrinsic()
-
-  val RatioPollutant: Double
-    get() = intrinsic()
-
-  val RatioPollutedWater: Double
-    get() = intrinsic()
-
-  val RatioSilanol: Double
-    get() = intrinsic()
-
-  val RatioSteam: Double
-    get() = intrinsic()
-
-  val RatioWater: Double
-    get() = intrinsic()
-
   var SoundAlert: Double
     get() = intrinsic()
     set(value) = intrinsic()
@@ -3069,6 +2477,14 @@ class HardsuitHelmet internal constructor() : TypedDevice() {
   var Volume: Double
     get() = intrinsic()
     set(value) = intrinsic()
+
+  @LogicTypes(
+      read =
+          "RatioCarbonDioxide,RatioHelium,RatioHydrazine,RatioHydrochloricAcid,RatioHydrogen,RatioLiquidAlcohol,RatioLiquidCarbonDioxide,RatioLiquidHydrazine,RatioLiquidHydrochloricAcid,RatioLiquidHydrogen,RatioLiquidMethane,RatioLiquidNitrogen,RatioLiquidNitrousOxide,RatioLiquidOxygen,RatioLiquidOzone,RatioLiquidPollutant,RatioLiquidSilanol,RatioLiquidSodiumChloride,RatioMethane,RatioNitrogen,RatioNitrousOxide,RatioOxygen,RatioOzone,RatioPollutant,RatioPollutedWater,RatioSilanol,RatioSteam,RatioWater",
+      written = "",
+  )
+  val Ratios: Ratios
+    get() = intrinsic()
 
   /** The ItemHardsuitHelmet prefab. */
   companion object : Prefab()
@@ -3116,90 +2532,6 @@ class IcarusHelmet internal constructor() : TypedDevice() {
   val Pressure: Double
     get() = intrinsic()
 
-  val RatioCarbonDioxide: Double
-    get() = intrinsic()
-
-  val RatioHelium: Double
-    get() = intrinsic()
-
-  val RatioHydrazine: Double
-    get() = intrinsic()
-
-  val RatioHydrochloricAcid: Double
-    get() = intrinsic()
-
-  val RatioHydrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidAlcohol: Double
-    get() = intrinsic()
-
-  val RatioLiquidCarbonDioxide: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrazine: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrochloricAcid: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidMethane: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrousOxide: Double
-    get() = intrinsic()
-
-  val RatioLiquidOxygen: Double
-    get() = intrinsic()
-
-  val RatioLiquidOzone: Double
-    get() = intrinsic()
-
-  val RatioLiquidPollutant: Double
-    get() = intrinsic()
-
-  val RatioLiquidSilanol: Double
-    get() = intrinsic()
-
-  val RatioLiquidSodiumChloride: Double
-    get() = intrinsic()
-
-  val RatioMethane: Double
-    get() = intrinsic()
-
-  val RatioNitrogen: Double
-    get() = intrinsic()
-
-  val RatioNitrousOxide: Double
-    get() = intrinsic()
-
-  val RatioOxygen: Double
-    get() = intrinsic()
-
-  val RatioOzone: Double
-    get() = intrinsic()
-
-  val RatioPollutant: Double
-    get() = intrinsic()
-
-  val RatioPollutedWater: Double
-    get() = intrinsic()
-
-  val RatioSilanol: Double
-    get() = intrinsic()
-
-  val RatioSteam: Double
-    get() = intrinsic()
-
-  val RatioWater: Double
-    get() = intrinsic()
-
   var SoundAlert: Double
     get() = intrinsic()
     set(value) = intrinsic()
@@ -3213,6 +2545,14 @@ class IcarusHelmet internal constructor() : TypedDevice() {
   var Volume: Double
     get() = intrinsic()
     set(value) = intrinsic()
+
+  @LogicTypes(
+      read =
+          "RatioCarbonDioxide,RatioHelium,RatioHydrazine,RatioHydrochloricAcid,RatioHydrogen,RatioLiquidAlcohol,RatioLiquidCarbonDioxide,RatioLiquidHydrazine,RatioLiquidHydrochloricAcid,RatioLiquidHydrogen,RatioLiquidMethane,RatioLiquidNitrogen,RatioLiquidNitrousOxide,RatioLiquidOxygen,RatioLiquidOzone,RatioLiquidPollutant,RatioLiquidSilanol,RatioLiquidSodiumChloride,RatioMethane,RatioNitrogen,RatioNitrousOxide,RatioOxygen,RatioOzone,RatioPollutant,RatioPollutedWater,RatioSilanol,RatioSteam,RatioWater",
+      written = "",
+  )
+  val Ratios: Ratios
+    get() = intrinsic()
 
   /** The ItemIcarusHelmet prefab. */
   companion object : Prefab()
@@ -3356,15 +2696,6 @@ class Laptop internal constructor() : TypedDevice() {
     get() = intrinsic()
     set(value) = intrinsic()
 
-  val PositionX: Double
-    get() = intrinsic()
-
-  val PositionY: Double
-    get() = intrinsic()
-
-  val PositionZ: Double
-    get() = intrinsic()
-
   val Power: Boolean
     get() = intrinsic()
 
@@ -3372,6 +2703,10 @@ class Laptop internal constructor() : TypedDevice() {
     get() = intrinsic()
 
   val TemperatureExternal: Double
+    get() = intrinsic()
+
+  @LogicTypes(read = "PositionX,PositionY,PositionZ", written = "")
+  val Position: Vector
     get() = intrinsic()
 
   /** The device's slots, by number. */
@@ -4044,90 +3379,6 @@ class SpaceHelmet internal constructor() : TypedDevice() {
   val Pressure: Double
     get() = intrinsic()
 
-  val RatioCarbonDioxide: Double
-    get() = intrinsic()
-
-  val RatioHelium: Double
-    get() = intrinsic()
-
-  val RatioHydrazine: Double
-    get() = intrinsic()
-
-  val RatioHydrochloricAcid: Double
-    get() = intrinsic()
-
-  val RatioHydrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidAlcohol: Double
-    get() = intrinsic()
-
-  val RatioLiquidCarbonDioxide: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrazine: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrochloricAcid: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidMethane: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrousOxide: Double
-    get() = intrinsic()
-
-  val RatioLiquidOxygen: Double
-    get() = intrinsic()
-
-  val RatioLiquidOzone: Double
-    get() = intrinsic()
-
-  val RatioLiquidPollutant: Double
-    get() = intrinsic()
-
-  val RatioLiquidSilanol: Double
-    get() = intrinsic()
-
-  val RatioLiquidSodiumChloride: Double
-    get() = intrinsic()
-
-  val RatioMethane: Double
-    get() = intrinsic()
-
-  val RatioNitrogen: Double
-    get() = intrinsic()
-
-  val RatioNitrousOxide: Double
-    get() = intrinsic()
-
-  val RatioOxygen: Double
-    get() = intrinsic()
-
-  val RatioOzone: Double
-    get() = intrinsic()
-
-  val RatioPollutant: Double
-    get() = intrinsic()
-
-  val RatioPollutedWater: Double
-    get() = intrinsic()
-
-  val RatioSilanol: Double
-    get() = intrinsic()
-
-  val RatioSteam: Double
-    get() = intrinsic()
-
-  val RatioWater: Double
-    get() = intrinsic()
-
   var SoundAlert: Double
     get() = intrinsic()
     set(value) = intrinsic()
@@ -4141,6 +3392,14 @@ class SpaceHelmet internal constructor() : TypedDevice() {
   var Volume: Double
     get() = intrinsic()
     set(value) = intrinsic()
+
+  @LogicTypes(
+      read =
+          "RatioCarbonDioxide,RatioHelium,RatioHydrazine,RatioHydrochloricAcid,RatioHydrogen,RatioLiquidAlcohol,RatioLiquidCarbonDioxide,RatioLiquidHydrazine,RatioLiquidHydrochloricAcid,RatioLiquidHydrogen,RatioLiquidMethane,RatioLiquidNitrogen,RatioLiquidNitrousOxide,RatioLiquidOxygen,RatioLiquidOzone,RatioLiquidPollutant,RatioLiquidSilanol,RatioLiquidSodiumChloride,RatioMethane,RatioNitrogen,RatioNitrousOxide,RatioOxygen,RatioOzone,RatioPollutant,RatioPollutedWater,RatioSilanol,RatioSteam,RatioWater",
+      written = "",
+  )
+  val Ratios: Ratios
+    get() = intrinsic()
 
   /** The ItemSpaceHelmet prefab. */
   companion object : Prefab()
@@ -4229,15 +3488,6 @@ class SuitHARM internal constructor() : TypedDevice() {
     get() = intrinsic()
     set(value) = intrinsic()
 
-  val ForwardX: Double
-    get() = intrinsic()
-
-  val ForwardY: Double
-    get() = intrinsic()
-
-  val ForwardZ: Double
-    get() = intrinsic()
-
   var Lock: Boolean
     get() = intrinsic()
     set(value) = intrinsic()
@@ -4247,15 +3497,6 @@ class SuitHARM internal constructor() : TypedDevice() {
     set(value) = intrinsic()
 
   val Orientation: Double
-    get() = intrinsic()
-
-  val PositionX: Double
-    get() = intrinsic()
-
-  val PositionY: Double
-    get() = intrinsic()
-
-  val PositionZ: Double
     get() = intrinsic()
 
   val Power: Boolean
@@ -4270,90 +3511,6 @@ class SuitHARM internal constructor() : TypedDevice() {
   var PressureSetting: Double
     get() = intrinsic()
     set(value) = intrinsic()
-
-  val RatioCarbonDioxide: Double
-    get() = intrinsic()
-
-  val RatioHelium: Double
-    get() = intrinsic()
-
-  val RatioHydrazine: Double
-    get() = intrinsic()
-
-  val RatioHydrochloricAcid: Double
-    get() = intrinsic()
-
-  val RatioHydrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidAlcohol: Double
-    get() = intrinsic()
-
-  val RatioLiquidCarbonDioxide: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrazine: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrochloricAcid: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidMethane: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrousOxide: Double
-    get() = intrinsic()
-
-  val RatioLiquidOxygen: Double
-    get() = intrinsic()
-
-  val RatioLiquidOzone: Double
-    get() = intrinsic()
-
-  val RatioLiquidPollutant: Double
-    get() = intrinsic()
-
-  val RatioLiquidSilanol: Double
-    get() = intrinsic()
-
-  val RatioLiquidSodiumChloride: Double
-    get() = intrinsic()
-
-  val RatioMethane: Double
-    get() = intrinsic()
-
-  val RatioNitrogen: Double
-    get() = intrinsic()
-
-  val RatioNitrousOxide: Double
-    get() = intrinsic()
-
-  val RatioOxygen: Double
-    get() = intrinsic()
-
-  val RatioOzone: Double
-    get() = intrinsic()
-
-  val RatioPollutant: Double
-    get() = intrinsic()
-
-  val RatioPollutedWater: Double
-    get() = intrinsic()
-
-  val RatioSilanol: Double
-    get() = intrinsic()
-
-  val RatioSteam: Double
-    get() = intrinsic()
-
-  val RatioWater: Double
-    get() = intrinsic()
 
   var Setting: Double
     get() = intrinsic()
@@ -4379,27 +3536,33 @@ class SuitHARM internal constructor() : TypedDevice() {
   val VelocityMagnitude: Double
     get() = intrinsic()
 
-  val VelocityRelativeX: Double
-    get() = intrinsic()
-
-  val VelocityRelativeY: Double
-    get() = intrinsic()
-
-  val VelocityRelativeZ: Double
-    get() = intrinsic()
-
-  val VelocityX: Double
-    get() = intrinsic()
-
-  val VelocityY: Double
-    get() = intrinsic()
-
-  val VelocityZ: Double
-    get() = intrinsic()
-
   var Volume: Double
     get() = intrinsic()
     set(value) = intrinsic()
+
+  @LogicTypes(
+      read =
+          "RatioCarbonDioxide,RatioHelium,RatioHydrazine,RatioHydrochloricAcid,RatioHydrogen,RatioLiquidAlcohol,RatioLiquidCarbonDioxide,RatioLiquidHydrazine,RatioLiquidHydrochloricAcid,RatioLiquidHydrogen,RatioLiquidMethane,RatioLiquidNitrogen,RatioLiquidNitrousOxide,RatioLiquidOxygen,RatioLiquidOzone,RatioLiquidPollutant,RatioLiquidSilanol,RatioLiquidSodiumChloride,RatioMethane,RatioNitrogen,RatioNitrousOxide,RatioOxygen,RatioOzone,RatioPollutant,RatioPollutedWater,RatioSilanol,RatioSteam,RatioWater",
+      written = "",
+  )
+  val Ratios: Ratios
+    get() = intrinsic()
+
+  @LogicTypes(read = "PositionX,PositionY,PositionZ", written = "")
+  val Position: Vector
+    get() = intrinsic()
+
+  @LogicTypes(read = "VelocityX,VelocityY,VelocityZ", written = "")
+  val Velocity: Vector
+    get() = intrinsic()
+
+  @LogicTypes(read = "VelocityRelativeX,VelocityRelativeY,VelocityRelativeZ", written = "")
+  val VelocityRelative: Vector
+    get() = intrinsic()
+
+  @LogicTypes(read = "ForwardX,ForwardY,ForwardZ", written = "")
+  val Forward: Vector
+    get() = intrinsic()
 
   /** The device's slots, by number. */
   val slots: Slots<ItemCommonSlot>
@@ -4507,90 +3670,6 @@ class SuitHelmetHARM internal constructor() : TypedDevice() {
   val Pressure: Double
     get() = intrinsic()
 
-  val RatioCarbonDioxide: Double
-    get() = intrinsic()
-
-  val RatioHelium: Double
-    get() = intrinsic()
-
-  val RatioHydrazine: Double
-    get() = intrinsic()
-
-  val RatioHydrochloricAcid: Double
-    get() = intrinsic()
-
-  val RatioHydrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidAlcohol: Double
-    get() = intrinsic()
-
-  val RatioLiquidCarbonDioxide: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrazine: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrochloricAcid: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidMethane: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrousOxide: Double
-    get() = intrinsic()
-
-  val RatioLiquidOxygen: Double
-    get() = intrinsic()
-
-  val RatioLiquidOzone: Double
-    get() = intrinsic()
-
-  val RatioLiquidPollutant: Double
-    get() = intrinsic()
-
-  val RatioLiquidSilanol: Double
-    get() = intrinsic()
-
-  val RatioLiquidSodiumChloride: Double
-    get() = intrinsic()
-
-  val RatioMethane: Double
-    get() = intrinsic()
-
-  val RatioNitrogen: Double
-    get() = intrinsic()
-
-  val RatioNitrousOxide: Double
-    get() = intrinsic()
-
-  val RatioOxygen: Double
-    get() = intrinsic()
-
-  val RatioOzone: Double
-    get() = intrinsic()
-
-  val RatioPollutant: Double
-    get() = intrinsic()
-
-  val RatioPollutedWater: Double
-    get() = intrinsic()
-
-  val RatioSilanol: Double
-    get() = intrinsic()
-
-  val RatioSteam: Double
-    get() = intrinsic()
-
-  val RatioWater: Double
-    get() = intrinsic()
-
   var SoundAlert: Double
     get() = intrinsic()
     set(value) = intrinsic()
@@ -4604,6 +3683,14 @@ class SuitHelmetHARM internal constructor() : TypedDevice() {
   var Volume: Double
     get() = intrinsic()
     set(value) = intrinsic()
+
+  @LogicTypes(
+      read =
+          "RatioCarbonDioxide,RatioHelium,RatioHydrazine,RatioHydrochloricAcid,RatioHydrogen,RatioLiquidAlcohol,RatioLiquidCarbonDioxide,RatioLiquidHydrazine,RatioLiquidHydrochloricAcid,RatioLiquidHydrogen,RatioLiquidMethane,RatioLiquidNitrogen,RatioLiquidNitrousOxide,RatioLiquidOxygen,RatioLiquidOzone,RatioLiquidPollutant,RatioLiquidSilanol,RatioLiquidSodiumChloride,RatioMethane,RatioNitrogen,RatioNitrousOxide,RatioOxygen,RatioOzone,RatioPollutant,RatioPollutedWater,RatioSilanol,RatioSteam,RatioWater",
+      written = "",
+  )
+  val Ratios: Ratios
+    get() = intrinsic()
 
   /** The ItemSuitHelmetHARM prefab. */
   companion object : Prefab()
@@ -4830,90 +3917,6 @@ class Landingpad_DataConnectionPiece internal constructor() : TypedDevice() {
   val Pressure: Double
     get() = intrinsic()
 
-  val RatioCarbonDioxide: Double
-    get() = intrinsic()
-
-  val RatioHelium: Double
-    get() = intrinsic()
-
-  val RatioHydrazine: Double
-    get() = intrinsic()
-
-  val RatioHydrochloricAcid: Double
-    get() = intrinsic()
-
-  val RatioHydrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidAlcohol: Double
-    get() = intrinsic()
-
-  val RatioLiquidCarbonDioxide: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrazine: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrochloricAcid: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidMethane: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrousOxide: Double
-    get() = intrinsic()
-
-  val RatioLiquidOxygen: Double
-    get() = intrinsic()
-
-  val RatioLiquidOzone: Double
-    get() = intrinsic()
-
-  val RatioLiquidPollutant: Double
-    get() = intrinsic()
-
-  val RatioLiquidSilanol: Double
-    get() = intrinsic()
-
-  val RatioLiquidSodiumChloride: Double
-    get() = intrinsic()
-
-  val RatioMethane: Double
-    get() = intrinsic()
-
-  val RatioNitrogen: Double
-    get() = intrinsic()
-
-  val RatioNitrousOxide: Double
-    get() = intrinsic()
-
-  val RatioOxygen: Double
-    get() = intrinsic()
-
-  val RatioOzone: Double
-    get() = intrinsic()
-
-  val RatioPollutant: Double
-    get() = intrinsic()
-
-  val RatioPollutedWater: Double
-    get() = intrinsic()
-
-  val RatioSilanol: Double
-    get() = intrinsic()
-
-  val RatioSteam: Double
-    get() = intrinsic()
-
-  val RatioWater: Double
-    get() = intrinsic()
-
   val RequiredPower: Double
     get() = intrinsic()
 
@@ -4926,6 +3929,14 @@ class Landingpad_DataConnectionPiece internal constructor() : TypedDevice() {
   var Vertical: Double
     get() = intrinsic()
     set(value) = intrinsic()
+
+  @LogicTypes(
+      read =
+          "RatioCarbonDioxide,RatioHelium,RatioHydrazine,RatioHydrochloricAcid,RatioHydrogen,RatioLiquidAlcohol,RatioLiquidCarbonDioxide,RatioLiquidHydrazine,RatioLiquidHydrochloricAcid,RatioLiquidHydrogen,RatioLiquidMethane,RatioLiquidNitrogen,RatioLiquidNitrousOxide,RatioLiquidOxygen,RatioLiquidOzone,RatioLiquidPollutant,RatioLiquidSilanol,RatioLiquidSodiumChloride,RatioMethane,RatioNitrogen,RatioNitrousOxide,RatioOxygen,RatioOzone,RatioPollutant,RatioPollutedWater,RatioSilanol,RatioSteam,RatioWater",
+      written = "",
+  )
+  val Ratios: Ratios
+    get() = intrinsic()
 
   /** The Landingpad_DataConnectionPiece prefab. */
   companion object : Prefab()
@@ -4970,90 +3981,6 @@ class Landingpad_GasConnectorInwardPiece internal constructor() : TypedDevice() 
   val Ratio: Double
     get() = intrinsic()
 
-  val RatioCarbonDioxide: Double
-    get() = intrinsic()
-
-  val RatioHelium: Double
-    get() = intrinsic()
-
-  val RatioHydrazine: Double
-    get() = intrinsic()
-
-  val RatioHydrochloricAcid: Double
-    get() = intrinsic()
-
-  val RatioHydrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidAlcohol: Double
-    get() = intrinsic()
-
-  val RatioLiquidCarbonDioxide: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrazine: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrochloricAcid: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidMethane: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrousOxide: Double
-    get() = intrinsic()
-
-  val RatioLiquidOxygen: Double
-    get() = intrinsic()
-
-  val RatioLiquidOzone: Double
-    get() = intrinsic()
-
-  val RatioLiquidPollutant: Double
-    get() = intrinsic()
-
-  val RatioLiquidSilanol: Double
-    get() = intrinsic()
-
-  val RatioLiquidSodiumChloride: Double
-    get() = intrinsic()
-
-  val RatioMethane: Double
-    get() = intrinsic()
-
-  val RatioNitrogen: Double
-    get() = intrinsic()
-
-  val RatioNitrousOxide: Double
-    get() = intrinsic()
-
-  val RatioOxygen: Double
-    get() = intrinsic()
-
-  val RatioOzone: Double
-    get() = intrinsic()
-
-  val RatioPollutant: Double
-    get() = intrinsic()
-
-  val RatioPollutedWater: Double
-    get() = intrinsic()
-
-  val RatioSilanol: Double
-    get() = intrinsic()
-
-  val RatioSteam: Double
-    get() = intrinsic()
-
-  val RatioWater: Double
-    get() = intrinsic()
-
   val RequiredPower: Double
     get() = intrinsic()
 
@@ -5065,6 +3992,14 @@ class Landingpad_GasConnectorInwardPiece internal constructor() : TypedDevice() 
     get() = intrinsic()
 
   val TotalMoles: Double
+    get() = intrinsic()
+
+  @LogicTypes(
+      read =
+          "RatioCarbonDioxide,RatioHelium,RatioHydrazine,RatioHydrochloricAcid,RatioHydrogen,RatioLiquidAlcohol,RatioLiquidCarbonDioxide,RatioLiquidHydrazine,RatioLiquidHydrochloricAcid,RatioLiquidHydrogen,RatioLiquidMethane,RatioLiquidNitrogen,RatioLiquidNitrousOxide,RatioLiquidOxygen,RatioLiquidOzone,RatioLiquidPollutant,RatioLiquidSilanol,RatioLiquidSodiumChloride,RatioMethane,RatioNitrogen,RatioNitrousOxide,RatioOxygen,RatioOzone,RatioPollutant,RatioPollutedWater,RatioSilanol,RatioSteam,RatioWater",
+      written = "",
+  )
+  val Ratios: Ratios
     get() = intrinsic()
 
   /** The Landingpad_GasConnectorInwardPiece prefab. */
@@ -5110,90 +4045,6 @@ class Landingpad_GasConnectorOutwardPiece internal constructor() : TypedDevice()
   val Ratio: Double
     get() = intrinsic()
 
-  val RatioCarbonDioxide: Double
-    get() = intrinsic()
-
-  val RatioHelium: Double
-    get() = intrinsic()
-
-  val RatioHydrazine: Double
-    get() = intrinsic()
-
-  val RatioHydrochloricAcid: Double
-    get() = intrinsic()
-
-  val RatioHydrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidAlcohol: Double
-    get() = intrinsic()
-
-  val RatioLiquidCarbonDioxide: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrazine: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrochloricAcid: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidMethane: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrousOxide: Double
-    get() = intrinsic()
-
-  val RatioLiquidOxygen: Double
-    get() = intrinsic()
-
-  val RatioLiquidOzone: Double
-    get() = intrinsic()
-
-  val RatioLiquidPollutant: Double
-    get() = intrinsic()
-
-  val RatioLiquidSilanol: Double
-    get() = intrinsic()
-
-  val RatioLiquidSodiumChloride: Double
-    get() = intrinsic()
-
-  val RatioMethane: Double
-    get() = intrinsic()
-
-  val RatioNitrogen: Double
-    get() = intrinsic()
-
-  val RatioNitrousOxide: Double
-    get() = intrinsic()
-
-  val RatioOxygen: Double
-    get() = intrinsic()
-
-  val RatioOzone: Double
-    get() = intrinsic()
-
-  val RatioPollutant: Double
-    get() = intrinsic()
-
-  val RatioPollutedWater: Double
-    get() = intrinsic()
-
-  val RatioSilanol: Double
-    get() = intrinsic()
-
-  val RatioSteam: Double
-    get() = intrinsic()
-
-  val RatioWater: Double
-    get() = intrinsic()
-
   val RequiredPower: Double
     get() = intrinsic()
 
@@ -5205,6 +4056,14 @@ class Landingpad_GasConnectorOutwardPiece internal constructor() : TypedDevice()
     get() = intrinsic()
 
   val TotalMoles: Double
+    get() = intrinsic()
+
+  @LogicTypes(
+      read =
+          "RatioCarbonDioxide,RatioHelium,RatioHydrazine,RatioHydrochloricAcid,RatioHydrogen,RatioLiquidAlcohol,RatioLiquidCarbonDioxide,RatioLiquidHydrazine,RatioLiquidHydrochloricAcid,RatioLiquidHydrogen,RatioLiquidMethane,RatioLiquidNitrogen,RatioLiquidNitrousOxide,RatioLiquidOxygen,RatioLiquidOzone,RatioLiquidPollutant,RatioLiquidSilanol,RatioLiquidSodiumChloride,RatioMethane,RatioNitrogen,RatioNitrousOxide,RatioOxygen,RatioOzone,RatioPollutant,RatioPollutedWater,RatioSilanol,RatioSteam,RatioWater",
+      written = "",
+  )
+  val Ratios: Ratios
     get() = intrinsic()
 
   /** The Landingpad_GasConnectorOutwardPiece prefab. */
@@ -5303,90 +4162,6 @@ class Landingpad_LiquidConnectorInwardPiece internal constructor() : TypedDevice
   val Ratio: Double
     get() = intrinsic()
 
-  val RatioCarbonDioxide: Double
-    get() = intrinsic()
-
-  val RatioHelium: Double
-    get() = intrinsic()
-
-  val RatioHydrazine: Double
-    get() = intrinsic()
-
-  val RatioHydrochloricAcid: Double
-    get() = intrinsic()
-
-  val RatioHydrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidAlcohol: Double
-    get() = intrinsic()
-
-  val RatioLiquidCarbonDioxide: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrazine: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrochloricAcid: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidMethane: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrousOxide: Double
-    get() = intrinsic()
-
-  val RatioLiquidOxygen: Double
-    get() = intrinsic()
-
-  val RatioLiquidOzone: Double
-    get() = intrinsic()
-
-  val RatioLiquidPollutant: Double
-    get() = intrinsic()
-
-  val RatioLiquidSilanol: Double
-    get() = intrinsic()
-
-  val RatioLiquidSodiumChloride: Double
-    get() = intrinsic()
-
-  val RatioMethane: Double
-    get() = intrinsic()
-
-  val RatioNitrogen: Double
-    get() = intrinsic()
-
-  val RatioNitrousOxide: Double
-    get() = intrinsic()
-
-  val RatioOxygen: Double
-    get() = intrinsic()
-
-  val RatioOzone: Double
-    get() = intrinsic()
-
-  val RatioPollutant: Double
-    get() = intrinsic()
-
-  val RatioPollutedWater: Double
-    get() = intrinsic()
-
-  val RatioSilanol: Double
-    get() = intrinsic()
-
-  val RatioSteam: Double
-    get() = intrinsic()
-
-  val RatioWater: Double
-    get() = intrinsic()
-
   val RequiredPower: Double
     get() = intrinsic()
 
@@ -5398,6 +4173,14 @@ class Landingpad_LiquidConnectorInwardPiece internal constructor() : TypedDevice
     get() = intrinsic()
 
   val TotalMoles: Double
+    get() = intrinsic()
+
+  @LogicTypes(
+      read =
+          "RatioCarbonDioxide,RatioHelium,RatioHydrazine,RatioHydrochloricAcid,RatioHydrogen,RatioLiquidAlcohol,RatioLiquidCarbonDioxide,RatioLiquidHydrazine,RatioLiquidHydrochloricAcid,RatioLiquidHydrogen,RatioLiquidMethane,RatioLiquidNitrogen,RatioLiquidNitrousOxide,RatioLiquidOxygen,RatioLiquidOzone,RatioLiquidPollutant,RatioLiquidSilanol,RatioLiquidSodiumChloride,RatioMethane,RatioNitrogen,RatioNitrousOxide,RatioOxygen,RatioOzone,RatioPollutant,RatioPollutedWater,RatioSilanol,RatioSteam,RatioWater",
+      written = "",
+  )
+  val Ratios: Ratios
     get() = intrinsic()
 
   /** The Landingpad_LiquidConnectorInwardPiece prefab. */
@@ -5443,90 +4226,6 @@ class Landingpad_LiquidConnectorOutwardPiece internal constructor() : TypedDevic
   val Ratio: Double
     get() = intrinsic()
 
-  val RatioCarbonDioxide: Double
-    get() = intrinsic()
-
-  val RatioHelium: Double
-    get() = intrinsic()
-
-  val RatioHydrazine: Double
-    get() = intrinsic()
-
-  val RatioHydrochloricAcid: Double
-    get() = intrinsic()
-
-  val RatioHydrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidAlcohol: Double
-    get() = intrinsic()
-
-  val RatioLiquidCarbonDioxide: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrazine: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrochloricAcid: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidMethane: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrousOxide: Double
-    get() = intrinsic()
-
-  val RatioLiquidOxygen: Double
-    get() = intrinsic()
-
-  val RatioLiquidOzone: Double
-    get() = intrinsic()
-
-  val RatioLiquidPollutant: Double
-    get() = intrinsic()
-
-  val RatioLiquidSilanol: Double
-    get() = intrinsic()
-
-  val RatioLiquidSodiumChloride: Double
-    get() = intrinsic()
-
-  val RatioMethane: Double
-    get() = intrinsic()
-
-  val RatioNitrogen: Double
-    get() = intrinsic()
-
-  val RatioNitrousOxide: Double
-    get() = intrinsic()
-
-  val RatioOxygen: Double
-    get() = intrinsic()
-
-  val RatioOzone: Double
-    get() = intrinsic()
-
-  val RatioPollutant: Double
-    get() = intrinsic()
-
-  val RatioPollutedWater: Double
-    get() = intrinsic()
-
-  val RatioSilanol: Double
-    get() = intrinsic()
-
-  val RatioSteam: Double
-    get() = intrinsic()
-
-  val RatioWater: Double
-    get() = intrinsic()
-
   val RequiredPower: Double
     get() = intrinsic()
 
@@ -5538,6 +4237,14 @@ class Landingpad_LiquidConnectorOutwardPiece internal constructor() : TypedDevic
     get() = intrinsic()
 
   val TotalMoles: Double
+    get() = intrinsic()
+
+  @LogicTypes(
+      read =
+          "RatioCarbonDioxide,RatioHelium,RatioHydrazine,RatioHydrochloricAcid,RatioHydrogen,RatioLiquidAlcohol,RatioLiquidCarbonDioxide,RatioLiquidHydrazine,RatioLiquidHydrochloricAcid,RatioLiquidHydrogen,RatioLiquidMethane,RatioLiquidNitrogen,RatioLiquidNitrousOxide,RatioLiquidOxygen,RatioLiquidOzone,RatioLiquidPollutant,RatioLiquidSilanol,RatioLiquidSodiumChloride,RatioMethane,RatioNitrogen,RatioNitrousOxide,RatioOxygen,RatioOzone,RatioPollutant,RatioPollutedWater,RatioSilanol,RatioSteam,RatioWater",
+      written = "",
+  )
+  val Ratios: Ratios
     get() = intrinsic()
 
   /** The Landingpad_LiquidConnectorOutwardPiece prefab. */
@@ -5782,15 +4489,6 @@ class Robot internal constructor() : TypedDevice() {
   val Error: Boolean
     get() = intrinsic()
 
-  val ForwardX: Double
-    get() = intrinsic()
-
-  val ForwardY: Double
-    get() = intrinsic()
-
-  val ForwardZ: Double
-    get() = intrinsic()
-
   val MineablesInQueue: Double
     get() = intrinsic()
 
@@ -5808,32 +4506,11 @@ class Robot internal constructor() : TypedDevice() {
   val Orientation: Double
     get() = intrinsic()
 
-  val PositionX: Double
-    get() = intrinsic()
-
-  val PositionY: Double
-    get() = intrinsic()
-
-  val PositionZ: Double
-    get() = intrinsic()
-
   val Power: Boolean
     get() = intrinsic()
 
   val PressureExternal: Double
     get() = intrinsic()
-
-  var TargetX: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var TargetY: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var TargetZ: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
 
   val TemperatureExternal: Double
     get() = intrinsic()
@@ -5841,22 +4518,24 @@ class Robot internal constructor() : TypedDevice() {
   val VelocityMagnitude: Double
     get() = intrinsic()
 
-  val VelocityRelativeX: Double
+  @LogicTypes(read = "PositionX,PositionY,PositionZ", written = "")
+  val Position: Vector
     get() = intrinsic()
 
-  val VelocityRelativeY: Double
+  @LogicTypes(read = "VelocityX,VelocityY,VelocityZ", written = "")
+  val Velocity: Vector
     get() = intrinsic()
 
-  val VelocityRelativeZ: Double
+  @LogicTypes(read = "VelocityRelativeX,VelocityRelativeY,VelocityRelativeZ", written = "")
+  val VelocityRelative: Vector
     get() = intrinsic()
 
-  val VelocityX: Double
+  @LogicTypes(read = "ForwardX,ForwardY,ForwardZ", written = "")
+  val Forward: Vector
     get() = intrinsic()
 
-  val VelocityY: Double
-    get() = intrinsic()
-
-  val VelocityZ: Double
+  @LogicTypes(read = "TargetX,TargetY,TargetZ", written = "TargetX,TargetY,TargetZ")
+  val Target: MutableVector
     get() = intrinsic()
 
   /** The device's slots, by number. */
@@ -6022,9 +4701,6 @@ object AccessBridges {
 /** A StructureActiveVent. */
 @PrefabName("StructureActiveVent")
 class ActiveVent internal constructor() : TypedDevice() {
-  val CombustionOutput: Double
-    get() = intrinsic()
-
   val Error: Boolean
     get() = intrinsic()
 
@@ -6058,73 +4734,7 @@ class ActiveVent internal constructor() : TypedDevice() {
     get() = intrinsic()
     set(value) = intrinsic()
 
-  val PressureOutput: Double
-    get() = intrinsic()
-
   val Ratio: Double
-    get() = intrinsic()
-
-  val RatioCarbonDioxideOutput: Double
-    get() = intrinsic()
-
-  val RatioHeliumOutput: Double
-    get() = intrinsic()
-
-  val RatioHydrazineOutput: Double
-    get() = intrinsic()
-
-  val RatioHydrochloricAcidOutput: Double
-    get() = intrinsic()
-
-  val RatioHydrogenOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidAlcoholOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrazineOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrochloricAcidOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrogenOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidOzoneOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidSilanolOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidSodiumChlorideOutput: Double
-    get() = intrinsic()
-
-  val RatioMethaneOutput: Double
-    get() = intrinsic()
-
-  val RatioNitrogenOutput: Double
-    get() = intrinsic()
-
-  val RatioNitrousOxideOutput: Double
-    get() = intrinsic()
-
-  val RatioOxygenOutput: Double
-    get() = intrinsic()
-
-  val RatioOzoneOutput: Double
-    get() = intrinsic()
-
-  val RatioPollutantOutput: Double
-    get() = intrinsic()
-
-  val RatioPollutedWaterOutput: Double
-    get() = intrinsic()
-
-  val RatioSilanolOutput: Double
-    get() = intrinsic()
-
-  val RatioWaterOutput: Double
     get() = intrinsic()
 
   val RequiredPower: Double
@@ -6134,10 +4744,12 @@ class ActiveVent internal constructor() : TypedDevice() {
     get() = intrinsic()
     set(value) = intrinsic()
 
-  val TemperatureOutput: Double
-    get() = intrinsic()
-
-  val TotalMolesOutput: Double
+  @LogicTypes(
+      read =
+          "CombustionOutput,PressureOutput,RatioCarbonDioxideOutput,RatioHeliumOutput,RatioHydrazineOutput,RatioHydrochloricAcidOutput,RatioHydrogenOutput,RatioLiquidAlcoholOutput,RatioLiquidHydrazineOutput,RatioLiquidHydrochloricAcidOutput,RatioLiquidHydrogenOutput,RatioLiquidOzoneOutput,RatioLiquidSilanolOutput,RatioLiquidSodiumChlorideOutput,RatioMethaneOutput,RatioNitrogenOutput,RatioNitrousOxideOutput,RatioOxygenOutput,RatioOzoneOutput,RatioPollutantOutput,RatioPollutedWaterOutput,RatioSilanolOutput,RatioWaterOutput,TemperatureOutput,TotalMolesOutput",
+      written = "",
+  )
+  val Ports: Ports
     get() = intrinsic()
 
   /** The device's slots, by number. */
@@ -6187,12 +4799,6 @@ class AdvancedComposter internal constructor() : TypedDevice() {
   val Error: Boolean
     get() = intrinsic()
 
-  val ExportCount: Double
-    get() = intrinsic()
-
-  val ImportCount: Double
-    get() = intrinsic()
-
   var Lock: Boolean
     get() = intrinsic()
     set(value) = intrinsic()
@@ -6228,18 +4834,16 @@ class AdvancedComposter internal constructor() : TypedDevice() {
     get() = intrinsic()
     set(value) = intrinsic()
 
+  @LogicTypes(read = "ImportCount", written = "")
+  val Import: Transfer
+    get() = intrinsic()
+
+  @LogicTypes(read = "ExportCount", written = "")
+  val Export: Transfer
+    get() = intrinsic()
+
   /** The device's slots, by number. */
   val slots: Slots<DataDiskSlot>
-    get() = intrinsic()
-
-  /** Slot 0. */
-  @SlotNumber(0)
-  val Import: DataDiskSlot
-    get() = intrinsic()
-
-  /** Slot 1. */
-  @SlotNumber(1)
-  val Export: DataDiskSlot
     get() = intrinsic()
 
   /** The StructureAdvancedComposter prefab. */
@@ -6283,12 +4887,6 @@ class AdvancedFurnace internal constructor() : TypedDevice() {
   val Error: Boolean
     get() = intrinsic()
 
-  val ExportCount: Double
-    get() = intrinsic()
-
-  val ImportCount: Double
-    get() = intrinsic()
-
   var Lock: Boolean
     get() = intrinsic()
     set(value) = intrinsic()
@@ -6317,90 +4915,6 @@ class AdvancedFurnace internal constructor() : TypedDevice() {
   val Ratio: Double
     get() = intrinsic()
 
-  val RatioCarbonDioxide: Double
-    get() = intrinsic()
-
-  val RatioHelium: Double
-    get() = intrinsic()
-
-  val RatioHydrazine: Double
-    get() = intrinsic()
-
-  val RatioHydrochloricAcid: Double
-    get() = intrinsic()
-
-  val RatioHydrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidAlcohol: Double
-    get() = intrinsic()
-
-  val RatioLiquidCarbonDioxide: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrazine: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrochloricAcid: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidMethane: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrousOxide: Double
-    get() = intrinsic()
-
-  val RatioLiquidOxygen: Double
-    get() = intrinsic()
-
-  val RatioLiquidOzone: Double
-    get() = intrinsic()
-
-  val RatioLiquidPollutant: Double
-    get() = intrinsic()
-
-  val RatioLiquidSilanol: Double
-    get() = intrinsic()
-
-  val RatioLiquidSodiumChloride: Double
-    get() = intrinsic()
-
-  val RatioMethane: Double
-    get() = intrinsic()
-
-  val RatioNitrogen: Double
-    get() = intrinsic()
-
-  val RatioNitrousOxide: Double
-    get() = intrinsic()
-
-  val RatioOxygen: Double
-    get() = intrinsic()
-
-  val RatioOzone: Double
-    get() = intrinsic()
-
-  val RatioPollutant: Double
-    get() = intrinsic()
-
-  val RatioPollutedWater: Double
-    get() = intrinsic()
-
-  val RatioSilanol: Double
-    get() = intrinsic()
-
-  val RatioSteam: Double
-    get() = intrinsic()
-
-  val RatioWater: Double
-    get() = intrinsic()
-
   val Reagents: Double
     get() = intrinsic()
 
@@ -6414,32 +4928,34 @@ class AdvancedFurnace internal constructor() : TypedDevice() {
     get() = intrinsic()
     set(value) = intrinsic()
 
-  var SettingInput: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var SettingOutput: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
   val Temperature: Double
     get() = intrinsic()
 
   val TotalMoles: Double
     get() = intrinsic()
 
+  @LogicTypes(read = "SettingInput,SettingOutput", written = "SettingInput,SettingOutput")
+  val Ports: Ports
+    get() = intrinsic()
+
+  @LogicTypes(
+      read =
+          "RatioCarbonDioxide,RatioHelium,RatioHydrazine,RatioHydrochloricAcid,RatioHydrogen,RatioLiquidAlcohol,RatioLiquidCarbonDioxide,RatioLiquidHydrazine,RatioLiquidHydrochloricAcid,RatioLiquidHydrogen,RatioLiquidMethane,RatioLiquidNitrogen,RatioLiquidNitrousOxide,RatioLiquidOxygen,RatioLiquidOzone,RatioLiquidPollutant,RatioLiquidSilanol,RatioLiquidSodiumChloride,RatioMethane,RatioNitrogen,RatioNitrousOxide,RatioOxygen,RatioOzone,RatioPollutant,RatioPollutedWater,RatioSilanol,RatioSteam,RatioWater",
+      written = "",
+  )
+  val Ratios: Ratios
+    get() = intrinsic()
+
+  @LogicTypes(read = "ImportCount", written = "")
+  val Import: Transfer
+    get() = intrinsic()
+
+  @LogicTypes(read = "ExportCount", written = "")
+  val Export: Transfer
+    get() = intrinsic()
+
   /** The device's slots, by number. */
   val slots: Slots<DataDiskSlot>
-    get() = intrinsic()
-
-  /** Slot 0. */
-  @SlotNumber(0)
-  val Import: DataDiskSlot
-    get() = intrinsic()
-
-  /** Slot 1. */
-  @SlotNumber(1)
-  val Export: DataDiskSlot
     get() = intrinsic()
 
   /** The StructureAdvancedFurnace prefab. */
@@ -6483,12 +4999,6 @@ class AdvancedPackagingMachine internal constructor() : TypedDevice() {
   val Error: Boolean
     get() = intrinsic()
 
-  val ExportCount: Double
-    get() = intrinsic()
-
-  val ImportCount: Double
-    get() = intrinsic()
-
   var Lock: Boolean
     get() = intrinsic()
     set(value) = intrinsic()
@@ -6517,18 +5027,16 @@ class AdvancedPackagingMachine internal constructor() : TypedDevice() {
   val StackSize: Double
     get() = intrinsic()
 
+  @LogicTypes(read = "ImportCount", written = "")
+  val Import: Transfer
+    get() = intrinsic()
+
+  @LogicTypes(read = "ExportCount", written = "")
+  val Export: Transfer
+    get() = intrinsic()
+
   /** The device's slots, by number. */
   val slots: Slots<DataDiskSlot>
-    get() = intrinsic()
-
-  /** Slot 0. */
-  @SlotNumber(0)
-  val Import: DataDiskSlot
-    get() = intrinsic()
-
-  /** Slot 1. */
-  @SlotNumber(1)
-  val Export: DataDiskSlot
     get() = intrinsic()
 
   /** The StructureAdvancedPackagingMachine prefab. */
@@ -6558,15 +5066,6 @@ object AdvancedPackagingMachines {
 /** A StructureAirConditioner. */
 @PrefabName("StructureAirConditioner")
 class AirConditioner internal constructor() : TypedDevice() {
-  val CombustionInput: Double
-    get() = intrinsic()
-
-  val CombustionOutput: Double
-    get() = intrinsic()
-
-  val CombustionOutput2: Double
-    get() = intrinsic()
-
   val Error: Boolean
     get() = intrinsic()
 
@@ -6598,268 +5097,7 @@ class AirConditioner internal constructor() : TypedDevice() {
   val PressureEfficiency: Double
     get() = intrinsic()
 
-  val PressureInput: Double
-    get() = intrinsic()
-
-  val PressureOutput: Double
-    get() = intrinsic()
-
-  val PressureOutput2: Double
-    get() = intrinsic()
-
   val Ratio: Double
-    get() = intrinsic()
-
-  val RatioCarbonDioxideInput: Double
-    get() = intrinsic()
-
-  val RatioCarbonDioxideOutput: Double
-    get() = intrinsic()
-
-  val RatioCarbonDioxideOutput2: Double
-    get() = intrinsic()
-
-  val RatioHeliumInput: Double
-    get() = intrinsic()
-
-  val RatioHeliumOutput: Double
-    get() = intrinsic()
-
-  val RatioHeliumOutput2: Double
-    get() = intrinsic()
-
-  val RatioHydrazineInput: Double
-    get() = intrinsic()
-
-  val RatioHydrazineOutput: Double
-    get() = intrinsic()
-
-  val RatioHydrazineOutput2: Double
-    get() = intrinsic()
-
-  val RatioHydrochloricAcidInput: Double
-    get() = intrinsic()
-
-  val RatioHydrochloricAcidOutput: Double
-    get() = intrinsic()
-
-  val RatioHydrochloricAcidOutput2: Double
-    get() = intrinsic()
-
-  val RatioHydrogenInput: Double
-    get() = intrinsic()
-
-  val RatioHydrogenOutput: Double
-    get() = intrinsic()
-
-  val RatioHydrogenOutput2: Double
-    get() = intrinsic()
-
-  val RatioLiquidAlcoholInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidAlcoholOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidAlcoholOutput2: Double
-    get() = intrinsic()
-
-  val RatioLiquidCarbonDioxideInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidCarbonDioxideOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidCarbonDioxideOutput2: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrazineInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrazineOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrazineOutput2: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrochloricAcidInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrochloricAcidOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrochloricAcidOutput2: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrogenInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrogenOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrogenOutput2: Double
-    get() = intrinsic()
-
-  val RatioLiquidMethaneInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidMethaneOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidMethaneOutput2: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrogenInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrogenOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrogenOutput2: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrousOxideInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrousOxideOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrousOxideOutput2: Double
-    get() = intrinsic()
-
-  val RatioLiquidOxygenInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidOxygenOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidOxygenOutput2: Double
-    get() = intrinsic()
-
-  val RatioLiquidOzoneInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidOzoneOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidOzoneOutput2: Double
-    get() = intrinsic()
-
-  val RatioLiquidPollutantInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidPollutantOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidPollutantOutput2: Double
-    get() = intrinsic()
-
-  val RatioLiquidSilanolInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidSilanolOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidSilanolOutput2: Double
-    get() = intrinsic()
-
-  val RatioLiquidSodiumChlorideInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidSodiumChlorideOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidSodiumChlorideOutput2: Double
-    get() = intrinsic()
-
-  val RatioMethaneInput: Double
-    get() = intrinsic()
-
-  val RatioMethaneOutput: Double
-    get() = intrinsic()
-
-  val RatioMethaneOutput2: Double
-    get() = intrinsic()
-
-  val RatioNitrogenInput: Double
-    get() = intrinsic()
-
-  val RatioNitrogenOutput: Double
-    get() = intrinsic()
-
-  val RatioNitrogenOutput2: Double
-    get() = intrinsic()
-
-  val RatioNitrousOxideInput: Double
-    get() = intrinsic()
-
-  val RatioNitrousOxideOutput: Double
-    get() = intrinsic()
-
-  val RatioNitrousOxideOutput2: Double
-    get() = intrinsic()
-
-  val RatioOxygenInput: Double
-    get() = intrinsic()
-
-  val RatioOxygenOutput: Double
-    get() = intrinsic()
-
-  val RatioOxygenOutput2: Double
-    get() = intrinsic()
-
-  val RatioOzoneInput: Double
-    get() = intrinsic()
-
-  val RatioOzoneOutput: Double
-    get() = intrinsic()
-
-  val RatioOzoneOutput2: Double
-    get() = intrinsic()
-
-  val RatioPollutantInput: Double
-    get() = intrinsic()
-
-  val RatioPollutantOutput: Double
-    get() = intrinsic()
-
-  val RatioPollutantOutput2: Double
-    get() = intrinsic()
-
-  val RatioPollutedWaterInput: Double
-    get() = intrinsic()
-
-  val RatioPollutedWaterOutput: Double
-    get() = intrinsic()
-
-  val RatioPollutedWaterOutput2: Double
-    get() = intrinsic()
-
-  val RatioSilanolInput: Double
-    get() = intrinsic()
-
-  val RatioSilanolOutput: Double
-    get() = intrinsic()
-
-  val RatioSilanolOutput2: Double
-    get() = intrinsic()
-
-  val RatioSteamInput: Double
-    get() = intrinsic()
-
-  val RatioSteamOutput: Double
-    get() = intrinsic()
-
-  val RatioSteamOutput2: Double
-    get() = intrinsic()
-
-  val RatioWaterInput: Double
-    get() = intrinsic()
-
-  val RatioWaterOutput: Double
-    get() = intrinsic()
-
-  val RatioWaterOutput2: Double
     get() = intrinsic()
 
   val RequiredPower: Double
@@ -6872,22 +5110,12 @@ class AirConditioner internal constructor() : TypedDevice() {
   val TemperatureDifferentialEfficiency: Double
     get() = intrinsic()
 
-  val TemperatureInput: Double
-    get() = intrinsic()
-
-  val TemperatureOutput: Double
-    get() = intrinsic()
-
-  val TemperatureOutput2: Double
-    get() = intrinsic()
-
-  val TotalMolesInput: Double
-    get() = intrinsic()
-
-  val TotalMolesOutput: Double
-    get() = intrinsic()
-
-  val TotalMolesOutput2: Double
+  @LogicTypes(
+      read =
+          "CombustionInput,CombustionOutput,CombustionOutput2,PressureInput,PressureOutput,PressureOutput2,RatioCarbonDioxideInput,RatioCarbonDioxideOutput,RatioCarbonDioxideOutput2,RatioHeliumInput,RatioHeliumOutput,RatioHeliumOutput2,RatioHydrazineInput,RatioHydrazineOutput,RatioHydrazineOutput2,RatioHydrochloricAcidInput,RatioHydrochloricAcidOutput,RatioHydrochloricAcidOutput2,RatioHydrogenInput,RatioHydrogenOutput,RatioHydrogenOutput2,RatioLiquidAlcoholInput,RatioLiquidAlcoholOutput,RatioLiquidAlcoholOutput2,RatioLiquidCarbonDioxideInput,RatioLiquidCarbonDioxideOutput,RatioLiquidCarbonDioxideOutput2,RatioLiquidHydrazineInput,RatioLiquidHydrazineOutput,RatioLiquidHydrazineOutput2,RatioLiquidHydrochloricAcidInput,RatioLiquidHydrochloricAcidOutput,RatioLiquidHydrochloricAcidOutput2,RatioLiquidHydrogenInput,RatioLiquidHydrogenOutput,RatioLiquidHydrogenOutput2,RatioLiquidMethaneInput,RatioLiquidMethaneOutput,RatioLiquidMethaneOutput2,RatioLiquidNitrogenInput,RatioLiquidNitrogenOutput,RatioLiquidNitrogenOutput2,RatioLiquidNitrousOxideInput,RatioLiquidNitrousOxideOutput,RatioLiquidNitrousOxideOutput2,RatioLiquidOxygenInput,RatioLiquidOxygenOutput,RatioLiquidOxygenOutput2,RatioLiquidOzoneInput,RatioLiquidOzoneOutput,RatioLiquidOzoneOutput2,RatioLiquidPollutantInput,RatioLiquidPollutantOutput,RatioLiquidPollutantOutput2,RatioLiquidSilanolInput,RatioLiquidSilanolOutput,RatioLiquidSilanolOutput2,RatioLiquidSodiumChlorideInput,RatioLiquidSodiumChlorideOutput,RatioLiquidSodiumChlorideOutput2,RatioMethaneInput,RatioMethaneOutput,RatioMethaneOutput2,RatioNitrogenInput,RatioNitrogenOutput,RatioNitrogenOutput2,RatioNitrousOxideInput,RatioNitrousOxideOutput,RatioNitrousOxideOutput2,RatioOxygenInput,RatioOxygenOutput,RatioOxygenOutput2,RatioOzoneInput,RatioOzoneOutput,RatioOzoneOutput2,RatioPollutantInput,RatioPollutantOutput,RatioPollutantOutput2,RatioPollutedWaterInput,RatioPollutedWaterOutput,RatioPollutedWaterOutput2,RatioSilanolInput,RatioSilanolOutput,RatioSilanolOutput2,RatioSteamInput,RatioSteamOutput,RatioSteamOutput2,RatioWaterInput,RatioWaterOutput,RatioWaterOutput2,TemperatureInput,TemperatureOutput,TemperatureOutput2,TotalMolesInput,TotalMolesOutput,TotalMolesOutput2",
+      written = "",
+  )
+  val Ports: Ports
     get() = intrinsic()
 
   /** The device's slots, by number. */
@@ -7087,13 +5315,7 @@ class ArcFurnace internal constructor() : TypedDevice() {
   val Error: Boolean
     get() = intrinsic()
 
-  val ExportCount: Double
-    get() = intrinsic()
-
   val Idle: Boolean
-    get() = intrinsic()
-
-  val ImportCount: Double
     get() = intrinsic()
 
   var Lock: Boolean
@@ -7116,18 +5338,16 @@ class ArcFurnace internal constructor() : TypedDevice() {
   val RequiredPower: Double
     get() = intrinsic()
 
+  @LogicTypes(read = "ImportCount", written = "")
+  val Import: Transfer
+    get() = intrinsic()
+
+  @LogicTypes(read = "ExportCount", written = "")
+  val Export: Transfer
+    get() = intrinsic()
+
   /** The device's slots, by number. */
   val slots: Slots<DataDiskSlot>
-    get() = intrinsic()
-
-  /** Slot 0. */
-  @SlotNumber(0)
-  val Import: DataDiskSlot
-    get() = intrinsic()
-
-  /** Slot 1. */
-  @SlotNumber(1)
-  val Export: DataDiskSlot
     get() = intrinsic()
 
   /** The StructureArcFurnace prefab. */
@@ -7330,12 +5550,6 @@ class AutoMinerSmall internal constructor() : TypedDevice() {
   val Error: Boolean
     get() = intrinsic()
 
-  val ExportCount: Double
-    get() = intrinsic()
-
-  val ImportCount: Double
-    get() = intrinsic()
-
   var On: Boolean
     get() = intrinsic()
     set(value) = intrinsic()
@@ -7350,18 +5564,16 @@ class AutoMinerSmall internal constructor() : TypedDevice() {
   val RequiredPower: Double
     get() = intrinsic()
 
+  @LogicTypes(read = "ImportCount", written = "")
+  val Import: Transfer
+    get() = intrinsic()
+
+  @LogicTypes(read = "ExportCount", written = "")
+  val Export: Transfer
+    get() = intrinsic()
+
   /** The device's slots, by number. */
   val slots: Slots<DataDiskSlot>
-    get() = intrinsic()
-
-  /** Slot 0. */
-  @SlotNumber(0)
-  val Import: DataDiskSlot
-    get() = intrinsic()
-
-  /** Slot 1. */
-  @SlotNumber(1)
-  val Export: DataDiskSlot
     get() = intrinsic()
 
   /** The StructureAutoMinerSmall prefab. */
@@ -7405,12 +5617,6 @@ class Autolathe internal constructor() : TypedDevice() {
   val Error: Boolean
     get() = intrinsic()
 
-  val ExportCount: Double
-    get() = intrinsic()
-
-  val ImportCount: Double
-    get() = intrinsic()
-
   var Lock: Boolean
     get() = intrinsic()
     set(value) = intrinsic()
@@ -7439,18 +5645,16 @@ class Autolathe internal constructor() : TypedDevice() {
   val StackSize: Double
     get() = intrinsic()
 
+  @LogicTypes(read = "ImportCount", written = "")
+  val Import: Transfer
+    get() = intrinsic()
+
+  @LogicTypes(read = "ExportCount", written = "")
+  val Export: Transfer
+    get() = intrinsic()
+
   /** The device's slots, by number. */
   val slots: Slots<DataDiskSlot>
-    get() = intrinsic()
-
-  /** Slot 0. */
-  @SlotNumber(0)
-  val Import: DataDiskSlot
-    get() = intrinsic()
-
-  /** Slot 1. */
-  @SlotNumber(1)
-  val Export: DataDiskSlot
     get() = intrinsic()
 
   /** The StructureAutolathe prefab. */
@@ -7494,12 +5698,6 @@ class AutomatedOven internal constructor() : TypedDevice() {
   val Error: Boolean
     get() = intrinsic()
 
-  val ExportCount: Double
-    get() = intrinsic()
-
-  val ImportCount: Double
-    get() = intrinsic()
-
   var Lock: Boolean
     get() = intrinsic()
     set(value) = intrinsic()
@@ -7528,18 +5726,16 @@ class AutomatedOven internal constructor() : TypedDevice() {
   val StackSize: Double
     get() = intrinsic()
 
+  @LogicTypes(read = "ImportCount", written = "")
+  val Import: Transfer
+    get() = intrinsic()
+
+  @LogicTypes(read = "ExportCount", written = "")
+  val Export: Transfer
+    get() = intrinsic()
+
   /** The device's slots, by number. */
   val slots: Slots<DataDiskSlot>
-    get() = intrinsic()
-
-  /** Slot 0. */
-  @SlotNumber(0)
-  val Import: DataDiskSlot
-    get() = intrinsic()
-
-  /** Slot 1. */
-  @SlotNumber(1)
-  val Export: DataDiskSlot
     get() = intrinsic()
 
   /** The StructureAutomatedOven prefab. */
@@ -7815,19 +6011,14 @@ class StructureBeacon internal constructor() : TypedDevice() {
     get() = intrinsic()
     set(value) = intrinsic()
 
-  val PositionX: Double
-    get() = intrinsic()
-
-  val PositionY: Double
-    get() = intrinsic()
-
-  val PositionZ: Double
-    get() = intrinsic()
-
   val Power: Boolean
     get() = intrinsic()
 
   val RequiredPower: Double
+    get() = intrinsic()
+
+  @LogicTypes(read = "PositionX,PositionY,PositionZ", written = "")
+  val Position: Vector
     get() = intrinsic()
 
   /** The StructureBeacon prefab. */
@@ -8286,166 +6477,13 @@ class CapsuleTankGas internal constructor() : TypedDevice() {
   val Combustion: Boolean
     get() = intrinsic()
 
-  val CombustionOutput: Double
-    get() = intrinsic()
-
   val Maximum: Double
     get() = intrinsic()
 
   val Pressure: Double
     get() = intrinsic()
 
-  val PressureOutput: Double
-    get() = intrinsic()
-
   val Ratio: Double
-    get() = intrinsic()
-
-  val RatioCarbonDioxide: Double
-    get() = intrinsic()
-
-  val RatioCarbonDioxideOutput: Double
-    get() = intrinsic()
-
-  val RatioHelium: Double
-    get() = intrinsic()
-
-  val RatioHeliumOutput: Double
-    get() = intrinsic()
-
-  val RatioHydrazine: Double
-    get() = intrinsic()
-
-  val RatioHydrazineOutput: Double
-    get() = intrinsic()
-
-  val RatioHydrochloricAcid: Double
-    get() = intrinsic()
-
-  val RatioHydrochloricAcidOutput: Double
-    get() = intrinsic()
-
-  val RatioHydrogen: Double
-    get() = intrinsic()
-
-  val RatioHydrogenOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidAlcohol: Double
-    get() = intrinsic()
-
-  val RatioLiquidAlcoholOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidCarbonDioxide: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrazine: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrazineOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrochloricAcid: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrochloricAcidOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrogenOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidMethane: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrousOxide: Double
-    get() = intrinsic()
-
-  val RatioLiquidOxygen: Double
-    get() = intrinsic()
-
-  val RatioLiquidOzone: Double
-    get() = intrinsic()
-
-  val RatioLiquidOzoneOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidPollutant: Double
-    get() = intrinsic()
-
-  val RatioLiquidSilanol: Double
-    get() = intrinsic()
-
-  val RatioLiquidSilanolOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidSodiumChloride: Double
-    get() = intrinsic()
-
-  val RatioLiquidSodiumChlorideOutput: Double
-    get() = intrinsic()
-
-  val RatioMethane: Double
-    get() = intrinsic()
-
-  val RatioMethaneOutput: Double
-    get() = intrinsic()
-
-  val RatioNitrogen: Double
-    get() = intrinsic()
-
-  val RatioNitrogenOutput: Double
-    get() = intrinsic()
-
-  val RatioNitrousOxide: Double
-    get() = intrinsic()
-
-  val RatioNitrousOxideOutput: Double
-    get() = intrinsic()
-
-  val RatioOxygen: Double
-    get() = intrinsic()
-
-  val RatioOxygenOutput: Double
-    get() = intrinsic()
-
-  val RatioOzone: Double
-    get() = intrinsic()
-
-  val RatioOzoneOutput: Double
-    get() = intrinsic()
-
-  val RatioPollutant: Double
-    get() = intrinsic()
-
-  val RatioPollutantOutput: Double
-    get() = intrinsic()
-
-  val RatioPollutedWater: Double
-    get() = intrinsic()
-
-  val RatioPollutedWaterOutput: Double
-    get() = intrinsic()
-
-  val RatioSilanol: Double
-    get() = intrinsic()
-
-  val RatioSilanolOutput: Double
-    get() = intrinsic()
-
-  val RatioSteam: Double
-    get() = intrinsic()
-
-  val RatioWater: Double
-    get() = intrinsic()
-
-  val RatioWaterOutput: Double
     get() = intrinsic()
 
   var Setting: Double
@@ -8455,19 +6493,29 @@ class CapsuleTankGas internal constructor() : TypedDevice() {
   val Temperature: Double
     get() = intrinsic()
 
-  val TemperatureOutput: Double
-    get() = intrinsic()
-
   val TotalMoles: Double
-    get() = intrinsic()
-
-  val TotalMolesOutput: Double
     get() = intrinsic()
 
   val Volume: Double
     get() = intrinsic()
 
   val VolumeOfLiquid: Double
+    get() = intrinsic()
+
+  @LogicTypes(
+      read =
+          "CombustionOutput,PressureOutput,RatioCarbonDioxideOutput,RatioHeliumOutput,RatioHydrazineOutput,RatioHydrochloricAcidOutput,RatioHydrogenOutput,RatioLiquidAlcoholOutput,RatioLiquidHydrazineOutput,RatioLiquidHydrochloricAcidOutput,RatioLiquidHydrogenOutput,RatioLiquidOzoneOutput,RatioLiquidSilanolOutput,RatioLiquidSodiumChlorideOutput,RatioMethaneOutput,RatioNitrogenOutput,RatioNitrousOxideOutput,RatioOxygenOutput,RatioOzoneOutput,RatioPollutantOutput,RatioPollutedWaterOutput,RatioSilanolOutput,RatioWaterOutput,TemperatureOutput,TotalMolesOutput",
+      written = "",
+  )
+  val Ports: Ports
+    get() = intrinsic()
+
+  @LogicTypes(
+      read =
+          "RatioCarbonDioxide,RatioHelium,RatioHydrazine,RatioHydrochloricAcid,RatioHydrogen,RatioLiquidAlcohol,RatioLiquidCarbonDioxide,RatioLiquidHydrazine,RatioLiquidHydrochloricAcid,RatioLiquidHydrogen,RatioLiquidMethane,RatioLiquidNitrogen,RatioLiquidNitrousOxide,RatioLiquidOxygen,RatioLiquidOzone,RatioLiquidPollutant,RatioLiquidSilanol,RatioLiquidSodiumChloride,RatioMethane,RatioNitrogen,RatioNitrousOxide,RatioOxygen,RatioOzone,RatioPollutant,RatioPollutedWater,RatioSilanol,RatioSteam,RatioWater",
+      written = "",
+  )
+  val Ratios: Ratios
     get() = intrinsic()
 
   /** The StructureCapsuleTankGas prefab. */
@@ -8494,166 +6542,13 @@ class CapsuleTankLiquid internal constructor() : TypedDevice() {
   val Combustion: Boolean
     get() = intrinsic()
 
-  val CombustionOutput: Double
-    get() = intrinsic()
-
   val Maximum: Double
     get() = intrinsic()
 
   val Pressure: Double
     get() = intrinsic()
 
-  val PressureOutput: Double
-    get() = intrinsic()
-
   val Ratio: Double
-    get() = intrinsic()
-
-  val RatioCarbonDioxide: Double
-    get() = intrinsic()
-
-  val RatioCarbonDioxideOutput: Double
-    get() = intrinsic()
-
-  val RatioHelium: Double
-    get() = intrinsic()
-
-  val RatioHeliumOutput: Double
-    get() = intrinsic()
-
-  val RatioHydrazine: Double
-    get() = intrinsic()
-
-  val RatioHydrazineOutput: Double
-    get() = intrinsic()
-
-  val RatioHydrochloricAcid: Double
-    get() = intrinsic()
-
-  val RatioHydrochloricAcidOutput: Double
-    get() = intrinsic()
-
-  val RatioHydrogen: Double
-    get() = intrinsic()
-
-  val RatioHydrogenOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidAlcohol: Double
-    get() = intrinsic()
-
-  val RatioLiquidAlcoholOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidCarbonDioxide: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrazine: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrazineOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrochloricAcid: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrochloricAcidOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrogenOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidMethane: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrousOxide: Double
-    get() = intrinsic()
-
-  val RatioLiquidOxygen: Double
-    get() = intrinsic()
-
-  val RatioLiquidOzone: Double
-    get() = intrinsic()
-
-  val RatioLiquidOzoneOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidPollutant: Double
-    get() = intrinsic()
-
-  val RatioLiquidSilanol: Double
-    get() = intrinsic()
-
-  val RatioLiquidSilanolOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidSodiumChloride: Double
-    get() = intrinsic()
-
-  val RatioLiquidSodiumChlorideOutput: Double
-    get() = intrinsic()
-
-  val RatioMethane: Double
-    get() = intrinsic()
-
-  val RatioMethaneOutput: Double
-    get() = intrinsic()
-
-  val RatioNitrogen: Double
-    get() = intrinsic()
-
-  val RatioNitrogenOutput: Double
-    get() = intrinsic()
-
-  val RatioNitrousOxide: Double
-    get() = intrinsic()
-
-  val RatioNitrousOxideOutput: Double
-    get() = intrinsic()
-
-  val RatioOxygen: Double
-    get() = intrinsic()
-
-  val RatioOxygenOutput: Double
-    get() = intrinsic()
-
-  val RatioOzone: Double
-    get() = intrinsic()
-
-  val RatioOzoneOutput: Double
-    get() = intrinsic()
-
-  val RatioPollutant: Double
-    get() = intrinsic()
-
-  val RatioPollutantOutput: Double
-    get() = intrinsic()
-
-  val RatioPollutedWater: Double
-    get() = intrinsic()
-
-  val RatioPollutedWaterOutput: Double
-    get() = intrinsic()
-
-  val RatioSilanol: Double
-    get() = intrinsic()
-
-  val RatioSilanolOutput: Double
-    get() = intrinsic()
-
-  val RatioSteam: Double
-    get() = intrinsic()
-
-  val RatioWater: Double
-    get() = intrinsic()
-
-  val RatioWaterOutput: Double
     get() = intrinsic()
 
   var Setting: Double
@@ -8663,19 +6558,29 @@ class CapsuleTankLiquid internal constructor() : TypedDevice() {
   val Temperature: Double
     get() = intrinsic()
 
-  val TemperatureOutput: Double
-    get() = intrinsic()
-
   val TotalMoles: Double
-    get() = intrinsic()
-
-  val TotalMolesOutput: Double
     get() = intrinsic()
 
   val Volume: Double
     get() = intrinsic()
 
   val VolumeOfLiquid: Double
+    get() = intrinsic()
+
+  @LogicTypes(
+      read =
+          "CombustionOutput,PressureOutput,RatioCarbonDioxideOutput,RatioHeliumOutput,RatioHydrazineOutput,RatioHydrochloricAcidOutput,RatioHydrogenOutput,RatioLiquidAlcoholOutput,RatioLiquidHydrazineOutput,RatioLiquidHydrochloricAcidOutput,RatioLiquidHydrogenOutput,RatioLiquidOzoneOutput,RatioLiquidSilanolOutput,RatioLiquidSodiumChlorideOutput,RatioMethaneOutput,RatioNitrogenOutput,RatioNitrousOxideOutput,RatioOxygenOutput,RatioOzoneOutput,RatioPollutantOutput,RatioPollutedWaterOutput,RatioSilanolOutput,RatioWaterOutput,TemperatureOutput,TotalMolesOutput",
+      written = "",
+  )
+  val Ports: Ports
+    get() = intrinsic()
+
+  @LogicTypes(
+      read =
+          "RatioCarbonDioxide,RatioHelium,RatioHydrazine,RatioHydrochloricAcid,RatioHydrogen,RatioLiquidAlcohol,RatioLiquidCarbonDioxide,RatioLiquidHydrazine,RatioLiquidHydrochloricAcid,RatioLiquidHydrogen,RatioLiquidMethane,RatioLiquidNitrogen,RatioLiquidNitrousOxide,RatioLiquidOxygen,RatioLiquidOzone,RatioLiquidPollutant,RatioLiquidSilanol,RatioLiquidSodiumChloride,RatioMethane,RatioNitrogen,RatioNitrousOxide,RatioOxygen,RatioOzone,RatioPollutant,RatioPollutedWater,RatioSilanol,RatioSteam,RatioWater",
+      written = "",
+  )
+  val Ratios: Ratios
     get() = intrinsic()
 
   /** The StructureCapsuleTankLiquid prefab. */
@@ -8706,12 +6611,6 @@ class CargoStorageMedium internal constructor() : TypedDevice() {
   val Error: Boolean
     get() = intrinsic()
 
-  val ExportCount: Double
-    get() = intrinsic()
-
-  val ImportCount: Double
-    get() = intrinsic()
-
   var Lock: Boolean
     get() = intrinsic()
     set(value) = intrinsic()
@@ -8736,18 +6635,16 @@ class CargoStorageMedium internal constructor() : TypedDevice() {
   val RequiredPower: Double
     get() = intrinsic()
 
+  @LogicTypes(read = "ImportCount", written = "")
+  val Import: Transfer
+    get() = intrinsic()
+
+  @LogicTypes(read = "ExportCount", written = "")
+  val Export: Transfer
+    get() = intrinsic()
+
   /** The device's slots, by number. */
   val slots: Slots<DataDiskSlot>
-    get() = intrinsic()
-
-  /** Slot 0. */
-  @SlotNumber(0)
-  val Import: DataDiskSlot
-    get() = intrinsic()
-
-  /** Slot 1. */
-  @SlotNumber(1)
-  val Export: DataDiskSlot
     get() = intrinsic()
 
   /** The StructureCargoStorageMedium prefab. */
@@ -8784,12 +6681,6 @@ class CargoStorageSmall internal constructor() : TypedDevice() {
   val Error: Boolean
     get() = intrinsic()
 
-  val ExportCount: Double
-    get() = intrinsic()
-
-  val ImportCount: Double
-    get() = intrinsic()
-
   var Lock: Boolean
     get() = intrinsic()
     set(value) = intrinsic()
@@ -8814,18 +6705,16 @@ class CargoStorageSmall internal constructor() : TypedDevice() {
   val RequiredPower: Double
     get() = intrinsic()
 
+  @LogicTypes(read = "ImportCount", written = "")
+  val Import: Transfer
+    get() = intrinsic()
+
+  @LogicTypes(read = "ExportCount", written = "")
+  val Export: Transfer
+    get() = intrinsic()
+
   /** The device's slots, by number. */
   val slots: Slots<DataDiskSlot>
-    get() = intrinsic()
-
-  /** Slot 0. */
-  @SlotNumber(0)
-  val Import: DataDiskSlot
-    get() = intrinsic()
-
-  /** Slot 1. */
-  @SlotNumber(1)
-  val Export: DataDiskSlot
     get() = intrinsic()
 
   /** The StructureCargoStorageSmall prefab. */
@@ -8862,12 +6751,6 @@ class Centrifuge internal constructor() : TypedDevice() {
   val Error: Boolean
     get() = intrinsic()
 
-  val ExportCount: Double
-    get() = intrinsic()
-
-  val ImportCount: Double
-    get() = intrinsic()
-
   var On: Boolean
     get() = intrinsic()
     set(value) = intrinsic()
@@ -8885,18 +6768,16 @@ class Centrifuge internal constructor() : TypedDevice() {
   val RequiredPower: Double
     get() = intrinsic()
 
+  @LogicTypes(read = "ImportCount", written = "")
+  val Import: Transfer
+    get() = intrinsic()
+
+  @LogicTypes(read = "ExportCount", written = "")
+  val Export: Transfer
+    get() = intrinsic()
+
   /** The device's slots, by number. */
   val slots: Slots<DataDiskSlot>
-    get() = intrinsic()
-
-  /** Slot 0. */
-  @SlotNumber(0)
-  val Import: DataDiskSlot
-    get() = intrinsic()
-
-  /** Slot 1. */
-  @SlotNumber(1)
-  val Export: DataDiskSlot
     get() = intrinsic()
 
   /** The StructureCentrifuge prefab. */
@@ -9005,9 +6886,9 @@ class ChuteDigitalFlipFlopSplitterLeft internal constructor() : TypedDevice() {
     get() = intrinsic()
     set(value) = intrinsic()
 
-  var SettingOutput: Double
+  @LogicTypes(read = "SettingOutput", written = "SettingOutput")
+  val Ports: Ports
     get() = intrinsic()
-    set(value) = intrinsic()
 
   /** The device's slots, by number. */
   val slots: Slots<DataDiskSlot>
@@ -9067,9 +6948,9 @@ class ChuteDigitalFlipFlopSplitterRight internal constructor() : TypedDevice() {
     get() = intrinsic()
     set(value) = intrinsic()
 
-  var SettingOutput: Double
+  @LogicTypes(read = "SettingOutput", written = "SettingOutput")
+  val Ports: Ports
     get() = intrinsic()
-    set(value) = intrinsic()
 
   /** The device's slots, by number. */
   val slots: Slots<DataDiskSlot>
@@ -9292,20 +7173,16 @@ class ChuteInlet internal constructor() : TypedDevice() {
     get() = intrinsic()
     set(value) = intrinsic()
 
-  val ImportCount: Double
-    get() = intrinsic()
-
   var Lock: Boolean
     get() = intrinsic()
     set(value) = intrinsic()
 
-  /** The device's slots, by number. */
-  val slots: Slots<DataDiskSlot>
+  @LogicTypes(read = "ImportCount", written = "")
+  val Import: Transfer
     get() = intrinsic()
 
-  /** Slot 0. */
-  @SlotNumber(0)
-  val Import: DataDiskSlot
+  /** The device's slots, by number. */
+  val slots: Slots<DataDiskSlot>
     get() = intrinsic()
 
   /** The StructureChuteInlet prefab. */
@@ -9339,23 +7216,20 @@ class ChuteOutlet internal constructor() : TypedDevice() {
     get() = intrinsic()
     set(value) = intrinsic()
 
-  val ExportCount: Double
-    get() = intrinsic()
-
-  val ImportCount: Double
-    get() = intrinsic()
-
   var Lock: Boolean
     get() = intrinsic()
     set(value) = intrinsic()
 
-  /** The device's slots, by number. */
-  val slots: Slots<DataDiskSlot>
+  @LogicTypes(read = "ImportCount", written = "")
+  val Import: Transfer
     get() = intrinsic()
 
-  /** Slot 0. */
-  @SlotNumber(0)
-  val Export: DataDiskSlot
+  @LogicTypes(read = "ExportCount", written = "")
+  val Export: Transfer
+    get() = intrinsic()
+
+  /** The device's slots, by number. */
+  val slots: Slots<DataDiskSlot>
     get() = intrinsic()
 
   /** The StructureChuteOutlet prefab. */
@@ -9580,23 +7454,11 @@ class CombustionCentrifuge internal constructor() : TypedDevice() {
   val Combustion: Boolean
     get() = intrinsic()
 
-  val CombustionInput: Double
-    get() = intrinsic()
-
   var CombustionLimiter: Double
     get() = intrinsic()
     set(value) = intrinsic()
 
-  val CombustionOutput: Double
-    get() = intrinsic()
-
   val Error: Boolean
-    get() = intrinsic()
-
-  val ExportCount: Double
-    get() = intrinsic()
-
-  val ImportCount: Double
     get() = intrinsic()
 
   var Lock: Boolean
@@ -9617,264 +7479,6 @@ class CombustionCentrifuge internal constructor() : TypedDevice() {
   val Pressure: Double
     get() = intrinsic()
 
-  val PressureInput: Double
-    get() = intrinsic()
-
-  val PressureOutput: Double
-    get() = intrinsic()
-
-  val RatioCarbonDioxide: Double
-    get() = intrinsic()
-
-  val RatioCarbonDioxideInput: Double
-    get() = intrinsic()
-
-  val RatioCarbonDioxideOutput: Double
-    get() = intrinsic()
-
-  val RatioHelium: Double
-    get() = intrinsic()
-
-  val RatioHeliumInput: Double
-    get() = intrinsic()
-
-  val RatioHeliumOutput: Double
-    get() = intrinsic()
-
-  val RatioHydrazine: Double
-    get() = intrinsic()
-
-  val RatioHydrazineInput: Double
-    get() = intrinsic()
-
-  val RatioHydrazineOutput: Double
-    get() = intrinsic()
-
-  val RatioHydrochloricAcid: Double
-    get() = intrinsic()
-
-  val RatioHydrochloricAcidInput: Double
-    get() = intrinsic()
-
-  val RatioHydrochloricAcidOutput: Double
-    get() = intrinsic()
-
-  val RatioHydrogen: Double
-    get() = intrinsic()
-
-  val RatioHydrogenInput: Double
-    get() = intrinsic()
-
-  val RatioHydrogenOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidAlcohol: Double
-    get() = intrinsic()
-
-  val RatioLiquidAlcoholInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidAlcoholOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidCarbonDioxide: Double
-    get() = intrinsic()
-
-  val RatioLiquidCarbonDioxideInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidCarbonDioxideOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrazine: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrazineInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrazineOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrochloricAcid: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrochloricAcidInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrochloricAcidOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrogenInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrogenOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidMethane: Double
-    get() = intrinsic()
-
-  val RatioLiquidMethaneInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidMethaneOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrogenInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrogenOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrousOxide: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrousOxideInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrousOxideOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidOxygen: Double
-    get() = intrinsic()
-
-  val RatioLiquidOxygenInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidOxygenOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidOzone: Double
-    get() = intrinsic()
-
-  val RatioLiquidOzoneInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidOzoneOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidPollutant: Double
-    get() = intrinsic()
-
-  val RatioLiquidPollutantInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidPollutantOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidSilanol: Double
-    get() = intrinsic()
-
-  val RatioLiquidSilanolInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidSilanolOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidSodiumChloride: Double
-    get() = intrinsic()
-
-  val RatioLiquidSodiumChlorideInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidSodiumChlorideOutput: Double
-    get() = intrinsic()
-
-  val RatioMethane: Double
-    get() = intrinsic()
-
-  val RatioMethaneInput: Double
-    get() = intrinsic()
-
-  val RatioMethaneOutput: Double
-    get() = intrinsic()
-
-  val RatioNitrogen: Double
-    get() = intrinsic()
-
-  val RatioNitrogenInput: Double
-    get() = intrinsic()
-
-  val RatioNitrogenOutput: Double
-    get() = intrinsic()
-
-  val RatioNitrousOxide: Double
-    get() = intrinsic()
-
-  val RatioNitrousOxideInput: Double
-    get() = intrinsic()
-
-  val RatioNitrousOxideOutput: Double
-    get() = intrinsic()
-
-  val RatioOxygen: Double
-    get() = intrinsic()
-
-  val RatioOxygenInput: Double
-    get() = intrinsic()
-
-  val RatioOxygenOutput: Double
-    get() = intrinsic()
-
-  val RatioOzone: Double
-    get() = intrinsic()
-
-  val RatioOzoneInput: Double
-    get() = intrinsic()
-
-  val RatioOzoneOutput: Double
-    get() = intrinsic()
-
-  val RatioPollutant: Double
-    get() = intrinsic()
-
-  val RatioPollutantInput: Double
-    get() = intrinsic()
-
-  val RatioPollutantOutput: Double
-    get() = intrinsic()
-
-  val RatioPollutedWater: Double
-    get() = intrinsic()
-
-  val RatioPollutedWaterInput: Double
-    get() = intrinsic()
-
-  val RatioPollutedWaterOutput: Double
-    get() = intrinsic()
-
-  val RatioSilanol: Double
-    get() = intrinsic()
-
-  val RatioSilanolInput: Double
-    get() = intrinsic()
-
-  val RatioSilanolOutput: Double
-    get() = intrinsic()
-
-  val RatioSteam: Double
-    get() = intrinsic()
-
-  val RatioSteamInput: Double
-    get() = intrinsic()
-
-  val RatioSteamOutput: Double
-    get() = intrinsic()
-
-  val RatioWater: Double
-    get() = intrinsic()
-
-  val RatioWaterInput: Double
-    get() = intrinsic()
-
-  val RatioWaterOutput: Double
-    get() = intrinsic()
-
   val Reagents: Double
     get() = intrinsic()
 
@@ -9890,12 +7494,6 @@ class CombustionCentrifuge internal constructor() : TypedDevice() {
   val Temperature: Double
     get() = intrinsic()
 
-  val TemperatureInput: Double
-    get() = intrinsic()
-
-  val TemperatureOutput: Double
-    get() = intrinsic()
-
   var Throttle: Double
     get() = intrinsic()
     set(value) = intrinsic()
@@ -9903,24 +7501,32 @@ class CombustionCentrifuge internal constructor() : TypedDevice() {
   val TotalMoles: Double
     get() = intrinsic()
 
-  val TotalMolesInput: Double
+  @LogicTypes(
+      read =
+          "CombustionInput,CombustionOutput,PressureInput,PressureOutput,RatioCarbonDioxideInput,RatioCarbonDioxideOutput,RatioHeliumInput,RatioHeliumOutput,RatioHydrazineInput,RatioHydrazineOutput,RatioHydrochloricAcidInput,RatioHydrochloricAcidOutput,RatioHydrogenInput,RatioHydrogenOutput,RatioLiquidAlcoholInput,RatioLiquidAlcoholOutput,RatioLiquidCarbonDioxideInput,RatioLiquidCarbonDioxideOutput,RatioLiquidHydrazineInput,RatioLiquidHydrazineOutput,RatioLiquidHydrochloricAcidInput,RatioLiquidHydrochloricAcidOutput,RatioLiquidHydrogenInput,RatioLiquidHydrogenOutput,RatioLiquidMethaneInput,RatioLiquidMethaneOutput,RatioLiquidNitrogenInput,RatioLiquidNitrogenOutput,RatioLiquidNitrousOxideInput,RatioLiquidNitrousOxideOutput,RatioLiquidOxygenInput,RatioLiquidOxygenOutput,RatioLiquidOzoneInput,RatioLiquidOzoneOutput,RatioLiquidPollutantInput,RatioLiquidPollutantOutput,RatioLiquidSilanolInput,RatioLiquidSilanolOutput,RatioLiquidSodiumChlorideInput,RatioLiquidSodiumChlorideOutput,RatioMethaneInput,RatioMethaneOutput,RatioNitrogenInput,RatioNitrogenOutput,RatioNitrousOxideInput,RatioNitrousOxideOutput,RatioOxygenInput,RatioOxygenOutput,RatioOzoneInput,RatioOzoneOutput,RatioPollutantInput,RatioPollutantOutput,RatioPollutedWaterInput,RatioPollutedWaterOutput,RatioSilanolInput,RatioSilanolOutput,RatioSteamInput,RatioSteamOutput,RatioWaterInput,RatioWaterOutput,TemperatureInput,TemperatureOutput,TotalMolesInput,TotalMolesOutput",
+      written = "",
+  )
+  val Ports: Ports
     get() = intrinsic()
 
-  val TotalMolesOutput: Double
+  @LogicTypes(
+      read =
+          "RatioCarbonDioxide,RatioHelium,RatioHydrazine,RatioHydrochloricAcid,RatioHydrogen,RatioLiquidAlcohol,RatioLiquidCarbonDioxide,RatioLiquidHydrazine,RatioLiquidHydrochloricAcid,RatioLiquidHydrogen,RatioLiquidMethane,RatioLiquidNitrogen,RatioLiquidNitrousOxide,RatioLiquidOxygen,RatioLiquidOzone,RatioLiquidPollutant,RatioLiquidSilanol,RatioLiquidSodiumChloride,RatioMethane,RatioNitrogen,RatioNitrousOxide,RatioOxygen,RatioOzone,RatioPollutant,RatioPollutedWater,RatioSilanol,RatioSteam,RatioWater",
+      written = "",
+  )
+  val Ratios: Ratios
+    get() = intrinsic()
+
+  @LogicTypes(read = "ImportCount", written = "")
+  val Import: Transfer
+    get() = intrinsic()
+
+  @LogicTypes(read = "ExportCount", written = "")
+  val Export: Transfer
     get() = intrinsic()
 
   /** The device's slots, by number. */
   val slots: Slots<DataDiskSlot>
-    get() = intrinsic()
-
-  /** Slot 0. */
-  @SlotNumber(0)
-  val Import: DataDiskSlot
-    get() = intrinsic()
-
-  /** Slot 1. */
-  @SlotNumber(1)
-  val Export: DataDiskSlot
     get() = intrinsic()
 
   /** Slot 2. */
@@ -9962,23 +7568,11 @@ class CombustionDeepMiner internal constructor() : TypedDevice() {
   val Combustion: Boolean
     get() = intrinsic()
 
-  val CombustionInput: Double
-    get() = intrinsic()
-
   var CombustionLimiter: Double
     get() = intrinsic()
     set(value) = intrinsic()
 
-  val CombustionOutput: Double
-    get() = intrinsic()
-
   val Error: Boolean
-    get() = intrinsic()
-
-  val ExportCount: Double
-    get() = intrinsic()
-
-  val ImportCount: Double
     get() = intrinsic()
 
   var Lock: Boolean
@@ -9999,264 +7593,6 @@ class CombustionDeepMiner internal constructor() : TypedDevice() {
   val Pressure: Double
     get() = intrinsic()
 
-  val PressureInput: Double
-    get() = intrinsic()
-
-  val PressureOutput: Double
-    get() = intrinsic()
-
-  val RatioCarbonDioxide: Double
-    get() = intrinsic()
-
-  val RatioCarbonDioxideInput: Double
-    get() = intrinsic()
-
-  val RatioCarbonDioxideOutput: Double
-    get() = intrinsic()
-
-  val RatioHelium: Double
-    get() = intrinsic()
-
-  val RatioHeliumInput: Double
-    get() = intrinsic()
-
-  val RatioHeliumOutput: Double
-    get() = intrinsic()
-
-  val RatioHydrazine: Double
-    get() = intrinsic()
-
-  val RatioHydrazineInput: Double
-    get() = intrinsic()
-
-  val RatioHydrazineOutput: Double
-    get() = intrinsic()
-
-  val RatioHydrochloricAcid: Double
-    get() = intrinsic()
-
-  val RatioHydrochloricAcidInput: Double
-    get() = intrinsic()
-
-  val RatioHydrochloricAcidOutput: Double
-    get() = intrinsic()
-
-  val RatioHydrogen: Double
-    get() = intrinsic()
-
-  val RatioHydrogenInput: Double
-    get() = intrinsic()
-
-  val RatioHydrogenOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidAlcohol: Double
-    get() = intrinsic()
-
-  val RatioLiquidAlcoholInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidAlcoholOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidCarbonDioxide: Double
-    get() = intrinsic()
-
-  val RatioLiquidCarbonDioxideInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidCarbonDioxideOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrazine: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrazineInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrazineOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrochloricAcid: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrochloricAcidInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrochloricAcidOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrogenInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrogenOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidMethane: Double
-    get() = intrinsic()
-
-  val RatioLiquidMethaneInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidMethaneOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrogenInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrogenOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrousOxide: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrousOxideInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrousOxideOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidOxygen: Double
-    get() = intrinsic()
-
-  val RatioLiquidOxygenInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidOxygenOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidOzone: Double
-    get() = intrinsic()
-
-  val RatioLiquidOzoneInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidOzoneOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidPollutant: Double
-    get() = intrinsic()
-
-  val RatioLiquidPollutantInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidPollutantOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidSilanol: Double
-    get() = intrinsic()
-
-  val RatioLiquidSilanolInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidSilanolOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidSodiumChloride: Double
-    get() = intrinsic()
-
-  val RatioLiquidSodiumChlorideInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidSodiumChlorideOutput: Double
-    get() = intrinsic()
-
-  val RatioMethane: Double
-    get() = intrinsic()
-
-  val RatioMethaneInput: Double
-    get() = intrinsic()
-
-  val RatioMethaneOutput: Double
-    get() = intrinsic()
-
-  val RatioNitrogen: Double
-    get() = intrinsic()
-
-  val RatioNitrogenInput: Double
-    get() = intrinsic()
-
-  val RatioNitrogenOutput: Double
-    get() = intrinsic()
-
-  val RatioNitrousOxide: Double
-    get() = intrinsic()
-
-  val RatioNitrousOxideInput: Double
-    get() = intrinsic()
-
-  val RatioNitrousOxideOutput: Double
-    get() = intrinsic()
-
-  val RatioOxygen: Double
-    get() = intrinsic()
-
-  val RatioOxygenInput: Double
-    get() = intrinsic()
-
-  val RatioOxygenOutput: Double
-    get() = intrinsic()
-
-  val RatioOzone: Double
-    get() = intrinsic()
-
-  val RatioOzoneInput: Double
-    get() = intrinsic()
-
-  val RatioOzoneOutput: Double
-    get() = intrinsic()
-
-  val RatioPollutant: Double
-    get() = intrinsic()
-
-  val RatioPollutantInput: Double
-    get() = intrinsic()
-
-  val RatioPollutantOutput: Double
-    get() = intrinsic()
-
-  val RatioPollutedWater: Double
-    get() = intrinsic()
-
-  val RatioPollutedWaterInput: Double
-    get() = intrinsic()
-
-  val RatioPollutedWaterOutput: Double
-    get() = intrinsic()
-
-  val RatioSilanol: Double
-    get() = intrinsic()
-
-  val RatioSilanolInput: Double
-    get() = intrinsic()
-
-  val RatioSilanolOutput: Double
-    get() = intrinsic()
-
-  val RatioSteam: Double
-    get() = intrinsic()
-
-  val RatioSteamInput: Double
-    get() = intrinsic()
-
-  val RatioSteamOutput: Double
-    get() = intrinsic()
-
-  val RatioWater: Double
-    get() = intrinsic()
-
-  val RatioWaterInput: Double
-    get() = intrinsic()
-
-  val RatioWaterOutput: Double
-    get() = intrinsic()
-
   val RequiredPower: Double
     get() = intrinsic()
 
@@ -10269,12 +7605,6 @@ class CombustionDeepMiner internal constructor() : TypedDevice() {
   val Temperature: Double
     get() = intrinsic()
 
-  val TemperatureInput: Double
-    get() = intrinsic()
-
-  val TemperatureOutput: Double
-    get() = intrinsic()
-
   var Throttle: Double
     get() = intrinsic()
     set(value) = intrinsic()
@@ -10282,19 +7612,32 @@ class CombustionDeepMiner internal constructor() : TypedDevice() {
   val TotalMoles: Double
     get() = intrinsic()
 
-  val TotalMolesInput: Double
+  @LogicTypes(
+      read =
+          "CombustionInput,CombustionOutput,PressureInput,PressureOutput,RatioCarbonDioxideInput,RatioCarbonDioxideOutput,RatioHeliumInput,RatioHeliumOutput,RatioHydrazineInput,RatioHydrazineOutput,RatioHydrochloricAcidInput,RatioHydrochloricAcidOutput,RatioHydrogenInput,RatioHydrogenOutput,RatioLiquidAlcoholInput,RatioLiquidAlcoholOutput,RatioLiquidCarbonDioxideInput,RatioLiquidCarbonDioxideOutput,RatioLiquidHydrazineInput,RatioLiquidHydrazineOutput,RatioLiquidHydrochloricAcidInput,RatioLiquidHydrochloricAcidOutput,RatioLiquidHydrogenInput,RatioLiquidHydrogenOutput,RatioLiquidMethaneInput,RatioLiquidMethaneOutput,RatioLiquidNitrogenInput,RatioLiquidNitrogenOutput,RatioLiquidNitrousOxideInput,RatioLiquidNitrousOxideOutput,RatioLiquidOxygenInput,RatioLiquidOxygenOutput,RatioLiquidOzoneInput,RatioLiquidOzoneOutput,RatioLiquidPollutantInput,RatioLiquidPollutantOutput,RatioLiquidSilanolInput,RatioLiquidSilanolOutput,RatioLiquidSodiumChlorideInput,RatioLiquidSodiumChlorideOutput,RatioMethaneInput,RatioMethaneOutput,RatioNitrogenInput,RatioNitrogenOutput,RatioNitrousOxideInput,RatioNitrousOxideOutput,RatioOxygenInput,RatioOxygenOutput,RatioOzoneInput,RatioOzoneOutput,RatioPollutantInput,RatioPollutantOutput,RatioPollutedWaterInput,RatioPollutedWaterOutput,RatioSilanolInput,RatioSilanolOutput,RatioSteamInput,RatioSteamOutput,RatioWaterInput,RatioWaterOutput,TemperatureInput,TemperatureOutput,TotalMolesInput,TotalMolesOutput",
+      written = "",
+  )
+  val Ports: Ports
     get() = intrinsic()
 
-  val TotalMolesOutput: Double
+  @LogicTypes(
+      read =
+          "RatioCarbonDioxide,RatioHelium,RatioHydrazine,RatioHydrochloricAcid,RatioHydrogen,RatioLiquidAlcohol,RatioLiquidCarbonDioxide,RatioLiquidHydrazine,RatioLiquidHydrochloricAcid,RatioLiquidHydrogen,RatioLiquidMethane,RatioLiquidNitrogen,RatioLiquidNitrousOxide,RatioLiquidOxygen,RatioLiquidOzone,RatioLiquidPollutant,RatioLiquidSilanol,RatioLiquidSodiumChloride,RatioMethane,RatioNitrogen,RatioNitrousOxide,RatioOxygen,RatioOzone,RatioPollutant,RatioPollutedWater,RatioSilanol,RatioSteam,RatioWater",
+      written = "",
+  )
+  val Ratios: Ratios
+    get() = intrinsic()
+
+  @LogicTypes(read = "ImportCount", written = "")
+  val Import: Transfer
+    get() = intrinsic()
+
+  @LogicTypes(read = "ExportCount", written = "")
+  val Export: Transfer
     get() = intrinsic()
 
   /** The device's slots, by number. */
   val slots: Slots<DataDiskSlot>
-    get() = intrinsic()
-
-  /** Slot 0. */
-  @SlotNumber(0)
-  val Export: DataDiskSlot
     get() = intrinsic()
 
   /** Slot 1. */
@@ -10679,90 +8022,6 @@ class CondensationChamber internal constructor() : TypedDevice() {
   val Ratio: Double
     get() = intrinsic()
 
-  val RatioCarbonDioxide: Double
-    get() = intrinsic()
-
-  val RatioHelium: Double
-    get() = intrinsic()
-
-  val RatioHydrazine: Double
-    get() = intrinsic()
-
-  val RatioHydrochloricAcid: Double
-    get() = intrinsic()
-
-  val RatioHydrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidAlcohol: Double
-    get() = intrinsic()
-
-  val RatioLiquidCarbonDioxide: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrazine: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrochloricAcid: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidMethane: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrousOxide: Double
-    get() = intrinsic()
-
-  val RatioLiquidOxygen: Double
-    get() = intrinsic()
-
-  val RatioLiquidOzone: Double
-    get() = intrinsic()
-
-  val RatioLiquidPollutant: Double
-    get() = intrinsic()
-
-  val RatioLiquidSilanol: Double
-    get() = intrinsic()
-
-  val RatioLiquidSodiumChloride: Double
-    get() = intrinsic()
-
-  val RatioMethane: Double
-    get() = intrinsic()
-
-  val RatioNitrogen: Double
-    get() = intrinsic()
-
-  val RatioNitrousOxide: Double
-    get() = intrinsic()
-
-  val RatioOxygen: Double
-    get() = intrinsic()
-
-  val RatioOzone: Double
-    get() = intrinsic()
-
-  val RatioPollutant: Double
-    get() = intrinsic()
-
-  val RatioPollutedWater: Double
-    get() = intrinsic()
-
-  val RatioSilanol: Double
-    get() = intrinsic()
-
-  val RatioSteam: Double
-    get() = intrinsic()
-
-  val RatioWater: Double
-    get() = intrinsic()
-
   val RequiredPower: Double
     get() = intrinsic()
 
@@ -10774,6 +8033,14 @@ class CondensationChamber internal constructor() : TypedDevice() {
     get() = intrinsic()
 
   val TotalMoles: Double
+    get() = intrinsic()
+
+  @LogicTypes(
+      read =
+          "RatioCarbonDioxide,RatioHelium,RatioHydrazine,RatioHydrochloricAcid,RatioHydrogen,RatioLiquidAlcohol,RatioLiquidCarbonDioxide,RatioLiquidHydrazine,RatioLiquidHydrochloricAcid,RatioLiquidHydrogen,RatioLiquidMethane,RatioLiquidNitrogen,RatioLiquidNitrousOxide,RatioLiquidOxygen,RatioLiquidOzone,RatioLiquidPollutant,RatioLiquidSilanol,RatioLiquidSodiumChloride,RatioMethane,RatioNitrogen,RatioNitrousOxide,RatioOxygen,RatioOzone,RatioPollutant,RatioPollutedWater,RatioSilanol,RatioSteam,RatioWater",
+      written = "",
+  )
+  val Ratios: Ratios
     get() = intrinsic()
 
   /** The StructureCondensationChamber prefab. */
@@ -11327,12 +8594,6 @@ class DeepMiner internal constructor() : TypedDevice() {
   val Error: Boolean
     get() = intrinsic()
 
-  val ExportCount: Double
-    get() = intrinsic()
-
-  val ImportCount: Double
-    get() = intrinsic()
-
   val Maximum: Double
     get() = intrinsic()
 
@@ -11353,13 +8614,16 @@ class DeepMiner internal constructor() : TypedDevice() {
     get() = intrinsic()
     set(value) = intrinsic()
 
-  /** The device's slots, by number. */
-  val slots: Slots<DataDiskSlot>
+  @LogicTypes(read = "ImportCount", written = "")
+  val Import: Transfer
     get() = intrinsic()
 
-  /** Slot 0. */
-  @SlotNumber(0)
-  val Export: DataDiskSlot
+  @LogicTypes(read = "ExportCount", written = "")
+  val Export: Transfer
+    get() = intrinsic()
+
+  /** The device's slots, by number. */
+  val slots: Slots<DataDiskSlot>
     get() = intrinsic()
 
   /** The StructureDeepMiner prefab. */
@@ -11553,12 +8817,6 @@ class Electrolyzer internal constructor() : TypedDevice() {
     get() = intrinsic()
     set(value) = intrinsic()
 
-  val CombustionInput: Double
-    get() = intrinsic()
-
-  val CombustionOutput: Double
-    get() = intrinsic()
-
   val Error: Boolean
     get() = intrinsic()
 
@@ -11584,181 +8842,7 @@ class Electrolyzer internal constructor() : TypedDevice() {
   val Power: Boolean
     get() = intrinsic()
 
-  val PressureInput: Double
-    get() = intrinsic()
-
-  val PressureOutput: Double
-    get() = intrinsic()
-
   val Ratio: Double
-    get() = intrinsic()
-
-  val RatioCarbonDioxideInput: Double
-    get() = intrinsic()
-
-  val RatioCarbonDioxideOutput: Double
-    get() = intrinsic()
-
-  val RatioHeliumInput: Double
-    get() = intrinsic()
-
-  val RatioHeliumOutput: Double
-    get() = intrinsic()
-
-  val RatioHydrazineInput: Double
-    get() = intrinsic()
-
-  val RatioHydrazineOutput: Double
-    get() = intrinsic()
-
-  val RatioHydrochloricAcidInput: Double
-    get() = intrinsic()
-
-  val RatioHydrochloricAcidOutput: Double
-    get() = intrinsic()
-
-  val RatioHydrogenInput: Double
-    get() = intrinsic()
-
-  val RatioHydrogenOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidAlcoholInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidAlcoholOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidCarbonDioxideInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidCarbonDioxideOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrazineInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrazineOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrochloricAcidInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrochloricAcidOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrogenInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrogenOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidMethaneInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidMethaneOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrogenInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrogenOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrousOxideInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrousOxideOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidOxygenInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidOxygenOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidOzoneInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidOzoneOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidPollutantInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidPollutantOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidSilanolInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidSilanolOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidSodiumChlorideInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidSodiumChlorideOutput: Double
-    get() = intrinsic()
-
-  val RatioMethaneInput: Double
-    get() = intrinsic()
-
-  val RatioMethaneOutput: Double
-    get() = intrinsic()
-
-  val RatioNitrogenInput: Double
-    get() = intrinsic()
-
-  val RatioNitrogenOutput: Double
-    get() = intrinsic()
-
-  val RatioNitrousOxideInput: Double
-    get() = intrinsic()
-
-  val RatioNitrousOxideOutput: Double
-    get() = intrinsic()
-
-  val RatioOxygenInput: Double
-    get() = intrinsic()
-
-  val RatioOxygenOutput: Double
-    get() = intrinsic()
-
-  val RatioOzoneInput: Double
-    get() = intrinsic()
-
-  val RatioOzoneOutput: Double
-    get() = intrinsic()
-
-  val RatioPollutantInput: Double
-    get() = intrinsic()
-
-  val RatioPollutantOutput: Double
-    get() = intrinsic()
-
-  val RatioPollutedWaterInput: Double
-    get() = intrinsic()
-
-  val RatioPollutedWaterOutput: Double
-    get() = intrinsic()
-
-  val RatioSilanolInput: Double
-    get() = intrinsic()
-
-  val RatioSilanolOutput: Double
-    get() = intrinsic()
-
-  val RatioSteamInput: Double
-    get() = intrinsic()
-
-  val RatioSteamOutput: Double
-    get() = intrinsic()
-
-  val RatioWaterInput: Double
-    get() = intrinsic()
-
-  val RatioWaterOutput: Double
     get() = intrinsic()
 
   val RequiredPower: Double
@@ -11768,16 +8852,12 @@ class Electrolyzer internal constructor() : TypedDevice() {
     get() = intrinsic()
     set(value) = intrinsic()
 
-  val TemperatureInput: Double
-    get() = intrinsic()
-
-  val TemperatureOutput: Double
-    get() = intrinsic()
-
-  val TotalMolesInput: Double
-    get() = intrinsic()
-
-  val TotalMolesOutput: Double
+  @LogicTypes(
+      read =
+          "CombustionInput,CombustionOutput,PressureInput,PressureOutput,RatioCarbonDioxideInput,RatioCarbonDioxideOutput,RatioHeliumInput,RatioHeliumOutput,RatioHydrazineInput,RatioHydrazineOutput,RatioHydrochloricAcidInput,RatioHydrochloricAcidOutput,RatioHydrogenInput,RatioHydrogenOutput,RatioLiquidAlcoholInput,RatioLiquidAlcoholOutput,RatioLiquidCarbonDioxideInput,RatioLiquidCarbonDioxideOutput,RatioLiquidHydrazineInput,RatioLiquidHydrazineOutput,RatioLiquidHydrochloricAcidInput,RatioLiquidHydrochloricAcidOutput,RatioLiquidHydrogenInput,RatioLiquidHydrogenOutput,RatioLiquidMethaneInput,RatioLiquidMethaneOutput,RatioLiquidNitrogenInput,RatioLiquidNitrogenOutput,RatioLiquidNitrousOxideInput,RatioLiquidNitrousOxideOutput,RatioLiquidOxygenInput,RatioLiquidOxygenOutput,RatioLiquidOzoneInput,RatioLiquidOzoneOutput,RatioLiquidPollutantInput,RatioLiquidPollutantOutput,RatioLiquidSilanolInput,RatioLiquidSilanolOutput,RatioLiquidSodiumChlorideInput,RatioLiquidSodiumChlorideOutput,RatioMethaneInput,RatioMethaneOutput,RatioNitrogenInput,RatioNitrogenOutput,RatioNitrousOxideInput,RatioNitrousOxideOutput,RatioOxygenInput,RatioOxygenOutput,RatioOzoneInput,RatioOzoneOutput,RatioPollutantInput,RatioPollutantOutput,RatioPollutedWaterInput,RatioPollutedWaterOutput,RatioSilanolInput,RatioSilanolOutput,RatioSteamInput,RatioSteamOutput,RatioWaterInput,RatioWaterOutput,TemperatureInput,TemperatureOutput,TotalMolesInput,TotalMolesOutput",
+      written = "",
+  )
+  val Ports: Ports
     get() = intrinsic()
 
   /** The device's slots, by number. */
@@ -11830,12 +8910,6 @@ class ElectronicsPrinter internal constructor() : TypedDevice() {
   val Error: Boolean
     get() = intrinsic()
 
-  val ExportCount: Double
-    get() = intrinsic()
-
-  val ImportCount: Double
-    get() = intrinsic()
-
   var Lock: Boolean
     get() = intrinsic()
     set(value) = intrinsic()
@@ -11864,18 +8938,16 @@ class ElectronicsPrinter internal constructor() : TypedDevice() {
   val StackSize: Double
     get() = intrinsic()
 
+  @LogicTypes(read = "ImportCount", written = "")
+  val Import: Transfer
+    get() = intrinsic()
+
+  @LogicTypes(read = "ExportCount", written = "")
+  val Export: Transfer
+    get() = intrinsic()
+
   /** The device's slots, by number. */
   val slots: Slots<DataDiskSlot>
-    get() = intrinsic()
-
-  /** Slot 0. */
-  @SlotNumber(0)
-  val Import: DataDiskSlot
-    get() = intrinsic()
-
-  /** Slot 1. */
-  @SlotNumber(1)
-  val Export: DataDiskSlot
     get() = intrinsic()
 
   /** The StructureElectronicsPrinter prefab. */
@@ -12160,90 +9232,6 @@ class EvaporationChamber internal constructor() : TypedDevice() {
   val Ratio: Double
     get() = intrinsic()
 
-  val RatioCarbonDioxide: Double
-    get() = intrinsic()
-
-  val RatioHelium: Double
-    get() = intrinsic()
-
-  val RatioHydrazine: Double
-    get() = intrinsic()
-
-  val RatioHydrochloricAcid: Double
-    get() = intrinsic()
-
-  val RatioHydrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidAlcohol: Double
-    get() = intrinsic()
-
-  val RatioLiquidCarbonDioxide: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrazine: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrochloricAcid: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidMethane: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrousOxide: Double
-    get() = intrinsic()
-
-  val RatioLiquidOxygen: Double
-    get() = intrinsic()
-
-  val RatioLiquidOzone: Double
-    get() = intrinsic()
-
-  val RatioLiquidPollutant: Double
-    get() = intrinsic()
-
-  val RatioLiquidSilanol: Double
-    get() = intrinsic()
-
-  val RatioLiquidSodiumChloride: Double
-    get() = intrinsic()
-
-  val RatioMethane: Double
-    get() = intrinsic()
-
-  val RatioNitrogen: Double
-    get() = intrinsic()
-
-  val RatioNitrousOxide: Double
-    get() = intrinsic()
-
-  val RatioOxygen: Double
-    get() = intrinsic()
-
-  val RatioOzone: Double
-    get() = intrinsic()
-
-  val RatioPollutant: Double
-    get() = intrinsic()
-
-  val RatioPollutedWater: Double
-    get() = intrinsic()
-
-  val RatioSilanol: Double
-    get() = intrinsic()
-
-  val RatioSteam: Double
-    get() = intrinsic()
-
-  val RatioWater: Double
-    get() = intrinsic()
-
   val RequiredPower: Double
     get() = intrinsic()
 
@@ -12255,6 +9243,14 @@ class EvaporationChamber internal constructor() : TypedDevice() {
     get() = intrinsic()
 
   val TotalMoles: Double
+    get() = intrinsic()
+
+  @LogicTypes(
+      read =
+          "RatioCarbonDioxide,RatioHelium,RatioHydrazine,RatioHydrochloricAcid,RatioHydrogen,RatioLiquidAlcohol,RatioLiquidCarbonDioxide,RatioLiquidHydrazine,RatioLiquidHydrochloricAcid,RatioLiquidHydrogen,RatioLiquidMethane,RatioLiquidNitrogen,RatioLiquidNitrousOxide,RatioLiquidOxygen,RatioLiquidOzone,RatioLiquidPollutant,RatioLiquidSilanol,RatioLiquidSodiumChloride,RatioMethane,RatioNitrogen,RatioNitrousOxide,RatioOxygen,RatioOzone,RatioPollutant,RatioPollutedWater,RatioSilanol,RatioSteam,RatioWater",
+      written = "",
+  )
+  val Ratios: Ratios
     get() = intrinsic()
 
   /** The StructureEvaporationChamber prefab. */
@@ -12317,22 +9313,10 @@ class Fermenter internal constructor() : TypedDevice() {
     get() = intrinsic()
     set(value) = intrinsic()
 
-  val CombustionInput: Double
-    get() = intrinsic()
-
-  val CombustionInput2: Double
-    get() = intrinsic()
-
-  val CombustionOutput: Double
-    get() = intrinsic()
-
   val CompletionRatio: Double
     get() = intrinsic()
 
   val Error: Boolean
-    get() = intrinsic()
-
-  val ImportCount: Double
     get() = intrinsic()
 
   var Lock: Boolean
@@ -12357,268 +9341,7 @@ class Fermenter internal constructor() : TypedDevice() {
   val Power: Boolean
     get() = intrinsic()
 
-  val PressureInput: Double
-    get() = intrinsic()
-
-  val PressureInput2: Double
-    get() = intrinsic()
-
-  val PressureOutput: Double
-    get() = intrinsic()
-
   val Ratio: Double
-    get() = intrinsic()
-
-  val RatioCarbonDioxideInput: Double
-    get() = intrinsic()
-
-  val RatioCarbonDioxideInput2: Double
-    get() = intrinsic()
-
-  val RatioCarbonDioxideOutput: Double
-    get() = intrinsic()
-
-  val RatioHeliumInput: Double
-    get() = intrinsic()
-
-  val RatioHeliumInput2: Double
-    get() = intrinsic()
-
-  val RatioHeliumOutput: Double
-    get() = intrinsic()
-
-  val RatioHydrazineInput: Double
-    get() = intrinsic()
-
-  val RatioHydrazineInput2: Double
-    get() = intrinsic()
-
-  val RatioHydrazineOutput: Double
-    get() = intrinsic()
-
-  val RatioHydrochloricAcidInput: Double
-    get() = intrinsic()
-
-  val RatioHydrochloricAcidInput2: Double
-    get() = intrinsic()
-
-  val RatioHydrochloricAcidOutput: Double
-    get() = intrinsic()
-
-  val RatioHydrogenInput: Double
-    get() = intrinsic()
-
-  val RatioHydrogenInput2: Double
-    get() = intrinsic()
-
-  val RatioHydrogenOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidAlcoholInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidAlcoholInput2: Double
-    get() = intrinsic()
-
-  val RatioLiquidAlcoholOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidCarbonDioxideInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidCarbonDioxideInput2: Double
-    get() = intrinsic()
-
-  val RatioLiquidCarbonDioxideOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrazineInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrazineInput2: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrazineOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrochloricAcidInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrochloricAcidInput2: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrochloricAcidOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrogenInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrogenInput2: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrogenOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidMethaneInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidMethaneInput2: Double
-    get() = intrinsic()
-
-  val RatioLiquidMethaneOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrogenInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrogenInput2: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrogenOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrousOxideInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrousOxideInput2: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrousOxideOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidOxygenInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidOxygenInput2: Double
-    get() = intrinsic()
-
-  val RatioLiquidOxygenOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidOzoneInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidOzoneInput2: Double
-    get() = intrinsic()
-
-  val RatioLiquidOzoneOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidPollutantInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidPollutantInput2: Double
-    get() = intrinsic()
-
-  val RatioLiquidPollutantOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidSilanolInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidSilanolInput2: Double
-    get() = intrinsic()
-
-  val RatioLiquidSilanolOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidSodiumChlorideInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidSodiumChlorideInput2: Double
-    get() = intrinsic()
-
-  val RatioLiquidSodiumChlorideOutput: Double
-    get() = intrinsic()
-
-  val RatioMethaneInput: Double
-    get() = intrinsic()
-
-  val RatioMethaneInput2: Double
-    get() = intrinsic()
-
-  val RatioMethaneOutput: Double
-    get() = intrinsic()
-
-  val RatioNitrogenInput: Double
-    get() = intrinsic()
-
-  val RatioNitrogenInput2: Double
-    get() = intrinsic()
-
-  val RatioNitrogenOutput: Double
-    get() = intrinsic()
-
-  val RatioNitrousOxideInput: Double
-    get() = intrinsic()
-
-  val RatioNitrousOxideInput2: Double
-    get() = intrinsic()
-
-  val RatioNitrousOxideOutput: Double
-    get() = intrinsic()
-
-  val RatioOxygenInput: Double
-    get() = intrinsic()
-
-  val RatioOxygenInput2: Double
-    get() = intrinsic()
-
-  val RatioOxygenOutput: Double
-    get() = intrinsic()
-
-  val RatioOzoneInput: Double
-    get() = intrinsic()
-
-  val RatioOzoneInput2: Double
-    get() = intrinsic()
-
-  val RatioOzoneOutput: Double
-    get() = intrinsic()
-
-  val RatioPollutantInput: Double
-    get() = intrinsic()
-
-  val RatioPollutantInput2: Double
-    get() = intrinsic()
-
-  val RatioPollutantOutput: Double
-    get() = intrinsic()
-
-  val RatioPollutedWaterInput: Double
-    get() = intrinsic()
-
-  val RatioPollutedWaterInput2: Double
-    get() = intrinsic()
-
-  val RatioPollutedWaterOutput: Double
-    get() = intrinsic()
-
-  val RatioSilanolInput: Double
-    get() = intrinsic()
-
-  val RatioSilanolInput2: Double
-    get() = intrinsic()
-
-  val RatioSilanolOutput: Double
-    get() = intrinsic()
-
-  val RatioSteamInput: Double
-    get() = intrinsic()
-
-  val RatioSteamInput2: Double
-    get() = intrinsic()
-
-  val RatioSteamOutput: Double
-    get() = intrinsic()
-
-  val RatioWaterInput: Double
-    get() = intrinsic()
-
-  val RatioWaterInput2: Double
-    get() = intrinsic()
-
-  val RatioWaterOutput: Double
     get() = intrinsic()
 
   val RequiredPower: Double
@@ -12628,31 +9351,20 @@ class Fermenter internal constructor() : TypedDevice() {
     get() = intrinsic()
     set(value) = intrinsic()
 
-  val TemperatureInput: Double
+  @LogicTypes(
+      read =
+          "CombustionInput,CombustionInput2,CombustionOutput,PressureInput,PressureInput2,PressureOutput,RatioCarbonDioxideInput,RatioCarbonDioxideInput2,RatioCarbonDioxideOutput,RatioHeliumInput,RatioHeliumInput2,RatioHeliumOutput,RatioHydrazineInput,RatioHydrazineInput2,RatioHydrazineOutput,RatioHydrochloricAcidInput,RatioHydrochloricAcidInput2,RatioHydrochloricAcidOutput,RatioHydrogenInput,RatioHydrogenInput2,RatioHydrogenOutput,RatioLiquidAlcoholInput,RatioLiquidAlcoholInput2,RatioLiquidAlcoholOutput,RatioLiquidCarbonDioxideInput,RatioLiquidCarbonDioxideInput2,RatioLiquidCarbonDioxideOutput,RatioLiquidHydrazineInput,RatioLiquidHydrazineInput2,RatioLiquidHydrazineOutput,RatioLiquidHydrochloricAcidInput,RatioLiquidHydrochloricAcidInput2,RatioLiquidHydrochloricAcidOutput,RatioLiquidHydrogenInput,RatioLiquidHydrogenInput2,RatioLiquidHydrogenOutput,RatioLiquidMethaneInput,RatioLiquidMethaneInput2,RatioLiquidMethaneOutput,RatioLiquidNitrogenInput,RatioLiquidNitrogenInput2,RatioLiquidNitrogenOutput,RatioLiquidNitrousOxideInput,RatioLiquidNitrousOxideInput2,RatioLiquidNitrousOxideOutput,RatioLiquidOxygenInput,RatioLiquidOxygenInput2,RatioLiquidOxygenOutput,RatioLiquidOzoneInput,RatioLiquidOzoneInput2,RatioLiquidOzoneOutput,RatioLiquidPollutantInput,RatioLiquidPollutantInput2,RatioLiquidPollutantOutput,RatioLiquidSilanolInput,RatioLiquidSilanolInput2,RatioLiquidSilanolOutput,RatioLiquidSodiumChlorideInput,RatioLiquidSodiumChlorideInput2,RatioLiquidSodiumChlorideOutput,RatioMethaneInput,RatioMethaneInput2,RatioMethaneOutput,RatioNitrogenInput,RatioNitrogenInput2,RatioNitrogenOutput,RatioNitrousOxideInput,RatioNitrousOxideInput2,RatioNitrousOxideOutput,RatioOxygenInput,RatioOxygenInput2,RatioOxygenOutput,RatioOzoneInput,RatioOzoneInput2,RatioOzoneOutput,RatioPollutantInput,RatioPollutantInput2,RatioPollutantOutput,RatioPollutedWaterInput,RatioPollutedWaterInput2,RatioPollutedWaterOutput,RatioSilanolInput,RatioSilanolInput2,RatioSilanolOutput,RatioSteamInput,RatioSteamInput2,RatioSteamOutput,RatioWaterInput,RatioWaterInput2,RatioWaterOutput,TemperatureInput,TemperatureInput2,TemperatureOutput,TotalMolesInput,TotalMolesInput2,TotalMolesOutput",
+      written = "",
+  )
+  val Ports: Ports
     get() = intrinsic()
 
-  val TemperatureInput2: Double
-    get() = intrinsic()
-
-  val TemperatureOutput: Double
-    get() = intrinsic()
-
-  val TotalMolesInput: Double
-    get() = intrinsic()
-
-  val TotalMolesInput2: Double
-    get() = intrinsic()
-
-  val TotalMolesOutput: Double
+  @LogicTypes(read = "ImportCount", written = "")
+  val Import: Transfer
     get() = intrinsic()
 
   /** The device's slots, by number. */
   val slots: Slots<DataDiskSlot>
-    get() = intrinsic()
-
-  /** Slot 0. */
-  @SlotNumber(0)
-  val Import: DataDiskSlot
     get() = intrinsic()
 
   /** Slot 1. */
@@ -12687,15 +9399,6 @@ object Fermenters {
 /** A StructureFiltration. */
 @PrefabName("StructureFiltration")
 class Filtration internal constructor() : TypedDevice() {
-  val CombustionInput: Double
-    get() = intrinsic()
-
-  val CombustionOutput: Double
-    get() = intrinsic()
-
-  val CombustionOutput2: Double
-    get() = intrinsic()
-
   val Error: Boolean
     get() = intrinsic()
 
@@ -12721,268 +9424,7 @@ class Filtration internal constructor() : TypedDevice() {
   val Power: Boolean
     get() = intrinsic()
 
-  val PressureInput: Double
-    get() = intrinsic()
-
-  val PressureOutput: Double
-    get() = intrinsic()
-
-  val PressureOutput2: Double
-    get() = intrinsic()
-
   val Ratio: Double
-    get() = intrinsic()
-
-  val RatioCarbonDioxideInput: Double
-    get() = intrinsic()
-
-  val RatioCarbonDioxideOutput: Double
-    get() = intrinsic()
-
-  val RatioCarbonDioxideOutput2: Double
-    get() = intrinsic()
-
-  val RatioHeliumInput: Double
-    get() = intrinsic()
-
-  val RatioHeliumOutput: Double
-    get() = intrinsic()
-
-  val RatioHeliumOutput2: Double
-    get() = intrinsic()
-
-  val RatioHydrazineInput: Double
-    get() = intrinsic()
-
-  val RatioHydrazineOutput: Double
-    get() = intrinsic()
-
-  val RatioHydrazineOutput2: Double
-    get() = intrinsic()
-
-  val RatioHydrochloricAcidInput: Double
-    get() = intrinsic()
-
-  val RatioHydrochloricAcidOutput: Double
-    get() = intrinsic()
-
-  val RatioHydrochloricAcidOutput2: Double
-    get() = intrinsic()
-
-  val RatioHydrogenInput: Double
-    get() = intrinsic()
-
-  val RatioHydrogenOutput: Double
-    get() = intrinsic()
-
-  val RatioHydrogenOutput2: Double
-    get() = intrinsic()
-
-  val RatioLiquidAlcoholInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidAlcoholOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidAlcoholOutput2: Double
-    get() = intrinsic()
-
-  val RatioLiquidCarbonDioxideInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidCarbonDioxideOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidCarbonDioxideOutput2: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrazineInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrazineOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrazineOutput2: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrochloricAcidInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrochloricAcidOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrochloricAcidOutput2: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrogenInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrogenOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrogenOutput2: Double
-    get() = intrinsic()
-
-  val RatioLiquidMethaneInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidMethaneOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidMethaneOutput2: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrogenInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrogenOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrogenOutput2: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrousOxideInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrousOxideOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrousOxideOutput2: Double
-    get() = intrinsic()
-
-  val RatioLiquidOxygenInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidOxygenOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidOxygenOutput2: Double
-    get() = intrinsic()
-
-  val RatioLiquidOzoneInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidOzoneOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidOzoneOutput2: Double
-    get() = intrinsic()
-
-  val RatioLiquidPollutantInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidPollutantOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidPollutantOutput2: Double
-    get() = intrinsic()
-
-  val RatioLiquidSilanolInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidSilanolOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidSilanolOutput2: Double
-    get() = intrinsic()
-
-  val RatioLiquidSodiumChlorideInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidSodiumChlorideOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidSodiumChlorideOutput2: Double
-    get() = intrinsic()
-
-  val RatioMethaneInput: Double
-    get() = intrinsic()
-
-  val RatioMethaneOutput: Double
-    get() = intrinsic()
-
-  val RatioMethaneOutput2: Double
-    get() = intrinsic()
-
-  val RatioNitrogenInput: Double
-    get() = intrinsic()
-
-  val RatioNitrogenOutput: Double
-    get() = intrinsic()
-
-  val RatioNitrogenOutput2: Double
-    get() = intrinsic()
-
-  val RatioNitrousOxideInput: Double
-    get() = intrinsic()
-
-  val RatioNitrousOxideOutput: Double
-    get() = intrinsic()
-
-  val RatioNitrousOxideOutput2: Double
-    get() = intrinsic()
-
-  val RatioOxygenInput: Double
-    get() = intrinsic()
-
-  val RatioOxygenOutput: Double
-    get() = intrinsic()
-
-  val RatioOxygenOutput2: Double
-    get() = intrinsic()
-
-  val RatioOzoneInput: Double
-    get() = intrinsic()
-
-  val RatioOzoneOutput: Double
-    get() = intrinsic()
-
-  val RatioOzoneOutput2: Double
-    get() = intrinsic()
-
-  val RatioPollutantInput: Double
-    get() = intrinsic()
-
-  val RatioPollutantOutput: Double
-    get() = intrinsic()
-
-  val RatioPollutantOutput2: Double
-    get() = intrinsic()
-
-  val RatioPollutedWaterInput: Double
-    get() = intrinsic()
-
-  val RatioPollutedWaterOutput: Double
-    get() = intrinsic()
-
-  val RatioPollutedWaterOutput2: Double
-    get() = intrinsic()
-
-  val RatioSilanolInput: Double
-    get() = intrinsic()
-
-  val RatioSilanolOutput: Double
-    get() = intrinsic()
-
-  val RatioSilanolOutput2: Double
-    get() = intrinsic()
-
-  val RatioSteamInput: Double
-    get() = intrinsic()
-
-  val RatioSteamOutput: Double
-    get() = intrinsic()
-
-  val RatioSteamOutput2: Double
-    get() = intrinsic()
-
-  val RatioWaterInput: Double
-    get() = intrinsic()
-
-  val RatioWaterOutput: Double
-    get() = intrinsic()
-
-  val RatioWaterOutput2: Double
     get() = intrinsic()
 
   val RequiredPower: Double
@@ -12992,22 +9434,12 @@ class Filtration internal constructor() : TypedDevice() {
     get() = intrinsic()
     set(value) = intrinsic()
 
-  val TemperatureInput: Double
-    get() = intrinsic()
-
-  val TemperatureOutput: Double
-    get() = intrinsic()
-
-  val TemperatureOutput2: Double
-    get() = intrinsic()
-
-  val TotalMolesInput: Double
-    get() = intrinsic()
-
-  val TotalMolesOutput: Double
-    get() = intrinsic()
-
-  val TotalMolesOutput2: Double
+  @LogicTypes(
+      read =
+          "CombustionInput,CombustionOutput,CombustionOutput2,PressureInput,PressureOutput,PressureOutput2,RatioCarbonDioxideInput,RatioCarbonDioxideOutput,RatioCarbonDioxideOutput2,RatioHeliumInput,RatioHeliumOutput,RatioHeliumOutput2,RatioHydrazineInput,RatioHydrazineOutput,RatioHydrazineOutput2,RatioHydrochloricAcidInput,RatioHydrochloricAcidOutput,RatioHydrochloricAcidOutput2,RatioHydrogenInput,RatioHydrogenOutput,RatioHydrogenOutput2,RatioLiquidAlcoholInput,RatioLiquidAlcoholOutput,RatioLiquidAlcoholOutput2,RatioLiquidCarbonDioxideInput,RatioLiquidCarbonDioxideOutput,RatioLiquidCarbonDioxideOutput2,RatioLiquidHydrazineInput,RatioLiquidHydrazineOutput,RatioLiquidHydrazineOutput2,RatioLiquidHydrochloricAcidInput,RatioLiquidHydrochloricAcidOutput,RatioLiquidHydrochloricAcidOutput2,RatioLiquidHydrogenInput,RatioLiquidHydrogenOutput,RatioLiquidHydrogenOutput2,RatioLiquidMethaneInput,RatioLiquidMethaneOutput,RatioLiquidMethaneOutput2,RatioLiquidNitrogenInput,RatioLiquidNitrogenOutput,RatioLiquidNitrogenOutput2,RatioLiquidNitrousOxideInput,RatioLiquidNitrousOxideOutput,RatioLiquidNitrousOxideOutput2,RatioLiquidOxygenInput,RatioLiquidOxygenOutput,RatioLiquidOxygenOutput2,RatioLiquidOzoneInput,RatioLiquidOzoneOutput,RatioLiquidOzoneOutput2,RatioLiquidPollutantInput,RatioLiquidPollutantOutput,RatioLiquidPollutantOutput2,RatioLiquidSilanolInput,RatioLiquidSilanolOutput,RatioLiquidSilanolOutput2,RatioLiquidSodiumChlorideInput,RatioLiquidSodiumChlorideOutput,RatioLiquidSodiumChlorideOutput2,RatioMethaneInput,RatioMethaneOutput,RatioMethaneOutput2,RatioNitrogenInput,RatioNitrogenOutput,RatioNitrogenOutput2,RatioNitrousOxideInput,RatioNitrousOxideOutput,RatioNitrousOxideOutput2,RatioOxygenInput,RatioOxygenOutput,RatioOxygenOutput2,RatioOzoneInput,RatioOzoneOutput,RatioOzoneOutput2,RatioPollutantInput,RatioPollutantOutput,RatioPollutantOutput2,RatioPollutedWaterInput,RatioPollutedWaterOutput,RatioPollutedWaterOutput2,RatioSilanolInput,RatioSilanolOutput,RatioSilanolOutput2,RatioSteamInput,RatioSteamOutput,RatioSteamOutput2,RatioWaterInput,RatioWaterOutput,RatioWaterOutput2,TemperatureInput,TemperatureOutput,TemperatureOutput2,TotalMolesInput,TotalMolesOutput,TotalMolesOutput2",
+      written = "",
+  )
+  val Ports: Ports
     get() = intrinsic()
 
   /** The device's slots, by number. */
@@ -13046,15 +9478,6 @@ object Filtrations {
 /** A StructureFiltrationLiquid. */
 @PrefabName("StructureFiltrationLiquid")
 class FiltrationLiquid internal constructor() : TypedDevice() {
-  val CombustionInput: Double
-    get() = intrinsic()
-
-  val CombustionOutput: Double
-    get() = intrinsic()
-
-  val CombustionOutput2: Double
-    get() = intrinsic()
-
   val Error: Boolean
     get() = intrinsic()
 
@@ -13080,268 +9503,7 @@ class FiltrationLiquid internal constructor() : TypedDevice() {
   val Power: Boolean
     get() = intrinsic()
 
-  val PressureInput: Double
-    get() = intrinsic()
-
-  val PressureOutput: Double
-    get() = intrinsic()
-
-  val PressureOutput2: Double
-    get() = intrinsic()
-
   val Ratio: Double
-    get() = intrinsic()
-
-  val RatioCarbonDioxideInput: Double
-    get() = intrinsic()
-
-  val RatioCarbonDioxideOutput: Double
-    get() = intrinsic()
-
-  val RatioCarbonDioxideOutput2: Double
-    get() = intrinsic()
-
-  val RatioHeliumInput: Double
-    get() = intrinsic()
-
-  val RatioHeliumOutput: Double
-    get() = intrinsic()
-
-  val RatioHeliumOutput2: Double
-    get() = intrinsic()
-
-  val RatioHydrazineInput: Double
-    get() = intrinsic()
-
-  val RatioHydrazineOutput: Double
-    get() = intrinsic()
-
-  val RatioHydrazineOutput2: Double
-    get() = intrinsic()
-
-  val RatioHydrochloricAcidInput: Double
-    get() = intrinsic()
-
-  val RatioHydrochloricAcidOutput: Double
-    get() = intrinsic()
-
-  val RatioHydrochloricAcidOutput2: Double
-    get() = intrinsic()
-
-  val RatioHydrogenInput: Double
-    get() = intrinsic()
-
-  val RatioHydrogenOutput: Double
-    get() = intrinsic()
-
-  val RatioHydrogenOutput2: Double
-    get() = intrinsic()
-
-  val RatioLiquidAlcoholInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidAlcoholOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidAlcoholOutput2: Double
-    get() = intrinsic()
-
-  val RatioLiquidCarbonDioxideInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidCarbonDioxideOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidCarbonDioxideOutput2: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrazineInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrazineOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrazineOutput2: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrochloricAcidInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrochloricAcidOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrochloricAcidOutput2: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrogenInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrogenOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrogenOutput2: Double
-    get() = intrinsic()
-
-  val RatioLiquidMethaneInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidMethaneOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidMethaneOutput2: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrogenInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrogenOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrogenOutput2: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrousOxideInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrousOxideOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrousOxideOutput2: Double
-    get() = intrinsic()
-
-  val RatioLiquidOxygenInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidOxygenOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidOxygenOutput2: Double
-    get() = intrinsic()
-
-  val RatioLiquidOzoneInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidOzoneOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidOzoneOutput2: Double
-    get() = intrinsic()
-
-  val RatioLiquidPollutantInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidPollutantOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidPollutantOutput2: Double
-    get() = intrinsic()
-
-  val RatioLiquidSilanolInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidSilanolOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidSilanolOutput2: Double
-    get() = intrinsic()
-
-  val RatioLiquidSodiumChlorideInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidSodiumChlorideOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidSodiumChlorideOutput2: Double
-    get() = intrinsic()
-
-  val RatioMethaneInput: Double
-    get() = intrinsic()
-
-  val RatioMethaneOutput: Double
-    get() = intrinsic()
-
-  val RatioMethaneOutput2: Double
-    get() = intrinsic()
-
-  val RatioNitrogenInput: Double
-    get() = intrinsic()
-
-  val RatioNitrogenOutput: Double
-    get() = intrinsic()
-
-  val RatioNitrogenOutput2: Double
-    get() = intrinsic()
-
-  val RatioNitrousOxideInput: Double
-    get() = intrinsic()
-
-  val RatioNitrousOxideOutput: Double
-    get() = intrinsic()
-
-  val RatioNitrousOxideOutput2: Double
-    get() = intrinsic()
-
-  val RatioOxygenInput: Double
-    get() = intrinsic()
-
-  val RatioOxygenOutput: Double
-    get() = intrinsic()
-
-  val RatioOxygenOutput2: Double
-    get() = intrinsic()
-
-  val RatioOzoneInput: Double
-    get() = intrinsic()
-
-  val RatioOzoneOutput: Double
-    get() = intrinsic()
-
-  val RatioOzoneOutput2: Double
-    get() = intrinsic()
-
-  val RatioPollutantInput: Double
-    get() = intrinsic()
-
-  val RatioPollutantOutput: Double
-    get() = intrinsic()
-
-  val RatioPollutantOutput2: Double
-    get() = intrinsic()
-
-  val RatioPollutedWaterInput: Double
-    get() = intrinsic()
-
-  val RatioPollutedWaterOutput: Double
-    get() = intrinsic()
-
-  val RatioPollutedWaterOutput2: Double
-    get() = intrinsic()
-
-  val RatioSilanolInput: Double
-    get() = intrinsic()
-
-  val RatioSilanolOutput: Double
-    get() = intrinsic()
-
-  val RatioSilanolOutput2: Double
-    get() = intrinsic()
-
-  val RatioSteamInput: Double
-    get() = intrinsic()
-
-  val RatioSteamOutput: Double
-    get() = intrinsic()
-
-  val RatioSteamOutput2: Double
-    get() = intrinsic()
-
-  val RatioWaterInput: Double
-    get() = intrinsic()
-
-  val RatioWaterOutput: Double
-    get() = intrinsic()
-
-  val RatioWaterOutput2: Double
     get() = intrinsic()
 
   val RequiredPower: Double
@@ -13351,22 +9513,12 @@ class FiltrationLiquid internal constructor() : TypedDevice() {
     get() = intrinsic()
     set(value) = intrinsic()
 
-  val TemperatureInput: Double
-    get() = intrinsic()
-
-  val TemperatureOutput: Double
-    get() = intrinsic()
-
-  val TemperatureOutput2: Double
-    get() = intrinsic()
-
-  val TotalMolesInput: Double
-    get() = intrinsic()
-
-  val TotalMolesOutput: Double
-    get() = intrinsic()
-
-  val TotalMolesOutput2: Double
+  @LogicTypes(
+      read =
+          "CombustionInput,CombustionOutput,CombustionOutput2,PressureInput,PressureOutput,PressureOutput2,RatioCarbonDioxideInput,RatioCarbonDioxideOutput,RatioCarbonDioxideOutput2,RatioHeliumInput,RatioHeliumOutput,RatioHeliumOutput2,RatioHydrazineInput,RatioHydrazineOutput,RatioHydrazineOutput2,RatioHydrochloricAcidInput,RatioHydrochloricAcidOutput,RatioHydrochloricAcidOutput2,RatioHydrogenInput,RatioHydrogenOutput,RatioHydrogenOutput2,RatioLiquidAlcoholInput,RatioLiquidAlcoholOutput,RatioLiquidAlcoholOutput2,RatioLiquidCarbonDioxideInput,RatioLiquidCarbonDioxideOutput,RatioLiquidCarbonDioxideOutput2,RatioLiquidHydrazineInput,RatioLiquidHydrazineOutput,RatioLiquidHydrazineOutput2,RatioLiquidHydrochloricAcidInput,RatioLiquidHydrochloricAcidOutput,RatioLiquidHydrochloricAcidOutput2,RatioLiquidHydrogenInput,RatioLiquidHydrogenOutput,RatioLiquidHydrogenOutput2,RatioLiquidMethaneInput,RatioLiquidMethaneOutput,RatioLiquidMethaneOutput2,RatioLiquidNitrogenInput,RatioLiquidNitrogenOutput,RatioLiquidNitrogenOutput2,RatioLiquidNitrousOxideInput,RatioLiquidNitrousOxideOutput,RatioLiquidNitrousOxideOutput2,RatioLiquidOxygenInput,RatioLiquidOxygenOutput,RatioLiquidOxygenOutput2,RatioLiquidOzoneInput,RatioLiquidOzoneOutput,RatioLiquidOzoneOutput2,RatioLiquidPollutantInput,RatioLiquidPollutantOutput,RatioLiquidPollutantOutput2,RatioLiquidSilanolInput,RatioLiquidSilanolOutput,RatioLiquidSilanolOutput2,RatioLiquidSodiumChlorideInput,RatioLiquidSodiumChlorideOutput,RatioLiquidSodiumChlorideOutput2,RatioMethaneInput,RatioMethaneOutput,RatioMethaneOutput2,RatioNitrogenInput,RatioNitrogenOutput,RatioNitrogenOutput2,RatioNitrousOxideInput,RatioNitrousOxideOutput,RatioNitrousOxideOutput2,RatioOxygenInput,RatioOxygenOutput,RatioOxygenOutput2,RatioOzoneInput,RatioOzoneOutput,RatioOzoneOutput2,RatioPollutantInput,RatioPollutantOutput,RatioPollutantOutput2,RatioPollutedWaterInput,RatioPollutedWaterOutput,RatioPollutedWaterOutput2,RatioSilanolInput,RatioSilanolOutput,RatioSilanolOutput2,RatioSteamInput,RatioSteamOutput,RatioSteamOutput2,RatioWaterInput,RatioWaterOutput,RatioWaterOutput2,TemperatureInput,TemperatureOutput,TemperatureOutput2,TotalMolesInput,TotalMolesOutput,TotalMolesOutput2",
+      written = "",
+  )
+  val Ports: Ports
     get() = intrinsic()
 
   /** The device's slots, by number. */
@@ -13443,9 +9595,6 @@ class FridgeBig internal constructor() : TypedDevice() {
   val Combustion: Boolean
     get() = intrinsic()
 
-  val CombustionOutput: Double
-    get() = intrinsic()
-
   val Error: Boolean
     get() = intrinsic()
 
@@ -13466,157 +9615,7 @@ class FridgeBig internal constructor() : TypedDevice() {
   val Pressure: Double
     get() = intrinsic()
 
-  val PressureOutput: Double
-    get() = intrinsic()
-
   val Ratio: Double
-    get() = intrinsic()
-
-  val RatioCarbonDioxide: Double
-    get() = intrinsic()
-
-  val RatioCarbonDioxideOutput: Double
-    get() = intrinsic()
-
-  val RatioHelium: Double
-    get() = intrinsic()
-
-  val RatioHeliumOutput: Double
-    get() = intrinsic()
-
-  val RatioHydrazine: Double
-    get() = intrinsic()
-
-  val RatioHydrazineOutput: Double
-    get() = intrinsic()
-
-  val RatioHydrochloricAcid: Double
-    get() = intrinsic()
-
-  val RatioHydrochloricAcidOutput: Double
-    get() = intrinsic()
-
-  val RatioHydrogen: Double
-    get() = intrinsic()
-
-  val RatioHydrogenOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidAlcohol: Double
-    get() = intrinsic()
-
-  val RatioLiquidAlcoholOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidCarbonDioxide: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrazine: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrazineOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrochloricAcid: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrochloricAcidOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrogenOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidMethane: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrousOxide: Double
-    get() = intrinsic()
-
-  val RatioLiquidOxygen: Double
-    get() = intrinsic()
-
-  val RatioLiquidOzone: Double
-    get() = intrinsic()
-
-  val RatioLiquidOzoneOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidPollutant: Double
-    get() = intrinsic()
-
-  val RatioLiquidSilanol: Double
-    get() = intrinsic()
-
-  val RatioLiquidSilanolOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidSodiumChloride: Double
-    get() = intrinsic()
-
-  val RatioLiquidSodiumChlorideOutput: Double
-    get() = intrinsic()
-
-  val RatioMethane: Double
-    get() = intrinsic()
-
-  val RatioMethaneOutput: Double
-    get() = intrinsic()
-
-  val RatioNitrogen: Double
-    get() = intrinsic()
-
-  val RatioNitrogenOutput: Double
-    get() = intrinsic()
-
-  val RatioNitrousOxide: Double
-    get() = intrinsic()
-
-  val RatioNitrousOxideOutput: Double
-    get() = intrinsic()
-
-  val RatioOxygen: Double
-    get() = intrinsic()
-
-  val RatioOxygenOutput: Double
-    get() = intrinsic()
-
-  val RatioOzone: Double
-    get() = intrinsic()
-
-  val RatioOzoneOutput: Double
-    get() = intrinsic()
-
-  val RatioPollutant: Double
-    get() = intrinsic()
-
-  val RatioPollutantOutput: Double
-    get() = intrinsic()
-
-  val RatioPollutedWater: Double
-    get() = intrinsic()
-
-  val RatioPollutedWaterOutput: Double
-    get() = intrinsic()
-
-  val RatioSilanol: Double
-    get() = intrinsic()
-
-  val RatioSilanolOutput: Double
-    get() = intrinsic()
-
-  val RatioSteam: Double
-    get() = intrinsic()
-
-  val RatioWater: Double
-    get() = intrinsic()
-
-  val RatioWaterOutput: Double
     get() = intrinsic()
 
   val RequiredPower: Double
@@ -13629,13 +9628,23 @@ class FridgeBig internal constructor() : TypedDevice() {
   val Temperature: Double
     get() = intrinsic()
 
-  val TemperatureOutput: Double
-    get() = intrinsic()
-
   val TotalMoles: Double
     get() = intrinsic()
 
-  val TotalMolesOutput: Double
+  @LogicTypes(
+      read =
+          "CombustionOutput,PressureOutput,RatioCarbonDioxideOutput,RatioHeliumOutput,RatioHydrazineOutput,RatioHydrochloricAcidOutput,RatioHydrogenOutput,RatioLiquidAlcoholOutput,RatioLiquidHydrazineOutput,RatioLiquidHydrochloricAcidOutput,RatioLiquidHydrogenOutput,RatioLiquidOzoneOutput,RatioLiquidSilanolOutput,RatioLiquidSodiumChlorideOutput,RatioMethaneOutput,RatioNitrogenOutput,RatioNitrousOxideOutput,RatioOxygenOutput,RatioOzoneOutput,RatioPollutantOutput,RatioPollutedWaterOutput,RatioSilanolOutput,RatioWaterOutput,TemperatureOutput,TotalMolesOutput",
+      written = "",
+  )
+  val Ports: Ports
+    get() = intrinsic()
+
+  @LogicTypes(
+      read =
+          "RatioCarbonDioxide,RatioHelium,RatioHydrazine,RatioHydrochloricAcid,RatioHydrogen,RatioLiquidAlcohol,RatioLiquidCarbonDioxide,RatioLiquidHydrazine,RatioLiquidHydrochloricAcid,RatioLiquidHydrogen,RatioLiquidMethane,RatioLiquidNitrogen,RatioLiquidNitrousOxide,RatioLiquidOxygen,RatioLiquidOzone,RatioLiquidPollutant,RatioLiquidSilanol,RatioLiquidSodiumChloride,RatioMethane,RatioNitrogen,RatioNitrousOxide,RatioOxygen,RatioOzone,RatioPollutant,RatioPollutedWater,RatioSilanol,RatioSteam,RatioWater",
+      written = "",
+  )
+  val Ratios: Ratios
     get() = intrinsic()
 
   /** The device's slots, by number. */
@@ -13672,9 +9681,6 @@ class FridgeSmall internal constructor() : TypedDevice() {
   val Combustion: Boolean
     get() = intrinsic()
 
-  val CombustionOutput: Double
-    get() = intrinsic()
-
   val Maximum: Double
     get() = intrinsic()
 
@@ -13685,157 +9691,7 @@ class FridgeSmall internal constructor() : TypedDevice() {
   val Pressure: Double
     get() = intrinsic()
 
-  val PressureOutput: Double
-    get() = intrinsic()
-
   val Ratio: Double
-    get() = intrinsic()
-
-  val RatioCarbonDioxide: Double
-    get() = intrinsic()
-
-  val RatioCarbonDioxideOutput: Double
-    get() = intrinsic()
-
-  val RatioHelium: Double
-    get() = intrinsic()
-
-  val RatioHeliumOutput: Double
-    get() = intrinsic()
-
-  val RatioHydrazine: Double
-    get() = intrinsic()
-
-  val RatioHydrazineOutput: Double
-    get() = intrinsic()
-
-  val RatioHydrochloricAcid: Double
-    get() = intrinsic()
-
-  val RatioHydrochloricAcidOutput: Double
-    get() = intrinsic()
-
-  val RatioHydrogen: Double
-    get() = intrinsic()
-
-  val RatioHydrogenOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidAlcohol: Double
-    get() = intrinsic()
-
-  val RatioLiquidAlcoholOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidCarbonDioxide: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrazine: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrazineOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrochloricAcid: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrochloricAcidOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrogenOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidMethane: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrousOxide: Double
-    get() = intrinsic()
-
-  val RatioLiquidOxygen: Double
-    get() = intrinsic()
-
-  val RatioLiquidOzone: Double
-    get() = intrinsic()
-
-  val RatioLiquidOzoneOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidPollutant: Double
-    get() = intrinsic()
-
-  val RatioLiquidSilanol: Double
-    get() = intrinsic()
-
-  val RatioLiquidSilanolOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidSodiumChloride: Double
-    get() = intrinsic()
-
-  val RatioLiquidSodiumChlorideOutput: Double
-    get() = intrinsic()
-
-  val RatioMethane: Double
-    get() = intrinsic()
-
-  val RatioMethaneOutput: Double
-    get() = intrinsic()
-
-  val RatioNitrogen: Double
-    get() = intrinsic()
-
-  val RatioNitrogenOutput: Double
-    get() = intrinsic()
-
-  val RatioNitrousOxide: Double
-    get() = intrinsic()
-
-  val RatioNitrousOxideOutput: Double
-    get() = intrinsic()
-
-  val RatioOxygen: Double
-    get() = intrinsic()
-
-  val RatioOxygenOutput: Double
-    get() = intrinsic()
-
-  val RatioOzone: Double
-    get() = intrinsic()
-
-  val RatioOzoneOutput: Double
-    get() = intrinsic()
-
-  val RatioPollutant: Double
-    get() = intrinsic()
-
-  val RatioPollutantOutput: Double
-    get() = intrinsic()
-
-  val RatioPollutedWater: Double
-    get() = intrinsic()
-
-  val RatioPollutedWaterOutput: Double
-    get() = intrinsic()
-
-  val RatioSilanol: Double
-    get() = intrinsic()
-
-  val RatioSilanolOutput: Double
-    get() = intrinsic()
-
-  val RatioSteam: Double
-    get() = intrinsic()
-
-  val RatioWater: Double
-    get() = intrinsic()
-
-  val RatioWaterOutput: Double
     get() = intrinsic()
 
   var Setting: Double
@@ -13845,13 +9701,23 @@ class FridgeSmall internal constructor() : TypedDevice() {
   val Temperature: Double
     get() = intrinsic()
 
-  val TemperatureOutput: Double
-    get() = intrinsic()
-
   val TotalMoles: Double
     get() = intrinsic()
 
-  val TotalMolesOutput: Double
+  @LogicTypes(
+      read =
+          "CombustionOutput,PressureOutput,RatioCarbonDioxideOutput,RatioHeliumOutput,RatioHydrazineOutput,RatioHydrochloricAcidOutput,RatioHydrogenOutput,RatioLiquidAlcoholOutput,RatioLiquidHydrazineOutput,RatioLiquidHydrochloricAcidOutput,RatioLiquidHydrogenOutput,RatioLiquidOzoneOutput,RatioLiquidSilanolOutput,RatioLiquidSodiumChlorideOutput,RatioMethaneOutput,RatioNitrogenOutput,RatioNitrousOxideOutput,RatioOxygenOutput,RatioOzoneOutput,RatioPollutantOutput,RatioPollutedWaterOutput,RatioSilanolOutput,RatioWaterOutput,TemperatureOutput,TotalMolesOutput",
+      written = "",
+  )
+  val Ports: Ports
+    get() = intrinsic()
+
+  @LogicTypes(
+      read =
+          "RatioCarbonDioxide,RatioHelium,RatioHydrazine,RatioHydrochloricAcid,RatioHydrogen,RatioLiquidAlcohol,RatioLiquidCarbonDioxide,RatioLiquidHydrazine,RatioLiquidHydrochloricAcid,RatioLiquidHydrogen,RatioLiquidMethane,RatioLiquidNitrogen,RatioLiquidNitrousOxide,RatioLiquidOxygen,RatioLiquidOzone,RatioLiquidPollutant,RatioLiquidSilanol,RatioLiquidSodiumChloride,RatioMethane,RatioNitrogen,RatioNitrousOxide,RatioOxygen,RatioOzone,RatioPollutant,RatioPollutedWater,RatioSilanol,RatioSteam,RatioWater",
+      written = "",
+  )
+  val Ratios: Ratios
     get() = intrinsic()
 
   /** The device's slots, by number. */
@@ -13896,12 +9762,6 @@ class Furnace internal constructor() : TypedDevice() {
   val Combustion: Boolean
     get() = intrinsic()
 
-  val ExportCount: Double
-    get() = intrinsic()
-
-  val ImportCount: Double
-    get() = intrinsic()
-
   var Lock: Boolean
     get() = intrinsic()
     set(value) = intrinsic()
@@ -13923,90 +9783,6 @@ class Furnace internal constructor() : TypedDevice() {
   val Ratio: Double
     get() = intrinsic()
 
-  val RatioCarbonDioxide: Double
-    get() = intrinsic()
-
-  val RatioHelium: Double
-    get() = intrinsic()
-
-  val RatioHydrazine: Double
-    get() = intrinsic()
-
-  val RatioHydrochloricAcid: Double
-    get() = intrinsic()
-
-  val RatioHydrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidAlcohol: Double
-    get() = intrinsic()
-
-  val RatioLiquidCarbonDioxide: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrazine: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrochloricAcid: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidMethane: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrousOxide: Double
-    get() = intrinsic()
-
-  val RatioLiquidOxygen: Double
-    get() = intrinsic()
-
-  val RatioLiquidOzone: Double
-    get() = intrinsic()
-
-  val RatioLiquidPollutant: Double
-    get() = intrinsic()
-
-  val RatioLiquidSilanol: Double
-    get() = intrinsic()
-
-  val RatioLiquidSodiumChloride: Double
-    get() = intrinsic()
-
-  val RatioMethane: Double
-    get() = intrinsic()
-
-  val RatioNitrogen: Double
-    get() = intrinsic()
-
-  val RatioNitrousOxide: Double
-    get() = intrinsic()
-
-  val RatioOxygen: Double
-    get() = intrinsic()
-
-  val RatioOzone: Double
-    get() = intrinsic()
-
-  val RatioPollutant: Double
-    get() = intrinsic()
-
-  val RatioPollutedWater: Double
-    get() = intrinsic()
-
-  val RatioSilanol: Double
-    get() = intrinsic()
-
-  val RatioSteam: Double
-    get() = intrinsic()
-
-  val RatioWater: Double
-    get() = intrinsic()
-
   val Reagents: Double
     get() = intrinsic()
 
@@ -14023,18 +9799,24 @@ class Furnace internal constructor() : TypedDevice() {
   val TotalMoles: Double
     get() = intrinsic()
 
+  @LogicTypes(
+      read =
+          "RatioCarbonDioxide,RatioHelium,RatioHydrazine,RatioHydrochloricAcid,RatioHydrogen,RatioLiquidAlcohol,RatioLiquidCarbonDioxide,RatioLiquidHydrazine,RatioLiquidHydrochloricAcid,RatioLiquidHydrogen,RatioLiquidMethane,RatioLiquidNitrogen,RatioLiquidNitrousOxide,RatioLiquidOxygen,RatioLiquidOzone,RatioLiquidPollutant,RatioLiquidSilanol,RatioLiquidSodiumChloride,RatioMethane,RatioNitrogen,RatioNitrousOxide,RatioOxygen,RatioOzone,RatioPollutant,RatioPollutedWater,RatioSilanol,RatioSteam,RatioWater",
+      written = "",
+  )
+  val Ratios: Ratios
+    get() = intrinsic()
+
+  @LogicTypes(read = "ImportCount", written = "")
+  val Import: Transfer
+    get() = intrinsic()
+
+  @LogicTypes(read = "ExportCount", written = "")
+  val Export: Transfer
+    get() = intrinsic()
+
   /** The device's slots, by number. */
   val slots: Slots<DataDiskSlot>
-    get() = intrinsic()
-
-  /** Slot 0. */
-  @SlotNumber(0)
-  val Import: DataDiskSlot
-    get() = intrinsic()
-
-  /** Slot 1. */
-  @SlotNumber(1)
-  val Export: DataDiskSlot
     get() = intrinsic()
 
   /** The StructureFurnace prefab. */
@@ -14089,90 +9871,6 @@ class GasGenerator internal constructor() : TypedDevice() {
   val Ratio: Double
     get() = intrinsic()
 
-  val RatioCarbonDioxide: Double
-    get() = intrinsic()
-
-  val RatioHelium: Double
-    get() = intrinsic()
-
-  val RatioHydrazine: Double
-    get() = intrinsic()
-
-  val RatioHydrochloricAcid: Double
-    get() = intrinsic()
-
-  val RatioHydrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidAlcohol: Double
-    get() = intrinsic()
-
-  val RatioLiquidCarbonDioxide: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrazine: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrochloricAcid: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidMethane: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrousOxide: Double
-    get() = intrinsic()
-
-  val RatioLiquidOxygen: Double
-    get() = intrinsic()
-
-  val RatioLiquidOzone: Double
-    get() = intrinsic()
-
-  val RatioLiquidPollutant: Double
-    get() = intrinsic()
-
-  val RatioLiquidSilanol: Double
-    get() = intrinsic()
-
-  val RatioLiquidSodiumChloride: Double
-    get() = intrinsic()
-
-  val RatioMethane: Double
-    get() = intrinsic()
-
-  val RatioNitrogen: Double
-    get() = intrinsic()
-
-  val RatioNitrousOxide: Double
-    get() = intrinsic()
-
-  val RatioOxygen: Double
-    get() = intrinsic()
-
-  val RatioOzone: Double
-    get() = intrinsic()
-
-  val RatioPollutant: Double
-    get() = intrinsic()
-
-  val RatioPollutedWater: Double
-    get() = intrinsic()
-
-  val RatioSilanol: Double
-    get() = intrinsic()
-
-  val RatioSteam: Double
-    get() = intrinsic()
-
-  val RatioWater: Double
-    get() = intrinsic()
-
   val RequiredPower: Double
     get() = intrinsic()
 
@@ -14184,6 +9882,14 @@ class GasGenerator internal constructor() : TypedDevice() {
     get() = intrinsic()
 
   val TotalMoles: Double
+    get() = intrinsic()
+
+  @LogicTypes(
+      read =
+          "RatioCarbonDioxide,RatioHelium,RatioHydrazine,RatioHydrochloricAcid,RatioHydrogen,RatioLiquidAlcohol,RatioLiquidCarbonDioxide,RatioLiquidHydrazine,RatioLiquidHydrochloricAcid,RatioLiquidHydrogen,RatioLiquidMethane,RatioLiquidNitrogen,RatioLiquidNitrousOxide,RatioLiquidOxygen,RatioLiquidOzone,RatioLiquidPollutant,RatioLiquidSilanol,RatioLiquidSodiumChloride,RatioMethane,RatioNitrogen,RatioNitrousOxide,RatioOxygen,RatioOzone,RatioPollutant,RatioPollutedWater,RatioSilanol,RatioSteam,RatioWater",
+      written = "",
+  )
+  val Ratios: Ratios
     get() = intrinsic()
 
   /** The StructureGasGenerator prefab. */
@@ -14261,90 +9967,6 @@ class GasSensor internal constructor() : TypedDevice() {
   val Pressure: Double
     get() = intrinsic()
 
-  val RatioCarbonDioxide: Double
-    get() = intrinsic()
-
-  val RatioHelium: Double
-    get() = intrinsic()
-
-  val RatioHydrazine: Double
-    get() = intrinsic()
-
-  val RatioHydrochloricAcid: Double
-    get() = intrinsic()
-
-  val RatioHydrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidAlcohol: Double
-    get() = intrinsic()
-
-  val RatioLiquidCarbonDioxide: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrazine: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrochloricAcid: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidMethane: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrousOxide: Double
-    get() = intrinsic()
-
-  val RatioLiquidOxygen: Double
-    get() = intrinsic()
-
-  val RatioLiquidOzone: Double
-    get() = intrinsic()
-
-  val RatioLiquidPollutant: Double
-    get() = intrinsic()
-
-  val RatioLiquidSilanol: Double
-    get() = intrinsic()
-
-  val RatioLiquidSodiumChloride: Double
-    get() = intrinsic()
-
-  val RatioMethane: Double
-    get() = intrinsic()
-
-  val RatioNitrogen: Double
-    get() = intrinsic()
-
-  val RatioNitrousOxide: Double
-    get() = intrinsic()
-
-  val RatioOxygen: Double
-    get() = intrinsic()
-
-  val RatioOzone: Double
-    get() = intrinsic()
-
-  val RatioPollutant: Double
-    get() = intrinsic()
-
-  val RatioPollutedWater: Double
-    get() = intrinsic()
-
-  val RatioSilanol: Double
-    get() = intrinsic()
-
-  val RatioSteam: Double
-    get() = intrinsic()
-
-  val RatioWater: Double
-    get() = intrinsic()
-
   val Temperature: Double
     get() = intrinsic()
 
@@ -14352,6 +9974,14 @@ class GasSensor internal constructor() : TypedDevice() {
     get() = intrinsic()
 
   val VolumeOfLiquid: Double
+    get() = intrinsic()
+
+  @LogicTypes(
+      read =
+          "RatioCarbonDioxide,RatioHelium,RatioHydrazine,RatioHydrochloricAcid,RatioHydrogen,RatioLiquidAlcohol,RatioLiquidCarbonDioxide,RatioLiquidHydrazine,RatioLiquidHydrochloricAcid,RatioLiquidHydrogen,RatioLiquidMethane,RatioLiquidNitrogen,RatioLiquidNitrousOxide,RatioLiquidOxygen,RatioLiquidOzone,RatioLiquidPollutant,RatioLiquidSilanol,RatioLiquidSodiumChloride,RatioMethane,RatioNitrogen,RatioNitrousOxide,RatioOxygen,RatioOzone,RatioPollutant,RatioPollutedWater,RatioSilanol,RatioSteam,RatioWater",
+      written = "",
+  )
+  val Ratios: Ratios
     get() = intrinsic()
 
   /** The StructureGasSensor prefab. */
@@ -14381,91 +10011,15 @@ class GasTankStorage internal constructor() : TypedDevice() {
   val Quantity: Double
     get() = intrinsic()
 
-  val RatioCarbonDioxide: Double
-    get() = intrinsic()
-
-  val RatioHelium: Double
-    get() = intrinsic()
-
-  val RatioHydrazine: Double
-    get() = intrinsic()
-
-  val RatioHydrochloricAcid: Double
-    get() = intrinsic()
-
-  val RatioHydrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidAlcohol: Double
-    get() = intrinsic()
-
-  val RatioLiquidCarbonDioxide: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrazine: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrochloricAcid: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidMethane: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrousOxide: Double
-    get() = intrinsic()
-
-  val RatioLiquidOxygen: Double
-    get() = intrinsic()
-
-  val RatioLiquidOzone: Double
-    get() = intrinsic()
-
-  val RatioLiquidPollutant: Double
-    get() = intrinsic()
-
-  val RatioLiquidSilanol: Double
-    get() = intrinsic()
-
-  val RatioLiquidSodiumChloride: Double
-    get() = intrinsic()
-
-  val RatioMethane: Double
-    get() = intrinsic()
-
-  val RatioNitrogen: Double
-    get() = intrinsic()
-
-  val RatioNitrousOxide: Double
-    get() = intrinsic()
-
-  val RatioOxygen: Double
-    get() = intrinsic()
-
-  val RatioOzone: Double
-    get() = intrinsic()
-
-  val RatioPollutant: Double
-    get() = intrinsic()
-
-  val RatioPollutedWater: Double
-    get() = intrinsic()
-
-  val RatioSilanol: Double
-    get() = intrinsic()
-
-  val RatioSteam: Double
-    get() = intrinsic()
-
-  val RatioWater: Double
-    get() = intrinsic()
-
   val Temperature: Double
+    get() = intrinsic()
+
+  @LogicTypes(
+      read =
+          "RatioCarbonDioxide,RatioHelium,RatioHydrazine,RatioHydrochloricAcid,RatioHydrogen,RatioLiquidAlcohol,RatioLiquidCarbonDioxide,RatioLiquidHydrazine,RatioLiquidHydrochloricAcid,RatioLiquidHydrogen,RatioLiquidMethane,RatioLiquidNitrogen,RatioLiquidNitrousOxide,RatioLiquidOxygen,RatioLiquidOzone,RatioLiquidPollutant,RatioLiquidSilanol,RatioLiquidSodiumChloride,RatioMethane,RatioNitrogen,RatioNitrousOxide,RatioOxygen,RatioOzone,RatioPollutant,RatioPollutedWater,RatioSilanol,RatioSteam,RatioWater",
+      written = "",
+  )
+  val Ratios: Ratios
     get() = intrinsic()
 
   /** The device's slots, by number. */
@@ -14690,90 +10244,6 @@ class GovernedGasEngine internal constructor() : TypedDevice() {
   val Pressure: Double
     get() = intrinsic()
 
-  val RatioCarbonDioxide: Double
-    get() = intrinsic()
-
-  val RatioHelium: Double
-    get() = intrinsic()
-
-  val RatioHydrazine: Double
-    get() = intrinsic()
-
-  val RatioHydrochloricAcid: Double
-    get() = intrinsic()
-
-  val RatioHydrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidAlcohol: Double
-    get() = intrinsic()
-
-  val RatioLiquidCarbonDioxide: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrazine: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrochloricAcid: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidMethane: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrousOxide: Double
-    get() = intrinsic()
-
-  val RatioLiquidOxygen: Double
-    get() = intrinsic()
-
-  val RatioLiquidOzone: Double
-    get() = intrinsic()
-
-  val RatioLiquidPollutant: Double
-    get() = intrinsic()
-
-  val RatioLiquidSilanol: Double
-    get() = intrinsic()
-
-  val RatioLiquidSodiumChloride: Double
-    get() = intrinsic()
-
-  val RatioMethane: Double
-    get() = intrinsic()
-
-  val RatioNitrogen: Double
-    get() = intrinsic()
-
-  val RatioNitrousOxide: Double
-    get() = intrinsic()
-
-  val RatioOxygen: Double
-    get() = intrinsic()
-
-  val RatioOzone: Double
-    get() = intrinsic()
-
-  val RatioPollutant: Double
-    get() = intrinsic()
-
-  val RatioPollutedWater: Double
-    get() = intrinsic()
-
-  val RatioSilanol: Double
-    get() = intrinsic()
-
-  val RatioSteam: Double
-    get() = intrinsic()
-
-  val RatioWater: Double
-    get() = intrinsic()
-
   val RequiredPower: Double
     get() = intrinsic()
 
@@ -14785,6 +10255,14 @@ class GovernedGasEngine internal constructor() : TypedDevice() {
     set(value) = intrinsic()
 
   val TotalMoles: Double
+    get() = intrinsic()
+
+  @LogicTypes(
+      read =
+          "RatioCarbonDioxide,RatioHelium,RatioHydrazine,RatioHydrochloricAcid,RatioHydrogen,RatioLiquidAlcohol,RatioLiquidCarbonDioxide,RatioLiquidHydrazine,RatioLiquidHydrochloricAcid,RatioLiquidHydrogen,RatioLiquidMethane,RatioLiquidNitrogen,RatioLiquidNitrousOxide,RatioLiquidOxygen,RatioLiquidOzone,RatioLiquidPollutant,RatioLiquidSilanol,RatioLiquidSodiumChloride,RatioMethane,RatioNitrogen,RatioNitrousOxide,RatioOxygen,RatioOzone,RatioPollutant,RatioPollutedWater,RatioSilanol,RatioSteam,RatioWater",
+      written = "",
+  )
+  val Ratios: Ratios
     get() = intrinsic()
 
   /** The StructureGovernedGasEngine prefab. */
@@ -14946,15 +10424,9 @@ class Harvie internal constructor() : TypedDevice() {
   val Error: Boolean
     get() = intrinsic()
 
-  val ExportCount: Double
-    get() = intrinsic()
-
   var Harvest: Double
     get() = intrinsic()
     set(value) = intrinsic()
-
-  val ImportCount: Double
-    get() = intrinsic()
 
   var Lock: Boolean
     get() = intrinsic()
@@ -14978,18 +10450,16 @@ class Harvie internal constructor() : TypedDevice() {
   val RequiredPower: Double
     get() = intrinsic()
 
+  @LogicTypes(read = "ImportCount", written = "")
+  val Import: Transfer
+    get() = intrinsic()
+
+  @LogicTypes(read = "ExportCount", written = "")
+  val Export: Transfer
+    get() = intrinsic()
+
   /** The device's slots, by number. */
   val slots: Slots<DataDiskSlot>
-    get() = intrinsic()
-
-  /** Slot 0. */
-  @SlotNumber(0)
-  val Import: DataDiskSlot
-    get() = intrinsic()
-
-  /** Slot 1. */
-  @SlotNumber(1)
-  val Export: DataDiskSlot
     get() = intrinsic()
 
   /** Slot 2. */
@@ -15035,12 +10505,6 @@ class HorizontalAutoMiner internal constructor() : TypedDevice() {
   val Error: Boolean
     get() = intrinsic()
 
-  val ExportCount: Double
-    get() = intrinsic()
-
-  val ImportCount: Double
-    get() = intrinsic()
-
   var Mode: Double
     get() = intrinsic()
     set(value) = intrinsic()
@@ -15059,18 +10523,16 @@ class HorizontalAutoMiner internal constructor() : TypedDevice() {
   val RequiredPower: Double
     get() = intrinsic()
 
+  @LogicTypes(read = "ImportCount", written = "")
+  val Import: Transfer
+    get() = intrinsic()
+
+  @LogicTypes(read = "ExportCount", written = "")
+  val Export: Transfer
+    get() = intrinsic()
+
   /** The device's slots, by number. */
   val slots: Slots<DataDiskSlot>
-    get() = intrinsic()
-
-  /** Slot 0. */
-  @SlotNumber(0)
-  val Import: DataDiskSlot
-    get() = intrinsic()
-
-  /** Slot 1. */
-  @SlotNumber(1)
-  val Export: DataDiskSlot
     get() = intrinsic()
 
   /** The StructureHorizontalAutoMiner prefab. */
@@ -15114,12 +10576,6 @@ class HydraulicPipeBender internal constructor() : TypedDevice() {
   val Error: Boolean
     get() = intrinsic()
 
-  val ExportCount: Double
-    get() = intrinsic()
-
-  val ImportCount: Double
-    get() = intrinsic()
-
   var Lock: Boolean
     get() = intrinsic()
     set(value) = intrinsic()
@@ -15148,18 +10604,16 @@ class HydraulicPipeBender internal constructor() : TypedDevice() {
   val StackSize: Double
     get() = intrinsic()
 
+  @LogicTypes(read = "ImportCount", written = "")
+  val Import: Transfer
+    get() = intrinsic()
+
+  @LogicTypes(read = "ExportCount", written = "")
+  val Export: Transfer
+    get() = intrinsic()
+
   /** The device's slots, by number. */
   val slots: Slots<DataDiskSlot>
-    get() = intrinsic()
-
-  /** Slot 0. */
-  @SlotNumber(0)
-  val Import: DataDiskSlot
-    get() = intrinsic()
-
-  /** Slot 1. */
-  @SlotNumber(1)
-  val Export: DataDiskSlot
     get() = intrinsic()
 
   /** The StructureHydraulicPipeBender prefab. */
@@ -15192,9 +10646,6 @@ class HydroponicsStation internal constructor() : TypedDevice() {
   val Combustion: Boolean
     get() = intrinsic()
 
-  val CombustionOutput: Double
-    get() = intrinsic()
-
   val Error: Boolean
     get() = intrinsic()
 
@@ -15211,157 +10662,7 @@ class HydroponicsStation internal constructor() : TypedDevice() {
   val Pressure: Double
     get() = intrinsic()
 
-  val PressureOutput: Double
-    get() = intrinsic()
-
   val Ratio: Double
-    get() = intrinsic()
-
-  val RatioCarbonDioxide: Double
-    get() = intrinsic()
-
-  val RatioCarbonDioxideOutput: Double
-    get() = intrinsic()
-
-  val RatioHelium: Double
-    get() = intrinsic()
-
-  val RatioHeliumOutput: Double
-    get() = intrinsic()
-
-  val RatioHydrazine: Double
-    get() = intrinsic()
-
-  val RatioHydrazineOutput: Double
-    get() = intrinsic()
-
-  val RatioHydrochloricAcid: Double
-    get() = intrinsic()
-
-  val RatioHydrochloricAcidOutput: Double
-    get() = intrinsic()
-
-  val RatioHydrogen: Double
-    get() = intrinsic()
-
-  val RatioHydrogenOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidAlcohol: Double
-    get() = intrinsic()
-
-  val RatioLiquidAlcoholOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidCarbonDioxide: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrazine: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrazineOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrochloricAcid: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrochloricAcidOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrogenOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidMethane: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrousOxide: Double
-    get() = intrinsic()
-
-  val RatioLiquidOxygen: Double
-    get() = intrinsic()
-
-  val RatioLiquidOzone: Double
-    get() = intrinsic()
-
-  val RatioLiquidOzoneOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidPollutant: Double
-    get() = intrinsic()
-
-  val RatioLiquidSilanol: Double
-    get() = intrinsic()
-
-  val RatioLiquidSilanolOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidSodiumChloride: Double
-    get() = intrinsic()
-
-  val RatioLiquidSodiumChlorideOutput: Double
-    get() = intrinsic()
-
-  val RatioMethane: Double
-    get() = intrinsic()
-
-  val RatioMethaneOutput: Double
-    get() = intrinsic()
-
-  val RatioNitrogen: Double
-    get() = intrinsic()
-
-  val RatioNitrogenOutput: Double
-    get() = intrinsic()
-
-  val RatioNitrousOxide: Double
-    get() = intrinsic()
-
-  val RatioNitrousOxideOutput: Double
-    get() = intrinsic()
-
-  val RatioOxygen: Double
-    get() = intrinsic()
-
-  val RatioOxygenOutput: Double
-    get() = intrinsic()
-
-  val RatioOzone: Double
-    get() = intrinsic()
-
-  val RatioOzoneOutput: Double
-    get() = intrinsic()
-
-  val RatioPollutant: Double
-    get() = intrinsic()
-
-  val RatioPollutantOutput: Double
-    get() = intrinsic()
-
-  val RatioPollutedWater: Double
-    get() = intrinsic()
-
-  val RatioPollutedWaterOutput: Double
-    get() = intrinsic()
-
-  val RatioSilanol: Double
-    get() = intrinsic()
-
-  val RatioSilanolOutput: Double
-    get() = intrinsic()
-
-  val RatioSteam: Double
-    get() = intrinsic()
-
-  val RatioWater: Double
-    get() = intrinsic()
-
-  val RatioWaterOutput: Double
     get() = intrinsic()
 
   val RequiredPower: Double
@@ -15374,13 +10675,23 @@ class HydroponicsStation internal constructor() : TypedDevice() {
   val Temperature: Double
     get() = intrinsic()
 
-  val TemperatureOutput: Double
-    get() = intrinsic()
-
   val TotalMoles: Double
     get() = intrinsic()
 
-  val TotalMolesOutput: Double
+  @LogicTypes(
+      read =
+          "CombustionOutput,PressureOutput,RatioCarbonDioxideOutput,RatioHeliumOutput,RatioHydrazineOutput,RatioHydrochloricAcidOutput,RatioHydrogenOutput,RatioLiquidAlcoholOutput,RatioLiquidHydrazineOutput,RatioLiquidHydrochloricAcidOutput,RatioLiquidHydrogenOutput,RatioLiquidOzoneOutput,RatioLiquidSilanolOutput,RatioLiquidSodiumChlorideOutput,RatioMethaneOutput,RatioNitrogenOutput,RatioNitrousOxideOutput,RatioOxygenOutput,RatioOzoneOutput,RatioPollutantOutput,RatioPollutedWaterOutput,RatioSilanolOutput,RatioWaterOutput,TemperatureOutput,TotalMolesOutput",
+      written = "",
+  )
+  val Ports: Ports
+    get() = intrinsic()
+
+  @LogicTypes(
+      read =
+          "RatioCarbonDioxide,RatioHelium,RatioHydrazine,RatioHydrochloricAcid,RatioHydrogen,RatioLiquidAlcohol,RatioLiquidCarbonDioxide,RatioLiquidHydrazine,RatioLiquidHydrochloricAcid,RatioLiquidHydrogen,RatioLiquidMethane,RatioLiquidNitrogen,RatioLiquidNitrousOxide,RatioLiquidOxygen,RatioLiquidOzone,RatioLiquidPollutant,RatioLiquidSilanol,RatioLiquidSodiumChloride,RatioMethane,RatioNitrogen,RatioNitrousOxide,RatioOxygen,RatioOzone,RatioPollutant,RatioPollutedWater,RatioSilanol,RatioSteam,RatioWater",
+      written = "",
+  )
+  val Ratios: Ratios
     get() = intrinsic()
 
   /** The device's slots, by number. */
@@ -15420,94 +10731,18 @@ class HydroponicsTrayData internal constructor() : TypedDevice() {
   val Pressure: Double
     get() = intrinsic()
 
-  val RatioCarbonDioxide: Double
-    get() = intrinsic()
-
-  val RatioHelium: Double
-    get() = intrinsic()
-
-  val RatioHydrazine: Double
-    get() = intrinsic()
-
-  val RatioHydrochloricAcid: Double
-    get() = intrinsic()
-
-  val RatioHydrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidAlcohol: Double
-    get() = intrinsic()
-
-  val RatioLiquidCarbonDioxide: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrazine: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrochloricAcid: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidMethane: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrousOxide: Double
-    get() = intrinsic()
-
-  val RatioLiquidOxygen: Double
-    get() = intrinsic()
-
-  val RatioLiquidOzone: Double
-    get() = intrinsic()
-
-  val RatioLiquidPollutant: Double
-    get() = intrinsic()
-
-  val RatioLiquidSilanol: Double
-    get() = intrinsic()
-
-  val RatioLiquidSodiumChloride: Double
-    get() = intrinsic()
-
-  val RatioMethane: Double
-    get() = intrinsic()
-
-  val RatioNitrogen: Double
-    get() = intrinsic()
-
-  val RatioNitrousOxide: Double
-    get() = intrinsic()
-
-  val RatioOxygen: Double
-    get() = intrinsic()
-
-  val RatioOzone: Double
-    get() = intrinsic()
-
-  val RatioPollutant: Double
-    get() = intrinsic()
-
-  val RatioPollutedWater: Double
-    get() = intrinsic()
-
-  val RatioSilanol: Double
-    get() = intrinsic()
-
-  val RatioSteam: Double
-    get() = intrinsic()
-
-  val RatioWater: Double
-    get() = intrinsic()
-
   val Temperature: Double
     get() = intrinsic()
 
   val TotalMoles: Double
+    get() = intrinsic()
+
+  @LogicTypes(
+      read =
+          "RatioCarbonDioxide,RatioHelium,RatioHydrazine,RatioHydrochloricAcid,RatioHydrogen,RatioLiquidAlcohol,RatioLiquidCarbonDioxide,RatioLiquidHydrazine,RatioLiquidHydrochloricAcid,RatioLiquidHydrogen,RatioLiquidMethane,RatioLiquidNitrogen,RatioLiquidNitrousOxide,RatioLiquidOxygen,RatioLiquidOzone,RatioLiquidPollutant,RatioLiquidSilanol,RatioLiquidSodiumChloride,RatioMethane,RatioNitrogen,RatioNitrousOxide,RatioOxygen,RatioOzone,RatioPollutant,RatioPollutedWater,RatioSilanol,RatioSteam,RatioWater",
+      written = "",
+  )
+  val Ratios: Ratios
     get() = intrinsic()
 
   /** The device's slots, by number. */
@@ -15562,9 +10797,6 @@ class IceCrusher internal constructor() : TypedDevice() {
   val Error: Boolean
     get() = intrinsic()
 
-  val ImportCount: Double
-    get() = intrinsic()
-
   var Lock: Boolean
     get() = intrinsic()
     set(value) = intrinsic()
@@ -15589,13 +10821,12 @@ class IceCrusher internal constructor() : TypedDevice() {
     get() = intrinsic()
     set(value) = intrinsic()
 
-  /** The device's slots, by number. */
-  val slots: Slots<DataDiskSlot>
+  @LogicTypes(read = "ImportCount", written = "")
+  val Import: Transfer
     get() = intrinsic()
 
-  /** Slot 0. */
-  @SlotNumber(0)
-  val Import: DataDiskSlot
+  /** The device's slots, by number. */
+  val slots: Slots<DataDiskSlot>
     get() = intrinsic()
 
   /** The StructureIceCrusher prefab. */
@@ -16082,166 +11313,13 @@ class LargeRocketGasFuelTank internal constructor() : TypedDevice() {
   val Combustion: Boolean
     get() = intrinsic()
 
-  val CombustionOutput: Double
-    get() = intrinsic()
-
   val Maximum: Double
     get() = intrinsic()
 
   val Pressure: Double
     get() = intrinsic()
 
-  val PressureOutput: Double
-    get() = intrinsic()
-
   val Ratio: Double
-    get() = intrinsic()
-
-  val RatioCarbonDioxide: Double
-    get() = intrinsic()
-
-  val RatioCarbonDioxideOutput: Double
-    get() = intrinsic()
-
-  val RatioHelium: Double
-    get() = intrinsic()
-
-  val RatioHeliumOutput: Double
-    get() = intrinsic()
-
-  val RatioHydrazine: Double
-    get() = intrinsic()
-
-  val RatioHydrazineOutput: Double
-    get() = intrinsic()
-
-  val RatioHydrochloricAcid: Double
-    get() = intrinsic()
-
-  val RatioHydrochloricAcidOutput: Double
-    get() = intrinsic()
-
-  val RatioHydrogen: Double
-    get() = intrinsic()
-
-  val RatioHydrogenOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidAlcohol: Double
-    get() = intrinsic()
-
-  val RatioLiquidAlcoholOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidCarbonDioxide: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrazine: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrazineOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrochloricAcid: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrochloricAcidOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrogenOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidMethane: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrousOxide: Double
-    get() = intrinsic()
-
-  val RatioLiquidOxygen: Double
-    get() = intrinsic()
-
-  val RatioLiquidOzone: Double
-    get() = intrinsic()
-
-  val RatioLiquidOzoneOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidPollutant: Double
-    get() = intrinsic()
-
-  val RatioLiquidSilanol: Double
-    get() = intrinsic()
-
-  val RatioLiquidSilanolOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidSodiumChloride: Double
-    get() = intrinsic()
-
-  val RatioLiquidSodiumChlorideOutput: Double
-    get() = intrinsic()
-
-  val RatioMethane: Double
-    get() = intrinsic()
-
-  val RatioMethaneOutput: Double
-    get() = intrinsic()
-
-  val RatioNitrogen: Double
-    get() = intrinsic()
-
-  val RatioNitrogenOutput: Double
-    get() = intrinsic()
-
-  val RatioNitrousOxide: Double
-    get() = intrinsic()
-
-  val RatioNitrousOxideOutput: Double
-    get() = intrinsic()
-
-  val RatioOxygen: Double
-    get() = intrinsic()
-
-  val RatioOxygenOutput: Double
-    get() = intrinsic()
-
-  val RatioOzone: Double
-    get() = intrinsic()
-
-  val RatioOzoneOutput: Double
-    get() = intrinsic()
-
-  val RatioPollutant: Double
-    get() = intrinsic()
-
-  val RatioPollutantOutput: Double
-    get() = intrinsic()
-
-  val RatioPollutedWater: Double
-    get() = intrinsic()
-
-  val RatioPollutedWaterOutput: Double
-    get() = intrinsic()
-
-  val RatioSilanol: Double
-    get() = intrinsic()
-
-  val RatioSilanolOutput: Double
-    get() = intrinsic()
-
-  val RatioSteam: Double
-    get() = intrinsic()
-
-  val RatioWater: Double
-    get() = intrinsic()
-
-  val RatioWaterOutput: Double
     get() = intrinsic()
 
   var Setting: Double
@@ -16251,19 +11329,29 @@ class LargeRocketGasFuelTank internal constructor() : TypedDevice() {
   val Temperature: Double
     get() = intrinsic()
 
-  val TemperatureOutput: Double
-    get() = intrinsic()
-
   val TotalMoles: Double
-    get() = intrinsic()
-
-  val TotalMolesOutput: Double
     get() = intrinsic()
 
   val Volume: Double
     get() = intrinsic()
 
   val VolumeOfLiquid: Double
+    get() = intrinsic()
+
+  @LogicTypes(
+      read =
+          "CombustionOutput,PressureOutput,RatioCarbonDioxideOutput,RatioHeliumOutput,RatioHydrazineOutput,RatioHydrochloricAcidOutput,RatioHydrogenOutput,RatioLiquidAlcoholOutput,RatioLiquidHydrazineOutput,RatioLiquidHydrochloricAcidOutput,RatioLiquidHydrogenOutput,RatioLiquidOzoneOutput,RatioLiquidSilanolOutput,RatioLiquidSodiumChlorideOutput,RatioMethaneOutput,RatioNitrogenOutput,RatioNitrousOxideOutput,RatioOxygenOutput,RatioOzoneOutput,RatioPollutantOutput,RatioPollutedWaterOutput,RatioSilanolOutput,RatioWaterOutput,TemperatureOutput,TotalMolesOutput",
+      written = "",
+  )
+  val Ports: Ports
+    get() = intrinsic()
+
+  @LogicTypes(
+      read =
+          "RatioCarbonDioxide,RatioHelium,RatioHydrazine,RatioHydrochloricAcid,RatioHydrogen,RatioLiquidAlcohol,RatioLiquidCarbonDioxide,RatioLiquidHydrazine,RatioLiquidHydrochloricAcid,RatioLiquidHydrogen,RatioLiquidMethane,RatioLiquidNitrogen,RatioLiquidNitrousOxide,RatioLiquidOxygen,RatioLiquidOzone,RatioLiquidPollutant,RatioLiquidSilanol,RatioLiquidSodiumChloride,RatioMethane,RatioNitrogen,RatioNitrousOxide,RatioOxygen,RatioOzone,RatioPollutant,RatioPollutedWater,RatioSilanol,RatioSteam,RatioWater",
+      written = "",
+  )
+  val Ratios: Ratios
     get() = intrinsic()
 
   /** The StructureLargeRocketGasFuelTank prefab. */
@@ -16290,166 +11378,13 @@ class LargeRocketLiquidFuelTank internal constructor() : TypedDevice() {
   val Combustion: Boolean
     get() = intrinsic()
 
-  val CombustionOutput: Double
-    get() = intrinsic()
-
   val Maximum: Double
     get() = intrinsic()
 
   val Pressure: Double
     get() = intrinsic()
 
-  val PressureOutput: Double
-    get() = intrinsic()
-
   val Ratio: Double
-    get() = intrinsic()
-
-  val RatioCarbonDioxide: Double
-    get() = intrinsic()
-
-  val RatioCarbonDioxideOutput: Double
-    get() = intrinsic()
-
-  val RatioHelium: Double
-    get() = intrinsic()
-
-  val RatioHeliumOutput: Double
-    get() = intrinsic()
-
-  val RatioHydrazine: Double
-    get() = intrinsic()
-
-  val RatioHydrazineOutput: Double
-    get() = intrinsic()
-
-  val RatioHydrochloricAcid: Double
-    get() = intrinsic()
-
-  val RatioHydrochloricAcidOutput: Double
-    get() = intrinsic()
-
-  val RatioHydrogen: Double
-    get() = intrinsic()
-
-  val RatioHydrogenOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidAlcohol: Double
-    get() = intrinsic()
-
-  val RatioLiquidAlcoholOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidCarbonDioxide: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrazine: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrazineOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrochloricAcid: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrochloricAcidOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrogenOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidMethane: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrousOxide: Double
-    get() = intrinsic()
-
-  val RatioLiquidOxygen: Double
-    get() = intrinsic()
-
-  val RatioLiquidOzone: Double
-    get() = intrinsic()
-
-  val RatioLiquidOzoneOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidPollutant: Double
-    get() = intrinsic()
-
-  val RatioLiquidSilanol: Double
-    get() = intrinsic()
-
-  val RatioLiquidSilanolOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidSodiumChloride: Double
-    get() = intrinsic()
-
-  val RatioLiquidSodiumChlorideOutput: Double
-    get() = intrinsic()
-
-  val RatioMethane: Double
-    get() = intrinsic()
-
-  val RatioMethaneOutput: Double
-    get() = intrinsic()
-
-  val RatioNitrogen: Double
-    get() = intrinsic()
-
-  val RatioNitrogenOutput: Double
-    get() = intrinsic()
-
-  val RatioNitrousOxide: Double
-    get() = intrinsic()
-
-  val RatioNitrousOxideOutput: Double
-    get() = intrinsic()
-
-  val RatioOxygen: Double
-    get() = intrinsic()
-
-  val RatioOxygenOutput: Double
-    get() = intrinsic()
-
-  val RatioOzone: Double
-    get() = intrinsic()
-
-  val RatioOzoneOutput: Double
-    get() = intrinsic()
-
-  val RatioPollutant: Double
-    get() = intrinsic()
-
-  val RatioPollutantOutput: Double
-    get() = intrinsic()
-
-  val RatioPollutedWater: Double
-    get() = intrinsic()
-
-  val RatioPollutedWaterOutput: Double
-    get() = intrinsic()
-
-  val RatioSilanol: Double
-    get() = intrinsic()
-
-  val RatioSilanolOutput: Double
-    get() = intrinsic()
-
-  val RatioSteam: Double
-    get() = intrinsic()
-
-  val RatioWater: Double
-    get() = intrinsic()
-
-  val RatioWaterOutput: Double
     get() = intrinsic()
 
   var Setting: Double
@@ -16459,19 +11394,29 @@ class LargeRocketLiquidFuelTank internal constructor() : TypedDevice() {
   val Temperature: Double
     get() = intrinsic()
 
-  val TemperatureOutput: Double
-    get() = intrinsic()
-
   val TotalMoles: Double
-    get() = intrinsic()
-
-  val TotalMolesOutput: Double
     get() = intrinsic()
 
   val Volume: Double
     get() = intrinsic()
 
   val VolumeOfLiquid: Double
+    get() = intrinsic()
+
+  @LogicTypes(
+      read =
+          "CombustionOutput,PressureOutput,RatioCarbonDioxideOutput,RatioHeliumOutput,RatioHydrazineOutput,RatioHydrochloricAcidOutput,RatioHydrogenOutput,RatioLiquidAlcoholOutput,RatioLiquidHydrazineOutput,RatioLiquidHydrochloricAcidOutput,RatioLiquidHydrogenOutput,RatioLiquidOzoneOutput,RatioLiquidSilanolOutput,RatioLiquidSodiumChlorideOutput,RatioMethaneOutput,RatioNitrogenOutput,RatioNitrousOxideOutput,RatioOxygenOutput,RatioOzoneOutput,RatioPollutantOutput,RatioPollutedWaterOutput,RatioSilanolOutput,RatioWaterOutput,TemperatureOutput,TotalMolesOutput",
+      written = "",
+  )
+  val Ports: Ports
+    get() = intrinsic()
+
+  @LogicTypes(
+      read =
+          "RatioCarbonDioxide,RatioHelium,RatioHydrazine,RatioHydrochloricAcid,RatioHydrogen,RatioLiquidAlcohol,RatioLiquidCarbonDioxide,RatioLiquidHydrazine,RatioLiquidHydrochloricAcid,RatioLiquidHydrogen,RatioLiquidMethane,RatioLiquidNitrogen,RatioLiquidNitrousOxide,RatioLiquidOxygen,RatioLiquidOzone,RatioLiquidPollutant,RatioLiquidSilanol,RatioLiquidSodiumChloride,RatioMethane,RatioNitrogen,RatioNitrousOxide,RatioOxygen,RatioOzone,RatioPollutant,RatioPollutedWater,RatioSilanol,RatioSteam,RatioWater",
+      written = "",
+  )
+  val Ratios: Ratios
     get() = intrinsic()
 
   /** The StructureLargeRocketLiquidFuelTank prefab. */
@@ -16545,12 +11490,6 @@ class LargeSatelliteDish internal constructor() : TypedDevice() {
   val SignalStrength: Double
     get() = intrinsic()
 
-  val SizeX: Double
-    get() = intrinsic()
-
-  val SizeZ: Double
-    get() = intrinsic()
-
   var TargetPadIndex: Double
     get() = intrinsic()
     set(value) = intrinsic()
@@ -16560,6 +11499,10 @@ class LargeSatelliteDish internal constructor() : TypedDevice() {
     set(value) = intrinsic()
 
   val WattsReachingContact: Double
+    get() = intrinsic()
+
+  @LogicTypes(read = "SizeX,SizeZ", written = "")
+  val Dimensions: Vector
     get() = intrinsic()
 
   /** The StructureLargeSatelliteDish prefab. */
@@ -16590,9 +11533,6 @@ class LarreDockAtmos internal constructor() : TypedDevice() {
   val Combustion: Boolean
     get() = intrinsic()
 
-  val CombustionInput: Double
-    get() = intrinsic()
-
   val Error: Boolean
     get() = intrinsic()
 
@@ -16614,9 +11554,6 @@ class LarreDockAtmos internal constructor() : TypedDevice() {
     get() = intrinsic()
     set(value) = intrinsic()
 
-  val PositionX: Double
-    get() = intrinsic()
-
   val Power: Boolean
     get() = intrinsic()
 
@@ -16627,138 +11564,9 @@ class LarreDockAtmos internal constructor() : TypedDevice() {
     get() = intrinsic()
     set(value) = intrinsic()
 
-  val PressureInput: Double
-    get() = intrinsic()
-
   var PressureInternal: Double
     get() = intrinsic()
     set(value) = intrinsic()
-
-  val RatioCarbonDioxide: Double
-    get() = intrinsic()
-
-  val RatioCarbonDioxideInput: Double
-    get() = intrinsic()
-
-  val RatioHelium: Double
-    get() = intrinsic()
-
-  val RatioHydrazine: Double
-    get() = intrinsic()
-
-  val RatioHydrochloricAcid: Double
-    get() = intrinsic()
-
-  val RatioHydrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidAlcohol: Double
-    get() = intrinsic()
-
-  val RatioLiquidCarbonDioxide: Double
-    get() = intrinsic()
-
-  val RatioLiquidCarbonDioxideInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrazine: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrochloricAcid: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidMethane: Double
-    get() = intrinsic()
-
-  val RatioLiquidMethaneInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrogenInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrousOxide: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrousOxideInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidOxygen: Double
-    get() = intrinsic()
-
-  val RatioLiquidOxygenInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidOzone: Double
-    get() = intrinsic()
-
-  val RatioLiquidPollutant: Double
-    get() = intrinsic()
-
-  val RatioLiquidPollutantInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidSilanol: Double
-    get() = intrinsic()
-
-  val RatioLiquidSodiumChloride: Double
-    get() = intrinsic()
-
-  val RatioMethane: Double
-    get() = intrinsic()
-
-  val RatioMethaneInput: Double
-    get() = intrinsic()
-
-  val RatioNitrogen: Double
-    get() = intrinsic()
-
-  val RatioNitrogenInput: Double
-    get() = intrinsic()
-
-  val RatioNitrousOxide: Double
-    get() = intrinsic()
-
-  val RatioNitrousOxideInput: Double
-    get() = intrinsic()
-
-  val RatioOxygen: Double
-    get() = intrinsic()
-
-  val RatioOxygenInput: Double
-    get() = intrinsic()
-
-  val RatioOzone: Double
-    get() = intrinsic()
-
-  val RatioPollutant: Double
-    get() = intrinsic()
-
-  val RatioPollutantInput: Double
-    get() = intrinsic()
-
-  val RatioPollutedWater: Double
-    get() = intrinsic()
-
-  val RatioSilanol: Double
-    get() = intrinsic()
-
-  val RatioSteam: Double
-    get() = intrinsic()
-
-  val RatioSteamInput: Double
-    get() = intrinsic()
-
-  val RatioWater: Double
-    get() = intrinsic()
-
-  val RatioWaterInput: Double
-    get() = intrinsic()
 
   val RequiredPower: Double
     get() = intrinsic()
@@ -16770,13 +11578,27 @@ class LarreDockAtmos internal constructor() : TypedDevice() {
   val Temperature: Double
     get() = intrinsic()
 
-  val TemperatureInput: Double
-    get() = intrinsic()
-
   val TotalMoles: Double
     get() = intrinsic()
 
-  val TotalMolesInput: Double
+  @LogicTypes(
+      read =
+          "CombustionInput,PressureInput,RatioCarbonDioxideInput,RatioLiquidCarbonDioxideInput,RatioLiquidMethaneInput,RatioLiquidNitrogenInput,RatioLiquidNitrousOxideInput,RatioLiquidOxygenInput,RatioLiquidPollutantInput,RatioMethaneInput,RatioNitrogenInput,RatioNitrousOxideInput,RatioOxygenInput,RatioPollutantInput,RatioSteamInput,RatioWaterInput,TemperatureInput,TotalMolesInput",
+      written = "",
+  )
+  val Ports: Ports
+    get() = intrinsic()
+
+  @LogicTypes(
+      read =
+          "RatioCarbonDioxide,RatioHelium,RatioHydrazine,RatioHydrochloricAcid,RatioHydrogen,RatioLiquidAlcohol,RatioLiquidCarbonDioxide,RatioLiquidHydrazine,RatioLiquidHydrochloricAcid,RatioLiquidHydrogen,RatioLiquidMethane,RatioLiquidNitrogen,RatioLiquidNitrousOxide,RatioLiquidOxygen,RatioLiquidOzone,RatioLiquidPollutant,RatioLiquidSilanol,RatioLiquidSodiumChloride,RatioMethane,RatioNitrogen,RatioNitrousOxide,RatioOxygen,RatioOzone,RatioPollutant,RatioPollutedWater,RatioSilanol,RatioSteam,RatioWater",
+      written = "",
+  )
+  val Ratios: Ratios
+    get() = intrinsic()
+
+  @LogicTypes(read = "PositionX", written = "")
+  val Position: Vector
     get() = intrinsic()
 
   /** The device's slots, by number. */
@@ -16871,9 +11693,6 @@ class LarreDockCargo internal constructor() : TypedDevice() {
     get() = intrinsic()
     set(value) = intrinsic()
 
-  val PositionX: Double
-    get() = intrinsic()
-
   val Power: Boolean
     get() = intrinsic()
 
@@ -16890,6 +11709,10 @@ class LarreDockCargo internal constructor() : TypedDevice() {
   var TargetSlotIndex: Double
     get() = intrinsic()
     set(value) = intrinsic()
+
+  @LogicTypes(read = "PositionX", written = "")
+  val Position: Vector
+    get() = intrinsic()
 
   /** The device's slots, by number. */
   val slots: Slots<CommonSlot>
@@ -16957,9 +11780,6 @@ class LarreDockCollector internal constructor() : TypedDevice() {
     get() = intrinsic()
     set(value) = intrinsic()
 
-  val PositionX: Double
-    get() = intrinsic()
-
   val Power: Boolean
     get() = intrinsic()
 
@@ -16975,6 +11795,10 @@ class LarreDockCollector internal constructor() : TypedDevice() {
   var Setting: Double
     get() = intrinsic()
     set(value) = intrinsic()
+
+  @LogicTypes(read = "PositionX", written = "")
+  val Position: Vector
+    get() = intrinsic()
 
   /** The device's slots, by number. */
   val slots: Slots<DataDiskSlot>
@@ -17028,9 +11852,6 @@ class LarreDockHydroponics internal constructor() : TypedDevice() {
     get() = intrinsic()
     set(value) = intrinsic()
 
-  val PositionX: Double
-    get() = intrinsic()
-
   val Power: Boolean
     get() = intrinsic()
 
@@ -17045,6 +11866,10 @@ class LarreDockHydroponics internal constructor() : TypedDevice() {
     get() = intrinsic()
 
   val TargetSlotIndex: Double
+    get() = intrinsic()
+
+  @LogicTypes(read = "PositionX", written = "")
+  val Position: Vector
     get() = intrinsic()
 
   /** The device's slots, by number. */
@@ -17303,9 +12128,6 @@ object LightRoundSmalls {
 /** A StructureLiquidDrain. */
 @PrefabName("StructureLiquidDrain")
 class LiquidDrain internal constructor() : TypedDevice() {
-  val CombustionOutput: Double
-    get() = intrinsic()
-
   val Error: Boolean
     get() = intrinsic()
 
@@ -17323,73 +12145,7 @@ class LiquidDrain internal constructor() : TypedDevice() {
   val Power: Boolean
     get() = intrinsic()
 
-  val PressureOutput: Double
-    get() = intrinsic()
-
   val Ratio: Double
-    get() = intrinsic()
-
-  val RatioCarbonDioxideOutput: Double
-    get() = intrinsic()
-
-  val RatioHeliumOutput: Double
-    get() = intrinsic()
-
-  val RatioHydrazineOutput: Double
-    get() = intrinsic()
-
-  val RatioHydrochloricAcidOutput: Double
-    get() = intrinsic()
-
-  val RatioHydrogenOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidAlcoholOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrazineOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrochloricAcidOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrogenOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidOzoneOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidSilanolOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidSodiumChlorideOutput: Double
-    get() = intrinsic()
-
-  val RatioMethaneOutput: Double
-    get() = intrinsic()
-
-  val RatioNitrogenOutput: Double
-    get() = intrinsic()
-
-  val RatioNitrousOxideOutput: Double
-    get() = intrinsic()
-
-  val RatioOxygenOutput: Double
-    get() = intrinsic()
-
-  val RatioOzoneOutput: Double
-    get() = intrinsic()
-
-  val RatioPollutantOutput: Double
-    get() = intrinsic()
-
-  val RatioPollutedWaterOutput: Double
-    get() = intrinsic()
-
-  val RatioSilanolOutput: Double
-    get() = intrinsic()
-
-  val RatioWaterOutput: Double
     get() = intrinsic()
 
   val RequiredPower: Double
@@ -17399,10 +12155,12 @@ class LiquidDrain internal constructor() : TypedDevice() {
     get() = intrinsic()
     set(value) = intrinsic()
 
-  val TemperatureOutput: Double
-    get() = intrinsic()
-
-  val TotalMolesOutput: Double
+  @LogicTypes(
+      read =
+          "CombustionOutput,PressureOutput,RatioCarbonDioxideOutput,RatioHeliumOutput,RatioHydrazineOutput,RatioHydrochloricAcidOutput,RatioHydrogenOutput,RatioLiquidAlcoholOutput,RatioLiquidHydrazineOutput,RatioLiquidHydrochloricAcidOutput,RatioLiquidHydrogenOutput,RatioLiquidOzoneOutput,RatioLiquidSilanolOutput,RatioLiquidSodiumChlorideOutput,RatioMethaneOutput,RatioNitrogenOutput,RatioNitrousOxideOutput,RatioOxygenOutput,RatioOzoneOutput,RatioPollutantOutput,RatioPollutedWaterOutput,RatioSilanolOutput,RatioWaterOutput,TemperatureOutput,TotalMolesOutput",
+      written = "",
+  )
+  val Ports: Ports
     get() = intrinsic()
 
   /** The StructureLiquidDrain prefab. */
@@ -17449,90 +12207,6 @@ class LiquidPipeAnalyzer internal constructor() : TypedDevice() {
   val Pressure: Double
     get() = intrinsic()
 
-  val RatioCarbonDioxide: Double
-    get() = intrinsic()
-
-  val RatioHelium: Double
-    get() = intrinsic()
-
-  val RatioHydrazine: Double
-    get() = intrinsic()
-
-  val RatioHydrochloricAcid: Double
-    get() = intrinsic()
-
-  val RatioHydrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidAlcohol: Double
-    get() = intrinsic()
-
-  val RatioLiquidCarbonDioxide: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrazine: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrochloricAcid: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidMethane: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrousOxide: Double
-    get() = intrinsic()
-
-  val RatioLiquidOxygen: Double
-    get() = intrinsic()
-
-  val RatioLiquidOzone: Double
-    get() = intrinsic()
-
-  val RatioLiquidPollutant: Double
-    get() = intrinsic()
-
-  val RatioLiquidSilanol: Double
-    get() = intrinsic()
-
-  val RatioLiquidSodiumChloride: Double
-    get() = intrinsic()
-
-  val RatioMethane: Double
-    get() = intrinsic()
-
-  val RatioNitrogen: Double
-    get() = intrinsic()
-
-  val RatioNitrousOxide: Double
-    get() = intrinsic()
-
-  val RatioOxygen: Double
-    get() = intrinsic()
-
-  val RatioOzone: Double
-    get() = intrinsic()
-
-  val RatioPollutant: Double
-    get() = intrinsic()
-
-  val RatioPollutedWater: Double
-    get() = intrinsic()
-
-  val RatioSilanol: Double
-    get() = intrinsic()
-
-  val RatioSteam: Double
-    get() = intrinsic()
-
-  val RatioWater: Double
-    get() = intrinsic()
-
   val RequiredPower: Double
     get() = intrinsic()
 
@@ -17546,6 +12220,14 @@ class LiquidPipeAnalyzer internal constructor() : TypedDevice() {
     get() = intrinsic()
 
   val VolumeOfLiquid: Double
+    get() = intrinsic()
+
+  @LogicTypes(
+      read =
+          "RatioCarbonDioxide,RatioHelium,RatioHydrazine,RatioHydrochloricAcid,RatioHydrogen,RatioLiquidAlcohol,RatioLiquidCarbonDioxide,RatioLiquidHydrazine,RatioLiquidHydrochloricAcid,RatioLiquidHydrogen,RatioLiquidMethane,RatioLiquidNitrogen,RatioLiquidNitrousOxide,RatioLiquidOxygen,RatioLiquidOzone,RatioLiquidPollutant,RatioLiquidSilanol,RatioLiquidSodiumChloride,RatioMethane,RatioNitrogen,RatioNitrousOxide,RatioOxygen,RatioOzone,RatioPollutant,RatioPollutedWater,RatioSilanol,RatioSteam,RatioWater",
+      written = "",
+  )
+  val Ratios: Ratios
     get() = intrinsic()
 
   /** The StructureLiquidPipeAnalyzer prefab. */
@@ -17661,91 +12343,15 @@ class LiquidTankStorage internal constructor() : TypedDevice() {
   val Quantity: Double
     get() = intrinsic()
 
-  val RatioCarbonDioxide: Double
-    get() = intrinsic()
-
-  val RatioHelium: Double
-    get() = intrinsic()
-
-  val RatioHydrazine: Double
-    get() = intrinsic()
-
-  val RatioHydrochloricAcid: Double
-    get() = intrinsic()
-
-  val RatioHydrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidAlcohol: Double
-    get() = intrinsic()
-
-  val RatioLiquidCarbonDioxide: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrazine: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrochloricAcid: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidMethane: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrousOxide: Double
-    get() = intrinsic()
-
-  val RatioLiquidOxygen: Double
-    get() = intrinsic()
-
-  val RatioLiquidOzone: Double
-    get() = intrinsic()
-
-  val RatioLiquidPollutant: Double
-    get() = intrinsic()
-
-  val RatioLiquidSilanol: Double
-    get() = intrinsic()
-
-  val RatioLiquidSodiumChloride: Double
-    get() = intrinsic()
-
-  val RatioMethane: Double
-    get() = intrinsic()
-
-  val RatioNitrogen: Double
-    get() = intrinsic()
-
-  val RatioNitrousOxide: Double
-    get() = intrinsic()
-
-  val RatioOxygen: Double
-    get() = intrinsic()
-
-  val RatioOzone: Double
-    get() = intrinsic()
-
-  val RatioPollutant: Double
-    get() = intrinsic()
-
-  val RatioPollutedWater: Double
-    get() = intrinsic()
-
-  val RatioSilanol: Double
-    get() = intrinsic()
-
-  val RatioSteam: Double
-    get() = intrinsic()
-
-  val RatioWater: Double
-    get() = intrinsic()
-
   val Temperature: Double
+    get() = intrinsic()
+
+  @LogicTypes(
+      read =
+          "RatioCarbonDioxide,RatioHelium,RatioHydrazine,RatioHydrochloricAcid,RatioHydrogen,RatioLiquidAlcohol,RatioLiquidCarbonDioxide,RatioLiquidHydrazine,RatioLiquidHydrochloricAcid,RatioLiquidHydrogen,RatioLiquidMethane,RatioLiquidNitrogen,RatioLiquidNitrousOxide,RatioLiquidOxygen,RatioLiquidOzone,RatioLiquidPollutant,RatioLiquidSilanol,RatioLiquidSodiumChloride,RatioMethane,RatioNitrogen,RatioNitrousOxide,RatioOxygen,RatioOzone,RatioPollutant,RatioPollutedWater,RatioSilanol,RatioSteam,RatioWater",
+      written = "",
+  )
+  val Ratios: Ratios
     get() = intrinsic()
 
   /** The device's slots, by number. */
@@ -18790,12 +13396,6 @@ class LogicSorter internal constructor() : TypedDevice() {
   val Error: Boolean
     get() = intrinsic()
 
-  val ExportCount: Double
-    get() = intrinsic()
-
-  val ImportCount: Double
-    get() = intrinsic()
-
   var Lock: Boolean
     get() = intrinsic()
     set(value) = intrinsic()
@@ -18817,18 +13417,16 @@ class LogicSorter internal constructor() : TypedDevice() {
   val StackSize: Double
     get() = intrinsic()
 
+  @LogicTypes(read = "ImportCount", written = "")
+  val Import: Transfer
+    get() = intrinsic()
+
+  @LogicTypes(read = "ExportCount", written = "")
+  val Export: Transfer
+    get() = intrinsic()
+
   /** The device's slots, by number. */
   val slots: Slots<DataDiskSlot>
-    get() = intrinsic()
-
-  /** Slot 0. */
-  @SlotNumber(0)
-  val Import: DataDiskSlot
-    get() = intrinsic()
-
-  /** Slot 1. */
-  @SlotNumber(1)
-  val Export: DataDiskSlot
     get() = intrinsic()
 
   /** Slot 2. */
@@ -19270,166 +13868,13 @@ class MediumRocketGasFuelTank internal constructor() : TypedDevice() {
   val Combustion: Boolean
     get() = intrinsic()
 
-  val CombustionOutput: Double
-    get() = intrinsic()
-
   val Maximum: Double
     get() = intrinsic()
 
   val Pressure: Double
     get() = intrinsic()
 
-  val PressureOutput: Double
-    get() = intrinsic()
-
   val Ratio: Double
-    get() = intrinsic()
-
-  val RatioCarbonDioxide: Double
-    get() = intrinsic()
-
-  val RatioCarbonDioxideOutput: Double
-    get() = intrinsic()
-
-  val RatioHelium: Double
-    get() = intrinsic()
-
-  val RatioHeliumOutput: Double
-    get() = intrinsic()
-
-  val RatioHydrazine: Double
-    get() = intrinsic()
-
-  val RatioHydrazineOutput: Double
-    get() = intrinsic()
-
-  val RatioHydrochloricAcid: Double
-    get() = intrinsic()
-
-  val RatioHydrochloricAcidOutput: Double
-    get() = intrinsic()
-
-  val RatioHydrogen: Double
-    get() = intrinsic()
-
-  val RatioHydrogenOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidAlcohol: Double
-    get() = intrinsic()
-
-  val RatioLiquidAlcoholOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidCarbonDioxide: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrazine: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrazineOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrochloricAcid: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrochloricAcidOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrogenOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidMethane: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrousOxide: Double
-    get() = intrinsic()
-
-  val RatioLiquidOxygen: Double
-    get() = intrinsic()
-
-  val RatioLiquidOzone: Double
-    get() = intrinsic()
-
-  val RatioLiquidOzoneOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidPollutant: Double
-    get() = intrinsic()
-
-  val RatioLiquidSilanol: Double
-    get() = intrinsic()
-
-  val RatioLiquidSilanolOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidSodiumChloride: Double
-    get() = intrinsic()
-
-  val RatioLiquidSodiumChlorideOutput: Double
-    get() = intrinsic()
-
-  val RatioMethane: Double
-    get() = intrinsic()
-
-  val RatioMethaneOutput: Double
-    get() = intrinsic()
-
-  val RatioNitrogen: Double
-    get() = intrinsic()
-
-  val RatioNitrogenOutput: Double
-    get() = intrinsic()
-
-  val RatioNitrousOxide: Double
-    get() = intrinsic()
-
-  val RatioNitrousOxideOutput: Double
-    get() = intrinsic()
-
-  val RatioOxygen: Double
-    get() = intrinsic()
-
-  val RatioOxygenOutput: Double
-    get() = intrinsic()
-
-  val RatioOzone: Double
-    get() = intrinsic()
-
-  val RatioOzoneOutput: Double
-    get() = intrinsic()
-
-  val RatioPollutant: Double
-    get() = intrinsic()
-
-  val RatioPollutantOutput: Double
-    get() = intrinsic()
-
-  val RatioPollutedWater: Double
-    get() = intrinsic()
-
-  val RatioPollutedWaterOutput: Double
-    get() = intrinsic()
-
-  val RatioSilanol: Double
-    get() = intrinsic()
-
-  val RatioSilanolOutput: Double
-    get() = intrinsic()
-
-  val RatioSteam: Double
-    get() = intrinsic()
-
-  val RatioWater: Double
-    get() = intrinsic()
-
-  val RatioWaterOutput: Double
     get() = intrinsic()
 
   var Setting: Double
@@ -19439,19 +13884,29 @@ class MediumRocketGasFuelTank internal constructor() : TypedDevice() {
   val Temperature: Double
     get() = intrinsic()
 
-  val TemperatureOutput: Double
-    get() = intrinsic()
-
   val TotalMoles: Double
-    get() = intrinsic()
-
-  val TotalMolesOutput: Double
     get() = intrinsic()
 
   val Volume: Double
     get() = intrinsic()
 
   val VolumeOfLiquid: Double
+    get() = intrinsic()
+
+  @LogicTypes(
+      read =
+          "CombustionOutput,PressureOutput,RatioCarbonDioxideOutput,RatioHeliumOutput,RatioHydrazineOutput,RatioHydrochloricAcidOutput,RatioHydrogenOutput,RatioLiquidAlcoholOutput,RatioLiquidHydrazineOutput,RatioLiquidHydrochloricAcidOutput,RatioLiquidHydrogenOutput,RatioLiquidOzoneOutput,RatioLiquidSilanolOutput,RatioLiquidSodiumChlorideOutput,RatioMethaneOutput,RatioNitrogenOutput,RatioNitrousOxideOutput,RatioOxygenOutput,RatioOzoneOutput,RatioPollutantOutput,RatioPollutedWaterOutput,RatioSilanolOutput,RatioWaterOutput,TemperatureOutput,TotalMolesOutput",
+      written = "",
+  )
+  val Ports: Ports
+    get() = intrinsic()
+
+  @LogicTypes(
+      read =
+          "RatioCarbonDioxide,RatioHelium,RatioHydrazine,RatioHydrochloricAcid,RatioHydrogen,RatioLiquidAlcohol,RatioLiquidCarbonDioxide,RatioLiquidHydrazine,RatioLiquidHydrochloricAcid,RatioLiquidHydrogen,RatioLiquidMethane,RatioLiquidNitrogen,RatioLiquidNitrousOxide,RatioLiquidOxygen,RatioLiquidOzone,RatioLiquidPollutant,RatioLiquidSilanol,RatioLiquidSodiumChloride,RatioMethane,RatioNitrogen,RatioNitrousOxide,RatioOxygen,RatioOzone,RatioPollutant,RatioPollutedWater,RatioSilanol,RatioSteam,RatioWater",
+      written = "",
+  )
+  val Ratios: Ratios
     get() = intrinsic()
 
   /** The StructureMediumRocketGasFuelTank prefab. */
@@ -19478,166 +13933,13 @@ class MediumRocketLiquidFuelTank internal constructor() : TypedDevice() {
   val Combustion: Boolean
     get() = intrinsic()
 
-  val CombustionOutput: Double
-    get() = intrinsic()
-
   val Maximum: Double
     get() = intrinsic()
 
   val Pressure: Double
     get() = intrinsic()
 
-  val PressureOutput: Double
-    get() = intrinsic()
-
   val Ratio: Double
-    get() = intrinsic()
-
-  val RatioCarbonDioxide: Double
-    get() = intrinsic()
-
-  val RatioCarbonDioxideOutput: Double
-    get() = intrinsic()
-
-  val RatioHelium: Double
-    get() = intrinsic()
-
-  val RatioHeliumOutput: Double
-    get() = intrinsic()
-
-  val RatioHydrazine: Double
-    get() = intrinsic()
-
-  val RatioHydrazineOutput: Double
-    get() = intrinsic()
-
-  val RatioHydrochloricAcid: Double
-    get() = intrinsic()
-
-  val RatioHydrochloricAcidOutput: Double
-    get() = intrinsic()
-
-  val RatioHydrogen: Double
-    get() = intrinsic()
-
-  val RatioHydrogenOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidAlcohol: Double
-    get() = intrinsic()
-
-  val RatioLiquidAlcoholOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidCarbonDioxide: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrazine: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrazineOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrochloricAcid: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrochloricAcidOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrogenOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidMethane: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrousOxide: Double
-    get() = intrinsic()
-
-  val RatioLiquidOxygen: Double
-    get() = intrinsic()
-
-  val RatioLiquidOzone: Double
-    get() = intrinsic()
-
-  val RatioLiquidOzoneOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidPollutant: Double
-    get() = intrinsic()
-
-  val RatioLiquidSilanol: Double
-    get() = intrinsic()
-
-  val RatioLiquidSilanolOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidSodiumChloride: Double
-    get() = intrinsic()
-
-  val RatioLiquidSodiumChlorideOutput: Double
-    get() = intrinsic()
-
-  val RatioMethane: Double
-    get() = intrinsic()
-
-  val RatioMethaneOutput: Double
-    get() = intrinsic()
-
-  val RatioNitrogen: Double
-    get() = intrinsic()
-
-  val RatioNitrogenOutput: Double
-    get() = intrinsic()
-
-  val RatioNitrousOxide: Double
-    get() = intrinsic()
-
-  val RatioNitrousOxideOutput: Double
-    get() = intrinsic()
-
-  val RatioOxygen: Double
-    get() = intrinsic()
-
-  val RatioOxygenOutput: Double
-    get() = intrinsic()
-
-  val RatioOzone: Double
-    get() = intrinsic()
-
-  val RatioOzoneOutput: Double
-    get() = intrinsic()
-
-  val RatioPollutant: Double
-    get() = intrinsic()
-
-  val RatioPollutantOutput: Double
-    get() = intrinsic()
-
-  val RatioPollutedWater: Double
-    get() = intrinsic()
-
-  val RatioPollutedWaterOutput: Double
-    get() = intrinsic()
-
-  val RatioSilanol: Double
-    get() = intrinsic()
-
-  val RatioSilanolOutput: Double
-    get() = intrinsic()
-
-  val RatioSteam: Double
-    get() = intrinsic()
-
-  val RatioWater: Double
-    get() = intrinsic()
-
-  val RatioWaterOutput: Double
     get() = intrinsic()
 
   var Setting: Double
@@ -19647,19 +13949,29 @@ class MediumRocketLiquidFuelTank internal constructor() : TypedDevice() {
   val Temperature: Double
     get() = intrinsic()
 
-  val TemperatureOutput: Double
-    get() = intrinsic()
-
   val TotalMoles: Double
-    get() = intrinsic()
-
-  val TotalMolesOutput: Double
     get() = intrinsic()
 
   val Volume: Double
     get() = intrinsic()
 
   val VolumeOfLiquid: Double
+    get() = intrinsic()
+
+  @LogicTypes(
+      read =
+          "CombustionOutput,PressureOutput,RatioCarbonDioxideOutput,RatioHeliumOutput,RatioHydrazineOutput,RatioHydrochloricAcidOutput,RatioHydrogenOutput,RatioLiquidAlcoholOutput,RatioLiquidHydrazineOutput,RatioLiquidHydrochloricAcidOutput,RatioLiquidHydrogenOutput,RatioLiquidOzoneOutput,RatioLiquidSilanolOutput,RatioLiquidSodiumChlorideOutput,RatioMethaneOutput,RatioNitrogenOutput,RatioNitrousOxideOutput,RatioOxygenOutput,RatioOzoneOutput,RatioPollutantOutput,RatioPollutedWaterOutput,RatioSilanolOutput,RatioWaterOutput,TemperatureOutput,TotalMolesOutput",
+      written = "",
+  )
+  val Ports: Ports
+    get() = intrinsic()
+
+  @LogicTypes(
+      read =
+          "RatioCarbonDioxide,RatioHelium,RatioHydrazine,RatioHydrochloricAcid,RatioHydrogen,RatioLiquidAlcohol,RatioLiquidCarbonDioxide,RatioLiquidHydrazine,RatioLiquidHydrochloricAcid,RatioLiquidHydrogen,RatioLiquidMethane,RatioLiquidNitrogen,RatioLiquidNitrousOxide,RatioLiquidOxygen,RatioLiquidOzone,RatioLiquidPollutant,RatioLiquidSilanol,RatioLiquidSodiumChloride,RatioMethane,RatioNitrogen,RatioNitrousOxide,RatioOxygen,RatioOzone,RatioPollutant,RatioPollutedWater,RatioSilanol,RatioSteam,RatioWater",
+      written = "",
+  )
+  val Ratios: Ratios
     get() = intrinsic()
 
   /** The StructureMediumRocketLiquidFuelTank prefab. */
@@ -19722,15 +14034,6 @@ class Nitrolyzer internal constructor() : TypedDevice() {
   val Combustion: Boolean
     get() = intrinsic()
 
-  val CombustionInput: Double
-    get() = intrinsic()
-
-  val CombustionInput2: Double
-    get() = intrinsic()
-
-  val CombustionOutput: Double
-    get() = intrinsic()
-
   val Error: Boolean
     get() = intrinsic()
 
@@ -19755,352 +14058,7 @@ class Nitrolyzer internal constructor() : TypedDevice() {
   val Pressure: Double
     get() = intrinsic()
 
-  val PressureInput: Double
-    get() = intrinsic()
-
-  val PressureInput2: Double
-    get() = intrinsic()
-
-  val PressureOutput: Double
-    get() = intrinsic()
-
   val Ratio: Double
-    get() = intrinsic()
-
-  val RatioCarbonDioxide: Double
-    get() = intrinsic()
-
-  val RatioCarbonDioxideInput: Double
-    get() = intrinsic()
-
-  val RatioCarbonDioxideInput2: Double
-    get() = intrinsic()
-
-  val RatioCarbonDioxideOutput: Double
-    get() = intrinsic()
-
-  val RatioHelium: Double
-    get() = intrinsic()
-
-  val RatioHeliumInput: Double
-    get() = intrinsic()
-
-  val RatioHeliumInput2: Double
-    get() = intrinsic()
-
-  val RatioHeliumOutput: Double
-    get() = intrinsic()
-
-  val RatioHydrazine: Double
-    get() = intrinsic()
-
-  val RatioHydrazineInput: Double
-    get() = intrinsic()
-
-  val RatioHydrazineInput2: Double
-    get() = intrinsic()
-
-  val RatioHydrazineOutput: Double
-    get() = intrinsic()
-
-  val RatioHydrochloricAcid: Double
-    get() = intrinsic()
-
-  val RatioHydrochloricAcidInput: Double
-    get() = intrinsic()
-
-  val RatioHydrochloricAcidInput2: Double
-    get() = intrinsic()
-
-  val RatioHydrochloricAcidOutput: Double
-    get() = intrinsic()
-
-  val RatioHydrogen: Double
-    get() = intrinsic()
-
-  val RatioHydrogenInput: Double
-    get() = intrinsic()
-
-  val RatioHydrogenInput2: Double
-    get() = intrinsic()
-
-  val RatioHydrogenOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidAlcohol: Double
-    get() = intrinsic()
-
-  val RatioLiquidAlcoholInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidAlcoholInput2: Double
-    get() = intrinsic()
-
-  val RatioLiquidAlcoholOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidCarbonDioxide: Double
-    get() = intrinsic()
-
-  val RatioLiquidCarbonDioxideInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidCarbonDioxideInput2: Double
-    get() = intrinsic()
-
-  val RatioLiquidCarbonDioxideOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrazine: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrazineInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrazineInput2: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrazineOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrochloricAcid: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrochloricAcidInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrochloricAcidInput2: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrochloricAcidOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrogenInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrogenInput2: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrogenOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidMethane: Double
-    get() = intrinsic()
-
-  val RatioLiquidMethaneInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidMethaneInput2: Double
-    get() = intrinsic()
-
-  val RatioLiquidMethaneOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrogenInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrogenInput2: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrogenOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrousOxide: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrousOxideInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrousOxideInput2: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrousOxideOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidOxygen: Double
-    get() = intrinsic()
-
-  val RatioLiquidOxygenInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidOxygenInput2: Double
-    get() = intrinsic()
-
-  val RatioLiquidOxygenOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidOzone: Double
-    get() = intrinsic()
-
-  val RatioLiquidOzoneInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidOzoneInput2: Double
-    get() = intrinsic()
-
-  val RatioLiquidOzoneOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidPollutant: Double
-    get() = intrinsic()
-
-  val RatioLiquidPollutantInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidPollutantInput2: Double
-    get() = intrinsic()
-
-  val RatioLiquidPollutantOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidSilanol: Double
-    get() = intrinsic()
-
-  val RatioLiquidSilanolInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidSilanolInput2: Double
-    get() = intrinsic()
-
-  val RatioLiquidSilanolOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidSodiumChloride: Double
-    get() = intrinsic()
-
-  val RatioLiquidSodiumChlorideInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidSodiumChlorideInput2: Double
-    get() = intrinsic()
-
-  val RatioLiquidSodiumChlorideOutput: Double
-    get() = intrinsic()
-
-  val RatioMethane: Double
-    get() = intrinsic()
-
-  val RatioMethaneInput: Double
-    get() = intrinsic()
-
-  val RatioMethaneInput2: Double
-    get() = intrinsic()
-
-  val RatioMethaneOutput: Double
-    get() = intrinsic()
-
-  val RatioNitrogen: Double
-    get() = intrinsic()
-
-  val RatioNitrogenInput: Double
-    get() = intrinsic()
-
-  val RatioNitrogenInput2: Double
-    get() = intrinsic()
-
-  val RatioNitrogenOutput: Double
-    get() = intrinsic()
-
-  val RatioNitrousOxide: Double
-    get() = intrinsic()
-
-  val RatioNitrousOxideInput: Double
-    get() = intrinsic()
-
-  val RatioNitrousOxideInput2: Double
-    get() = intrinsic()
-
-  val RatioNitrousOxideOutput: Double
-    get() = intrinsic()
-
-  val RatioOxygen: Double
-    get() = intrinsic()
-
-  val RatioOxygenInput: Double
-    get() = intrinsic()
-
-  val RatioOxygenInput2: Double
-    get() = intrinsic()
-
-  val RatioOxygenOutput: Double
-    get() = intrinsic()
-
-  val RatioOzone: Double
-    get() = intrinsic()
-
-  val RatioOzoneInput: Double
-    get() = intrinsic()
-
-  val RatioOzoneInput2: Double
-    get() = intrinsic()
-
-  val RatioOzoneOutput: Double
-    get() = intrinsic()
-
-  val RatioPollutant: Double
-    get() = intrinsic()
-
-  val RatioPollutantInput: Double
-    get() = intrinsic()
-
-  val RatioPollutantInput2: Double
-    get() = intrinsic()
-
-  val RatioPollutantOutput: Double
-    get() = intrinsic()
-
-  val RatioPollutedWater: Double
-    get() = intrinsic()
-
-  val RatioPollutedWaterInput: Double
-    get() = intrinsic()
-
-  val RatioPollutedWaterInput2: Double
-    get() = intrinsic()
-
-  val RatioPollutedWaterOutput: Double
-    get() = intrinsic()
-
-  val RatioSilanol: Double
-    get() = intrinsic()
-
-  val RatioSilanolInput: Double
-    get() = intrinsic()
-
-  val RatioSilanolInput2: Double
-    get() = intrinsic()
-
-  val RatioSilanolOutput: Double
-    get() = intrinsic()
-
-  val RatioSteam: Double
-    get() = intrinsic()
-
-  val RatioSteamInput: Double
-    get() = intrinsic()
-
-  val RatioSteamInput2: Double
-    get() = intrinsic()
-
-  val RatioSteamOutput: Double
-    get() = intrinsic()
-
-  val RatioWater: Double
-    get() = intrinsic()
-
-  val RatioWaterInput: Double
-    get() = intrinsic()
-
-  val RatioWaterInput2: Double
-    get() = intrinsic()
-
-  val RatioWaterOutput: Double
     get() = intrinsic()
 
   val RequiredPower: Double
@@ -20113,25 +14071,23 @@ class Nitrolyzer internal constructor() : TypedDevice() {
   val Temperature: Double
     get() = intrinsic()
 
-  val TemperatureInput: Double
-    get() = intrinsic()
-
-  val TemperatureInput2: Double
-    get() = intrinsic()
-
-  val TemperatureOutput: Double
-    get() = intrinsic()
-
   val TotalMoles: Double
     get() = intrinsic()
 
-  val TotalMolesInput: Double
+  @LogicTypes(
+      read =
+          "CombustionInput,CombustionInput2,CombustionOutput,PressureInput,PressureInput2,PressureOutput,RatioCarbonDioxideInput,RatioCarbonDioxideInput2,RatioCarbonDioxideOutput,RatioHeliumInput,RatioHeliumInput2,RatioHeliumOutput,RatioHydrazineInput,RatioHydrazineInput2,RatioHydrazineOutput,RatioHydrochloricAcidInput,RatioHydrochloricAcidInput2,RatioHydrochloricAcidOutput,RatioHydrogenInput,RatioHydrogenInput2,RatioHydrogenOutput,RatioLiquidAlcoholInput,RatioLiquidAlcoholInput2,RatioLiquidAlcoholOutput,RatioLiquidCarbonDioxideInput,RatioLiquidCarbonDioxideInput2,RatioLiquidCarbonDioxideOutput,RatioLiquidHydrazineInput,RatioLiquidHydrazineInput2,RatioLiquidHydrazineOutput,RatioLiquidHydrochloricAcidInput,RatioLiquidHydrochloricAcidInput2,RatioLiquidHydrochloricAcidOutput,RatioLiquidHydrogenInput,RatioLiquidHydrogenInput2,RatioLiquidHydrogenOutput,RatioLiquidMethaneInput,RatioLiquidMethaneInput2,RatioLiquidMethaneOutput,RatioLiquidNitrogenInput,RatioLiquidNitrogenInput2,RatioLiquidNitrogenOutput,RatioLiquidNitrousOxideInput,RatioLiquidNitrousOxideInput2,RatioLiquidNitrousOxideOutput,RatioLiquidOxygenInput,RatioLiquidOxygenInput2,RatioLiquidOxygenOutput,RatioLiquidOzoneInput,RatioLiquidOzoneInput2,RatioLiquidOzoneOutput,RatioLiquidPollutantInput,RatioLiquidPollutantInput2,RatioLiquidPollutantOutput,RatioLiquidSilanolInput,RatioLiquidSilanolInput2,RatioLiquidSilanolOutput,RatioLiquidSodiumChlorideInput,RatioLiquidSodiumChlorideInput2,RatioLiquidSodiumChlorideOutput,RatioMethaneInput,RatioMethaneInput2,RatioMethaneOutput,RatioNitrogenInput,RatioNitrogenInput2,RatioNitrogenOutput,RatioNitrousOxideInput,RatioNitrousOxideInput2,RatioNitrousOxideOutput,RatioOxygenInput,RatioOxygenInput2,RatioOxygenOutput,RatioOzoneInput,RatioOzoneInput2,RatioOzoneOutput,RatioPollutantInput,RatioPollutantInput2,RatioPollutantOutput,RatioPollutedWaterInput,RatioPollutedWaterInput2,RatioPollutedWaterOutput,RatioSilanolInput,RatioSilanolInput2,RatioSilanolOutput,RatioSteamInput,RatioSteamInput2,RatioSteamOutput,RatioWaterInput,RatioWaterInput2,RatioWaterOutput,TemperatureInput,TemperatureInput2,TemperatureOutput,TotalMolesInput,TotalMolesInput2,TotalMolesOutput",
+      written = "",
+  )
+  val Ports: Ports
     get() = intrinsic()
 
-  val TotalMolesInput2: Double
-    get() = intrinsic()
-
-  val TotalMolesOutput: Double
+  @LogicTypes(
+      read =
+          "RatioCarbonDioxide,RatioHelium,RatioHydrazine,RatioHydrochloricAcid,RatioHydrogen,RatioLiquidAlcohol,RatioLiquidCarbonDioxide,RatioLiquidHydrazine,RatioLiquidHydrochloricAcid,RatioLiquidHydrogen,RatioLiquidMethane,RatioLiquidNitrogen,RatioLiquidNitrousOxide,RatioLiquidOxygen,RatioLiquidOzone,RatioLiquidPollutant,RatioLiquidSilanol,RatioLiquidSodiumChloride,RatioMethane,RatioNitrogen,RatioNitrousOxide,RatioOxygen,RatioOzone,RatioPollutant,RatioPollutedWater,RatioSilanol,RatioSteam,RatioWater",
+      written = "",
+  )
+  val Ratios: Ratios
     get() = intrinsic()
 
   /** The device's slots, by number. */
@@ -20527,90 +14483,6 @@ class PipeAnalysizer internal constructor() : TypedDevice() {
   val Pressure: Double
     get() = intrinsic()
 
-  val RatioCarbonDioxide: Double
-    get() = intrinsic()
-
-  val RatioHelium: Double
-    get() = intrinsic()
-
-  val RatioHydrazine: Double
-    get() = intrinsic()
-
-  val RatioHydrochloricAcid: Double
-    get() = intrinsic()
-
-  val RatioHydrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidAlcohol: Double
-    get() = intrinsic()
-
-  val RatioLiquidCarbonDioxide: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrazine: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrochloricAcid: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidMethane: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrousOxide: Double
-    get() = intrinsic()
-
-  val RatioLiquidOxygen: Double
-    get() = intrinsic()
-
-  val RatioLiquidOzone: Double
-    get() = intrinsic()
-
-  val RatioLiquidPollutant: Double
-    get() = intrinsic()
-
-  val RatioLiquidSilanol: Double
-    get() = intrinsic()
-
-  val RatioLiquidSodiumChloride: Double
-    get() = intrinsic()
-
-  val RatioMethane: Double
-    get() = intrinsic()
-
-  val RatioNitrogen: Double
-    get() = intrinsic()
-
-  val RatioNitrousOxide: Double
-    get() = intrinsic()
-
-  val RatioOxygen: Double
-    get() = intrinsic()
-
-  val RatioOzone: Double
-    get() = intrinsic()
-
-  val RatioPollutant: Double
-    get() = intrinsic()
-
-  val RatioPollutedWater: Double
-    get() = intrinsic()
-
-  val RatioSilanol: Double
-    get() = intrinsic()
-
-  val RatioSteam: Double
-    get() = intrinsic()
-
-  val RatioWater: Double
-    get() = intrinsic()
-
   val RequiredPower: Double
     get() = intrinsic()
 
@@ -20624,6 +14496,14 @@ class PipeAnalysizer internal constructor() : TypedDevice() {
     get() = intrinsic()
 
   val VolumeOfLiquid: Double
+    get() = intrinsic()
+
+  @LogicTypes(
+      read =
+          "RatioCarbonDioxide,RatioHelium,RatioHydrazine,RatioHydrochloricAcid,RatioHydrogen,RatioLiquidAlcohol,RatioLiquidCarbonDioxide,RatioLiquidHydrazine,RatioLiquidHydrochloricAcid,RatioLiquidHydrogen,RatioLiquidMethane,RatioLiquidNitrogen,RatioLiquidNitrousOxide,RatioLiquidOxygen,RatioLiquidOzone,RatioLiquidPollutant,RatioLiquidSilanol,RatioLiquidSodiumChloride,RatioMethane,RatioNitrogen,RatioNitrousOxide,RatioOxygen,RatioOzone,RatioPollutant,RatioPollutedWater,RatioSilanol,RatioSteam,RatioWater",
+      written = "",
+  )
+  val Ratios: Ratios
     get() = intrinsic()
 
   /** The StructurePipeAnalysizer prefab. */
@@ -20896,15 +14776,6 @@ class PowerTransmitter internal constructor() : TypedDevice() {
     get() = intrinsic()
     set(value) = intrinsic()
 
-  val PositionX: Double
-    get() = intrinsic()
-
-  val PositionY: Double
-    get() = intrinsic()
-
-  val PositionZ: Double
-    get() = intrinsic()
-
   val Power: Boolean
     get() = intrinsic()
 
@@ -20920,6 +14791,10 @@ class PowerTransmitter internal constructor() : TypedDevice() {
   var Vertical: Double
     get() = intrinsic()
     set(value) = intrinsic()
+
+  @LogicTypes(read = "PositionX,PositionY,PositionZ", written = "")
+  val Position: Vector
+    get() = intrinsic()
 
   /** The StructurePowerTransmitter prefab. */
   companion object : Prefab()
@@ -20993,15 +14868,6 @@ class PowerTransmitterReceiver internal constructor() : TypedDevice() {
     get() = intrinsic()
     set(value) = intrinsic()
 
-  val PositionX: Double
-    get() = intrinsic()
-
-  val PositionY: Double
-    get() = intrinsic()
-
-  val PositionZ: Double
-    get() = intrinsic()
-
   val Power: Boolean
     get() = intrinsic()
 
@@ -21017,6 +14883,10 @@ class PowerTransmitterReceiver internal constructor() : TypedDevice() {
   var Vertical: Double
     get() = intrinsic()
     set(value) = intrinsic()
+
+  @LogicTypes(read = "PositionX,PositionY,PositionZ", written = "")
+  val Position: Vector
+    get() = intrinsic()
 
   /** The StructurePowerTransmitterReceiver prefab. */
   companion object : Prefab()
@@ -21084,9 +14954,6 @@ object PowerUmbilicalMales {
 /** A StructurePoweredVent. */
 @PrefabName("StructurePoweredVent")
 class PoweredVent internal constructor() : TypedDevice() {
-  val CombustionOutput: Double
-    get() = intrinsic()
-
   val Error: Boolean
     get() = intrinsic()
 
@@ -21109,79 +14976,15 @@ class PoweredVent internal constructor() : TypedDevice() {
     get() = intrinsic()
     set(value) = intrinsic()
 
-  val PressureOutput: Double
-    get() = intrinsic()
-
-  val RatioCarbonDioxideOutput: Double
-    get() = intrinsic()
-
-  val RatioHeliumOutput: Double
-    get() = intrinsic()
-
-  val RatioHydrazineOutput: Double
-    get() = intrinsic()
-
-  val RatioHydrochloricAcidOutput: Double
-    get() = intrinsic()
-
-  val RatioHydrogenOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidAlcoholOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrazineOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrochloricAcidOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrogenOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidOzoneOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidSilanolOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidSodiumChlorideOutput: Double
-    get() = intrinsic()
-
-  val RatioMethaneOutput: Double
-    get() = intrinsic()
-
-  val RatioNitrogenOutput: Double
-    get() = intrinsic()
-
-  val RatioNitrousOxideOutput: Double
-    get() = intrinsic()
-
-  val RatioOxygenOutput: Double
-    get() = intrinsic()
-
-  val RatioOzoneOutput: Double
-    get() = intrinsic()
-
-  val RatioPollutantOutput: Double
-    get() = intrinsic()
-
-  val RatioPollutedWaterOutput: Double
-    get() = intrinsic()
-
-  val RatioSilanolOutput: Double
-    get() = intrinsic()
-
-  val RatioWaterOutput: Double
-    get() = intrinsic()
-
   val RequiredPower: Double
     get() = intrinsic()
 
-  val TemperatureOutput: Double
-    get() = intrinsic()
-
-  val TotalMolesOutput: Double
+  @LogicTypes(
+      read =
+          "CombustionOutput,PressureOutput,RatioCarbonDioxideOutput,RatioHeliumOutput,RatioHydrazineOutput,RatioHydrochloricAcidOutput,RatioHydrogenOutput,RatioLiquidAlcoholOutput,RatioLiquidHydrazineOutput,RatioLiquidHydrochloricAcidOutput,RatioLiquidHydrogenOutput,RatioLiquidOzoneOutput,RatioLiquidSilanolOutput,RatioLiquidSodiumChlorideOutput,RatioMethaneOutput,RatioNitrogenOutput,RatioNitrousOxideOutput,RatioOxygenOutput,RatioOzoneOutput,RatioPollutantOutput,RatioPollutedWaterOutput,RatioSilanolOutput,RatioWaterOutput,TemperatureOutput,TotalMolesOutput",
+      written = "",
+  )
+  val Ports: Ports
     get() = intrinsic()
 
   /** The StructurePoweredVent prefab. */
@@ -21205,9 +15008,6 @@ object PoweredVents {
 /** A StructurePoweredVentLarge. */
 @PrefabName("StructurePoweredVentLarge")
 class PoweredVentLarge internal constructor() : TypedDevice() {
-  val CombustionOutput: Double
-    get() = intrinsic()
-
   val Error: Boolean
     get() = intrinsic()
 
@@ -21230,79 +15030,15 @@ class PoweredVentLarge internal constructor() : TypedDevice() {
     get() = intrinsic()
     set(value) = intrinsic()
 
-  val PressureOutput: Double
-    get() = intrinsic()
-
-  val RatioCarbonDioxideOutput: Double
-    get() = intrinsic()
-
-  val RatioHeliumOutput: Double
-    get() = intrinsic()
-
-  val RatioHydrazineOutput: Double
-    get() = intrinsic()
-
-  val RatioHydrochloricAcidOutput: Double
-    get() = intrinsic()
-
-  val RatioHydrogenOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidAlcoholOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrazineOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrochloricAcidOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrogenOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidOzoneOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidSilanolOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidSodiumChlorideOutput: Double
-    get() = intrinsic()
-
-  val RatioMethaneOutput: Double
-    get() = intrinsic()
-
-  val RatioNitrogenOutput: Double
-    get() = intrinsic()
-
-  val RatioNitrousOxideOutput: Double
-    get() = intrinsic()
-
-  val RatioOxygenOutput: Double
-    get() = intrinsic()
-
-  val RatioOzoneOutput: Double
-    get() = intrinsic()
-
-  val RatioPollutantOutput: Double
-    get() = intrinsic()
-
-  val RatioPollutedWaterOutput: Double
-    get() = intrinsic()
-
-  val RatioSilanolOutput: Double
-    get() = intrinsic()
-
-  val RatioWaterOutput: Double
-    get() = intrinsic()
-
   val RequiredPower: Double
     get() = intrinsic()
 
-  val TemperatureOutput: Double
-    get() = intrinsic()
-
-  val TotalMolesOutput: Double
+  @LogicTypes(
+      read =
+          "CombustionOutput,PressureOutput,RatioCarbonDioxideOutput,RatioHeliumOutput,RatioHydrazineOutput,RatioHydrochloricAcidOutput,RatioHydrogenOutput,RatioLiquidAlcoholOutput,RatioLiquidHydrazineOutput,RatioLiquidHydrochloricAcidOutput,RatioLiquidHydrogenOutput,RatioLiquidOzoneOutput,RatioLiquidSilanolOutput,RatioLiquidSodiumChlorideOutput,RatioMethaneOutput,RatioNitrogenOutput,RatioNitrousOxideOutput,RatioOxygenOutput,RatioOzoneOutput,RatioPollutantOutput,RatioPollutedWaterOutput,RatioSilanolOutput,RatioWaterOutput,TemperatureOutput,TotalMolesOutput",
+      written = "",
+  )
+  val Ports: Ports
     get() = intrinsic()
 
   /** The StructurePoweredVentLarge prefab. */
@@ -21393,90 +15129,6 @@ class PressureFedGasEngine internal constructor() : TypedDevice() {
   val Pressure: Double
     get() = intrinsic()
 
-  val RatioCarbonDioxide: Double
-    get() = intrinsic()
-
-  val RatioHelium: Double
-    get() = intrinsic()
-
-  val RatioHydrazine: Double
-    get() = intrinsic()
-
-  val RatioHydrochloricAcid: Double
-    get() = intrinsic()
-
-  val RatioHydrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidAlcohol: Double
-    get() = intrinsic()
-
-  val RatioLiquidCarbonDioxide: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrazine: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrochloricAcid: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidMethane: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrousOxide: Double
-    get() = intrinsic()
-
-  val RatioLiquidOxygen: Double
-    get() = intrinsic()
-
-  val RatioLiquidOzone: Double
-    get() = intrinsic()
-
-  val RatioLiquidPollutant: Double
-    get() = intrinsic()
-
-  val RatioLiquidSilanol: Double
-    get() = intrinsic()
-
-  val RatioLiquidSodiumChloride: Double
-    get() = intrinsic()
-
-  val RatioMethane: Double
-    get() = intrinsic()
-
-  val RatioNitrogen: Double
-    get() = intrinsic()
-
-  val RatioNitrousOxide: Double
-    get() = intrinsic()
-
-  val RatioOxygen: Double
-    get() = intrinsic()
-
-  val RatioOzone: Double
-    get() = intrinsic()
-
-  val RatioPollutant: Double
-    get() = intrinsic()
-
-  val RatioPollutedWater: Double
-    get() = intrinsic()
-
-  val RatioSilanol: Double
-    get() = intrinsic()
-
-  val RatioSteam: Double
-    get() = intrinsic()
-
-  val RatioWater: Double
-    get() = intrinsic()
-
   val RequiredPower: Double
     get() = intrinsic()
 
@@ -21488,6 +15140,14 @@ class PressureFedGasEngine internal constructor() : TypedDevice() {
     set(value) = intrinsic()
 
   val TotalMoles: Double
+    get() = intrinsic()
+
+  @LogicTypes(
+      read =
+          "RatioCarbonDioxide,RatioHelium,RatioHydrazine,RatioHydrochloricAcid,RatioHydrogen,RatioLiquidAlcohol,RatioLiquidCarbonDioxide,RatioLiquidHydrazine,RatioLiquidHydrochloricAcid,RatioLiquidHydrogen,RatioLiquidMethane,RatioLiquidNitrogen,RatioLiquidNitrousOxide,RatioLiquidOxygen,RatioLiquidOzone,RatioLiquidPollutant,RatioLiquidSilanol,RatioLiquidSodiumChloride,RatioMethane,RatioNitrogen,RatioNitrousOxide,RatioOxygen,RatioOzone,RatioPollutant,RatioPollutedWater,RatioSilanol,RatioSteam,RatioWater",
+      written = "",
+  )
+  val Ratios: Ratios
     get() = intrinsic()
 
   /** The StructurePressureFedGasEngine prefab. */
@@ -21530,90 +15190,6 @@ class PressureFedGasEngineHeavy internal constructor() : TypedDevice() {
   val Pressure: Double
     get() = intrinsic()
 
-  val RatioCarbonDioxide: Double
-    get() = intrinsic()
-
-  val RatioHelium: Double
-    get() = intrinsic()
-
-  val RatioHydrazine: Double
-    get() = intrinsic()
-
-  val RatioHydrochloricAcid: Double
-    get() = intrinsic()
-
-  val RatioHydrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidAlcohol: Double
-    get() = intrinsic()
-
-  val RatioLiquidCarbonDioxide: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrazine: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrochloricAcid: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidMethane: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrousOxide: Double
-    get() = intrinsic()
-
-  val RatioLiquidOxygen: Double
-    get() = intrinsic()
-
-  val RatioLiquidOzone: Double
-    get() = intrinsic()
-
-  val RatioLiquidPollutant: Double
-    get() = intrinsic()
-
-  val RatioLiquidSilanol: Double
-    get() = intrinsic()
-
-  val RatioLiquidSodiumChloride: Double
-    get() = intrinsic()
-
-  val RatioMethane: Double
-    get() = intrinsic()
-
-  val RatioNitrogen: Double
-    get() = intrinsic()
-
-  val RatioNitrousOxide: Double
-    get() = intrinsic()
-
-  val RatioOxygen: Double
-    get() = intrinsic()
-
-  val RatioOzone: Double
-    get() = intrinsic()
-
-  val RatioPollutant: Double
-    get() = intrinsic()
-
-  val RatioPollutedWater: Double
-    get() = intrinsic()
-
-  val RatioSilanol: Double
-    get() = intrinsic()
-
-  val RatioSteam: Double
-    get() = intrinsic()
-
-  val RatioWater: Double
-    get() = intrinsic()
-
   val RequiredPower: Double
     get() = intrinsic()
 
@@ -21625,6 +15201,14 @@ class PressureFedGasEngineHeavy internal constructor() : TypedDevice() {
     set(value) = intrinsic()
 
   val TotalMoles: Double
+    get() = intrinsic()
+
+  @LogicTypes(
+      read =
+          "RatioCarbonDioxide,RatioHelium,RatioHydrazine,RatioHydrochloricAcid,RatioHydrogen,RatioLiquidAlcohol,RatioLiquidCarbonDioxide,RatioLiquidHydrazine,RatioLiquidHydrochloricAcid,RatioLiquidHydrogen,RatioLiquidMethane,RatioLiquidNitrogen,RatioLiquidNitrousOxide,RatioLiquidOxygen,RatioLiquidOzone,RatioLiquidPollutant,RatioLiquidSilanol,RatioLiquidSodiumChloride,RatioMethane,RatioNitrogen,RatioNitrousOxide,RatioOxygen,RatioOzone,RatioPollutant,RatioPollutedWater,RatioSilanol,RatioSteam,RatioWater",
+      written = "",
+  )
+  val Ratios: Ratios
     get() = intrinsic()
 
   /** The StructurePressureFedGasEngineHeavy prefab. */
@@ -21673,90 +15257,6 @@ class PressureFedLiquidEngine internal constructor() : TypedDevice() {
   val Ratio: Double
     get() = intrinsic()
 
-  val RatioCarbonDioxide: Double
-    get() = intrinsic()
-
-  val RatioHelium: Double
-    get() = intrinsic()
-
-  val RatioHydrazine: Double
-    get() = intrinsic()
-
-  val RatioHydrochloricAcid: Double
-    get() = intrinsic()
-
-  val RatioHydrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidAlcohol: Double
-    get() = intrinsic()
-
-  val RatioLiquidCarbonDioxide: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrazine: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrochloricAcid: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidMethane: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrousOxide: Double
-    get() = intrinsic()
-
-  val RatioLiquidOxygen: Double
-    get() = intrinsic()
-
-  val RatioLiquidOzone: Double
-    get() = intrinsic()
-
-  val RatioLiquidPollutant: Double
-    get() = intrinsic()
-
-  val RatioLiquidSilanol: Double
-    get() = intrinsic()
-
-  val RatioLiquidSodiumChloride: Double
-    get() = intrinsic()
-
-  val RatioMethane: Double
-    get() = intrinsic()
-
-  val RatioNitrogen: Double
-    get() = intrinsic()
-
-  val RatioNitrousOxide: Double
-    get() = intrinsic()
-
-  val RatioOxygen: Double
-    get() = intrinsic()
-
-  val RatioOzone: Double
-    get() = intrinsic()
-
-  val RatioPollutant: Double
-    get() = intrinsic()
-
-  val RatioPollutedWater: Double
-    get() = intrinsic()
-
-  val RatioSilanol: Double
-    get() = intrinsic()
-
-  val RatioSteam: Double
-    get() = intrinsic()
-
-  val RatioWater: Double
-    get() = intrinsic()
-
   val RequiredPower: Double
     get() = intrinsic()
 
@@ -21772,6 +15272,14 @@ class PressureFedLiquidEngine internal constructor() : TypedDevice() {
     set(value) = intrinsic()
 
   val TotalMoles: Double
+    get() = intrinsic()
+
+  @LogicTypes(
+      read =
+          "RatioCarbonDioxide,RatioHelium,RatioHydrazine,RatioHydrochloricAcid,RatioHydrogen,RatioLiquidAlcohol,RatioLiquidCarbonDioxide,RatioLiquidHydrazine,RatioLiquidHydrochloricAcid,RatioLiquidHydrogen,RatioLiquidMethane,RatioLiquidNitrogen,RatioLiquidNitrousOxide,RatioLiquidOxygen,RatioLiquidOzone,RatioLiquidPollutant,RatioLiquidSilanol,RatioLiquidSodiumChloride,RatioMethane,RatioNitrogen,RatioNitrousOxide,RatioOxygen,RatioOzone,RatioPollutant,RatioPollutedWater,RatioSilanol,RatioSteam,RatioWater",
+      written = "",
+  )
+  val Ratios: Ratios
     get() = intrinsic()
 
   /** The StructurePressureFedLiquidEngine prefab. */
@@ -21820,90 +15328,6 @@ class PressureFedLiquidEngineHeavy internal constructor() : TypedDevice() {
   val Ratio: Double
     get() = intrinsic()
 
-  val RatioCarbonDioxide: Double
-    get() = intrinsic()
-
-  val RatioHelium: Double
-    get() = intrinsic()
-
-  val RatioHydrazine: Double
-    get() = intrinsic()
-
-  val RatioHydrochloricAcid: Double
-    get() = intrinsic()
-
-  val RatioHydrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidAlcohol: Double
-    get() = intrinsic()
-
-  val RatioLiquidCarbonDioxide: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrazine: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrochloricAcid: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidMethane: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrousOxide: Double
-    get() = intrinsic()
-
-  val RatioLiquidOxygen: Double
-    get() = intrinsic()
-
-  val RatioLiquidOzone: Double
-    get() = intrinsic()
-
-  val RatioLiquidPollutant: Double
-    get() = intrinsic()
-
-  val RatioLiquidSilanol: Double
-    get() = intrinsic()
-
-  val RatioLiquidSodiumChloride: Double
-    get() = intrinsic()
-
-  val RatioMethane: Double
-    get() = intrinsic()
-
-  val RatioNitrogen: Double
-    get() = intrinsic()
-
-  val RatioNitrousOxide: Double
-    get() = intrinsic()
-
-  val RatioOxygen: Double
-    get() = intrinsic()
-
-  val RatioOzone: Double
-    get() = intrinsic()
-
-  val RatioPollutant: Double
-    get() = intrinsic()
-
-  val RatioPollutedWater: Double
-    get() = intrinsic()
-
-  val RatioSilanol: Double
-    get() = intrinsic()
-
-  val RatioSteam: Double
-    get() = intrinsic()
-
-  val RatioWater: Double
-    get() = intrinsic()
-
   val RequiredPower: Double
     get() = intrinsic()
 
@@ -21919,6 +15343,14 @@ class PressureFedLiquidEngineHeavy internal constructor() : TypedDevice() {
     set(value) = intrinsic()
 
   val TotalMoles: Double
+    get() = intrinsic()
+
+  @LogicTypes(
+      read =
+          "RatioCarbonDioxide,RatioHelium,RatioHydrazine,RatioHydrochloricAcid,RatioHydrogen,RatioLiquidAlcohol,RatioLiquidCarbonDioxide,RatioLiquidHydrazine,RatioLiquidHydrochloricAcid,RatioLiquidHydrogen,RatioLiquidMethane,RatioLiquidNitrogen,RatioLiquidNitrousOxide,RatioLiquidOxygen,RatioLiquidOzone,RatioLiquidPollutant,RatioLiquidSilanol,RatioLiquidSodiumChloride,RatioMethane,RatioNitrogen,RatioNitrousOxide,RatioOxygen,RatioOzone,RatioPollutant,RatioPollutedWater,RatioSilanol,RatioSteam,RatioWater",
+      written = "",
+  )
+  val Ratios: Ratios
     get() = intrinsic()
 
   /** The StructurePressureFedLiquidEngineHeavy prefab. */
@@ -22118,90 +15550,6 @@ class PumpedLiquidEngine internal constructor() : TypedDevice() {
   val Ratio: Double
     get() = intrinsic()
 
-  val RatioCarbonDioxide: Double
-    get() = intrinsic()
-
-  val RatioHelium: Double
-    get() = intrinsic()
-
-  val RatioHydrazine: Double
-    get() = intrinsic()
-
-  val RatioHydrochloricAcid: Double
-    get() = intrinsic()
-
-  val RatioHydrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidAlcohol: Double
-    get() = intrinsic()
-
-  val RatioLiquidCarbonDioxide: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrazine: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrochloricAcid: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidMethane: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrousOxide: Double
-    get() = intrinsic()
-
-  val RatioLiquidOxygen: Double
-    get() = intrinsic()
-
-  val RatioLiquidOzone: Double
-    get() = intrinsic()
-
-  val RatioLiquidPollutant: Double
-    get() = intrinsic()
-
-  val RatioLiquidSilanol: Double
-    get() = intrinsic()
-
-  val RatioLiquidSodiumChloride: Double
-    get() = intrinsic()
-
-  val RatioMethane: Double
-    get() = intrinsic()
-
-  val RatioNitrogen: Double
-    get() = intrinsic()
-
-  val RatioNitrousOxide: Double
-    get() = intrinsic()
-
-  val RatioOxygen: Double
-    get() = intrinsic()
-
-  val RatioOzone: Double
-    get() = intrinsic()
-
-  val RatioPollutant: Double
-    get() = intrinsic()
-
-  val RatioPollutedWater: Double
-    get() = intrinsic()
-
-  val RatioSilanol: Double
-    get() = intrinsic()
-
-  val RatioSteam: Double
-    get() = intrinsic()
-
-  val RatioWater: Double
-    get() = intrinsic()
-
   val RequiredPower: Double
     get() = intrinsic()
 
@@ -22217,6 +15565,14 @@ class PumpedLiquidEngine internal constructor() : TypedDevice() {
     set(value) = intrinsic()
 
   val TotalMoles: Double
+    get() = intrinsic()
+
+  @LogicTypes(
+      read =
+          "RatioCarbonDioxide,RatioHelium,RatioHydrazine,RatioHydrochloricAcid,RatioHydrogen,RatioLiquidAlcohol,RatioLiquidCarbonDioxide,RatioLiquidHydrazine,RatioLiquidHydrochloricAcid,RatioLiquidHydrogen,RatioLiquidMethane,RatioLiquidNitrogen,RatioLiquidNitrousOxide,RatioLiquidOxygen,RatioLiquidOzone,RatioLiquidPollutant,RatioLiquidSilanol,RatioLiquidSodiumChloride,RatioMethane,RatioNitrogen,RatioNitrousOxide,RatioOxygen,RatioOzone,RatioPollutant,RatioPollutedWater,RatioSilanol,RatioSteam,RatioWater",
+      written = "",
+  )
+  val Ratios: Ratios
     get() = intrinsic()
 
   /** The StructurePumpedLiquidEngine prefab. */
@@ -22299,12 +15655,6 @@ class Recycler internal constructor() : TypedDevice() {
   val Error: Boolean
     get() = intrinsic()
 
-  val ExportCount: Double
-    get() = intrinsic()
-
-  val ImportCount: Double
-    get() = intrinsic()
-
   var On: Boolean
     get() = intrinsic()
     set(value) = intrinsic()
@@ -22318,18 +15668,16 @@ class Recycler internal constructor() : TypedDevice() {
   val RequiredPower: Double
     get() = intrinsic()
 
+  @LogicTypes(read = "ImportCount", written = "")
+  val Import: Transfer
+    get() = intrinsic()
+
+  @LogicTypes(read = "ExportCount", written = "")
+  val Export: Transfer
+    get() = intrinsic()
+
   /** The device's slots, by number. */
   val slots: Slots<DataDiskSlot>
-    get() = intrinsic()
-
-  /** Slot 0. */
-  @SlotNumber(0)
-  val Import: DataDiskSlot
-    get() = intrinsic()
-
-  /** Slot 1. */
-  @SlotNumber(1)
-  val Export: DataDiskSlot
     get() = intrinsic()
 
   /** The StructureRecycler prefab. */
@@ -22373,12 +15721,6 @@ class RefrigeratedVendingMachine internal constructor() : TypedDevice() {
   val Error: Boolean
     get() = intrinsic()
 
-  val ExportCount: Double
-    get() = intrinsic()
-
-  val ImportCount: Double
-    get() = intrinsic()
-
   var Lock: Boolean
     get() = intrinsic()
     set(value) = intrinsic()
@@ -22397,90 +15739,6 @@ class RefrigeratedVendingMachine internal constructor() : TypedDevice() {
     get() = intrinsic()
 
   val Ratio: Double
-    get() = intrinsic()
-
-  val RatioCarbonDioxide: Double
-    get() = intrinsic()
-
-  val RatioHelium: Double
-    get() = intrinsic()
-
-  val RatioHydrazine: Double
-    get() = intrinsic()
-
-  val RatioHydrochloricAcid: Double
-    get() = intrinsic()
-
-  val RatioHydrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidAlcohol: Double
-    get() = intrinsic()
-
-  val RatioLiquidCarbonDioxide: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrazine: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrochloricAcid: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidMethane: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrousOxide: Double
-    get() = intrinsic()
-
-  val RatioLiquidOxygen: Double
-    get() = intrinsic()
-
-  val RatioLiquidOzone: Double
-    get() = intrinsic()
-
-  val RatioLiquidPollutant: Double
-    get() = intrinsic()
-
-  val RatioLiquidSilanol: Double
-    get() = intrinsic()
-
-  val RatioLiquidSodiumChloride: Double
-    get() = intrinsic()
-
-  val RatioMethane: Double
-    get() = intrinsic()
-
-  val RatioNitrogen: Double
-    get() = intrinsic()
-
-  val RatioNitrousOxide: Double
-    get() = intrinsic()
-
-  val RatioOxygen: Double
-    get() = intrinsic()
-
-  val RatioOzone: Double
-    get() = intrinsic()
-
-  val RatioPollutant: Double
-    get() = intrinsic()
-
-  val RatioPollutedWater: Double
-    get() = intrinsic()
-
-  val RatioSilanol: Double
-    get() = intrinsic()
-
-  val RatioSteam: Double
-    get() = intrinsic()
-
-  val RatioWater: Double
     get() = intrinsic()
 
   var RequestHash: Double
@@ -22506,18 +15764,24 @@ class RefrigeratedVendingMachine internal constructor() : TypedDevice() {
   val TotalMoles: Double
     get() = intrinsic()
 
+  @LogicTypes(
+      read =
+          "RatioCarbonDioxide,RatioHelium,RatioHydrazine,RatioHydrochloricAcid,RatioHydrogen,RatioLiquidAlcohol,RatioLiquidCarbonDioxide,RatioLiquidHydrazine,RatioLiquidHydrochloricAcid,RatioLiquidHydrogen,RatioLiquidMethane,RatioLiquidNitrogen,RatioLiquidNitrousOxide,RatioLiquidOxygen,RatioLiquidOzone,RatioLiquidPollutant,RatioLiquidSilanol,RatioLiquidSodiumChloride,RatioMethane,RatioNitrogen,RatioNitrousOxide,RatioOxygen,RatioOzone,RatioPollutant,RatioPollutedWater,RatioSilanol,RatioSteam,RatioWater",
+      written = "",
+  )
+  val Ratios: Ratios
+    get() = intrinsic()
+
+  @LogicTypes(read = "ImportCount", written = "")
+  val Import: Transfer
+    get() = intrinsic()
+
+  @LogicTypes(read = "ExportCount", written = "")
+  val Export: Transfer
+    get() = intrinsic()
+
   /** The device's slots, by number. */
   val slots: Slots<DataDiskSlot>
-    get() = intrinsic()
-
-  /** Slot 0. */
-  @SlotNumber(0)
-  val Import: DataDiskSlot
-    get() = intrinsic()
-
-  /** Slot 1. */
-  @SlotNumber(1)
-  val Export: DataDiskSlot
     get() = intrinsic()
 
   /** The StructureRefrigeratedVendingMachine prefab. */
@@ -22595,9 +15859,6 @@ class RoboticArmDock internal constructor() : TypedDevice() {
     get() = intrinsic()
     set(value) = intrinsic()
 
-  val PositionX: Double
-    get() = intrinsic()
-
   val Power: Boolean
     get() = intrinsic()
 
@@ -22607,6 +15868,10 @@ class RoboticArmDock internal constructor() : TypedDevice() {
   var Setting: Double
     get() = intrinsic()
     set(value) = intrinsic()
+
+  @LogicTypes(read = "PositionX", written = "")
+  val Position: Vector
+    get() = intrinsic()
 
   /** The device's slots, by number. */
   val slots: Slots<DataDiskSlot>
@@ -22718,90 +15983,6 @@ class RocketAvionics internal constructor() : TypedDevice() {
   val Quantity: Double
     get() = intrinsic()
 
-  val RatioCarbonDioxide: Double
-    get() = intrinsic()
-
-  val RatioHelium: Double
-    get() = intrinsic()
-
-  val RatioHydrazine: Double
-    get() = intrinsic()
-
-  val RatioHydrochloricAcid: Double
-    get() = intrinsic()
-
-  val RatioHydrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidAlcohol: Double
-    get() = intrinsic()
-
-  val RatioLiquidCarbonDioxide: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrazine: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrochloricAcid: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidMethane: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrousOxide: Double
-    get() = intrinsic()
-
-  val RatioLiquidOxygen: Double
-    get() = intrinsic()
-
-  val RatioLiquidOzone: Double
-    get() = intrinsic()
-
-  val RatioLiquidPollutant: Double
-    get() = intrinsic()
-
-  val RatioLiquidSilanol: Double
-    get() = intrinsic()
-
-  val RatioLiquidSodiumChloride: Double
-    get() = intrinsic()
-
-  val RatioMethane: Double
-    get() = intrinsic()
-
-  val RatioNitrogen: Double
-    get() = intrinsic()
-
-  val RatioNitrousOxide: Double
-    get() = intrinsic()
-
-  val RatioOxygen: Double
-    get() = intrinsic()
-
-  val RatioOzone: Double
-    get() = intrinsic()
-
-  val RatioPollutant: Double
-    get() = intrinsic()
-
-  val RatioPollutedWater: Double
-    get() = intrinsic()
-
-  val RatioSilanol: Double
-    get() = intrinsic()
-
-  val RatioSteam: Double
-    get() = intrinsic()
-
-  val RatioWater: Double
-    get() = intrinsic()
-
   val ReEntryAltitude: Double
     get() = intrinsic()
 
@@ -22844,10 +16025,19 @@ class RocketAvionics internal constructor() : TypedDevice() {
   val TotalQuantity: Double
     get() = intrinsic()
 
-  val VelocityRelativeY: Double
+  val Weight: Double
     get() = intrinsic()
 
-  val Weight: Double
+  @LogicTypes(
+      read =
+          "RatioCarbonDioxide,RatioHelium,RatioHydrazine,RatioHydrochloricAcid,RatioHydrogen,RatioLiquidAlcohol,RatioLiquidCarbonDioxide,RatioLiquidHydrazine,RatioLiquidHydrochloricAcid,RatioLiquidHydrogen,RatioLiquidMethane,RatioLiquidNitrogen,RatioLiquidNitrousOxide,RatioLiquidOxygen,RatioLiquidOzone,RatioLiquidPollutant,RatioLiquidSilanol,RatioLiquidSodiumChloride,RatioMethane,RatioNitrogen,RatioNitrousOxide,RatioOxygen,RatioOzone,RatioPollutant,RatioPollutedWater,RatioSilanol,RatioSteam,RatioWater",
+      written = "",
+  )
+  val Ratios: Ratios
+    get() = intrinsic()
+
+  @LogicTypes(read = "VelocityRelativeY", written = "")
+  val VelocityRelative: Vector
     get() = intrinsic()
 
   /** The StructureRocketAvionics prefab. */
@@ -22985,9 +16175,6 @@ object RocketCircuitHousings {
 /** A StructureRocketEngineTiny. */
 @PrefabName("StructureRocketEngineTiny")
 class RocketEngineTiny internal constructor() : TypedDevice() {
-  val CombustionOutput: Double
-    get() = intrinsic()
-
   val Error: Boolean
     get() = intrinsic()
 
@@ -23005,73 +16192,7 @@ class RocketEngineTiny internal constructor() : TypedDevice() {
   val Power: Boolean
     get() = intrinsic()
 
-  val PressureOutput: Double
-    get() = intrinsic()
-
   val Ratio: Double
-    get() = intrinsic()
-
-  val RatioCarbonDioxideOutput: Double
-    get() = intrinsic()
-
-  val RatioHeliumOutput: Double
-    get() = intrinsic()
-
-  val RatioHydrazineOutput: Double
-    get() = intrinsic()
-
-  val RatioHydrochloricAcidOutput: Double
-    get() = intrinsic()
-
-  val RatioHydrogenOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidAlcoholOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrazineOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrochloricAcidOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrogenOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidOzoneOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidSilanolOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidSodiumChlorideOutput: Double
-    get() = intrinsic()
-
-  val RatioMethaneOutput: Double
-    get() = intrinsic()
-
-  val RatioNitrogenOutput: Double
-    get() = intrinsic()
-
-  val RatioNitrousOxideOutput: Double
-    get() = intrinsic()
-
-  val RatioOxygenOutput: Double
-    get() = intrinsic()
-
-  val RatioOzoneOutput: Double
-    get() = intrinsic()
-
-  val RatioPollutantOutput: Double
-    get() = intrinsic()
-
-  val RatioPollutedWaterOutput: Double
-    get() = intrinsic()
-
-  val RatioSilanolOutput: Double
-    get() = intrinsic()
-
-  val RatioWaterOutput: Double
     get() = intrinsic()
 
   val RequiredPower: Double
@@ -23081,10 +16202,12 @@ class RocketEngineTiny internal constructor() : TypedDevice() {
     get() = intrinsic()
     set(value) = intrinsic()
 
-  val TemperatureOutput: Double
-    get() = intrinsic()
-
-  val TotalMolesOutput: Double
+  @LogicTypes(
+      read =
+          "CombustionOutput,PressureOutput,RatioCarbonDioxideOutput,RatioHeliumOutput,RatioHydrazineOutput,RatioHydrochloricAcidOutput,RatioHydrogenOutput,RatioLiquidAlcoholOutput,RatioLiquidHydrazineOutput,RatioLiquidHydrochloricAcidOutput,RatioLiquidHydrogenOutput,RatioLiquidOzoneOutput,RatioLiquidSilanolOutput,RatioLiquidSodiumChlorideOutput,RatioMethaneOutput,RatioNitrogenOutput,RatioNitrousOxideOutput,RatioOxygenOutput,RatioOzoneOutput,RatioPollutantOutput,RatioPollutedWaterOutput,RatioSilanolOutput,RatioWaterOutput,TemperatureOutput,TotalMolesOutput",
+      written = "",
+  )
+  val Ports: Ports
     get() = intrinsic()
 
   /** The StructureRocketEngineTiny prefab. */
@@ -23108,15 +16231,6 @@ object RocketEngineTinies {
 /** A StructureRocketFiltrationGas. */
 @PrefabName("StructureRocketFiltrationGas")
 class RocketFiltrationGas internal constructor() : TypedDevice() {
-  val CombustionInput: Double
-    get() = intrinsic()
-
-  val CombustionOutput: Double
-    get() = intrinsic()
-
-  val CombustionOutput2: Double
-    get() = intrinsic()
-
   val Error: Boolean
     get() = intrinsic()
 
@@ -23138,268 +16252,7 @@ class RocketFiltrationGas internal constructor() : TypedDevice() {
   val Power: Boolean
     get() = intrinsic()
 
-  val PressureInput: Double
-    get() = intrinsic()
-
-  val PressureOutput: Double
-    get() = intrinsic()
-
-  val PressureOutput2: Double
-    get() = intrinsic()
-
   val Ratio: Double
-    get() = intrinsic()
-
-  val RatioCarbonDioxideInput: Double
-    get() = intrinsic()
-
-  val RatioCarbonDioxideOutput: Double
-    get() = intrinsic()
-
-  val RatioCarbonDioxideOutput2: Double
-    get() = intrinsic()
-
-  val RatioHeliumInput: Double
-    get() = intrinsic()
-
-  val RatioHeliumOutput: Double
-    get() = intrinsic()
-
-  val RatioHeliumOutput2: Double
-    get() = intrinsic()
-
-  val RatioHydrazineInput: Double
-    get() = intrinsic()
-
-  val RatioHydrazineOutput: Double
-    get() = intrinsic()
-
-  val RatioHydrazineOutput2: Double
-    get() = intrinsic()
-
-  val RatioHydrochloricAcidInput: Double
-    get() = intrinsic()
-
-  val RatioHydrochloricAcidOutput: Double
-    get() = intrinsic()
-
-  val RatioHydrochloricAcidOutput2: Double
-    get() = intrinsic()
-
-  val RatioHydrogenInput: Double
-    get() = intrinsic()
-
-  val RatioHydrogenOutput: Double
-    get() = intrinsic()
-
-  val RatioHydrogenOutput2: Double
-    get() = intrinsic()
-
-  val RatioLiquidAlcoholInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidAlcoholOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidAlcoholOutput2: Double
-    get() = intrinsic()
-
-  val RatioLiquidCarbonDioxideInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidCarbonDioxideOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidCarbonDioxideOutput2: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrazineInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrazineOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrazineOutput2: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrochloricAcidInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrochloricAcidOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrochloricAcidOutput2: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrogenInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrogenOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrogenOutput2: Double
-    get() = intrinsic()
-
-  val RatioLiquidMethaneInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidMethaneOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidMethaneOutput2: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrogenInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrogenOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrogenOutput2: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrousOxideInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrousOxideOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrousOxideOutput2: Double
-    get() = intrinsic()
-
-  val RatioLiquidOxygenInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidOxygenOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidOxygenOutput2: Double
-    get() = intrinsic()
-
-  val RatioLiquidOzoneInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidOzoneOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidOzoneOutput2: Double
-    get() = intrinsic()
-
-  val RatioLiquidPollutantInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidPollutantOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidPollutantOutput2: Double
-    get() = intrinsic()
-
-  val RatioLiquidSilanolInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidSilanolOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidSilanolOutput2: Double
-    get() = intrinsic()
-
-  val RatioLiquidSodiumChlorideInput: Double
-    get() = intrinsic()
-
-  val RatioLiquidSodiumChlorideOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidSodiumChlorideOutput2: Double
-    get() = intrinsic()
-
-  val RatioMethaneInput: Double
-    get() = intrinsic()
-
-  val RatioMethaneOutput: Double
-    get() = intrinsic()
-
-  val RatioMethaneOutput2: Double
-    get() = intrinsic()
-
-  val RatioNitrogenInput: Double
-    get() = intrinsic()
-
-  val RatioNitrogenOutput: Double
-    get() = intrinsic()
-
-  val RatioNitrogenOutput2: Double
-    get() = intrinsic()
-
-  val RatioNitrousOxideInput: Double
-    get() = intrinsic()
-
-  val RatioNitrousOxideOutput: Double
-    get() = intrinsic()
-
-  val RatioNitrousOxideOutput2: Double
-    get() = intrinsic()
-
-  val RatioOxygenInput: Double
-    get() = intrinsic()
-
-  val RatioOxygenOutput: Double
-    get() = intrinsic()
-
-  val RatioOxygenOutput2: Double
-    get() = intrinsic()
-
-  val RatioOzoneInput: Double
-    get() = intrinsic()
-
-  val RatioOzoneOutput: Double
-    get() = intrinsic()
-
-  val RatioOzoneOutput2: Double
-    get() = intrinsic()
-
-  val RatioPollutantInput: Double
-    get() = intrinsic()
-
-  val RatioPollutantOutput: Double
-    get() = intrinsic()
-
-  val RatioPollutantOutput2: Double
-    get() = intrinsic()
-
-  val RatioPollutedWaterInput: Double
-    get() = intrinsic()
-
-  val RatioPollutedWaterOutput: Double
-    get() = intrinsic()
-
-  val RatioPollutedWaterOutput2: Double
-    get() = intrinsic()
-
-  val RatioSilanolInput: Double
-    get() = intrinsic()
-
-  val RatioSilanolOutput: Double
-    get() = intrinsic()
-
-  val RatioSilanolOutput2: Double
-    get() = intrinsic()
-
-  val RatioSteamInput: Double
-    get() = intrinsic()
-
-  val RatioSteamOutput: Double
-    get() = intrinsic()
-
-  val RatioSteamOutput2: Double
-    get() = intrinsic()
-
-  val RatioWaterInput: Double
-    get() = intrinsic()
-
-  val RatioWaterOutput: Double
-    get() = intrinsic()
-
-  val RatioWaterOutput2: Double
     get() = intrinsic()
 
   val RequiredPower: Double
@@ -23409,22 +16262,12 @@ class RocketFiltrationGas internal constructor() : TypedDevice() {
     get() = intrinsic()
     set(value) = intrinsic()
 
-  val TemperatureInput: Double
-    get() = intrinsic()
-
-  val TemperatureOutput: Double
-    get() = intrinsic()
-
-  val TemperatureOutput2: Double
-    get() = intrinsic()
-
-  val TotalMolesInput: Double
-    get() = intrinsic()
-
-  val TotalMolesOutput: Double
-    get() = intrinsic()
-
-  val TotalMolesOutput2: Double
+  @LogicTypes(
+      read =
+          "CombustionInput,CombustionOutput,CombustionOutput2,PressureInput,PressureOutput,PressureOutput2,RatioCarbonDioxideInput,RatioCarbonDioxideOutput,RatioCarbonDioxideOutput2,RatioHeliumInput,RatioHeliumOutput,RatioHeliumOutput2,RatioHydrazineInput,RatioHydrazineOutput,RatioHydrazineOutput2,RatioHydrochloricAcidInput,RatioHydrochloricAcidOutput,RatioHydrochloricAcidOutput2,RatioHydrogenInput,RatioHydrogenOutput,RatioHydrogenOutput2,RatioLiquidAlcoholInput,RatioLiquidAlcoholOutput,RatioLiquidAlcoholOutput2,RatioLiquidCarbonDioxideInput,RatioLiquidCarbonDioxideOutput,RatioLiquidCarbonDioxideOutput2,RatioLiquidHydrazineInput,RatioLiquidHydrazineOutput,RatioLiquidHydrazineOutput2,RatioLiquidHydrochloricAcidInput,RatioLiquidHydrochloricAcidOutput,RatioLiquidHydrochloricAcidOutput2,RatioLiquidHydrogenInput,RatioLiquidHydrogenOutput,RatioLiquidHydrogenOutput2,RatioLiquidMethaneInput,RatioLiquidMethaneOutput,RatioLiquidMethaneOutput2,RatioLiquidNitrogenInput,RatioLiquidNitrogenOutput,RatioLiquidNitrogenOutput2,RatioLiquidNitrousOxideInput,RatioLiquidNitrousOxideOutput,RatioLiquidNitrousOxideOutput2,RatioLiquidOxygenInput,RatioLiquidOxygenOutput,RatioLiquidOxygenOutput2,RatioLiquidOzoneInput,RatioLiquidOzoneOutput,RatioLiquidOzoneOutput2,RatioLiquidPollutantInput,RatioLiquidPollutantOutput,RatioLiquidPollutantOutput2,RatioLiquidSilanolInput,RatioLiquidSilanolOutput,RatioLiquidSilanolOutput2,RatioLiquidSodiumChlorideInput,RatioLiquidSodiumChlorideOutput,RatioLiquidSodiumChlorideOutput2,RatioMethaneInput,RatioMethaneOutput,RatioMethaneOutput2,RatioNitrogenInput,RatioNitrogenOutput,RatioNitrogenOutput2,RatioNitrousOxideInput,RatioNitrousOxideOutput,RatioNitrousOxideOutput2,RatioOxygenInput,RatioOxygenOutput,RatioOxygenOutput2,RatioOzoneInput,RatioOzoneOutput,RatioOzoneOutput2,RatioPollutantInput,RatioPollutantOutput,RatioPollutantOutput2,RatioPollutedWaterInput,RatioPollutedWaterOutput,RatioPollutedWaterOutput2,RatioSilanolInput,RatioSilanolOutput,RatioSilanolOutput2,RatioSteamInput,RatioSteamOutput,RatioSteamOutput2,RatioWaterInput,RatioWaterOutput,RatioWaterOutput2,TemperatureInput,TemperatureOutput,TemperatureOutput2,TotalMolesInput,TotalMolesOutput,TotalMolesOutput2",
+      written = "",
+  )
+  val Ports: Ports
     get() = intrinsic()
 
   /** The device's slots, by number. */
@@ -23480,90 +16323,6 @@ class RocketGasCollector internal constructor() : TypedDevice() {
   val Pressure: Double
     get() = intrinsic()
 
-  val RatioCarbonDioxide: Double
-    get() = intrinsic()
-
-  val RatioHelium: Double
-    get() = intrinsic()
-
-  val RatioHydrazine: Double
-    get() = intrinsic()
-
-  val RatioHydrochloricAcid: Double
-    get() = intrinsic()
-
-  val RatioHydrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidAlcohol: Double
-    get() = intrinsic()
-
-  val RatioLiquidCarbonDioxide: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrazine: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrochloricAcid: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidMethane: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrousOxide: Double
-    get() = intrinsic()
-
-  val RatioLiquidOxygen: Double
-    get() = intrinsic()
-
-  val RatioLiquidOzone: Double
-    get() = intrinsic()
-
-  val RatioLiquidPollutant: Double
-    get() = intrinsic()
-
-  val RatioLiquidSilanol: Double
-    get() = intrinsic()
-
-  val RatioLiquidSodiumChloride: Double
-    get() = intrinsic()
-
-  val RatioMethane: Double
-    get() = intrinsic()
-
-  val RatioNitrogen: Double
-    get() = intrinsic()
-
-  val RatioNitrousOxide: Double
-    get() = intrinsic()
-
-  val RatioOxygen: Double
-    get() = intrinsic()
-
-  val RatioOzone: Double
-    get() = intrinsic()
-
-  val RatioPollutant: Double
-    get() = intrinsic()
-
-  val RatioPollutedWater: Double
-    get() = intrinsic()
-
-  val RatioSilanol: Double
-    get() = intrinsic()
-
-  val RatioSteam: Double
-    get() = intrinsic()
-
-  val RatioWater: Double
-    get() = intrinsic()
-
   val RequiredPower: Double
     get() = intrinsic()
 
@@ -23571,6 +16330,14 @@ class RocketGasCollector internal constructor() : TypedDevice() {
     get() = intrinsic()
 
   val TotalMoles: Double
+    get() = intrinsic()
+
+  @LogicTypes(
+      read =
+          "RatioCarbonDioxide,RatioHelium,RatioHydrazine,RatioHydrochloricAcid,RatioHydrogen,RatioLiquidAlcohol,RatioLiquidCarbonDioxide,RatioLiquidHydrazine,RatioLiquidHydrochloricAcid,RatioLiquidHydrogen,RatioLiquidMethane,RatioLiquidNitrogen,RatioLiquidNitrousOxide,RatioLiquidOxygen,RatioLiquidOzone,RatioLiquidPollutant,RatioLiquidSilanol,RatioLiquidSodiumChloride,RatioMethane,RatioNitrogen,RatioNitrousOxide,RatioOxygen,RatioOzone,RatioPollutant,RatioPollutedWater,RatioSilanol,RatioSteam,RatioWater",
+      written = "",
+  )
+  val Ratios: Ratios
     get() = intrinsic()
 
   /** The StructureRocketGasCollector prefab. */
@@ -23608,12 +16375,6 @@ class RocketManufactory internal constructor() : TypedDevice() {
   val Error: Boolean
     get() = intrinsic()
 
-  val ExportCount: Double
-    get() = intrinsic()
-
-  val ImportCount: Double
-    get() = intrinsic()
-
   var Lock: Boolean
     get() = intrinsic()
     set(value) = intrinsic()
@@ -23642,18 +16403,16 @@ class RocketManufactory internal constructor() : TypedDevice() {
   val StackSize: Double
     get() = intrinsic()
 
+  @LogicTypes(read = "ImportCount", written = "")
+  val Import: Transfer
+    get() = intrinsic()
+
+  @LogicTypes(read = "ExportCount", written = "")
+  val Export: Transfer
+    get() = intrinsic()
+
   /** The device's slots, by number. */
   val slots: Slots<DataDiskSlot>
-    get() = intrinsic()
-
-  /** Slot 0. */
-  @SlotNumber(0)
-  val Import: DataDiskSlot
-    get() = intrinsic()
-
-  /** Slot 1. */
-  @SlotNumber(1)
-  val Export: DataDiskSlot
     get() = intrinsic()
 
   /** The StructureRocketManufactory prefab. */
@@ -23693,12 +16452,6 @@ class RocketMiner internal constructor() : TypedDevice() {
   val Error: Boolean
     get() = intrinsic()
 
-  val ExportCount: Double
-    get() = intrinsic()
-
-  val ImportCount: Double
-    get() = intrinsic()
-
   var Lock: Boolean
     get() = intrinsic()
     set(value) = intrinsic()
@@ -23716,13 +16469,16 @@ class RocketMiner internal constructor() : TypedDevice() {
   val RequiredPower: Double
     get() = intrinsic()
 
-  /** The device's slots, by number. */
-  val slots: Slots<DataDiskSlot>
+  @LogicTypes(read = "ImportCount", written = "")
+  val Import: Transfer
     get() = intrinsic()
 
-  /** Slot 0. */
-  @SlotNumber(0)
-  val Export: DataDiskSlot
+  @LogicTypes(read = "ExportCount", written = "")
+  val Export: Transfer
+    get() = intrinsic()
+
+  /** The device's slots, by number. */
+  val slots: Slots<DataDiskSlot>
     get() = intrinsic()
 
   /** Slot 1. */
@@ -23862,20 +16618,16 @@ class SDBHopper internal constructor() : TypedDevice() {
     get() = intrinsic()
     set(value) = intrinsic()
 
-  val ImportCount: Double
-    get() = intrinsic()
-
   var Open: Boolean
     get() = intrinsic()
     set(value) = intrinsic()
 
-  /** The device's slots, by number. */
-  val slots: Slots<DataDiskSlot>
+  @LogicTypes(read = "ImportCount", written = "")
+  val Import: Transfer
     get() = intrinsic()
 
-  /** Slot 0. */
-  @SlotNumber(0)
-  val Import: DataDiskSlot
+  /** The device's slots, by number. */
+  val slots: Slots<DataDiskSlot>
     get() = intrinsic()
 
   /** The StructureSDBHopper prefab. */
@@ -23909,9 +16661,6 @@ class SDBHopperAdvanced internal constructor() : TypedDevice() {
     get() = intrinsic()
     set(value) = intrinsic()
 
-  val ImportCount: Double
-    get() = intrinsic()
-
   var Lock: Boolean
     get() = intrinsic()
     set(value) = intrinsic()
@@ -23920,13 +16669,12 @@ class SDBHopperAdvanced internal constructor() : TypedDevice() {
     get() = intrinsic()
     set(value) = intrinsic()
 
-  /** The device's slots, by number. */
-  val slots: Slots<DataDiskSlot>
+  @LogicTypes(read = "ImportCount", written = "")
+  val Import: Transfer
     get() = intrinsic()
 
-  /** Slot 0. */
-  @SlotNumber(0)
-  val Import: DataDiskSlot
+  /** The device's slots, by number. */
+  val slots: Slots<DataDiskSlot>
     get() = intrinsic()
 
   /** The StructureSDBHopperAdvanced prefab. */
@@ -23967,12 +16715,6 @@ class SDBSilo internal constructor() : TypedDevice() {
   val Error: Boolean
     get() = intrinsic()
 
-  val ExportCount: Double
-    get() = intrinsic()
-
-  val ImportCount: Double
-    get() = intrinsic()
-
   var Lock: Boolean
     get() = intrinsic()
     set(value) = intrinsic()
@@ -23998,18 +16740,16 @@ class SDBSilo internal constructor() : TypedDevice() {
   val RequiredPower: Double
     get() = intrinsic()
 
+  @LogicTypes(read = "ImportCount", written = "")
+  val Import: Transfer
+    get() = intrinsic()
+
+  @LogicTypes(read = "ExportCount", written = "")
+  val Export: Transfer
+    get() = intrinsic()
+
   /** The device's slots, by number. */
   val slots: Slots<DataDiskSlot>
-    get() = intrinsic()
-
-  /** Slot 0. */
-  @SlotNumber(0)
-  val Import: DataDiskSlot
-    get() = intrinsic()
-
-  /** Slot 1. */
-  @SlotNumber(1)
-  val Export: DataDiskSlot
     get() = intrinsic()
 
   /** The StructureSDBSilo prefab. */
@@ -24089,12 +16829,6 @@ class SatelliteDish internal constructor() : TypedDevice() {
   val SignalStrength: Double
     get() = intrinsic()
 
-  val SizeX: Double
-    get() = intrinsic()
-
-  val SizeZ: Double
-    get() = intrinsic()
-
   val StackSize: Double
     get() = intrinsic()
 
@@ -24107,6 +16841,10 @@ class SatelliteDish internal constructor() : TypedDevice() {
     set(value) = intrinsic()
 
   val WattsReachingContact: Double
+    get() = intrinsic()
+
+  @LogicTypes(read = "SizeX,SizeZ", written = "")
+  val Dimensions: Vector
     get() = intrinsic()
 
   /** The StructureSatelliteDish prefab. */
@@ -24144,12 +16882,6 @@ class SecurityPrinter internal constructor() : TypedDevice() {
   val Error: Boolean
     get() = intrinsic()
 
-  val ExportCount: Double
-    get() = intrinsic()
-
-  val ImportCount: Double
-    get() = intrinsic()
-
   var Lock: Boolean
     get() = intrinsic()
     set(value) = intrinsic()
@@ -24178,18 +16910,16 @@ class SecurityPrinter internal constructor() : TypedDevice() {
   val StackSize: Double
     get() = intrinsic()
 
+  @LogicTypes(read = "ImportCount", written = "")
+  val Import: Transfer
+    get() = intrinsic()
+
+  @LogicTypes(read = "ExportCount", written = "")
+  val Export: Transfer
+    get() = intrinsic()
+
   /** The device's slots, by number. */
   val slots: Slots<DataDiskSlot>
-    get() = intrinsic()
-
-  /** Slot 0. */
-  @SlotNumber(0)
-  val Import: DataDiskSlot
-    get() = intrinsic()
-
-  /** Slot 1. */
-  @SlotNumber(1)
-  val Export: DataDiskSlot
     get() = intrinsic()
 
   /** The StructureSecurityPrinter prefab. */
@@ -24921,12 +17651,6 @@ class SmallSatelliteDish internal constructor() : TypedDevice() {
   val SignalStrength: Double
     get() = intrinsic()
 
-  val SizeX: Double
-    get() = intrinsic()
-
-  val SizeZ: Double
-    get() = intrinsic()
-
   var TargetPadIndex: Double
     get() = intrinsic()
     set(value) = intrinsic()
@@ -24936,6 +17660,10 @@ class SmallSatelliteDish internal constructor() : TypedDevice() {
     set(value) = intrinsic()
 
   val WattsReachingContact: Double
+    get() = intrinsic()
+
+  @LogicTypes(read = "SizeX,SizeZ", written = "")
+  val Dimensions: Vector
     get() = intrinsic()
 
   /** The StructureSmallSatelliteDish prefab. */
@@ -25267,9 +17995,6 @@ class SolidFuelGenerator internal constructor() : TypedDevice() {
     get() = intrinsic()
     set(value) = intrinsic()
 
-  val ImportCount: Double
-    get() = intrinsic()
-
   var Lock: Boolean
     get() = intrinsic()
     set(value) = intrinsic()
@@ -25279,6 +18004,10 @@ class SolidFuelGenerator internal constructor() : TypedDevice() {
     set(value) = intrinsic()
 
   val PowerGeneration: Double
+    get() = intrinsic()
+
+  @LogicTypes(read = "ImportCount", written = "")
+  val Import: Transfer
     get() = intrinsic()
 
   /** The device's slots, by number. */
@@ -25324,12 +18053,6 @@ class Sorter internal constructor() : TypedDevice() {
   val Error: Boolean
     get() = intrinsic()
 
-  val ExportCount: Double
-    get() = intrinsic()
-
-  val ImportCount: Double
-    get() = intrinsic()
-
   var Lock: Boolean
     get() = intrinsic()
     set(value) = intrinsic()
@@ -25352,18 +18075,16 @@ class Sorter internal constructor() : TypedDevice() {
   val RequiredPower: Double
     get() = intrinsic()
 
+  @LogicTypes(read = "ImportCount", written = "")
+  val Import: Transfer
+    get() = intrinsic()
+
+  @LogicTypes(read = "ExportCount", written = "")
+  val Export: Transfer
+    get() = intrinsic()
+
   /** The device's slots, by number. */
   val slots: Slots<DataDiskSlot>
-    get() = intrinsic()
-
-  /** Slot 0. */
-  @SlotNumber(0)
-  val Import: DataDiskSlot
-    get() = intrinsic()
-
-  /** Slot 1. */
-  @SlotNumber(1)
-  val Export: DataDiskSlot
     get() = intrinsic()
 
   /** Slot 2. */
@@ -25409,12 +18130,6 @@ class Stacker internal constructor() : TypedDevice() {
   val Error: Boolean
     get() = intrinsic()
 
-  val ExportCount: Double
-    get() = intrinsic()
-
-  val ImportCount: Double
-    get() = intrinsic()
-
   var Lock: Boolean
     get() = intrinsic()
     set(value) = intrinsic()
@@ -25441,18 +18156,16 @@ class Stacker internal constructor() : TypedDevice() {
     get() = intrinsic()
     set(value) = intrinsic()
 
+  @LogicTypes(read = "ImportCount", written = "")
+  val Import: Transfer
+    get() = intrinsic()
+
+  @LogicTypes(read = "ExportCount", written = "")
+  val Export: Transfer
+    get() = intrinsic()
+
   /** The device's slots, by number. */
   val slots: Slots<DataDiskSlot>
-    get() = intrinsic()
-
-  /** Slot 0. */
-  @SlotNumber(0)
-  val Import: DataDiskSlot
-    get() = intrinsic()
-
-  /** Slot 1. */
-  @SlotNumber(1)
-  val Export: DataDiskSlot
     get() = intrinsic()
 
   /** Slot 2. */
@@ -25498,12 +18211,6 @@ class StackerReverse internal constructor() : TypedDevice() {
   val Error: Boolean
     get() = intrinsic()
 
-  val ExportCount: Double
-    get() = intrinsic()
-
-  val ImportCount: Double
-    get() = intrinsic()
-
   var Lock: Boolean
     get() = intrinsic()
     set(value) = intrinsic()
@@ -25530,18 +18237,16 @@ class StackerReverse internal constructor() : TypedDevice() {
     get() = intrinsic()
     set(value) = intrinsic()
 
+  @LogicTypes(read = "ImportCount", written = "")
+  val Import: Transfer
+    get() = intrinsic()
+
+  @LogicTypes(read = "ExportCount", written = "")
+  val Export: Transfer
+    get() = intrinsic()
+
   /** The device's slots, by number. */
   val slots: Slots<DataDiskSlot>
-    get() = intrinsic()
-
-  /** Slot 0. */
-  @SlotNumber(0)
-  val Import: DataDiskSlot
-    get() = intrinsic()
-
-  /** Slot 1. */
-  @SlotNumber(1)
-  val Export: DataDiskSlot
     get() = intrinsic()
 
   /** Slot 2. */
@@ -25607,90 +18312,6 @@ class StirlingEngine internal constructor() : TypedDevice() {
   val Ratio: Double
     get() = intrinsic()
 
-  val RatioCarbonDioxide: Double
-    get() = intrinsic()
-
-  val RatioHelium: Double
-    get() = intrinsic()
-
-  val RatioHydrazine: Double
-    get() = intrinsic()
-
-  val RatioHydrochloricAcid: Double
-    get() = intrinsic()
-
-  val RatioHydrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidAlcohol: Double
-    get() = intrinsic()
-
-  val RatioLiquidCarbonDioxide: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrazine: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrochloricAcid: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidMethane: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrogen: Double
-    get() = intrinsic()
-
-  val RatioLiquidNitrousOxide: Double
-    get() = intrinsic()
-
-  val RatioLiquidOxygen: Double
-    get() = intrinsic()
-
-  val RatioLiquidOzone: Double
-    get() = intrinsic()
-
-  val RatioLiquidPollutant: Double
-    get() = intrinsic()
-
-  val RatioLiquidSilanol: Double
-    get() = intrinsic()
-
-  val RatioLiquidSodiumChloride: Double
-    get() = intrinsic()
-
-  val RatioMethane: Double
-    get() = intrinsic()
-
-  val RatioNitrogen: Double
-    get() = intrinsic()
-
-  val RatioNitrousOxide: Double
-    get() = intrinsic()
-
-  val RatioOxygen: Double
-    get() = intrinsic()
-
-  val RatioOzone: Double
-    get() = intrinsic()
-
-  val RatioPollutant: Double
-    get() = intrinsic()
-
-  val RatioPollutedWater: Double
-    get() = intrinsic()
-
-  val RatioSilanol: Double
-    get() = intrinsic()
-
-  val RatioSteam: Double
-    get() = intrinsic()
-
-  val RatioWater: Double
-    get() = intrinsic()
-
   val RequiredPower: Double
     get() = intrinsic()
 
@@ -25708,6 +18329,14 @@ class StirlingEngine internal constructor() : TypedDevice() {
     get() = intrinsic()
 
   val WorkingGasEfficiency: Double
+    get() = intrinsic()
+
+  @LogicTypes(
+      read =
+          "RatioCarbonDioxide,RatioHelium,RatioHydrazine,RatioHydrochloricAcid,RatioHydrogen,RatioLiquidAlcohol,RatioLiquidCarbonDioxide,RatioLiquidHydrazine,RatioLiquidHydrochloricAcid,RatioLiquidHydrogen,RatioLiquidMethane,RatioLiquidNitrogen,RatioLiquidNitrousOxide,RatioLiquidOxygen,RatioLiquidOzone,RatioLiquidPollutant,RatioLiquidSilanol,RatioLiquidSodiumChloride,RatioMethane,RatioNitrogen,RatioNitrousOxide,RatioOxygen,RatioOzone,RatioPollutant,RatioPollutedWater,RatioSilanol,RatioSteam,RatioWater",
+      written = "",
+  )
+  val Ratios: Ratios
     get() = intrinsic()
 
   /** The device's slots, by number. */
@@ -26099,12 +18728,6 @@ class ToolManufactory internal constructor() : TypedDevice() {
   val Error: Boolean
     get() = intrinsic()
 
-  val ExportCount: Double
-    get() = intrinsic()
-
-  val ImportCount: Double
-    get() = intrinsic()
-
   var Lock: Boolean
     get() = intrinsic()
     set(value) = intrinsic()
@@ -26133,18 +18756,16 @@ class ToolManufactory internal constructor() : TypedDevice() {
   val StackSize: Double
     get() = intrinsic()
 
+  @LogicTypes(read = "ImportCount", written = "")
+  val Import: Transfer
+    get() = intrinsic()
+
+  @LogicTypes(read = "ExportCount", written = "")
+  val Export: Transfer
+    get() = intrinsic()
+
   /** The device's slots, by number. */
   val slots: Slots<DataDiskSlot>
-    get() = intrinsic()
-
-  /** Slot 0. */
-  @SlotNumber(0)
-  val Import: DataDiskSlot
-    get() = intrinsic()
-
-  /** Slot 1. */
-  @SlotNumber(1)
-  val Export: DataDiskSlot
     get() = intrinsic()
 
   /** The StructureToolManufactory prefab. */
@@ -26507,12 +19128,6 @@ class Unloader internal constructor() : TypedDevice() {
   val Error: Boolean
     get() = intrinsic()
 
-  val ExportCount: Double
-    get() = intrinsic()
-
-  val ImportCount: Double
-    get() = intrinsic()
-
   var Lock: Boolean
     get() = intrinsic()
     set(value) = intrinsic()
@@ -26535,18 +19150,16 @@ class Unloader internal constructor() : TypedDevice() {
   val RequiredPower: Double
     get() = intrinsic()
 
+  @LogicTypes(read = "ImportCount", written = "")
+  val Import: Transfer
+    get() = intrinsic()
+
+  @LogicTypes(read = "ExportCount", written = "")
+  val Export: Transfer
+    get() = intrinsic()
+
   /** The device's slots, by number. */
   val slots: Slots<DataDiskSlot>
-    get() = intrinsic()
-
-  /** Slot 0. */
-  @SlotNumber(0)
-  val Import: DataDiskSlot
-    get() = intrinsic()
-
-  /** Slot 1. */
-  @SlotNumber(1)
-  val Export: DataDiskSlot
     get() = intrinsic()
 
   /** The StructureUnloader prefab. */
@@ -26646,12 +19259,6 @@ class VendingMachine internal constructor() : TypedDevice() {
   val Error: Boolean
     get() = intrinsic()
 
-  val ExportCount: Double
-    get() = intrinsic()
-
-  val ImportCount: Double
-    get() = intrinsic()
-
   var Lock: Boolean
     get() = intrinsic()
     set(value) = intrinsic()
@@ -26682,18 +19289,16 @@ class VendingMachine internal constructor() : TypedDevice() {
   val TargetSlotIndex: Double
     get() = intrinsic()
 
+  @LogicTypes(read = "ImportCount", written = "")
+  val Import: Transfer
+    get() = intrinsic()
+
+  @LogicTypes(read = "ExportCount", written = "")
+  val Export: Transfer
+    get() = intrinsic()
+
   /** The device's slots, by number. */
   val slots: Slots<DataDiskSlot>
-    get() = intrinsic()
-
-  /** Slot 0. */
-  @SlotNumber(0)
-  val Import: DataDiskSlot
-    get() = intrinsic()
-
-  /** Slot 1. */
-  @SlotNumber(1)
-  val Export: DataDiskSlot
     get() = intrinsic()
 
   /** The StructureVendingMachine prefab. */
@@ -26734,12 +19339,6 @@ class VendingMachineSmall internal constructor() : TypedDevice() {
   val Error: Boolean
     get() = intrinsic()
 
-  val ExportCount: Double
-    get() = intrinsic()
-
-  val ImportCount: Double
-    get() = intrinsic()
-
   var Lock: Boolean
     get() = intrinsic()
     set(value) = intrinsic()
@@ -26770,18 +19369,16 @@ class VendingMachineSmall internal constructor() : TypedDevice() {
   val TargetSlotIndex: Double
     get() = intrinsic()
 
+  @LogicTypes(read = "ImportCount", written = "")
+  val Import: Transfer
+    get() = intrinsic()
+
+  @LogicTypes(read = "ExportCount", written = "")
+  val Export: Transfer
+    get() = intrinsic()
+
   /** The device's slots, by number. */
   val slots: Slots<DataDiskSlot>
-    get() = intrinsic()
-
-  /** Slot 0. */
-  @SlotNumber(0)
-  val Import: DataDiskSlot
-    get() = intrinsic()
-
-  /** Slot 1. */
-  @SlotNumber(1)
-  val Export: DataDiskSlot
     get() = intrinsic()
 
   /** The StructureVendingMachineSmall prefab. */
@@ -26859,9 +19456,6 @@ object VolumePumps {
 /** A StructureWallCooler. */
 @PrefabName("StructureWallCooler")
 class WallCooler internal constructor() : TypedDevice() {
-  val CombustionOutput: Double
-    get() = intrinsic()
-
   val Error: Boolean
     get() = intrinsic()
 
@@ -26879,73 +19473,7 @@ class WallCooler internal constructor() : TypedDevice() {
   val Power: Boolean
     get() = intrinsic()
 
-  val PressureOutput: Double
-    get() = intrinsic()
-
   val Ratio: Double
-    get() = intrinsic()
-
-  val RatioCarbonDioxideOutput: Double
-    get() = intrinsic()
-
-  val RatioHeliumOutput: Double
-    get() = intrinsic()
-
-  val RatioHydrazineOutput: Double
-    get() = intrinsic()
-
-  val RatioHydrochloricAcidOutput: Double
-    get() = intrinsic()
-
-  val RatioHydrogenOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidAlcoholOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrazineOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrochloricAcidOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrogenOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidOzoneOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidSilanolOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidSodiumChlorideOutput: Double
-    get() = intrinsic()
-
-  val RatioMethaneOutput: Double
-    get() = intrinsic()
-
-  val RatioNitrogenOutput: Double
-    get() = intrinsic()
-
-  val RatioNitrousOxideOutput: Double
-    get() = intrinsic()
-
-  val RatioOxygenOutput: Double
-    get() = intrinsic()
-
-  val RatioOzoneOutput: Double
-    get() = intrinsic()
-
-  val RatioPollutantOutput: Double
-    get() = intrinsic()
-
-  val RatioPollutedWaterOutput: Double
-    get() = intrinsic()
-
-  val RatioSilanolOutput: Double
-    get() = intrinsic()
-
-  val RatioWaterOutput: Double
     get() = intrinsic()
 
   val RequiredPower: Double
@@ -26955,10 +19483,12 @@ class WallCooler internal constructor() : TypedDevice() {
     get() = intrinsic()
     set(value) = intrinsic()
 
-  val TemperatureOutput: Double
-    get() = intrinsic()
-
-  val TotalMolesOutput: Double
+  @LogicTypes(
+      read =
+          "CombustionOutput,PressureOutput,RatioCarbonDioxideOutput,RatioHeliumOutput,RatioHydrazineOutput,RatioHydrochloricAcidOutput,RatioHydrogenOutput,RatioLiquidAlcoholOutput,RatioLiquidHydrazineOutput,RatioLiquidHydrochloricAcidOutput,RatioLiquidHydrogenOutput,RatioLiquidOzoneOutput,RatioLiquidSilanolOutput,RatioLiquidSodiumChlorideOutput,RatioMethaneOutput,RatioNitrogenOutput,RatioNitrousOxideOutput,RatioOxygenOutput,RatioOzoneOutput,RatioPollutantOutput,RatioPollutedWaterOutput,RatioSilanolOutput,RatioWaterOutput,TemperatureOutput,TotalMolesOutput",
+      written = "",
+  )
+  val Ports: Ports
     get() = intrinsic()
 
   /** The device's slots, by number. */
@@ -27286,9 +19816,6 @@ class WaterPurifier internal constructor() : TypedDevice() {
   val Error: Boolean
     get() = intrinsic()
 
-  val ImportCount: Double
-    get() = intrinsic()
-
   var Lock: Boolean
     get() = intrinsic()
     set(value) = intrinsic()
@@ -27303,13 +19830,12 @@ class WaterPurifier internal constructor() : TypedDevice() {
   val RequiredPower: Double
     get() = intrinsic()
 
-  /** The device's slots, by number. */
-  val slots: Slots<DataDiskSlot>
+  @LogicTypes(read = "ImportCount", written = "")
+  val Import: Transfer
     get() = intrinsic()
 
-  /** Slot 0. */
-  @SlotNumber(0)
-  val Import: DataDiskSlot
+  /** The device's slots, by number. */
+  val slots: Slots<DataDiskSlot>
     get() = intrinsic()
 
   /** The StructureWaterPurifier prefab. */
@@ -27339,9 +19865,6 @@ object WaterPurifiers {
 /** A StructureWaterWallCooler. */
 @PrefabName("StructureWaterWallCooler")
 class WaterWallCooler internal constructor() : TypedDevice() {
-  val CombustionOutput: Double
-    get() = intrinsic()
-
   val Error: Boolean
     get() = intrinsic()
 
@@ -27359,73 +19882,7 @@ class WaterWallCooler internal constructor() : TypedDevice() {
   val Power: Boolean
     get() = intrinsic()
 
-  val PressureOutput: Double
-    get() = intrinsic()
-
   val Ratio: Double
-    get() = intrinsic()
-
-  val RatioCarbonDioxideOutput: Double
-    get() = intrinsic()
-
-  val RatioHeliumOutput: Double
-    get() = intrinsic()
-
-  val RatioHydrazineOutput: Double
-    get() = intrinsic()
-
-  val RatioHydrochloricAcidOutput: Double
-    get() = intrinsic()
-
-  val RatioHydrogenOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidAlcoholOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrazineOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrochloricAcidOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidHydrogenOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidOzoneOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidSilanolOutput: Double
-    get() = intrinsic()
-
-  val RatioLiquidSodiumChlorideOutput: Double
-    get() = intrinsic()
-
-  val RatioMethaneOutput: Double
-    get() = intrinsic()
-
-  val RatioNitrogenOutput: Double
-    get() = intrinsic()
-
-  val RatioNitrousOxideOutput: Double
-    get() = intrinsic()
-
-  val RatioOxygenOutput: Double
-    get() = intrinsic()
-
-  val RatioOzoneOutput: Double
-    get() = intrinsic()
-
-  val RatioPollutantOutput: Double
-    get() = intrinsic()
-
-  val RatioPollutedWaterOutput: Double
-    get() = intrinsic()
-
-  val RatioSilanolOutput: Double
-    get() = intrinsic()
-
-  val RatioWaterOutput: Double
     get() = intrinsic()
 
   val RequiredPower: Double
@@ -27435,10 +19892,12 @@ class WaterWallCooler internal constructor() : TypedDevice() {
     get() = intrinsic()
     set(value) = intrinsic()
 
-  val TemperatureOutput: Double
-    get() = intrinsic()
-
-  val TotalMolesOutput: Double
+  @LogicTypes(
+      read =
+          "CombustionOutput,PressureOutput,RatioCarbonDioxideOutput,RatioHeliumOutput,RatioHydrazineOutput,RatioHydrochloricAcidOutput,RatioHydrogenOutput,RatioLiquidAlcoholOutput,RatioLiquidHydrazineOutput,RatioLiquidHydrochloricAcidOutput,RatioLiquidHydrogenOutput,RatioLiquidOzoneOutput,RatioLiquidSilanolOutput,RatioLiquidSodiumChlorideOutput,RatioMethaneOutput,RatioNitrogenOutput,RatioNitrousOxideOutput,RatioOxygenOutput,RatioOzoneOutput,RatioPollutantOutput,RatioPollutedWaterOutput,RatioSilanolOutput,RatioWaterOutput,TemperatureOutput,TotalMolesOutput",
+      written = "",
+  )
+  val Ports: Ports
     get() = intrinsic()
 
   /** The device's slots, by number. */

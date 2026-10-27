@@ -59,30 +59,6 @@ abstract class GenericDevice internal constructor() {
     get() = intrinsic()
     set(value) = intrinsic()
 
-  var RatioOxygen: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var RatioCarbonDioxide: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var RatioNitrogen: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var RatioPollutant: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var RatioMethane: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var RatioWater: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
   var Horizontal: Double
     get() = intrinsic()
     set(value) = intrinsic()
@@ -119,22 +95,6 @@ abstract class GenericDevice internal constructor() {
     get() = intrinsic()
     set(value) = intrinsic()
 
-  var ImportQuantity: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var ImportSlotOccupant: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var ExportQuantity: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var ExportSlotOccupant: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
   var RequiredPower: Double
     get() = intrinsic()
     set(value) = intrinsic()
@@ -168,14 +128,6 @@ abstract class GenericDevice internal constructor() {
     set(value) = intrinsic()
 
   var RecipeHash: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var ExportSlotHash: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var ImportSlotHash: Double
     get() = intrinsic()
     set(value) = intrinsic()
 
@@ -255,14 +207,6 @@ abstract class GenericDevice internal constructor() {
     get() = intrinsic()
     set(value) = intrinsic()
 
-  var ExportCount: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var ImportCount: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
   var PowerGeneration: Double
     get() = intrinsic()
     set(value) = intrinsic()
@@ -307,35 +251,7 @@ abstract class GenericDevice internal constructor() {
     get() = intrinsic()
     set(value) = intrinsic()
 
-  var PositionX: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var PositionY: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var PositionZ: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
   var VelocityMagnitude: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var VelocityRelativeX: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var VelocityRelativeY: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var VelocityRelativeZ: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var RatioNitrousOxide: Double
     get() = intrinsic()
     set(value) = intrinsic()
 
@@ -351,26 +267,6 @@ abstract class GenericDevice internal constructor() {
     set(value) = intrinsic()
 
   var SignalID: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var TargetX: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var TargetY: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var TargetZ: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var SettingInput: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var SettingOutput: Double
     get() = intrinsic()
     set(value) = intrinsic()
 
@@ -426,182 +322,6 @@ abstract class GenericDevice internal constructor() {
     get() = intrinsic()
     set(value) = intrinsic()
 
-  var PressureInput: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var TemperatureInput: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var RatioOxygenInput: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var RatioCarbonDioxideInput: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var RatioNitrogenInput: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var RatioPollutantInput: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var RatioMethaneInput: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var RatioWaterInput: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var RatioNitrousOxideInput: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var TotalMolesInput: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var PressureInput2: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var TemperatureInput2: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var RatioOxygenInput2: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var RatioCarbonDioxideInput2: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var RatioNitrogenInput2: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var RatioPollutantInput2: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var RatioMethaneInput2: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var RatioWaterInput2: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var RatioNitrousOxideInput2: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var TotalMolesInput2: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var PressureOutput: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var TemperatureOutput: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var RatioOxygenOutput: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var RatioCarbonDioxideOutput: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var RatioNitrogenOutput: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var RatioPollutantOutput: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var RatioMethaneOutput: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var RatioWaterOutput: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var RatioNitrousOxideOutput: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var TotalMolesOutput: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var PressureOutput2: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var TemperatureOutput2: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var RatioOxygenOutput2: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var RatioCarbonDioxideOutput2: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var RatioNitrogenOutput2: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var RatioPollutantOutput2: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var RatioMethaneOutput2: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var RatioWaterOutput2: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var RatioNitrousOxideOutput2: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var TotalMolesOutput2: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var CombustionInput: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var CombustionInput2: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var CombustionOutput: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var CombustionOutput2: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
   var OperationalTemperatureEfficiency: Double
     get() = intrinsic()
     set(value) = intrinsic()
@@ -635,18 +355,6 @@ abstract class GenericDevice internal constructor() {
     set(value) = intrinsic()
 
   var TargetPadIndex: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var SizeX: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var SizeY: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var SizeZ: Double
     get() = intrinsic()
     set(value) = intrinsic()
 
@@ -706,151 +414,11 @@ abstract class GenericDevice internal constructor() {
     get() = intrinsic()
     set(value) = intrinsic()
 
-  var RatioLiquidNitrogen: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var RatioLiquidNitrogenInput: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var RatioLiquidNitrogenInput2: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var RatioLiquidNitrogenOutput: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var RatioLiquidNitrogenOutput2: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
   var VolumeOfLiquid: Double
     get() = intrinsic()
     set(value) = intrinsic()
 
-  var RatioLiquidOxygen: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var RatioLiquidOxygenInput: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var RatioLiquidOxygenInput2: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var RatioLiquidOxygenOutput: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var RatioLiquidOxygenOutput2: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var RatioLiquidMethane: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var RatioLiquidMethaneInput: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var RatioLiquidMethaneInput2: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var RatioLiquidMethaneOutput: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var RatioLiquidMethaneOutput2: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var RatioSteam: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var RatioSteamInput: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var RatioSteamInput2: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var RatioSteamOutput: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var RatioSteamOutput2: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
   var ContactTypeId: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var RatioLiquidCarbonDioxide: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var RatioLiquidCarbonDioxideInput: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var RatioLiquidCarbonDioxideInput2: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var RatioLiquidCarbonDioxideOutput: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var RatioLiquidCarbonDioxideOutput2: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var RatioLiquidPollutant: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var RatioLiquidPollutantInput: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var RatioLiquidPollutantInput2: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var RatioLiquidPollutantOutput: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var RatioLiquidPollutantOutput2: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var RatioLiquidNitrousOxide: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var RatioLiquidNitrousOxideInput: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var RatioLiquidNitrousOxideInput2: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var RatioLiquidNitrousOxideOutput: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var RatioLiquidNitrousOxideOutput2: Double
     get() = intrinsic()
     set(value) = intrinsic()
 
@@ -906,31 +474,7 @@ abstract class GenericDevice internal constructor() {
     get() = intrinsic()
     set(value) = intrinsic()
 
-  var ForwardX: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var ForwardY: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var ForwardZ: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
   var Orientation: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var VelocityX: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var VelocityY: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var VelocityZ: Double
     get() = intrinsic()
     set(value) = intrinsic()
 
@@ -1003,18 +547,6 @@ abstract class GenericDevice internal constructor() {
     set(value) = intrinsic()
 
   var TrueAnomaly: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var RatioHydrogen: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var RatioLiquidHydrogen: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var RatioPollutedWater: Double
     get() = intrinsic()
     set(value) = intrinsic()
 
@@ -1130,273 +662,35 @@ abstract class GenericDevice internal constructor() {
     get() = intrinsic()
     set(value) = intrinsic()
 
-  var RatioHydrazine: Double
+  val Ratios: Ratios
     get() = intrinsic()
-    set(value) = intrinsic()
 
-  var RatioLiquidHydrazine: Double
+  val Import: Transfer
     get() = intrinsic()
-    set(value) = intrinsic()
 
-  var RatioLiquidAlcohol: Double
+  val Export: Transfer
     get() = intrinsic()
-    set(value) = intrinsic()
 
-  var RatioHelium: Double
+  val Position: MutableVector
     get() = intrinsic()
-    set(value) = intrinsic()
 
-  var RatioLiquidSodiumChloride: Double
+  val VelocityRelative: MutableVector
     get() = intrinsic()
-    set(value) = intrinsic()
 
-  var RatioSilanol: Double
+  val Target: MutableVector
     get() = intrinsic()
-    set(value) = intrinsic()
 
-  var RatioLiquidSilanol: Double
+  val Ports: Ports
     get() = intrinsic()
-    set(value) = intrinsic()
 
-  var RatioHydrochloricAcid: Double
+  val Dimensions: MutableVector
     get() = intrinsic()
-    set(value) = intrinsic()
 
-  var RatioLiquidHydrochloricAcid: Double
+  val Forward: MutableVector
     get() = intrinsic()
-    set(value) = intrinsic()
 
-  var RatioOzone: Double
+  val Velocity: MutableVector
     get() = intrinsic()
-    set(value) = intrinsic()
-
-  var RatioLiquidOzone: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var RatioHydrogenInput: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var RatioHydrogenInput2: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var RatioHydrogenOutput: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var RatioHydrogenOutput2: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var RatioLiquidHydrogenInput: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var RatioLiquidHydrogenInput2: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var RatioLiquidHydrogenOutput: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var RatioLiquidHydrogenOutput2: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var RatioPollutedWaterInput: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var RatioPollutedWaterInput2: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var RatioPollutedWaterOutput: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var RatioPollutedWaterOutput2: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var RatioHydrazineInput: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var RatioHydrazineInput2: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var RatioHydrazineOutput: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var RatioHydrazineOutput2: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var RatioLiquidHydrazineInput: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var RatioLiquidHydrazineInput2: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var RatioLiquidHydrazineOutput: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var RatioLiquidHydrazineOutput2: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var RatioLiquidAlcoholInput: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var RatioLiquidAlcoholInput2: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var RatioLiquidAlcoholOutput: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var RatioLiquidAlcoholOutput2: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var RatioHeliumInput: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var RatioHeliumInput2: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var RatioHeliumOutput: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var RatioHeliumOutput2: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var RatioLiquidSodiumChlorideInput: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var RatioLiquidSodiumChlorideInput2: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var RatioLiquidSodiumChlorideOutput: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var RatioLiquidSodiumChlorideOutput2: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var RatioSilanolInput: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var RatioSilanolInput2: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var RatioSilanolOutput: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var RatioSilanolOutput2: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var RatioLiquidSilanolInput: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var RatioLiquidSilanolInput2: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var RatioLiquidSilanolOutput: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var RatioLiquidSilanolOutput2: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var RatioHydrochloricAcidInput: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var RatioHydrochloricAcidInput2: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var RatioHydrochloricAcidOutput: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var RatioHydrochloricAcidOutput2: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var RatioLiquidHydrochloricAcidInput: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var RatioLiquidHydrochloricAcidInput2: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var RatioLiquidHydrochloricAcidOutput: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var RatioLiquidHydrochloricAcidOutput2: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var RatioOzoneInput: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var RatioOzoneInput2: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var RatioOzoneOutput: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var RatioOzoneOutput2: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var RatioLiquidOzoneInput: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var RatioLiquidOzoneInput2: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var RatioLiquidOzoneOutput: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var RatioLiquidOzoneOutput2: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
 
   /** The device's slots, by number. */
   val slots: Slots<Slot>

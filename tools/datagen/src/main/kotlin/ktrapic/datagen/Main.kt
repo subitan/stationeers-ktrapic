@@ -92,5 +92,6 @@ object DataFiles {
           generated.getValue("GeneratedPrefabs.kt"),
           LogicEnums.fromJson(enums(root).readText()),
           Typing.fromJson(typing(root).readText()),
+          generated.getValue(ViewsGenerator.FILE),
       )
 }

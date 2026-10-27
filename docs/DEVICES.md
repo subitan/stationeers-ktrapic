@@ -5,6 +5,7 @@
 The typed devices, slots and enums a program can name, as Kotlin declarations: 358 prefabs in all. The [language guide](LANGUAGE.md#devices) says how to use them. Search this page for a game prefab name (`StructureGrowLight`) to find its type.
 
 - [Using a device](#using-a-device)
+- [Views](#views)
 - [Families](#families)
 - Devices: [A](#a) · [B](#b) · [C](#c) · [D](#d) · [E](#e) · [F](#f) · [G](#g) · [H](#h) · [I](#i) · [J](#j) · [K](#k) · [L](#l) · [M](#m) · [N](#n) · [O](#o) · [P](#p) · [R](#r) · [S](#s) · [T](#t) · [U](#u) · [V](#v) · [W](#w)
 - [Slots](#slots)
@@ -30,6 +31,72 @@ object GrowLights {
 For a device with slots, the batch from `all` or `named` also has `slots`, a slot of every one in the batch: `BatteryChargers.all.slots[0]`.
 
 A device's logic types are its properties: a `var` can be written, a `val` only read. Every typed device also has `val PrefabHash: Prefab`, `val NameHash: Double` and `val ReferenceId: Double`. Any device can also be used untyped, as `d0` to `d5` or `db`, with every logic type.
+
+## Views
+
+Some logic types come in families, which a device groups as views: `filtration.Ports.Output.Pressure` is `PressureOutput`, `sensor.Ratios[Substance.Oxygen]` is `RatioOxygen`, `robot.Position.X` is `PositionX`, and `hopper.Import.Count` is `ImportCount`. A view compiles to the same one instruction as the logic type it names, and can be held in a `val` or passed to an inline function like a device. A key, such as `Substance.Oxygen`, must be written out, held in a `val` or passed to an inline function.
+
+A typed device has only the views its prefab has, and the comment by each says what it reaches there; naming anything else is an error saying what the device lacks. An untyped pin (`d0`) has every view, checked only against the logic types the game has. A batch reads and writes views too: `GasSensors.all.map { it.Ratios[Substance.Oxygen] }.average()`.
+
+```kotlin
+/** The substances whose ratios a device reports, the keys of [Ratios]. */
+enum class Substance {
+  Oxygen, CarbonDioxide, Nitrogen, Pollutant, Methane, Water,
+  NitrousOxide, LiquidNitrogen, LiquidOxygen, LiquidMethane, Steam, LiquidCarbonDioxide,
+  LiquidPollutant, LiquidNitrousOxide, Hydrogen, LiquidHydrogen, PollutedWater, Hydrazine,
+  LiquidHydrazine, LiquidAlcohol, Helium, LiquidSodiumChloride, Silanol, LiquidSilanol,
+  HydrochloricAcid, LiquidHydrochloricAcid, Ozone, LiquidOzone,
+}
+
+/** A device's ports, each with its own pressure, temperature and contents. */
+class Ports {
+  val Input: Port
+  val Input2: Port
+  val Output: Port
+  val Output2: Port
+}
+
+/** One of a device's [Ports]. */
+class Port {
+  val Pressure: Double
+  val Temperature: Double
+  val TotalMoles: Double
+  val Combustion: Double
+  var Setting: Double
+  /** The port's contents, as the ratio of each [Substance]. */
+  val Ratios: Ratios
+}
+
+/**
+ * The ratio of each [Substance] in a device or one of its ports: `sensor.Ratios[Substance.Oxygen]`.
+ * The key must be a constant, and one the device reports.
+ */
+class Ratios {
+  operator fun get(substance: Substance): Double
+}
+
+/** A vector a device reports, by axis. */
+class Vector {
+  val X: Double
+  val Y: Double
+  val Z: Double
+}
+
+/** A vector a device reports and a program can set, by axis. */
+class MutableVector {
+  var X: Double
+  var Y: Double
+  var Z: Double
+}
+
+/** What a device imports or exports. */
+class Transfer {
+  val Count: Double
+  val Quantity: Double
+  val SlotHash: Double
+  val SlotOccupant: Double
+}
+```
 
 ## Families
 
@@ -114,43 +181,19 @@ class AccessBridge : TypedDevice {
 
 /** StructureActiveVent. Entry point: ActiveVents. */
 class ActiveVent : TypedDevice {
-  val CombustionOutput: Double
   val Error: Boolean
   var Lock: Boolean
   val Maximum: Double
   var Mode: Double
   var On: Boolean
   var Open: Boolean
+  val Ports: Ports // Output: Combustion, Pressure, Temperature, TotalMoles, Ratios[CarbonDioxide, Helium, Hydrazine, HydrochloricAcid, Hydrogen, LiquidAlcohol, LiquidHydrazine, LiquidHydrochloricAcid, LiquidHydrogen, LiquidOzone, LiquidSilanol, LiquidSodiumChloride, Methane, Nitrogen, NitrousOxide, Oxygen, Ozone, Pollutant, PollutedWater, Silanol, Water]
   val Power: Boolean
   var PressureExternal: Double
   var PressureInternal: Double
-  val PressureOutput: Double
   val Ratio: Double
-  val RatioCarbonDioxideOutput: Double
-  val RatioHeliumOutput: Double
-  val RatioHydrazineOutput: Double
-  val RatioHydrochloricAcidOutput: Double
-  val RatioHydrogenOutput: Double
-  val RatioLiquidAlcoholOutput: Double
-  val RatioLiquidHydrazineOutput: Double
-  val RatioLiquidHydrochloricAcidOutput: Double
-  val RatioLiquidHydrogenOutput: Double
-  val RatioLiquidOzoneOutput: Double
-  val RatioLiquidSilanolOutput: Double
-  val RatioLiquidSodiumChlorideOutput: Double
-  val RatioMethaneOutput: Double
-  val RatioNitrogenOutput: Double
-  val RatioNitrousOxideOutput: Double
-  val RatioOxygenOutput: Double
-  val RatioOzoneOutput: Double
-  val RatioPollutantOutput: Double
-  val RatioPollutedWaterOutput: Double
-  val RatioSilanolOutput: Double
-  val RatioWaterOutput: Double
   val RequiredPower: Double
   var Setting: Double
-  val TemperatureOutput: Double
-  val TotalMolesOutput: Double
   val DataDisk: DataDiskSlot // slots[0]
   val slots: Slots<DataDiskSlot>
 }
@@ -160,8 +203,8 @@ class AdvancedComposter : TypedDevice {
   var Activate: Boolean
   var ClearMemory: Boolean
   val Error: Boolean
-  val ExportCount: Double
-  val ImportCount: Double
+  val Export: Transfer // Count
+  val Import: Transfer // Count
   var Lock: Boolean
   val Maximum: Double
   var Mode: Double
@@ -172,8 +215,6 @@ class AdvancedComposter : TypedDevice {
   val Ratio: Double
   val RequiredPower: Double
   var Setting: Double
-  val Import: DataDiskSlot // slots[0]
-  val Export: DataDiskSlot // slots[1]
   val slots: Slots<DataDiskSlot>
 }
 
@@ -183,54 +224,26 @@ class AdvancedFurnace : TypedDevice {
   var ClearMemory: Boolean
   val Combustion: Boolean
   val Error: Boolean
-  val ExportCount: Double
-  val ImportCount: Double
+  val Export: Transfer // Count
+  val Import: Transfer // Count
   var Lock: Boolean
   val Maximum: Double
   var Mode: Double
   var On: Boolean
   var Open: Boolean
+  val Ports: Ports
+  //   Input: var Setting
+  //   Output: var Setting
   val Power: Boolean
   val Pressure: Double
   val Ratio: Double
-  val RatioCarbonDioxide: Double
-  val RatioHelium: Double
-  val RatioHydrazine: Double
-  val RatioHydrochloricAcid: Double
-  val RatioHydrogen: Double
-  val RatioLiquidAlcohol: Double
-  val RatioLiquidCarbonDioxide: Double
-  val RatioLiquidHydrazine: Double
-  val RatioLiquidHydrochloricAcid: Double
-  val RatioLiquidHydrogen: Double
-  val RatioLiquidMethane: Double
-  val RatioLiquidNitrogen: Double
-  val RatioLiquidNitrousOxide: Double
-  val RatioLiquidOxygen: Double
-  val RatioLiquidOzone: Double
-  val RatioLiquidPollutant: Double
-  val RatioLiquidSilanol: Double
-  val RatioLiquidSodiumChloride: Double
-  val RatioMethane: Double
-  val RatioNitrogen: Double
-  val RatioNitrousOxide: Double
-  val RatioOxygen: Double
-  val RatioOzone: Double
-  val RatioPollutant: Double
-  val RatioPollutedWater: Double
-  val RatioSilanol: Double
-  val RatioSteam: Double
-  val RatioWater: Double
+  val Ratios: Ratios // every Substance
   val Reagents: Double
   val RecipeHash: Double
   val RequiredPower: Double
   var Setting: Double
-  var SettingInput: Double
-  var SettingOutput: Double
   val Temperature: Double
   val TotalMoles: Double
-  val Import: DataDiskSlot // slots[0]
-  val Export: DataDiskSlot // slots[1]
   val slots: Slots<DataDiskSlot>
 }
 
@@ -240,8 +253,8 @@ class AdvancedPackagingMachine : TypedDevice {
   var ClearMemory: Boolean
   val CompletionRatio: Double
   val Error: Boolean
-  val ExportCount: Double
-  val ImportCount: Double
+  val Export: Transfer // Count
+  val Import: Transfer // Count
   var Lock: Boolean
   var On: Boolean
   var Open: Boolean
@@ -250,8 +263,6 @@ class AdvancedPackagingMachine : TypedDevice {
   var RecipeHash: Double
   val RequiredPower: Double
   val StackSize: Double
-  val Import: DataDiskSlot // slots[0]
-  val Export: DataDiskSlot // slots[1]
   val slots: Slots<DataDiskSlot>
 }
 
@@ -273,9 +284,6 @@ class AdvancedTablet : TypedDevice {
 
 /** StructureAirConditioner. Entry point: AirConditioners. */
 class AirConditioner : TypedDevice {
-  val CombustionInput: Double
-  val CombustionOutput: Double
-  val CombustionOutput2: Double
   val Error: Boolean
   var Lock: Boolean
   val Maximum: Double
@@ -283,105 +291,16 @@ class AirConditioner : TypedDevice {
   var On: Boolean
   var Open: Boolean
   val OperationalTemperatureEfficiency: Double
+  val Ports: Ports
+  //   Input: Combustion, Pressure, Temperature, TotalMoles, Ratios[every Substance]
+  //   Output: Combustion, Pressure, Temperature, TotalMoles, Ratios[every Substance]
+  //   Output2: Combustion, Pressure, Temperature, TotalMoles, Ratios[every Substance]
   val Power: Boolean
   val PressureEfficiency: Double
-  val PressureInput: Double
-  val PressureOutput: Double
-  val PressureOutput2: Double
   val Ratio: Double
-  val RatioCarbonDioxideInput: Double
-  val RatioCarbonDioxideOutput: Double
-  val RatioCarbonDioxideOutput2: Double
-  val RatioHeliumInput: Double
-  val RatioHeliumOutput: Double
-  val RatioHeliumOutput2: Double
-  val RatioHydrazineInput: Double
-  val RatioHydrazineOutput: Double
-  val RatioHydrazineOutput2: Double
-  val RatioHydrochloricAcidInput: Double
-  val RatioHydrochloricAcidOutput: Double
-  val RatioHydrochloricAcidOutput2: Double
-  val RatioHydrogenInput: Double
-  val RatioHydrogenOutput: Double
-  val RatioHydrogenOutput2: Double
-  val RatioLiquidAlcoholInput: Double
-  val RatioLiquidAlcoholOutput: Double
-  val RatioLiquidAlcoholOutput2: Double
-  val RatioLiquidCarbonDioxideInput: Double
-  val RatioLiquidCarbonDioxideOutput: Double
-  val RatioLiquidCarbonDioxideOutput2: Double
-  val RatioLiquidHydrazineInput: Double
-  val RatioLiquidHydrazineOutput: Double
-  val RatioLiquidHydrazineOutput2: Double
-  val RatioLiquidHydrochloricAcidInput: Double
-  val RatioLiquidHydrochloricAcidOutput: Double
-  val RatioLiquidHydrochloricAcidOutput2: Double
-  val RatioLiquidHydrogenInput: Double
-  val RatioLiquidHydrogenOutput: Double
-  val RatioLiquidHydrogenOutput2: Double
-  val RatioLiquidMethaneInput: Double
-  val RatioLiquidMethaneOutput: Double
-  val RatioLiquidMethaneOutput2: Double
-  val RatioLiquidNitrogenInput: Double
-  val RatioLiquidNitrogenOutput: Double
-  val RatioLiquidNitrogenOutput2: Double
-  val RatioLiquidNitrousOxideInput: Double
-  val RatioLiquidNitrousOxideOutput: Double
-  val RatioLiquidNitrousOxideOutput2: Double
-  val RatioLiquidOxygenInput: Double
-  val RatioLiquidOxygenOutput: Double
-  val RatioLiquidOxygenOutput2: Double
-  val RatioLiquidOzoneInput: Double
-  val RatioLiquidOzoneOutput: Double
-  val RatioLiquidOzoneOutput2: Double
-  val RatioLiquidPollutantInput: Double
-  val RatioLiquidPollutantOutput: Double
-  val RatioLiquidPollutantOutput2: Double
-  val RatioLiquidSilanolInput: Double
-  val RatioLiquidSilanolOutput: Double
-  val RatioLiquidSilanolOutput2: Double
-  val RatioLiquidSodiumChlorideInput: Double
-  val RatioLiquidSodiumChlorideOutput: Double
-  val RatioLiquidSodiumChlorideOutput2: Double
-  val RatioMethaneInput: Double
-  val RatioMethaneOutput: Double
-  val RatioMethaneOutput2: Double
-  val RatioNitrogenInput: Double
-  val RatioNitrogenOutput: Double
-  val RatioNitrogenOutput2: Double
-  val RatioNitrousOxideInput: Double
-  val RatioNitrousOxideOutput: Double
-  val RatioNitrousOxideOutput2: Double
-  val RatioOxygenInput: Double
-  val RatioOxygenOutput: Double
-  val RatioOxygenOutput2: Double
-  val RatioOzoneInput: Double
-  val RatioOzoneOutput: Double
-  val RatioOzoneOutput2: Double
-  val RatioPollutantInput: Double
-  val RatioPollutantOutput: Double
-  val RatioPollutantOutput2: Double
-  val RatioPollutedWaterInput: Double
-  val RatioPollutedWaterOutput: Double
-  val RatioPollutedWaterOutput2: Double
-  val RatioSilanolInput: Double
-  val RatioSilanolOutput: Double
-  val RatioSilanolOutput2: Double
-  val RatioSteamInput: Double
-  val RatioSteamOutput: Double
-  val RatioSteamOutput2: Double
-  val RatioWaterInput: Double
-  val RatioWaterOutput: Double
-  val RatioWaterOutput2: Double
   val RequiredPower: Double
   var Setting: Double
   val TemperatureDifferentialEfficiency: Double
-  val TemperatureInput: Double
-  val TemperatureOutput: Double
-  val TemperatureOutput2: Double
-  val TotalMolesInput: Double
-  val TotalMolesOutput: Double
-  val TotalMolesOutput2: Double
   val ProgrammableChip: DataDiskSlot // slots[0]
   val slots: Slots<DataDiskSlot>
 }
@@ -435,17 +354,15 @@ class ArcFurnace : TypedDevice {
   var Activate: Boolean
   var ClearMemory: Boolean
   val Error: Boolean
-  val ExportCount: Double
+  val Export: Transfer // Count
   val Idle: Boolean
-  val ImportCount: Double
+  val Import: Transfer // Count
   var Lock: Boolean
   var On: Boolean
   val Power: Boolean
   val Reagents: Double
   val RecipeHash: Double
   val RequiredPower: Double
-  val Import: DataDiskSlot // slots[0]
-  val Export: DataDiskSlot // slots[1]
   val slots: Slots<DataDiskSlot>
 }
 
@@ -501,8 +418,8 @@ class Autolathe : TypedDevice {
   var ClearMemory: Boolean
   val CompletionRatio: Double
   val Error: Boolean
-  val ExportCount: Double
-  val ImportCount: Double
+  val Export: Transfer // Count
+  val Import: Transfer // Count
   var Lock: Boolean
   var On: Boolean
   var Open: Boolean
@@ -511,8 +428,6 @@ class Autolathe : TypedDevice {
   var RecipeHash: Double
   val RequiredPower: Double
   val StackSize: Double
-  val Import: DataDiskSlot // slots[0]
-  val Export: DataDiskSlot // slots[1]
   val slots: Slots<DataDiskSlot>
 }
 
@@ -522,8 +437,8 @@ class AutomatedOven : TypedDevice {
   var ClearMemory: Boolean
   val CompletionRatio: Double
   val Error: Boolean
-  val ExportCount: Double
-  val ImportCount: Double
+  val Export: Transfer // Count
+  val Import: Transfer // Count
   var Lock: Boolean
   var On: Boolean
   var Open: Boolean
@@ -532,8 +447,6 @@ class AutomatedOven : TypedDevice {
   var RecipeHash: Double
   val RequiredPower: Double
   val StackSize: Double
-  val Import: DataDiskSlot // slots[0]
-  val Export: DataDiskSlot // slots[1]
   val slots: Slots<DataDiskSlot>
 }
 
@@ -542,14 +455,12 @@ class AutoMinerSmall : TypedDevice {
   var Activate: Boolean
   var ClearMemory: Boolean
   val Error: Boolean
-  val ExportCount: Double
-  val ImportCount: Double
+  val Export: Transfer // Count
+  val Import: Transfer // Count
   var On: Boolean
   var Open: Boolean
   val Power: Boolean
   val RequiredPower: Double
-  val Import: DataDiskSlot // slots[0]
-  val Export: DataDiskSlot // slots[1]
   val slots: Slots<DataDiskSlot>
 }
 ```
@@ -733,65 +644,14 @@ class Camera : TypedDevice {
 /** StructureCapsuleTankGas. Entry point: CapsuleTankGases. */
 class CapsuleTankGas : TypedDevice {
   val Combustion: Boolean
-  val CombustionOutput: Double
   val Maximum: Double
+  val Ports: Ports // Output: Combustion, Pressure, Temperature, TotalMoles, Ratios[CarbonDioxide, Helium, Hydrazine, HydrochloricAcid, Hydrogen, LiquidAlcohol, LiquidHydrazine, LiquidHydrochloricAcid, LiquidHydrogen, LiquidOzone, LiquidSilanol, LiquidSodiumChloride, Methane, Nitrogen, NitrousOxide, Oxygen, Ozone, Pollutant, PollutedWater, Silanol, Water]
   val Pressure: Double
-  val PressureOutput: Double
   val Ratio: Double
-  val RatioCarbonDioxide: Double
-  val RatioCarbonDioxideOutput: Double
-  val RatioHelium: Double
-  val RatioHeliumOutput: Double
-  val RatioHydrazine: Double
-  val RatioHydrazineOutput: Double
-  val RatioHydrochloricAcid: Double
-  val RatioHydrochloricAcidOutput: Double
-  val RatioHydrogen: Double
-  val RatioHydrogenOutput: Double
-  val RatioLiquidAlcohol: Double
-  val RatioLiquidAlcoholOutput: Double
-  val RatioLiquidCarbonDioxide: Double
-  val RatioLiquidHydrazine: Double
-  val RatioLiquidHydrazineOutput: Double
-  val RatioLiquidHydrochloricAcid: Double
-  val RatioLiquidHydrochloricAcidOutput: Double
-  val RatioLiquidHydrogen: Double
-  val RatioLiquidHydrogenOutput: Double
-  val RatioLiquidMethane: Double
-  val RatioLiquidNitrogen: Double
-  val RatioLiquidNitrousOxide: Double
-  val RatioLiquidOxygen: Double
-  val RatioLiquidOzone: Double
-  val RatioLiquidOzoneOutput: Double
-  val RatioLiquidPollutant: Double
-  val RatioLiquidSilanol: Double
-  val RatioLiquidSilanolOutput: Double
-  val RatioLiquidSodiumChloride: Double
-  val RatioLiquidSodiumChlorideOutput: Double
-  val RatioMethane: Double
-  val RatioMethaneOutput: Double
-  val RatioNitrogen: Double
-  val RatioNitrogenOutput: Double
-  val RatioNitrousOxide: Double
-  val RatioNitrousOxideOutput: Double
-  val RatioOxygen: Double
-  val RatioOxygenOutput: Double
-  val RatioOzone: Double
-  val RatioOzoneOutput: Double
-  val RatioPollutant: Double
-  val RatioPollutantOutput: Double
-  val RatioPollutedWater: Double
-  val RatioPollutedWaterOutput: Double
-  val RatioSilanol: Double
-  val RatioSilanolOutput: Double
-  val RatioSteam: Double
-  val RatioWater: Double
-  val RatioWaterOutput: Double
+  val Ratios: Ratios // every Substance
   var Setting: Double
   val Temperature: Double
-  val TemperatureOutput: Double
   val TotalMoles: Double
-  val TotalMolesOutput: Double
   val Volume: Double
   val VolumeOfLiquid: Double
 }
@@ -799,65 +659,14 @@ class CapsuleTankGas : TypedDevice {
 /** StructureCapsuleTankLiquid. Entry point: CapsuleTankLiquids. */
 class CapsuleTankLiquid : TypedDevice {
   val Combustion: Boolean
-  val CombustionOutput: Double
   val Maximum: Double
+  val Ports: Ports // Output: Combustion, Pressure, Temperature, TotalMoles, Ratios[CarbonDioxide, Helium, Hydrazine, HydrochloricAcid, Hydrogen, LiquidAlcohol, LiquidHydrazine, LiquidHydrochloricAcid, LiquidHydrogen, LiquidOzone, LiquidSilanol, LiquidSodiumChloride, Methane, Nitrogen, NitrousOxide, Oxygen, Ozone, Pollutant, PollutedWater, Silanol, Water]
   val Pressure: Double
-  val PressureOutput: Double
   val Ratio: Double
-  val RatioCarbonDioxide: Double
-  val RatioCarbonDioxideOutput: Double
-  val RatioHelium: Double
-  val RatioHeliumOutput: Double
-  val RatioHydrazine: Double
-  val RatioHydrazineOutput: Double
-  val RatioHydrochloricAcid: Double
-  val RatioHydrochloricAcidOutput: Double
-  val RatioHydrogen: Double
-  val RatioHydrogenOutput: Double
-  val RatioLiquidAlcohol: Double
-  val RatioLiquidAlcoholOutput: Double
-  val RatioLiquidCarbonDioxide: Double
-  val RatioLiquidHydrazine: Double
-  val RatioLiquidHydrazineOutput: Double
-  val RatioLiquidHydrochloricAcid: Double
-  val RatioLiquidHydrochloricAcidOutput: Double
-  val RatioLiquidHydrogen: Double
-  val RatioLiquidHydrogenOutput: Double
-  val RatioLiquidMethane: Double
-  val RatioLiquidNitrogen: Double
-  val RatioLiquidNitrousOxide: Double
-  val RatioLiquidOxygen: Double
-  val RatioLiquidOzone: Double
-  val RatioLiquidOzoneOutput: Double
-  val RatioLiquidPollutant: Double
-  val RatioLiquidSilanol: Double
-  val RatioLiquidSilanolOutput: Double
-  val RatioLiquidSodiumChloride: Double
-  val RatioLiquidSodiumChlorideOutput: Double
-  val RatioMethane: Double
-  val RatioMethaneOutput: Double
-  val RatioNitrogen: Double
-  val RatioNitrogenOutput: Double
-  val RatioNitrousOxide: Double
-  val RatioNitrousOxideOutput: Double
-  val RatioOxygen: Double
-  val RatioOxygenOutput: Double
-  val RatioOzone: Double
-  val RatioOzoneOutput: Double
-  val RatioPollutant: Double
-  val RatioPollutantOutput: Double
-  val RatioPollutedWater: Double
-  val RatioPollutedWaterOutput: Double
-  val RatioSilanol: Double
-  val RatioSilanolOutput: Double
-  val RatioSteam: Double
-  val RatioWater: Double
-  val RatioWaterOutput: Double
+  val Ratios: Ratios // every Substance
   var Setting: Double
   val Temperature: Double
-  val TemperatureOutput: Double
   val TotalMoles: Double
-  val TotalMolesOutput: Double
   val Volume: Double
   val VolumeOfLiquid: Double
 }
@@ -866,8 +675,8 @@ class CapsuleTankLiquid : TypedDevice {
 class CargoStorageMedium : TypedDevice {
   var ClearMemory: Boolean
   val Error: Boolean
-  val ExportCount: Double
-  val ImportCount: Double
+  val Export: Transfer // Count
+  val Import: Transfer // Count
   var Lock: Boolean
   var On: Boolean
   var Open: Boolean
@@ -875,8 +684,6 @@ class CargoStorageMedium : TypedDevice {
   val Quantity: Double
   val Ratio: Double
   val RequiredPower: Double
-  val Import: DataDiskSlot // slots[0]
-  val Export: DataDiskSlot // slots[1]
   val slots: Slots<DataDiskSlot>
 }
 
@@ -884,8 +691,8 @@ class CargoStorageMedium : TypedDevice {
 class CargoStorageSmall : TypedDevice {
   var ClearMemory: Boolean
   val Error: Boolean
-  val ExportCount: Double
-  val ImportCount: Double
+  val Export: Transfer // Count
+  val Import: Transfer // Count
   var Lock: Boolean
   var On: Boolean
   var Open: Boolean
@@ -893,8 +700,6 @@ class CargoStorageSmall : TypedDevice {
   val Quantity: Double
   val Ratio: Double
   val RequiredPower: Double
-  val Import: DataDiskSlot // slots[0]
-  val Export: DataDiskSlot // slots[1]
   val slots: Slots<DataDiskSlot>
 }
 
@@ -902,15 +707,13 @@ class CargoStorageSmall : TypedDevice {
 class Centrifuge : TypedDevice {
   var ClearMemory: Boolean
   val Error: Boolean
-  val ExportCount: Double
-  val ImportCount: Double
+  val Export: Transfer // Count
+  val Import: Transfer // Count
   var On: Boolean
   var Open: Boolean
   val Power: Boolean
   val Reagents: Double
   val RequiredPower: Double
-  val Import: DataDiskSlot // slots[0]
-  val Export: DataDiskSlot // slots[1]
   val slots: Slots<DataDiskSlot>
 }
 
@@ -930,11 +733,11 @@ class ChuteBin : TypedDevice {
 class ChuteDigitalFlipFlopSplitterLeft : TypedDevice {
   var Mode: Double
   var On: Boolean
+  val Ports: Ports // Output: var Setting
   val Power: Boolean
   var Quantity: Double
   val RequiredPower: Double
   var Setting: Double
-  var SettingOutput: Double
   val TransportSlot: DataDiskSlot // slots[0]
   val slots: Slots<DataDiskSlot>
 }
@@ -943,11 +746,11 @@ class ChuteDigitalFlipFlopSplitterLeft : TypedDevice {
 class ChuteDigitalFlipFlopSplitterRight : TypedDevice {
   var Mode: Double
   var On: Boolean
+  val Ports: Ports // Output: var Setting
   val Power: Boolean
   var Quantity: Double
   val RequiredPower: Double
   var Setting: Double
-  var SettingOutput: Double
   val TransportSlot: DataDiskSlot // slots[0]
   val slots: Slots<DataDiskSlot>
 }
@@ -993,19 +796,17 @@ class ChuteExportBin : TypedDevice {
 /** StructureChuteInlet. Entry point: ChuteInlets. */
 class ChuteInlet : TypedDevice {
   var ClearMemory: Boolean
-  val ImportCount: Double
+  val Import: Transfer // Count
   var Lock: Boolean
-  val Import: DataDiskSlot // slots[0]
   val slots: Slots<DataDiskSlot>
 }
 
 /** StructureChuteOutlet. Entry point: ChuteOutlets. */
 class ChuteOutlet : TypedDevice {
   var ClearMemory: Boolean
-  val ExportCount: Double
-  val ImportCount: Double
+  val Export: Transfer // Count
+  val Import: Transfer // Count
   var Lock: Boolean
-  val Export: DataDiskSlot // slots[0]
   val slots: Slots<DataDiskSlot>
 }
 
@@ -1054,116 +855,26 @@ class CircuitHousingCompact : TypedDevice {
 class CombustionCentrifuge : TypedDevice {
   var ClearMemory: Boolean
   val Combustion: Boolean
-  val CombustionInput: Double
   var CombustionLimiter: Double
-  val CombustionOutput: Double
   val Error: Boolean
-  val ExportCount: Double
-  val ImportCount: Double
+  val Export: Transfer // Count
+  val Import: Transfer // Count
   var Lock: Boolean
   var On: Boolean
   var Open: Boolean
+  val Ports: Ports
+  //   Input: Combustion, Pressure, Temperature, TotalMoles, Ratios[every Substance]
+  //   Output: Combustion, Pressure, Temperature, TotalMoles, Ratios[every Substance]
   val Power: Boolean
   val Pressure: Double
-  val PressureInput: Double
-  val PressureOutput: Double
-  val RatioCarbonDioxide: Double
-  val RatioCarbonDioxideInput: Double
-  val RatioCarbonDioxideOutput: Double
-  val RatioHelium: Double
-  val RatioHeliumInput: Double
-  val RatioHeliumOutput: Double
-  val RatioHydrazine: Double
-  val RatioHydrazineInput: Double
-  val RatioHydrazineOutput: Double
-  val RatioHydrochloricAcid: Double
-  val RatioHydrochloricAcidInput: Double
-  val RatioHydrochloricAcidOutput: Double
-  val RatioHydrogen: Double
-  val RatioHydrogenInput: Double
-  val RatioHydrogenOutput: Double
-  val RatioLiquidAlcohol: Double
-  val RatioLiquidAlcoholInput: Double
-  val RatioLiquidAlcoholOutput: Double
-  val RatioLiquidCarbonDioxide: Double
-  val RatioLiquidCarbonDioxideInput: Double
-  val RatioLiquidCarbonDioxideOutput: Double
-  val RatioLiquidHydrazine: Double
-  val RatioLiquidHydrazineInput: Double
-  val RatioLiquidHydrazineOutput: Double
-  val RatioLiquidHydrochloricAcid: Double
-  val RatioLiquidHydrochloricAcidInput: Double
-  val RatioLiquidHydrochloricAcidOutput: Double
-  val RatioLiquidHydrogen: Double
-  val RatioLiquidHydrogenInput: Double
-  val RatioLiquidHydrogenOutput: Double
-  val RatioLiquidMethane: Double
-  val RatioLiquidMethaneInput: Double
-  val RatioLiquidMethaneOutput: Double
-  val RatioLiquidNitrogen: Double
-  val RatioLiquidNitrogenInput: Double
-  val RatioLiquidNitrogenOutput: Double
-  val RatioLiquidNitrousOxide: Double
-  val RatioLiquidNitrousOxideInput: Double
-  val RatioLiquidNitrousOxideOutput: Double
-  val RatioLiquidOxygen: Double
-  val RatioLiquidOxygenInput: Double
-  val RatioLiquidOxygenOutput: Double
-  val RatioLiquidOzone: Double
-  val RatioLiquidOzoneInput: Double
-  val RatioLiquidOzoneOutput: Double
-  val RatioLiquidPollutant: Double
-  val RatioLiquidPollutantInput: Double
-  val RatioLiquidPollutantOutput: Double
-  val RatioLiquidSilanol: Double
-  val RatioLiquidSilanolInput: Double
-  val RatioLiquidSilanolOutput: Double
-  val RatioLiquidSodiumChloride: Double
-  val RatioLiquidSodiumChlorideInput: Double
-  val RatioLiquidSodiumChlorideOutput: Double
-  val RatioMethane: Double
-  val RatioMethaneInput: Double
-  val RatioMethaneOutput: Double
-  val RatioNitrogen: Double
-  val RatioNitrogenInput: Double
-  val RatioNitrogenOutput: Double
-  val RatioNitrousOxide: Double
-  val RatioNitrousOxideInput: Double
-  val RatioNitrousOxideOutput: Double
-  val RatioOxygen: Double
-  val RatioOxygenInput: Double
-  val RatioOxygenOutput: Double
-  val RatioOzone: Double
-  val RatioOzoneInput: Double
-  val RatioOzoneOutput: Double
-  val RatioPollutant: Double
-  val RatioPollutantInput: Double
-  val RatioPollutantOutput: Double
-  val RatioPollutedWater: Double
-  val RatioPollutedWaterInput: Double
-  val RatioPollutedWaterOutput: Double
-  val RatioSilanol: Double
-  val RatioSilanolInput: Double
-  val RatioSilanolOutput: Double
-  val RatioSteam: Double
-  val RatioSteamInput: Double
-  val RatioSteamOutput: Double
-  val RatioWater: Double
-  val RatioWaterInput: Double
-  val RatioWaterOutput: Double
+  val Ratios: Ratios // every Substance
   val Reagents: Double
   val RequiredPower: Double
   val Rpm: Double
   val Stress: Double
   val Temperature: Double
-  val TemperatureInput: Double
-  val TemperatureOutput: Double
   var Throttle: Double
   val TotalMoles: Double
-  val TotalMolesInput: Double
-  val TotalMolesOutput: Double
-  val Import: DataDiskSlot // slots[0]
-  val Export: DataDiskSlot // slots[1]
   val ProgrammableChip: DataDiskSlot // slots[2]
   val slots: Slots<DataDiskSlot>
 }
@@ -1172,114 +883,25 @@ class CombustionCentrifuge : TypedDevice {
 class CombustionDeepMiner : TypedDevice {
   var ClearMemory: Boolean
   val Combustion: Boolean
-  val CombustionInput: Double
   var CombustionLimiter: Double
-  val CombustionOutput: Double
   val Error: Boolean
-  val ExportCount: Double
-  val ImportCount: Double
+  val Export: Transfer // Count
+  val Import: Transfer // Count
   var Lock: Boolean
   var On: Boolean
   var Open: Boolean
+  val Ports: Ports
+  //   Input: Combustion, Pressure, Temperature, TotalMoles, Ratios[every Substance]
+  //   Output: Combustion, Pressure, Temperature, TotalMoles, Ratios[every Substance]
   val Power: Boolean
   val Pressure: Double
-  val PressureInput: Double
-  val PressureOutput: Double
-  val RatioCarbonDioxide: Double
-  val RatioCarbonDioxideInput: Double
-  val RatioCarbonDioxideOutput: Double
-  val RatioHelium: Double
-  val RatioHeliumInput: Double
-  val RatioHeliumOutput: Double
-  val RatioHydrazine: Double
-  val RatioHydrazineInput: Double
-  val RatioHydrazineOutput: Double
-  val RatioHydrochloricAcid: Double
-  val RatioHydrochloricAcidInput: Double
-  val RatioHydrochloricAcidOutput: Double
-  val RatioHydrogen: Double
-  val RatioHydrogenInput: Double
-  val RatioHydrogenOutput: Double
-  val RatioLiquidAlcohol: Double
-  val RatioLiquidAlcoholInput: Double
-  val RatioLiquidAlcoholOutput: Double
-  val RatioLiquidCarbonDioxide: Double
-  val RatioLiquidCarbonDioxideInput: Double
-  val RatioLiquidCarbonDioxideOutput: Double
-  val RatioLiquidHydrazine: Double
-  val RatioLiquidHydrazineInput: Double
-  val RatioLiquidHydrazineOutput: Double
-  val RatioLiquidHydrochloricAcid: Double
-  val RatioLiquidHydrochloricAcidInput: Double
-  val RatioLiquidHydrochloricAcidOutput: Double
-  val RatioLiquidHydrogen: Double
-  val RatioLiquidHydrogenInput: Double
-  val RatioLiquidHydrogenOutput: Double
-  val RatioLiquidMethane: Double
-  val RatioLiquidMethaneInput: Double
-  val RatioLiquidMethaneOutput: Double
-  val RatioLiquidNitrogen: Double
-  val RatioLiquidNitrogenInput: Double
-  val RatioLiquidNitrogenOutput: Double
-  val RatioLiquidNitrousOxide: Double
-  val RatioLiquidNitrousOxideInput: Double
-  val RatioLiquidNitrousOxideOutput: Double
-  val RatioLiquidOxygen: Double
-  val RatioLiquidOxygenInput: Double
-  val RatioLiquidOxygenOutput: Double
-  val RatioLiquidOzone: Double
-  val RatioLiquidOzoneInput: Double
-  val RatioLiquidOzoneOutput: Double
-  val RatioLiquidPollutant: Double
-  val RatioLiquidPollutantInput: Double
-  val RatioLiquidPollutantOutput: Double
-  val RatioLiquidSilanol: Double
-  val RatioLiquidSilanolInput: Double
-  val RatioLiquidSilanolOutput: Double
-  val RatioLiquidSodiumChloride: Double
-  val RatioLiquidSodiumChlorideInput: Double
-  val RatioLiquidSodiumChlorideOutput: Double
-  val RatioMethane: Double
-  val RatioMethaneInput: Double
-  val RatioMethaneOutput: Double
-  val RatioNitrogen: Double
-  val RatioNitrogenInput: Double
-  val RatioNitrogenOutput: Double
-  val RatioNitrousOxide: Double
-  val RatioNitrousOxideInput: Double
-  val RatioNitrousOxideOutput: Double
-  val RatioOxygen: Double
-  val RatioOxygenInput: Double
-  val RatioOxygenOutput: Double
-  val RatioOzone: Double
-  val RatioOzoneInput: Double
-  val RatioOzoneOutput: Double
-  val RatioPollutant: Double
-  val RatioPollutantInput: Double
-  val RatioPollutantOutput: Double
-  val RatioPollutedWater: Double
-  val RatioPollutedWaterInput: Double
-  val RatioPollutedWaterOutput: Double
-  val RatioSilanol: Double
-  val RatioSilanolInput: Double
-  val RatioSilanolOutput: Double
-  val RatioSteam: Double
-  val RatioSteamInput: Double
-  val RatioSteamOutput: Double
-  val RatioWater: Double
-  val RatioWaterInput: Double
-  val RatioWaterOutput: Double
+  val Ratios: Ratios // every Substance
   val RequiredPower: Double
   val Rpm: Double
   val Stress: Double
   val Temperature: Double
-  val TemperatureInput: Double
-  val TemperatureOutput: Double
   var Throttle: Double
   val TotalMoles: Double
-  val TotalMolesInput: Double
-  val TotalMolesOutput: Double
-  val Export: DataDiskSlot // slots[0]
   val ProgrammableChip: DataDiskSlot // slots[1]
   val slots: Slots<DataDiskSlot>
 }
@@ -1375,34 +997,7 @@ class CondensationChamber : TypedDevice {
   val Power: Boolean
   val Pressure: Double
   val Ratio: Double
-  val RatioCarbonDioxide: Double
-  val RatioHelium: Double
-  val RatioHydrazine: Double
-  val RatioHydrochloricAcid: Double
-  val RatioHydrogen: Double
-  val RatioLiquidAlcohol: Double
-  val RatioLiquidCarbonDioxide: Double
-  val RatioLiquidHydrazine: Double
-  val RatioLiquidHydrochloricAcid: Double
-  val RatioLiquidHydrogen: Double
-  val RatioLiquidMethane: Double
-  val RatioLiquidNitrogen: Double
-  val RatioLiquidNitrousOxide: Double
-  val RatioLiquidOxygen: Double
-  val RatioLiquidOzone: Double
-  val RatioLiquidPollutant: Double
-  val RatioLiquidSilanol: Double
-  val RatioLiquidSodiumChloride: Double
-  val RatioMethane: Double
-  val RatioNitrogen: Double
-  val RatioNitrousOxide: Double
-  val RatioOxygen: Double
-  val RatioOzone: Double
-  val RatioPollutant: Double
-  val RatioPollutedWater: Double
-  val RatioSilanol: Double
-  val RatioSteam: Double
-  val RatioWater: Double
+  val Ratios: Ratios // every Substance
   val RequiredPower: Double
   var Setting: Double
   val Temperature: Double
@@ -1535,15 +1130,14 @@ class DaylightSensor : TypedDevice {
 class DeepMiner : TypedDevice {
   var ClearMemory: Boolean
   val Error: Boolean
-  val ExportCount: Double
-  val ImportCount: Double
+  val Export: Transfer // Count
+  val Import: Transfer // Count
   val Maximum: Double
   var On: Boolean
   val Power: Boolean
   val Ratio: Double
   val RequiredPower: Double
   var Setting: Double
-  val Export: DataDiskSlot // slots[0]
   val slots: Slots<DataDiskSlot>
 }
 
@@ -1642,80 +1236,19 @@ class DynamicLight : TypedDevice {
 /** StructureElectrolyzer. Entry point: Electrolyzers. */
 class Electrolyzer : TypedDevice {
   var Activate: Boolean
-  val CombustionInput: Double
-  val CombustionOutput: Double
   val Error: Boolean
   var Lock: Boolean
   val Maximum: Double
   var Mode: Double
   var On: Boolean
   var Open: Boolean
+  val Ports: Ports
+  //   Input: Combustion, Pressure, Temperature, TotalMoles, Ratios[every Substance]
+  //   Output: Combustion, Pressure, Temperature, TotalMoles, Ratios[every Substance]
   val Power: Boolean
-  val PressureInput: Double
-  val PressureOutput: Double
   val Ratio: Double
-  val RatioCarbonDioxideInput: Double
-  val RatioCarbonDioxideOutput: Double
-  val RatioHeliumInput: Double
-  val RatioHeliumOutput: Double
-  val RatioHydrazineInput: Double
-  val RatioHydrazineOutput: Double
-  val RatioHydrochloricAcidInput: Double
-  val RatioHydrochloricAcidOutput: Double
-  val RatioHydrogenInput: Double
-  val RatioHydrogenOutput: Double
-  val RatioLiquidAlcoholInput: Double
-  val RatioLiquidAlcoholOutput: Double
-  val RatioLiquidCarbonDioxideInput: Double
-  val RatioLiquidCarbonDioxideOutput: Double
-  val RatioLiquidHydrazineInput: Double
-  val RatioLiquidHydrazineOutput: Double
-  val RatioLiquidHydrochloricAcidInput: Double
-  val RatioLiquidHydrochloricAcidOutput: Double
-  val RatioLiquidHydrogenInput: Double
-  val RatioLiquidHydrogenOutput: Double
-  val RatioLiquidMethaneInput: Double
-  val RatioLiquidMethaneOutput: Double
-  val RatioLiquidNitrogenInput: Double
-  val RatioLiquidNitrogenOutput: Double
-  val RatioLiquidNitrousOxideInput: Double
-  val RatioLiquidNitrousOxideOutput: Double
-  val RatioLiquidOxygenInput: Double
-  val RatioLiquidOxygenOutput: Double
-  val RatioLiquidOzoneInput: Double
-  val RatioLiquidOzoneOutput: Double
-  val RatioLiquidPollutantInput: Double
-  val RatioLiquidPollutantOutput: Double
-  val RatioLiquidSilanolInput: Double
-  val RatioLiquidSilanolOutput: Double
-  val RatioLiquidSodiumChlorideInput: Double
-  val RatioLiquidSodiumChlorideOutput: Double
-  val RatioMethaneInput: Double
-  val RatioMethaneOutput: Double
-  val RatioNitrogenInput: Double
-  val RatioNitrogenOutput: Double
-  val RatioNitrousOxideInput: Double
-  val RatioNitrousOxideOutput: Double
-  val RatioOxygenInput: Double
-  val RatioOxygenOutput: Double
-  val RatioOzoneInput: Double
-  val RatioOzoneOutput: Double
-  val RatioPollutantInput: Double
-  val RatioPollutantOutput: Double
-  val RatioPollutedWaterInput: Double
-  val RatioPollutedWaterOutput: Double
-  val RatioSilanolInput: Double
-  val RatioSilanolOutput: Double
-  val RatioSteamInput: Double
-  val RatioSteamOutput: Double
-  val RatioWaterInput: Double
-  val RatioWaterOutput: Double
   val RequiredPower: Double
   var Setting: Double
-  val TemperatureInput: Double
-  val TemperatureOutput: Double
-  val TotalMolesInput: Double
-  val TotalMolesOutput: Double
   val ProgrammableChip: DataDiskSlot // slots[0]
   val slots: Slots<DataDiskSlot>
 }
@@ -1726,8 +1259,8 @@ class ElectronicsPrinter : TypedDevice {
   var ClearMemory: Boolean
   val CompletionRatio: Double
   val Error: Boolean
-  val ExportCount: Double
-  val ImportCount: Double
+  val Export: Transfer // Count
+  val Import: Transfer // Count
   var Lock: Boolean
   var On: Boolean
   var Open: Boolean
@@ -1736,8 +1269,6 @@ class ElectronicsPrinter : TypedDevice {
   var RecipeHash: Double
   val RequiredPower: Double
   val StackSize: Double
-  val Import: DataDiskSlot // slots[0]
-  val Export: DataDiskSlot // slots[1]
   val slots: Slots<DataDiskSlot>
 }
 
@@ -1827,34 +1358,7 @@ class EmergencySpaceHelmet : TypedDevice {
   var Open: Boolean
   val Power: Boolean
   val Pressure: Double
-  val RatioCarbonDioxide: Double
-  val RatioHelium: Double
-  val RatioHydrazine: Double
-  val RatioHydrochloricAcid: Double
-  val RatioHydrogen: Double
-  val RatioLiquidAlcohol: Double
-  val RatioLiquidCarbonDioxide: Double
-  val RatioLiquidHydrazine: Double
-  val RatioLiquidHydrochloricAcid: Double
-  val RatioLiquidHydrogen: Double
-  val RatioLiquidMethane: Double
-  val RatioLiquidNitrogen: Double
-  val RatioLiquidNitrousOxide: Double
-  val RatioLiquidOxygen: Double
-  val RatioLiquidOzone: Double
-  val RatioLiquidPollutant: Double
-  val RatioLiquidSilanol: Double
-  val RatioLiquidSodiumChloride: Double
-  val RatioMethane: Double
-  val RatioNitrogen: Double
-  val RatioNitrousOxide: Double
-  val RatioOxygen: Double
-  val RatioOzone: Double
-  val RatioPollutant: Double
-  val RatioPollutedWater: Double
-  val RatioSilanol: Double
-  val RatioSteam: Double
-  val RatioWater: Double
+  val Ratios: Ratios // every Substance
   var SoundAlert: Double
   val Temperature: Double
   val TotalMoles: Double
@@ -1872,34 +1376,7 @@ class EvaporationChamber : TypedDevice {
   val Power: Boolean
   val Pressure: Double
   val Ratio: Double
-  val RatioCarbonDioxide: Double
-  val RatioHelium: Double
-  val RatioHydrazine: Double
-  val RatioHydrochloricAcid: Double
-  val RatioHydrogen: Double
-  val RatioLiquidAlcohol: Double
-  val RatioLiquidCarbonDioxide: Double
-  val RatioLiquidHydrazine: Double
-  val RatioLiquidHydrochloricAcid: Double
-  val RatioLiquidHydrogen: Double
-  val RatioLiquidMethane: Double
-  val RatioLiquidNitrogen: Double
-  val RatioLiquidNitrousOxide: Double
-  val RatioLiquidOxygen: Double
-  val RatioLiquidOzone: Double
-  val RatioLiquidPollutant: Double
-  val RatioLiquidSilanol: Double
-  val RatioLiquidSodiumChloride: Double
-  val RatioMethane: Double
-  val RatioNitrogen: Double
-  val RatioNitrousOxide: Double
-  val RatioOxygen: Double
-  val RatioOzone: Double
-  val RatioPollutant: Double
-  val RatioPollutedWater: Double
-  val RatioSilanol: Double
-  val RatioSteam: Double
-  val RatioWater: Double
+  val Ratios: Ratios // every Substance
   val RequiredPower: Double
   var Setting: Double
   val Temperature: Double
@@ -1921,339 +1398,62 @@ class ExpansionValve : TypedDevice {
 /** StructureFermenter. Entry point: Fermenters. */
 class Fermenter : TypedDevice {
   var ClearMemory: Boolean
-  val CombustionInput: Double
-  val CombustionInput2: Double
-  val CombustionOutput: Double
   val CompletionRatio: Double
   val Error: Boolean
-  val ImportCount: Double
+  val Import: Transfer // Count
   var Lock: Boolean
   val Maximum: Double
   var Mode: Double
   var On: Boolean
   var Open: Boolean
+  val Ports: Ports
+  //   Input: Combustion, Pressure, Temperature, TotalMoles, Ratios[every Substance]
+  //   Input2: Combustion, Pressure, Temperature, TotalMoles, Ratios[every Substance]
+  //   Output: Combustion, Pressure, Temperature, TotalMoles, Ratios[every Substance]
   val Power: Boolean
-  val PressureInput: Double
-  val PressureInput2: Double
-  val PressureOutput: Double
   val Ratio: Double
-  val RatioCarbonDioxideInput: Double
-  val RatioCarbonDioxideInput2: Double
-  val RatioCarbonDioxideOutput: Double
-  val RatioHeliumInput: Double
-  val RatioHeliumInput2: Double
-  val RatioHeliumOutput: Double
-  val RatioHydrazineInput: Double
-  val RatioHydrazineInput2: Double
-  val RatioHydrazineOutput: Double
-  val RatioHydrochloricAcidInput: Double
-  val RatioHydrochloricAcidInput2: Double
-  val RatioHydrochloricAcidOutput: Double
-  val RatioHydrogenInput: Double
-  val RatioHydrogenInput2: Double
-  val RatioHydrogenOutput: Double
-  val RatioLiquidAlcoholInput: Double
-  val RatioLiquidAlcoholInput2: Double
-  val RatioLiquidAlcoholOutput: Double
-  val RatioLiquidCarbonDioxideInput: Double
-  val RatioLiquidCarbonDioxideInput2: Double
-  val RatioLiquidCarbonDioxideOutput: Double
-  val RatioLiquidHydrazineInput: Double
-  val RatioLiquidHydrazineInput2: Double
-  val RatioLiquidHydrazineOutput: Double
-  val RatioLiquidHydrochloricAcidInput: Double
-  val RatioLiquidHydrochloricAcidInput2: Double
-  val RatioLiquidHydrochloricAcidOutput: Double
-  val RatioLiquidHydrogenInput: Double
-  val RatioLiquidHydrogenInput2: Double
-  val RatioLiquidHydrogenOutput: Double
-  val RatioLiquidMethaneInput: Double
-  val RatioLiquidMethaneInput2: Double
-  val RatioLiquidMethaneOutput: Double
-  val RatioLiquidNitrogenInput: Double
-  val RatioLiquidNitrogenInput2: Double
-  val RatioLiquidNitrogenOutput: Double
-  val RatioLiquidNitrousOxideInput: Double
-  val RatioLiquidNitrousOxideInput2: Double
-  val RatioLiquidNitrousOxideOutput: Double
-  val RatioLiquidOxygenInput: Double
-  val RatioLiquidOxygenInput2: Double
-  val RatioLiquidOxygenOutput: Double
-  val RatioLiquidOzoneInput: Double
-  val RatioLiquidOzoneInput2: Double
-  val RatioLiquidOzoneOutput: Double
-  val RatioLiquidPollutantInput: Double
-  val RatioLiquidPollutantInput2: Double
-  val RatioLiquidPollutantOutput: Double
-  val RatioLiquidSilanolInput: Double
-  val RatioLiquidSilanolInput2: Double
-  val RatioLiquidSilanolOutput: Double
-  val RatioLiquidSodiumChlorideInput: Double
-  val RatioLiquidSodiumChlorideInput2: Double
-  val RatioLiquidSodiumChlorideOutput: Double
-  val RatioMethaneInput: Double
-  val RatioMethaneInput2: Double
-  val RatioMethaneOutput: Double
-  val RatioNitrogenInput: Double
-  val RatioNitrogenInput2: Double
-  val RatioNitrogenOutput: Double
-  val RatioNitrousOxideInput: Double
-  val RatioNitrousOxideInput2: Double
-  val RatioNitrousOxideOutput: Double
-  val RatioOxygenInput: Double
-  val RatioOxygenInput2: Double
-  val RatioOxygenOutput: Double
-  val RatioOzoneInput: Double
-  val RatioOzoneInput2: Double
-  val RatioOzoneOutput: Double
-  val RatioPollutantInput: Double
-  val RatioPollutantInput2: Double
-  val RatioPollutantOutput: Double
-  val RatioPollutedWaterInput: Double
-  val RatioPollutedWaterInput2: Double
-  val RatioPollutedWaterOutput: Double
-  val RatioSilanolInput: Double
-  val RatioSilanolInput2: Double
-  val RatioSilanolOutput: Double
-  val RatioSteamInput: Double
-  val RatioSteamInput2: Double
-  val RatioSteamOutput: Double
-  val RatioWaterInput: Double
-  val RatioWaterInput2: Double
-  val RatioWaterOutput: Double
   val RequiredPower: Double
   var Setting: Double
-  val TemperatureInput: Double
-  val TemperatureInput2: Double
-  val TemperatureOutput: Double
-  val TotalMolesInput: Double
-  val TotalMolesInput2: Double
-  val TotalMolesOutput: Double
-  val Import: DataDiskSlot // slots[0]
   val ProgrammableChip: DataDiskSlot // slots[1]
   val slots: Slots<DataDiskSlot>
 }
 
 /** StructureFiltration. Entry point: Filtrations. */
 class Filtration : TypedDevice {
-  val CombustionInput: Double
-  val CombustionOutput: Double
-  val CombustionOutput2: Double
   val Error: Boolean
   var Lock: Boolean
   val Maximum: Double
   var Mode: Double
   var On: Boolean
   var Open: Boolean
+  val Ports: Ports
+  //   Input: Combustion, Pressure, Temperature, TotalMoles, Ratios[every Substance]
+  //   Output: Combustion, Pressure, Temperature, TotalMoles, Ratios[every Substance]
+  //   Output2: Combustion, Pressure, Temperature, TotalMoles, Ratios[every Substance]
   val Power: Boolean
-  val PressureInput: Double
-  val PressureOutput: Double
-  val PressureOutput2: Double
   val Ratio: Double
-  val RatioCarbonDioxideInput: Double
-  val RatioCarbonDioxideOutput: Double
-  val RatioCarbonDioxideOutput2: Double
-  val RatioHeliumInput: Double
-  val RatioHeliumOutput: Double
-  val RatioHeliumOutput2: Double
-  val RatioHydrazineInput: Double
-  val RatioHydrazineOutput: Double
-  val RatioHydrazineOutput2: Double
-  val RatioHydrochloricAcidInput: Double
-  val RatioHydrochloricAcidOutput: Double
-  val RatioHydrochloricAcidOutput2: Double
-  val RatioHydrogenInput: Double
-  val RatioHydrogenOutput: Double
-  val RatioHydrogenOutput2: Double
-  val RatioLiquidAlcoholInput: Double
-  val RatioLiquidAlcoholOutput: Double
-  val RatioLiquidAlcoholOutput2: Double
-  val RatioLiquidCarbonDioxideInput: Double
-  val RatioLiquidCarbonDioxideOutput: Double
-  val RatioLiquidCarbonDioxideOutput2: Double
-  val RatioLiquidHydrazineInput: Double
-  val RatioLiquidHydrazineOutput: Double
-  val RatioLiquidHydrazineOutput2: Double
-  val RatioLiquidHydrochloricAcidInput: Double
-  val RatioLiquidHydrochloricAcidOutput: Double
-  val RatioLiquidHydrochloricAcidOutput2: Double
-  val RatioLiquidHydrogenInput: Double
-  val RatioLiquidHydrogenOutput: Double
-  val RatioLiquidHydrogenOutput2: Double
-  val RatioLiquidMethaneInput: Double
-  val RatioLiquidMethaneOutput: Double
-  val RatioLiquidMethaneOutput2: Double
-  val RatioLiquidNitrogenInput: Double
-  val RatioLiquidNitrogenOutput: Double
-  val RatioLiquidNitrogenOutput2: Double
-  val RatioLiquidNitrousOxideInput: Double
-  val RatioLiquidNitrousOxideOutput: Double
-  val RatioLiquidNitrousOxideOutput2: Double
-  val RatioLiquidOxygenInput: Double
-  val RatioLiquidOxygenOutput: Double
-  val RatioLiquidOxygenOutput2: Double
-  val RatioLiquidOzoneInput: Double
-  val RatioLiquidOzoneOutput: Double
-  val RatioLiquidOzoneOutput2: Double
-  val RatioLiquidPollutantInput: Double
-  val RatioLiquidPollutantOutput: Double
-  val RatioLiquidPollutantOutput2: Double
-  val RatioLiquidSilanolInput: Double
-  val RatioLiquidSilanolOutput: Double
-  val RatioLiquidSilanolOutput2: Double
-  val RatioLiquidSodiumChlorideInput: Double
-  val RatioLiquidSodiumChlorideOutput: Double
-  val RatioLiquidSodiumChlorideOutput2: Double
-  val RatioMethaneInput: Double
-  val RatioMethaneOutput: Double
-  val RatioMethaneOutput2: Double
-  val RatioNitrogenInput: Double
-  val RatioNitrogenOutput: Double
-  val RatioNitrogenOutput2: Double
-  val RatioNitrousOxideInput: Double
-  val RatioNitrousOxideOutput: Double
-  val RatioNitrousOxideOutput2: Double
-  val RatioOxygenInput: Double
-  val RatioOxygenOutput: Double
-  val RatioOxygenOutput2: Double
-  val RatioOzoneInput: Double
-  val RatioOzoneOutput: Double
-  val RatioOzoneOutput2: Double
-  val RatioPollutantInput: Double
-  val RatioPollutantOutput: Double
-  val RatioPollutantOutput2: Double
-  val RatioPollutedWaterInput: Double
-  val RatioPollutedWaterOutput: Double
-  val RatioPollutedWaterOutput2: Double
-  val RatioSilanolInput: Double
-  val RatioSilanolOutput: Double
-  val RatioSilanolOutput2: Double
-  val RatioSteamInput: Double
-  val RatioSteamOutput: Double
-  val RatioSteamOutput2: Double
-  val RatioWaterInput: Double
-  val RatioWaterOutput: Double
-  val RatioWaterOutput2: Double
   val RequiredPower: Double
   var Setting: Double
-  val TemperatureInput: Double
-  val TemperatureOutput: Double
-  val TemperatureOutput2: Double
-  val TotalMolesInput: Double
-  val TotalMolesOutput: Double
-  val TotalMolesOutput2: Double
   val ProgrammableChip: DataDiskSlot // slots[2]
   val slots: Slots<CommonSlot>
 }
 
 /** StructureFiltrationLiquid. Entry point: FiltrationLiquids. */
 class FiltrationLiquid : TypedDevice {
-  val CombustionInput: Double
-  val CombustionOutput: Double
-  val CombustionOutput2: Double
   val Error: Boolean
   var Lock: Boolean
   val Maximum: Double
   var Mode: Double
   var On: Boolean
   var Open: Boolean
+  val Ports: Ports
+  //   Input: Combustion, Pressure, Temperature, TotalMoles, Ratios[every Substance]
+  //   Output: Combustion, Pressure, Temperature, TotalMoles, Ratios[every Substance]
+  //   Output2: Combustion, Pressure, Temperature, TotalMoles, Ratios[every Substance]
   val Power: Boolean
-  val PressureInput: Double
-  val PressureOutput: Double
-  val PressureOutput2: Double
   val Ratio: Double
-  val RatioCarbonDioxideInput: Double
-  val RatioCarbonDioxideOutput: Double
-  val RatioCarbonDioxideOutput2: Double
-  val RatioHeliumInput: Double
-  val RatioHeliumOutput: Double
-  val RatioHeliumOutput2: Double
-  val RatioHydrazineInput: Double
-  val RatioHydrazineOutput: Double
-  val RatioHydrazineOutput2: Double
-  val RatioHydrochloricAcidInput: Double
-  val RatioHydrochloricAcidOutput: Double
-  val RatioHydrochloricAcidOutput2: Double
-  val RatioHydrogenInput: Double
-  val RatioHydrogenOutput: Double
-  val RatioHydrogenOutput2: Double
-  val RatioLiquidAlcoholInput: Double
-  val RatioLiquidAlcoholOutput: Double
-  val RatioLiquidAlcoholOutput2: Double
-  val RatioLiquidCarbonDioxideInput: Double
-  val RatioLiquidCarbonDioxideOutput: Double
-  val RatioLiquidCarbonDioxideOutput2: Double
-  val RatioLiquidHydrazineInput: Double
-  val RatioLiquidHydrazineOutput: Double
-  val RatioLiquidHydrazineOutput2: Double
-  val RatioLiquidHydrochloricAcidInput: Double
-  val RatioLiquidHydrochloricAcidOutput: Double
-  val RatioLiquidHydrochloricAcidOutput2: Double
-  val RatioLiquidHydrogenInput: Double
-  val RatioLiquidHydrogenOutput: Double
-  val RatioLiquidHydrogenOutput2: Double
-  val RatioLiquidMethaneInput: Double
-  val RatioLiquidMethaneOutput: Double
-  val RatioLiquidMethaneOutput2: Double
-  val RatioLiquidNitrogenInput: Double
-  val RatioLiquidNitrogenOutput: Double
-  val RatioLiquidNitrogenOutput2: Double
-  val RatioLiquidNitrousOxideInput: Double
-  val RatioLiquidNitrousOxideOutput: Double
-  val RatioLiquidNitrousOxideOutput2: Double
-  val RatioLiquidOxygenInput: Double
-  val RatioLiquidOxygenOutput: Double
-  val RatioLiquidOxygenOutput2: Double
-  val RatioLiquidOzoneInput: Double
-  val RatioLiquidOzoneOutput: Double
-  val RatioLiquidOzoneOutput2: Double
-  val RatioLiquidPollutantInput: Double
-  val RatioLiquidPollutantOutput: Double
-  val RatioLiquidPollutantOutput2: Double
-  val RatioLiquidSilanolInput: Double
-  val RatioLiquidSilanolOutput: Double
-  val RatioLiquidSilanolOutput2: Double
-  val RatioLiquidSodiumChlorideInput: Double
-  val RatioLiquidSodiumChlorideOutput: Double
-  val RatioLiquidSodiumChlorideOutput2: Double
-  val RatioMethaneInput: Double
-  val RatioMethaneOutput: Double
-  val RatioMethaneOutput2: Double
-  val RatioNitrogenInput: Double
-  val RatioNitrogenOutput: Double
-  val RatioNitrogenOutput2: Double
-  val RatioNitrousOxideInput: Double
-  val RatioNitrousOxideOutput: Double
-  val RatioNitrousOxideOutput2: Double
-  val RatioOxygenInput: Double
-  val RatioOxygenOutput: Double
-  val RatioOxygenOutput2: Double
-  val RatioOzoneInput: Double
-  val RatioOzoneOutput: Double
-  val RatioOzoneOutput2: Double
-  val RatioPollutantInput: Double
-  val RatioPollutantOutput: Double
-  val RatioPollutantOutput2: Double
-  val RatioPollutedWaterInput: Double
-  val RatioPollutedWaterOutput: Double
-  val RatioPollutedWaterOutput2: Double
-  val RatioSilanolInput: Double
-  val RatioSilanolOutput: Double
-  val RatioSilanolOutput2: Double
-  val RatioSteamInput: Double
-  val RatioSteamOutput: Double
-  val RatioSteamOutput2: Double
-  val RatioWaterInput: Double
-  val RatioWaterOutput: Double
-  val RatioWaterOutput2: Double
   val RequiredPower: Double
   var Setting: Double
-  val TemperatureInput: Double
-  val TemperatureOutput: Double
-  val TemperatureOutput2: Double
-  val TotalMolesInput: Double
-  val TotalMolesOutput: Double
-  val TotalMolesOutput2: Double
   val ProgrammableChip: DataDiskSlot // slots[2]
   val slots: Slots<CommonSlot>
 }
@@ -2278,136 +1478,34 @@ class Flashlight : TypedDevice {
 /** StructureFridgeBig. Entry point: FridgeBigs. */
 class FridgeBig : TypedDevice {
   val Combustion: Boolean
-  val CombustionOutput: Double
   val Error: Boolean
   val Maximum: Double
   var On: Boolean
   var Open: Boolean
+  val Ports: Ports // Output: Combustion, Pressure, Temperature, TotalMoles, Ratios[CarbonDioxide, Helium, Hydrazine, HydrochloricAcid, Hydrogen, LiquidAlcohol, LiquidHydrazine, LiquidHydrochloricAcid, LiquidHydrogen, LiquidOzone, LiquidSilanol, LiquidSodiumChloride, Methane, Nitrogen, NitrousOxide, Oxygen, Ozone, Pollutant, PollutedWater, Silanol, Water]
   val Power: Boolean
   val Pressure: Double
-  val PressureOutput: Double
   val Ratio: Double
-  val RatioCarbonDioxide: Double
-  val RatioCarbonDioxideOutput: Double
-  val RatioHelium: Double
-  val RatioHeliumOutput: Double
-  val RatioHydrazine: Double
-  val RatioHydrazineOutput: Double
-  val RatioHydrochloricAcid: Double
-  val RatioHydrochloricAcidOutput: Double
-  val RatioHydrogen: Double
-  val RatioHydrogenOutput: Double
-  val RatioLiquidAlcohol: Double
-  val RatioLiquidAlcoholOutput: Double
-  val RatioLiquidCarbonDioxide: Double
-  val RatioLiquidHydrazine: Double
-  val RatioLiquidHydrazineOutput: Double
-  val RatioLiquidHydrochloricAcid: Double
-  val RatioLiquidHydrochloricAcidOutput: Double
-  val RatioLiquidHydrogen: Double
-  val RatioLiquidHydrogenOutput: Double
-  val RatioLiquidMethane: Double
-  val RatioLiquidNitrogen: Double
-  val RatioLiquidNitrousOxide: Double
-  val RatioLiquidOxygen: Double
-  val RatioLiquidOzone: Double
-  val RatioLiquidOzoneOutput: Double
-  val RatioLiquidPollutant: Double
-  val RatioLiquidSilanol: Double
-  val RatioLiquidSilanolOutput: Double
-  val RatioLiquidSodiumChloride: Double
-  val RatioLiquidSodiumChlorideOutput: Double
-  val RatioMethane: Double
-  val RatioMethaneOutput: Double
-  val RatioNitrogen: Double
-  val RatioNitrogenOutput: Double
-  val RatioNitrousOxide: Double
-  val RatioNitrousOxideOutput: Double
-  val RatioOxygen: Double
-  val RatioOxygenOutput: Double
-  val RatioOzone: Double
-  val RatioOzoneOutput: Double
-  val RatioPollutant: Double
-  val RatioPollutantOutput: Double
-  val RatioPollutedWater: Double
-  val RatioPollutedWaterOutput: Double
-  val RatioSilanol: Double
-  val RatioSilanolOutput: Double
-  val RatioSteam: Double
-  val RatioWater: Double
-  val RatioWaterOutput: Double
+  val Ratios: Ratios // every Substance
   val RequiredPower: Double
   var Setting: Double
   val Temperature: Double
-  val TemperatureOutput: Double
   val TotalMoles: Double
-  val TotalMolesOutput: Double
   val slots: Slots<DataDiskSlot>
 }
 
 /** StructureFridgeSmall. Entry point: FridgeSmalls. */
 class FridgeSmall : TypedDevice {
   val Combustion: Boolean
-  val CombustionOutput: Double
   val Maximum: Double
   var Open: Boolean
+  val Ports: Ports // Output: Combustion, Pressure, Temperature, TotalMoles, Ratios[CarbonDioxide, Helium, Hydrazine, HydrochloricAcid, Hydrogen, LiquidAlcohol, LiquidHydrazine, LiquidHydrochloricAcid, LiquidHydrogen, LiquidOzone, LiquidSilanol, LiquidSodiumChloride, Methane, Nitrogen, NitrousOxide, Oxygen, Ozone, Pollutant, PollutedWater, Silanol, Water]
   val Pressure: Double
-  val PressureOutput: Double
   val Ratio: Double
-  val RatioCarbonDioxide: Double
-  val RatioCarbonDioxideOutput: Double
-  val RatioHelium: Double
-  val RatioHeliumOutput: Double
-  val RatioHydrazine: Double
-  val RatioHydrazineOutput: Double
-  val RatioHydrochloricAcid: Double
-  val RatioHydrochloricAcidOutput: Double
-  val RatioHydrogen: Double
-  val RatioHydrogenOutput: Double
-  val RatioLiquidAlcohol: Double
-  val RatioLiquidAlcoholOutput: Double
-  val RatioLiquidCarbonDioxide: Double
-  val RatioLiquidHydrazine: Double
-  val RatioLiquidHydrazineOutput: Double
-  val RatioLiquidHydrochloricAcid: Double
-  val RatioLiquidHydrochloricAcidOutput: Double
-  val RatioLiquidHydrogen: Double
-  val RatioLiquidHydrogenOutput: Double
-  val RatioLiquidMethane: Double
-  val RatioLiquidNitrogen: Double
-  val RatioLiquidNitrousOxide: Double
-  val RatioLiquidOxygen: Double
-  val RatioLiquidOzone: Double
-  val RatioLiquidOzoneOutput: Double
-  val RatioLiquidPollutant: Double
-  val RatioLiquidSilanol: Double
-  val RatioLiquidSilanolOutput: Double
-  val RatioLiquidSodiumChloride: Double
-  val RatioLiquidSodiumChlorideOutput: Double
-  val RatioMethane: Double
-  val RatioMethaneOutput: Double
-  val RatioNitrogen: Double
-  val RatioNitrogenOutput: Double
-  val RatioNitrousOxide: Double
-  val RatioNitrousOxideOutput: Double
-  val RatioOxygen: Double
-  val RatioOxygenOutput: Double
-  val RatioOzone: Double
-  val RatioOzoneOutput: Double
-  val RatioPollutant: Double
-  val RatioPollutantOutput: Double
-  val RatioPollutedWater: Double
-  val RatioPollutedWaterOutput: Double
-  val RatioSilanol: Double
-  val RatioSilanolOutput: Double
-  val RatioSteam: Double
-  val RatioWater: Double
-  val RatioWaterOutput: Double
+  val Ratios: Ratios // every Substance
   var Setting: Double
   val Temperature: Double
-  val TemperatureOutput: Double
   val TotalMoles: Double
-  val TotalMolesOutput: Double
   val slots: Slots<DataDiskSlot>
 }
 
@@ -2416,49 +1514,20 @@ class Furnace : TypedDevice {
   var Activate: Boolean
   var ClearMemory: Boolean
   val Combustion: Boolean
-  val ExportCount: Double
-  val ImportCount: Double
+  val Export: Transfer // Count
+  val Import: Transfer // Count
   var Lock: Boolean
   val Maximum: Double
   var Mode: Double
   var Open: Boolean
   val Pressure: Double
   val Ratio: Double
-  val RatioCarbonDioxide: Double
-  val RatioHelium: Double
-  val RatioHydrazine: Double
-  val RatioHydrochloricAcid: Double
-  val RatioHydrogen: Double
-  val RatioLiquidAlcohol: Double
-  val RatioLiquidCarbonDioxide: Double
-  val RatioLiquidHydrazine: Double
-  val RatioLiquidHydrochloricAcid: Double
-  val RatioLiquidHydrogen: Double
-  val RatioLiquidMethane: Double
-  val RatioLiquidNitrogen: Double
-  val RatioLiquidNitrousOxide: Double
-  val RatioLiquidOxygen: Double
-  val RatioLiquidOzone: Double
-  val RatioLiquidPollutant: Double
-  val RatioLiquidSilanol: Double
-  val RatioLiquidSodiumChloride: Double
-  val RatioMethane: Double
-  val RatioNitrogen: Double
-  val RatioNitrousOxide: Double
-  val RatioOxygen: Double
-  val RatioOzone: Double
-  val RatioPollutant: Double
-  val RatioPollutedWater: Double
-  val RatioSilanol: Double
-  val RatioSteam: Double
-  val RatioWater: Double
+  val Ratios: Ratios // every Substance
   val Reagents: Double
   val RecipeHash: Double
   var Setting: Double
   val Temperature: Double
   val TotalMoles: Double
-  val Import: DataDiskSlot // slots[0]
-  val Export: DataDiskSlot // slots[1]
   val slots: Slots<DataDiskSlot>
 }
 ```
@@ -2476,34 +1545,7 @@ class GasGenerator : TypedDevice {
   val PowerGeneration: Double
   val Pressure: Double
   val Ratio: Double
-  val RatioCarbonDioxide: Double
-  val RatioHelium: Double
-  val RatioHydrazine: Double
-  val RatioHydrochloricAcid: Double
-  val RatioHydrogen: Double
-  val RatioLiquidAlcohol: Double
-  val RatioLiquidCarbonDioxide: Double
-  val RatioLiquidHydrazine: Double
-  val RatioLiquidHydrochloricAcid: Double
-  val RatioLiquidHydrogen: Double
-  val RatioLiquidMethane: Double
-  val RatioLiquidNitrogen: Double
-  val RatioLiquidNitrousOxide: Double
-  val RatioLiquidOxygen: Double
-  val RatioLiquidOzone: Double
-  val RatioLiquidPollutant: Double
-  val RatioLiquidSilanol: Double
-  val RatioLiquidSodiumChloride: Double
-  val RatioMethane: Double
-  val RatioNitrogen: Double
-  val RatioNitrousOxide: Double
-  val RatioOxygen: Double
-  val RatioOzone: Double
-  val RatioPollutant: Double
-  val RatioPollutedWater: Double
-  val RatioSilanol: Double
-  val RatioSteam: Double
-  val RatioWater: Double
+  val Ratios: Ratios // every Substance
   val RequiredPower: Double
   var Setting: Double
   val Temperature: Double
@@ -2515,34 +1557,7 @@ class GasMask : TypedDevice {
   val Combustion: Boolean
   var Flush: Boolean
   val Pressure: Double
-  val RatioCarbonDioxide: Double
-  val RatioHelium: Double
-  val RatioHydrazine: Double
-  val RatioHydrochloricAcid: Double
-  val RatioHydrogen: Double
-  val RatioLiquidAlcohol: Double
-  val RatioLiquidCarbonDioxide: Double
-  val RatioLiquidHydrazine: Double
-  val RatioLiquidHydrochloricAcid: Double
-  val RatioLiquidHydrogen: Double
-  val RatioLiquidMethane: Double
-  val RatioLiquidNitrogen: Double
-  val RatioLiquidNitrousOxide: Double
-  val RatioLiquidOxygen: Double
-  val RatioLiquidOzone: Double
-  val RatioLiquidPollutant: Double
-  val RatioLiquidSilanol: Double
-  val RatioLiquidSodiumChloride: Double
-  val RatioMethane: Double
-  val RatioNitrogen: Double
-  val RatioNitrousOxide: Double
-  val RatioOxygen: Double
-  val RatioOzone: Double
-  val RatioPollutant: Double
-  val RatioPollutedWater: Double
-  val RatioSilanol: Double
-  val RatioSteam: Double
-  val RatioWater: Double
+  val Ratios: Ratios // every Substance
   var SoundAlert: Double
   val Temperature: Double
   val TotalMoles: Double
@@ -2566,34 +1581,7 @@ class GasMixer : TypedDevice {
 class GasSensor : TypedDevice {
   val Combustion: Boolean
   val Pressure: Double
-  val RatioCarbonDioxide: Double
-  val RatioHelium: Double
-  val RatioHydrazine: Double
-  val RatioHydrochloricAcid: Double
-  val RatioHydrogen: Double
-  val RatioLiquidAlcohol: Double
-  val RatioLiquidCarbonDioxide: Double
-  val RatioLiquidHydrazine: Double
-  val RatioLiquidHydrochloricAcid: Double
-  val RatioLiquidHydrogen: Double
-  val RatioLiquidMethane: Double
-  val RatioLiquidNitrogen: Double
-  val RatioLiquidNitrousOxide: Double
-  val RatioLiquidOxygen: Double
-  val RatioLiquidOzone: Double
-  val RatioLiquidPollutant: Double
-  val RatioLiquidSilanol: Double
-  val RatioLiquidSodiumChloride: Double
-  val RatioMethane: Double
-  val RatioNitrogen: Double
-  val RatioNitrousOxide: Double
-  val RatioOxygen: Double
-  val RatioOzone: Double
-  val RatioPollutant: Double
-  val RatioPollutedWater: Double
-  val RatioSilanol: Double
-  val RatioSteam: Double
-  val RatioWater: Double
+  val Ratios: Ratios // every Substance
   val Temperature: Double
   val TotalMoles: Double
   val VolumeOfLiquid: Double
@@ -2603,34 +1591,7 @@ class GasSensor : TypedDevice {
 class GasTankStorage : TypedDevice {
   val Pressure: Double
   val Quantity: Double
-  val RatioCarbonDioxide: Double
-  val RatioHelium: Double
-  val RatioHydrazine: Double
-  val RatioHydrochloricAcid: Double
-  val RatioHydrogen: Double
-  val RatioLiquidAlcohol: Double
-  val RatioLiquidCarbonDioxide: Double
-  val RatioLiquidHydrazine: Double
-  val RatioLiquidHydrochloricAcid: Double
-  val RatioLiquidHydrogen: Double
-  val RatioLiquidMethane: Double
-  val RatioLiquidNitrogen: Double
-  val RatioLiquidNitrousOxide: Double
-  val RatioLiquidOxygen: Double
-  val RatioLiquidOzone: Double
-  val RatioLiquidPollutant: Double
-  val RatioLiquidSilanol: Double
-  val RatioLiquidSodiumChloride: Double
-  val RatioMethane: Double
-  val RatioNitrogen: Double
-  val RatioNitrousOxide: Double
-  val RatioOxygen: Double
-  val RatioOzone: Double
-  val RatioPollutant: Double
-  val RatioPollutedWater: Double
-  val RatioSilanol: Double
-  val RatioSteam: Double
-  val RatioWater: Double
+  val Ratios: Ratios // every Substance
   val Temperature: Double
   val GasCanister: GasCanisterSlot // slots[0]
   val slots: Slots<GasCanisterSlot>
@@ -2684,34 +1645,7 @@ class GovernedGasEngine : TypedDevice {
   val PassedMoles: Double
   val Power: Boolean
   val Pressure: Double
-  val RatioCarbonDioxide: Double
-  val RatioHelium: Double
-  val RatioHydrazine: Double
-  val RatioHydrochloricAcid: Double
-  val RatioHydrogen: Double
-  val RatioLiquidAlcohol: Double
-  val RatioLiquidCarbonDioxide: Double
-  val RatioLiquidHydrazine: Double
-  val RatioLiquidHydrochloricAcid: Double
-  val RatioLiquidHydrogen: Double
-  val RatioLiquidMethane: Double
-  val RatioLiquidNitrogen: Double
-  val RatioLiquidNitrousOxide: Double
-  val RatioLiquidOxygen: Double
-  val RatioLiquidOzone: Double
-  val RatioLiquidPollutant: Double
-  val RatioLiquidSilanol: Double
-  val RatioLiquidSodiumChloride: Double
-  val RatioMethane: Double
-  val RatioNitrogen: Double
-  val RatioNitrousOxide: Double
-  val RatioOxygen: Double
-  val RatioOzone: Double
-  val RatioPollutant: Double
-  val RatioPollutedWater: Double
-  val RatioSilanol: Double
-  val RatioSteam: Double
-  val RatioWater: Double
+  val Ratios: Ratios // every Substance
   val RequiredPower: Double
   val Temperature: Double
   var Throttle: Double
@@ -2759,111 +1693,23 @@ class GrowLight : TypedDevice {
 class H2Combustor : TypedDevice {
   var Activate: Boolean
   val Combustion: Boolean
-  val CombustionInput: Double
-  val CombustionOutput: Double
   val Error: Boolean
   var Lock: Boolean
   val Maximum: Double
   var Mode: Double
   var On: Boolean
   var Open: Boolean
+  val Ports: Ports
+  //   Input: Combustion, Pressure, Temperature, TotalMoles, Ratios[every Substance]
+  //   Output: Combustion, Pressure, Temperature, TotalMoles, Ratios[every Substance]
   val Power: Boolean
   val Pressure: Double
-  val PressureInput: Double
-  val PressureOutput: Double
   val Ratio: Double
-  val RatioCarbonDioxide: Double
-  val RatioCarbonDioxideInput: Double
-  val RatioCarbonDioxideOutput: Double
-  val RatioHelium: Double
-  val RatioHeliumInput: Double
-  val RatioHeliumOutput: Double
-  val RatioHydrazine: Double
-  val RatioHydrazineInput: Double
-  val RatioHydrazineOutput: Double
-  val RatioHydrochloricAcid: Double
-  val RatioHydrochloricAcidInput: Double
-  val RatioHydrochloricAcidOutput: Double
-  val RatioHydrogen: Double
-  val RatioHydrogenInput: Double
-  val RatioHydrogenOutput: Double
-  val RatioLiquidAlcohol: Double
-  val RatioLiquidAlcoholInput: Double
-  val RatioLiquidAlcoholOutput: Double
-  val RatioLiquidCarbonDioxide: Double
-  val RatioLiquidCarbonDioxideInput: Double
-  val RatioLiquidCarbonDioxideOutput: Double
-  val RatioLiquidHydrazine: Double
-  val RatioLiquidHydrazineInput: Double
-  val RatioLiquidHydrazineOutput: Double
-  val RatioLiquidHydrochloricAcid: Double
-  val RatioLiquidHydrochloricAcidInput: Double
-  val RatioLiquidHydrochloricAcidOutput: Double
-  val RatioLiquidHydrogen: Double
-  val RatioLiquidHydrogenInput: Double
-  val RatioLiquidHydrogenOutput: Double
-  val RatioLiquidMethane: Double
-  val RatioLiquidMethaneInput: Double
-  val RatioLiquidMethaneOutput: Double
-  val RatioLiquidNitrogen: Double
-  val RatioLiquidNitrogenInput: Double
-  val RatioLiquidNitrogenOutput: Double
-  val RatioLiquidNitrousOxide: Double
-  val RatioLiquidNitrousOxideInput: Double
-  val RatioLiquidNitrousOxideOutput: Double
-  val RatioLiquidOxygen: Double
-  val RatioLiquidOxygenInput: Double
-  val RatioLiquidOxygenOutput: Double
-  val RatioLiquidOzone: Double
-  val RatioLiquidOzoneInput: Double
-  val RatioLiquidOzoneOutput: Double
-  val RatioLiquidPollutant: Double
-  val RatioLiquidPollutantInput: Double
-  val RatioLiquidPollutantOutput: Double
-  val RatioLiquidSilanol: Double
-  val RatioLiquidSilanolInput: Double
-  val RatioLiquidSilanolOutput: Double
-  val RatioLiquidSodiumChloride: Double
-  val RatioLiquidSodiumChlorideInput: Double
-  val RatioLiquidSodiumChlorideOutput: Double
-  val RatioMethane: Double
-  val RatioMethaneInput: Double
-  val RatioMethaneOutput: Double
-  val RatioNitrogen: Double
-  val RatioNitrogenInput: Double
-  val RatioNitrogenOutput: Double
-  val RatioNitrousOxide: Double
-  val RatioNitrousOxideInput: Double
-  val RatioNitrousOxideOutput: Double
-  val RatioOxygen: Double
-  val RatioOxygenInput: Double
-  val RatioOxygenOutput: Double
-  val RatioOzone: Double
-  val RatioOzoneInput: Double
-  val RatioOzoneOutput: Double
-  val RatioPollutant: Double
-  val RatioPollutantInput: Double
-  val RatioPollutantOutput: Double
-  val RatioPollutedWater: Double
-  val RatioPollutedWaterInput: Double
-  val RatioPollutedWaterOutput: Double
-  val RatioSilanol: Double
-  val RatioSilanolInput: Double
-  val RatioSilanolOutput: Double
-  val RatioSteam: Double
-  val RatioSteamInput: Double
-  val RatioSteamOutput: Double
-  val RatioWater: Double
-  val RatioWaterInput: Double
-  val RatioWaterOutput: Double
+  val Ratios: Ratios // every Substance
   val RequiredPower: Double
   var Setting: Double
   val Temperature: Double
-  val TemperatureInput: Double
-  val TemperatureOutput: Double
   val TotalMoles: Double
-  val TotalMolesInput: Double
-  val TotalMolesOutput: Double
   val ProgrammableChip: DataDiskSlot // slots[0]
   val slots: Slots<DataDiskSlot>
 }
@@ -2892,60 +1738,25 @@ class HardSuit : TypedDevice {
   val EntityState: Double
   var Error: Boolean
   var Filtration: Double
-  val ForwardX: Double
-  val ForwardY: Double
-  val ForwardZ: Double
+  val Forward: Vector // X, Y, Z
   var Lock: Boolean
   var On: Boolean
   val Orientation: Double
-  val PositionX: Double
-  val PositionY: Double
-  val PositionZ: Double
+  val Position: Vector // X, Y, Z
   val Power: Boolean
   val Pressure: Double
   val PressureExternal: Double
   var PressureSetting: Double
-  val RatioCarbonDioxide: Double
-  val RatioHelium: Double
-  val RatioHydrazine: Double
-  val RatioHydrochloricAcid: Double
-  val RatioHydrogen: Double
-  val RatioLiquidAlcohol: Double
-  val RatioLiquidCarbonDioxide: Double
-  val RatioLiquidHydrazine: Double
-  val RatioLiquidHydrochloricAcid: Double
-  val RatioLiquidHydrogen: Double
-  val RatioLiquidMethane: Double
-  val RatioLiquidNitrogen: Double
-  val RatioLiquidNitrousOxide: Double
-  val RatioLiquidOxygen: Double
-  val RatioLiquidOzone: Double
-  val RatioLiquidPollutant: Double
-  val RatioLiquidSilanol: Double
-  val RatioLiquidSodiumChloride: Double
-  val RatioMethane: Double
-  val RatioNitrogen: Double
-  val RatioNitrousOxide: Double
-  val RatioOxygen: Double
-  val RatioOzone: Double
-  val RatioPollutant: Double
-  val RatioPollutedWater: Double
-  val RatioSilanol: Double
-  val RatioSteam: Double
-  val RatioWater: Double
+  val Ratios: Ratios // every Substance
   var Setting: Double
   var SoundAlert: Double
   val Temperature: Double
   val TemperatureExternal: Double
   var TemperatureSetting: Double
   val TotalMoles: Double
+  val Velocity: Vector // X, Y, Z
   val VelocityMagnitude: Double
-  val VelocityRelativeX: Double
-  val VelocityRelativeY: Double
-  val VelocityRelativeZ: Double
-  val VelocityX: Double
-  val VelocityY: Double
-  val VelocityZ: Double
+  val VelocityRelative: Vector // X, Y, Z
   var Volume: Double
   val AirTank: ItemAirTankSlot // slots[0]
   val WasteTank: ItemAirTankSlot // slots[1]
@@ -2963,34 +1774,7 @@ class HardsuitHelmet : TypedDevice {
   var Open: Boolean
   val Power: Boolean
   val Pressure: Double
-  val RatioCarbonDioxide: Double
-  val RatioHelium: Double
-  val RatioHydrazine: Double
-  val RatioHydrochloricAcid: Double
-  val RatioHydrogen: Double
-  val RatioLiquidAlcohol: Double
-  val RatioLiquidCarbonDioxide: Double
-  val RatioLiquidHydrazine: Double
-  val RatioLiquidHydrochloricAcid: Double
-  val RatioLiquidHydrogen: Double
-  val RatioLiquidMethane: Double
-  val RatioLiquidNitrogen: Double
-  val RatioLiquidNitrousOxide: Double
-  val RatioLiquidOxygen: Double
-  val RatioLiquidOzone: Double
-  val RatioLiquidPollutant: Double
-  val RatioLiquidSilanol: Double
-  val RatioLiquidSodiumChloride: Double
-  val RatioMethane: Double
-  val RatioNitrogen: Double
-  val RatioNitrousOxide: Double
-  val RatioOxygen: Double
-  val RatioOzone: Double
-  val RatioPollutant: Double
-  val RatioPollutedWater: Double
-  val RatioSilanol: Double
-  val RatioSteam: Double
-  val RatioWater: Double
+  val Ratios: Ratios // every Substance
   var SoundAlert: Double
   val Temperature: Double
   val TotalMoles: Double
@@ -3002,17 +1786,15 @@ class Harvie : TypedDevice {
   var Activate: Boolean
   var ClearMemory: Boolean
   val Error: Boolean
-  val ExportCount: Double
+  val Export: Transfer // Count
   var Harvest: Double
-  val ImportCount: Double
+  val Import: Transfer // Count
   var Lock: Boolean
   var Mode: Double
   var On: Boolean
   var Plant: Double
   val Power: Boolean
   val RequiredPower: Double
-  val Import: DataDiskSlot // slots[0]
-  val Export: DataDiskSlot // slots[1]
   val Hand: DataDiskSlot // slots[2]
   val slots: Slots<DataDiskSlot>
 }
@@ -3022,15 +1804,13 @@ class HorizontalAutoMiner : TypedDevice {
   var Activate: Boolean
   var ClearMemory: Boolean
   val Error: Boolean
-  val ExportCount: Double
-  val ImportCount: Double
+  val Export: Transfer // Count
+  val Import: Transfer // Count
   var Mode: Double
   var On: Boolean
   var Open: Boolean
   val Power: Boolean
   val RequiredPower: Double
-  val Import: DataDiskSlot // slots[0]
-  val Export: DataDiskSlot // slots[1]
   val slots: Slots<DataDiskSlot>
 }
 
@@ -3040,8 +1820,8 @@ class HydraulicPipeBender : TypedDevice {
   var ClearMemory: Boolean
   val CompletionRatio: Double
   val Error: Boolean
-  val ExportCount: Double
-  val ImportCount: Double
+  val Export: Transfer // Count
+  val Import: Transfer // Count
   var Lock: Boolean
   var On: Boolean
   var Open: Boolean
@@ -3050,77 +1830,24 @@ class HydraulicPipeBender : TypedDevice {
   var RecipeHash: Double
   val RequiredPower: Double
   val StackSize: Double
-  val Import: DataDiskSlot // slots[0]
-  val Export: DataDiskSlot // slots[1]
   val slots: Slots<DataDiskSlot>
 }
 
 /** StructureHydroponicsStation. Entry point: HydroponicsStations. */
 class HydroponicsStation : TypedDevice {
   val Combustion: Boolean
-  val CombustionOutput: Double
   val Error: Boolean
   val Maximum: Double
   var On: Boolean
+  val Ports: Ports // Output: Combustion, Pressure, Temperature, TotalMoles, Ratios[CarbonDioxide, Helium, Hydrazine, HydrochloricAcid, Hydrogen, LiquidAlcohol, LiquidHydrazine, LiquidHydrochloricAcid, LiquidHydrogen, LiquidOzone, LiquidSilanol, LiquidSodiumChloride, Methane, Nitrogen, NitrousOxide, Oxygen, Ozone, Pollutant, PollutedWater, Silanol, Water]
   val Power: Boolean
   val Pressure: Double
-  val PressureOutput: Double
   val Ratio: Double
-  val RatioCarbonDioxide: Double
-  val RatioCarbonDioxideOutput: Double
-  val RatioHelium: Double
-  val RatioHeliumOutput: Double
-  val RatioHydrazine: Double
-  val RatioHydrazineOutput: Double
-  val RatioHydrochloricAcid: Double
-  val RatioHydrochloricAcidOutput: Double
-  val RatioHydrogen: Double
-  val RatioHydrogenOutput: Double
-  val RatioLiquidAlcohol: Double
-  val RatioLiquidAlcoholOutput: Double
-  val RatioLiquidCarbonDioxide: Double
-  val RatioLiquidHydrazine: Double
-  val RatioLiquidHydrazineOutput: Double
-  val RatioLiquidHydrochloricAcid: Double
-  val RatioLiquidHydrochloricAcidOutput: Double
-  val RatioLiquidHydrogen: Double
-  val RatioLiquidHydrogenOutput: Double
-  val RatioLiquidMethane: Double
-  val RatioLiquidNitrogen: Double
-  val RatioLiquidNitrousOxide: Double
-  val RatioLiquidOxygen: Double
-  val RatioLiquidOzone: Double
-  val RatioLiquidOzoneOutput: Double
-  val RatioLiquidPollutant: Double
-  val RatioLiquidSilanol: Double
-  val RatioLiquidSilanolOutput: Double
-  val RatioLiquidSodiumChloride: Double
-  val RatioLiquidSodiumChlorideOutput: Double
-  val RatioMethane: Double
-  val RatioMethaneOutput: Double
-  val RatioNitrogen: Double
-  val RatioNitrogenOutput: Double
-  val RatioNitrousOxide: Double
-  val RatioNitrousOxideOutput: Double
-  val RatioOxygen: Double
-  val RatioOxygenOutput: Double
-  val RatioOzone: Double
-  val RatioOzoneOutput: Double
-  val RatioPollutant: Double
-  val RatioPollutantOutput: Double
-  val RatioPollutedWater: Double
-  val RatioPollutedWaterOutput: Double
-  val RatioSilanol: Double
-  val RatioSilanolOutput: Double
-  val RatioSteam: Double
-  val RatioWater: Double
-  val RatioWaterOutput: Double
+  val Ratios: Ratios // every Substance
   val RequiredPower: Double
   var Setting: Double
   val Temperature: Double
-  val TemperatureOutput: Double
   val TotalMoles: Double
-  val TotalMolesOutput: Double
   val slots: Slots<PlantSlot>
 }
 
@@ -3128,34 +1855,7 @@ class HydroponicsStation : TypedDevice {
 class HydroponicsTrayData : TypedDevice {
   val Combustion: Boolean
   val Pressure: Double
-  val RatioCarbonDioxide: Double
-  val RatioHelium: Double
-  val RatioHydrazine: Double
-  val RatioHydrochloricAcid: Double
-  val RatioHydrogen: Double
-  val RatioLiquidAlcohol: Double
-  val RatioLiquidCarbonDioxide: Double
-  val RatioLiquidHydrazine: Double
-  val RatioLiquidHydrochloricAcid: Double
-  val RatioLiquidHydrogen: Double
-  val RatioLiquidMethane: Double
-  val RatioLiquidNitrogen: Double
-  val RatioLiquidNitrousOxide: Double
-  val RatioLiquidOxygen: Double
-  val RatioLiquidOzone: Double
-  val RatioLiquidPollutant: Double
-  val RatioLiquidSilanol: Double
-  val RatioLiquidSodiumChloride: Double
-  val RatioMethane: Double
-  val RatioNitrogen: Double
-  val RatioNitrousOxide: Double
-  val RatioOxygen: Double
-  val RatioOzone: Double
-  val RatioPollutant: Double
-  val RatioPollutedWater: Double
-  val RatioSilanol: Double
-  val RatioSteam: Double
-  val RatioWater: Double
+  val Ratios: Ratios // every Substance
   val Temperature: Double
   val TotalMoles: Double
   val Plant: PlantSlot // slots[0]
@@ -3176,34 +1876,7 @@ class IcarusHelmet : TypedDevice {
   var Open: Boolean
   val Power: Boolean
   val Pressure: Double
-  val RatioCarbonDioxide: Double
-  val RatioHelium: Double
-  val RatioHydrazine: Double
-  val RatioHydrochloricAcid: Double
-  val RatioHydrogen: Double
-  val RatioLiquidAlcohol: Double
-  val RatioLiquidCarbonDioxide: Double
-  val RatioLiquidHydrazine: Double
-  val RatioLiquidHydrochloricAcid: Double
-  val RatioLiquidHydrogen: Double
-  val RatioLiquidMethane: Double
-  val RatioLiquidNitrogen: Double
-  val RatioLiquidNitrousOxide: Double
-  val RatioLiquidOxygen: Double
-  val RatioLiquidOzone: Double
-  val RatioLiquidPollutant: Double
-  val RatioLiquidSilanol: Double
-  val RatioLiquidSodiumChloride: Double
-  val RatioMethane: Double
-  val RatioNitrogen: Double
-  val RatioNitrousOxide: Double
-  val RatioOxygen: Double
-  val RatioOzone: Double
-  val RatioPollutant: Double
-  val RatioPollutedWater: Double
-  val RatioSilanol: Double
-  val RatioSteam: Double
-  val RatioWater: Double
+  val Ratios: Ratios // every Substance
   var SoundAlert: Double
   val Temperature: Double
   val TotalMoles: Double
@@ -3215,7 +1888,7 @@ class IceCrusher : TypedDevice {
   var Activate: Boolean
   var ClearMemory: Boolean
   val Error: Boolean
-  val ImportCount: Double
+  val Import: Transfer // Count
   var Lock: Boolean
   val Maximum: Double
   var On: Boolean
@@ -3223,7 +1896,6 @@ class IceCrusher : TypedDevice {
   val Ratio: Double
   val RequiredPower: Double
   var Setting: Double
-  val Import: DataDiskSlot // slots[0]
   val slots: Slots<DataDiskSlot>
 }
 
@@ -3343,34 +2015,7 @@ class Landingpad_DataConnectionPiece : TypedDevice {
   var On: Boolean
   val Power: Boolean
   val Pressure: Double
-  val RatioCarbonDioxide: Double
-  val RatioHelium: Double
-  val RatioHydrazine: Double
-  val RatioHydrochloricAcid: Double
-  val RatioHydrogen: Double
-  val RatioLiquidAlcohol: Double
-  val RatioLiquidCarbonDioxide: Double
-  val RatioLiquidHydrazine: Double
-  val RatioLiquidHydrochloricAcid: Double
-  val RatioLiquidHydrogen: Double
-  val RatioLiquidMethane: Double
-  val RatioLiquidNitrogen: Double
-  val RatioLiquidNitrousOxide: Double
-  val RatioLiquidOxygen: Double
-  val RatioLiquidOzone: Double
-  val RatioLiquidPollutant: Double
-  val RatioLiquidSilanol: Double
-  val RatioLiquidSodiumChloride: Double
-  val RatioMethane: Double
-  val RatioNitrogen: Double
-  val RatioNitrousOxide: Double
-  val RatioOxygen: Double
-  val RatioOzone: Double
-  val RatioPollutant: Double
-  val RatioPollutedWater: Double
-  val RatioSilanol: Double
-  val RatioSteam: Double
-  val RatioWater: Double
+  val Ratios: Ratios // every Substance
   val RequiredPower: Double
   val Temperature: Double
   val TotalMoles: Double
@@ -3386,34 +2031,7 @@ class Landingpad_GasConnectorInwardPiece : TypedDevice {
   val Power: Boolean
   val Pressure: Double
   val Ratio: Double
-  val RatioCarbonDioxide: Double
-  val RatioHelium: Double
-  val RatioHydrazine: Double
-  val RatioHydrochloricAcid: Double
-  val RatioHydrogen: Double
-  val RatioLiquidAlcohol: Double
-  val RatioLiquidCarbonDioxide: Double
-  val RatioLiquidHydrazine: Double
-  val RatioLiquidHydrochloricAcid: Double
-  val RatioLiquidHydrogen: Double
-  val RatioLiquidMethane: Double
-  val RatioLiquidNitrogen: Double
-  val RatioLiquidNitrousOxide: Double
-  val RatioLiquidOxygen: Double
-  val RatioLiquidOzone: Double
-  val RatioLiquidPollutant: Double
-  val RatioLiquidSilanol: Double
-  val RatioLiquidSodiumChloride: Double
-  val RatioMethane: Double
-  val RatioNitrogen: Double
-  val RatioNitrousOxide: Double
-  val RatioOxygen: Double
-  val RatioOzone: Double
-  val RatioPollutant: Double
-  val RatioPollutedWater: Double
-  val RatioSilanol: Double
-  val RatioSteam: Double
-  val RatioWater: Double
+  val Ratios: Ratios // every Substance
   val RequiredPower: Double
   var Setting: Double
   val Temperature: Double
@@ -3429,34 +2047,7 @@ class Landingpad_GasConnectorOutwardPiece : TypedDevice {
   val Power: Boolean
   val Pressure: Double
   val Ratio: Double
-  val RatioCarbonDioxide: Double
-  val RatioHelium: Double
-  val RatioHydrazine: Double
-  val RatioHydrochloricAcid: Double
-  val RatioHydrogen: Double
-  val RatioLiquidAlcohol: Double
-  val RatioLiquidCarbonDioxide: Double
-  val RatioLiquidHydrazine: Double
-  val RatioLiquidHydrochloricAcid: Double
-  val RatioLiquidHydrogen: Double
-  val RatioLiquidMethane: Double
-  val RatioLiquidNitrogen: Double
-  val RatioLiquidNitrousOxide: Double
-  val RatioLiquidOxygen: Double
-  val RatioLiquidOzone: Double
-  val RatioLiquidPollutant: Double
-  val RatioLiquidSilanol: Double
-  val RatioLiquidSodiumChloride: Double
-  val RatioMethane: Double
-  val RatioNitrogen: Double
-  val RatioNitrousOxide: Double
-  val RatioOxygen: Double
-  val RatioOzone: Double
-  val RatioPollutant: Double
-  val RatioPollutedWater: Double
-  val RatioSilanol: Double
-  val RatioSteam: Double
-  val RatioWater: Double
+  val Ratios: Ratios // every Substance
   val RequiredPower: Double
   var Setting: Double
   val Temperature: Double
@@ -3483,34 +2074,7 @@ class Landingpad_LiquidConnectorInwardPiece : TypedDevice {
   val Power: Boolean
   val Pressure: Double
   val Ratio: Double
-  val RatioCarbonDioxide: Double
-  val RatioHelium: Double
-  val RatioHydrazine: Double
-  val RatioHydrochloricAcid: Double
-  val RatioHydrogen: Double
-  val RatioLiquidAlcohol: Double
-  val RatioLiquidCarbonDioxide: Double
-  val RatioLiquidHydrazine: Double
-  val RatioLiquidHydrochloricAcid: Double
-  val RatioLiquidHydrogen: Double
-  val RatioLiquidMethane: Double
-  val RatioLiquidNitrogen: Double
-  val RatioLiquidNitrousOxide: Double
-  val RatioLiquidOxygen: Double
-  val RatioLiquidOzone: Double
-  val RatioLiquidPollutant: Double
-  val RatioLiquidSilanol: Double
-  val RatioLiquidSodiumChloride: Double
-  val RatioMethane: Double
-  val RatioNitrogen: Double
-  val RatioNitrousOxide: Double
-  val RatioOxygen: Double
-  val RatioOzone: Double
-  val RatioPollutant: Double
-  val RatioPollutedWater: Double
-  val RatioSilanol: Double
-  val RatioSteam: Double
-  val RatioWater: Double
+  val Ratios: Ratios // every Substance
   val RequiredPower: Double
   var Setting: Double
   val Temperature: Double
@@ -3526,34 +2090,7 @@ class Landingpad_LiquidConnectorOutwardPiece : TypedDevice {
   val Power: Boolean
   val Pressure: Double
   val Ratio: Double
-  val RatioCarbonDioxide: Double
-  val RatioHelium: Double
-  val RatioHydrazine: Double
-  val RatioHydrochloricAcid: Double
-  val RatioHydrogen: Double
-  val RatioLiquidAlcohol: Double
-  val RatioLiquidCarbonDioxide: Double
-  val RatioLiquidHydrazine: Double
-  val RatioLiquidHydrochloricAcid: Double
-  val RatioLiquidHydrogen: Double
-  val RatioLiquidMethane: Double
-  val RatioLiquidNitrogen: Double
-  val RatioLiquidNitrousOxide: Double
-  val RatioLiquidOxygen: Double
-  val RatioLiquidOzone: Double
-  val RatioLiquidPollutant: Double
-  val RatioLiquidSilanol: Double
-  val RatioLiquidSodiumChloride: Double
-  val RatioMethane: Double
-  val RatioNitrogen: Double
-  val RatioNitrousOxide: Double
-  val RatioOxygen: Double
-  val RatioOzone: Double
-  val RatioPollutant: Double
-  val RatioPollutedWater: Double
-  val RatioSilanol: Double
-  val RatioSteam: Double
-  val RatioWater: Double
+  val Ratios: Ratios // every Substance
   val RequiredPower: Double
   var Setting: Double
   val Temperature: Double
@@ -3582,9 +2119,7 @@ class Landingpad_ThreshholdPiece : TypedDevice {
 class Laptop : TypedDevice {
   val Error: Boolean
   var On: Boolean
-  val PositionX: Double
-  val PositionY: Double
-  val PositionZ: Double
+  val Position: Vector // X, Y, Z
   val Power: Boolean
   val PressureExternal: Double
   val TemperatureExternal: Double
@@ -3640,65 +2175,14 @@ class LargeHangerDoor : TypedDevice {
 /** StructureLargeRocketGasFuelTank. Entry point: LargeRocketGasFuelTanks. */
 class LargeRocketGasFuelTank : TypedDevice {
   val Combustion: Boolean
-  val CombustionOutput: Double
   val Maximum: Double
+  val Ports: Ports // Output: Combustion, Pressure, Temperature, TotalMoles, Ratios[CarbonDioxide, Helium, Hydrazine, HydrochloricAcid, Hydrogen, LiquidAlcohol, LiquidHydrazine, LiquidHydrochloricAcid, LiquidHydrogen, LiquidOzone, LiquidSilanol, LiquidSodiumChloride, Methane, Nitrogen, NitrousOxide, Oxygen, Ozone, Pollutant, PollutedWater, Silanol, Water]
   val Pressure: Double
-  val PressureOutput: Double
   val Ratio: Double
-  val RatioCarbonDioxide: Double
-  val RatioCarbonDioxideOutput: Double
-  val RatioHelium: Double
-  val RatioHeliumOutput: Double
-  val RatioHydrazine: Double
-  val RatioHydrazineOutput: Double
-  val RatioHydrochloricAcid: Double
-  val RatioHydrochloricAcidOutput: Double
-  val RatioHydrogen: Double
-  val RatioHydrogenOutput: Double
-  val RatioLiquidAlcohol: Double
-  val RatioLiquidAlcoholOutput: Double
-  val RatioLiquidCarbonDioxide: Double
-  val RatioLiquidHydrazine: Double
-  val RatioLiquidHydrazineOutput: Double
-  val RatioLiquidHydrochloricAcid: Double
-  val RatioLiquidHydrochloricAcidOutput: Double
-  val RatioLiquidHydrogen: Double
-  val RatioLiquidHydrogenOutput: Double
-  val RatioLiquidMethane: Double
-  val RatioLiquidNitrogen: Double
-  val RatioLiquidNitrousOxide: Double
-  val RatioLiquidOxygen: Double
-  val RatioLiquidOzone: Double
-  val RatioLiquidOzoneOutput: Double
-  val RatioLiquidPollutant: Double
-  val RatioLiquidSilanol: Double
-  val RatioLiquidSilanolOutput: Double
-  val RatioLiquidSodiumChloride: Double
-  val RatioLiquidSodiumChlorideOutput: Double
-  val RatioMethane: Double
-  val RatioMethaneOutput: Double
-  val RatioNitrogen: Double
-  val RatioNitrogenOutput: Double
-  val RatioNitrousOxide: Double
-  val RatioNitrousOxideOutput: Double
-  val RatioOxygen: Double
-  val RatioOxygenOutput: Double
-  val RatioOzone: Double
-  val RatioOzoneOutput: Double
-  val RatioPollutant: Double
-  val RatioPollutantOutput: Double
-  val RatioPollutedWater: Double
-  val RatioPollutedWaterOutput: Double
-  val RatioSilanol: Double
-  val RatioSilanolOutput: Double
-  val RatioSteam: Double
-  val RatioWater: Double
-  val RatioWaterOutput: Double
+  val Ratios: Ratios // every Substance
   var Setting: Double
   val Temperature: Double
-  val TemperatureOutput: Double
   val TotalMoles: Double
-  val TotalMolesOutput: Double
   val Volume: Double
   val VolumeOfLiquid: Double
 }
@@ -3706,65 +2190,14 @@ class LargeRocketGasFuelTank : TypedDevice {
 /** StructureLargeRocketLiquidFuelTank. Entry point: LargeRocketLiquidFuelTanks. */
 class LargeRocketLiquidFuelTank : TypedDevice {
   val Combustion: Boolean
-  val CombustionOutput: Double
   val Maximum: Double
+  val Ports: Ports // Output: Combustion, Pressure, Temperature, TotalMoles, Ratios[CarbonDioxide, Helium, Hydrazine, HydrochloricAcid, Hydrogen, LiquidAlcohol, LiquidHydrazine, LiquidHydrochloricAcid, LiquidHydrogen, LiquidOzone, LiquidSilanol, LiquidSodiumChloride, Methane, Nitrogen, NitrousOxide, Oxygen, Ozone, Pollutant, PollutedWater, Silanol, Water]
   val Pressure: Double
-  val PressureOutput: Double
   val Ratio: Double
-  val RatioCarbonDioxide: Double
-  val RatioCarbonDioxideOutput: Double
-  val RatioHelium: Double
-  val RatioHeliumOutput: Double
-  val RatioHydrazine: Double
-  val RatioHydrazineOutput: Double
-  val RatioHydrochloricAcid: Double
-  val RatioHydrochloricAcidOutput: Double
-  val RatioHydrogen: Double
-  val RatioHydrogenOutput: Double
-  val RatioLiquidAlcohol: Double
-  val RatioLiquidAlcoholOutput: Double
-  val RatioLiquidCarbonDioxide: Double
-  val RatioLiquidHydrazine: Double
-  val RatioLiquidHydrazineOutput: Double
-  val RatioLiquidHydrochloricAcid: Double
-  val RatioLiquidHydrochloricAcidOutput: Double
-  val RatioLiquidHydrogen: Double
-  val RatioLiquidHydrogenOutput: Double
-  val RatioLiquidMethane: Double
-  val RatioLiquidNitrogen: Double
-  val RatioLiquidNitrousOxide: Double
-  val RatioLiquidOxygen: Double
-  val RatioLiquidOzone: Double
-  val RatioLiquidOzoneOutput: Double
-  val RatioLiquidPollutant: Double
-  val RatioLiquidSilanol: Double
-  val RatioLiquidSilanolOutput: Double
-  val RatioLiquidSodiumChloride: Double
-  val RatioLiquidSodiumChlorideOutput: Double
-  val RatioMethane: Double
-  val RatioMethaneOutput: Double
-  val RatioNitrogen: Double
-  val RatioNitrogenOutput: Double
-  val RatioNitrousOxide: Double
-  val RatioNitrousOxideOutput: Double
-  val RatioOxygen: Double
-  val RatioOxygenOutput: Double
-  val RatioOzone: Double
-  val RatioOzoneOutput: Double
-  val RatioPollutant: Double
-  val RatioPollutantOutput: Double
-  val RatioPollutedWater: Double
-  val RatioPollutedWaterOutput: Double
-  val RatioSilanol: Double
-  val RatioSilanolOutput: Double
-  val RatioSteam: Double
-  val RatioWater: Double
-  val RatioWaterOutput: Double
+  val Ratios: Ratios // every Substance
   var Setting: Double
   val Temperature: Double
-  val TemperatureOutput: Double
   val TotalMoles: Double
-  val TotalMolesOutput: Double
   val Volume: Double
   val VolumeOfLiquid: Double
 }
@@ -3775,6 +2208,7 @@ class LargeSatelliteDish : TypedDevice {
   var BestContactFilter: Double
   val ContactSlotIndex: Double
   val ContactTypeId: Double
+  val Dimensions: Vector // X, Z
   val Error: Boolean
   var Horizontal: Double
   val Idle: Boolean
@@ -3786,8 +2220,6 @@ class LargeSatelliteDish : TypedDevice {
   var Setting: Double
   val SignalID: Double
   val SignalStrength: Double
-  val SizeX: Double
-  val SizeZ: Double
   var TargetPadIndex: Double
   var Vertical: Double
   val WattsReachingContact: Double
@@ -3797,67 +2229,23 @@ class LargeSatelliteDish : TypedDevice {
 class LarreDockAtmos : TypedDevice {
   var Activate: Boolean
   val Combustion: Boolean
-  val CombustionInput: Double
   val Error: Boolean
   val Extended: Double
   val Idle: Boolean
   var Mode: Double
   var On: Boolean
   var Open: Boolean
-  val PositionX: Double
+  val Ports: Ports // Input: Combustion, Pressure, Temperature, TotalMoles, Ratios[CarbonDioxide, LiquidCarbonDioxide, LiquidMethane, LiquidNitrogen, LiquidNitrousOxide, LiquidOxygen, LiquidPollutant, Methane, Nitrogen, NitrousOxide, Oxygen, Pollutant, Steam, Water]
+  val Position: Vector // X
   val Power: Boolean
   val Pressure: Double
   var PressureExternal: Double
-  val PressureInput: Double
   var PressureInternal: Double
-  val RatioCarbonDioxide: Double
-  val RatioCarbonDioxideInput: Double
-  val RatioHelium: Double
-  val RatioHydrazine: Double
-  val RatioHydrochloricAcid: Double
-  val RatioHydrogen: Double
-  val RatioLiquidAlcohol: Double
-  val RatioLiquidCarbonDioxide: Double
-  val RatioLiquidCarbonDioxideInput: Double
-  val RatioLiquidHydrazine: Double
-  val RatioLiquidHydrochloricAcid: Double
-  val RatioLiquidHydrogen: Double
-  val RatioLiquidMethane: Double
-  val RatioLiquidMethaneInput: Double
-  val RatioLiquidNitrogen: Double
-  val RatioLiquidNitrogenInput: Double
-  val RatioLiquidNitrousOxide: Double
-  val RatioLiquidNitrousOxideInput: Double
-  val RatioLiquidOxygen: Double
-  val RatioLiquidOxygenInput: Double
-  val RatioLiquidOzone: Double
-  val RatioLiquidPollutant: Double
-  val RatioLiquidPollutantInput: Double
-  val RatioLiquidSilanol: Double
-  val RatioLiquidSodiumChloride: Double
-  val RatioMethane: Double
-  val RatioMethaneInput: Double
-  val RatioNitrogen: Double
-  val RatioNitrogenInput: Double
-  val RatioNitrousOxide: Double
-  val RatioNitrousOxideInput: Double
-  val RatioOxygen: Double
-  val RatioOxygenInput: Double
-  val RatioOzone: Double
-  val RatioPollutant: Double
-  val RatioPollutantInput: Double
-  val RatioPollutedWater: Double
-  val RatioSilanol: Double
-  val RatioSteam: Double
-  val RatioSteamInput: Double
-  val RatioWater: Double
-  val RatioWaterInput: Double
+  val Ratios: Ratios // every Substance
   val RequiredPower: Double
   var Setting: Double
   val Temperature: Double
-  val TemperatureInput: Double
   val TotalMoles: Double
-  val TotalMolesInput: Double
   val Filter: FilterSlot // slots[0]
   val slots: Slots<FilterSlot>
 }
@@ -3878,7 +2266,7 @@ class LarreDockCargo : TypedDevice {
   val Idle: Boolean
   var On: Boolean
   var Open: Boolean
-  val PositionX: Double
+  val Position: Vector // X
   val Power: Boolean
   val RequiredPower: Double
   var Setting: Double
@@ -3898,7 +2286,7 @@ class LarreDockCollector : TypedDevice {
   var Mode: Double
   var On: Boolean
   var Open: Boolean
-  val PositionX: Double
+  val Position: Vector // X
   val Power: Boolean
   val Quantity: Double
   val Ratio: Double
@@ -3915,7 +2303,7 @@ class LarreDockHydroponics : TypedDevice {
   val Idle: Boolean
   var On: Boolean
   var Open: Boolean
-  val PositionX: Double
+  val Position: Vector // X
   val Power: Boolean
   val RequiredPower: Double
   var Setting: Double
@@ -3977,39 +2365,15 @@ class LightRoundSmall : TypedDevice {
 
 /** StructureLiquidDrain. Entry point: LiquidDrains. */
 class LiquidDrain : TypedDevice {
-  val CombustionOutput: Double
   val Error: Boolean
   var Lock: Boolean
   val Maximum: Double
   var On: Boolean
+  val Ports: Ports // Output: Combustion, Pressure, Temperature, TotalMoles, Ratios[CarbonDioxide, Helium, Hydrazine, HydrochloricAcid, Hydrogen, LiquidAlcohol, LiquidHydrazine, LiquidHydrochloricAcid, LiquidHydrogen, LiquidOzone, LiquidSilanol, LiquidSodiumChloride, Methane, Nitrogen, NitrousOxide, Oxygen, Ozone, Pollutant, PollutedWater, Silanol, Water]
   val Power: Boolean
-  val PressureOutput: Double
   val Ratio: Double
-  val RatioCarbonDioxideOutput: Double
-  val RatioHeliumOutput: Double
-  val RatioHydrazineOutput: Double
-  val RatioHydrochloricAcidOutput: Double
-  val RatioHydrogenOutput: Double
-  val RatioLiquidAlcoholOutput: Double
-  val RatioLiquidHydrazineOutput: Double
-  val RatioLiquidHydrochloricAcidOutput: Double
-  val RatioLiquidHydrogenOutput: Double
-  val RatioLiquidOzoneOutput: Double
-  val RatioLiquidSilanolOutput: Double
-  val RatioLiquidSodiumChlorideOutput: Double
-  val RatioMethaneOutput: Double
-  val RatioNitrogenOutput: Double
-  val RatioNitrousOxideOutput: Double
-  val RatioOxygenOutput: Double
-  val RatioOzoneOutput: Double
-  val RatioPollutantOutput: Double
-  val RatioPollutedWaterOutput: Double
-  val RatioSilanolOutput: Double
-  val RatioWaterOutput: Double
   val RequiredPower: Double
   var Setting: Double
-  val TemperatureOutput: Double
-  val TotalMolesOutput: Double
 }
 
 /** StructureLiquidPipeAnalyzer. Entry point: LiquidPipeAnalyzers. */
@@ -4021,34 +2385,7 @@ class LiquidPipeAnalyzer : TypedDevice {
   var On: Boolean
   val Power: Boolean
   val Pressure: Double
-  val RatioCarbonDioxide: Double
-  val RatioHelium: Double
-  val RatioHydrazine: Double
-  val RatioHydrochloricAcid: Double
-  val RatioHydrogen: Double
-  val RatioLiquidAlcohol: Double
-  val RatioLiquidCarbonDioxide: Double
-  val RatioLiquidHydrazine: Double
-  val RatioLiquidHydrochloricAcid: Double
-  val RatioLiquidHydrogen: Double
-  val RatioLiquidMethane: Double
-  val RatioLiquidNitrogen: Double
-  val RatioLiquidNitrousOxide: Double
-  val RatioLiquidOxygen: Double
-  val RatioLiquidOzone: Double
-  val RatioLiquidPollutant: Double
-  val RatioLiquidSilanol: Double
-  val RatioLiquidSodiumChloride: Double
-  val RatioMethane: Double
-  val RatioNitrogen: Double
-  val RatioNitrousOxide: Double
-  val RatioOxygen: Double
-  val RatioOzone: Double
-  val RatioPollutant: Double
-  val RatioPollutedWater: Double
-  val RatioSilanol: Double
-  val RatioSteam: Double
-  val RatioWater: Double
+  val Ratios: Ratios // every Substance
   val RequiredPower: Double
   val Temperature: Double
   val TotalMoles: Double
@@ -4081,34 +2418,7 @@ class LiquidPressureRegulator : TypedDevice {
 class LiquidTankStorage : TypedDevice {
   val Pressure: Double
   val Quantity: Double
-  val RatioCarbonDioxide: Double
-  val RatioHelium: Double
-  val RatioHydrazine: Double
-  val RatioHydrochloricAcid: Double
-  val RatioHydrogen: Double
-  val RatioLiquidAlcohol: Double
-  val RatioLiquidCarbonDioxide: Double
-  val RatioLiquidHydrazine: Double
-  val RatioLiquidHydrochloricAcid: Double
-  val RatioLiquidHydrogen: Double
-  val RatioLiquidMethane: Double
-  val RatioLiquidNitrogen: Double
-  val RatioLiquidNitrousOxide: Double
-  val RatioLiquidOxygen: Double
-  val RatioLiquidOzone: Double
-  val RatioLiquidPollutant: Double
-  val RatioLiquidSilanol: Double
-  val RatioLiquidSodiumChloride: Double
-  val RatioMethane: Double
-  val RatioNitrogen: Double
-  val RatioNitrousOxide: Double
-  val RatioOxygen: Double
-  val RatioOzone: Double
-  val RatioPollutant: Double
-  val RatioPollutedWater: Double
-  val RatioSilanol: Double
-  val RatioSteam: Double
-  val RatioWater: Double
+  val Ratios: Ratios // every Substance
   val Temperature: Double
   val LiquidCanister: GasCanisterSlot // slots[0]
   val slots: Slots<GasCanisterSlot>
@@ -4365,16 +2675,14 @@ class LogicSlotReader : TypedDevice {
 class LogicSorter : TypedDevice {
   var ClearMemory: Boolean
   val Error: Boolean
-  val ExportCount: Double
-  val ImportCount: Double
+  val Export: Transfer // Count
+  val Import: Transfer // Count
   var Lock: Boolean
   var Mode: Double
   var On: Boolean
   val Power: Boolean
   val RequiredPower: Double
   val StackSize: Double
-  val Import: DataDiskSlot // slots[0]
-  val Export: DataDiskSlot // slots[1]
   val Export2: DataDiskSlot // slots[2]
   val slots: Slots<DataDiskSlot>
 }
@@ -4493,65 +2801,14 @@ class MediumRadiatorLiquid : TypedDevice {
 /** StructureMediumRocketGasFuelTank. Entry point: MediumRocketGasFuelTanks. */
 class MediumRocketGasFuelTank : TypedDevice {
   val Combustion: Boolean
-  val CombustionOutput: Double
   val Maximum: Double
+  val Ports: Ports // Output: Combustion, Pressure, Temperature, TotalMoles, Ratios[CarbonDioxide, Helium, Hydrazine, HydrochloricAcid, Hydrogen, LiquidAlcohol, LiquidHydrazine, LiquidHydrochloricAcid, LiquidHydrogen, LiquidOzone, LiquidSilanol, LiquidSodiumChloride, Methane, Nitrogen, NitrousOxide, Oxygen, Ozone, Pollutant, PollutedWater, Silanol, Water]
   val Pressure: Double
-  val PressureOutput: Double
   val Ratio: Double
-  val RatioCarbonDioxide: Double
-  val RatioCarbonDioxideOutput: Double
-  val RatioHelium: Double
-  val RatioHeliumOutput: Double
-  val RatioHydrazine: Double
-  val RatioHydrazineOutput: Double
-  val RatioHydrochloricAcid: Double
-  val RatioHydrochloricAcidOutput: Double
-  val RatioHydrogen: Double
-  val RatioHydrogenOutput: Double
-  val RatioLiquidAlcohol: Double
-  val RatioLiquidAlcoholOutput: Double
-  val RatioLiquidCarbonDioxide: Double
-  val RatioLiquidHydrazine: Double
-  val RatioLiquidHydrazineOutput: Double
-  val RatioLiquidHydrochloricAcid: Double
-  val RatioLiquidHydrochloricAcidOutput: Double
-  val RatioLiquidHydrogen: Double
-  val RatioLiquidHydrogenOutput: Double
-  val RatioLiquidMethane: Double
-  val RatioLiquidNitrogen: Double
-  val RatioLiquidNitrousOxide: Double
-  val RatioLiquidOxygen: Double
-  val RatioLiquidOzone: Double
-  val RatioLiquidOzoneOutput: Double
-  val RatioLiquidPollutant: Double
-  val RatioLiquidSilanol: Double
-  val RatioLiquidSilanolOutput: Double
-  val RatioLiquidSodiumChloride: Double
-  val RatioLiquidSodiumChlorideOutput: Double
-  val RatioMethane: Double
-  val RatioMethaneOutput: Double
-  val RatioNitrogen: Double
-  val RatioNitrogenOutput: Double
-  val RatioNitrousOxide: Double
-  val RatioNitrousOxideOutput: Double
-  val RatioOxygen: Double
-  val RatioOxygenOutput: Double
-  val RatioOzone: Double
-  val RatioOzoneOutput: Double
-  val RatioPollutant: Double
-  val RatioPollutantOutput: Double
-  val RatioPollutedWater: Double
-  val RatioPollutedWaterOutput: Double
-  val RatioSilanol: Double
-  val RatioSilanolOutput: Double
-  val RatioSteam: Double
-  val RatioWater: Double
-  val RatioWaterOutput: Double
+  val Ratios: Ratios // every Substance
   var Setting: Double
   val Temperature: Double
-  val TemperatureOutput: Double
   val TotalMoles: Double
-  val TotalMolesOutput: Double
   val Volume: Double
   val VolumeOfLiquid: Double
 }
@@ -4559,65 +2816,14 @@ class MediumRocketGasFuelTank : TypedDevice {
 /** StructureMediumRocketLiquidFuelTank. Entry point: MediumRocketLiquidFuelTanks. */
 class MediumRocketLiquidFuelTank : TypedDevice {
   val Combustion: Boolean
-  val CombustionOutput: Double
   val Maximum: Double
+  val Ports: Ports // Output: Combustion, Pressure, Temperature, TotalMoles, Ratios[CarbonDioxide, Helium, Hydrazine, HydrochloricAcid, Hydrogen, LiquidAlcohol, LiquidHydrazine, LiquidHydrochloricAcid, LiquidHydrogen, LiquidOzone, LiquidSilanol, LiquidSodiumChloride, Methane, Nitrogen, NitrousOxide, Oxygen, Ozone, Pollutant, PollutedWater, Silanol, Water]
   val Pressure: Double
-  val PressureOutput: Double
   val Ratio: Double
-  val RatioCarbonDioxide: Double
-  val RatioCarbonDioxideOutput: Double
-  val RatioHelium: Double
-  val RatioHeliumOutput: Double
-  val RatioHydrazine: Double
-  val RatioHydrazineOutput: Double
-  val RatioHydrochloricAcid: Double
-  val RatioHydrochloricAcidOutput: Double
-  val RatioHydrogen: Double
-  val RatioHydrogenOutput: Double
-  val RatioLiquidAlcohol: Double
-  val RatioLiquidAlcoholOutput: Double
-  val RatioLiquidCarbonDioxide: Double
-  val RatioLiquidHydrazine: Double
-  val RatioLiquidHydrazineOutput: Double
-  val RatioLiquidHydrochloricAcid: Double
-  val RatioLiquidHydrochloricAcidOutput: Double
-  val RatioLiquidHydrogen: Double
-  val RatioLiquidHydrogenOutput: Double
-  val RatioLiquidMethane: Double
-  val RatioLiquidNitrogen: Double
-  val RatioLiquidNitrousOxide: Double
-  val RatioLiquidOxygen: Double
-  val RatioLiquidOzone: Double
-  val RatioLiquidOzoneOutput: Double
-  val RatioLiquidPollutant: Double
-  val RatioLiquidSilanol: Double
-  val RatioLiquidSilanolOutput: Double
-  val RatioLiquidSodiumChloride: Double
-  val RatioLiquidSodiumChlorideOutput: Double
-  val RatioMethane: Double
-  val RatioMethaneOutput: Double
-  val RatioNitrogen: Double
-  val RatioNitrogenOutput: Double
-  val RatioNitrousOxide: Double
-  val RatioNitrousOxideOutput: Double
-  val RatioOxygen: Double
-  val RatioOxygenOutput: Double
-  val RatioOzone: Double
-  val RatioOzoneOutput: Double
-  val RatioPollutant: Double
-  val RatioPollutantOutput: Double
-  val RatioPollutedWater: Double
-  val RatioPollutedWaterOutput: Double
-  val RatioSilanol: Double
-  val RatioSilanolOutput: Double
-  val RatioSteam: Double
-  val RatioWater: Double
-  val RatioWaterOutput: Double
+  val Ratios: Ratios // every Substance
   var Setting: Double
   val Temperature: Double
-  val TemperatureOutput: Double
   val TotalMoles: Double
-  val TotalMolesOutput: Double
   val Volume: Double
   val VolumeOfLiquid: Double
 }
@@ -4694,142 +2900,23 @@ class MotionSensor : TypedDevice {
 class Nitrolyzer : TypedDevice {
   var Activate: Boolean
   val Combustion: Boolean
-  val CombustionInput: Double
-  val CombustionInput2: Double
-  val CombustionOutput: Double
   val Error: Boolean
   val Maximum: Double
   var Mode: Double
   var On: Boolean
   var Open: Boolean
+  val Ports: Ports
+  //   Input: Combustion, Pressure, Temperature, TotalMoles, Ratios[every Substance]
+  //   Input2: Combustion, Pressure, Temperature, TotalMoles, Ratios[every Substance]
+  //   Output: Combustion, Pressure, Temperature, TotalMoles, Ratios[every Substance]
   val Power: Boolean
   val Pressure: Double
-  val PressureInput: Double
-  val PressureInput2: Double
-  val PressureOutput: Double
   val Ratio: Double
-  val RatioCarbonDioxide: Double
-  val RatioCarbonDioxideInput: Double
-  val RatioCarbonDioxideInput2: Double
-  val RatioCarbonDioxideOutput: Double
-  val RatioHelium: Double
-  val RatioHeliumInput: Double
-  val RatioHeliumInput2: Double
-  val RatioHeliumOutput: Double
-  val RatioHydrazine: Double
-  val RatioHydrazineInput: Double
-  val RatioHydrazineInput2: Double
-  val RatioHydrazineOutput: Double
-  val RatioHydrochloricAcid: Double
-  val RatioHydrochloricAcidInput: Double
-  val RatioHydrochloricAcidInput2: Double
-  val RatioHydrochloricAcidOutput: Double
-  val RatioHydrogen: Double
-  val RatioHydrogenInput: Double
-  val RatioHydrogenInput2: Double
-  val RatioHydrogenOutput: Double
-  val RatioLiquidAlcohol: Double
-  val RatioLiquidAlcoholInput: Double
-  val RatioLiquidAlcoholInput2: Double
-  val RatioLiquidAlcoholOutput: Double
-  val RatioLiquidCarbonDioxide: Double
-  val RatioLiquidCarbonDioxideInput: Double
-  val RatioLiquidCarbonDioxideInput2: Double
-  val RatioLiquidCarbonDioxideOutput: Double
-  val RatioLiquidHydrazine: Double
-  val RatioLiquidHydrazineInput: Double
-  val RatioLiquidHydrazineInput2: Double
-  val RatioLiquidHydrazineOutput: Double
-  val RatioLiquidHydrochloricAcid: Double
-  val RatioLiquidHydrochloricAcidInput: Double
-  val RatioLiquidHydrochloricAcidInput2: Double
-  val RatioLiquidHydrochloricAcidOutput: Double
-  val RatioLiquidHydrogen: Double
-  val RatioLiquidHydrogenInput: Double
-  val RatioLiquidHydrogenInput2: Double
-  val RatioLiquidHydrogenOutput: Double
-  val RatioLiquidMethane: Double
-  val RatioLiquidMethaneInput: Double
-  val RatioLiquidMethaneInput2: Double
-  val RatioLiquidMethaneOutput: Double
-  val RatioLiquidNitrogen: Double
-  val RatioLiquidNitrogenInput: Double
-  val RatioLiquidNitrogenInput2: Double
-  val RatioLiquidNitrogenOutput: Double
-  val RatioLiquidNitrousOxide: Double
-  val RatioLiquidNitrousOxideInput: Double
-  val RatioLiquidNitrousOxideInput2: Double
-  val RatioLiquidNitrousOxideOutput: Double
-  val RatioLiquidOxygen: Double
-  val RatioLiquidOxygenInput: Double
-  val RatioLiquidOxygenInput2: Double
-  val RatioLiquidOxygenOutput: Double
-  val RatioLiquidOzone: Double
-  val RatioLiquidOzoneInput: Double
-  val RatioLiquidOzoneInput2: Double
-  val RatioLiquidOzoneOutput: Double
-  val RatioLiquidPollutant: Double
-  val RatioLiquidPollutantInput: Double
-  val RatioLiquidPollutantInput2: Double
-  val RatioLiquidPollutantOutput: Double
-  val RatioLiquidSilanol: Double
-  val RatioLiquidSilanolInput: Double
-  val RatioLiquidSilanolInput2: Double
-  val RatioLiquidSilanolOutput: Double
-  val RatioLiquidSodiumChloride: Double
-  val RatioLiquidSodiumChlorideInput: Double
-  val RatioLiquidSodiumChlorideInput2: Double
-  val RatioLiquidSodiumChlorideOutput: Double
-  val RatioMethane: Double
-  val RatioMethaneInput: Double
-  val RatioMethaneInput2: Double
-  val RatioMethaneOutput: Double
-  val RatioNitrogen: Double
-  val RatioNitrogenInput: Double
-  val RatioNitrogenInput2: Double
-  val RatioNitrogenOutput: Double
-  val RatioNitrousOxide: Double
-  val RatioNitrousOxideInput: Double
-  val RatioNitrousOxideInput2: Double
-  val RatioNitrousOxideOutput: Double
-  val RatioOxygen: Double
-  val RatioOxygenInput: Double
-  val RatioOxygenInput2: Double
-  val RatioOxygenOutput: Double
-  val RatioOzone: Double
-  val RatioOzoneInput: Double
-  val RatioOzoneInput2: Double
-  val RatioOzoneOutput: Double
-  val RatioPollutant: Double
-  val RatioPollutantInput: Double
-  val RatioPollutantInput2: Double
-  val RatioPollutantOutput: Double
-  val RatioPollutedWater: Double
-  val RatioPollutedWaterInput: Double
-  val RatioPollutedWaterInput2: Double
-  val RatioPollutedWaterOutput: Double
-  val RatioSilanol: Double
-  val RatioSilanolInput: Double
-  val RatioSilanolInput2: Double
-  val RatioSilanolOutput: Double
-  val RatioSteam: Double
-  val RatioSteamInput: Double
-  val RatioSteamInput2: Double
-  val RatioSteamOutput: Double
-  val RatioWater: Double
-  val RatioWaterInput: Double
-  val RatioWaterInput2: Double
-  val RatioWaterOutput: Double
+  val Ratios: Ratios // every Substance
   val RequiredPower: Double
   var Setting: Double
   val Temperature: Double
-  val TemperatureInput: Double
-  val TemperatureInput2: Double
-  val TemperatureOutput: Double
   val TotalMoles: Double
-  val TotalMolesInput: Double
-  val TotalMolesInput2: Double
-  val TotalMolesOutput: Double
   val ProgrammableChip: DataDiskSlot // slots[0]
   val slots: Slots<DataDiskSlot>
 }
@@ -4947,34 +3034,7 @@ class PipeAnalysizer : TypedDevice {
   var On: Boolean
   val Power: Boolean
   val Pressure: Double
-  val RatioCarbonDioxide: Double
-  val RatioHelium: Double
-  val RatioHydrazine: Double
-  val RatioHydrochloricAcid: Double
-  val RatioHydrogen: Double
-  val RatioLiquidAlcohol: Double
-  val RatioLiquidCarbonDioxide: Double
-  val RatioLiquidHydrazine: Double
-  val RatioLiquidHydrochloricAcid: Double
-  val RatioLiquidHydrogen: Double
-  val RatioLiquidMethane: Double
-  val RatioLiquidNitrogen: Double
-  val RatioLiquidNitrousOxide: Double
-  val RatioLiquidOxygen: Double
-  val RatioLiquidOzone: Double
-  val RatioLiquidPollutant: Double
-  val RatioLiquidSilanol: Double
-  val RatioLiquidSodiumChloride: Double
-  val RatioMethane: Double
-  val RatioNitrogen: Double
-  val RatioNitrousOxide: Double
-  val RatioOxygen: Double
-  val RatioOzone: Double
-  val RatioPollutant: Double
-  val RatioPollutedWater: Double
-  val RatioSilanol: Double
-  val RatioSteam: Double
-  val RatioWater: Double
+  val Ratios: Ratios // every Substance
   val RequiredPower: Double
   val Temperature: Double
   val TotalMoles: Double
@@ -5051,74 +3111,26 @@ class PowerConnector : TypedDevice {
 
 /** StructurePoweredVent. Entry point: PoweredVents. */
 class PoweredVent : TypedDevice {
-  val CombustionOutput: Double
   val Error: Boolean
   var Lock: Boolean
   var Mode: Double
   var On: Boolean
+  val Ports: Ports // Output: Combustion, Pressure, Temperature, TotalMoles, Ratios[CarbonDioxide, Helium, Hydrazine, HydrochloricAcid, Hydrogen, LiquidAlcohol, LiquidHydrazine, LiquidHydrochloricAcid, LiquidHydrogen, LiquidOzone, LiquidSilanol, LiquidSodiumChloride, Methane, Nitrogen, NitrousOxide, Oxygen, Ozone, Pollutant, PollutedWater, Silanol, Water]
   val Power: Boolean
   var PressureExternal: Double
-  val PressureOutput: Double
-  val RatioCarbonDioxideOutput: Double
-  val RatioHeliumOutput: Double
-  val RatioHydrazineOutput: Double
-  val RatioHydrochloricAcidOutput: Double
-  val RatioHydrogenOutput: Double
-  val RatioLiquidAlcoholOutput: Double
-  val RatioLiquidHydrazineOutput: Double
-  val RatioLiquidHydrochloricAcidOutput: Double
-  val RatioLiquidHydrogenOutput: Double
-  val RatioLiquidOzoneOutput: Double
-  val RatioLiquidSilanolOutput: Double
-  val RatioLiquidSodiumChlorideOutput: Double
-  val RatioMethaneOutput: Double
-  val RatioNitrogenOutput: Double
-  val RatioNitrousOxideOutput: Double
-  val RatioOxygenOutput: Double
-  val RatioOzoneOutput: Double
-  val RatioPollutantOutput: Double
-  val RatioPollutedWaterOutput: Double
-  val RatioSilanolOutput: Double
-  val RatioWaterOutput: Double
   val RequiredPower: Double
-  val TemperatureOutput: Double
-  val TotalMolesOutput: Double
 }
 
 /** StructurePoweredVentLarge. Entry point: PoweredVentLarges. */
 class PoweredVentLarge : TypedDevice {
-  val CombustionOutput: Double
   val Error: Boolean
   var Lock: Boolean
   var Mode: Double
   var On: Boolean
+  val Ports: Ports // Output: Combustion, Pressure, Temperature, TotalMoles, Ratios[CarbonDioxide, Helium, Hydrazine, HydrochloricAcid, Hydrogen, LiquidAlcohol, LiquidHydrazine, LiquidHydrochloricAcid, LiquidHydrogen, LiquidOzone, LiquidSilanol, LiquidSodiumChloride, Methane, Nitrogen, NitrousOxide, Oxygen, Ozone, Pollutant, PollutedWater, Silanol, Water]
   val Power: Boolean
   var PressureExternal: Double
-  val PressureOutput: Double
-  val RatioCarbonDioxideOutput: Double
-  val RatioHeliumOutput: Double
-  val RatioHydrazineOutput: Double
-  val RatioHydrochloricAcidOutput: Double
-  val RatioHydrogenOutput: Double
-  val RatioLiquidAlcoholOutput: Double
-  val RatioLiquidHydrazineOutput: Double
-  val RatioLiquidHydrochloricAcidOutput: Double
-  val RatioLiquidHydrogenOutput: Double
-  val RatioLiquidOzoneOutput: Double
-  val RatioLiquidSilanolOutput: Double
-  val RatioLiquidSodiumChlorideOutput: Double
-  val RatioMethaneOutput: Double
-  val RatioNitrogenOutput: Double
-  val RatioNitrousOxideOutput: Double
-  val RatioOxygenOutput: Double
-  val RatioOzoneOutput: Double
-  val RatioPollutantOutput: Double
-  val RatioPollutedWaterOutput: Double
-  val RatioSilanolOutput: Double
-  val RatioWaterOutput: Double
   val RequiredPower: Double
-  val TemperatureOutput: Double
-  val TotalMolesOutput: Double
 }
 
 /** StructurePowerTransmitter. Entry point: PowerTransmitters. */
@@ -5128,9 +3140,7 @@ class PowerTransmitter : TypedDevice {
   var Horizontal: Double
   val Mode: Double
   var On: Boolean
-  val PositionX: Double
-  val PositionY: Double
-  val PositionZ: Double
+  val Position: Vector // X, Y, Z
   val Power: Boolean
   val PowerActual: Double
   val PowerPotential: Double
@@ -5153,9 +3163,7 @@ class PowerTransmitterReceiver : TypedDevice {
   var Horizontal: Double
   val Mode: Double
   var On: Boolean
-  val PositionX: Double
-  val PositionY: Double
-  val PositionZ: Double
+  val Position: Vector // X, Y, Z
   val Power: Boolean
   val PowerActual: Double
   val PowerPotential: Double
@@ -5194,34 +3202,7 @@ class PressureFedGasEngine : TypedDevice {
   val PassedMoles: Double
   val Power: Boolean
   val Pressure: Double
-  val RatioCarbonDioxide: Double
-  val RatioHelium: Double
-  val RatioHydrazine: Double
-  val RatioHydrochloricAcid: Double
-  val RatioHydrogen: Double
-  val RatioLiquidAlcohol: Double
-  val RatioLiquidCarbonDioxide: Double
-  val RatioLiquidHydrazine: Double
-  val RatioLiquidHydrochloricAcid: Double
-  val RatioLiquidHydrogen: Double
-  val RatioLiquidMethane: Double
-  val RatioLiquidNitrogen: Double
-  val RatioLiquidNitrousOxide: Double
-  val RatioLiquidOxygen: Double
-  val RatioLiquidOzone: Double
-  val RatioLiquidPollutant: Double
-  val RatioLiquidSilanol: Double
-  val RatioLiquidSodiumChloride: Double
-  val RatioMethane: Double
-  val RatioNitrogen: Double
-  val RatioNitrousOxide: Double
-  val RatioOxygen: Double
-  val RatioOzone: Double
-  val RatioPollutant: Double
-  val RatioPollutedWater: Double
-  val RatioSilanol: Double
-  val RatioSteam: Double
-  val RatioWater: Double
+  val Ratios: Ratios // every Substance
   val RequiredPower: Double
   val Temperature: Double
   var Throttle: Double
@@ -5236,34 +3217,7 @@ class PressureFedGasEngineHeavy : TypedDevice {
   val PassedMoles: Double
   val Power: Boolean
   val Pressure: Double
-  val RatioCarbonDioxide: Double
-  val RatioHelium: Double
-  val RatioHydrazine: Double
-  val RatioHydrochloricAcid: Double
-  val RatioHydrogen: Double
-  val RatioLiquidAlcohol: Double
-  val RatioLiquidCarbonDioxide: Double
-  val RatioLiquidHydrazine: Double
-  val RatioLiquidHydrochloricAcid: Double
-  val RatioLiquidHydrogen: Double
-  val RatioLiquidMethane: Double
-  val RatioLiquidNitrogen: Double
-  val RatioLiquidNitrousOxide: Double
-  val RatioLiquidOxygen: Double
-  val RatioLiquidOzone: Double
-  val RatioLiquidPollutant: Double
-  val RatioLiquidSilanol: Double
-  val RatioLiquidSodiumChloride: Double
-  val RatioMethane: Double
-  val RatioNitrogen: Double
-  val RatioNitrousOxide: Double
-  val RatioOxygen: Double
-  val RatioOzone: Double
-  val RatioPollutant: Double
-  val RatioPollutedWater: Double
-  val RatioSilanol: Double
-  val RatioSteam: Double
-  val RatioWater: Double
+  val Ratios: Ratios // every Substance
   val RequiredPower: Double
   val Temperature: Double
   var Throttle: Double
@@ -5280,34 +3234,7 @@ class PressureFedLiquidEngine : TypedDevice {
   val Power: Boolean
   val Pressure: Double
   val Ratio: Double
-  val RatioCarbonDioxide: Double
-  val RatioHelium: Double
-  val RatioHydrazine: Double
-  val RatioHydrochloricAcid: Double
-  val RatioHydrogen: Double
-  val RatioLiquidAlcohol: Double
-  val RatioLiquidCarbonDioxide: Double
-  val RatioLiquidHydrazine: Double
-  val RatioLiquidHydrochloricAcid: Double
-  val RatioLiquidHydrogen: Double
-  val RatioLiquidMethane: Double
-  val RatioLiquidNitrogen: Double
-  val RatioLiquidNitrousOxide: Double
-  val RatioLiquidOxygen: Double
-  val RatioLiquidOzone: Double
-  val RatioLiquidPollutant: Double
-  val RatioLiquidSilanol: Double
-  val RatioLiquidSodiumChloride: Double
-  val RatioMethane: Double
-  val RatioNitrogen: Double
-  val RatioNitrousOxide: Double
-  val RatioOxygen: Double
-  val RatioOzone: Double
-  val RatioPollutant: Double
-  val RatioPollutedWater: Double
-  val RatioSilanol: Double
-  val RatioSteam: Double
-  val RatioWater: Double
+  val Ratios: Ratios // every Substance
   val RequiredPower: Double
   var Setting: Double
   val Temperature: Double
@@ -5325,34 +3252,7 @@ class PressureFedLiquidEngineHeavy : TypedDevice {
   val Power: Boolean
   val Pressure: Double
   val Ratio: Double
-  val RatioCarbonDioxide: Double
-  val RatioHelium: Double
-  val RatioHydrazine: Double
-  val RatioHydrochloricAcid: Double
-  val RatioHydrogen: Double
-  val RatioLiquidAlcohol: Double
-  val RatioLiquidCarbonDioxide: Double
-  val RatioLiquidHydrazine: Double
-  val RatioLiquidHydrochloricAcid: Double
-  val RatioLiquidHydrogen: Double
-  val RatioLiquidMethane: Double
-  val RatioLiquidNitrogen: Double
-  val RatioLiquidNitrousOxide: Double
-  val RatioLiquidOxygen: Double
-  val RatioLiquidOzone: Double
-  val RatioLiquidPollutant: Double
-  val RatioLiquidSilanol: Double
-  val RatioLiquidSodiumChloride: Double
-  val RatioMethane: Double
-  val RatioNitrogen: Double
-  val RatioNitrousOxide: Double
-  val RatioOxygen: Double
-  val RatioOzone: Double
-  val RatioPollutant: Double
-  val RatioPollutedWater: Double
-  val RatioSilanol: Double
-  val RatioSteam: Double
-  val RatioWater: Double
+  val Ratios: Ratios // every Substance
   val RequiredPower: Double
   var Setting: Double
   val Temperature: Double
@@ -5404,34 +3304,7 @@ class PumpedLiquidEngine : TypedDevice {
   val Power: Boolean
   val Pressure: Double
   val Ratio: Double
-  val RatioCarbonDioxide: Double
-  val RatioHelium: Double
-  val RatioHydrazine: Double
-  val RatioHydrochloricAcid: Double
-  val RatioHydrogen: Double
-  val RatioLiquidAlcohol: Double
-  val RatioLiquidCarbonDioxide: Double
-  val RatioLiquidHydrazine: Double
-  val RatioLiquidHydrochloricAcid: Double
-  val RatioLiquidHydrogen: Double
-  val RatioLiquidMethane: Double
-  val RatioLiquidNitrogen: Double
-  val RatioLiquidNitrousOxide: Double
-  val RatioLiquidOxygen: Double
-  val RatioLiquidOzone: Double
-  val RatioLiquidPollutant: Double
-  val RatioLiquidSilanol: Double
-  val RatioLiquidSodiumChloride: Double
-  val RatioMethane: Double
-  val RatioNitrogen: Double
-  val RatioNitrousOxide: Double
-  val RatioOxygen: Double
-  val RatioOzone: Double
-  val RatioPollutant: Double
-  val RatioPollutedWater: Double
-  val RatioSilanol: Double
-  val RatioSteam: Double
-  val RatioWater: Double
+  val Ratios: Ratios // every Substance
   val RequiredPower: Double
   var Setting: Double
   val Temperature: Double
@@ -5460,14 +3333,12 @@ class Recycler : TypedDevice {
   var Activate: Boolean
   var ClearMemory: Boolean
   val Error: Boolean
-  val ExportCount: Double
-  val ImportCount: Double
+  val Export: Transfer // Count
+  val Import: Transfer // Count
   var On: Boolean
   val Power: Boolean
   val Reagents: Double
   val RequiredPower: Double
-  val Import: DataDiskSlot // slots[0]
-  val Export: DataDiskSlot // slots[1]
   val slots: Slots<DataDiskSlot>
 }
 
@@ -5477,42 +3348,15 @@ class RefrigeratedVendingMachine : TypedDevice {
   var ClearMemory: Boolean
   val Combustion: Boolean
   val Error: Boolean
-  val ExportCount: Double
-  val ImportCount: Double
+  val Export: Transfer // Count
+  val Import: Transfer // Count
   var Lock: Boolean
   var On: Boolean
   val Power: Boolean
   val Pressure: Double
   val Quantity: Double
   val Ratio: Double
-  val RatioCarbonDioxide: Double
-  val RatioHelium: Double
-  val RatioHydrazine: Double
-  val RatioHydrochloricAcid: Double
-  val RatioHydrogen: Double
-  val RatioLiquidAlcohol: Double
-  val RatioLiquidCarbonDioxide: Double
-  val RatioLiquidHydrazine: Double
-  val RatioLiquidHydrochloricAcid: Double
-  val RatioLiquidHydrogen: Double
-  val RatioLiquidMethane: Double
-  val RatioLiquidNitrogen: Double
-  val RatioLiquidNitrousOxide: Double
-  val RatioLiquidOxygen: Double
-  val RatioLiquidOzone: Double
-  val RatioLiquidPollutant: Double
-  val RatioLiquidSilanol: Double
-  val RatioLiquidSodiumChloride: Double
-  val RatioMethane: Double
-  val RatioNitrogen: Double
-  val RatioNitrousOxide: Double
-  val RatioOxygen: Double
-  val RatioOzone: Double
-  val RatioPollutant: Double
-  val RatioPollutedWater: Double
-  val RatioSilanol: Double
-  val RatioSteam: Double
-  val RatioWater: Double
+  val Ratios: Ratios // every Substance
   var RequestHash: Double
   val RequiredPower: Double
   var Setting: Double
@@ -5520,8 +3364,6 @@ class RefrigeratedVendingMachine : TypedDevice {
   val TargetSlotIndex: Double
   val Temperature: Double
   val TotalMoles: Double
-  val Import: DataDiskSlot // slots[0]
-  val Export: DataDiskSlot // slots[1]
   val slots: Slots<DataDiskSlot>
 }
 
@@ -5540,30 +3382,20 @@ class RemoteDetonator : TypedDevice {
 /** Robot. Entry point: Robots. */
 class Robot : TypedDevice {
   val Error: Boolean
-  val ForwardX: Double
-  val ForwardY: Double
-  val ForwardZ: Double
+  val Forward: Vector // X, Y, Z
   val MineablesInQueue: Double
   val MineablesInVicinity: Double
   var Mode: Double
   var On: Boolean
   val Orientation: Double
-  val PositionX: Double
-  val PositionY: Double
-  val PositionZ: Double
+  val Position: Vector // X, Y, Z
   val Power: Boolean
   val PressureExternal: Double
-  var TargetX: Double
-  var TargetY: Double
-  var TargetZ: Double
+  val Target: MutableVector // var X, var Y, var Z
   val TemperatureExternal: Double
+  val Velocity: Vector // X, Y, Z
   val VelocityMagnitude: Double
-  val VelocityRelativeX: Double
-  val VelocityRelativeY: Double
-  val VelocityRelativeZ: Double
-  val VelocityX: Double
-  val VelocityY: Double
-  val VelocityZ: Double
+  val VelocityRelative: Vector // X, Y, Z
   val Battery: ItemBatterySlot // slots[0]
   val ProgrammableChip: ItemCommonSlot // slots[1]
   val slots: Slots<ItemCommonSlot>
@@ -5583,7 +3415,7 @@ class RoboticArmDock : TypedDevice {
   val Extended: Double
   val Idle: Boolean
   var On: Boolean
-  val PositionX: Double
+  val Position: Vector // X
   val Power: Boolean
   val RequiredPower: Double
   var Setting: Double
@@ -5616,34 +3448,7 @@ class RocketAvionics : TypedDevice {
   val Power: Boolean
   val Progress: Double
   val Quantity: Double
-  val RatioCarbonDioxide: Double
-  val RatioHelium: Double
-  val RatioHydrazine: Double
-  val RatioHydrochloricAcid: Double
-  val RatioHydrogen: Double
-  val RatioLiquidAlcohol: Double
-  val RatioLiquidCarbonDioxide: Double
-  val RatioLiquidHydrazine: Double
-  val RatioLiquidHydrochloricAcid: Double
-  val RatioLiquidHydrogen: Double
-  val RatioLiquidMethane: Double
-  val RatioLiquidNitrogen: Double
-  val RatioLiquidNitrousOxide: Double
-  val RatioLiquidOxygen: Double
-  val RatioLiquidOzone: Double
-  val RatioLiquidPollutant: Double
-  val RatioLiquidSilanol: Double
-  val RatioLiquidSodiumChloride: Double
-  val RatioMethane: Double
-  val RatioNitrogen: Double
-  val RatioNitrousOxide: Double
-  val RatioOxygen: Double
-  val RatioOzone: Double
-  val RatioPollutant: Double
-  val RatioPollutedWater: Double
-  val RatioSilanol: Double
-  val RatioSteam: Double
-  val RatioWater: Double
+  val Ratios: Ratios // every Substance
   val ReEntryAltitude: Double
   val Reagents: Double
   val RequiredPower: Double
@@ -5658,7 +3463,7 @@ class RocketAvionics : TypedDevice {
   val TimeToDestination: Double
   val TotalMoles: Double
   val TotalQuantity: Double
-  val VelocityRelativeY: Double
+  val VelocityRelative: Vector // Y
   val Weight: Double
 }
 
@@ -5691,148 +3496,32 @@ class RocketCircuitHousing : TypedDevice {
 
 /** StructureRocketEngineTiny. Entry point: RocketEngineTinies. */
 class RocketEngineTiny : TypedDevice {
-  val CombustionOutput: Double
   val Error: Boolean
   var Lock: Boolean
   val Maximum: Double
   var On: Boolean
+  val Ports: Ports // Output: Combustion, Pressure, Temperature, TotalMoles, Ratios[CarbonDioxide, Helium, Hydrazine, HydrochloricAcid, Hydrogen, LiquidAlcohol, LiquidHydrazine, LiquidHydrochloricAcid, LiquidHydrogen, LiquidOzone, LiquidSilanol, LiquidSodiumChloride, Methane, Nitrogen, NitrousOxide, Oxygen, Ozone, Pollutant, PollutedWater, Silanol, Water]
   val Power: Boolean
-  val PressureOutput: Double
   val Ratio: Double
-  val RatioCarbonDioxideOutput: Double
-  val RatioHeliumOutput: Double
-  val RatioHydrazineOutput: Double
-  val RatioHydrochloricAcidOutput: Double
-  val RatioHydrogenOutput: Double
-  val RatioLiquidAlcoholOutput: Double
-  val RatioLiquidHydrazineOutput: Double
-  val RatioLiquidHydrochloricAcidOutput: Double
-  val RatioLiquidHydrogenOutput: Double
-  val RatioLiquidOzoneOutput: Double
-  val RatioLiquidSilanolOutput: Double
-  val RatioLiquidSodiumChlorideOutput: Double
-  val RatioMethaneOutput: Double
-  val RatioNitrogenOutput: Double
-  val RatioNitrousOxideOutput: Double
-  val RatioOxygenOutput: Double
-  val RatioOzoneOutput: Double
-  val RatioPollutantOutput: Double
-  val RatioPollutedWaterOutput: Double
-  val RatioSilanolOutput: Double
-  val RatioWaterOutput: Double
   val RequiredPower: Double
   var Setting: Double
-  val TemperatureOutput: Double
-  val TotalMolesOutput: Double
 }
 
 /** StructureRocketFiltrationGas. Entry point: RocketFiltrationGases. */
 class RocketFiltrationGas : TypedDevice {
-  val CombustionInput: Double
-  val CombustionOutput: Double
-  val CombustionOutput2: Double
   val Error: Boolean
   var Lock: Boolean
   val Maximum: Double
   var Mode: Double
   var On: Boolean
+  val Ports: Ports
+  //   Input: Combustion, Pressure, Temperature, TotalMoles, Ratios[every Substance]
+  //   Output: Combustion, Pressure, Temperature, TotalMoles, Ratios[every Substance]
+  //   Output2: Combustion, Pressure, Temperature, TotalMoles, Ratios[every Substance]
   val Power: Boolean
-  val PressureInput: Double
-  val PressureOutput: Double
-  val PressureOutput2: Double
   val Ratio: Double
-  val RatioCarbonDioxideInput: Double
-  val RatioCarbonDioxideOutput: Double
-  val RatioCarbonDioxideOutput2: Double
-  val RatioHeliumInput: Double
-  val RatioHeliumOutput: Double
-  val RatioHeliumOutput2: Double
-  val RatioHydrazineInput: Double
-  val RatioHydrazineOutput: Double
-  val RatioHydrazineOutput2: Double
-  val RatioHydrochloricAcidInput: Double
-  val RatioHydrochloricAcidOutput: Double
-  val RatioHydrochloricAcidOutput2: Double
-  val RatioHydrogenInput: Double
-  val RatioHydrogenOutput: Double
-  val RatioHydrogenOutput2: Double
-  val RatioLiquidAlcoholInput: Double
-  val RatioLiquidAlcoholOutput: Double
-  val RatioLiquidAlcoholOutput2: Double
-  val RatioLiquidCarbonDioxideInput: Double
-  val RatioLiquidCarbonDioxideOutput: Double
-  val RatioLiquidCarbonDioxideOutput2: Double
-  val RatioLiquidHydrazineInput: Double
-  val RatioLiquidHydrazineOutput: Double
-  val RatioLiquidHydrazineOutput2: Double
-  val RatioLiquidHydrochloricAcidInput: Double
-  val RatioLiquidHydrochloricAcidOutput: Double
-  val RatioLiquidHydrochloricAcidOutput2: Double
-  val RatioLiquidHydrogenInput: Double
-  val RatioLiquidHydrogenOutput: Double
-  val RatioLiquidHydrogenOutput2: Double
-  val RatioLiquidMethaneInput: Double
-  val RatioLiquidMethaneOutput: Double
-  val RatioLiquidMethaneOutput2: Double
-  val RatioLiquidNitrogenInput: Double
-  val RatioLiquidNitrogenOutput: Double
-  val RatioLiquidNitrogenOutput2: Double
-  val RatioLiquidNitrousOxideInput: Double
-  val RatioLiquidNitrousOxideOutput: Double
-  val RatioLiquidNitrousOxideOutput2: Double
-  val RatioLiquidOxygenInput: Double
-  val RatioLiquidOxygenOutput: Double
-  val RatioLiquidOxygenOutput2: Double
-  val RatioLiquidOzoneInput: Double
-  val RatioLiquidOzoneOutput: Double
-  val RatioLiquidOzoneOutput2: Double
-  val RatioLiquidPollutantInput: Double
-  val RatioLiquidPollutantOutput: Double
-  val RatioLiquidPollutantOutput2: Double
-  val RatioLiquidSilanolInput: Double
-  val RatioLiquidSilanolOutput: Double
-  val RatioLiquidSilanolOutput2: Double
-  val RatioLiquidSodiumChlorideInput: Double
-  val RatioLiquidSodiumChlorideOutput: Double
-  val RatioLiquidSodiumChlorideOutput2: Double
-  val RatioMethaneInput: Double
-  val RatioMethaneOutput: Double
-  val RatioMethaneOutput2: Double
-  val RatioNitrogenInput: Double
-  val RatioNitrogenOutput: Double
-  val RatioNitrogenOutput2: Double
-  val RatioNitrousOxideInput: Double
-  val RatioNitrousOxideOutput: Double
-  val RatioNitrousOxideOutput2: Double
-  val RatioOxygenInput: Double
-  val RatioOxygenOutput: Double
-  val RatioOxygenOutput2: Double
-  val RatioOzoneInput: Double
-  val RatioOzoneOutput: Double
-  val RatioOzoneOutput2: Double
-  val RatioPollutantInput: Double
-  val RatioPollutantOutput: Double
-  val RatioPollutantOutput2: Double
-  val RatioPollutedWaterInput: Double
-  val RatioPollutedWaterOutput: Double
-  val RatioPollutedWaterOutput2: Double
-  val RatioSilanolInput: Double
-  val RatioSilanolOutput: Double
-  val RatioSilanolOutput2: Double
-  val RatioSteamInput: Double
-  val RatioSteamOutput: Double
-  val RatioSteamOutput2: Double
-  val RatioWaterInput: Double
-  val RatioWaterOutput: Double
-  val RatioWaterOutput2: Double
   val RequiredPower: Double
   var Setting: Double
-  val TemperatureInput: Double
-  val TemperatureOutput: Double
-  val TemperatureOutput2: Double
-  val TotalMolesInput: Double
-  val TotalMolesOutput: Double
-  val TotalMolesOutput2: Double
   val GasFilter: FilterSlot // slots[0]
   val slots: Slots<FilterSlot>
 }
@@ -5844,34 +3533,7 @@ class RocketGasCollector : TypedDevice {
   var On: Boolean
   val Power: Boolean
   val Pressure: Double
-  val RatioCarbonDioxide: Double
-  val RatioHelium: Double
-  val RatioHydrazine: Double
-  val RatioHydrochloricAcid: Double
-  val RatioHydrogen: Double
-  val RatioLiquidAlcohol: Double
-  val RatioLiquidCarbonDioxide: Double
-  val RatioLiquidHydrazine: Double
-  val RatioLiquidHydrochloricAcid: Double
-  val RatioLiquidHydrogen: Double
-  val RatioLiquidMethane: Double
-  val RatioLiquidNitrogen: Double
-  val RatioLiquidNitrousOxide: Double
-  val RatioLiquidOxygen: Double
-  val RatioLiquidOzone: Double
-  val RatioLiquidPollutant: Double
-  val RatioLiquidSilanol: Double
-  val RatioLiquidSodiumChloride: Double
-  val RatioMethane: Double
-  val RatioNitrogen: Double
-  val RatioNitrousOxide: Double
-  val RatioOxygen: Double
-  val RatioOzone: Double
-  val RatioPollutant: Double
-  val RatioPollutedWater: Double
-  val RatioSilanol: Double
-  val RatioSteam: Double
-  val RatioWater: Double
+  val Ratios: Ratios // every Substance
   val RequiredPower: Double
   val Temperature: Double
   val TotalMoles: Double
@@ -5883,8 +3545,8 @@ class RocketManufactory : TypedDevice {
   var ClearMemory: Boolean
   val CompletionRatio: Double
   val Error: Boolean
-  val ExportCount: Double
-  val ImportCount: Double
+  val Export: Transfer // Count
+  val Import: Transfer // Count
   var Lock: Boolean
   var On: Boolean
   var Open: Boolean
@@ -5893,8 +3555,6 @@ class RocketManufactory : TypedDevice {
   var RecipeHash: Double
   val RequiredPower: Double
   val StackSize: Double
-  val Import: DataDiskSlot // slots[0]
-  val Export: DataDiskSlot // slots[1]
   val slots: Slots<DataDiskSlot>
 }
 
@@ -5903,14 +3563,13 @@ class RocketMiner : TypedDevice {
   var ClearMemory: Boolean
   val DrillCondition: Double
   val Error: Boolean
-  val ExportCount: Double
-  val ImportCount: Double
+  val Export: Transfer // Count
+  val Import: Transfer // Count
   var Lock: Boolean
   var On: Boolean
   val Power: Boolean
   val Quantity: Double
   val RequiredPower: Double
-  val Export: DataDiskSlot // slots[0]
   val DrillHeadSlot: DataDiskSlot // slots[1]
   val slots: Slots<DataDiskSlot>
 }
@@ -5955,6 +3614,7 @@ class SatelliteDish : TypedDevice {
   var BestContactFilter: Double
   val ContactSlotIndex: Double
   val ContactTypeId: Double
+  val Dimensions: Vector // X, Z
   val Error: Boolean
   var Horizontal: Double
   val Idle: Boolean
@@ -5966,8 +3626,6 @@ class SatelliteDish : TypedDevice {
   var Setting: Double
   val SignalID: Double
   val SignalStrength: Double
-  val SizeX: Double
-  val SizeZ: Double
   val StackSize: Double
   var TargetPadIndex: Double
   var Vertical: Double
@@ -5977,19 +3635,17 @@ class SatelliteDish : TypedDevice {
 /** StructureSDBHopper. Entry point: SDBHoppers. */
 class SDBHopper : TypedDevice {
   var ClearMemory: Boolean
-  val ImportCount: Double
+  val Import: Transfer // Count
   var Open: Boolean
-  val Import: DataDiskSlot // slots[0]
   val slots: Slots<DataDiskSlot>
 }
 
 /** StructureSDBHopperAdvanced. Entry point: SDBHopperAdvanceds. */
 class SDBHopperAdvanced : TypedDevice {
   var ClearMemory: Boolean
-  val ImportCount: Double
+  val Import: Transfer // Count
   var Lock: Boolean
   var Open: Boolean
-  val Import: DataDiskSlot // slots[0]
   val slots: Slots<DataDiskSlot>
 }
 
@@ -5998,8 +3654,8 @@ class SDBSilo : TypedDevice {
   var Activate: Boolean
   var ClearMemory: Boolean
   val Error: Boolean
-  val ExportCount: Double
-  val ImportCount: Double
+  val Export: Transfer // Count
+  val Import: Transfer // Count
   var Lock: Boolean
   var Mode: Double
   var On: Boolean
@@ -6007,8 +3663,6 @@ class SDBSilo : TypedDevice {
   val Power: Boolean
   val Quantity: Double
   val RequiredPower: Double
-  val Import: DataDiskSlot // slots[0]
-  val Export: DataDiskSlot // slots[1]
   val slots: Slots<DataDiskSlot>
 }
 
@@ -6018,8 +3672,8 @@ class SecurityPrinter : TypedDevice {
   var ClearMemory: Boolean
   val CompletionRatio: Double
   val Error: Boolean
-  val ExportCount: Double
-  val ImportCount: Double
+  val Export: Transfer // Count
+  val Import: Transfer // Count
   var Lock: Boolean
   var On: Boolean
   var Open: Boolean
@@ -6028,8 +3682,6 @@ class SecurityPrinter : TypedDevice {
   var RecipeHash: Double
   val RequiredPower: Double
   val StackSize: Double
-  val Import: DataDiskSlot // slots[0]
-  val Export: DataDiskSlot // slots[1]
   val slots: Slots<DataDiskSlot>
 }
 
@@ -6191,6 +3843,7 @@ class SmallSatelliteDish : TypedDevice {
   var BestContactFilter: Double
   val ContactSlotIndex: Double
   val ContactTypeId: Double
+  val Dimensions: Vector // X, Z
   val Error: Boolean
   var Horizontal: Double
   val Idle: Boolean
@@ -6202,8 +3855,6 @@ class SmallSatelliteDish : TypedDevice {
   var Setting: Double
   val SignalID: Double
   val SignalStrength: Double
-  val SizeX: Double
-  val SizeZ: Double
   var TargetPadIndex: Double
   var Vertical: Double
   val WattsReachingContact: Double
@@ -6284,7 +3935,7 @@ class SolarPanelReinforced : TypedDevice {
 /** StructureSolidFuelGenerator. Entry point: SolidFuelGenerators. */
 class SolidFuelGenerator : TypedDevice {
   var ClearMemory: Boolean
-  val ImportCount: Double
+  val Import: Transfer // Count
   var Lock: Boolean
   var On: Boolean
   val PowerGeneration: Double
@@ -6296,16 +3947,14 @@ class SolidFuelGenerator : TypedDevice {
 class Sorter : TypedDevice {
   var ClearMemory: Boolean
   val Error: Boolean
-  val ExportCount: Double
-  val ImportCount: Double
+  val Export: Transfer // Count
+  val Import: Transfer // Count
   var Lock: Boolean
   var Mode: Double
   var On: Boolean
   var Output: Double
   val Power: Boolean
   val RequiredPower: Double
-  val Import: DataDiskSlot // slots[0]
-  val Export: DataDiskSlot // slots[1]
   val Export2: DataDiskSlot // slots[2]
   val slots: Slots<DataDiskSlot>
 }
@@ -6319,34 +3968,7 @@ class SpaceHelmet : TypedDevice {
   var Open: Boolean
   val Power: Boolean
   val Pressure: Double
-  val RatioCarbonDioxide: Double
-  val RatioHelium: Double
-  val RatioHydrazine: Double
-  val RatioHydrochloricAcid: Double
-  val RatioHydrogen: Double
-  val RatioLiquidAlcohol: Double
-  val RatioLiquidCarbonDioxide: Double
-  val RatioLiquidHydrazine: Double
-  val RatioLiquidHydrochloricAcid: Double
-  val RatioLiquidHydrogen: Double
-  val RatioLiquidMethane: Double
-  val RatioLiquidNitrogen: Double
-  val RatioLiquidNitrousOxide: Double
-  val RatioLiquidOxygen: Double
-  val RatioLiquidOzone: Double
-  val RatioLiquidPollutant: Double
-  val RatioLiquidSilanol: Double
-  val RatioLiquidSodiumChloride: Double
-  val RatioMethane: Double
-  val RatioNitrogen: Double
-  val RatioNitrousOxide: Double
-  val RatioOxygen: Double
-  val RatioOzone: Double
-  val RatioPollutant: Double
-  val RatioPollutedWater: Double
-  val RatioSilanol: Double
-  val RatioSteam: Double
-  val RatioWater: Double
+  val Ratios: Ratios // every Substance
   var SoundAlert: Double
   val Temperature: Double
   val TotalMoles: Double
@@ -6366,8 +3988,8 @@ class Stacker : TypedDevice {
   var Activate: Boolean
   var ClearMemory: Boolean
   val Error: Boolean
-  val ExportCount: Double
-  val ImportCount: Double
+  val Export: Transfer // Count
+  val Import: Transfer // Count
   var Lock: Boolean
   var Mode: Double
   var On: Boolean
@@ -6375,8 +3997,6 @@ class Stacker : TypedDevice {
   val Power: Boolean
   val RequiredPower: Double
   var Setting: Double
-  val Import: DataDiskSlot // slots[0]
-  val Export: DataDiskSlot // slots[1]
   val Processing: DataDiskSlot // slots[2]
   val slots: Slots<DataDiskSlot>
 }
@@ -6386,8 +4006,8 @@ class StackerReverse : TypedDevice {
   var Activate: Boolean
   var ClearMemory: Boolean
   val Error: Boolean
-  val ExportCount: Double
-  val ImportCount: Double
+  val Export: Transfer // Count
+  val Import: Transfer // Count
   var Lock: Boolean
   var Mode: Double
   var On: Boolean
@@ -6395,8 +4015,6 @@ class StackerReverse : TypedDevice {
   val Power: Boolean
   val RequiredPower: Double
   var Setting: Double
-  val Import: DataDiskSlot // slots[0]
-  val Export: DataDiskSlot // slots[1]
   val Processing: DataDiskSlot // slots[2]
   val slots: Slots<DataDiskSlot>
 }
@@ -6413,34 +4031,7 @@ class StirlingEngine : TypedDevice {
   val Pressure: Double
   val Quantity: Double
   val Ratio: Double
-  val RatioCarbonDioxide: Double
-  val RatioHelium: Double
-  val RatioHydrazine: Double
-  val RatioHydrochloricAcid: Double
-  val RatioHydrogen: Double
-  val RatioLiquidAlcohol: Double
-  val RatioLiquidCarbonDioxide: Double
-  val RatioLiquidHydrazine: Double
-  val RatioLiquidHydrochloricAcid: Double
-  val RatioLiquidHydrogen: Double
-  val RatioLiquidMethane: Double
-  val RatioLiquidNitrogen: Double
-  val RatioLiquidNitrousOxide: Double
-  val RatioLiquidOxygen: Double
-  val RatioLiquidOzone: Double
-  val RatioLiquidPollutant: Double
-  val RatioLiquidSilanol: Double
-  val RatioLiquidSodiumChloride: Double
-  val RatioMethane: Double
-  val RatioNitrogen: Double
-  val RatioNitrousOxide: Double
-  val RatioOxygen: Double
-  val RatioOzone: Double
-  val RatioPollutant: Double
-  val RatioPollutedWater: Double
-  val RatioSilanol: Double
-  val RatioSteam: Double
-  val RatioWater: Double
+  val Ratios: Ratios // every Substance
   val RequiredPower: Double
   var Setting: Double
   val Temperature: Double
@@ -6474,9 +4065,7 @@ class StructureBeacon : TypedDevice {
   val Error: Boolean
   var Lock: Boolean
   var On: Boolean
-  val PositionX: Double
-  val PositionY: Double
-  val PositionZ: Double
+  val Position: Vector // X, Y, Z
   val Power: Boolean
   val RequiredPower: Double
 }
@@ -6489,60 +4078,25 @@ class SuitHARM : TypedDevice {
   val EntityState: Double
   var Error: Boolean
   var Filtration: Double
-  val ForwardX: Double
-  val ForwardY: Double
-  val ForwardZ: Double
+  val Forward: Vector // X, Y, Z
   var Lock: Boolean
   var On: Boolean
   val Orientation: Double
-  val PositionX: Double
-  val PositionY: Double
-  val PositionZ: Double
+  val Position: Vector // X, Y, Z
   val Power: Boolean
   val Pressure: Double
   val PressureExternal: Double
   var PressureSetting: Double
-  val RatioCarbonDioxide: Double
-  val RatioHelium: Double
-  val RatioHydrazine: Double
-  val RatioHydrochloricAcid: Double
-  val RatioHydrogen: Double
-  val RatioLiquidAlcohol: Double
-  val RatioLiquidCarbonDioxide: Double
-  val RatioLiquidHydrazine: Double
-  val RatioLiquidHydrochloricAcid: Double
-  val RatioLiquidHydrogen: Double
-  val RatioLiquidMethane: Double
-  val RatioLiquidNitrogen: Double
-  val RatioLiquidNitrousOxide: Double
-  val RatioLiquidOxygen: Double
-  val RatioLiquidOzone: Double
-  val RatioLiquidPollutant: Double
-  val RatioLiquidSilanol: Double
-  val RatioLiquidSodiumChloride: Double
-  val RatioMethane: Double
-  val RatioNitrogen: Double
-  val RatioNitrousOxide: Double
-  val RatioOxygen: Double
-  val RatioOzone: Double
-  val RatioPollutant: Double
-  val RatioPollutedWater: Double
-  val RatioSilanol: Double
-  val RatioSteam: Double
-  val RatioWater: Double
+  val Ratios: Ratios // every Substance
   var Setting: Double
   var SoundAlert: Double
   val Temperature: Double
   val TemperatureExternal: Double
   var TemperatureSetting: Double
   val TotalMoles: Double
+  val Velocity: Vector // X, Y, Z
   val VelocityMagnitude: Double
-  val VelocityRelativeX: Double
-  val VelocityRelativeY: Double
-  val VelocityRelativeZ: Double
-  val VelocityX: Double
-  val VelocityY: Double
-  val VelocityZ: Double
+  val VelocityRelative: Vector // X, Y, Z
   var Volume: Double
   val AirTank: ItemAirTankSlot // slots[0]
   val WasteTank: ItemAirTankSlot // slots[1]
@@ -6566,34 +4120,7 @@ class SuitHelmetHARM : TypedDevice {
   var Open: Boolean
   val Power: Boolean
   val Pressure: Double
-  val RatioCarbonDioxide: Double
-  val RatioHelium: Double
-  val RatioHydrazine: Double
-  val RatioHydrochloricAcid: Double
-  val RatioHydrogen: Double
-  val RatioLiquidAlcohol: Double
-  val RatioLiquidCarbonDioxide: Double
-  val RatioLiquidHydrazine: Double
-  val RatioLiquidHydrochloricAcid: Double
-  val RatioLiquidHydrogen: Double
-  val RatioLiquidMethane: Double
-  val RatioLiquidNitrogen: Double
-  val RatioLiquidNitrousOxide: Double
-  val RatioLiquidOxygen: Double
-  val RatioLiquidOzone: Double
-  val RatioLiquidPollutant: Double
-  val RatioLiquidSilanol: Double
-  val RatioLiquidSodiumChloride: Double
-  val RatioMethane: Double
-  val RatioNitrogen: Double
-  val RatioNitrousOxide: Double
-  val RatioOxygen: Double
-  val RatioOzone: Double
-  val RatioPollutant: Double
-  val RatioPollutedWater: Double
-  val RatioSilanol: Double
-  val RatioSteam: Double
-  val RatioWater: Double
+  val Ratios: Ratios // every Substance
   var SoundAlert: Double
   val Temperature: Double
   val TotalMoles: Double
@@ -6698,8 +4225,8 @@ class ToolManufactory : TypedDevice {
   var ClearMemory: Boolean
   val CompletionRatio: Double
   val Error: Boolean
-  val ExportCount: Double
-  val ImportCount: Double
+  val Export: Transfer // Count
+  val Import: Transfer // Count
   var Lock: Boolean
   var On: Boolean
   var Open: Boolean
@@ -6708,8 +4235,6 @@ class ToolManufactory : TypedDevice {
   var RecipeHash: Double
   val RequiredPower: Double
   val StackSize: Double
-  val Import: DataDiskSlot // slots[0]
-  val Export: DataDiskSlot // slots[1]
   val slots: Slots<DataDiskSlot>
 }
 
@@ -6802,16 +4327,14 @@ class TurboVolumePump : TypedDevice {
 class Unloader : TypedDevice {
   var ClearMemory: Boolean
   val Error: Boolean
-  val ExportCount: Double
-  val ImportCount: Double
+  val Export: Transfer // Count
+  val Import: Transfer // Count
   var Lock: Boolean
   var Mode: Double
   var On: Boolean
   var Output: Double
   val Power: Boolean
   val RequiredPower: Double
-  val Import: DataDiskSlot // slots[0]
-  val Export: DataDiskSlot // slots[1]
   val slots: Slots<DataDiskSlot>
 }
 
@@ -6837,8 +4360,8 @@ class VendingMachine : TypedDevice {
   var Activate: Boolean
   var ClearMemory: Boolean
   val Error: Boolean
-  val ExportCount: Double
-  val ImportCount: Double
+  val Export: Transfer // Count
+  val Import: Transfer // Count
   var Lock: Boolean
   var On: Boolean
   val Power: Boolean
@@ -6848,8 +4371,6 @@ class VendingMachine : TypedDevice {
   val RequiredPower: Double
   val TargetPrefabHash: Double
   val TargetSlotIndex: Double
-  val Import: DataDiskSlot // slots[0]
-  val Export: DataDiskSlot // slots[1]
   val slots: Slots<DataDiskSlot>
 }
 
@@ -6858,8 +4379,8 @@ class VendingMachineSmall : TypedDevice {
   var Activate: Boolean
   var ClearMemory: Boolean
   val Error: Boolean
-  val ExportCount: Double
-  val ImportCount: Double
+  val Export: Transfer // Count
+  val Import: Transfer // Count
   var Lock: Boolean
   var On: Boolean
   val Power: Boolean
@@ -6869,8 +4390,6 @@ class VendingMachineSmall : TypedDevice {
   val RequiredPower: Double
   val TargetPrefabHash: Double
   val TargetSlotIndex: Double
-  val Import: DataDiskSlot // slots[0]
-  val Export: DataDiskSlot // slots[1]
   val slots: Slots<DataDiskSlot>
 }
 
@@ -6892,39 +4411,15 @@ class VolumePump : TypedDevice {
 ```kotlin
 /** StructureWallCooler. Entry point: WallCoolers. */
 class WallCooler : TypedDevice {
-  val CombustionOutput: Double
   val Error: Boolean
   var Lock: Boolean
   val Maximum: Double
   var On: Boolean
+  val Ports: Ports // Output: Combustion, Pressure, Temperature, TotalMoles, Ratios[CarbonDioxide, Helium, Hydrazine, HydrochloricAcid, Hydrogen, LiquidAlcohol, LiquidHydrazine, LiquidHydrochloricAcid, LiquidHydrogen, LiquidOzone, LiquidSilanol, LiquidSodiumChloride, Methane, Nitrogen, NitrousOxide, Oxygen, Ozone, Pollutant, PollutedWater, Silanol, Water]
   val Power: Boolean
-  val PressureOutput: Double
   val Ratio: Double
-  val RatioCarbonDioxideOutput: Double
-  val RatioHeliumOutput: Double
-  val RatioHydrazineOutput: Double
-  val RatioHydrochloricAcidOutput: Double
-  val RatioHydrogenOutput: Double
-  val RatioLiquidAlcoholOutput: Double
-  val RatioLiquidHydrazineOutput: Double
-  val RatioLiquidHydrochloricAcidOutput: Double
-  val RatioLiquidHydrogenOutput: Double
-  val RatioLiquidOzoneOutput: Double
-  val RatioLiquidSilanolOutput: Double
-  val RatioLiquidSodiumChlorideOutput: Double
-  val RatioMethaneOutput: Double
-  val RatioNitrogenOutput: Double
-  val RatioNitrousOxideOutput: Double
-  val RatioOxygenOutput: Double
-  val RatioOzoneOutput: Double
-  val RatioPollutantOutput: Double
-  val RatioPollutedWaterOutput: Double
-  val RatioSilanolOutput: Double
-  val RatioWaterOutput: Double
   val RequiredPower: Double
   var Setting: Double
-  val TemperatureOutput: Double
-  val TotalMolesOutput: Double
   val DataDisk: DataDiskSlot // slots[0]
   val slots: Slots<DataDiskSlot>
 }
@@ -6994,50 +4489,25 @@ class WaterDigitalValve : TypedDevice {
 class WaterPurifier : TypedDevice {
   var ClearMemory: Boolean
   val Error: Boolean
-  val ImportCount: Double
+  val Import: Transfer // Count
   var Lock: Boolean
   var On: Boolean
   val Power: Boolean
   val RequiredPower: Double
-  val Import: DataDiskSlot // slots[0]
   val slots: Slots<DataDiskSlot>
 }
 
 /** StructureWaterWallCooler. Entry point: WaterWallCoolers. */
 class WaterWallCooler : TypedDevice {
-  val CombustionOutput: Double
   val Error: Boolean
   var Lock: Boolean
   val Maximum: Double
   var On: Boolean
+  val Ports: Ports // Output: Combustion, Pressure, Temperature, TotalMoles, Ratios[CarbonDioxide, Helium, Hydrazine, HydrochloricAcid, Hydrogen, LiquidAlcohol, LiquidHydrazine, LiquidHydrochloricAcid, LiquidHydrogen, LiquidOzone, LiquidSilanol, LiquidSodiumChloride, Methane, Nitrogen, NitrousOxide, Oxygen, Ozone, Pollutant, PollutedWater, Silanol, Water]
   val Power: Boolean
-  val PressureOutput: Double
   val Ratio: Double
-  val RatioCarbonDioxideOutput: Double
-  val RatioHeliumOutput: Double
-  val RatioHydrazineOutput: Double
-  val RatioHydrochloricAcidOutput: Double
-  val RatioHydrogenOutput: Double
-  val RatioLiquidAlcoholOutput: Double
-  val RatioLiquidHydrazineOutput: Double
-  val RatioLiquidHydrochloricAcidOutput: Double
-  val RatioLiquidHydrogenOutput: Double
-  val RatioLiquidOzoneOutput: Double
-  val RatioLiquidSilanolOutput: Double
-  val RatioLiquidSodiumChlorideOutput: Double
-  val RatioMethaneOutput: Double
-  val RatioNitrogenOutput: Double
-  val RatioNitrousOxideOutput: Double
-  val RatioOxygenOutput: Double
-  val RatioOzoneOutput: Double
-  val RatioPollutantOutput: Double
-  val RatioPollutedWaterOutput: Double
-  val RatioSilanolOutput: Double
-  val RatioWaterOutput: Double
   val RequiredPower: Double
   var Setting: Double
-  val TemperatureOutput: Double
-  val TotalMolesOutput: Double
   val DataDisk: DataDiskSlot // slots[0]
   val slots: Slots<DataDiskSlot>
 }
