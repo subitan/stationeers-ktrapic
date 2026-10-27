@@ -143,7 +143,7 @@ class SlotTest {
   fun `every structure slot reads SortingClass, FreeSlots and TotalSlots, up to slot 255`() {
     val source =
         """
-        val dock = LarreDockCargos.at(d0)
+        val dock = LarreDocks.Cargo.at(d0)
         db.Setting = dock.slots[255].SortingClass + dock.TargetSlot.FreeSlots
         db.Ratio = dock.slots[0].TotalSlots
         """
