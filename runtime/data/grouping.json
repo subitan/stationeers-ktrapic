@@ -464,6 +464,13 @@
         "Important": "StructureEmergencyButton"
       }
     },
+    "ChuteBin": {
+      "plural": "ChuteBins",
+      "members": {
+        "Import": "StructureChuteBin",
+        "Export": "StructureChuteExportBin"
+      }
+    },
     "Door": {
       "plural": "Doors",
       "members": {
@@ -588,10 +595,6 @@
         ["StructureInteriorDoorGlass", "StructureInteriorDoorPadded", "StructureInteriorDoorPaddedThin", "StructureInteriorDoorTriangle"]
       ],
       "reason": "the Glass Door is one of the Doors, like the Blast and Composite Doors, and not one of the Interior Doors, which extend them"
-    },
-    {
-      "prefabs": ["StructureChuteBin", "StructureChuteExportBin"],
-      "reason": "the Chute Import Bin passes items into a chute network, the Chute Export Bin takes them out of it"
     },
     {
       "prefabs": ["StructurePowerTransmitter", "StructurePowerTransmitterReceiver"],
