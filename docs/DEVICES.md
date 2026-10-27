@@ -109,16 +109,7 @@ A family is a device that comes as several prefabs. Its interface holds the logi
 ### Airlock
 
 ```kotlin
-interface Airlock {
-  val Idle: Boolean
-  var Lock: Boolean
-  var Mode: Double
-  var On: Boolean
-  var Open: Boolean
-  val Power: Boolean
-  val RequiredPower: Double
-  var Setting: Double
-
+interface Airlock : Door {
   /** StructureAirlock. Entry point: Airlocks.Standard. */
   class Standard : TypedDevice, Airlock
 
@@ -595,6 +586,30 @@ interface DirectHeatExchanger {
 }
 ```
 
+### Door
+
+```kotlin
+interface Door {
+  val Idle: Boolean
+  var Lock: Boolean
+  var Mode: Double
+  var On: Boolean
+  var Open: Boolean
+  val Power: Boolean
+  val RequiredPower: Double
+  var Setting: Double
+
+  /** StructureGlassDoor. Entry point: Doors.Glass. */
+  class Glass : TypedDevice, Door
+
+  /** StructureBlastDoor. Entry point: Doors.Blast. */
+  class Blast : TypedDevice, Door
+
+  /** StructureCompositeDoor. Entry point: Doors.Composite. */
+  class Composite : TypedDevice, Door
+}
+```
+
 ### ElevatorLevel
 
 ```kotlin
@@ -770,16 +785,7 @@ interface HandDrill {
 ### HangarDoor
 
 ```kotlin
-interface HangarDoor {
-  val Idle: Boolean
-  var Lock: Boolean
-  var Mode: Double
-  var On: Boolean
-  var Open: Boolean
-  val Power: Boolean
-  val RequiredPower: Double
-  var Setting: Double
-
+interface HangarDoor : Door {
   /** StructureAirlockGate. Entry point: HangarDoors.Small. */
   class Small : TypedDevice, HangarDoor
 
@@ -794,16 +800,7 @@ interface HangarDoor {
 ### InteriorDoor
 
 ```kotlin
-interface InteriorDoor {
-  val Idle: Boolean
-  var Lock: Boolean
-  var Mode: Double
-  var On: Boolean
-  var Open: Boolean
-  val Power: Boolean
-  val RequiredPower: Double
-  var Setting: Double
-
+interface InteriorDoor : Door {
   /** StructureInteriorDoorGlass. Entry point: InteriorDoors.Glass. */
   class Glass : TypedDevice, InteriorDoor
 
@@ -1982,18 +1979,6 @@ class BasketHoop : TypedDevice {
   var Setting: Double
 }
 
-/** StructureBlastDoor. Entry point: BlastDoors. */
-class BlastDoor : TypedDevice {
-  val Idle: Boolean
-  var Lock: Boolean
-  var Mode: Double
-  var On: Boolean
-  var Open: Boolean
-  val Power: Boolean
-  val RequiredPower: Double
-  var Setting: Double
-}
-
 /** StructureBlockBed. Entry point: BlockBeds. */
 class BlockBed : TypedDevice {
   var Activate: Boolean
@@ -2195,18 +2180,6 @@ class CombustionDeepMiner : TypedDevice {
   val TotalMoles: Double
   val ProgrammableChip: DataDiskSlot // slots[1]
   val slots: Slots<DataDiskSlot>
-}
-
-/** StructureCompositeDoor. Entry point: CompositeDoors. */
-class CompositeDoor : TypedDevice {
-  val Idle: Boolean
-  var Lock: Boolean
-  var Mode: Double
-  var On: Boolean
-  var Open: Boolean
-  val Power: Boolean
-  val RequiredPower: Double
-  var Setting: Double
 }
 
 /** CompositeRollCover. Entry point: CompositeRollCovers. */
@@ -2585,18 +2558,6 @@ class GasSensor : TypedDevice {
   val Temperature: Double
   val TotalMoles: Double
   val VolumeOfLiquid: Double
-}
-
-/** StructureGlassDoor. Entry point: GlassDoors. */
-class GlassDoor : TypedDevice {
-  val Idle: Boolean
-  var Lock: Boolean
-  var Mode: Double
-  var On: Boolean
-  var Open: Boolean
-  val Power: Boolean
-  val RequiredPower: Double
-  var Setting: Double
 }
 
 /** StructureGovernedGasEngine. Entry point: GovernedGasEngines. */

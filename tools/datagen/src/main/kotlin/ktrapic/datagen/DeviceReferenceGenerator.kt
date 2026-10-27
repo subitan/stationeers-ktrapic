@@ -201,10 +201,11 @@ object DeviceReferenceGenerator {
         append("```kotlin\n")
         append("interface ${family.name}${family.supertypes} {\n")
         for (property in family.properties) append("  $property\n")
-        for (member in members) {
+        for ((i, member) in members.withIndex()) {
           val simple = member.name.substringAfter('.')
           val extra = member.properties.filter { !it.inherited }
-          append("\n")
+          // A blank line between declarations, but not at the top of an interface that adds none.
+          if (i > 0 || family.properties.isNotEmpty()) append("\n")
           append("  /** ${member.prefab}. Entry point: ${entryPoint(member)}. */\n")
           if (extra.isEmpty()) {
             append("  class $simple : TypedDevice, ${family.name}\n")
