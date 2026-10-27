@@ -87,6 +87,21 @@ class ViewTest {
   }
 
   @Test
+  fun `a GenericDevice val has every view, with no other view before it`() {
+    val code =
+        lines(
+            """
+            val g: GenericDevice = d0
+            db.Setting = g.Ports.Input.Pressure
+            """
+        )
+
+    assertThat(code).containsExactly("l r0 d0 PressureInput", "s db Setting r0").inOrder()
+    assertThat(error("val g: GenericDevice = d0\ng.Ports.Output2.Setting = 1.0").message)
+        .isEqualTo("a device has no SettingOutput2")
+  }
+
+  @Test
   fun `an untyped pin's view names only logic types the game has`() {
     assertThat(error("d1.Ports.Output2.Setting = 1.0").message)
         .isEqualTo("a device has no SettingOutput2")

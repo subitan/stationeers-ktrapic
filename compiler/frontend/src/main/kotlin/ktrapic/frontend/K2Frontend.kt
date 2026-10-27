@@ -10,6 +10,7 @@ package ktrapic.frontend
 
 import java.io.File
 import java.nio.file.Files
+import org.jetbrains.kotlin.backend.common.extensions.DeclarationFinder
 import org.jetbrains.kotlin.backend.common.phaser.then
 import org.jetbrains.kotlin.cli.common.ExitCode
 import org.jetbrains.kotlin.cli.common.arguments.K2JVMCompilerArguments
@@ -105,7 +106,12 @@ object K2Frontend {
       if (captured !is CapturedIr || diagnostics.any { it.severity == Diagnostic.Severity.ERROR }) {
         return FrontendResult.Failure(diagnostics)
       }
-      val ir = FrontendIr(captured.fir2ir.result.irModuleFragment, wrapped)
+      val ir =
+          FrontendIr(
+              captured.fir2ir.result.irModuleFragment,
+              captured.fir2ir.result.pluginContext.finderForBuiltins(),
+              wrapped,
+          )
       return FrontendResult.Success(use(ir), diagnostics)
     } finally {
       Disposer.dispose(disposable)
@@ -215,10 +221,14 @@ private class CollectingMessageCollector : MessageCollector {
   }
 }
 
-/** A program's IR, and how to find where its elements are in the user's source. */
+/**
+ * A program's IR, and how to find where its elements are in the user's source. [symbols] finds
+ * declarations by name in the libraries the program compiles against, such as the runtime API.
+ */
 class FrontendIr
 internal constructor(
     val module: IrModuleFragment,
+    val symbols: DeclarationFinder,
     private val wrapped: WrappedSource,
 ) {
   /**

@@ -16,6 +16,7 @@ import ktrapic.ic10.Number
 import ktrapic.ic10.Operand
 import ktrapic.ic10.Register
 import ktrapic.ic10.StringConstant
+import org.jetbrains.kotlin.backend.common.extensions.DeclarationFinder
 import org.jetbrains.kotlin.descriptors.ClassKind
 import org.jetbrains.kotlin.ir.IrElement
 import org.jetbrains.kotlin.ir.declarations.IrAnonymousInitializer
@@ -71,6 +72,8 @@ import org.jetbrains.kotlin.ir.util.parentClassOrNull
 import org.jetbrains.kotlin.ir.visitors.IrVisitorVoid
 import org.jetbrains.kotlin.ir.visitors.acceptChildrenVoid
 import org.jetbrains.kotlin.ir.visitors.acceptVoid
+import org.jetbrains.kotlin.name.ClassId
+import org.jetbrains.kotlin.name.FqName
 
 /** A construct the backend cannot compile, at [offset] in the wrapped source (-1 if unknown). */
 class CompileException(val offset: Int, message: String) : Exception(message) {
@@ -140,9 +143,10 @@ internal data class Key(val name: String) : Value
 
 /**
  * Translates the IR of a wrapped script-style program into [TirLine]s: the `Program` object's
- * property initializers and `init` blocks, in source order.
+ * property initializers and `init` blocks, in source order. [symbols] finds the runtime API's
+ * declarations.
  */
-internal class Translator {
+internal class Translator(private val symbols: DeclarationFinder) {
   val lines = mutableListOf<TirLine>()
   private var vregs = 0
   private val labelCounts = mutableMapOf<String, Int>()
@@ -156,8 +160,25 @@ internal class Translator {
   private val exits = mutableMapOf<IrSimpleFunction, FunctionExit>()
   /** Functions that have a body of their own, called with `jal`, in the order first called. */
   private val called = linkedMapOf<IrSimpleFunction, CalledFunction>()
-  /** What an untyped pin's views reach ([anyDeviceAccess]), once looked up. */
-  private var anyDevice: ViewAccess? = null
+
+  /**
+   * What an untyped device's views reach: every logic type the game has, read and written, as its
+   * flat logic types are. A view's members combine (`Ports.Output2.Setting`) into names the game
+   * may not have, which this rules out. The game's logic types are the entries of the runtime's
+   * `LogicType`.
+   */
+  private val anyDeviceAccess: ViewAccess by lazy {
+    val logicType =
+        checkNotNull(symbols.findClass(LOGIC_TYPE)) {
+          "the runtime has no ${LOGIC_TYPE.asString()}"
+        }
+    val names =
+        logicType.owner.declarations
+            .filterIsInstance<IrEnumEntry>()
+            .map { it.name.asString() }
+            .toSet()
+    ViewAccess("a device", names, names)
+  }
 
   private class FunctionExit(val label: String, val result: VReg?)
 
@@ -576,7 +597,7 @@ internal class Translator {
     }
     if (property != null && owner in DEVICE_CLASSES) {
       if (function.returnType.classFqName?.asString() in VIEW_CLASSES) {
-        return startView(call, property.owner, viewOwner(call, args[0]), anyDeviceAccess(call))
+        return startView(call, property.owner, viewOwner(call, args[0]), anyDeviceAccess)
       }
       val device = device(call, args[0])
       if (property.owner.name.asString() == SLOTS) return SlotsOf(device)
@@ -739,37 +760,6 @@ internal class Translator {
       "Transfer" -> View(owner, "Transfer", name, "", access)
       else -> fail(call, "$name is not supported")
     }
-  }
-
-  /**
-   * What an untyped pin's views reach: every logic type the game has, read and written, as its flat
-   * logic types are. A view's members combine (`Ports.Output2.Setting`) into names the game may not
-   * have, which this rules out. The game's logic types are the entries of the `LogicType` a
-   * [DEVICE] is indexed by, found from [call]'s device.
-   */
-  private fun anyDeviceAccess(call: IrCall): ViewAccess {
-    val access =
-        anyDevice
-            ?: run {
-              val device =
-                  call.arguments[0]?.type?.classOrNull?.owner?.takeIf {
-                    it.kotlinFqName.asString() == DEVICE
-                  } ?: fail(call, "this device must be a pin, or a val holding one")
-              val index =
-                  device.declarations.filterIsInstance<IrSimpleFunction>().first {
-                    it.name.asString() == "get"
-                  }
-              val logicType =
-                  index.parameters.first { it.kind == IrParameterKind.Regular }.type.classOrNull!!
-              val names =
-                  logicType.owner.declarations
-                      .filterIsInstance<IrEnumEntry>()
-                      .map { it.name.asString() }
-                      .toSet()
-              ViewAccess("a device", names, names)
-            }
-    anyDevice = access
-    return access
   }
 
   /** The logic types a typed device's view reaches, from its `@LogicTypes`. */
@@ -2046,6 +2036,7 @@ internal class Translator {
     const val MAX_SLOT = 255
     const val LOGIC_TYPES = "ktrapic.LogicTypes"
     const val SUBSTANCE = "ktrapic.Substance"
+    val LOGIC_TYPE: ClassId = ClassId.topLevel(FqName("ktrapic.LogicType"))
 
     /** The runtime's view classes, whose members name logic types ([View]). */
     val VIEW_CLASSES =
