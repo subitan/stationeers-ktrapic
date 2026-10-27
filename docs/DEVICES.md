@@ -1084,6 +1084,33 @@ interface Locker {
 }
 ```
 
+### LogicReader
+
+```kotlin
+interface LogicReader {
+  val Error: Boolean
+  var On: Boolean
+  val Power: Boolean
+  val RequiredPower: Double
+  val Setting: Double
+
+  /** StructureLogicReader. Entry point: LogicReaders.Standard. */
+  class Standard : TypedDevice, LogicReader
+
+  /** StructureLogicSlotReader. Entry point: LogicReaders.Slot. */
+  class Slot : TypedDevice, LogicReader
+
+  /** StructureLogicReagentReader. Entry point: LogicReaders.Reagent. */
+  class Reagent : TypedDevice, LogicReader
+
+  /** StructureLogicBatchReader. Entry point: LogicReaders.Batch. */
+  class Batch : TypedDevice, LogicReader
+
+  /** StructureLogicBatchSlotReader. Entry point: LogicReaders.BatchSlot. */
+  class BatchSlot : TypedDevice, LogicReader
+}
+```
+
 ### LogicWriter
 
 ```kotlin
@@ -3104,24 +3131,6 @@ class LiquidVacuum : TypedDevice {
   val slots: Slots<ItemBatterySlot>
 }
 
-/** StructureLogicBatchReader. Entry point: LogicBatchReaders. */
-class LogicBatchReader : TypedDevice {
-  val Error: Boolean
-  var On: Boolean
-  val Power: Boolean
-  val RequiredPower: Double
-  val Setting: Double
-}
-
-/** StructureLogicBatchSlotReader. Entry point: LogicBatchSlotReaders. */
-class LogicBatchSlotReader : TypedDevice {
-  val Error: Boolean
-  var On: Boolean
-  val Power: Boolean
-  val RequiredPower: Double
-  val Setting: Double
-}
-
 /** StructureLogicButton. Entry point: LogicButtons. */
 class LogicButton : TypedDevice {
   var Activate: Boolean
@@ -3212,24 +3221,6 @@ class LogicPidController : TypedDevice {
   val Setting: Double
 }
 
-/** StructureLogicReader. Entry point: LogicReaders. */
-class LogicReader : TypedDevice {
-  val Error: Boolean
-  var On: Boolean
-  val Power: Boolean
-  val RequiredPower: Double
-  val Setting: Double
-}
-
-/** StructureLogicReagentReader. Entry point: LogicReagentReaders. */
-class LogicReagentReader : TypedDevice {
-  val Error: Boolean
-  var On: Boolean
-  val Power: Boolean
-  val RequiredPower: Double
-  val Setting: Double
-}
-
 /** StructureLogicRocketDownlink. Entry point: LogicRocketDownlinks. */
 class LogicRocketDownlink : TypedDevice {
   val Power: Boolean
@@ -3248,15 +3239,6 @@ class LogicRocketUplink : TypedDevice {
 class LogicSelect : TypedDevice {
   val Error: Boolean
   var Mode: Double
-  var On: Boolean
-  val Power: Boolean
-  val RequiredPower: Double
-  val Setting: Double
-}
-
-/** StructureLogicSlotReader. Entry point: LogicSlotReaders. */
-class LogicSlotReader : TypedDevice {
-  val Error: Boolean
   var On: Boolean
   val Power: Boolean
   val RequiredPower: Double
