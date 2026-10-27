@@ -8419,14 +8419,14 @@ object MiningDrills {
 }
 
 /** A device that comes as several prefabs, each a nested class. */
-interface Drill {
+interface HandDrill {
   var Activate: Boolean
 
   val Power: Boolean
 
   /** A ItemDrill. */
   @PrefabName("ItemDrill")
-  class Standard internal constructor() : TypedDevice(), Drill {
+  class Standard internal constructor() : TypedDevice(), HandDrill {
     override var Activate: Boolean
       get() = intrinsic()
       set(value) = intrinsic()
@@ -8449,7 +8449,7 @@ interface Drill {
 
   /** A ItemEmergencyDrill. */
   @PrefabName("ItemEmergencyDrill")
-  class Emergency internal constructor() : TypedDevice(), Drill {
+  class Emergency internal constructor() : TypedDevice(), HandDrill {
     override var Activate: Boolean
       get() = intrinsic()
       set(value) = intrinsic()
@@ -8472,7 +8472,7 @@ interface Drill {
 
   /** A ItemMKIIDrill. */
   @PrefabName("ItemMKIIDrill")
-  class MkII internal constructor() : TypedDevice(), Drill {
+  class MkII internal constructor() : TypedDevice(), HandDrill {
     override var Activate: Boolean
       get() = intrinsic()
       set(value) = intrinsic()
@@ -8494,13 +8494,13 @@ interface Drill {
   }
 }
 
-/** The Drill devices on the chip's network, by prefab. */
-object Drills {
+/** The HandDrill devices on the chip's network, by prefab. */
+object HandDrills {
   /** The ItemDrill devices on the chip's network. */
   @PrefabName("ItemDrill")
   object Standard {
     /** The device on [pin], as a ItemDrill. */
-    fun at(pin: Device): Drill.Standard = intrinsic()
+    fun at(pin: Device): HandDrill.Standard = intrinsic()
 
     /** Every one on the network. */
     val all: Batch
@@ -8509,7 +8509,7 @@ object Drills {
     /** Every one on the network named [name], which must be a constant. */
     fun named(name: String): Batch = intrinsic()
 
-    class Batch internal constructor() : DeviceBatch<Drill.Standard>() {
+    class Batch internal constructor() : DeviceBatch<HandDrill.Standard>() {
       /** A slot of every one in the batch, by number. */
       val slots: Slots<SlotBatch<ItemBatterySlot>>
         get() = intrinsic()
@@ -8520,7 +8520,7 @@ object Drills {
   @PrefabName("ItemEmergencyDrill")
   object Emergency {
     /** The device on [pin], as a ItemEmergencyDrill. */
-    fun at(pin: Device): Drill.Emergency = intrinsic()
+    fun at(pin: Device): HandDrill.Emergency = intrinsic()
 
     /** Every one on the network. */
     val all: Batch
@@ -8529,7 +8529,7 @@ object Drills {
     /** Every one on the network named [name], which must be a constant. */
     fun named(name: String): Batch = intrinsic()
 
-    class Batch internal constructor() : DeviceBatch<Drill.Emergency>() {
+    class Batch internal constructor() : DeviceBatch<HandDrill.Emergency>() {
       /** A slot of every one in the batch, by number. */
       val slots: Slots<SlotBatch<ItemBatterySlot>>
         get() = intrinsic()
@@ -8540,7 +8540,7 @@ object Drills {
   @PrefabName("ItemMKIIDrill")
   object MkII {
     /** The device on [pin], as a ItemMKIIDrill. */
-    fun at(pin: Device): Drill.MkII = intrinsic()
+    fun at(pin: Device): HandDrill.MkII = intrinsic()
 
     /** Every one on the network. */
     val all: Batch
@@ -8549,7 +8549,7 @@ object Drills {
     /** Every one on the network named [name], which must be a constant. */
     fun named(name: String): Batch = intrinsic()
 
-    class Batch internal constructor() : DeviceBatch<Drill.MkII>() {
+    class Batch internal constructor() : DeviceBatch<HandDrill.MkII>() {
       /** A slot of every one in the batch, by number. */
       val slots: Slots<SlotBatch<ItemBatterySlot>>
         get() = intrinsic()

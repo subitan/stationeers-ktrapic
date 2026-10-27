@@ -562,33 +562,6 @@ interface DirectHeatExchanger {
 }
 ```
 
-### Drill
-
-```kotlin
-interface Drill {
-  var Activate: Boolean
-  val Power: Boolean
-
-  /** ItemDrill. Entry point: Drills.Standard. */
-  class Standard : TypedDevice, Drill {
-    val Battery: ItemBatterySlot // slots[0]
-    val slots: Slots<ItemBatterySlot>
-  }
-
-  /** ItemEmergencyDrill. Entry point: Drills.Emergency. */
-  class Emergency : TypedDevice, Drill {
-    val Battery: ItemBatterySlot // slots[0]
-    val slots: Slots<ItemBatterySlot>
-  }
-
-  /** ItemMKIIDrill. Entry point: Drills.MkII. */
-  class MkII : TypedDevice, Drill {
-    val Battery: ItemBatterySlot // slots[0]
-    val slots: Slots<ItemBatterySlot>
-  }
-}
-```
-
 ### Filtration
 
 ```kotlin
@@ -691,6 +664,33 @@ interface Furnace {
     val Ratios: Ratios
     val RequiredPower: Double
     val slots: Slots<DataDiskSlot>
+  }
+}
+```
+
+### HandDrill
+
+```kotlin
+interface HandDrill {
+  var Activate: Boolean
+  val Power: Boolean
+
+  /** ItemDrill. Entry point: HandDrills.Standard. */
+  class Standard : TypedDevice, HandDrill {
+    val Battery: ItemBatterySlot // slots[0]
+    val slots: Slots<ItemBatterySlot>
+  }
+
+  /** ItemEmergencyDrill. Entry point: HandDrills.Emergency. */
+  class Emergency : TypedDevice, HandDrill {
+    val Battery: ItemBatterySlot // slots[0]
+    val slots: Slots<ItemBatterySlot>
+  }
+
+  /** ItemMKIIDrill. Entry point: HandDrills.MkII. */
+  class MkII : TypedDevice, HandDrill {
+    val Battery: ItemBatterySlot // slots[0]
+    val slots: Slots<ItemBatterySlot>
   }
 }
 ```

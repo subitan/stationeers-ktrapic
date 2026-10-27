@@ -364,8 +364,8 @@
         "MkII": "ItemMKIIMiningDrill"
       }
     },
-    "Drill": {
-      "plural": "Drills",
+    "HandDrill": {
+      "plural": "HandDrills",
       "members": {
         "Standard": "ItemDrill",
         "Emergency": "ItemEmergencyDrill",
