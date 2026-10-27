@@ -224,7 +224,16 @@ data class Grouping(
     val textDisplays: List<String>,
     val notFamilies: List<NotFamily> = emptyList(),
 ) {
-  data class Family(val plural: String, val members: Map<String, String>)
+  /**
+   * @property extends the families this one is a special case of: its interface extends theirs, so
+   *   a function taking one of them takes a member of this one too. Every logic type they declare
+   *   must be one all of this family's members can read, and write where they declare it a `var`.
+   */
+  data class Family(
+      val plural: String,
+      val members: Map<String, String>,
+      val extends: List<String> = emptyList(),
+  )
 
   /**
    * Prefabs that look alike but are different devices, and why.
@@ -248,6 +257,7 @@ data class Grouping(
                 Family(
                     obj["plural"].asString,
                     obj["members"].asJsonObject.entrySet().associate { (k, v) -> k to v.asString },
+                    obj["extends"]?.asJsonArray?.map { it.asString } ?: emptyList(),
                 )
           },
           root["textDisplays"].asJsonArray.map { it.asString },

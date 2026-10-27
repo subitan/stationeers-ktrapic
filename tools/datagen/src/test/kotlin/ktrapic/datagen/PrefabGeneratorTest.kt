@@ -268,6 +268,78 @@ class PrefabGeneratorTest {
   }
 
   @Test
+  fun `a family that extends another declares only what it adds or makes writable`() {
+    val rw = Access(read = true, write = true)
+    val r = Access(read = true, write = false)
+    fun prefab(name: String, vararg logic: Pair<String, Access>) =
+        Prefab(name, hash(name), mapOf(*logic), emptyMap())
+    val prefabs =
+        Prefabs(
+            "test",
+            listOf(
+                prefab("StructureShaft", "Level" to rw, "Speed" to r),
+                prefab("StructureShaftCabled", "Level" to rw, "Speed" to rw),
+                prefab("StructureFloor", "Level" to rw, "Speed" to rw, "Open" to rw),
+                prefab("StructureFloorCabled", "Level" to rw, "Speed" to rw, "Open" to rw),
+                prefab("StructureLift", "Level" to rw, "Speed" to rw),
+                prefab("StructureLiftCabled", "Level" to rw, "Speed" to rw),
+            ),
+            emptyMap(),
+        )
+    fun generate(vararg families: Pair<String, Grouping.Family>) =
+        PrefabGenerator.generate(
+                prefabs,
+                Grouping(mapOf(*families), emptyList()),
+                setOf("LogicType"),
+                typing,
+            )
+            .second
+    val shaft =
+        Grouping.Family("Shafts", mapOf("A" to "StructureShaft", "B" to "StructureShaftCabled"))
+    val floor =
+        Grouping.Family(
+            "Floors",
+            mapOf("A" to "StructureFloor", "B" to "StructureFloorCabled"),
+            extends = listOf("Shaft"),
+        )
+
+    val code = generate("Shaft" to shaft, "Floor" to floor)
+
+    // Level is the shaft's as it is; Speed is a val there and a var on every floor.
+    assertThat(code)
+        .contains(
+            "interface Floor : Shaft {\n  override var Speed: Double\n\n  var Open: Double\n\n  /**"
+        )
+    assertThat(code).contains("interface Shaft {\n  var Level: Double\n\n  val Speed: Double\n")
+    assertThat(code).contains("  class A internal constructor() : TypedDevice(), Floor {")
+    assertThat(code).contains("    override var Level: Double\n")
+
+    for (bad in
+        listOf(
+            // A parent that is no family, or the family itself.
+            arrayOf("Floor" to floor.copy(extends = listOf("Missing"))),
+            arrayOf("Shaft" to shaft.copy(extends = listOf("Shaft"))),
+            // A cycle.
+            arrayOf("Shaft" to shaft.copy(extends = listOf("Floor")), "Floor" to floor),
+            // A family whose members can't all read what the parent declares.
+            arrayOf(
+                "Floor" to floor.copy(extends = emptyList()),
+                "Shaft" to shaft.copy(extends = listOf("Floor")),
+            ),
+        )) {
+      assertThrows<IllegalArgumentException>(bad.toList().toString()) { generate(*bad) }
+    }
+
+    // A family whose members can all read what the parent declares a var, but not all write it.
+    val lift = Grouping.Family("Lifts", mapOf("A" to "StructureLift", "B" to "StructureLiftCabled"))
+    val error =
+        assertThrows<IllegalArgumentException> {
+          generate("Lift" to lift, "Shaft" to shaft.copy(extends = listOf("Lift")))
+        }
+    assertThat(error).hasMessageThat().contains("can write Speed")
+  }
+
+  @Test
   fun `the consoles must be exactly the prefabs with Circuitboard slots`() {
     fun prefab(name: String, vararg kinds: String) =
         Prefab(

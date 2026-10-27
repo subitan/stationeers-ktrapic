@@ -10833,12 +10833,8 @@ object CircuitHousings {
 }
 
 /** A device that comes as several prefabs, each a nested class. */
-interface ElevatorLevel {
+interface ElevatorLevel : ElevatorShaft {
   var Activate: Boolean
-
-  var ElevatorLevel: Double
-
-  var ElevatorSpeed: Double
 
   val Error: Boolean
 

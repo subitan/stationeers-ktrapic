@@ -191,8 +191,11 @@ function can take any battery. It has only those logic types: `PrefabHash`, `Nam
 `ReferenceId` are read from a member (`Batteries.Small.at(d0)`) or its pin. Prefabs are grouped
 this way wherever the game has one device in several sizes, fluids or styles: `Valves.Gas` and
 `Valves.Liquid`, `Transformers.Small`, `SolarPanels.HeavyAngled`,
-`DirectHeatExchangers.LargeGasToLiquid`. The [device reference](DEVICES.md#families) lists every
-family and its members; every other prefab has its own entry point.
+`DirectHeatExchangers.LargeGasToLiquid`. A family that is a special case of another extends its
+interface: an elevator level is a shaft with doors and power, so `ElevatorLevel` extends
+`ElevatorShaft`, and a function taking an `ElevatorShaft` takes an `ElevatorLevels.Standard` too.
+The [device reference](DEVICES.md#families) lists every family and its members; every other prefab
+has its own entry point.
 
 ### Views
 
