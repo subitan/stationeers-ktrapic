@@ -216,7 +216,8 @@ data class Prefabs(
  *   mode, which get a `Text` setter.
  * @property notFamilies prefabs that look like one device in several kinds but aren't, each group
  *   with the reason: checked by datagen's test of family candidates, so a new look-alike gets a
- *   decision.
+ *   decision. In `grouping.json` an entry's `prefabs` holds a prefab's name, or an array of the
+ *   prefabs of one family.
  */
 data class Grouping(
     val families: Map<String, Family>,
@@ -225,8 +226,17 @@ data class Grouping(
 ) {
   data class Family(val plural: String, val members: Map<String, String>)
 
-  /** Prefabs that look alike but are different devices, and why. */
-  data class NotFamily(val prefabs: List<String>, val reason: String)
+  /**
+   * Prefabs that look alike but are different devices, and why.
+   *
+   * @property groups the different devices: each group is one prefab, or the prefabs of one family.
+   *   Only prefabs in different groups are decided as not one family; prefabs in one group must be
+   *   one family.
+   */
+  data class NotFamily(val groups: List<List<String>>, val reason: String) {
+    val prefabs: List<String>
+      get() = groups.flatten()
+  }
 
   companion object {
     fun fromJson(text: String): Grouping {
@@ -243,7 +253,13 @@ data class Grouping(
           root["textDisplays"].asJsonArray.map { it.asString },
           root["notFamilies"]?.asJsonArray?.map { element ->
             val obj = element.asJsonObject
-            NotFamily(obj["prefabs"].asJsonArray.map { it.asString }, obj["reason"].asString)
+            NotFamily(
+                obj["prefabs"].asJsonArray.map { group ->
+                  if (group.isJsonArray) group.asJsonArray.map { it.asString }
+                  else listOf(group.asString)
+                },
+                obj["reason"].asString,
+            )
           } ?: emptyList(),
       )
     }

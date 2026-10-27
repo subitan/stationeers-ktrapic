@@ -51,9 +51,9 @@ object FamilyCandidates {
     // A word after punctuation starts one, as in "Battery_Wireless_cell".
     name = name.replace(Regex("[^A-Za-z]+([a-z])")) { it.groupValues[1].uppercase() }
     name = name.replace(Regex("[^A-Za-z]"), "")
-    // Some prefabs write "GastoLiquid": make "to" a word of its own, so the words around it are
-    // too.
-    name = name.replace(Regex("(?<=[a-z])to(?=[A-Z])"), "To")
+    // Some prefabs write "GastoLiquid": make that "to" a word of its own, so the fluids around it
+    // are too. Only between fluids: "AutoMiner" keeps its "Auto".
+    name = name.replace(Regex("(?<=Gas|Liquid)to(?=Gas|Liquid)"), "To")
     for (word in VARIANT_WORDS) name = name.replace(Regex("$word(?=[A-Z]|$)"), "")
     return name
   }
@@ -72,17 +72,18 @@ object FamilyCandidates {
 
   /**
    * The groups of [prefabs] that look alike but that [grouping] neither puts in one family nor
-   * lists together as not one: each group's prefab names, sorted. Two prefabs are in a group when a
-   * chain of such look-alike pairs links them.
+   * lists in different groups of a not-family entry: each group's prefab names, sorted. Two prefabs
+   * are in a group when a chain of such look-alike pairs links them.
    */
   fun ungrouped(prefabs: List<Prefab>, grouping: Grouping): List<List<String>> {
-    val familyOf =
-        grouping.families
-            .flatMap { (family, members) -> members.members.values.map { it to family } }
-            .toMap()
+    val familyOf = familyOf(grouping)
     fun decided(a: String, b: String) =
         familyOf[a]?.let { it == familyOf[b] } == true ||
-            grouping.notFamilies.any { a in it.prefabs && b in it.prefabs }
+            grouping.notFamilies.any { notFamily ->
+              val groupOfA = notFamily.groups.indexOfFirst { a in it }
+              val groupOfB = notFamily.groups.indexOfFirst { b in it }
+              groupOfA >= 0 && groupOfB >= 0 && groupOfA != groupOfB
+            }
 
     val group = prefabs.associate { it.name to mutableSetOf(it.name) }.toMutableMap()
     for ((i, a) in prefabs.withIndex()) {
@@ -94,4 +95,20 @@ object FamilyCandidates {
     }
     return group.values.distinct().filter { it.size > 1 }.map { it.sorted() }.sortedBy { it[0] }
   }
+
+  /** The groups of prefabs in [grouping]'s not-family entries that aren't all in one family. */
+  fun groupsOutsideAFamily(grouping: Grouping): List<List<String>> {
+    val familyOf = familyOf(grouping)
+    return grouping.notFamilies
+        .flatMap { it.groups }
+        .filter { group ->
+          val families = group.map { familyOf[it] }.distinct()
+          group.size > 1 && (families.size != 1 || families[0] == null)
+        }
+  }
+
+  private fun familyOf(grouping: Grouping): Map<String, String> =
+      grouping.families
+          .flatMap { (family, members) -> members.members.values.map { it to family } }
+          .toMap()
 }

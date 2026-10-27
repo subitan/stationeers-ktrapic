@@ -1646,13 +1646,13 @@ interface WaterBottleFiller {
   val Power: Boolean
   val RequiredPower: Double
 
-  /** StructureWaterBottleFillerPowered. Entry point: WaterBottleFillers.Standard. */
-  class Standard : TypedDevice, WaterBottleFiller {
+  /** StructureWaterBottleFillerPowered. Entry point: WaterBottleFillers.Powered. */
+  class Powered : TypedDevice, WaterBottleFiller {
     val slots: Slots<GasCanisterSlot>
   }
 
-  /** StructureWaterBottleFillerPoweredBottom. Entry point: WaterBottleFillers.Bottom. */
-  class Bottom : TypedDevice, WaterBottleFiller {
+  /** StructureWaterBottleFillerPoweredBottom. Entry point: WaterBottleFillers.PoweredBottom. */
+  class PoweredBottom : TypedDevice, WaterBottleFiller {
     val slots: Slots<GasCanisterSlot>
   }
 }

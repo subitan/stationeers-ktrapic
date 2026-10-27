@@ -456,8 +456,8 @@
     "WaterBottleFiller": {
       "plural": "WaterBottleFillers",
       "members": {
-        "Standard": "StructureWaterBottleFillerPowered",
-        "Bottom": "StructureWaterBottleFillerPoweredBottom"
+        "Powered": "StructureWaterBottleFillerPowered",
+        "PoweredBottom": "StructureWaterBottleFillerPoweredBottom"
       }
     }
   },
@@ -472,17 +472,13 @@
     },
     {
       "prefabs": [
-        "ItemBatteryCell",
-        "ItemBatteryCellLarge",
-        "ItemBatteryCellNuclear",
-        "Battery_Wireless_cell",
-        "Battery_Wireless_cell_Big",
-        "ItemWirelessBatteryCellExtraLarge"
+        ["ItemBatteryCell", "ItemBatteryCellLarge", "ItemBatteryCellNuclear"],
+        ["Battery_Wireless_cell", "Battery_Wireless_cell_Big", "ItemWirelessBatteryCellExtraLarge"]
       ],
       "reason": "the game names the Battery Cells and the Wireless Battery Cells as two kinds, each with sizes of its own"
     },
     {
-      "prefabs": ["StructureAirlock", "StructureAirlockWide", "StructureAirlockGate"],
+      "prefabs": [["StructureAirlock", "StructureAirlockWide"], "StructureAirlockGate"],
       "reason": "StructureAirlockGate is the game's Small Hangar Door, a 1 x 1 hangar door piece, not an airlock"
     },
     {
@@ -491,19 +487,15 @@
     },
     {
       "prefabs": [
-        "StructurePressureRegulator",
-        "StructureLiquidPressureRegulator",
-        "StructureBackPressureRegulator",
-        "StructureBackLiquidPressureRegulator"
+        ["StructurePressureRegulator", "StructureLiquidPressureRegulator"],
+        ["StructureBackPressureRegulator", "StructureBackLiquidPressureRegulator"]
       ],
       "reason": "a Pressure Regulator holds its outlet at the setting, a Back Pressure Regulator opens when its inlet reaches it"
     },
     {
       "prefabs": [
-        "StructureValve",
-        "StructureLiquidValve",
-        "StructurePipeOneWayValveLever",
-        "StructurePipeLiquidOneWayValveLever",
+        ["StructureValve", "StructureLiquidValve"],
+        ["StructurePipeOneWayValveLever", "StructurePipeLiquidOneWayValveLever"],
         "StructureCondensationValve",
         "StructureExpansionValve"
       ],
@@ -511,12 +503,9 @@
     },
     {
       "prefabs": [
-        "StructureMediumRadiator",
-        "StructureMediumRadiatorLiquid",
-        "StructureMediumConvectionRadiator",
-        "StructureMediumConvectionRadiatorLiquid",
-        "StructurePassiveLargeRadiatorGas",
-        "StructurePassiveLargeRadiatorLiquid"
+        ["StructureMediumRadiator", "StructureMediumRadiatorLiquid"],
+        ["StructureMediumConvectionRadiator", "StructureMediumConvectionRadiatorLiquid"],
+        ["StructurePassiveLargeRadiatorGas", "StructurePassiveLargeRadiatorLiquid"]
       ],
       "reason": "the Medium Radiator radiates heat into a vacuum, the convection radiators exchange it with the air around them, and StructurePassiveLargeRadiator is an older convection radiator the game says was replaced"
     },

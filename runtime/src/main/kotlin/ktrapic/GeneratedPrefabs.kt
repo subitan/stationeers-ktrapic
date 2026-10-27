@@ -10232,7 +10232,7 @@ interface WaterBottleFiller {
 
   /** A StructureWaterBottleFillerPowered. */
   @PrefabName("StructureWaterBottleFillerPowered")
-  class Standard internal constructor() : TypedDevice(), WaterBottleFiller {
+  class Powered internal constructor() : TypedDevice(), WaterBottleFiller {
     override var Activate: Boolean
       get() = intrinsic()
       set(value) = intrinsic()
@@ -10260,7 +10260,7 @@ interface WaterBottleFiller {
 
   /** A StructureWaterBottleFillerPoweredBottom. */
   @PrefabName("StructureWaterBottleFillerPoweredBottom")
-  class Bottom internal constructor() : TypedDevice(), WaterBottleFiller {
+  class PoweredBottom internal constructor() : TypedDevice(), WaterBottleFiller {
     override var Activate: Boolean
       get() = intrinsic()
       set(value) = intrinsic()
@@ -10291,9 +10291,9 @@ interface WaterBottleFiller {
 object WaterBottleFillers {
   /** The StructureWaterBottleFillerPowered devices on the chip's network. */
   @PrefabName("StructureWaterBottleFillerPowered")
-  object Standard {
+  object Powered {
     /** The device on [pin], as a StructureWaterBottleFillerPowered. */
-    fun at(pin: Device): WaterBottleFiller.Standard = intrinsic()
+    fun at(pin: Device): WaterBottleFiller.Powered = intrinsic()
 
     /** Every one on the network. */
     val all: Batch
@@ -10302,7 +10302,7 @@ object WaterBottleFillers {
     /** Every one on the network named [name], which must be a constant. */
     fun named(name: String): Batch = intrinsic()
 
-    class Batch internal constructor() : DeviceBatch<WaterBottleFiller.Standard>() {
+    class Batch internal constructor() : DeviceBatch<WaterBottleFiller.Powered>() {
       /** A slot of every one in the batch, by number. */
       val slots: Slots<SlotBatch<GasCanisterSlot>>
         get() = intrinsic()
@@ -10311,9 +10311,9 @@ object WaterBottleFillers {
 
   /** The StructureWaterBottleFillerPoweredBottom devices on the chip's network. */
   @PrefabName("StructureWaterBottleFillerPoweredBottom")
-  object Bottom {
+  object PoweredBottom {
     /** The device on [pin], as a StructureWaterBottleFillerPoweredBottom. */
-    fun at(pin: Device): WaterBottleFiller.Bottom = intrinsic()
+    fun at(pin: Device): WaterBottleFiller.PoweredBottom = intrinsic()
 
     /** Every one on the network. */
     val all: Batch
@@ -10322,7 +10322,7 @@ object WaterBottleFillers {
     /** Every one on the network named [name], which must be a constant. */
     fun named(name: String): Batch = intrinsic()
 
-    class Batch internal constructor() : DeviceBatch<WaterBottleFiller.Bottom>() {
+    class Batch internal constructor() : DeviceBatch<WaterBottleFiller.PoweredBottom>() {
       /** A slot of every one in the batch, by number. */
       val slots: Slots<SlotBatch<GasCanisterSlot>>
         get() = intrinsic()

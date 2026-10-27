@@ -25,6 +25,9 @@ class FamilyCandidatesTest {
     assertWithMessage("notFamilies names prefabs the game doesn't have")
         .that(grouping.notFamilies.flatMap { it.prefabs } - prefabs.map { it.name }.toSet())
         .isEmpty()
+    assertWithMessage("notFamilies groups prefabs together that aren't one family")
+        .that(FamilyCandidates.groupsOutsideAFamily(grouping))
+        .isEmpty()
   }
 
   @Test
@@ -41,6 +44,7 @@ class FamilyCandidatesTest {
     // A word inside another isn't a variant: Gasket isn't Gas + ket, Tomato isn't Toma + to.
     assertThat(FamilyCandidates.baseName("StructureGasket")).isEqualTo("Gasket")
     assertThat(FamilyCandidates.baseName("ItemTomato")).isEqualTo("Tomato")
+    assertThat(FamilyCandidates.baseName("StructureAutoMinerSmall")).isEqualTo("AutoMiner")
   }
 
   @Test
@@ -55,28 +59,74 @@ class FamilyCandidatesTest {
     assertThat(FamilyCandidates.lookAlike(long, otherLogic)).isFalse()
   }
 
+  private val valves = listOf(prefab("StructureValve"), prefab("StructureLiquidValve"))
+  private val gasValves = Grouping.Family("Valves", mapOf("Gas" to "StructureValve"))
+
   @Test
-  fun `a group split across families, or partly outside one, is still a candidate`() {
+  fun `a group split across families is still a candidate`() {
     val grouping =
         Grouping(
-            mapOf("Valve" to Grouping.Family("Valves", mapOf("Gas" to "StructureValve"))),
+            mapOf(
+                "Valve" to gasValves,
+                "LiquidValve" to
+                    Grouping.Family("LiquidValves", mapOf("Liquid" to "StructureLiquidValve")),
+            ),
             emptyList(),
         )
 
-    assertThat(
-            FamilyCandidates.ungrouped(
-                listOf(prefab("StructureValve"), prefab("StructureLiquidValve")),
-                grouping,
-            )
-        )
+    assertThat(FamilyCandidates.ungrouped(valves, grouping))
         .containsExactly(listOf("StructureLiquidValve", "StructureValve"))
+  }
+
+  @Test
+  fun `a group partly outside a family is still a candidate`() {
+    val grouping = Grouping(mapOf("Valve" to gasValves), emptyList())
+
+    assertThat(FamilyCandidates.ungrouped(valves, grouping))
+        .containsExactly(listOf("StructureLiquidValve", "StructureValve"))
+  }
+
+  @Test
+  fun `a not-family entry decides only prefabs in different groups of it`() {
+    val valvesTogether =
+        Grouping(
+            emptyMap(),
+            emptyList(),
+            listOf(
+                Grouping.NotFamily(
+                    listOf(listOf("StructureValve", "StructureLiquidValve")),
+                    "different",
+                )
+            ),
+        )
+    val valvesApart =
+        Grouping(
+            emptyMap(),
+            emptyList(),
+            listOf(
+                Grouping.NotFamily(
+                    listOf(listOf("StructureValve"), listOf("StructureLiquidValve")),
+                    "different",
+                )
+            ),
+        )
+
+    assertThat(FamilyCandidates.ungrouped(valves, valvesTogether))
+        .containsExactly(listOf("StructureLiquidValve", "StructureValve"))
+    assertThat(FamilyCandidates.groupsOutsideAFamily(valvesTogether))
+        .containsExactly(listOf("StructureValve", "StructureLiquidValve"))
+    assertThat(FamilyCandidates.ungrouped(valves, valvesApart)).isEmpty()
   }
 
   @Test
   fun `a not-family entry covers only the prefabs it lists`() {
     val switches = listOf("StructureLogicSwitch", "StructureLogicSwitch2")
     val grouping =
-        Grouping(emptyMap(), emptyList(), listOf(Grouping.NotFamily(switches, "different")))
+        Grouping(
+            emptyMap(),
+            emptyList(),
+            listOf(Grouping.NotFamily(switches.map { listOf(it) }, "different")),
+        )
 
     assertThat(FamilyCandidates.ungrouped(switches.map { prefab(it) }, grouping)).isEmpty()
     assertThat(
