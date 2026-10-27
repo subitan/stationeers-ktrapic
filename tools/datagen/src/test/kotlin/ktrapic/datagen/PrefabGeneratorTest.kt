@@ -281,6 +281,8 @@ class PrefabGeneratorTest {
                 prefab("StructureShaftCabled", "Level" to rw, "Speed" to rw),
                 prefab("StructureFloor", "Level" to rw, "Speed" to rw, "Open" to rw),
                 prefab("StructureFloorCabled", "Level" to rw, "Speed" to rw, "Open" to rw),
+                prefab("StructureLift", "Level" to rw, "Speed" to rw),
+                prefab("StructureLiftCabled", "Level" to rw, "Speed" to rw),
             ),
             emptyMap(),
         )
@@ -327,6 +329,14 @@ class PrefabGeneratorTest {
         )) {
       assertThrows<IllegalArgumentException>(bad.toList().toString()) { generate(*bad) }
     }
+
+    // A family whose members can all read what the parent declares a var, but not all write it.
+    val lift = Grouping.Family("Lifts", mapOf("A" to "StructureLift", "B" to "StructureLiftCabled"))
+    val error =
+        assertThrows<IllegalArgumentException> {
+          generate("Lift" to lift, "Shaft" to shaft.copy(extends = listOf("Lift")))
+        }
+    assertThat(error).hasMessageThat().contains("can write Speed")
   }
 
   @Test
