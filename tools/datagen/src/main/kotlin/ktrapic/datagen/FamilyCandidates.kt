@@ -42,6 +42,7 @@ object FamilyCandidates {
           "Refrigerated",
           "Angled",
           "Flat",
+          "Floor",
           "Dual",
           "Corner",
           "Short",
