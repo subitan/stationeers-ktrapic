@@ -1184,38 +1184,6 @@ interface ManualHatch {
 }
 ```
 
-### MediumConvectionRadiator
-
-```kotlin
-interface MediumConvectionRadiator {
-  val Maximum: Double
-  val Ratio: Double
-  var Setting: Double
-
-  /** StructureMediumConvectionRadiator. Entry point: MediumConvectionRadiators.Gas. */
-  class Gas : TypedDevice, MediumConvectionRadiator
-
-  /** StructureMediumConvectionRadiatorLiquid. Entry point: MediumConvectionRadiators.Liquid. */
-  class Liquid : TypedDevice, MediumConvectionRadiator
-}
-```
-
-### MediumRadiator
-
-```kotlin
-interface MediumRadiator {
-  val Maximum: Double
-  val Ratio: Double
-  var Setting: Double
-
-  /** StructureMediumRadiator. Entry point: MediumRadiators.Gas. */
-  class Gas : TypedDevice, MediumRadiator
-
-  /** StructureMediumRadiatorLiquid. Entry point: MediumRadiators.Liquid. */
-  class Liquid : TypedDevice, MediumRadiator
-}
-```
-
 ### MiningDrill
 
 ```kotlin
@@ -1243,22 +1211,6 @@ interface MiningDrill {
     val Battery: ItemBatterySlot // slots[0]
     val slots: Slots<ItemBatterySlot>
   }
-}
-```
-
-### PassiveLargeRadiator
-
-```kotlin
-interface PassiveLargeRadiator {
-  val Maximum: Double
-  val Ratio: Double
-  var Setting: Double
-
-  /** StructurePassiveLargeRadiatorGas. Entry point: PassiveLargeRadiators.Gas. */
-  class Gas : TypedDevice, PassiveLargeRadiator
-
-  /** StructurePassiveLargeRadiatorLiquid. Entry point: PassiveLargeRadiators.Liquid. */
-  class Liquid : TypedDevice, PassiveLargeRadiator
 }
 ```
 
@@ -1436,6 +1388,41 @@ interface PressureRegulator {
 
   /** StructureBackLiquidPressureRegulator. Entry point: PressureRegulators.BackLiquid. */
   class BackLiquid : TypedDevice, PressureRegulator
+}
+```
+
+### Radiator
+
+```kotlin
+interface Radiator {
+  val Maximum: Double
+  val Ratio: Double
+  var Setting: Double
+
+  /** StructureMediumRadiator. Entry point: Radiators.MediumGas. */
+  class MediumGas : TypedDevice, Radiator
+
+  /** StructureMediumRadiatorLiquid. Entry point: Radiators.MediumLiquid. */
+  class MediumLiquid : TypedDevice, Radiator
+
+  /** StructureMediumConvectionRadiator. Entry point: Radiators.ConvectionGas. */
+  class ConvectionGas : TypedDevice, Radiator
+
+  /** StructureMediumConvectionRadiatorLiquid. Entry point: Radiators.ConvectionLiquid. */
+  class ConvectionLiquid : TypedDevice, Radiator
+
+  /** StructurePassiveLargeRadiatorGas. Entry point: Radiators.PassiveLargeGas. */
+  class PassiveLargeGas : TypedDevice, Radiator
+
+  /** StructurePassiveLargeRadiatorLiquid. Entry point: Radiators.PassiveLargeLiquid. */
+  class PassiveLargeLiquid : TypedDevice, Radiator
+
+  /** StructureLargeExtendableRadiator. Entry point: Radiators.LargeExtendable. */
+  class LargeExtendable : TypedDevice, Radiator {
+    var Horizontal: Double
+    var Lock: Boolean
+    var Open: Boolean
+  }
 }
 ```
 
@@ -3104,16 +3091,6 @@ class Laptop : TypedDevice {
   val Battery: ItemBatterySlot // slots[1]
   val Motherboard: ItemCommonSlot // slots[2]
   val slots: Slots<ItemCommonSlot>
-}
-
-/** StructureLargeExtendableRadiator. Entry point: LargeExtendableRadiators. */
-class LargeExtendableRadiator : TypedDevice {
-  var Horizontal: Double
-  var Lock: Boolean
-  val Maximum: Double
-  var Open: Boolean
-  val Ratio: Double
-  var Setting: Double
 }
 
 /** StructureLarreDockBypass. Entry point: LarreDockBypasses. */
