@@ -289,7 +289,14 @@ class StaticSetTest {
 
     assertThat(loads(code)).containsExactly("RatioOxygen", "RatioOxygen")
     assertThat(error("for (e in d0.Ratios) { var x = e\nx = e\ndb.Setting = x.value }").message)
-        .contains("never reassigned")
+        .contains("Ratios entry can only be held")
+    assertThat(
+            error(
+                    "for (e in d0.Ratios) { val x = if (d0.Mode > 0) e else e\ndb.Setting = x.value }"
+                )
+                .message
+        )
+        .contains("a Ratios entry is used through its key or value")
   }
 
   @Test

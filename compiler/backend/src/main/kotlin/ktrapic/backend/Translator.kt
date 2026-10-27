@@ -469,7 +469,7 @@ internal class Translator(private val symbols: DeclarationFinder) {
           value.isAlias() ->
               fail(
                   property,
-                  "a device, batch, slot, view or static set can only be held in a val, or in a var never reassigned",
+                  "a device, batch, slot, view, static set or Ratios entry can only be held in a val, or in a var never reassigned",
               )
           value is Const && !property.isReassigned() -> value
           else -> Reg(newVReg(property.name.asString())).also { move(it.reg, value) }
@@ -531,7 +531,7 @@ internal class Translator(private val symbols: DeclarationFinder) {
           value.isAlias() ->
               fail(
                   variable,
-                  "a device, batch, slot, view or static set can only be held in a val, or in a var never reassigned",
+                  "a device, batch, slot, view, static set or Ratios entry can only be held in a val, or in a var never reassigned",
               )
           value is Const && !variable.isReassigned() -> value
           else -> Reg(newVReg(variable.name.asString())).also { move(it.reg, value) }
@@ -560,6 +560,9 @@ internal class Translator(private val symbols: DeclarationFinder) {
         if (it is Key) fail(expression, "a substance can only be used as a key, as Ratios[it]")
         if (it is StaticSet) {
           fail(expression, "a static set can only be looped over, tested with in, or measured")
+        }
+        if (it is RatioEntry) {
+          fail(expression, "a Ratios entry is used through its key or value, as entry.value")
         }
         if (it.isAlias() && it !is Dev) fail(expression, batchError)
       }
