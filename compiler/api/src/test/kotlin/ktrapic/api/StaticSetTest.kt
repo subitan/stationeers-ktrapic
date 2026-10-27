@@ -287,6 +287,37 @@ class StaticSetTest {
           .that(error(source).message)
           .contains("can only be held in a val, not a var")
     }
+    // A local declared first and given a value later is held all the same. (A top-level one is a
+    // property, which must have a value where it is declared.)
+    fun local(statements: String) = "if (d0.On) {\n$statements\n}"
+    for (source in
+        listOf(
+            "var pin: Device\npin = d0",
+            "var sensor: GasSensor\nsensor = GasSensors.at(d0)",
+            "var lights: DeviceBatch<GrowLight>\nlights = GrowLights.all",
+            "var outlet: Port\noutlet = Filtrations.Gas.at(d1).Ports.Output",
+            "var gas: Substance\ngas = Substance.Oxygen",
+            "var gases: Set<Substance>\ngases = setOf(Substance.Oxygen)",
+            "var slot: DeviceSlot\nslot = d0.slots[0]",
+        )) {
+      assertWithMessage(source)
+          .that(error(local(source)).message)
+          .contains("can only be held in a val, not a var")
+    }
+    // A val of one must be given it where it is declared.
+    for (source in
+        listOf(
+            local("val pin: Device\npin = d0\npin.On = true"),
+            local("val gas: Substance\ngas = Substance.Oxygen\ndb.Setting = d0.Ratios[gas]"),
+            "for (e in d0.Ratios) {\nval x: Map.Entry<Substance, Double>\nx = e\ndb.Setting = x.value\n}",
+        )) {
+      assertWithMessage(source)
+          .that(error(source).message)
+          .contains("a val of one must be given it where it is declared")
+    }
+    // A number declared first and given a value later is a variable as before.
+    assertThat(compiled(local("var x: Double\nx = d0.Setting\ndb.Setting = x")).code)
+        .isEqualTo(compiled(local("val x = d0.Setting\ndb.Setting = x")).code)
     val code =
         compiled(
                 """
