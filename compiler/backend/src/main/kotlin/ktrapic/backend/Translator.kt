@@ -297,8 +297,9 @@ internal class Translator(private val symbols: DeclarationFinder) {
   }
 
   /**
-   * Whether this is a `var` the program assigns after declaring it. One it never does is a `val` in
-   * all but name: it may hold what a `val` may (a device, a view, a static set) and folds as one.
+   * Whether this is a `var` the program assigns after declaring it. A constant in one it never does
+   * folds as a `val`'s would; what has no value on the chip (a device, a view, a static set) needs
+   * a `val` all the same, as a `var` of one can't be a variable.
    */
   private fun IrVariable.isReassigned() = isVar && symbol in assigned
 
@@ -465,11 +466,11 @@ internal class Translator(private val symbols: DeclarationFinder) {
     properties[property.symbol] =
         when {
           value is Mapped -> fail(initializer, MAPPED_HELD)
-          value.isAlias() && !property.isReassigned() -> value
+          value.isAlias() && !property.isVar -> value
           value.isAlias() ->
               fail(
                   property,
-                  "a device, batch, slot, view, static set or Ratios entry can only be held in a val, or in a var never reassigned",
+                  "a device, batch, slot, view, static set, substance or Ratios entry has no value on the chip, so it can only be held in a val, not a var",
               )
           value is Const && !property.isReassigned() -> value
           else -> Reg(newVReg(property.name.asString())).also { move(it.reg, value) }
@@ -527,11 +528,11 @@ internal class Translator(private val symbols: DeclarationFinder) {
     variables[variable] =
         when {
           value is Mapped -> fail(initializer, MAPPED_HELD)
-          value.isAlias() && !variable.isReassigned() -> value
+          value.isAlias() && !variable.isVar -> value
           value.isAlias() ->
               fail(
                   variable,
-                  "a device, batch, slot, view, static set or Ratios entry can only be held in a val, or in a var never reassigned",
+                  "a device, batch, slot, view, static set, substance or Ratios entry has no value on the chip, so it can only be held in a val, not a var",
               )
           value is Const && !variable.isReassigned() -> value
           else -> Reg(newVReg(variable.name.asString())).also { move(it.reg, value) }

@@ -55,8 +55,9 @@ and use `toDouble()` (which costs nothing) or `toInt()` to convert.
 
 `val` and `var` work as in Kotlin, at the top level and in blocks. A top-level property needs an
 initializer and the default getter and setter; a `val` whose initializer is a constant costs no
-register. A `val` may also hold a device, as an alias: `val sensor = d0`. A `var` the program
-never assigns again is a `val` in all but name: it may hold the same things, and costs the same.
+register, and so does a `var` the program never assigns again. A `val` may also hold a device, as
+an alias: `val sensor = d0`. What has no value on the chip (a device, a view, a static set, a
+`Substance`, a slot or a batch) can only be held in a `val`, never a `var`.
 
 ## Operators
 
@@ -272,8 +273,8 @@ db.Setting = other + heaviest
 
 `continue` goes on to the next element's copy, and `break` past the last. A set's `size` and an
 `in` test of a constant are constants; `in` with a number known only when the program runs
-compiles to one comparison per element. A static set can be held in a `val` (or a `var` never
-reassigned) and passed to an inlined function, but not used as a value otherwise. Elements
+compiles to one comparison per element. A static set can be held in a `val` and passed to an
+inlined function, but not used as a value otherwise. Elements
 compare as numbers, unlike Kotlin's: `2` and `2.0` are the same element. A `for` over an `Int`
 range is not unrolled: it stays a loop.
 
