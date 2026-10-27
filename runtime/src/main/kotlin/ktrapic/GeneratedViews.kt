@@ -78,6 +78,10 @@ class Port internal constructor() {
  */
 class Ratios internal constructor() {
   operator fun get(substance: Substance): Double = intrinsic()
+
+  /** The substances the device reports, a set known when compiled. */
+  val keys: Set<Substance>
+    get() = intrinsic()
 }
 
 /** A vector a device reports, by axis. */
