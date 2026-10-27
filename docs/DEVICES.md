@@ -1084,6 +1084,29 @@ interface Locker {
 }
 ```
 
+### LogicWriter
+
+```kotlin
+interface LogicWriter {
+  val Error: Boolean
+  var ForceWrite: Boolean
+  var On: Boolean
+  val Power: Boolean
+  val RequiredPower: Double
+
+  /** StructureLogicWriter. Entry point: LogicWriters.Standard. */
+  class Standard : TypedDevice, LogicWriter
+
+  /** StructureLogicBatchWriter. Entry point: LogicWriters.Batch. */
+  class Batch : TypedDevice, LogicWriter
+
+  /** StructureLogicWriterSwitch. Entry point: LogicWriters.Switch. */
+  class Switch : TypedDevice, LogicWriter {
+    var Activate: Boolean
+  }
+}
+```
+
 ### ManualHatch
 
 ```kotlin
@@ -3099,15 +3122,6 @@ class LogicBatchSlotReader : TypedDevice {
   val Setting: Double
 }
 
-/** StructureLogicBatchWriter. Entry point: LogicBatchWriters. */
-class LogicBatchWriter : TypedDevice {
-  val Error: Boolean
-  var ForceWrite: Boolean
-  var On: Boolean
-  val Power: Boolean
-  val RequiredPower: Double
-}
-
 /** StructureLogicButton. Entry point: LogicButtons. */
 class LogicButton : TypedDevice {
   var Activate: Boolean
@@ -3291,25 +3305,6 @@ class LogicSwitch2 : TypedDevice {
   var Lock: Boolean
   var Open: Boolean
   val Setting: Double
-}
-
-/** StructureLogicWriter. Entry point: LogicWriters. */
-class LogicWriter : TypedDevice {
-  val Error: Boolean
-  var ForceWrite: Boolean
-  var On: Boolean
-  val Power: Boolean
-  val RequiredPower: Double
-}
-
-/** StructureLogicWriterSwitch. Entry point: LogicWriterSwitches. */
-class LogicWriterSwitch : TypedDevice {
-  var Activate: Boolean
-  val Error: Boolean
-  var ForceWrite: Boolean
-  var On: Boolean
-  val Power: Boolean
-  val RequiredPower: Double
 }
 ```
 

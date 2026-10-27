@@ -438,6 +438,14 @@
         "Hydroponics": "StructureLarreDockHydroponics"
       }
     },
+    "LogicWriter": {
+      "plural": "LogicWriters",
+      "members": {
+        "Standard": "StructureLogicWriter",
+        "Batch": "StructureLogicBatchWriter",
+        "Switch": "StructureLogicWriterSwitch"
+      }
+    },
     "Door": {
       "plural": "Doors",
       "members": {
@@ -603,10 +611,6 @@
         "StructureLogicBatchSlotReader"
       ],
       "reason": "each reader reads something different: a device, a slot, reagents, a batch of devices, or a batch of slots"
-    },
-    {
-      "prefabs": ["StructureLogicWriter", "StructureLogicBatchWriter"],
-      "reason": "the Logic Writer writes one device, the Batch Writer every device of a kind"
     },
     {
       "prefabs": ["StructureLogicMath", "StructureLogicMathUnary"],

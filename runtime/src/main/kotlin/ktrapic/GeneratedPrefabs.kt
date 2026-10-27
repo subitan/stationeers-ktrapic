@@ -10162,6 +10162,140 @@ object LarreDocks {
 }
 
 /** A device that comes as several prefabs, each a nested class. */
+interface LogicWriter {
+  val Error: Boolean
+
+  var ForceWrite: Boolean
+
+  var On: Boolean
+
+  val Power: Boolean
+
+  val RequiredPower: Double
+
+  /** A StructureLogicWriter. */
+  @PrefabName("StructureLogicWriter")
+  class Standard internal constructor() : TypedDevice(), LogicWriter {
+    override val Error: Boolean
+      get() = intrinsic()
+
+    override var ForceWrite: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override var On: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override val Power: Boolean
+      get() = intrinsic()
+
+    override val RequiredPower: Double
+      get() = intrinsic()
+
+    /** The StructureLogicWriter prefab. */
+    companion object : Prefab()
+  }
+
+  /** A StructureLogicBatchWriter. */
+  @PrefabName("StructureLogicBatchWriter")
+  class Batch internal constructor() : TypedDevice(), LogicWriter {
+    override val Error: Boolean
+      get() = intrinsic()
+
+    override var ForceWrite: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override var On: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override val Power: Boolean
+      get() = intrinsic()
+
+    override val RequiredPower: Double
+      get() = intrinsic()
+
+    /** The StructureLogicBatchWriter prefab. */
+    companion object : Prefab()
+  }
+
+  /** A StructureLogicWriterSwitch. */
+  @PrefabName("StructureLogicWriterSwitch")
+  class Switch internal constructor() : TypedDevice(), LogicWriter {
+    var Activate: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override val Error: Boolean
+      get() = intrinsic()
+
+    override var ForceWrite: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override var On: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override val Power: Boolean
+      get() = intrinsic()
+
+    override val RequiredPower: Double
+      get() = intrinsic()
+
+    /** The StructureLogicWriterSwitch prefab. */
+    companion object : Prefab()
+  }
+}
+
+/** The LogicWriter devices on the chip's network, by prefab. */
+object LogicWriters {
+  /** The StructureLogicWriter devices on the chip's network. */
+  @PrefabName("StructureLogicWriter")
+  object Standard {
+    /** The device on [pin], as a StructureLogicWriter. */
+    fun at(pin: Device): LogicWriter.Standard = intrinsic()
+
+    /** Every one on the network. */
+    val all: DeviceBatch<LogicWriter.Standard>
+      get() = intrinsic()
+
+    /** Every one on the network named [name], which must be a constant. */
+    fun named(name: String): DeviceBatch<LogicWriter.Standard> = intrinsic()
+  }
+
+  /** The StructureLogicBatchWriter devices on the chip's network. */
+  @PrefabName("StructureLogicBatchWriter")
+  object Batch {
+    /** The device on [pin], as a StructureLogicBatchWriter. */
+    fun at(pin: Device): LogicWriter.Batch = intrinsic()
+
+    /** Every one on the network. */
+    val all: DeviceBatch<LogicWriter.Batch>
+      get() = intrinsic()
+
+    /** Every one on the network named [name], which must be a constant. */
+    fun named(name: String): DeviceBatch<LogicWriter.Batch> = intrinsic()
+  }
+
+  /** The StructureLogicWriterSwitch devices on the chip's network. */
+  @PrefabName("StructureLogicWriterSwitch")
+  object Switch {
+    /** The device on [pin], as a StructureLogicWriterSwitch. */
+    fun at(pin: Device): LogicWriter.Switch = intrinsic()
+
+    /** Every one on the network. */
+    val all: DeviceBatch<LogicWriter.Switch>
+      get() = intrinsic()
+
+    /** Every one on the network named [name], which must be a constant. */
+    fun named(name: String): DeviceBatch<LogicWriter.Switch> = intrinsic()
+  }
+}
+
+/** A device that comes as several prefabs, each a nested class. */
 interface Door {
   val Idle: Boolean
 
@@ -17998,44 +18132,6 @@ object LogicBatchSlotReaders {
   fun named(name: String): DeviceBatch<LogicBatchSlotReader> = intrinsic()
 }
 
-/** A StructureLogicBatchWriter. */
-@PrefabName("StructureLogicBatchWriter")
-class LogicBatchWriter internal constructor() : TypedDevice() {
-  val Error: Boolean
-    get() = intrinsic()
-
-  var ForceWrite: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var On: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val Power: Boolean
-    get() = intrinsic()
-
-  val RequiredPower: Double
-    get() = intrinsic()
-
-  /** The StructureLogicBatchWriter prefab. */
-  companion object : Prefab()
-}
-
-/** The StructureLogicBatchWriter devices on the chip's network. */
-@PrefabName("StructureLogicBatchWriter")
-object LogicBatchWriters {
-  /** The device on [pin], as a StructureLogicBatchWriter. */
-  fun at(pin: Device): LogicBatchWriter = intrinsic()
-
-  /** Every one on the network. */
-  val all: DeviceBatch<LogicBatchWriter>
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): DeviceBatch<LogicBatchWriter> = intrinsic()
-}
-
 /** A StructureLogicButton. */
 @PrefabName("StructureLogicButton")
 class LogicButton internal constructor() : TypedDevice() {
@@ -18766,86 +18862,6 @@ object LogicSwitch2s {
 
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): DeviceBatch<LogicSwitch2> = intrinsic()
-}
-
-/** A StructureLogicWriter. */
-@PrefabName("StructureLogicWriter")
-class LogicWriter internal constructor() : TypedDevice() {
-  val Error: Boolean
-    get() = intrinsic()
-
-  var ForceWrite: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var On: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val Power: Boolean
-    get() = intrinsic()
-
-  val RequiredPower: Double
-    get() = intrinsic()
-
-  /** The StructureLogicWriter prefab. */
-  companion object : Prefab()
-}
-
-/** The StructureLogicWriter devices on the chip's network. */
-@PrefabName("StructureLogicWriter")
-object LogicWriters {
-  /** The device on [pin], as a StructureLogicWriter. */
-  fun at(pin: Device): LogicWriter = intrinsic()
-
-  /** Every one on the network. */
-  val all: DeviceBatch<LogicWriter>
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): DeviceBatch<LogicWriter> = intrinsic()
-}
-
-/** A StructureLogicWriterSwitch. */
-@PrefabName("StructureLogicWriterSwitch")
-class LogicWriterSwitch internal constructor() : TypedDevice() {
-  var Activate: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val Error: Boolean
-    get() = intrinsic()
-
-  var ForceWrite: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var On: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val Power: Boolean
-    get() = intrinsic()
-
-  val RequiredPower: Double
-    get() = intrinsic()
-
-  /** The StructureLogicWriterSwitch prefab. */
-  companion object : Prefab()
-}
-
-/** The StructureLogicWriterSwitch devices on the chip's network. */
-@PrefabName("StructureLogicWriterSwitch")
-object LogicWriterSwitches {
-  /** The device on [pin], as a StructureLogicWriterSwitch. */
-  fun at(pin: Device): LogicWriterSwitch = intrinsic()
-
-  /** Every one on the network. */
-  val all: DeviceBatch<LogicWriterSwitch>
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): DeviceBatch<LogicWriterSwitch> = intrinsic()
 }
 
 /** A StructureMotionSensor. */
