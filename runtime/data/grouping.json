@@ -456,6 +456,17 @@
         "BatchSlot": "StructureLogicBatchSlotReader"
       }
     },
+    "LogicProcessor": {
+      "plural": "LogicProcessors",
+      "members": {
+        "Compare": "StructureLogicCompare",
+        "Gate": "StructureLogicGate",
+        "Math": "StructureLogicMath",
+        "MathUnary": "StructureLogicMathUnary",
+        "MinMax": "StructureLogicMinMax",
+        "Select": "StructureLogicSelect"
+      }
+    },
     "Door": {
       "plural": "Doors",
       "members": {
@@ -611,10 +622,6 @@
     {
       "prefabs": ["StructureChuteBin", "StructureChuteExportBin"],
       "reason": "the Chute Import Bin passes items into a chute network, the Chute Export Bin takes them out of it"
-    },
-    {
-      "prefabs": ["StructureLogicMath", "StructureLogicMathUnary"],
-      "reason": "Logic Math takes two inputs, Math Unary one: different devices"
     },
     {
       "prefabs": ["StructurePowerTransmitter", "StructurePowerTransmitterReceiver"],

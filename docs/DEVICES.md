@@ -1084,6 +1084,37 @@ interface Locker {
 }
 ```
 
+### LogicProcessor
+
+```kotlin
+interface LogicProcessor {
+  val Error: Boolean
+  var Mode: Double
+  var On: Boolean
+  val Power: Boolean
+  val RequiredPower: Double
+  val Setting: Double
+
+  /** StructureLogicCompare. Entry point: LogicProcessors.Compare. */
+  class Compare : TypedDevice, LogicProcessor
+
+  /** StructureLogicGate. Entry point: LogicProcessors.Gate. */
+  class Gate : TypedDevice, LogicProcessor
+
+  /** StructureLogicMath. Entry point: LogicProcessors.Math. */
+  class Math : TypedDevice, LogicProcessor
+
+  /** StructureLogicMathUnary. Entry point: LogicProcessors.MathUnary. */
+  class MathUnary : TypedDevice, LogicProcessor
+
+  /** StructureLogicMinMax. Entry point: LogicProcessors.MinMax. */
+  class MinMax : TypedDevice, LogicProcessor
+
+  /** StructureLogicSelect. Entry point: LogicProcessors.Select. */
+  class Select : TypedDevice, LogicProcessor
+}
+```
+
 ### LogicReader
 
 ```kotlin
@@ -3138,16 +3169,6 @@ class LogicButton : TypedDevice {
   val Setting: Double
 }
 
-/** StructureLogicCompare. Entry point: LogicCompares. */
-class LogicCompare : TypedDevice {
-  val Error: Boolean
-  var Mode: Double
-  var On: Boolean
-  val Power: Boolean
-  val RequiredPower: Double
-  val Setting: Double
-}
-
 /** StructureLogicDial. Entry point: LogicDials. */
 class LogicDial : TypedDevice {
   var Mode: Double
@@ -3155,54 +3176,14 @@ class LogicDial : TypedDevice {
   var Setting: Double
 }
 
-/** StructureLogicGate. Entry point: LogicGates. */
-class LogicGate : TypedDevice {
-  val Error: Boolean
-  var Mode: Double
-  var On: Boolean
-  val Power: Boolean
-  val RequiredPower: Double
-  val Setting: Double
-}
-
 /** StructureLogicHashGen. Entry point: LogicHashGens. */
 class LogicHashGen : TypedDevice {
-  val Setting: Double
-}
-
-/** StructureLogicMath. Entry point: LogicMaths. */
-class LogicMath : TypedDevice {
-  val Error: Boolean
-  var Mode: Double
-  var On: Boolean
-  val Power: Boolean
-  val RequiredPower: Double
-  val Setting: Double
-}
-
-/** StructureLogicMathUnary. Entry point: LogicMathUnaries. */
-class LogicMathUnary : TypedDevice {
-  val Error: Boolean
-  var Mode: Double
-  var On: Boolean
-  val Power: Boolean
-  val RequiredPower: Double
   val Setting: Double
 }
 
 /** StructureLogicMemory. Entry point: LogicMemories. */
 class LogicMemory : TypedDevice {
   var Setting: Double
-}
-
-/** StructureLogicMinMax. Entry point: LogicMinMaxes. */
-class LogicMinMax : TypedDevice {
-  val Error: Boolean
-  var Mode: Double
-  var On: Boolean
-  val Power: Boolean
-  val RequiredPower: Double
-  val Setting: Double
 }
 
 /** StructureLogicPidController. Entry point: LogicPidControllers. */
@@ -3233,16 +3214,6 @@ class LogicRocketUplink : TypedDevice {
   var On: Boolean
   val Power: Boolean
   val RequiredPower: Double
-}
-
-/** StructureLogicSelect. Entry point: LogicSelects. */
-class LogicSelect : TypedDevice {
-  val Error: Boolean
-  var Mode: Double
-  var On: Boolean
-  val Power: Boolean
-  val RequiredPower: Double
-  val Setting: Double
 }
 
 /** StructureLogicSorter. Entry point: LogicSorters. */
