@@ -622,6 +622,10 @@
       "reason": "StructureAirlockGate is the game's Small Hangar Door, a 1 x 1 hangar door piece, not an airlock"
     },
     {
+      "prefabs": [["StructureFiltration", "StructureFiltrationLiquid", "StructureRocketFiltrationGas"], "StructureAirConditioner"],
+      "reason": "the Air Conditioner has every logic type a filtration has and more, but it changes a gas's temperature rather than filtering it"
+    },
+    {
       "prefabs": [
         ["StructureGlassDoor", "StructureBlastDoor", "StructureCompositeDoor"],
         ["StructureInteriorDoorGlass", "StructureInteriorDoorPadded", "StructureInteriorDoorPaddedThin", "StructureInteriorDoorTriangle"]
