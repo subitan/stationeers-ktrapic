@@ -556,15 +556,11 @@ interface CryoTube : Sleeper {
 ### DigitalValve
 
 ```kotlin
-interface DigitalValve {
+interface DigitalValve : Valve {
   val Error: Boolean
   var Lock: Boolean
-  val Maximum: Double
-  var On: Boolean
   val Power: Boolean
-  val Ratio: Double
   val RequiredPower: Double
-  var Setting: Double
 
   /** StructureDigitalValve. Entry point: DigitalValves.Gas. */
   class Gas : TypedDevice, DigitalValve
@@ -1332,23 +1328,6 @@ interface PipeHeater {
 }
 ```
 
-### PipeOneWayValveLever
-
-```kotlin
-interface PipeOneWayValveLever {
-  val Maximum: Double
-  var On: Boolean
-  val Ratio: Double
-  var Setting: Double
-
-  /** StructurePipeOneWayValveLever. Entry point: PipeOneWayValveLevers.Gas. */
-  class Gas : TypedDevice, PipeOneWayValveLever
-
-  /** StructurePipeLiquidOneWayValveLever. Entry point: PipeOneWayValveLevers.Liquid. */
-  class Liquid : TypedDevice, PipeOneWayValveLever
-}
-```
-
 ### PoweredVent
 
 ```kotlin
@@ -1893,6 +1872,18 @@ interface Valve {
 
   /** StructureLiquidValve. Entry point: Valves.Liquid. */
   class Liquid : TypedDevice, Valve
+
+  /** StructurePipeOneWayValveLever. Entry point: Valves.OneWayGas. */
+  class OneWayGas : TypedDevice, Valve
+
+  /** StructurePipeLiquidOneWayValveLever. Entry point: Valves.OneWayLiquid. */
+  class OneWayLiquid : TypedDevice, Valve
+
+  /** StructureCondensationValve. Entry point: Valves.Condensation. */
+  class Condensation : TypedDevice, Valve
+
+  /** StructureExpansionValve. Entry point: Valves.Expansion. */
+  class Expansion : TypedDevice, Valve
 }
 ```
 
@@ -2493,14 +2484,6 @@ class CondensationChamber : TypedDevice {
   val TotalMoles: Double
 }
 
-/** StructureCondensationValve. Entry point: CondensationValves. */
-class CondensationValve : TypedDevice {
-  val Maximum: Double
-  var On: Boolean
-  val Ratio: Double
-  var Setting: Double
-}
-
 /** StructureCrewUmbilical. Entry point: CrewUmbilicals. */
 class CrewUmbilical : TypedDevice {
   val Error: Boolean
@@ -2669,14 +2652,6 @@ class EvaporationChamber : TypedDevice {
   var Setting: Double
   val Temperature: Double
   val TotalMoles: Double
-}
-
-/** StructureExpansionValve. Entry point: ExpansionValves. */
-class ExpansionValve : TypedDevice {
-  val Maximum: Double
-  var On: Boolean
-  val Ratio: Double
-  var Setting: Double
 }
 ```
 
