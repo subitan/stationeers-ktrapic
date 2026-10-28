@@ -2,9 +2,15 @@
 
 A plugin for the [IC10 Editor](https://github.com/aproposmath/StationeersIC10Editor) mod that adds
 a "Kotlin" language to it, so chips can be programmed in KTrapIC's Kotlin (see the
-[language guide](../docs/LANGUAGE.md)). It is a peer of
+[language guide](../docs/LANGUAGE.md)). It is a peer of, and modelled on,
 [PyTrapIC](https://github.com/aproposmath/stationeers-pytrapic)'s plugin, which does the same for
-Python.
+Python. It tries to behave and look like PyTrapIC's plugin in game: its compile daemon speaks
+PyTrapIC's daemon protocol (with small differences, such as error positions being 1-based
+here), and it has the same compile-as-you-type preview and the same export to the chip. Both
+PyTrapIC and the IC10 Editor, which this plugin is built on and needs, are by
+[aproposmath](https://github.com/aproposmath). Thank you to aproposmath for both, and for the
+[modding template](https://github.com/aproposmath/stationeers-modding-template) whose stand-in game
+DLLs the plugin's CI build compiles against.
 
 ## Installing
 
