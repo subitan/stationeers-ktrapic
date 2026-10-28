@@ -44,7 +44,8 @@ internal class ResponseError(val code: Int, message: String) : Exception(message
  * is dropped, so diagnostics are never sent for a version the document no longer has. Diagnostics
  * compiles use the options of the latest `ktrapic/compile`, and the last few compiles are kept, so
  * a `ktrapic/compile` of the text a diagnostics compile has just compiled (or is compiling) gets
- * that compile's result, and the other way round.
+ * that compile's result, and the other way round; internal compiler errors are not kept, but
+ * compiled again.
  *
  * **`textDocument/semanticTokens/full`** gets `{"data": []}`, although the server doesn't declare
  * the capability: the IC10 Editor asks for semantic tokens after every change whatever the server
@@ -273,7 +274,9 @@ internal constructor(
   }
 
   private fun shutdown(params: JsonElement?): JsonElement {
-    state = State.SHUT_DOWN
+    // Under the lock, so diagnostics being published finish before the response goes out, and
+    // none are published after it.
+    synchronized(documentsLock) { state = State.SHUT_DOWN }
     pendingDiagnostics.values.forEach { it.cancel(false) }
     pendingDiagnostics.clear()
     return JsonNull.INSTANCE
@@ -293,11 +296,16 @@ internal constructor(
    * [compiler]'s result for [text] and [options], compiled now or kept from a recent compile.
    * Compiles run one at a time: this waits for one running on another thread, which may well be of
    * the same text.
+   *
+   * An internal compiler error, a result whose error has a `stack_trace`, is not kept: it can
+   * depend on more than the text, as a stack overflow does on the thread's stack and on what the
+   * JIT has compiled, so the same text may compile next time.
    */
   private fun compileOnce(text: String, options: JsonObject?): JsonObject {
     val key = text to (options ?: JsonObject()).toString()
     synchronized(compiles) {
-      return compiles[key] ?: compiler(text, options).also { compiles[key] = it }
+      return compiles[key]
+          ?: compiler(text, options).also { if (!it.isInternalError()) compiles[key] = it }
     }
   }
 
@@ -407,6 +415,10 @@ internal constructor(
     const val KEPT_COMPILES = 4
 
     fun invalidParams(message: String) = ResponseError(ErrorCodes.INVALID_PARAMS, message)
+
+    /** Whether a [Daemon.compile] result is an internal compiler error. */
+    fun JsonObject.isInternalError() =
+        get("error")?.takeIf { it.isJsonObject }?.asJsonObject?.has("stack_trace") == true
 
     fun JsonElement?.asObject(what: String): JsonObject =
         this?.takeIf { it.isJsonObject }?.asJsonObject

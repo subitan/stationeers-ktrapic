@@ -125,6 +125,7 @@ internal sealed class LspTestClient : IDisposable
     private readonly BlockingCollection<JObject> _diagnostics = new BlockingCollection<JObject>();
     private readonly List<string> _log = new List<string>();
     private int _nextId;
+    private volatile bool _stopped;
 
     public LspTestClient(string java, string jar)
     {
@@ -160,8 +161,14 @@ internal sealed class LspTestClient : IDisposable
         int id = Interlocked.Increment(ref _nextId);
         var response = new TaskCompletionSource<JObject>(TaskCreationOptions.RunContinuationsAsynchronously);
         _pending[id] = response;
-        Send(new JObject { ["jsonrpc"] = "2.0", ["id"] = id, ["method"] = method, ["params"] = parameters });
-        Assert.True(response.Task.Wait(Timeout), $"No response to {method}.\n{Log()}");
+        if (_stopped)
+            FailPending();
+        else
+            Send(new JObject { ["jsonrpc"] = "2.0", ["id"] = id, ["method"] = method, ["params"] = parameters });
+        bool answered = Task.WhenAny(response.Task, Task.Delay(Timeout)).Result == response.Task;
+        Assert.True(
+            answered && response.Task.Status == TaskStatus.RanToCompletion,
+            $"No response to {method}: {response.Task.Exception?.GetBaseException().Message}\n{Log()}");
         var message = response.Task.Result;
         Assert.True(message["error"] == null, $"{method} failed: {message["error"]}\n{Log()}");
         return message["result"];
@@ -235,9 +242,27 @@ internal sealed class LspTestClient : IDisposable
         {
             // The daemon stopped.
         }
+        catch (Exception e)
+        {
+            // An exception escaping a background thread would end the whole test process, so it
+            // goes in the log that failing assertions show instead.
+            lock (_log) _log.Add($"Reading the daemon's messages failed: {e}");
+        }
         finally
         {
+            _stopped = true;
+            FailPending();
             _diagnostics.CompleteAdding();
+        }
+    }
+
+    /// <summary>Fails the requests still waiting, once no more responses can be read.</summary>
+    private void FailPending()
+    {
+        foreach (int id in _pending.Keys)
+        {
+            if (_pending.TryRemove(id, out var response))
+                response.TrySetException(new IOException("No more messages can be read from the daemon."));
         }
     }
 
@@ -270,6 +295,8 @@ internal sealed class LspTestClient : IDisposable
     {
         if (message["method"] == null)
         {
+            if (message["id"]?.Type != JTokenType.Integer)
+                throw new InvalidDataException($"A response to no request of ours: {message}");
             if (_pending.TryRemove((int)message["id"], out var response))
                 response.SetResult(message);
         }
