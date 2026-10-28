@@ -11345,6 +11345,684 @@ object PowerTransmissions {
 }
 
 /** A device that comes as several prefabs, each a nested class. */
+interface Fabricator {
+  var Activate: Boolean
+
+  var ClearMemory: Boolean
+
+  val CompletionRatio: Double
+
+  val Error: Boolean
+
+  var Lock: Boolean
+
+  var On: Boolean
+
+  var Open: Boolean
+
+  val Power: Boolean
+
+  val Reagents: Double
+
+  var RecipeHash: Double
+
+  val RequiredPower: Double
+
+  val StackSize: Double
+
+  /** A StructureAutolathe. */
+  @PrefabName("StructureAutolathe")
+  class Autolathe internal constructor() : TypedDevice(), Fabricator {
+    override var Activate: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override var ClearMemory: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override val CompletionRatio: Double
+      get() = intrinsic()
+
+    override val Error: Boolean
+      get() = intrinsic()
+
+    override var Lock: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override var On: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override var Open: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override val Power: Boolean
+      get() = intrinsic()
+
+    override val Reagents: Double
+      get() = intrinsic()
+
+    override var RecipeHash: Double
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override val RequiredPower: Double
+      get() = intrinsic()
+
+    override val StackSize: Double
+      get() = intrinsic()
+
+    @LogicTypes(read = "ImportCount", written = "")
+    val Import: Transfer
+      get() = intrinsic()
+
+    @LogicTypes(read = "ExportCount", written = "")
+    val Export: Transfer
+      get() = intrinsic()
+
+    /** The device's slots, by number. */
+    val slots: Slots<DataDiskSlot>
+      get() = intrinsic()
+
+    /** The StructureAutolathe prefab. */
+    companion object : Prefab()
+  }
+
+  /** A StructureElectronicsPrinter. */
+  @PrefabName("StructureElectronicsPrinter")
+  class ElectronicsPrinter internal constructor() : TypedDevice(), Fabricator {
+    override var Activate: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override var ClearMemory: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override val CompletionRatio: Double
+      get() = intrinsic()
+
+    override val Error: Boolean
+      get() = intrinsic()
+
+    override var Lock: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override var On: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override var Open: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override val Power: Boolean
+      get() = intrinsic()
+
+    override val Reagents: Double
+      get() = intrinsic()
+
+    override var RecipeHash: Double
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override val RequiredPower: Double
+      get() = intrinsic()
+
+    override val StackSize: Double
+      get() = intrinsic()
+
+    @LogicTypes(read = "ImportCount", written = "")
+    val Import: Transfer
+      get() = intrinsic()
+
+    @LogicTypes(read = "ExportCount", written = "")
+    val Export: Transfer
+      get() = intrinsic()
+
+    /** The device's slots, by number. */
+    val slots: Slots<DataDiskSlot>
+      get() = intrinsic()
+
+    /** The StructureElectronicsPrinter prefab. */
+    companion object : Prefab()
+  }
+
+  /** A StructureSecurityPrinter. */
+  @PrefabName("StructureSecurityPrinter")
+  class SecurityPrinter internal constructor() : TypedDevice(), Fabricator {
+    override var Activate: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override var ClearMemory: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override val CompletionRatio: Double
+      get() = intrinsic()
+
+    override val Error: Boolean
+      get() = intrinsic()
+
+    override var Lock: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override var On: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override var Open: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override val Power: Boolean
+      get() = intrinsic()
+
+    override val Reagents: Double
+      get() = intrinsic()
+
+    override var RecipeHash: Double
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override val RequiredPower: Double
+      get() = intrinsic()
+
+    override val StackSize: Double
+      get() = intrinsic()
+
+    @LogicTypes(read = "ImportCount", written = "")
+    val Import: Transfer
+      get() = intrinsic()
+
+    @LogicTypes(read = "ExportCount", written = "")
+    val Export: Transfer
+      get() = intrinsic()
+
+    /** The device's slots, by number. */
+    val slots: Slots<DataDiskSlot>
+      get() = intrinsic()
+
+    /** The StructureSecurityPrinter prefab. */
+    companion object : Prefab()
+  }
+
+  /** A StructureToolManufactory. */
+  @PrefabName("StructureToolManufactory")
+  class ToolManufactory internal constructor() : TypedDevice(), Fabricator {
+    override var Activate: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override var ClearMemory: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override val CompletionRatio: Double
+      get() = intrinsic()
+
+    override val Error: Boolean
+      get() = intrinsic()
+
+    override var Lock: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override var On: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override var Open: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override val Power: Boolean
+      get() = intrinsic()
+
+    override val Reagents: Double
+      get() = intrinsic()
+
+    override var RecipeHash: Double
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override val RequiredPower: Double
+      get() = intrinsic()
+
+    override val StackSize: Double
+      get() = intrinsic()
+
+    @LogicTypes(read = "ImportCount", written = "")
+    val Import: Transfer
+      get() = intrinsic()
+
+    @LogicTypes(read = "ExportCount", written = "")
+    val Export: Transfer
+      get() = intrinsic()
+
+    /** The device's slots, by number. */
+    val slots: Slots<DataDiskSlot>
+      get() = intrinsic()
+
+    /** The StructureToolManufactory prefab. */
+    companion object : Prefab()
+  }
+
+  /** A StructureRocketManufactory. */
+  @PrefabName("StructureRocketManufactory")
+  class RocketManufactory internal constructor() : TypedDevice(), Fabricator {
+    override var Activate: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override var ClearMemory: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override val CompletionRatio: Double
+      get() = intrinsic()
+
+    override val Error: Boolean
+      get() = intrinsic()
+
+    override var Lock: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override var On: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override var Open: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override val Power: Boolean
+      get() = intrinsic()
+
+    override val Reagents: Double
+      get() = intrinsic()
+
+    override var RecipeHash: Double
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override val RequiredPower: Double
+      get() = intrinsic()
+
+    override val StackSize: Double
+      get() = intrinsic()
+
+    @LogicTypes(read = "ImportCount", written = "")
+    val Import: Transfer
+      get() = intrinsic()
+
+    @LogicTypes(read = "ExportCount", written = "")
+    val Export: Transfer
+      get() = intrinsic()
+
+    /** The device's slots, by number. */
+    val slots: Slots<DataDiskSlot>
+      get() = intrinsic()
+
+    /** The StructureRocketManufactory prefab. */
+    companion object : Prefab()
+  }
+
+  /** A StructureHydraulicPipeBender. */
+  @PrefabName("StructureHydraulicPipeBender")
+  class PipeBender internal constructor() : TypedDevice(), Fabricator {
+    override var Activate: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override var ClearMemory: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override val CompletionRatio: Double
+      get() = intrinsic()
+
+    override val Error: Boolean
+      get() = intrinsic()
+
+    override var Lock: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override var On: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override var Open: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override val Power: Boolean
+      get() = intrinsic()
+
+    override val Reagents: Double
+      get() = intrinsic()
+
+    override var RecipeHash: Double
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override val RequiredPower: Double
+      get() = intrinsic()
+
+    override val StackSize: Double
+      get() = intrinsic()
+
+    @LogicTypes(read = "ImportCount", written = "")
+    val Import: Transfer
+      get() = intrinsic()
+
+    @LogicTypes(read = "ExportCount", written = "")
+    val Export: Transfer
+      get() = intrinsic()
+
+    /** The device's slots, by number. */
+    val slots: Slots<DataDiskSlot>
+      get() = intrinsic()
+
+    /** The StructureHydraulicPipeBender prefab. */
+    companion object : Prefab()
+  }
+
+  /** A StructureAutomatedOven. */
+  @PrefabName("StructureAutomatedOven")
+  class AutomatedOven internal constructor() : TypedDevice(), Fabricator {
+    override var Activate: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override var ClearMemory: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override val CompletionRatio: Double
+      get() = intrinsic()
+
+    override val Error: Boolean
+      get() = intrinsic()
+
+    override var Lock: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override var On: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override var Open: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override val Power: Boolean
+      get() = intrinsic()
+
+    override val Reagents: Double
+      get() = intrinsic()
+
+    override var RecipeHash: Double
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override val RequiredPower: Double
+      get() = intrinsic()
+
+    override val StackSize: Double
+      get() = intrinsic()
+
+    @LogicTypes(read = "ImportCount", written = "")
+    val Import: Transfer
+      get() = intrinsic()
+
+    @LogicTypes(read = "ExportCount", written = "")
+    val Export: Transfer
+      get() = intrinsic()
+
+    /** The device's slots, by number. */
+    val slots: Slots<DataDiskSlot>
+      get() = intrinsic()
+
+    /** The StructureAutomatedOven prefab. */
+    companion object : Prefab()
+  }
+
+  /** A StructureAdvancedPackagingMachine. */
+  @PrefabName("StructureAdvancedPackagingMachine")
+  class AdvancedPackagingMachine internal constructor() : TypedDevice(), Fabricator {
+    override var Activate: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override var ClearMemory: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override val CompletionRatio: Double
+      get() = intrinsic()
+
+    override val Error: Boolean
+      get() = intrinsic()
+
+    override var Lock: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override var On: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override var Open: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override val Power: Boolean
+      get() = intrinsic()
+
+    override val Reagents: Double
+      get() = intrinsic()
+
+    override var RecipeHash: Double
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override val RequiredPower: Double
+      get() = intrinsic()
+
+    override val StackSize: Double
+      get() = intrinsic()
+
+    @LogicTypes(read = "ImportCount", written = "")
+    val Import: Transfer
+      get() = intrinsic()
+
+    @LogicTypes(read = "ExportCount", written = "")
+    val Export: Transfer
+      get() = intrinsic()
+
+    /** The device's slots, by number. */
+    val slots: Slots<DataDiskSlot>
+      get() = intrinsic()
+
+    /** The StructureAdvancedPackagingMachine prefab. */
+    companion object : Prefab()
+  }
+}
+
+/** The Fabricator devices on the chip's network, by prefab. */
+object Fabricators {
+  /** The StructureAutolathe devices on the chip's network. */
+  @PrefabName("StructureAutolathe")
+  object Autolathe {
+    /** The device on [pin], as a StructureAutolathe. */
+    fun at(pin: Device): Fabricator.Autolathe = intrinsic()
+
+    /** Every one on the network. */
+    val all: Batch
+      get() = intrinsic()
+
+    /** Every one on the network named [name], which must be a constant. */
+    fun named(name: String): Batch = intrinsic()
+
+    class Batch internal constructor() : DeviceBatch<Fabricator.Autolathe>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+  }
+
+  /** The StructureElectronicsPrinter devices on the chip's network. */
+  @PrefabName("StructureElectronicsPrinter")
+  object ElectronicsPrinter {
+    /** The device on [pin], as a StructureElectronicsPrinter. */
+    fun at(pin: Device): Fabricator.ElectronicsPrinter = intrinsic()
+
+    /** Every one on the network. */
+    val all: Batch
+      get() = intrinsic()
+
+    /** Every one on the network named [name], which must be a constant. */
+    fun named(name: String): Batch = intrinsic()
+
+    class Batch internal constructor() : DeviceBatch<Fabricator.ElectronicsPrinter>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+  }
+
+  /** The StructureSecurityPrinter devices on the chip's network. */
+  @PrefabName("StructureSecurityPrinter")
+  object SecurityPrinter {
+    /** The device on [pin], as a StructureSecurityPrinter. */
+    fun at(pin: Device): Fabricator.SecurityPrinter = intrinsic()
+
+    /** Every one on the network. */
+    val all: Batch
+      get() = intrinsic()
+
+    /** Every one on the network named [name], which must be a constant. */
+    fun named(name: String): Batch = intrinsic()
+
+    class Batch internal constructor() : DeviceBatch<Fabricator.SecurityPrinter>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+  }
+
+  /** The StructureToolManufactory devices on the chip's network. */
+  @PrefabName("StructureToolManufactory")
+  object ToolManufactory {
+    /** The device on [pin], as a StructureToolManufactory. */
+    fun at(pin: Device): Fabricator.ToolManufactory = intrinsic()
+
+    /** Every one on the network. */
+    val all: Batch
+      get() = intrinsic()
+
+    /** Every one on the network named [name], which must be a constant. */
+    fun named(name: String): Batch = intrinsic()
+
+    class Batch internal constructor() : DeviceBatch<Fabricator.ToolManufactory>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+  }
+
+  /** The StructureRocketManufactory devices on the chip's network. */
+  @PrefabName("StructureRocketManufactory")
+  object RocketManufactory {
+    /** The device on [pin], as a StructureRocketManufactory. */
+    fun at(pin: Device): Fabricator.RocketManufactory = intrinsic()
+
+    /** Every one on the network. */
+    val all: Batch
+      get() = intrinsic()
+
+    /** Every one on the network named [name], which must be a constant. */
+    fun named(name: String): Batch = intrinsic()
+
+    class Batch internal constructor() : DeviceBatch<Fabricator.RocketManufactory>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+  }
+
+  /** The StructureHydraulicPipeBender devices on the chip's network. */
+  @PrefabName("StructureHydraulicPipeBender")
+  object PipeBender {
+    /** The device on [pin], as a StructureHydraulicPipeBender. */
+    fun at(pin: Device): Fabricator.PipeBender = intrinsic()
+
+    /** Every one on the network. */
+    val all: Batch
+      get() = intrinsic()
+
+    /** Every one on the network named [name], which must be a constant. */
+    fun named(name: String): Batch = intrinsic()
+
+    class Batch internal constructor() : DeviceBatch<Fabricator.PipeBender>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+  }
+
+  /** The StructureAutomatedOven devices on the chip's network. */
+  @PrefabName("StructureAutomatedOven")
+  object AutomatedOven {
+    /** The device on [pin], as a StructureAutomatedOven. */
+    fun at(pin: Device): Fabricator.AutomatedOven = intrinsic()
+
+    /** Every one on the network. */
+    val all: Batch
+      get() = intrinsic()
+
+    /** Every one on the network named [name], which must be a constant. */
+    fun named(name: String): Batch = intrinsic()
+
+    class Batch internal constructor() : DeviceBatch<Fabricator.AutomatedOven>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+  }
+
+  /** The StructureAdvancedPackagingMachine devices on the chip's network. */
+  @PrefabName("StructureAdvancedPackagingMachine")
+  object AdvancedPackagingMachine {
+    /** The device on [pin], as a StructureAdvancedPackagingMachine. */
+    fun at(pin: Device): Fabricator.AdvancedPackagingMachine = intrinsic()
+
+    /** Every one on the network. */
+    val all: Batch
+      get() = intrinsic()
+
+    /** Every one on the network named [name], which must be a constant. */
+    fun named(name: String): Batch = intrinsic()
+
+    class Batch internal constructor() : DeviceBatch<Fabricator.AdvancedPackagingMachine>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+  }
+}
+
+/** A device that comes as several prefabs, each a nested class. */
 interface Door {
   val Idle: Boolean
 
@@ -15779,87 +16457,6 @@ object AdvancedComposters {
   }
 }
 
-/** A StructureAdvancedPackagingMachine. */
-@PrefabName("StructureAdvancedPackagingMachine")
-class AdvancedPackagingMachine internal constructor() : TypedDevice() {
-  var Activate: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var ClearMemory: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val CompletionRatio: Double
-    get() = intrinsic()
-
-  val Error: Boolean
-    get() = intrinsic()
-
-  var Lock: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var On: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var Open: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val Power: Boolean
-    get() = intrinsic()
-
-  val Reagents: Double
-    get() = intrinsic()
-
-  var RecipeHash: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val RequiredPower: Double
-    get() = intrinsic()
-
-  val StackSize: Double
-    get() = intrinsic()
-
-  @LogicTypes(read = "ImportCount", written = "")
-  val Import: Transfer
-    get() = intrinsic()
-
-  @LogicTypes(read = "ExportCount", written = "")
-  val Export: Transfer
-    get() = intrinsic()
-
-  /** The device's slots, by number. */
-  val slots: Slots<DataDiskSlot>
-    get() = intrinsic()
-
-  /** The StructureAdvancedPackagingMachine prefab. */
-  companion object : Prefab()
-}
-
-/** The StructureAdvancedPackagingMachine devices on the chip's network. */
-@PrefabName("StructureAdvancedPackagingMachine")
-object AdvancedPackagingMachines {
-  /** The device on [pin], as a StructureAdvancedPackagingMachine. */
-  fun at(pin: Device): AdvancedPackagingMachine = intrinsic()
-
-  /** Every one on the network. */
-  val all: Batch
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch<AdvancedPackagingMachine>() {
-    /** A slot of every one in the batch, by number. */
-    val slots: Slots<SlotBatch<DataDiskSlot>>
-      get() = intrinsic()
-  }
-}
-
 /** A StructureAirConditioner. */
 @PrefabName("StructureAirConditioner")
 class AirConditioner internal constructor() : TypedDevice() {
@@ -16079,168 +16676,6 @@ object AutoMinerSmalls {
   fun named(name: String): Batch = intrinsic()
 
   class Batch internal constructor() : DeviceBatch<AutoMinerSmall>() {
-    /** A slot of every one in the batch, by number. */
-    val slots: Slots<SlotBatch<DataDiskSlot>>
-      get() = intrinsic()
-  }
-}
-
-/** A StructureAutolathe. */
-@PrefabName("StructureAutolathe")
-class Autolathe internal constructor() : TypedDevice() {
-  var Activate: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var ClearMemory: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val CompletionRatio: Double
-    get() = intrinsic()
-
-  val Error: Boolean
-    get() = intrinsic()
-
-  var Lock: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var On: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var Open: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val Power: Boolean
-    get() = intrinsic()
-
-  val Reagents: Double
-    get() = intrinsic()
-
-  var RecipeHash: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val RequiredPower: Double
-    get() = intrinsic()
-
-  val StackSize: Double
-    get() = intrinsic()
-
-  @LogicTypes(read = "ImportCount", written = "")
-  val Import: Transfer
-    get() = intrinsic()
-
-  @LogicTypes(read = "ExportCount", written = "")
-  val Export: Transfer
-    get() = intrinsic()
-
-  /** The device's slots, by number. */
-  val slots: Slots<DataDiskSlot>
-    get() = intrinsic()
-
-  /** The StructureAutolathe prefab. */
-  companion object : Prefab()
-}
-
-/** The StructureAutolathe devices on the chip's network. */
-@PrefabName("StructureAutolathe")
-object Autolathes {
-  /** The device on [pin], as a StructureAutolathe. */
-  fun at(pin: Device): Autolathe = intrinsic()
-
-  /** Every one on the network. */
-  val all: Batch
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch<Autolathe>() {
-    /** A slot of every one in the batch, by number. */
-    val slots: Slots<SlotBatch<DataDiskSlot>>
-      get() = intrinsic()
-  }
-}
-
-/** A StructureAutomatedOven. */
-@PrefabName("StructureAutomatedOven")
-class AutomatedOven internal constructor() : TypedDevice() {
-  var Activate: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var ClearMemory: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val CompletionRatio: Double
-    get() = intrinsic()
-
-  val Error: Boolean
-    get() = intrinsic()
-
-  var Lock: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var On: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var Open: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val Power: Boolean
-    get() = intrinsic()
-
-  val Reagents: Double
-    get() = intrinsic()
-
-  var RecipeHash: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val RequiredPower: Double
-    get() = intrinsic()
-
-  val StackSize: Double
-    get() = intrinsic()
-
-  @LogicTypes(read = "ImportCount", written = "")
-  val Import: Transfer
-    get() = intrinsic()
-
-  @LogicTypes(read = "ExportCount", written = "")
-  val Export: Transfer
-    get() = intrinsic()
-
-  /** The device's slots, by number. */
-  val slots: Slots<DataDiskSlot>
-    get() = intrinsic()
-
-  /** The StructureAutomatedOven prefab. */
-  companion object : Prefab()
-}
-
-/** The StructureAutomatedOven devices on the chip's network. */
-@PrefabName("StructureAutomatedOven")
-object AutomatedOvens {
-  /** The device on [pin], as a StructureAutomatedOven. */
-  fun at(pin: Device): AutomatedOven = intrinsic()
-
-  /** Every one on the network. */
-  val all: Batch
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch<AutomatedOven>() {
     /** A slot of every one in the batch, by number. */
     val slots: Slots<SlotBatch<DataDiskSlot>>
       get() = intrinsic()
@@ -17596,87 +18031,6 @@ object Electrolyzers {
   }
 }
 
-/** A StructureElectronicsPrinter. */
-@PrefabName("StructureElectronicsPrinter")
-class ElectronicsPrinter internal constructor() : TypedDevice() {
-  var Activate: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var ClearMemory: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val CompletionRatio: Double
-    get() = intrinsic()
-
-  val Error: Boolean
-    get() = intrinsic()
-
-  var Lock: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var On: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var Open: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val Power: Boolean
-    get() = intrinsic()
-
-  val Reagents: Double
-    get() = intrinsic()
-
-  var RecipeHash: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val RequiredPower: Double
-    get() = intrinsic()
-
-  val StackSize: Double
-    get() = intrinsic()
-
-  @LogicTypes(read = "ImportCount", written = "")
-  val Import: Transfer
-    get() = intrinsic()
-
-  @LogicTypes(read = "ExportCount", written = "")
-  val Export: Transfer
-    get() = intrinsic()
-
-  /** The device's slots, by number. */
-  val slots: Slots<DataDiskSlot>
-    get() = intrinsic()
-
-  /** The StructureElectronicsPrinter prefab. */
-  companion object : Prefab()
-}
-
-/** The StructureElectronicsPrinter devices on the chip's network. */
-@PrefabName("StructureElectronicsPrinter")
-object ElectronicsPrinters {
-  /** The device on [pin], as a StructureElectronicsPrinter. */
-  fun at(pin: Device): ElectronicsPrinter = intrinsic()
-
-  /** Every one on the network. */
-  val all: Batch
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch<ElectronicsPrinter>() {
-    /** A slot of every one in the batch, by number. */
-    val slots: Slots<SlotBatch<DataDiskSlot>>
-      get() = intrinsic()
-  }
-}
-
 /** A StructureEvaporationChamber. */
 @PrefabName("StructureEvaporationChamber")
 class EvaporationChamber internal constructor() : TypedDevice() {
@@ -18364,87 +18718,6 @@ object HorizontalAutoMiners {
   fun named(name: String): Batch = intrinsic()
 
   class Batch internal constructor() : DeviceBatch<HorizontalAutoMiner>() {
-    /** A slot of every one in the batch, by number. */
-    val slots: Slots<SlotBatch<DataDiskSlot>>
-      get() = intrinsic()
-  }
-}
-
-/** A StructureHydraulicPipeBender. */
-@PrefabName("StructureHydraulicPipeBender")
-class HydraulicPipeBender internal constructor() : TypedDevice() {
-  var Activate: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var ClearMemory: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val CompletionRatio: Double
-    get() = intrinsic()
-
-  val Error: Boolean
-    get() = intrinsic()
-
-  var Lock: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var On: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var Open: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val Power: Boolean
-    get() = intrinsic()
-
-  val Reagents: Double
-    get() = intrinsic()
-
-  var RecipeHash: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val RequiredPower: Double
-    get() = intrinsic()
-
-  val StackSize: Double
-    get() = intrinsic()
-
-  @LogicTypes(read = "ImportCount", written = "")
-  val Import: Transfer
-    get() = intrinsic()
-
-  @LogicTypes(read = "ExportCount", written = "")
-  val Export: Transfer
-    get() = intrinsic()
-
-  /** The device's slots, by number. */
-  val slots: Slots<DataDiskSlot>
-    get() = intrinsic()
-
-  /** The StructureHydraulicPipeBender prefab. */
-  companion object : Prefab()
-}
-
-/** The StructureHydraulicPipeBender devices on the chip's network. */
-@PrefabName("StructureHydraulicPipeBender")
-object HydraulicPipeBenders {
-  /** The device on [pin], as a StructureHydraulicPipeBender. */
-  fun at(pin: Device): HydraulicPipeBender = intrinsic()
-
-  /** Every one on the network. */
-  val all: Batch
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch<HydraulicPipeBender>() {
     /** A slot of every one in the batch, by number. */
     val slots: Slots<SlotBatch<DataDiskSlot>>
       get() = intrinsic()
@@ -20121,87 +20394,6 @@ object RocketGasCollectors {
   fun named(name: String): DeviceBatch<RocketGasCollector> = intrinsic()
 }
 
-/** A StructureRocketManufactory. */
-@PrefabName("StructureRocketManufactory")
-class RocketManufactory internal constructor() : TypedDevice() {
-  var Activate: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var ClearMemory: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val CompletionRatio: Double
-    get() = intrinsic()
-
-  val Error: Boolean
-    get() = intrinsic()
-
-  var Lock: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var On: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var Open: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val Power: Boolean
-    get() = intrinsic()
-
-  val Reagents: Double
-    get() = intrinsic()
-
-  var RecipeHash: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val RequiredPower: Double
-    get() = intrinsic()
-
-  val StackSize: Double
-    get() = intrinsic()
-
-  @LogicTypes(read = "ImportCount", written = "")
-  val Import: Transfer
-    get() = intrinsic()
-
-  @LogicTypes(read = "ExportCount", written = "")
-  val Export: Transfer
-    get() = intrinsic()
-
-  /** The device's slots, by number. */
-  val slots: Slots<DataDiskSlot>
-    get() = intrinsic()
-
-  /** The StructureRocketManufactory prefab. */
-  companion object : Prefab()
-}
-
-/** The StructureRocketManufactory devices on the chip's network. */
-@PrefabName("StructureRocketManufactory")
-object RocketManufactories {
-  /** The device on [pin], as a StructureRocketManufactory. */
-  fun at(pin: Device): RocketManufactory = intrinsic()
-
-  /** Every one on the network. */
-  val all: Batch
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch<RocketManufactory>() {
-    /** A slot of every one in the batch, by number. */
-    val slots: Slots<SlotBatch<DataDiskSlot>>
-      get() = intrinsic()
-  }
-}
-
 /** A StructureRocketMiner. */
 @PrefabName("StructureRocketMiner")
 class RocketMiner internal constructor() : TypedDevice() {
@@ -20395,87 +20587,6 @@ object SDBSilos {
   fun named(name: String): Batch = intrinsic()
 
   class Batch internal constructor() : DeviceBatch<SDBSilo>() {
-    /** A slot of every one in the batch, by number. */
-    val slots: Slots<SlotBatch<DataDiskSlot>>
-      get() = intrinsic()
-  }
-}
-
-/** A StructureSecurityPrinter. */
-@PrefabName("StructureSecurityPrinter")
-class SecurityPrinter internal constructor() : TypedDevice() {
-  var Activate: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var ClearMemory: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val CompletionRatio: Double
-    get() = intrinsic()
-
-  val Error: Boolean
-    get() = intrinsic()
-
-  var Lock: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var On: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var Open: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val Power: Boolean
-    get() = intrinsic()
-
-  val Reagents: Double
-    get() = intrinsic()
-
-  var RecipeHash: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val RequiredPower: Double
-    get() = intrinsic()
-
-  val StackSize: Double
-    get() = intrinsic()
-
-  @LogicTypes(read = "ImportCount", written = "")
-  val Import: Transfer
-    get() = intrinsic()
-
-  @LogicTypes(read = "ExportCount", written = "")
-  val Export: Transfer
-    get() = intrinsic()
-
-  /** The device's slots, by number. */
-  val slots: Slots<DataDiskSlot>
-    get() = intrinsic()
-
-  /** The StructureSecurityPrinter prefab. */
-  companion object : Prefab()
-}
-
-/** The StructureSecurityPrinter devices on the chip's network. */
-@PrefabName("StructureSecurityPrinter")
-object SecurityPrinters {
-  /** The device on [pin], as a StructureSecurityPrinter. */
-  fun at(pin: Device): SecurityPrinter = intrinsic()
-
-  /** Every one on the network. */
-  val all: Batch
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch<SecurityPrinter>() {
     /** A slot of every one in the batch, by number. */
     val slots: Slots<SlotBatch<DataDiskSlot>>
       get() = intrinsic()
@@ -20873,87 +20984,6 @@ object StirlingEngines {
   class Batch internal constructor() : DeviceBatch<StirlingEngine>() {
     /** A slot of every one in the batch, by number. */
     val slots: Slots<SlotBatch<GasCanisterSlot>>
-      get() = intrinsic()
-  }
-}
-
-/** A StructureToolManufactory. */
-@PrefabName("StructureToolManufactory")
-class ToolManufactory internal constructor() : TypedDevice() {
-  var Activate: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var ClearMemory: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val CompletionRatio: Double
-    get() = intrinsic()
-
-  val Error: Boolean
-    get() = intrinsic()
-
-  var Lock: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var On: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var Open: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val Power: Boolean
-    get() = intrinsic()
-
-  val Reagents: Double
-    get() = intrinsic()
-
-  var RecipeHash: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val RequiredPower: Double
-    get() = intrinsic()
-
-  val StackSize: Double
-    get() = intrinsic()
-
-  @LogicTypes(read = "ImportCount", written = "")
-  val Import: Transfer
-    get() = intrinsic()
-
-  @LogicTypes(read = "ExportCount", written = "")
-  val Export: Transfer
-    get() = intrinsic()
-
-  /** The device's slots, by number. */
-  val slots: Slots<DataDiskSlot>
-    get() = intrinsic()
-
-  /** The StructureToolManufactory prefab. */
-  companion object : Prefab()
-}
-
-/** The StructureToolManufactory devices on the chip's network. */
-@PrefabName("StructureToolManufactory")
-object ToolManufactories {
-  /** The device on [pin], as a StructureToolManufactory. */
-  fun at(pin: Device): ToolManufactory = intrinsic()
-
-  /** Every one on the network. */
-  val all: Batch
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch<ToolManufactory>() {
-    /** A slot of every one in the batch, by number. */
-    val slots: Slots<SlotBatch<DataDiskSlot>>
       get() = intrinsic()
   }
 }
