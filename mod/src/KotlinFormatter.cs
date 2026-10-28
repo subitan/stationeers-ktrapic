@@ -106,8 +106,8 @@ namespace KTrapIC
         private static readonly Style FunctionStyle = new Style { Color = ColorFromHTML("#DCDCAA") };
 
         /// <summary>
-        /// The formatters with a document, so that those whose editor has replaced them or whose
-        /// tab has closed can close theirs (<see cref="CloseOrphans"/>). Used on the main thread.
+        /// The formatters with a document, so that those whose editor no longer shows them can
+        /// close theirs (<see cref="CloseOrphans"/>). Used on the main thread.
         /// </summary>
         private static readonly HashSet<KotlinFormatter> WithDocuments = new HashSet<KotlinFormatter>();
 
@@ -314,6 +314,20 @@ namespace KTrapIC
             }
         }
 
+        /// <summary>
+        /// Removes line <paramref name="index"/>, sending the daemon the change that removes it
+        /// there too (<see cref="LspDocument.LineRemoval"/>): the base class's would leave the
+        /// line break before a last line behind.
+        /// </summary>
+        public override void RemoveLine(int index)
+        {
+            IncrementVersion();
+            _changes.Add(
+                LspDocument.LineRemoval(index, Lines.Count, i => Lines[i].Text.Length)
+                    .ToObject<TextDocumentContentChangeEvent>());
+            Lines.RemoveAt(index);
+        }
+
         /// <summary>No completion yet: the daemon doesn't offer it.</summary>
         public override void UpdateAutocomplete()
         {
@@ -346,7 +360,10 @@ namespace KTrapIC
 
         /// <summary>
         /// Whether this formatter's editor has stopped showing it: the editor picked another
-        /// formatter for code it loaded, or its tab was closed.
+        /// formatter for code it loaded, its tab was closed, or its window was dropped. The IC10
+        /// Editor drops a chip's window, tabs and all, once the chip is gone or the game has left
+        /// the save (to the menu, or to load another); every window, the one the Library opens
+        /// scripts in too, is in <see cref="IC10EditorPatches.AllEditors"/> until then.
         /// </summary>
         private bool IsOrphaned
         {
@@ -354,8 +371,9 @@ namespace KTrapIC
             {
                 if (Editor == null || Editor.CodeFormatter != this)
                     return true;
-                var tab = Editor.ParentTab;
-                return tab?.ParentWindow != null && !tab.ParentWindow.Tabs.Contains(tab);
+                var window = Editor.ParentTab?.ParentWindow;
+                return window != null
+                    && (!window.Tabs.Contains(Editor.ParentTab) || !IC10EditorPatches.AllEditors.Contains(window));
             }
         }
 

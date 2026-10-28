@@ -104,7 +104,8 @@ it in game. The daemon's JVM options keep it small beside the game:
   machine, a series of compiles (40 of a 66-line program and one of a 5,000-line one) peaked at
   1.16 GB of working set with the default collector, 850 MB with the serial one, and 560 MB with
   this cap, with at most 110 MB of the heap still in use after a full collection. Warm compiles
-  took about 15% longer than uncapped.
+  took 169 ms with these options, against 146 ms with the serial collector uncapped and 135 ms
+  with the defaults (one run of each).
 - `-XX:+UseSerialGC`: one collector thread and less bookkeeping than the default G1. Its pauses
   don't matter for a compiler.
 - `-XX:+ExitOnOutOfMemoryError`: a daemon that runs out of memory exits, rather than carrying on

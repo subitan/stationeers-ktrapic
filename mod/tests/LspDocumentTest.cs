@@ -205,6 +205,45 @@ public class LspDocumentTest : IDisposable
         Assert.Equal("s db Setting 1", response.code);
     }
 
+    [Theory]
+    [InlineData(0)]
+    [InlineData(1)]
+    [InlineData(2)]
+    public async Task RemovingALineLeavesTheDaemonWithTheEditorsText(int index)
+    {
+        var lines = new List<string> { "db.Setting = 1.0", "db.Setting = 2.0", "db.Setting = 3.0" };
+        var daemon = Start();
+        var document = Open(daemon, string.Join("\n", lines), out _);
+
+        var removal = LspDocument.LineRemoval(index, lines.Count, i => lines[i].Length);
+        Assert.True(document.Sync(2, null, new JArray(removal)));
+        lines.RemoveAt(index);
+        // Text inserted on the line after the last lands on a line of its own if the daemon kept
+        // a line break the editor no longer has, and at the end of the last line if not.
+        Assert.True(document.Sync(3, null, Replace(lines.Count, 0, 0, " + 4.0")));
+        var edited = await TestDaemon.Within(document.Compile(false));
+
+        var exact = Open(daemon, string.Join("\n", lines) + " + 4.0", out _);
+        var expected = await TestDaemon.Within(exact.Compile(false));
+        daemon.AssertCompiled(expected);
+        daemon.AssertCompiled(edited);
+        Assert.Equal(expected.code, edited.code);
+    }
+
+    [Fact]
+    public async Task RemovingTheOnlyLineEmptiesTheText()
+    {
+        var daemon = Start();
+        var document = Open(daemon, "db.Setting = nope", out _);
+
+        Assert.True(document.Sync(2, null, new JArray(LspDocument.LineRemoval(0, 1, _ => 17))));
+        Assert.True(document.Sync(3, null, Replace(0, 0, 0, "db.Setting = 5.0")));
+        var response = await TestDaemon.Within(document.Compile(false));
+
+        daemon.AssertCompiled(response);
+        Assert.Equal("s db Setting 5", response.code);
+    }
+
     [Fact]
     public void CompileNowCompilesTheLatestEditsOnThisThread()
     {
@@ -306,6 +345,8 @@ public class LspDocumentTest : IDisposable
         Assert.True(response.Unavailable);
         Assert.False(daemon.Connection.IsRunning);
         Assert.True(daemon.Connection.Stopped.IsCompleted);
+        Assert.True(await TestDaemon.Within(daemon.Connection.Released, "Freeing the process"));
+        Assert.NotNull(daemon.Connection.ExitCode);
     }
 
     [Fact]
@@ -319,6 +360,9 @@ public class LspDocumentTest : IDisposable
         connection.Notify("exit", null);
 
         await TestDaemon.Within(connection.Stopped, "The connection");
+        // Its process is freed once it has exited, and its exit code kept.
+        Assert.True(await TestDaemon.Within(connection.Released, "Freeing the process"));
+        Assert.Equal(0, connection.ExitCode);
         Assert.False(connection.IsInitialized);
         var request = connection.Request("ktrapic/compile", new JObject());
         await Assert.ThrowsAsync<LspConnection.StoppedException>(() => TestDaemon.Within(request));

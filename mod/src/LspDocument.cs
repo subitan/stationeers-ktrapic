@@ -47,6 +47,23 @@ namespace KTrapIC
 
         public string Uri { get; }
 
+        /// <summary>
+        /// The LSP <c>TextDocumentContentChangeEvent</c> that removes line <paramref name="index"/>
+        /// of a text of <paramref name="lineCount"/> lines, whose lengths <paramref name="lengthOf"/>
+        /// gives: the line and the line break after it, or, for the last line, which has none after
+        /// it, the line break before it. Removing the only line leaves it empty.
+        /// </summary>
+        public static JObject LineRemoval(int index, int lineCount, Func<int, int> lengthOf)
+        {
+            bool last = index == lineCount - 1 && index > 0;
+            var start = last ? Position(index - 1, lengthOf(index - 1)) : Position(index, 0);
+            var end = last ? Position(index, lengthOf(index)) : Position(index + 1, 0);
+            return new JObject { ["range"] = new JObject { ["start"] = start, ["end"] = end }, ["text"] = "" };
+        }
+
+        private static JObject Position(int line, int character) =>
+            new JObject { ["line"] = line, ["character"] = character };
+
         /// <summary>The connection it is bound to; null before <see cref="Bind"/> and after <see cref="Close"/>.</summary>
         public LspConnection Connection => _connection;
 

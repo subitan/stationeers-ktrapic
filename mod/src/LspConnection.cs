@@ -41,8 +41,9 @@ namespace KTrapIC
         /// it grow to a quarter of the RAM; measured on a 32 GB machine, 40 compiles of a 66-line
         /// program and one of a 5,000-line one peaked at 1.16 GB of working set with the default
         /// collector, 850 MB with the serial one, and 560 MB with this cap, with at most 110 MB of
-        /// the heap live after a full collection. Warm compiles took about 15% longer than
-        /// uncapped.</item>
+        /// the heap live after a full collection. Warm compiles took 169 ms with these options,
+        /// against 146 ms with the serial collector uncapped and 135 ms with the defaults (one
+        /// run of each).</item>
         /// <item><c>-XX:+UseSerialGC</c>: one collector thread and no G1 bookkeeping. Pauses
         /// don't matter for a compiler that answers in a few hundred milliseconds.</item>
         /// <item><c>-XX:+ExitOnOutOfMemoryError</c>: a daemon out of memory exits instead of
@@ -89,8 +90,21 @@ namespace KTrapIC
             new TaskCompletionSource<JToken>(TaskCreationOptions.RunContinuationsAsynchronously);
         private readonly TaskCompletionSource<string> _stopped =
             new TaskCompletionSource<string>(TaskCreationOptions.RunContinuationsAsynchronously);
+        private readonly TaskCompletionSource<bool> _released =
+            new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
         private int _nextId;
         private int _disposed;
+
+        /// <summary>
+        /// What still uses the process: the writer and reader threads, and the process itself
+        /// until it has exited (<see cref="Release"/>).
+        /// </summary>
+        private int _users = 3;
+
+        /// <summary>The exit code, kept from when it exited, as the process is freed afterwards.</summary>
+        private int _exitCode;
+
+        private volatile bool _exited;
 
         /// <summary>
         /// The <c>textDocument/publishDiagnostics</c> notifications' params, for every document, as
@@ -134,9 +148,16 @@ namespace KTrapIC
             };
             _process.Exited += (_, __) =>
             {
+                var code = ExitCode;
+                if (code != null)
+                {
+                    _exitCode = code.Value;
+                    _exited = true;
+                }
                 if (Volatile.Read(ref _disposed) == 0)
-                    _log($"The KTrapIC compiler exited with code {ExitCode}");
+                    _log($"The KTrapIC compiler exited with code {code}");
                 Stop(StoppedMessage);
+                Release();
             };
             _process.Start();
             _process.BeginErrorReadLine();
@@ -146,6 +167,37 @@ namespace KTrapIC
             new Thread(ReadLoop) { IsBackground = true, Name = "KTrapIC LSP reader" }.Start();
             Initialize();
         }
+
+        /// <summary>
+        /// Called once by each user of the process (<see cref="_users"/>) when it is done with it;
+        /// the last call frees the process's handle and pipes, once its standard error has all
+        /// been logged.
+        /// </summary>
+        private void Release()
+        {
+            if (Interlocked.Decrement(ref _users) != 0)
+                return;
+            Task.Run(() =>
+            {
+                try
+                {
+                    _process.WaitForExit();
+                    _process.Dispose();
+                    _released.TrySetResult(true);
+                }
+                catch (Exception e)
+                {
+                    _log($"Releasing the KTrapIC compiler's process failed: {e.Message}");
+                    _released.TrySetResult(false);
+                }
+            });
+        }
+
+        /// <summary>
+        /// Completes once the exited process has been freed (<see cref="Release"/>): true, or false
+        /// if freeing it failed.
+        /// </summary>
+        internal Task<bool> Released => _released.Task;
 
         /// <summary>
         /// Completes with the <c>initialize</c> result once the daemon has answered it and
@@ -168,6 +220,8 @@ namespace KTrapIC
             {
                 try
                 {
+                    if (_exited)
+                        return _exitCode;
                     return _process.HasExited ? _process.ExitCode : (int?)null;
                 }
                 catch (InvalidOperationException)
@@ -337,6 +391,10 @@ namespace KTrapIC
             {
                 Stop($"Writing to the KTrapIC compiler failed: {e.Message}");
             }
+            finally
+            {
+                Release();
+            }
         }
 
         private void ReadLoop()
@@ -386,6 +444,7 @@ namespace KTrapIC
                 // A daemon that can't be understood is of no use, though still running.
                 if (broken)
                     Dispose();
+                Release();
             }
         }
 
