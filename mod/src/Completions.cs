@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace KTrapIC
 {
@@ -28,6 +29,113 @@ namespace KTrapIC
         public IReadOnlyList<Completion> Shown;
         public int Matched;
         public string Insert;
+    }
+
+    /// <summary>Completions wanted: at a caret (0-based line and column) in a version of the code, after a word.</summary>
+    public sealed class CompletionRequest
+    {
+        public readonly int Version;
+        public readonly int Line;
+        public readonly int Column;
+        public readonly string Word;
+
+        public CompletionRequest(int version, int line, int column, string word)
+        {
+            Version = version;
+            Line = line;
+            Column = column;
+            Word = word;
+        }
+
+        /// <summary>Whether <paramref name="other"/> is at the same caret in the same version.</summary>
+        public bool IsAt(CompletionRequest other) =>
+            other != null && Version == other.Version && Line == other.Line && Column == other.Column;
+    }
+
+    /// <summary>
+    /// One document's completion requests to the daemon, which answers them one at a time, each
+    /// taking a full analysis of the program; typing outruns it. So at most one request is in
+    /// flight: those wanted meanwhile wait, and when it is answered only the latest of them is
+    /// sent, the others being out of date by then. A request at the caret and version of the one
+    /// in flight is not sent again (the IC10 Editor asks twice for each keystroke), and one at
+    /// those of the last answered gets that answer again.
+    ///
+    /// <para>Answers are given on the thread the daemon's answer arrives on, or, for one given
+    /// again, on <see cref="Want"/>'s.</para>
+    /// </summary>
+    public sealed class CompletionRequests
+    {
+        private readonly Func<int, int, Task<IReadOnlyList<Completion>>> _complete;
+        private readonly Action<CompletionRequest, IReadOnlyList<Completion>> _answered;
+        private readonly object _lock = new object();
+        private CompletionRequest _inFlight;
+        private CompletionRequest _next;
+        private CompletionRequest _lastAnswered;
+        private IReadOnlyList<Completion> _lastAnswer;
+
+        /// <param name="complete">Asks the daemon for the completions at a line and column.</param>
+        /// <param name="answered">Given each request sent, or answered again, with its completions.</param>
+        public CompletionRequests(
+            Func<int, int, Task<IReadOnlyList<Completion>>> complete,
+            Action<CompletionRequest, IReadOnlyList<Completion>> answered)
+        {
+            _complete = complete;
+            _answered = answered;
+        }
+
+        /// <summary>Asks for completions at <paramref name="request"/>'s caret, now or once the request in flight is answered.</summary>
+        public void Want(CompletionRequest request)
+        {
+            IReadOnlyList<Completion> answer = null;
+            lock (_lock)
+            {
+                if (request.IsAt(_inFlight))
+                {
+                    _next = null;
+                    return;
+                }
+                if (_inFlight != null)
+                {
+                    _next = request;
+                    return;
+                }
+                if (request.IsAt(_lastAnswered))
+                    answer = _lastAnswer;
+                else
+                    _inFlight = request;
+            }
+            if (answer != null)
+                _answered(request, answer);
+            else
+                _ = Send(request);
+        }
+
+        private async Task Send(CompletionRequest request)
+        {
+            while (request != null)
+            {
+                IReadOnlyList<Completion> answer;
+                try
+                {
+                    answer = await _complete(request.Line, request.Column).ConfigureAwait(false);
+                }
+                catch (Exception)
+                {
+                    answer = Array.Empty<Completion>();
+                }
+                CompletionRequest next;
+                lock (_lock)
+                {
+                    _lastAnswered = request;
+                    _lastAnswer = answer;
+                    next = _next;
+                    _next = null;
+                    _inFlight = next;
+                }
+                _answered(request, answer);
+                request = next;
+            }
+        }
     }
 
     /// <summary>The game-independent part of completion in the Kotlin editor.</summary>

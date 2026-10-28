@@ -86,9 +86,75 @@ class K2CompletionTest {
     assertThat(items).contains("if")
   }
 
+  private fun locals(source: String) =
+      complete(source).filter { it.kind == Completion.Kind.LOCAL }.map { it.label }
+
   @Test
   fun `a loop variable is in scope in the loop`() {
-    assertThat(labels("for (i in 0..3) {\n  d0.Setting = |\n}\n")).contains("i")
+    assertThat(locals("for (i in 0..3) {\n  d0.Setting = |\n}\n")).containsExactly("i")
+  }
+
+  @Test
+  fun `the variables a destructuring declaration makes, and not the compiler's`() {
+    assertThat(locals("fun f() {\n  val (a, b) = Pair(1, 2)\n  val c = |\n}\n"))
+        .containsExactly("a", "b")
+    assertThat(locals("for ((gas, ratio) in GasSensors.at(d0).Ratios) {\n  d0.Setting = |\n}\n"))
+        .containsExactly("gas", "ratio")
+  }
+
+  @Test
+  fun `a when subject's variable is in scope in the branches`() {
+    val source = "when (val v = d0.Setting) {\n  1.0 -> d0.Setting = |\n  else -> {}\n}\n"
+
+    assertThat(locals(source)).containsExactly("v")
+  }
+
+  @Test
+  fun `a shadowed name is offered once, as the nearer declaration`() {
+    val items = complete("val x = 1\nfun f() {\n  val x = 2.0\n  val y = |\n}\n")
+
+    val xs = items.filter { it.label == "x" }
+    assertThat(xs).hasSize(1)
+    assertThat(xs.single().kind).isEqualTo(Completion.Kind.LOCAL)
+    assertThat(xs.single().detail).isEqualTo("val x: Double")
+  }
+
+  @Test
+  fun `names that need backticks are not offered`() {
+    assertThat(labels("val `my val` = 1\nval y = |\n")).doesNotContain("my val")
+  }
+
+  @Test
+  fun `after an Int, only the members and extensions KTrapIC compiles`() {
+    val items = labels("val x = 1\nval y = x.|\n")
+
+    assertThat(items).containsAtLeast("plus", "toDouble", "toInt", "shl", "coerceIn", "until")
+    assertThat(items)
+        .containsNoneOf("toLong", "toFloat", "toByte", "toShort", "toChar", "compareTo")
+    assertThat(K2Completion.SUPPORTED_STDLIB.map { it.substringAfterLast('.') })
+        .containsAtLeastElementsIn(items)
+  }
+
+  @Test
+  fun `after a Double, kotlin-math's extensions once imported`() {
+    val plain = labels("val x = 2.0\nval y = x.|\n")
+    val withMath = labels("import kotlin.math.*\nval x = 2.0\nval y = x.|\n")
+    val withOne = labels("import kotlin.math.roundToInt\nval x = 2.0\nval y = x.|\n")
+
+    assertThat(plain).containsAtLeast("toInt", "coerceAtLeast")
+    assertThat(plain).containsNoneOf("roundToInt", "toLong", "toFloat", "compareTo")
+    assertThat(withMath).containsAtLeast("roundToInt", "absoluteValue", "pow")
+    assertThat(withMath).containsNoneOf("roundToLong", "sign", "ulp", "withSign")
+    assertThat(withOne).contains("roundToInt")
+    assertThat(withOne).doesNotContain("pow")
+  }
+
+  @Test
+  fun `after an enum entry or a static set, only what KTrapIC compiles`() {
+    assertThat(labels("val s = setOf(1, 2)\nval n = s.|\n"))
+        .containsExactly("contains", "intersect", "isEmpty", "minus", "plus", "size")
+    assertThat(labels("val o = Substance.Oxygen.|\n"))
+        .containsNoneOf("name", "ordinal", "compareTo")
   }
 
   @Test

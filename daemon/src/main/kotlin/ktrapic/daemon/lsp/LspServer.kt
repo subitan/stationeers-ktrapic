@@ -50,7 +50,8 @@ internal class ResponseError(val code: Int, message: String) : Exception(message
  * compiled again.
  *
  * **`textDocument/completion`** lists what could be written at the position, from the compiler's
- * analysis of the document's current text (see [completion]).
+ * analysis of the document's current text (see [completion]); a repeat of the latest request costs
+ * nothing, and an analysis that fails is answered with InternalError.
  *
  * **`textDocument/semanticTokens/full`** gets `{"data": []}`, although the server doesn't declare
  * the capability: the IC10 Editor asks for semantic tokens after every change whatever the server
@@ -120,6 +121,11 @@ internal constructor(
         override fun removeEldestEntry(eldest: Map.Entry<Pair<String, String>, JsonObject>) =
             size > KEPT_COMPILES
       }
+
+  private class LastCompletion(val text: String, val offset: Int, val completions: List<Completion>)
+
+  /** The latest completion's text, offset and list, for [completion]. Under [compiles]' lock. */
+  private var lastCompletion: LastCompletion? = null
 
   /** Request handlers by method: each returns the result, or throws [ResponseError]. */
   private val requests: Map<String, (JsonElement?) -> JsonElement> =
@@ -328,7 +334,9 @@ internal constructor(
    * lists them). Each item's `sortText` keeps [completer]'s order, `detail` is its declaration
    * (such as `var Setting: Double`), and its `kind` is one the IC10 Editor can show: it colours an
    * item by indexing a 24-colour table with the kind, so Operator (24) and TypeParameter (25) are
-   * never sent. Runs as compiles do, one at a time.
+   * never sent. Runs as compiles do, one at a time. A request at the same text and index as the
+   * latest one gets that one's list again without analysing the text, as the IC10 Editor asks twice
+   * for each keystroke. If the analysis fails, the request is answered with InternalError.
    */
   private fun completion(params: JsonElement?): JsonElement {
     val fields = params.asObject("params")
@@ -337,7 +345,11 @@ internal constructor(
         documents[uri] ?: throw ResponseError(ErrorCodes.INVALID_PARAMS, "$uri is not open")
     val text = document.text
     val offset = document.offsetAt(fields["position"].asObject("position").toPosition())
-    val completions = synchronized(compiles) { completer(text, offset) }
+    val completions =
+        synchronized(compiles) {
+          lastCompletion?.takeIf { it.text == text && it.offset == offset }?.completions
+              ?: complete(text, offset).also { lastCompletion = LastCompletion(text, offset, it) }
+        }
     val items = JsonArray()
     completions.forEachIndexed { index, completion ->
       items.add(
@@ -354,6 +366,21 @@ internal constructor(
       add("items", items)
     }
   }
+
+  /**
+   * [completer]'s list, or an InternalError answer if it fails. Like a compile, it can fail with an
+   * Error as well as an Exception: the compiler's parser overflows the stack on deeply nested
+   * source, and its internal checks throw AssertionError. A stack overflow has unwound by the time
+   * it is caught, so the server can answer and carry on; other VirtualMachineErrors mean it cannot.
+   */
+  private fun complete(text: String, offset: Int): List<Completion> =
+      try {
+        completer(text, offset)
+      } catch (e: Throwable) {
+        if (e is VirtualMachineError && e !is StackOverflowError) throw e
+        log("Completion failed: ${e.stackTraceToString()}")
+        throw ResponseError(ErrorCodes.INTERNAL_ERROR, "Completion failed: $e")
+      }
 
   /** Answers semantic tokens with none, so the IC10 Editor's request after each change succeeds. */
   private fun semanticTokens(params: JsonElement?): JsonElement =

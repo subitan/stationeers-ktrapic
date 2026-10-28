@@ -135,6 +135,9 @@ namespace KTrapIC
         /// <summary>Set once this formatter's editor no longer shows it, after which it sends nothing.</summary>
         private bool _closed;
 
+        /// <summary>The document's completion requests, one at a time; used once there is a document.</summary>
+        private readonly CompletionRequests _completionRequests;
+
         private sealed class Compiled
         {
             public readonly int Version;
@@ -162,6 +165,9 @@ namespace KTrapIC
         public KotlinFormatter()
         {
             Identifier = new VersionedTextDocumentIdentifier { uri = null, version = 0 };
+            _completionRequests = new CompletionRequests(
+                (line, column) => _document.Complete(line, column),
+                (request, completions) => ShowCompletions(request, completions).Forget());
             OnCodeChanged += () =>
             {
                 // The editor signals some changes twice (a reset, then again on its next frame), so
@@ -332,7 +338,8 @@ namespace KTrapIC
         /// <summary>
         /// Asks the daemon what could be written at the caret, after a word that has begun or
         /// right after a dot (<see cref="Completions.Wanted"/>), and shows the answer once it
-        /// comes, if the code and the caret haven't changed since. The editor calls this when the
+        /// comes, if the code and the caret haven't changed since. Requests go one at a time, the
+        /// latest wanted after the one in flight (<see cref="CompletionRequests"/>). The editor calls this when the
         /// code changes or the caret moves, with the caret at the end of a word or a line.
         /// </summary>
         public override void UpdateAutocomplete()
@@ -348,17 +355,17 @@ namespace KTrapIC
             SubmitChanges();
             if (_document == null || _syncedVersion != _version)
                 return;
-            ShowCompletions(_version, caret, Completions.WordBefore(line, caret.Col)).Forget();
+            _completionRequests.Want(
+                new CompletionRequest(_version, caret.Line, caret.Col, Completions.WordBefore(line, caret.Col)));
         }
 
-        private async UniTaskVoid ShowCompletions(int version, TextPosition caret, string word)
+        private async UniTaskVoid ShowCompletions(CompletionRequest request, IReadOnlyList<Completion> completions)
         {
-            var completions = await _document.Complete(caret.Line, caret.Col);
             await UniTask.SwitchToMainThread();
             var now = Editor.CaretPos;
-            if (_closed || version != _version || now.Line != caret.Line || now.Col != caret.Col)
+            if (_closed || request.Version != _version || now.Line != request.Line || now.Col != request.Column)
                 return;
-            var choice = Completions.Choose(completions, word);
+            var choice = Completions.Choose(completions, request.Word);
             if (choice == null)
                 return;
             var popup = new StyledText();

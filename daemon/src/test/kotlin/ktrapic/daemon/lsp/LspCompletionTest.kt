@@ -83,6 +83,87 @@ class LspCompletionTest {
   }
 
   @Test
+  fun `a completion that overflows the stack is answered with an error and the server carries on`() {
+    LspTestClient().use { client ->
+      client.initialize()
+      client.open(uri, "d0.Setting = ${"(".repeat(20_000)}1.0${")".repeat(20_000)}\nd0.\n")
+
+      val overflowed = client.complete(1, 3)
+      client.change(uri, 2, "val x = 1\nd0.\n")
+      val next = client.complete(1, 3)
+
+      val error = overflowed["error"].asJsonObject
+      assertThat(error["code"].asInt).isEqualTo(-32603)
+      assertThat(error["message"].asString).contains("StackOverflowError")
+      assertThat(next.items().map { it["label"].asString }).contains("Setting")
+    }
+  }
+
+  @Test
+  fun `a completion that throws an Error is answered with an error and the server carries on`() {
+    var calls = 0
+    LspTestClient(
+            completer = { _, _ ->
+              if (calls++ == 0) throw AssertionError("boom")
+              listOf(
+                  ktrapic.frontend.Completion(
+                      "Setting",
+                      ktrapic.frontend.Completion.Kind.PROPERTY,
+                      "",
+                  )
+              )
+            }
+        )
+        .use { client ->
+          client.initialize()
+          client.open(uri, "d0.\n")
+
+          val failed = client.complete(0, 3)
+          val next = client.complete(0, 3)
+
+          assertThat(failed["error"].asJsonObject["code"].asInt).isEqualTo(-32603)
+          assertThat(failed["error"].asJsonObject["message"].asString).contains("boom")
+          assertThat(next.items().map { it["label"].asString }).containsExactly("Setting")
+        }
+  }
+
+  @Test
+  fun `a burst of the same completion analyses once, ahead of a compile`() {
+    val calls = java.util.concurrent.atomic.AtomicInteger()
+    LspTestClient(
+            completer = { _, _ ->
+              calls.incrementAndGet()
+              Thread.sleep(200)
+              emptyList()
+            },
+            compiler = { _, _ -> JsonObject() },
+        )
+        .use { client ->
+          client.initialize()
+          client.open(uri, "d0.\n")
+
+          val position =
+              """{"textDocument": {"uri": "$uri"}, "position": {"line": 0, "character": 3}}"""
+          for (id in 100 until 120) {
+            client.send(
+                """{"jsonrpc": "2.0", "id": $id, "method": "textDocument/completion", "params": $position}"""
+            )
+          }
+          val started = System.nanoTime()
+          client.send(
+              """{"jsonrpc": "2.0", "id": 200, "method": "ktrapic/compile", "params": {"textDocument": {"uri": "$uri"}}}"""
+          )
+          val answered = generateSequence { client.read() }.first { it["id"]?.asInt == 200 }
+          val waitedMillis = (System.nanoTime() - started) / 1_000_000
+
+          assertThat(answered.has("result")).isTrue()
+          assertThat(calls.get()).isEqualTo(1)
+          // Twenty analyses would take four seconds.
+          assertThat(waitedMillis).isLessThan(4_000)
+        }
+  }
+
+  @Test
   fun `completion of a document that isn't open is an error`() {
     LspTestClient().use { client ->
       client.initialize()

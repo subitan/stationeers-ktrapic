@@ -36,6 +36,7 @@ import org.jetbrains.kotlin.fir.declarations.FirResolvePhase
 import org.jetbrains.kotlin.fir.expressions.FirBlock
 import org.jetbrains.kotlin.fir.expressions.FirQualifiedAccessExpression
 import org.jetbrains.kotlin.fir.expressions.FirResolvedQualifier
+import org.jetbrains.kotlin.fir.expressions.FirWhenExpression
 import org.jetbrains.kotlin.fir.pipeline.SingleModuleFrontendOutput
 import org.jetbrains.kotlin.fir.references.FirNamedReference
 import org.jetbrains.kotlin.fir.resolve.ScopeSession
@@ -57,15 +58,20 @@ import org.jetbrains.kotlin.fir.symbols.impl.FirTypeAliasSymbol
 import org.jetbrains.kotlin.fir.symbols.impl.FirVariableSymbol
 import org.jetbrains.kotlin.fir.types.ConeClassLikeType
 import org.jetbrains.kotlin.fir.types.ConeKotlinType
+import org.jetbrains.kotlin.fir.types.ConeStarProjection
 import org.jetbrains.kotlin.fir.types.ConeTypeParameterType
+import org.jetbrains.kotlin.fir.types.constructClassType
 import org.jetbrains.kotlin.fir.types.isMarkedNullable
 import org.jetbrains.kotlin.fir.types.resolvedType
 import org.jetbrains.kotlin.fir.types.type
 import org.jetbrains.kotlin.fir.types.typeContext
+import org.jetbrains.kotlin.fir.unwrapFakeOverrides
 import org.jetbrains.kotlin.fir.visitors.FirVisitorVoid
 import org.jetbrains.kotlin.name.ClassId
 import org.jetbrains.kotlin.name.FqName
+import org.jetbrains.kotlin.name.Name
 import org.jetbrains.kotlin.name.StandardClassIds
+import org.jetbrains.kotlin.name.isSubpackageOf
 import org.jetbrains.kotlin.psi.KtFile
 import org.jetbrains.kotlin.psi.KtLiteralStringTemplateEntry
 import org.jetbrains.kotlin.psi.KtStringTemplateEntryWithExpression
@@ -88,9 +94,11 @@ data class Completion(val label: String, val kind: Kind, val detail: String) {
 
 /**
  * Lists what could be written at a position in a script-style program, from the Kotlin K2
- * compiler's analysis of it: after `receiver.`, the members and SDK extensions of the receiver's
- * type (or, after a class or object name, what it holds); anywhere else, the locals, parameters and
- * members in scope there, the SDK's top-level names, and keywords.
+ * compiler's analysis of it: after `receiver.`, the members and extensions of the receiver's type
+ * (or, after a class or object name, what it holds); anywhere else, the locals, parameters and
+ * members in scope there, the SDK's top-level names, and keywords. Of the standard library's
+ * declarations, only those KTrapIC compiles are offered ([SUPPORTED_STDLIB]), and a name shadowed
+ * by one declared nearer the caret is offered once.
  *
  * The program is analysed with a placeholder name in place of the word at the caret, so the
  * reference there is the only one the analysis need not resolve. Errors elsewhere in the program
@@ -99,6 +107,74 @@ data class Completion(val label: String, val kind: Kind, val detail: String) {
 object K2Completion {
   /** The packages whose top-level names a program sees, as `ktrapic.*` imports them. */
   private val IMPORTED_PACKAGES = listOf(FqName("ktrapic"))
+
+  /**
+   * The kotlin-stdlib extensions KTrapIC compiles, by package. `kotlin.ranges` and
+   * `kotlin.collections` are imported by default; `kotlin.math` only where the program imports it.
+   */
+  private val STDLIB_EXTENSIONS =
+      mapOf(
+          FqName("kotlin.math") to listOf("absoluteValue", "pow", "roundToInt"),
+          FqName("kotlin.ranges") to
+              listOf("coerceAtLeast", "coerceAtMost", "coerceIn", "downTo", "step", "until"),
+          FqName("kotlin.collections") to listOf("intersect", "minus", "plus"),
+      )
+
+  /** The standard library's packages: `kotlin` and those under it. */
+  private val KOTLIN = FqName("kotlin")
+
+  private val DEFAULT_IMPORTED = setOf(FqName("kotlin.ranges"), FqName("kotlin.collections"))
+
+  /**
+   * The declarations of the `kotlin` packages that KTrapIC compiles, by fully qualified name: a
+   * member (`kotlin.Int.plus`) or a top-level extension (`kotlin.math.roundToInt`). Of the standard
+   * library's declarations, only these are offered; see docs/LANGUAGE.md.
+   */
+  val SUPPORTED_STDLIB: Set<String> =
+      (listOf(
+              "kotlin.Int" to
+                  listOf(
+                      "and",
+                      "dec",
+                      "div",
+                      "inc",
+                      "inv",
+                      "minus",
+                      "or",
+                      "plus",
+                      "rangeTo",
+                      "rangeUntil",
+                      "rem",
+                      "shl",
+                      "shr",
+                      "times",
+                      "toDouble",
+                      "toInt",
+                      "unaryMinus",
+                      "unaryPlus",
+                      "ushr",
+                      "xor",
+                  ),
+              "kotlin.Double" to
+                  listOf(
+                      "dec",
+                      "div",
+                      "inc",
+                      "minus",
+                      "plus",
+                      "rem",
+                      "times",
+                      "toDouble",
+                      "toInt",
+                      "unaryMinus",
+                      "unaryPlus",
+                  ),
+              "kotlin.Boolean" to listOf("not"),
+              "kotlin.collections.Set" to listOf("contains", "isEmpty", "size"),
+              "kotlin.collections.List" to listOf("contains", "isEmpty", "size"),
+          ) + STDLIB_EXTENSIONS.map { (pkg, names) -> pkg.asString() to names })
+          .flatMap { (owner, names) -> names.map { "$owner.$it" } }
+          .toSet()
 
   private const val PLACEHOLDER = "ktrapicCompletionPlaceholder"
 
@@ -128,6 +204,49 @@ object K2Completion {
 
   /** `Any`'s members, which every type has and no program needs offered. */
   private val ANY_MEMBERS = setOf("equals", "hashCode", "toString")
+
+  /** Kotlin's hard keywords, which can name a declaration only in backticks. */
+  private val HARD_KEYWORDS =
+      setOf(
+          "as",
+          "break",
+          "class",
+          "continue",
+          "do",
+          "else",
+          "false",
+          "for",
+          "fun",
+          "if",
+          "in",
+          "interface",
+          "is",
+          "null",
+          "object",
+          "package",
+          "return",
+          "super",
+          "this",
+          "throw",
+          "true",
+          "try",
+          "typealias",
+          "typeof",
+          "val",
+          "var",
+          "when",
+          "while",
+      )
+
+  /**
+   * Whether [name] can be written without backticks. A name that needs them is not offered: the
+   * editors complete the word before the caret, which never starts with a backtick.
+   */
+  private fun isPlainIdentifier(name: String): Boolean =
+      name.isNotEmpty() &&
+          (name[0].isLetter() || name[0] == '_') &&
+          name.all { it.isLetterOrDigit() || it == '_' } &&
+          name !in HARD_KEYWORDS
 
   /**
    * What could be written at [offset] (a `String` index) in [source], compiled against
@@ -193,6 +312,7 @@ object K2Completion {
     private val scopeSession: ScopeSession = output.scopeSession
     private val path = mutableListOf<FirElement>()
     private var access: FirQualifiedAccessExpression? = null
+    private val imports = output.fir.flatMap { it.imports }
 
     init {
       val visitor =
@@ -218,7 +338,11 @@ object K2Completion {
     fun completions(): List<Completion> {
       val receiver = access?.explicitReceiver
       val items = if (receiver != null) members(receiver) else inScope() + topLevel() + keywords()
-      return items.distinctBy { it.label to it.kind }
+      // One item per name: overloads share one, and a name declared nearer the caret shadows
+      // the same name declared further out, which comes later in the list.
+      return items
+          .filter { it.kind == Completion.Kind.KEYWORD || isPlainIdentifier(it.label) }
+          .distinctBy { it.label }
     }
 
     /** What can follow `receiver.`. */
@@ -262,24 +386,49 @@ object K2Completion {
       return items
     }
 
-    /** The imported packages' extensions whose receiver [type] can be. */
-    private fun extensions(type: ConeKotlinType): List<Completion> =
-        IMPORTED_PACKAGES.flatMap { pkg ->
-              names(pkg).callables.flatMap { name ->
-                session.symbolProvider.getTopLevelCallableSymbols(pkg, name).filter {
-                  shown(it) && accepts(it.resolvedReceiverType ?: return@filter false, type)
-                }
+    /**
+     * The extensions whose receiver [type] can be: the imported packages' and the supported
+     * standard library extensions the program sees.
+     */
+    private fun extensions(type: ConeKotlinType): List<Completion> {
+      val candidates =
+          IMPORTED_PACKAGES.flatMap { pkg -> names(pkg).callables.map { pkg to it } } +
+              STDLIB_EXTENSIONS.flatMap { (pkg, names) ->
+                names.map { pkg to Name.identifier(it) }.filter { (_, name) -> sees(pkg, name) }
               }
+      return candidates
+          .flatMap { (pkg, name) ->
+            session.symbolProvider.getTopLevelCallableSymbols(pkg, name).filter {
+              shown(it) && accepts(it.resolvedReceiverType ?: return@filter false, type)
             }
-            .map { callable(it, local = false) }
+          }
+          .map { callable(it, local = false) }
+    }
+
+    /**
+     * Whether the program sees [pkg]'s [name] unqualified: imported by default or by the program.
+     */
+    private fun sees(pkg: FqName, name: Name): Boolean =
+        pkg in DEFAULT_IMPORTED ||
+            imports.any {
+              it.aliasName == null &&
+                  (it.isAllUnder && it.importedFqName == pkg ||
+                      !it.isAllUnder && it.importedFqName == pkg.child(name))
+            }
 
     private fun accepts(receiver: ConeKotlinType, type: ConeKotlinType): Boolean {
       val context = session.typeContext
       if (AbstractTypeChecker.isSubtypeOf(context, type, receiver)) return true
-      // A generic receiver: compare the classes alone.
-      val receiverClass = (receiver as? ConeClassLikeType)?.lookupTag?.classId ?: return false
+      // A generic receiver, such as `Iterable<T>`: any type of its class, or of a subclass, will
+      // do.
+      if (receiver !is ConeClassLikeType) return false
       if (receiver.typeArguments.none { it.type is ConeTypeParameterType }) return false
-      return (type as? ConeClassLikeType)?.lookupTag?.classId == receiverClass
+      val anyArguments =
+          receiver.lookupTag.constructClassType(
+              Array(receiver.typeArguments.size) { ConeStarProjection },
+              receiver.isMarkedNullable,
+          )
+      return AbstractTypeChecker.isSubtypeOf(context, type, anyArguments)
     }
 
     /** The locals, parameters and members in scope at the caret. */
@@ -292,16 +441,22 @@ object K2Completion {
                 val source = statement.source ?: continue
                 if (source.startOffset >= at || statement in path) continue
                 when (statement) {
-                  is FirProperty -> items += callable(statement.symbol, local = true)
-                  is FirNamedFunction -> items += callable(statement.symbol, local = true)
+                  is FirProperty -> local(statement.symbol)?.let(items::add)
+                  is FirNamedFunction -> local(statement.symbol)?.let(items::add)
                   is FirRegularClass -> classifier(statement.symbol)?.let(items::add)
                   else -> {}
                 }
               }
           is FirFunction ->
               for (parameter in element.valueParameters) {
-                items += callable(parameter.symbol, local = true)
+                local(parameter.symbol)?.let(items::add)
               }
+          // `when (val v = ...)`: the subject's variable is in scope in the branches.
+          is FirWhenExpression ->
+              element.subjectVariable
+                  ?.takeIf { it !in path }
+                  ?.let { local(it.symbol) }
+                  ?.let(items::add)
           is FirRegularClass -> {
             // The program's top-level properties are run in order, as a script's are, so one
             // declared after the caret isn't set yet there.
@@ -355,9 +510,28 @@ object K2Completion {
       )
     }
 
+    /**
+     * A local declaration or parameter, or null for one the compiler made, such as a `for` loop's
+     * `<iterator>` or a destructuring declaration's `<destruct>`, which have special names.
+     */
+    private fun local(symbol: FirCallableSymbol<*>): Completion? =
+        if (symbol.name.isSpecial) null else callable(symbol, local = true)
+
+    /**
+     * Whether a member or a top-level declaration is offered: one a program can use, which is
+     * public, not deprecated, not one of the SDK's internals (named with a leading `_`) nor of
+     * [ANY_MEMBERS], and, if the standard library declares it, in [SUPPORTED_STDLIB].
+     */
     private fun shown(symbol: FirCallableSymbol<*>): Boolean {
       val name = symbol.name
       if (name.isSpecial || name.asString().startsWith("_") || name.asString() in ANY_MEMBERS) {
+        return false
+      }
+      val declared = symbol.fir.unwrapFakeOverrides().symbol.callableId ?: return false
+      if (
+          declared.packageName.isSubpackageOf(KOTLIN) &&
+              declared.asSingleFqName().asString() !in SUPPORTED_STDLIB
+      ) {
         return false
       }
       if (symbol.resolvedStatus.visibility != Visibilities.Public) return false
