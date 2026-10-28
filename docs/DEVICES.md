@@ -427,6 +427,31 @@ interface CargoStorage {
 }
 ```
 
+### ChuteBin
+
+```kotlin
+interface ChuteBin {
+  val Error: Boolean
+  var Lock: Boolean
+  var On: Boolean
+  var Open: Boolean
+  val Power: Boolean
+  val RequiredPower: Double
+
+  /** StructureChuteBin. Entry point: ChuteBins.Import. */
+  class Import : TypedDevice, ChuteBin {
+    val Input: DataDiskSlot // slots[0]
+    val slots: Slots<DataDiskSlot>
+  }
+
+  /** StructureChuteExportBin. Entry point: ChuteBins.Export. */
+  class Export : TypedDevice, ChuteBin {
+    val Input: DataDiskSlot // slots[0]
+    val slots: Slots<DataDiskSlot>
+  }
+}
+```
+
 ### CircuitHousing
 
 ```kotlin
@@ -2272,18 +2297,6 @@ class Centrifuge : TypedDevice {
   val slots: Slots<DataDiskSlot>
 }
 
-/** StructureChuteBin. Entry point: ChuteBins. */
-class ChuteBin : TypedDevice {
-  val Error: Boolean
-  var Lock: Boolean
-  var On: Boolean
-  var Open: Boolean
-  val Power: Boolean
-  val RequiredPower: Double
-  val Input: DataDiskSlot // slots[0]
-  val slots: Slots<DataDiskSlot>
-}
-
 /** StructureChuteDigitalFlipFlopSplitterLeft. Entry point: ChuteDigitalFlipFlopSplitterLefts. */
 class ChuteDigitalFlipFlopSplitterLeft : TypedDevice {
   var Mode: Double
@@ -2333,18 +2346,6 @@ class ChuteDigitalValveRight : TypedDevice {
   val RequiredPower: Double
   var Setting: Double
   val TransportSlot: DataDiskSlot // slots[0]
-  val slots: Slots<DataDiskSlot>
-}
-
-/** StructureChuteExportBin. Entry point: ChuteExportBins. */
-class ChuteExportBin : TypedDevice {
-  val Error: Boolean
-  var Lock: Boolean
-  var On: Boolean
-  var Open: Boolean
-  val Power: Boolean
-  val RequiredPower: Double
-  val Input: DataDiskSlot // slots[0]
   val slots: Slots<DataDiskSlot>
 }
 
