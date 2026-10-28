@@ -832,7 +832,6 @@ interface Filtration {
   val Maximum: Double
   var Mode: Double
   var On: Boolean
-  var Open: Boolean
   val Power: Boolean
   val Ratio: Double
   val RequiredPower: Double
@@ -840,6 +839,7 @@ interface Filtration {
 
   /** StructureFiltration. Entry point: Filtrations.Gas. */
   class Gas : TypedDevice, Filtration {
+    var Open: Boolean
     val Ports: Ports
     val ProgrammableChip: DataDiskSlot // slots[2]
     val slots: Slots<CommonSlot>
@@ -847,9 +847,17 @@ interface Filtration {
 
   /** StructureFiltrationLiquid. Entry point: Filtrations.Liquid. */
   class Liquid : TypedDevice, Filtration {
+    var Open: Boolean
     val Ports: Ports
     val ProgrammableChip: DataDiskSlot // slots[2]
     val slots: Slots<CommonSlot>
+  }
+
+  /** StructureRocketFiltrationGas. Entry point: Filtrations.RocketGas. */
+  class RocketGas : TypedDevice, Filtration {
+    val Ports: Ports
+    val GasFilter: FilterSlot // slots[0]
+    val slots: Slots<FilterSlot>
   }
 }
 ```
@@ -3529,25 +3537,6 @@ class RocketEngineTiny : TypedDevice {
   val Ratio: Double
   val RequiredPower: Double
   var Setting: Double
-}
-
-/** StructureRocketFiltrationGas. Entry point: RocketFiltrationGases. */
-class RocketFiltrationGas : TypedDevice {
-  val Error: Boolean
-  var Lock: Boolean
-  val Maximum: Double
-  var Mode: Double
-  var On: Boolean
-  val Ports: Ports
-  //   Input: Combustion, Pressure, Temperature, TotalMoles, Ratios[every Substance]
-  //   Output: Combustion, Pressure, Temperature, TotalMoles, Ratios[every Substance]
-  //   Output2: Combustion, Pressure, Temperature, TotalMoles, Ratios[every Substance]
-  val Power: Boolean
-  val Ratio: Double
-  val RequiredPower: Double
-  var Setting: Double
-  val GasFilter: FilterSlot // slots[0]
-  val slots: Slots<FilterSlot>
 }
 
 /** StructureRocketGasCollector. Entry point: RocketGasCollectors. */
