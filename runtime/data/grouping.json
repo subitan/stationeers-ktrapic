@@ -173,7 +173,8 @@
       "plural": "Filtrations",
       "members": {
         "Gas": "StructureFiltration",
-        "Liquid": "StructureFiltrationLiquid"
+        "Liquid": "StructureFiltrationLiquid",
+        "RocketGas": "StructureRocketFiltrationGas"
       }
     },
     "UmbilicalMale": {

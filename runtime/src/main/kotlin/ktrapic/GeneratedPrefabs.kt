@@ -4596,8 +4596,6 @@ interface Filtration {
 
   var On: Boolean
 
-  var Open: Boolean
-
   val Power: Boolean
 
   val Ratio: Double
@@ -4627,7 +4625,7 @@ interface Filtration {
       get() = intrinsic()
       set(value) = intrinsic()
 
-    override var Open: Boolean
+    var Open: Boolean
       get() = intrinsic()
       set(value) = intrinsic()
 
@@ -4686,7 +4684,7 @@ interface Filtration {
       get() = intrinsic()
       set(value) = intrinsic()
 
-    override var Open: Boolean
+    var Open: Boolean
       get() = intrinsic()
       set(value) = intrinsic()
 
@@ -4721,6 +4719,61 @@ interface Filtration {
       get() = intrinsic()
 
     /** The StructureFiltrationLiquid prefab. */
+    companion object : Prefab()
+  }
+
+  /** A StructureRocketFiltrationGas. */
+  @PrefabName("StructureRocketFiltrationGas")
+  class RocketGas internal constructor() : TypedDevice(), Filtration {
+    override val Error: Boolean
+      get() = intrinsic()
+
+    override var Lock: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override val Maximum: Double
+      get() = intrinsic()
+
+    override var Mode: Double
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override var On: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override val Power: Boolean
+      get() = intrinsic()
+
+    override val Ratio: Double
+      get() = intrinsic()
+
+    override val RequiredPower: Double
+      get() = intrinsic()
+
+    override var Setting: Double
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    @LogicTypes(
+        read =
+            "CombustionInput,CombustionOutput,CombustionOutput2,PressureInput,PressureOutput,PressureOutput2,RatioCarbonDioxideInput,RatioCarbonDioxideOutput,RatioCarbonDioxideOutput2,RatioHeliumInput,RatioHeliumOutput,RatioHeliumOutput2,RatioHydrazineInput,RatioHydrazineOutput,RatioHydrazineOutput2,RatioHydrochloricAcidInput,RatioHydrochloricAcidOutput,RatioHydrochloricAcidOutput2,RatioHydrogenInput,RatioHydrogenOutput,RatioHydrogenOutput2,RatioLiquidAlcoholInput,RatioLiquidAlcoholOutput,RatioLiquidAlcoholOutput2,RatioLiquidCarbonDioxideInput,RatioLiquidCarbonDioxideOutput,RatioLiquidCarbonDioxideOutput2,RatioLiquidHydrazineInput,RatioLiquidHydrazineOutput,RatioLiquidHydrazineOutput2,RatioLiquidHydrochloricAcidInput,RatioLiquidHydrochloricAcidOutput,RatioLiquidHydrochloricAcidOutput2,RatioLiquidHydrogenInput,RatioLiquidHydrogenOutput,RatioLiquidHydrogenOutput2,RatioLiquidMethaneInput,RatioLiquidMethaneOutput,RatioLiquidMethaneOutput2,RatioLiquidNitrogenInput,RatioLiquidNitrogenOutput,RatioLiquidNitrogenOutput2,RatioLiquidNitrousOxideInput,RatioLiquidNitrousOxideOutput,RatioLiquidNitrousOxideOutput2,RatioLiquidOxygenInput,RatioLiquidOxygenOutput,RatioLiquidOxygenOutput2,RatioLiquidOzoneInput,RatioLiquidOzoneOutput,RatioLiquidOzoneOutput2,RatioLiquidPollutantInput,RatioLiquidPollutantOutput,RatioLiquidPollutantOutput2,RatioLiquidSilanolInput,RatioLiquidSilanolOutput,RatioLiquidSilanolOutput2,RatioLiquidSodiumChlorideInput,RatioLiquidSodiumChlorideOutput,RatioLiquidSodiumChlorideOutput2,RatioMethaneInput,RatioMethaneOutput,RatioMethaneOutput2,RatioNitrogenInput,RatioNitrogenOutput,RatioNitrogenOutput2,RatioNitrousOxideInput,RatioNitrousOxideOutput,RatioNitrousOxideOutput2,RatioOxygenInput,RatioOxygenOutput,RatioOxygenOutput2,RatioOzoneInput,RatioOzoneOutput,RatioOzoneOutput2,RatioPollutantInput,RatioPollutantOutput,RatioPollutantOutput2,RatioPollutedWaterInput,RatioPollutedWaterOutput,RatioPollutedWaterOutput2,RatioSilanolInput,RatioSilanolOutput,RatioSilanolOutput2,RatioSteamInput,RatioSteamOutput,RatioSteamOutput2,RatioWaterInput,RatioWaterOutput,RatioWaterOutput2,TemperatureInput,TemperatureOutput,TemperatureOutput2,TotalMolesInput,TotalMolesOutput,TotalMolesOutput2",
+        written = "",
+    )
+    val Ports: Ports
+      get() = intrinsic()
+
+    /** The device's slots, by number. */
+    val slots: Slots<FilterSlot>
+      get() = intrinsic()
+
+    /** Slot 0. */
+    @SlotNumber(0)
+    val GasFilter: FilterSlot
+      get() = intrinsic()
+
+    /** The StructureRocketFiltrationGas prefab. */
     companion object : Prefab()
   }
 }
@@ -4763,6 +4816,26 @@ object Filtrations {
     class Batch internal constructor() : DeviceBatch<Filtration.Liquid>() {
       /** A slot of every one in the batch, by number. */
       val slots: Slots<SlotBatch<CommonSlot>>
+        get() = intrinsic()
+    }
+  }
+
+  /** The StructureRocketFiltrationGas devices on the chip's network. */
+  @PrefabName("StructureRocketFiltrationGas")
+  object RocketGas {
+    /** The device on [pin], as a StructureRocketFiltrationGas. */
+    fun at(pin: Device): Filtration.RocketGas = intrinsic()
+
+    /** Every one on the network. */
+    val all: Batch
+      get() = intrinsic()
+
+    /** Every one on the network named [name], which must be a constant. */
+    fun named(name: String): Batch = intrinsic()
+
+    class Batch internal constructor() : DeviceBatch<Filtration.RocketGas>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<FilterSlot>>
         get() = intrinsic()
     }
   }
@@ -20326,81 +20399,6 @@ object RocketEngineTinies {
 
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): DeviceBatch<RocketEngineTiny> = intrinsic()
-}
-
-/** A StructureRocketFiltrationGas. */
-@PrefabName("StructureRocketFiltrationGas")
-class RocketFiltrationGas internal constructor() : TypedDevice() {
-  val Error: Boolean
-    get() = intrinsic()
-
-  var Lock: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val Maximum: Double
-    get() = intrinsic()
-
-  var Mode: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var On: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val Power: Boolean
-    get() = intrinsic()
-
-  val Ratio: Double
-    get() = intrinsic()
-
-  val RequiredPower: Double
-    get() = intrinsic()
-
-  var Setting: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  @LogicTypes(
-      read =
-          "CombustionInput,CombustionOutput,CombustionOutput2,PressureInput,PressureOutput,PressureOutput2,RatioCarbonDioxideInput,RatioCarbonDioxideOutput,RatioCarbonDioxideOutput2,RatioHeliumInput,RatioHeliumOutput,RatioHeliumOutput2,RatioHydrazineInput,RatioHydrazineOutput,RatioHydrazineOutput2,RatioHydrochloricAcidInput,RatioHydrochloricAcidOutput,RatioHydrochloricAcidOutput2,RatioHydrogenInput,RatioHydrogenOutput,RatioHydrogenOutput2,RatioLiquidAlcoholInput,RatioLiquidAlcoholOutput,RatioLiquidAlcoholOutput2,RatioLiquidCarbonDioxideInput,RatioLiquidCarbonDioxideOutput,RatioLiquidCarbonDioxideOutput2,RatioLiquidHydrazineInput,RatioLiquidHydrazineOutput,RatioLiquidHydrazineOutput2,RatioLiquidHydrochloricAcidInput,RatioLiquidHydrochloricAcidOutput,RatioLiquidHydrochloricAcidOutput2,RatioLiquidHydrogenInput,RatioLiquidHydrogenOutput,RatioLiquidHydrogenOutput2,RatioLiquidMethaneInput,RatioLiquidMethaneOutput,RatioLiquidMethaneOutput2,RatioLiquidNitrogenInput,RatioLiquidNitrogenOutput,RatioLiquidNitrogenOutput2,RatioLiquidNitrousOxideInput,RatioLiquidNitrousOxideOutput,RatioLiquidNitrousOxideOutput2,RatioLiquidOxygenInput,RatioLiquidOxygenOutput,RatioLiquidOxygenOutput2,RatioLiquidOzoneInput,RatioLiquidOzoneOutput,RatioLiquidOzoneOutput2,RatioLiquidPollutantInput,RatioLiquidPollutantOutput,RatioLiquidPollutantOutput2,RatioLiquidSilanolInput,RatioLiquidSilanolOutput,RatioLiquidSilanolOutput2,RatioLiquidSodiumChlorideInput,RatioLiquidSodiumChlorideOutput,RatioLiquidSodiumChlorideOutput2,RatioMethaneInput,RatioMethaneOutput,RatioMethaneOutput2,RatioNitrogenInput,RatioNitrogenOutput,RatioNitrogenOutput2,RatioNitrousOxideInput,RatioNitrousOxideOutput,RatioNitrousOxideOutput2,RatioOxygenInput,RatioOxygenOutput,RatioOxygenOutput2,RatioOzoneInput,RatioOzoneOutput,RatioOzoneOutput2,RatioPollutantInput,RatioPollutantOutput,RatioPollutantOutput2,RatioPollutedWaterInput,RatioPollutedWaterOutput,RatioPollutedWaterOutput2,RatioSilanolInput,RatioSilanolOutput,RatioSilanolOutput2,RatioSteamInput,RatioSteamOutput,RatioSteamOutput2,RatioWaterInput,RatioWaterOutput,RatioWaterOutput2,TemperatureInput,TemperatureOutput,TemperatureOutput2,TotalMolesInput,TotalMolesOutput,TotalMolesOutput2",
-      written = "",
-  )
-  val Ports: Ports
-    get() = intrinsic()
-
-  /** The device's slots, by number. */
-  val slots: Slots<FilterSlot>
-    get() = intrinsic()
-
-  /** Slot 0. */
-  @SlotNumber(0)
-  val GasFilter: FilterSlot
-    get() = intrinsic()
-
-  /** The StructureRocketFiltrationGas prefab. */
-  companion object : Prefab()
-}
-
-/** The StructureRocketFiltrationGas devices on the chip's network. */
-@PrefabName("StructureRocketFiltrationGas")
-object RocketFiltrationGases {
-  /** The device on [pin], as a StructureRocketFiltrationGas. */
-  fun at(pin: Device): RocketFiltrationGas = intrinsic()
-
-  /** Every one on the network. */
-  val all: Batch
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch<RocketFiltrationGas>() {
-    /** A slot of every one in the batch, by number. */
-    val slots: Slots<SlotBatch<FilterSlot>>
-      get() = intrinsic()
-  }
 }
 
 /** A StructureRocketGasCollector. */
