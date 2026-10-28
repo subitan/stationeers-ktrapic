@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
@@ -18,7 +19,7 @@ namespace KTrapIC
     /// document's.</para>
     ///
     /// <para><see cref="Bind"/>, <see cref="Sync"/> and <see cref="Close"/> are called from one
-    /// thread, the game's main thread in game; compiles from any.</para>
+    /// thread, the game's main thread in game; compiles and completions from any.</para>
     ///
     /// <para>This class uses nothing from the game, so it can be tested on its own.</para>
     /// </summary>
@@ -150,6 +151,36 @@ namespace KTrapIC
                 return compile.Result;
             return CompileResponse.Failed(
                 $"The KTrapIC compiler didn't answer within {timeout.TotalSeconds:0} seconds; export again in a moment.");
+        }
+
+        /// <summary>
+        /// What could be written at <paramref name="line"/> and <paramref name="character"/>
+        /// (0-based, in UTF-16 code units) of the document as of the last <see cref="Sync"/>: the
+        /// daemon's <c>textDocument/completion</c> items. None if it isn't open, or the daemon
+        /// stops or answers with an error.
+        /// </summary>
+        public async Task<IReadOnlyList<Completion>> Complete(int line, int character)
+        {
+            var connection = _connection;
+            if (connection == null || !connection.IsInitialized || !_isOpen)
+                return Array.Empty<Completion>();
+            try
+            {
+                var result = await connection.Request("textDocument/completion", new JObject
+                {
+                    ["textDocument"] = new JObject { ["uri"] = Uri },
+                    ["position"] = Position(line, character),
+                }).ConfigureAwait(false);
+                return result?["items"]?.ToObject<List<Completion>>() ?? new List<Completion>();
+            }
+            catch (LspConnection.StoppedException)
+            {
+                return Array.Empty<Completion>();
+            }
+            catch (LspConnection.ResponseException)
+            {
+                return Array.Empty<Completion>();
+            }
         }
 
         /// <summary>Closes the document on the daemon, if it is open, and unbinds it.</summary>

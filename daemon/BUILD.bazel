@@ -7,6 +7,7 @@ kt_jvm_library(
     srcs = glob(["src/main/kotlin/**/*.kt"]),
     deps = [
         "//compiler/api",
+        "//compiler/frontend",
         "@maven//:com_google_code_gson_gson",
     ],
 )
@@ -27,6 +28,8 @@ kt_junit5_tests(
     associates = [":daemon_lib"],
     size = "medium",
     deps = [
+        "//compiler/api",
+        "//compiler/frontend",
         "@maven//:com_google_code_gson_gson",
         "@maven//:com_google_truth_truth",
         "@maven//:org_junit_jupiter_junit_jupiter_api",

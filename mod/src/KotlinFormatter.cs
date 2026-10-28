@@ -15,7 +15,8 @@ namespace KTrapIC
     /// <summary>
     /// The IC10 Editor's "Kotlin" language: KTrapIC programs, highlighted, compiled as they're
     /// edited, with the IC10 shown in a read-only editor beside them and the IC10 lines of the
-    /// caret's line highlighted there, and with the compiler's errors marked in the code. Exporting
+    /// caret's line highlighted there, with the compiler's errors marked in the code, and with
+    /// completion of the names that could go at the caret (<see cref="UpdateAutocomplete"/>). Exporting
     /// writes the IC10 to the chip with the Kotlin source appended as encoded comments, which
     /// <see cref="ResetCode"/> reads back, so reopening the chip shows the Kotlin.
     ///
@@ -328,11 +329,82 @@ namespace KTrapIC
             Lines.RemoveAt(index);
         }
 
-        /// <summary>No completion yet: the daemon doesn't offer it.</summary>
+        /// <summary>
+        /// Asks the daemon what could be written at the caret, after a word that has begun or
+        /// right after a dot (<see cref="Completions.Wanted"/>), and shows the answer once it
+        /// comes, if the code and the caret haven't changed since. The editor calls this when the
+        /// code changes or the caret moves, with the caret at the end of a word or a line.
+        /// </summary>
         public override void UpdateAutocomplete()
         {
             _autocomplete = null;
             _autocompleteInsertText = null;
+            var caret = Editor.CaretPos;
+            if (caret.Line >= Lines.Count)
+                return;
+            string line = Lines[caret.Line].Text;
+            if (!Completions.Wanted(line, caret.Col))
+                return;
+            SubmitChanges();
+            if (_document == null || _syncedVersion != _version)
+                return;
+            ShowCompletions(_version, caret, Completions.WordBefore(line, caret.Col)).Forget();
+        }
+
+        private async UniTaskVoid ShowCompletions(int version, TextPosition caret, string word)
+        {
+            var completions = await _document.Complete(caret.Line, caret.Col);
+            await UniTask.SwitchToMainThread();
+            var now = Editor.CaretPos;
+            if (_closed || version != _version || now.Line != caret.Line || now.Col != caret.Col)
+                return;
+            var choice = Completions.Choose(completions, word);
+            if (choice == null)
+                return;
+            var popup = new StyledText();
+            foreach (var completion in choice.Shown)
+            {
+                var entry = new StyledLine(completion.label);
+                entry.Add(new Token(0, completion.label, CompletionStyle(completion.kind)));
+                popup.Add(entry);
+            }
+            if (choice.Matched > choice.Shown.Count)
+                popup.AddLine($"... and {choice.Matched - choice.Shown.Count} more", DefaultStyle);
+            _autocomplete = popup;
+            _autocompleteInsertText = choice.Insert;
+        }
+
+        /// <summary>The color of a completion of LSP <c>CompletionItemKind</c> <paramref name="kind"/>, as the code colors its names.</summary>
+        private static Style CompletionStyle(int kind)
+        {
+            switch (kind)
+            {
+                case 3: // Function
+                    return FunctionStyle;
+                case 6: // Variable
+                case 10: // Property
+                    return LogicTypeStyle;
+                case 7: // Class
+                case 8: // Interface
+                case 9: // Module: an object
+                    return TypeStyle;
+                case 13: // Enum
+                    return EnumStyle;
+                case 20: // EnumMember
+                    return EnumValueStyle;
+                default:
+                    return DefaultStyle;
+            }
+        }
+
+        /// <summary>
+        /// Inserts the shown completions' shared text, only while they're shown: the editor keeps
+        /// the text to insert after it stops showing them.
+        /// </summary>
+        public override void PerformAutocomplete()
+        {
+            if (_autocomplete != null)
+                base.PerformAutocomplete();
         }
 
         /// <summary>

@@ -86,22 +86,14 @@ object K2Frontend {
       val wrapped = ScriptWrapper.wrap(script, defaultImports)
       val sourceFile = File(workDir, "$PROGRAM_OBJECT.kt").apply { writeText(wrapped.text) }
       val messages = CollectingMessageCollector()
-      val arguments =
-          K2JVMCompilerArguments().apply {
-            freeArgs = listOf(sourceFile.absolutePath)
-            this.classpath =
-                (listOf(kotlinStdlibJar()) + classpath).joinToString(File.pathSeparator) {
-                  it.absolutePath
-                }
-            noStdlib = true
-            noReflect = true
-            jdkHome = System.getProperty("java.home")
-            moduleName = "ktrapic"
-            destination = File(workDir, "out").absolutePath
-          }
       val captured =
           IrCapturePipeline(K2JVMCompiler().defaultPerformanceManager)
-              .executeAndReturnPipeLineArtifact(arguments, Services.EMPTY, messages, disposable)
+              .executeAndReturnPipeLineArtifact(
+                  arguments(sourceFile, classpath, workDir),
+                  Services.EMPTY,
+                  messages,
+                  disposable,
+              )
       val diagnostics = messages.diagnostics(wrapped)
       if (captured !is CapturedIr || diagnostics.any { it.severity == Diagnostic.Severity.ERROR }) {
         return FrontendResult.Failure(diagnostics)
@@ -148,6 +140,24 @@ object K2Frontend {
                     source.removePrefix(0xFEFF.toChar().toString()).replace("\r\n", "\n"),
                 )
           }
+
+  /**
+   * The compiler arguments for [sourceFile], compiled against kotlin-stdlib and [classpath], with
+   * any output under [workDir].
+   */
+  internal fun arguments(sourceFile: File, classpath: List<File>, workDir: File) =
+      K2JVMCompilerArguments().apply {
+        freeArgs = listOf(sourceFile.absolutePath)
+        this.classpath =
+            (listOf(kotlinStdlibJar()) + classpath).joinToString(File.pathSeparator) {
+              it.absolutePath
+            }
+        noStdlib = true
+        noReflect = true
+        jdkHome = System.getProperty("java.home")
+        moduleName = "ktrapic"
+        destination = File(workDir, "out").absolutePath
+      }
 
   /** The kotlin-stdlib jar this process runs with, which the program is compiled against. */
   private fun kotlinStdlibJar(): File =

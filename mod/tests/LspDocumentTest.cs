@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using KTrapIC;
 using Newtonsoft.Json.Linq;
@@ -256,6 +257,31 @@ public class LspDocumentTest : IDisposable
 
         daemon.AssertCompiled(response);
         Assert.Equal("s db Setting 2", response.code);
+    }
+
+    [Fact]
+    public async Task CompletesTheLatestEditsAtAPosition()
+    {
+        var daemon = Start();
+        var document = Open(daemon, "val x = 1\n", out _);
+        Assert.True(document.Sync(2, null, Replace(1, 0, 0, "d0.")));
+
+        var completions = await document.Complete(1, 3).WaitAsync(TestDaemon.Timeout);
+
+        var setting = completions.Single(c => c.label == "Setting");
+        Assert.Equal(10, setting.kind);
+        Assert.Equal("var Setting: Double", setting.detail);
+        Assert.NotNull(setting.sortText);
+    }
+
+    [Fact]
+    public async Task NoCompletionsForADocumentNotOpen()
+    {
+        var daemon = Start();
+        var document = new LspDocument(LspDocument.NewUri("chip"));
+        document.Bind(daemon.Connection);
+
+        Assert.Empty(await document.Complete(0, 0).WaitAsync(TestDaemon.Timeout));
     }
 
     [Fact]

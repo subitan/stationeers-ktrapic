@@ -48,6 +48,11 @@ moment after typing stops:
   4096 bytes) apply to the IC10, not to the Kotlin.
 - The IC10 lines that the caret's line compiled to are highlighted.
 - "Compact" resolves labels to line numbers and drops them, to save lines.
+- Typing a name, or a dot after one (`d0.`, `PresenceSensors.`), lists what could go there,
+  from the compiler's reading of the program: a device's logic types, a family's prefabs, an
+  enum's values, the members of a local's type, the locals, parameters and functions in scope,
+  and the SDK's names. The list shows at most 20 of the names that start with what's typed, and
+  accepting it (the editor's autocomplete key) types the part that all of them share.
 
 Exporting writes the IC10 to the chip, followed by the Kotlin source, compressed and encoded in
 comment lines that the chip skips. Opening the chip again shows the Kotlin. A program that doesn't
@@ -93,6 +98,7 @@ process's standard input and output (JSON-RPC with `Content-Length` framing, UTF
   same connection after the edits it compiles. An export waits for it on the main thread, up to
   30 seconds, but never for the compiler to start: until it has, an export writes a comment
   saying so.
+- Completion is the daemon's `textDocument/completion`, at the caret, after the edits before it.
 - When the daemon starts again (`ktrapic restart`, or after it stopped), each editor opens its
   document on it again, with its whole text, and compiles it.
 
@@ -118,7 +124,7 @@ it in game. The daemon's JVM options keep it small beside the game:
 ## Not yet
 
 - Library imports from the IC10 Editor's Library window.
-- Completion and hover information.
+- Hover information and signature help.
 - Device data for prefabs added by other mods.
 
 ## Building

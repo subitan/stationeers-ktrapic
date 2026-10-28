@@ -11,7 +11,9 @@ import java.io.InputStream
 import java.io.OutputStream
 import java.io.StringReader
 import java.util.concurrent.Future
+import ktrapic.api.Compiler
 import ktrapic.daemon.Daemon
+import ktrapic.frontend.Completion
 
 /** JSON-RPC's and LSP's error codes. */
 internal object ErrorCodes {
@@ -47,6 +49,9 @@ internal class ResponseError(val code: Int, message: String) : Exception(message
  * that compile's result, and the other way round; internal compiler errors are not kept, but
  * compiled again.
  *
+ * **`textDocument/completion`** lists what could be written at the position, from the compiler's
+ * analysis of the document's current text (see [completion]).
+ *
  * **`textDocument/semanticTokens/full`** gets `{"data": []}`, although the server doesn't declare
  * the capability: the IC10 Editor asks for semantic tokens after every change whatever the server
  * declares, and an error answer to each would be noise.
@@ -67,6 +72,7 @@ internal class ResponseError(val code: Int, message: String) : Exception(message
  *   keystrokes compiles once; 150 ms, as the plugin's compile-as-you-type waits.
  * @param scheduler runs diagnostics compiles; tests can run them by hand.
  * @param compiler compiles a document's text with a `ktrapic/compile` request's options.
+ * @param completer lists what could be written at an index in a document's text.
  */
 class LspServer
 internal constructor(
@@ -76,6 +82,7 @@ internal constructor(
     private val debounceMillis: Long,
     private val scheduler: Scheduler,
     private val compiler: (String, JsonObject?) -> JsonObject,
+    private val completer: (String, Int) -> List<Completion> = Compiler::complete,
 ) {
   constructor(
       input: InputStream,
@@ -120,6 +127,7 @@ internal constructor(
           "initialize" to ::initialize,
           "shutdown" to ::shutdown,
           "ktrapic/compile" to ::compile,
+          "textDocument/completion" to ::completion,
           "textDocument/semanticTokens/full" to ::semanticTokens,
       )
 
@@ -267,6 +275,12 @@ internal constructor(
                   addProperty("change", TEXT_DOCUMENT_SYNC_INCREMENTAL)
                 },
             )
+            add(
+                "completionProvider",
+                JsonObject().apply {
+                  add("triggerCharacters", JsonArray().apply { add(".") })
+                },
+            )
           },
       )
       add("serverInfo", JsonObject().apply { addProperty("name", "ktrapic-daemon") })
@@ -306,6 +320,38 @@ internal constructor(
     synchronized(compiles) {
       return compiles[key]
           ?: compiler(text, options).also { if (!it.isInternalError()) compiles[key] = it }
+    }
+  }
+
+  /**
+   * What could be written at a position in an open document, as a `CompletionList` ([completer]
+   * lists them). Each item's `sortText` keeps [completer]'s order, `detail` is its declaration
+   * (such as `var Setting: Double`), and its `kind` is one the IC10 Editor can show: it colours an
+   * item by indexing a 24-colour table with the kind, so Operator (24) and TypeParameter (25) are
+   * never sent. Runs as compiles do, one at a time.
+   */
+  private fun completion(params: JsonElement?): JsonElement {
+    val fields = params.asObject("params")
+    val uri = fields["textDocument"].asObject("textDocument").string("uri")
+    val document =
+        documents[uri] ?: throw ResponseError(ErrorCodes.INVALID_PARAMS, "$uri is not open")
+    val text = document.text
+    val offset = document.offsetAt(fields["position"].asObject("position").toPosition())
+    val completions = synchronized(compiles) { completer(text, offset) }
+    val items = JsonArray()
+    completions.forEachIndexed { index, completion ->
+      items.add(
+          JsonObject().apply {
+            addProperty("label", completion.label)
+            addProperty("kind", kindOf(completion.kind))
+            if (completion.detail.isNotEmpty()) addProperty("detail", completion.detail)
+            addProperty("sortText", "%05d".format(index))
+          }
+      )
+    }
+    return JsonObject().apply {
+      addProperty("isIncomplete", false)
+      add("items", items)
     }
   }
 
@@ -415,6 +461,20 @@ internal constructor(
     const val KEPT_COMPILES = 4
 
     fun invalidParams(message: String) = ResponseError(ErrorCodes.INVALID_PARAMS, message)
+
+    /** LSP's `CompletionItemKind` for [kind]: all below 24, which the IC10 Editor can show. */
+    fun kindOf(kind: Completion.Kind): Int =
+        when (kind) {
+          Completion.Kind.FUNCTION -> 3
+          Completion.Kind.LOCAL -> 6
+          Completion.Kind.CLASS -> 7
+          Completion.Kind.INTERFACE -> 8
+          Completion.Kind.OBJECT -> 9
+          Completion.Kind.PROPERTY -> 10
+          Completion.Kind.ENUM -> 13
+          Completion.Kind.KEYWORD -> 14
+          Completion.Kind.ENUM_ENTRY -> 20
+        }
 
     /** Whether a [Daemon.compile] result is an internal compiler error. */
     fun JsonObject.isInternalError() =

@@ -79,7 +79,7 @@ public class DaemonLspTest : IDisposable
     [Fact]
     public async Task AnswersAnUnknownRequestWithAnError()
     {
-        var request = _daemon.Connection.Request("textDocument/completion", new JObject());
+        var request = _daemon.Connection.Request("textDocument/definition", new JObject());
 
         var error = await Assert.ThrowsAsync<LspConnection.ResponseException>(() => TestDaemon.Within(request));
         Assert.Equal(-32601, error.Code);

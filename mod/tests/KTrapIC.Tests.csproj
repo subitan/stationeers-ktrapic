@@ -11,6 +11,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="../src/CompileResponse.cs" Link="CompileResponse.cs" />
+    <Compile Include="../src/Completions.cs" Link="Completions.cs" />
     <Compile Include="../src/LspConnection.cs" Link="LspConnection.cs" />
     <Compile Include="../src/LspDocument.cs" Link="LspDocument.cs" />
     <Compile Include="../src/SdkNames.g.cs" Link="SdkNames.g.cs" />

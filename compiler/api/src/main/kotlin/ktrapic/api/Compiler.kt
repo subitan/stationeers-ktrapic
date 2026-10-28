@@ -4,8 +4,10 @@ import java.io.File
 import ktrapic.backend.Backend
 import ktrapic.backend.CompileException
 import ktrapic.backend.TooManyRegistersException
+import ktrapic.frontend.Completion
 import ktrapic.frontend.Diagnostic
 import ktrapic.frontend.FrontendResult
+import ktrapic.frontend.K2Completion
 import ktrapic.frontend.K2Frontend
 import ktrapic.ic10.Line
 import ktrapic.ic10.Program
@@ -110,6 +112,13 @@ object Compiler {
   private fun Diagnostic.toError() = CompileError(message, line, column)
 
   private class CompileFailure(val error: CompileError) : Exception(error.message)
+
+  /**
+   * What could be written at [offset] (a `String` index) in [source], as a program compiles it:
+   * against the SDK, with `ktrapic.*` imported. See [K2Completion].
+   */
+  fun complete(source: String, offset: Int): List<Completion> =
+      K2Completion.complete(source, offset, listOf(sdkJar()), listOf("ktrapic.*"))
 
   /** The SDK's jar, which programs compile against. */
   private fun sdkJar(): File =
