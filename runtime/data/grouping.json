@@ -198,25 +198,16 @@
         "LiquidHeavy": "StructurePressureFedLiquidEngineHeavy"
       }
     },
-    "MediumRadiator": {
-      "plural": "MediumRadiators",
+    "Radiator": {
+      "plural": "Radiators",
       "members": {
-        "Gas": "StructureMediumRadiator",
-        "Liquid": "StructureMediumRadiatorLiquid"
-      }
-    },
-    "MediumConvectionRadiator": {
-      "plural": "MediumConvectionRadiators",
-      "members": {
-        "Gas": "StructureMediumConvectionRadiator",
-        "Liquid": "StructureMediumConvectionRadiatorLiquid"
-      }
-    },
-    "PassiveLargeRadiator": {
-      "plural": "PassiveLargeRadiators",
-      "members": {
-        "Gas": "StructurePassiveLargeRadiatorGas",
-        "Liquid": "StructurePassiveLargeRadiatorLiquid"
+        "MediumGas": "StructureMediumRadiator",
+        "MediumLiquid": "StructureMediumRadiatorLiquid",
+        "ConvectionGas": "StructureMediumConvectionRadiator",
+        "ConvectionLiquid": "StructureMediumConvectionRadiatorLiquid",
+        "PassiveLargeGas": "StructurePassiveLargeRadiatorGas",
+        "PassiveLargeLiquid": "StructurePassiveLargeRadiatorLiquid",
+        "LargeExtendable": "StructureLargeExtendableRadiator"
       }
     },
     "LandingPadInwardConnector": {
@@ -599,14 +590,6 @@
         ["StructureInteriorDoorGlass", "StructureInteriorDoorPadded", "StructureInteriorDoorPaddedThin", "StructureInteriorDoorTriangle"]
       ],
       "reason": "the Glass Door is one of the Doors, like the Blast and Composite Doors, and not one of the Interior Doors, which extend them"
-    },
-    {
-      "prefabs": [
-        ["StructureMediumRadiator", "StructureMediumRadiatorLiquid"],
-        ["StructureMediumConvectionRadiator", "StructureMediumConvectionRadiatorLiquid"],
-        ["StructurePassiveLargeRadiatorGas", "StructurePassiveLargeRadiatorLiquid"]
-      ],
-      "reason": "the Medium Radiator radiates heat into a vacuum, the convection radiators exchange it with the air around them, and StructurePassiveLargeRadiator is an older convection radiator the game says was replaced"
     },
     {
       "prefabs": ["StructureChuteBin", "StructureChuteExportBin"],

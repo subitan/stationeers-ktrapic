@@ -5256,7 +5256,7 @@ object PressureFedEngines {
 }
 
 /** A device that comes as several prefabs, each a nested class. */
-interface MediumRadiator {
+interface Radiator {
   val Maximum: Double
 
   val Ratio: Double
@@ -5265,7 +5265,7 @@ interface MediumRadiator {
 
   /** A StructureMediumRadiator. */
   @PrefabName("StructureMediumRadiator")
-  class Gas internal constructor() : TypedDevice(), MediumRadiator {
+  class MediumGas internal constructor() : TypedDevice(), Radiator {
     override val Maximum: Double
       get() = intrinsic()
 
@@ -5282,7 +5282,7 @@ interface MediumRadiator {
 
   /** A StructureMediumRadiatorLiquid. */
   @PrefabName("StructureMediumRadiatorLiquid")
-  class Liquid internal constructor() : TypedDevice(), MediumRadiator {
+  class MediumLiquid internal constructor() : TypedDevice(), Radiator {
     override val Maximum: Double
       get() = intrinsic()
 
@@ -5296,50 +5296,10 @@ interface MediumRadiator {
     /** The StructureMediumRadiatorLiquid prefab. */
     companion object : Prefab()
   }
-}
-
-/** The MediumRadiator devices on the chip's network, by prefab. */
-object MediumRadiators {
-  /** The StructureMediumRadiator devices on the chip's network. */
-  @PrefabName("StructureMediumRadiator")
-  object Gas {
-    /** The device on [pin], as a StructureMediumRadiator. */
-    fun at(pin: Device): MediumRadiator.Gas = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<MediumRadiator.Gas>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<MediumRadiator.Gas> = intrinsic()
-  }
-
-  /** The StructureMediumRadiatorLiquid devices on the chip's network. */
-  @PrefabName("StructureMediumRadiatorLiquid")
-  object Liquid {
-    /** The device on [pin], as a StructureMediumRadiatorLiquid. */
-    fun at(pin: Device): MediumRadiator.Liquid = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<MediumRadiator.Liquid>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<MediumRadiator.Liquid> = intrinsic()
-  }
-}
-
-/** A device that comes as several prefabs, each a nested class. */
-interface MediumConvectionRadiator {
-  val Maximum: Double
-
-  val Ratio: Double
-
-  var Setting: Double
 
   /** A StructureMediumConvectionRadiator. */
   @PrefabName("StructureMediumConvectionRadiator")
-  class Gas internal constructor() : TypedDevice(), MediumConvectionRadiator {
+  class ConvectionGas internal constructor() : TypedDevice(), Radiator {
     override val Maximum: Double
       get() = intrinsic()
 
@@ -5356,7 +5316,7 @@ interface MediumConvectionRadiator {
 
   /** A StructureMediumConvectionRadiatorLiquid. */
   @PrefabName("StructureMediumConvectionRadiatorLiquid")
-  class Liquid internal constructor() : TypedDevice(), MediumConvectionRadiator {
+  class ConvectionLiquid internal constructor() : TypedDevice(), Radiator {
     override val Maximum: Double
       get() = intrinsic()
 
@@ -5370,50 +5330,10 @@ interface MediumConvectionRadiator {
     /** The StructureMediumConvectionRadiatorLiquid prefab. */
     companion object : Prefab()
   }
-}
-
-/** The MediumConvectionRadiator devices on the chip's network, by prefab. */
-object MediumConvectionRadiators {
-  /** The StructureMediumConvectionRadiator devices on the chip's network. */
-  @PrefabName("StructureMediumConvectionRadiator")
-  object Gas {
-    /** The device on [pin], as a StructureMediumConvectionRadiator. */
-    fun at(pin: Device): MediumConvectionRadiator.Gas = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<MediumConvectionRadiator.Gas>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<MediumConvectionRadiator.Gas> = intrinsic()
-  }
-
-  /** The StructureMediumConvectionRadiatorLiquid devices on the chip's network. */
-  @PrefabName("StructureMediumConvectionRadiatorLiquid")
-  object Liquid {
-    /** The device on [pin], as a StructureMediumConvectionRadiatorLiquid. */
-    fun at(pin: Device): MediumConvectionRadiator.Liquid = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<MediumConvectionRadiator.Liquid>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<MediumConvectionRadiator.Liquid> = intrinsic()
-  }
-}
-
-/** A device that comes as several prefabs, each a nested class. */
-interface PassiveLargeRadiator {
-  val Maximum: Double
-
-  val Ratio: Double
-
-  var Setting: Double
 
   /** A StructurePassiveLargeRadiatorGas. */
   @PrefabName("StructurePassiveLargeRadiatorGas")
-  class Gas internal constructor() : TypedDevice(), PassiveLargeRadiator {
+  class PassiveLargeGas internal constructor() : TypedDevice(), Radiator {
     override val Maximum: Double
       get() = intrinsic()
 
@@ -5430,7 +5350,7 @@ interface PassiveLargeRadiator {
 
   /** A StructurePassiveLargeRadiatorLiquid. */
   @PrefabName("StructurePassiveLargeRadiatorLiquid")
-  class Liquid internal constructor() : TypedDevice(), PassiveLargeRadiator {
+  class PassiveLargeLiquid internal constructor() : TypedDevice(), Radiator {
     override val Maximum: Double
       get() = intrinsic()
 
@@ -5444,36 +5364,135 @@ interface PassiveLargeRadiator {
     /** The StructurePassiveLargeRadiatorLiquid prefab. */
     companion object : Prefab()
   }
+
+  /** A StructureLargeExtendableRadiator. */
+  @PrefabName("StructureLargeExtendableRadiator")
+  class LargeExtendable internal constructor() : TypedDevice(), Radiator {
+    var Horizontal: Double
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    var Lock: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override val Maximum: Double
+      get() = intrinsic()
+
+    var Open: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override val Ratio: Double
+      get() = intrinsic()
+
+    override var Setting: Double
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    /** The StructureLargeExtendableRadiator prefab. */
+    companion object : Prefab()
+  }
 }
 
-/** The PassiveLargeRadiator devices on the chip's network, by prefab. */
-object PassiveLargeRadiators {
-  /** The StructurePassiveLargeRadiatorGas devices on the chip's network. */
-  @PrefabName("StructurePassiveLargeRadiatorGas")
-  object Gas {
-    /** The device on [pin], as a StructurePassiveLargeRadiatorGas. */
-    fun at(pin: Device): PassiveLargeRadiator.Gas = intrinsic()
+/** The Radiator devices on the chip's network, by prefab. */
+object Radiators {
+  /** The StructureMediumRadiator devices on the chip's network. */
+  @PrefabName("StructureMediumRadiator")
+  object MediumGas {
+    /** The device on [pin], as a StructureMediumRadiator. */
+    fun at(pin: Device): Radiator.MediumGas = intrinsic()
 
     /** Every one on the network. */
-    val all: DeviceBatch<PassiveLargeRadiator.Gas>
+    val all: DeviceBatch<Radiator.MediumGas>
       get() = intrinsic()
 
     /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<PassiveLargeRadiator.Gas> = intrinsic()
+    fun named(name: String): DeviceBatch<Radiator.MediumGas> = intrinsic()
+  }
+
+  /** The StructureMediumRadiatorLiquid devices on the chip's network. */
+  @PrefabName("StructureMediumRadiatorLiquid")
+  object MediumLiquid {
+    /** The device on [pin], as a StructureMediumRadiatorLiquid. */
+    fun at(pin: Device): Radiator.MediumLiquid = intrinsic()
+
+    /** Every one on the network. */
+    val all: DeviceBatch<Radiator.MediumLiquid>
+      get() = intrinsic()
+
+    /** Every one on the network named [name], which must be a constant. */
+    fun named(name: String): DeviceBatch<Radiator.MediumLiquid> = intrinsic()
+  }
+
+  /** The StructureMediumConvectionRadiator devices on the chip's network. */
+  @PrefabName("StructureMediumConvectionRadiator")
+  object ConvectionGas {
+    /** The device on [pin], as a StructureMediumConvectionRadiator. */
+    fun at(pin: Device): Radiator.ConvectionGas = intrinsic()
+
+    /** Every one on the network. */
+    val all: DeviceBatch<Radiator.ConvectionGas>
+      get() = intrinsic()
+
+    /** Every one on the network named [name], which must be a constant. */
+    fun named(name: String): DeviceBatch<Radiator.ConvectionGas> = intrinsic()
+  }
+
+  /** The StructureMediumConvectionRadiatorLiquid devices on the chip's network. */
+  @PrefabName("StructureMediumConvectionRadiatorLiquid")
+  object ConvectionLiquid {
+    /** The device on [pin], as a StructureMediumConvectionRadiatorLiquid. */
+    fun at(pin: Device): Radiator.ConvectionLiquid = intrinsic()
+
+    /** Every one on the network. */
+    val all: DeviceBatch<Radiator.ConvectionLiquid>
+      get() = intrinsic()
+
+    /** Every one on the network named [name], which must be a constant. */
+    fun named(name: String): DeviceBatch<Radiator.ConvectionLiquid> = intrinsic()
+  }
+
+  /** The StructurePassiveLargeRadiatorGas devices on the chip's network. */
+  @PrefabName("StructurePassiveLargeRadiatorGas")
+  object PassiveLargeGas {
+    /** The device on [pin], as a StructurePassiveLargeRadiatorGas. */
+    fun at(pin: Device): Radiator.PassiveLargeGas = intrinsic()
+
+    /** Every one on the network. */
+    val all: DeviceBatch<Radiator.PassiveLargeGas>
+      get() = intrinsic()
+
+    /** Every one on the network named [name], which must be a constant. */
+    fun named(name: String): DeviceBatch<Radiator.PassiveLargeGas> = intrinsic()
   }
 
   /** The StructurePassiveLargeRadiatorLiquid devices on the chip's network. */
   @PrefabName("StructurePassiveLargeRadiatorLiquid")
-  object Liquid {
+  object PassiveLargeLiquid {
     /** The device on [pin], as a StructurePassiveLargeRadiatorLiquid. */
-    fun at(pin: Device): PassiveLargeRadiator.Liquid = intrinsic()
+    fun at(pin: Device): Radiator.PassiveLargeLiquid = intrinsic()
 
     /** Every one on the network. */
-    val all: DeviceBatch<PassiveLargeRadiator.Liquid>
+    val all: DeviceBatch<Radiator.PassiveLargeLiquid>
       get() = intrinsic()
 
     /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<PassiveLargeRadiator.Liquid> = intrinsic()
+    fun named(name: String): DeviceBatch<Radiator.PassiveLargeLiquid> = intrinsic()
+  }
+
+  /** The StructureLargeExtendableRadiator devices on the chip's network. */
+  @PrefabName("StructureLargeExtendableRadiator")
+  object LargeExtendable {
+    /** The device on [pin], as a StructureLargeExtendableRadiator. */
+    fun at(pin: Device): Radiator.LargeExtendable = intrinsic()
+
+    /** Every one on the network. */
+    val all: DeviceBatch<Radiator.LargeExtendable>
+      get() = intrinsic()
+
+    /** Every one on the network named [name], which must be a constant. */
+    fun named(name: String): DeviceBatch<Radiator.LargeExtendable> = intrinsic()
   }
 }
 
@@ -18559,49 +18578,6 @@ object Klaxons {
 
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): DeviceBatch<Klaxon> = intrinsic()
-}
-
-/** A StructureLargeExtendableRadiator. */
-@PrefabName("StructureLargeExtendableRadiator")
-class LargeExtendableRadiator internal constructor() : TypedDevice() {
-  var Horizontal: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var Lock: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val Maximum: Double
-    get() = intrinsic()
-
-  var Open: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val Ratio: Double
-    get() = intrinsic()
-
-  var Setting: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  /** The StructureLargeExtendableRadiator prefab. */
-  companion object : Prefab()
-}
-
-/** The StructureLargeExtendableRadiator devices on the chip's network. */
-@PrefabName("StructureLargeExtendableRadiator")
-object LargeExtendableRadiators {
-  /** The device on [pin], as a StructureLargeExtendableRadiator. */
-  fun at(pin: Device): LargeExtendableRadiator = intrinsic()
-
-  /** Every one on the network. */
-  val all: DeviceBatch<LargeExtendableRadiator>
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): DeviceBatch<LargeExtendableRadiator> = intrinsic()
 }
 
 /** A StructureLarreDockBypass. */
