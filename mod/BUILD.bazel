@@ -1,6 +1,6 @@
-# The in-game plugin builds with dotnet, not Bazel. Its list of the runtime's generated names is
+# The in-game plugin builds with dotnet, not Bazel. Its list of the SDK's generated names is
 # made by //tools/datagen, whose test checks it is up to date.
 exports_files(
-    ["src/RuntimeNames.g.cs"],
+    ["src/SdkNames.g.cs"],
     visibility = ["//tools/datagen:__pkg__"],
 )

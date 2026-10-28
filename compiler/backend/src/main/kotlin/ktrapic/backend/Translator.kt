@@ -119,7 +119,7 @@ internal data object NoValue : Value
 /**
  * A view of a device's logic types (`Ports`, `Ratios`, `Position`, `Import` and their parts),
  * resolved when compiled: a member or key of it names the logic type [prefix] + the member or
- * key + [suffix]. Its [shape] is the view's runtime class, by simple name. [owner] is the device
+ * key + [suffix]. Its [shape] is the view's SDK class, by simple name. [owner] is the device
  * ([Dev]), or a batch's element ([Element]). [access] is what a typed device's prefab has in this
  * view, or for an untyped pin every logic type the game has.
  */
@@ -160,8 +160,7 @@ internal data class RatioEntry(val view: View, val key: Key) : Value
 
 /**
  * Translates the IR of a wrapped script-style program into [TirLine]s: the `Program` object's
- * property initializers and `init` blocks, in source order. [symbols] finds the runtime API's
- * declarations.
+ * property initializers and `init` blocks, in source order. [symbols] finds the SDK's declarations.
  */
 internal class Translator(private val symbols: DeclarationFinder) {
   val lines = mutableListOf<TirLine>()
@@ -181,13 +180,13 @@ internal class Translator(private val symbols: DeclarationFinder) {
   /**
    * What an untyped device's views reach: every logic type the game has, read and written, as its
    * flat logic types are. A view's members combine (`Ports.Output2.Setting`) into names the game
-   * may not have, which this rules out. The game's logic types are the entries of the runtime's
+   * may not have, which this rules out. The game's logic types are the entries of the SDK's
    * `LogicType`.
    */
   private val anyDeviceAccess: ViewAccess by lazy {
     val logicType =
         checkNotNull(symbols.findClass(LOGIC_TYPE)) {
-          "the runtime has no ${LOGIC_TYPE.asString()}"
+          "the SDK has no ${LOGIC_TYPE.asString()}"
         }
     val names =
         logicType.owner.declarations
@@ -201,7 +200,7 @@ internal class Translator(private val symbols: DeclarationFinder) {
   private val substances: List<String> by lazy {
     val substance =
         checkNotNull(symbols.findClass(SUBSTANCE_ID)) {
-          "the runtime has no ${SUBSTANCE_ID.asString()}"
+          "the SDK has no ${SUBSTANCE_ID.asString()}"
         }
     substance.owner.declarations.filterIsInstance<IrEnumEntry>().map { it.name.asString() }
   }
@@ -1397,7 +1396,7 @@ internal class Translator(private val symbols: DeclarationFinder) {
   }
 
   /**
-   * A runtime function with a side effect that is not an assignment: a device's indexed write
+   * An SDK function with a side effect that is not an assignment: a device's indexed write
    * (`Device.set`), a batch's `forEach`, `sleep` or `yield`. Every `forEach` that compiles assigns
    * logic types in its lambda, which [assigns] finds on its own; the call is counted too, so that
    * doesn't depend on what [batchWrites] accepts.
@@ -1643,7 +1642,7 @@ internal class Translator(private val symbols: DeclarationFinder) {
 
   /**
    * True if [element] assigns a property, or a variable when [variables] is set, or, when [effects]
-   * is set, calls a runtime function with a side effect. A call to one of the program's functions
+   * is set, calls an SDK function with a side effect. A call to one of the program's functions
    * counts what its body does, except the variables it assigns, which are its own. [visited] holds
    * the functions already looked into.
    */
@@ -2362,7 +2361,7 @@ internal class Translator(private val symbols: DeclarationFinder) {
         setOf("Set", "List", "Collection", "Iterable").map { "kotlin.collections.$it" }.toSet() +
             "kotlin.enums.EnumEntries"
 
-    /** The runtime's view classes, whose members name logic types ([View]). */
+    /** The SDK's view classes, whose members name logic types ([View]). */
     val VIEW_CLASSES =
         setOf(
                 "Ports",
@@ -2394,7 +2393,7 @@ internal class Translator(private val symbols: DeclarationFinder) {
             "ktrapic.min" to "Minimum",
             "ktrapic.max" to "Maximum",
         )
-    /** The runtime functions besides a batch's `forEach` with a side effect not an assignment. */
+    /** The SDK functions besides a batch's `forEach` with a side effect not an assignment. */
     val SIDE_EFFECTS = setOf("ktrapic.Device.set", "ktrapic.sleep", "ktrapic.yield")
     val PIN_GETTERS =
         listOf("d0", "d1", "d2", "d3", "d4", "d5", "db").associateBy { "ktrapic.<get-$it>" }

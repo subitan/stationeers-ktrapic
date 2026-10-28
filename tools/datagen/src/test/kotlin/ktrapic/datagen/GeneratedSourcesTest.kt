@@ -8,7 +8,7 @@ class GeneratedSourcesTest {
   private val workspace = File(System.getenv("TEST_SRCDIR"), System.getenv("TEST_WORKSPACE"))
 
   @Test
-  fun `the committed runtime sources match the data`() {
+  fun `the committed SDK sources match the data`() {
     for ((name, text) in DataFiles.generate(workspace)) {
       val committed = DataFiles.generatedDir(workspace).resolve(name).readText()
       assertWithMessage("%s is stale; regenerate with: bazel run //tools/datagen -- generate", name)

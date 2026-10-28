@@ -3,7 +3,7 @@ using System.Linq;
 using KTrapIC;
 using Xunit;
 
-public class RuntimeNameKindsTest
+public class SdkNameKindsTest
 {
     [Theory]
     // Small, Medium and Large are batteries and values of an enum; the qualifier decides.
@@ -35,7 +35,7 @@ public class RuntimeNameKindsTest
     [InlineData(null, "Pressure", NameKind.LogicType)]
     public void Member(string qualifier, string name, NameKind kind)
     {
-        Assert.Equal(kind, RuntimeNameKinds.Member(qualifier, name));
+        Assert.Equal(kind, SdkNameKinds.Member(qualifier, name));
     }
 
     [Theory]
@@ -47,7 +47,7 @@ public class RuntimeNameKindsTest
     [InlineData("unknown", NameKind.None)]
     public void Name(string name, NameKind kind)
     {
-        Assert.Equal(kind, RuntimeNameKinds.Name(name));
+        Assert.Equal(kind, SdkNameKinds.Name(name));
     }
 
     /// <summary>
@@ -56,12 +56,12 @@ public class RuntimeNameKindsTest
     /// </summary>
     private static IEnumerable<IEnumerable<string>> NameSets()
     {
-        yield return RuntimeNameKinds.Types;
-        foreach (var values in RuntimeNameKinds.Enums.Values)
+        yield return SdkNameKinds.Types;
+        foreach (var values in SdkNameKinds.Enums.Values)
             yield return values;
-        yield return RuntimeNameKinds.LogicTypes;
-        yield return RuntimeNameKinds.Functions;
-        yield return RuntimeNameKinds.Enums.Keys;
+        yield return SdkNameKinds.LogicTypes;
+        yield return SdkNameKinds.Functions;
+        yield return SdkNameKinds.Enums.Keys;
     }
 
     /// <summary>Every name in more than one of <see cref="NameSets"/>.</summary>
@@ -74,7 +74,7 @@ public class RuntimeNameKindsTest
 
     /// <summary>The qualifiers that aren't enums: every type, each device and a variable.</summary>
     private static IEnumerable<string> NonEnumQualifiers() =>
-        RuntimeNameKinds.Types.Concat(new[] { "d0", "d1", "d2", "d3", "d4", "d5", "db", "x" });
+        SdkNameKinds.Types.Concat(new[] { "d0", "d1", "d2", "d3", "d4", "d5", "db", "x" });
 
     [Fact]
     public void OverlapsIncludeTheKnownOnes()
@@ -88,14 +88,14 @@ public class RuntimeNameKindsTest
     public void AfterAnEnumOnlyItsOwnValuesAreValues()
     {
         var failures = new List<string>();
-        foreach (var e in RuntimeNameKinds.Enums)
+        foreach (var e in SdkNameKinds.Enums)
         {
             foreach (var name in Overlaps)
             {
-                var kind = RuntimeNameKinds.Member(e.Key, name);
+                var kind = SdkNameKinds.Member(e.Key, name);
                 NameKind? expected = null;
                 if (e.Value.Contains(name))
-                    expected = RuntimeNameKinds.OperandEnums.Contains(e.Key) && RuntimeNameKinds.LogicTypes.Contains(name)
+                    expected = SdkNameKinds.OperandEnums.Contains(e.Key) && SdkNameKinds.LogicTypes.Contains(name)
                         ? NameKind.LogicType
                         : NameKind.EnumValue;
                 else if (kind == NameKind.EnumValue || kind == NameKind.LogicType)
@@ -115,7 +115,7 @@ public class RuntimeNameKindsTest
         {
             foreach (var name in Overlaps)
             {
-                if (RuntimeNameKinds.Member(qualifier, name) == NameKind.EnumValue)
+                if (SdkNameKinds.Member(qualifier, name) == NameKind.EnumValue)
                     failures.Add($"{qualifier}.{name}");
             }
         }
@@ -126,11 +126,11 @@ public class RuntimeNameKindsTest
     public void AfterAFamilyATypeIsAType()
     {
         var failures = new List<string>();
-        foreach (var qualifier in RuntimeNameKinds.Types)
+        foreach (var qualifier in SdkNameKinds.Types)
         {
-            foreach (var name in Overlaps.Where(RuntimeNameKinds.Types.Contains))
+            foreach (var name in Overlaps.Where(SdkNameKinds.Types.Contains))
             {
-                var kind = RuntimeNameKinds.Member(qualifier, name);
+                var kind = SdkNameKinds.Member(qualifier, name);
                 if (kind != NameKind.Type)
                     failures.Add($"{qualifier}.{name}: {kind}");
             }
@@ -144,9 +144,9 @@ public class RuntimeNameKindsTest
         var failures = new List<string>();
         foreach (var qualifier in new[] { "d0", "d1", "d2", "d3", "d4", "d5", "db", "x", ")", null })
         {
-            foreach (var name in Overlaps.Where(RuntimeNameKinds.LogicTypes.Contains))
+            foreach (var name in Overlaps.Where(SdkNameKinds.LogicTypes.Contains))
             {
-                var kind = RuntimeNameKinds.Member(qualifier, name);
+                var kind = SdkNameKinds.Member(qualifier, name);
                 if (kind != NameKind.LogicType)
                     failures.Add($"{qualifier ?? "(none)"}.{name}: {kind}");
             }
@@ -157,12 +157,12 @@ public class RuntimeNameKindsTest
     [Fact]
     public void WithNoQualifierAnEnumValueThatIsNoLogicTypeIsAValue()
     {
-        var values = RuntimeNameKinds.Enums
-            .Where(e => !RuntimeNameKinds.OperandEnums.Contains(e.Key))
+        var values = SdkNameKinds.Enums
+            .Where(e => !SdkNameKinds.OperandEnums.Contains(e.Key))
             .SelectMany(e => e.Value);
         var failures = Overlaps
-            .Where(name => values.Contains(name) && !RuntimeNameKinds.LogicTypes.Contains(name))
-            .Where(name => RuntimeNameKinds.Member(null, name) != NameKind.EnumValue)
+            .Where(name => values.Contains(name) && !SdkNameKinds.LogicTypes.Contains(name))
+            .Where(name => SdkNameKinds.Member(null, name) != NameKind.EnumValue)
             .ToList();
         Assert.Empty(failures);
     }

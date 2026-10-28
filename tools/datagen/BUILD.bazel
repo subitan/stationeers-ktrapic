@@ -20,10 +20,10 @@ kt_junit5_tests(
     srcs = glob(["src/test/kotlin/**/*.kt"]),
     associates = [":datagen_lib"],
     data = [
-        "//runtime:data",
+        "//sdk:data",
         "//docs:DEVICES.md",
-        "//mod:src/RuntimeNames.g.cs",
-        "//runtime:generated_srcs",
+        "//mod:src/SdkNames.g.cs",
+        "//sdk:generated_srcs",
     ],
     deps = [
         "@maven//:com_google_truth_truth",

@@ -14,7 +14,7 @@ kt_junit5_tests(
     associates = [":frontend"],
     size = "medium",
     deps = [
-        "//runtime",
+        "//sdk",
         "@maven//:com_google_truth_truth",
         "@maven//:org_jetbrains_kotlin_kotlin_compiler_embeddable",
         "@maven//:org_junit_jupiter_junit_jupiter_api",

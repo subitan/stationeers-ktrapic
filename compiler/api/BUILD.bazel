@@ -9,7 +9,7 @@ kt_jvm_library(
         "//compiler/backend",
         "//compiler/frontend",
         "//compiler/ic10",
-        "//runtime",
+        "//sdk",
     ],
 )
 

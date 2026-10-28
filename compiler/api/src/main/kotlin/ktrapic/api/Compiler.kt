@@ -44,7 +44,7 @@ sealed interface CompileResult {
 object Compiler {
   fun compile(source: String, options: CompileOptions = CompileOptions()): CompileResult {
     val result =
-        K2Frontend.compile(source, listOf(runtimeJar()), listOf("ktrapic.*")) { ir ->
+        K2Frontend.compile(source, listOf(sdkJar()), listOf("ktrapic.*")) { ir ->
           try {
             val lowered = Backend.compile(ir.module, ir.symbols)
             // The 0-based line of the user's source that each line of the program comes from.
@@ -111,7 +111,7 @@ object Compiler {
 
   private class CompileFailure(val error: CompileError) : Exception(error.message)
 
-  /** The runtime API's jar, which programs compile against. */
-  private fun runtimeJar(): File =
+  /** The SDK's jar, which programs compile against. */
+  private fun sdkJar(): File =
       File(ktrapic.Device::class.java.protectionDomain.codeSource.location.toURI())
 }

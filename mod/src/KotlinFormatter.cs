@@ -65,7 +65,7 @@ namespace KTrapIC
 
         private static readonly uint PreviewHighlight = ColorFromHTML("#000080");
 
-        // The runtime's names, in the colors the editor's theme gives types, enums, variables,
+        // The SDK's names, in the colors the editor's theme gives types, enums, variables,
         // properties, enum members and functions.
         private static readonly Style TypeStyle = new Style { Color = ColorFromHTML("#4EC9B0") };
         private static readonly Style EnumStyle = new Style { Color = ColorFromHTML("#B8D7A3") };
@@ -134,7 +134,7 @@ namespace KTrapIC
         }
 
         /// <summary>
-        /// Highlights the Kotlin keywords and the runtime's names. A name after a dot is a member,
+        /// Highlights the Kotlin keywords and the SDK's names. A name after a dot is a member,
         /// told apart by the name before the dot: an enum's value (<c>Color.Red</c>), a family's
         /// prefab (<c>Batteries.Small</c>) or a logic type (<c>d0.Temperature</c>). Anywhere else it
         /// is a type, an enum, a device or a function, so <c>db.Color = Color.Red</c> colors each
@@ -152,8 +152,8 @@ namespace KTrapIC
                 if (!token.Text.StartsWith(CommentPrefix) && !KotlinKeywords.ContainsKey(token.Text))
                 {
                     var kind = previous?.Text == "."
-                        ? RuntimeNameKinds.Member(qualifier?.Text, token.Text)
-                        : RuntimeNameKinds.Name(token.Text);
+                        ? SdkNameKinds.Member(qualifier?.Text, token.Text)
+                        : SdkNameKinds.Name(token.Text);
                     var style = StyleOf(kind);
                     if (style.HasValue)
                         token.Style = style.Value;

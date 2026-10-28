@@ -26,10 +26,10 @@ functions, devices, the maths and numeric rules, and the chip's size limits. The
   labels resolved to line numbers), plus the chip's size limits.
 - `emu`: an IC10 emulator with fake devices, so tests can check what a program does.
 - `playground`: a Kotlin script serving a local editor page backed by the daemon.
-- `runtime`: the `ktrapic` API that programs compile against (devices, logic types, `sleep`,
-  `hash`, ...). Part of it is generated from the game data in `runtime/data` by
+- `sdk`: the `ktrapic` API that programs compile against (devices, logic types, `sleep`,
+  `hash`, ...). Part of it is generated from the game data in `sdk/data` by
   `tools/datagen`.
-- `runtime/script`: the Kotlin script definition for `*.ic10.kts`, so IDEs check programs against
+- `sdk/script`: the Kotlin script definition for `*.ic10.kts`, so IDEs check programs against
   the `ktrapic` API.
 
 ## Roadmap
@@ -100,12 +100,12 @@ it then completes and type-checks programs against the `ktrapic` API, with `impo
 implied. Build the two jars it needs:
 
 ```
-bazel build //runtime //runtime/script:ktrapic-script
+bazel build //sdk //sdk/script:ktrapic-script
 ```
 
-and add `bazel-bin/runtime/runtime.jar` and `bazel-bin/runtime/script/ktrapic-script.jar` to
+and add `bazel-bin/sdk/sdk.jar` and `bazel-bin/sdk/script/ktrapic-script.jar` to
 your project as a library (Project Structure > Libraries; keep the file names, since the
-definition finds the runtime by the name `runtime`). IntelliJ discovers the definition from the
+definition finds the SDK by the name `sdk`). IntelliJ discovers the definition from the
 jar; if it asks, allow it under Settings > Languages & Frameworks > Kotlin > Kotlin Scripting.
 IntelliJ checks Kotlin only: KTrapIC's own rules (supported constructs, register and size
 limits) come from the compiler, the playground or the CLI.
@@ -157,12 +157,12 @@ RULES_JVM_EXTERNAL_REPIN=1 bazel run @maven//:pin
 
 ### Game data
 
-`runtime/data/logic-enums.json` holds the game's logic enums and `runtime/data/prefabs.json` its
+`sdk/data/logic-enums.json` holds the game's logic enums and `sdk/data/prefabs.json` its
 prefabs with their logic types and slots, and what each kind of slot can read;
-`runtime/data/typing.json` says how the API types logic and which slot logic types the game lets
+`sdk/data/typing.json` says how the API types logic and which slot logic types the game lets
 a program write (checked against the game's code, which allows far fewer than PyTrapIC's data
-claims), and `runtime/data/grouping.json` which prefabs are grouped into kinds (`Battery.Small`)
-and which are text displays. After changing any of them, regenerate the runtime's sources (a test fails
+claims), and `sdk/data/grouping.json` which prefabs are grouped into kinds (`Battery.Small`)
+and which are text displays. After changing any of them, regenerate the SDK's sources (a test fails
 until they match):
 
 ```
@@ -173,7 +173,7 @@ The enums and prefabs were imported from
 [PyTrapIC](https://github.com/aproposmath/stationeers-pytrapic)'s generated types and structures
 with `bazel run //tools/datagen -- import-pytrapic <types_generated.py> <source description>`
 and `import-pytrapic-structures <structures_generated.py> <source description>`.
-PyTrapIC is under the MIT License; its notice is in `runtime/data/PYTRAPIC-LICENSE`.
+PyTrapIC is under the MIT License; its notice is in `sdk/data/PYTRAPIC-LICENSE`.
 
 ## Formatting
 
