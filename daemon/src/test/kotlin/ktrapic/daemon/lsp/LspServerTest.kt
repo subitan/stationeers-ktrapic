@@ -1,0 +1,301 @@
+package ktrapic.daemon.lsp
+
+import com.google.common.truth.Truth.assertThat
+import com.google.gson.Gson
+import com.google.gson.JsonObject
+import com.google.gson.JsonParser
+import java.io.PipedInputStream
+import java.io.PipedOutputStream
+import java.util.Base64
+import java.util.concurrent.TimeUnit
+import kotlin.concurrent.thread
+import ktrapic.daemon.Daemon
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.Timeout
+
+/** Drives an [LspServer] in-process, over pipes, as a client would over the daemon's stdio. */
+@Timeout(value = 5, unit = TimeUnit.MINUTES)
+class LspServerTest {
+  private val gson = Gson()
+
+  /** A client connected to a server running on its own thread. */
+  private class Client : AutoCloseable {
+    private val toServer = PipedOutputStream()
+    private val serverInput = PipedInputStream(toServer, 1 shl 20)
+    private val serverOutput = PipedOutputStream()
+    private val fromServer = PipedInputStream(serverOutput, 1 shl 20)
+    private val reader = MessageReader(fromServer) {}
+    val server = LspServer(serverInput, serverOutput, log = {})
+    @Volatile private var exitCode: Int? = null
+    private val serverThread = thread {
+      try {
+        exitCode = server.run()
+      } finally {
+        serverOutput.close()
+      }
+    }
+    private var nextId = 1
+
+    fun sendBytes(bytes: ByteArray) {
+      toServer.write(bytes)
+      toServer.flush()
+    }
+
+    fun send(body: String) = sendBytes(frame(body))
+
+    fun request(method: String, params: String = "null"): JsonObject {
+      send("""{"jsonrpc": "2.0", "id": ${nextId++}, "method": "$method", "params": $params}""")
+      return read()
+    }
+
+    fun notify(method: String, params: String = "null") =
+        send("""{"jsonrpc": "2.0", "method": "$method", "params": $params}""")
+
+    fun read(): JsonObject =
+        JsonParser.parseString(checkNotNull(reader.read()) { "The server sent nothing" })
+            .asJsonObject
+
+    fun initialize(): JsonObject {
+      val response = request("initialize", """{"processId": null, "rootUri": null}""")
+      notify("initialized", "{}")
+      return response
+    }
+
+    /** Ends the input and waits for the server to stop; its exit code. */
+    fun awaitExit(): Int? {
+      toServer.close()
+      serverThread.join(60_000)
+      return exitCode
+    }
+
+    override fun close() {
+      awaitExit()
+    }
+
+    companion object {
+      fun frame(body: String): ByteArray {
+        val bytes = body.toByteArray()
+        return "Content-Length: ${bytes.size}\r\n\r\n".toByteArray() + bytes
+      }
+    }
+  }
+
+  private val client = Client()
+
+  @AfterEach fun stop() = client.close()
+
+  private fun open(uri: String, text: String, version: Int = 1) =
+      client.notify(
+          "textDocument/didOpen",
+          """{"textDocument": {"uri": "$uri", "languageId": "python", "version": $version,
+            "text": ${gson.toJson(text)}}}""",
+      )
+
+  private fun compile(uri: String, options: String = "{}") =
+      client.request(
+          "ktrapic/compile",
+          """{"textDocument": {"uri": "$uri"}, "options": $options}""",
+      )
+
+  /** What the line protocol answers for compiling [source] with [options]. */
+  private fun lineProtocolCompile(source: String, options: String = "{}"): JsonObject {
+    val request = """{"action": "compile", "code": ${gson.toJson(source)}, "options": $options}"""
+    val line = Daemon.handle(Base64.getEncoder().encodeToString(request.toByteArray()))
+    return JsonParser.parseString(String(Base64.getDecoder().decode(line))).asJsonObject
+  }
+
+  private fun JsonObject.errorCode() = this["error"].asJsonObject["code"].asInt
+
+  @Test
+  fun `initializes with only the capabilities it implements`() {
+    val response = client.initialize()
+
+    assertThat(response["jsonrpc"].asString).isEqualTo("2.0")
+    assertThat(response["id"].asInt).isEqualTo(1)
+    val result = response["result"].asJsonObject
+    assertThat(result["capabilities"].toString())
+        .isEqualTo("""{"textDocumentSync":{"openClose":true,"change":2}}""")
+    assertThat(result["serverInfo"].asJsonObject["name"].asString).isEqualTo("ktrapic-daemon")
+  }
+
+  @Test
+  fun `answers requests before initialize with ServerNotInitialized and drops notifications`() {
+    val early = compile("file:///a.kt")
+    open("file:///a.kt", "text")
+    client.initialize()
+
+    assertThat(early["id"].asInt).isEqualTo(1)
+    assertThat(early.errorCode()).isEqualTo(-32002)
+    assertThat(client.server.documents).isEmpty()
+  }
+
+  @Test
+  fun `shuts down and exits with 0`() {
+    client.initialize()
+    val shutdown = client.request("shutdown")
+    val after = client.request("ktrapic/compile", "{}")
+    client.notify("exit")
+
+    assertThat(shutdown.has("result")).isTrue()
+    assertThat(shutdown["result"].isJsonNull).isTrue()
+    assertThat(after.errorCode()).isEqualTo(-32600)
+    assertThat(client.awaitExit()).isEqualTo(0)
+  }
+
+  @Test
+  fun `exits with 1 when told to exit without shutting down`() {
+    client.initialize()
+    client.notify("exit")
+
+    assertThat(client.awaitExit()).isEqualTo(1)
+  }
+
+  @Test
+  fun `exits with 1 when the input ends without exit`() {
+    client.initialize()
+
+    assertThat(client.awaitExit()).isEqualTo(1)
+  }
+
+  @Test
+  fun `rejects a second initialize`() {
+    client.initialize()
+
+    assertThat(client.request("initialize", "{}").errorCode()).isEqualTo(-32600)
+  }
+
+  @Test
+  fun `reads messages back to back and split into pieces`() {
+    val initialize = """{"jsonrpc": "2.0", "id": "init", "method": "initialize", "params": {}}"""
+    val initialized = """{"jsonrpc": "2.0", "method": "initialized", "params": {}}"""
+    client.sendBytes(Client.frame(initialize) + Client.frame(initialized))
+    val response = client.read()
+    // A message sent a byte at a time, splitting its header and its multibyte characters.
+    val text = "// é 😀 ü\n"
+    val didOpen =
+        """{"jsonrpc": "2.0", "method": "textDocument/didOpen", "params": {"textDocument":
+          {"uri": "file:///a.kt", "languageId": "kotlin", "version": 1, "text": "// é 😀 ü\n"}}}"""
+    for (byte in Client.frame(didOpen)) client.sendBytes(byteArrayOf(byte))
+    // A request after it, so its answer shows the server has read the notification.
+    val unknown = client.request("ktrapic/unknown")
+
+    assertThat(response["id"].asString).isEqualTo("init")
+    assertThat(response.has("result")).isTrue()
+    assertThat(unknown.errorCode()).isEqualTo(-32601)
+    assertThat(client.server.documents.getValue("file:///a.kt").text).isEqualTo(text)
+  }
+
+  @Test
+  fun `applies full and incremental changes, with positions in UTF-16 code units`() {
+    client.initialize()
+    open("file:///a.kt", "val s = \"😀a\"\nval t = 1\n")
+    // The emoji takes two UTF-16 code units, so "a" is at character 11.
+    client.notify(
+        "textDocument/didChange",
+        """{"textDocument": {"uri": "file:///a.kt", "version": 2}, "contentChanges": [
+          {"range": {"start": {"line": 0, "character": 11}, "end": {"line": 0, "character": 12}},
+           "text": "b"},
+          {"range": {"start": {"line": 1, "character": 8}, "end": {"line": 2, "character": 0}},
+           "text": "2\nval u = 3\n"}]}""",
+    )
+    client.request("ktrapic/unknown")
+    val document = client.server.documents.getValue("file:///a.kt")
+
+    assertThat(document.text).isEqualTo("val s = \"😀b\"\nval t = 2\nval u = 3\n")
+    assertThat(document.version).isEqualTo(2)
+    assertThat(document.languageId).isEqualTo("python")
+
+    client.notify(
+        "textDocument/didChange",
+        """{"textDocument": {"uri": "file:///a.kt", "version": 3},
+          "contentChanges": [{"text": "whole"}]}""",
+    )
+    client.request("ktrapic/unknown")
+    assertThat(document.text).isEqualTo("whole")
+    assertThat(document.version).isEqualTo(3)
+
+    client.notify("textDocument/didClose", """{"textDocument": {"uri": "file:///a.kt"}}""")
+    client.request("ktrapic/unknown")
+    assertThat(client.server.documents).isEmpty()
+  }
+
+  @Test
+  fun `compiles an open document as the line protocol does`() {
+    val program = "import ktrapic.*\nvar i = 0\nwhile (i < 3) i++\ndb.Setting = i.toDouble()\n"
+    val broken = "import ktrapic.*\nd0.On = 1.0\n"
+    client.initialize()
+    open("file:///program.kt", program)
+    open("file:///broken.kt", broken)
+
+    val labelled = compile("file:///program.kt")
+    val compact = compile("file:///program.kt", """{"compact": true}""")
+    val failed = compile("file:///broken.kt")
+
+    assertThat(labelled["result"]).isEqualTo(lineProtocolCompile(program))
+    assertThat(labelled["result"].asJsonObject["code"].asString).contains(":")
+    assertThat(compact["result"]).isEqualTo(lineProtocolCompile(program, """{"compact": true}"""))
+    assertThat(compact["result"].asJsonObject["code"].asString).doesNotContain(":")
+    assertThat(failed["result"]).isEqualTo(lineProtocolCompile(broken))
+    assertThat(failed["result"].asJsonObject["error"].asJsonObject["line"].asInt).isEqualTo(2)
+  }
+
+  @Test
+  fun `compiles a document's latest text`() {
+    client.initialize()
+    open("file:///a.kt", "import ktrapic.*\ndb.Setting = 1.0\n")
+    client.notify(
+        "textDocument/didChange",
+        """{"textDocument": {"uri": "file:///a.kt", "version": 2}, "contentChanges": [
+          {"range": {"start": {"line": 1, "character": 13}, "end": {"line": 1, "character": 16}},
+           "text": "2.0"}]}""",
+    )
+
+    val response = compile("file:///a.kt")
+
+    assertThat(response["result"].asJsonObject["code"].asString).isEqualTo("s db Setting 2")
+  }
+
+  @Test
+  fun `answers bad ktrapic-compile params with InvalidParams`() {
+    client.initialize()
+
+    assertThat(compile("file:///closed.kt").errorCode()).isEqualTo(-32602)
+    assertThat(client.request("ktrapic/compile", "{}").errorCode()).isEqualTo(-32602)
+    assertThat(client.request("ktrapic/compile").errorCode()).isEqualTo(-32602)
+  }
+
+  @Test
+  fun `answers unknown requests with MethodNotFound and ignores unknown notifications`() {
+    client.initialize()
+    client.notify("\$/cancelRequest", """{"id": 1}""")
+    client.notify("workspace/didChangeConfiguration", "{}")
+    client.send("""{"jsonrpc": "2.0", "id": "abc", "method": "textDocument/hover"}""")
+
+    // The next message is the request's answer: the notifications got none.
+    val response = client.read()
+    assertThat(response["id"].asString).isEqualTo("abc")
+    assertThat(response.errorCode()).isEqualTo(-32601)
+  }
+
+  @Test
+  fun `answers malformed messages with ParseError or InvalidRequest and carries on`() {
+    client.initialize()
+
+    client.send("""{"jsonrpc": "2.0", "id": 7, "method": """)
+    val parseError = client.read()
+    client.send("[1, 2]")
+    val notAnObject = client.read()
+    client.send("""{"jsonrpc": "2.0", "id": 8}""")
+    val noMethod = client.read()
+
+    assertThat(parseError.errorCode()).isEqualTo(-32700)
+    assertThat(parseError.has("id")).isTrue()
+    assertThat(parseError["id"].isJsonNull).isTrue()
+    assertThat(notAnObject.errorCode()).isEqualTo(-32600)
+    assertThat(notAnObject["id"].isJsonNull).isTrue()
+    assertThat(noMethod.errorCode()).isEqualTo(-32600)
+    assertThat(noMethod["id"].asInt).isEqualTo(8)
+    assertThat(client.request("shutdown").has("result")).isTrue()
+  }
+}

@@ -20,7 +20,8 @@ functions, devices, the maths and numeric rules, and the chip's size limits. The
 - `compiler/api`: `Compiler.compile(source, options)`, the whole pipeline from source to IC10.
 - `compiler/frontend`: runs the Kotlin K2 front end on a script and returns its IR.
 - `compiler/backend`: translates that IR to IC10, allocating registers r0–r15.
-- `daemon`: the compile daemon, which reads requests on stdin and writes results on stdout.
+- `daemon`: the compile daemon, which reads requests on stdin and writes results on stdout,
+  in PyTrapIC's line protocol or, with `--lsp`, the Language Server Protocol.
 - `mod`: the plugin for the IC10 Editor mod (C#), which runs the daemon in game.
 - `compiler/ic10`: the IC10 program model, parser, and printer (normal, and compact with
   labels resolved to line numbers), plus the chip's size limits.
@@ -83,6 +84,12 @@ then open http://127.0.0.1:8765/. The Open menu lists the programs in `test/case
 the compile daemon (`daemon/`) and sends it each compile; the daemon speaks PyTrapIC's protocol
 (one base64 JSON line per request and per response), which the IC10 Editor plugin uses too.
 The first compile after starting takes a few seconds while the compiler warms up.
+
+Started with `--lsp`, the daemon speaks the Language Server Protocol on stdin and stdout instead
+(JSON-RPC with `Content-Length` framing). It keeps the documents a client opens and changes, and
+compiles one on the custom request `ktrapic/compile`, whose params are
+`{"textDocument": {"uri"}, "options": {"compact"}}` and whose result is the same JSON as a
+line-protocol compile. See `daemon/src/main/kotlin/ktrapic/daemon/lsp/LspServer.kt`.
 
 ## In game
 

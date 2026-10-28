@@ -11,8 +11,9 @@ kt_jvm_library(
     ],
 )
 
-# The compile daemon (PyTrapIC's stdin/stdout protocol). The playground and, later, the IC10
-# Editor plugin run its deploy jar: bazel build //daemon:ktrapic-daemon_deploy.jar
+# The compile daemon (PyTrapIC's stdin/stdout protocol, or the Language Server Protocol with
+# --lsp). The playground and the IC10 Editor plugin run its deploy jar:
+# bazel build //daemon:ktrapic-daemon_deploy.jar
 java_binary(
     name = "ktrapic-daemon",
     main_class = "ktrapic.daemon.DaemonKt",

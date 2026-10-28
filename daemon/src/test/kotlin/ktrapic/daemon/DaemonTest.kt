@@ -90,7 +90,7 @@ class DaemonTest {
     try {
       System.setIn(ByteArrayInputStream(requests.toByteArray()))
       System.setOut(PrintStream(captured, true))
-      main()
+      main(arrayOf())
     } finally {
       System.setIn(stdin)
       System.setOut(stdout)
