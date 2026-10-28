@@ -13,16 +13,7 @@ public class DaemonClientTest : IDisposable
 
     public DaemonClientTest()
     {
-        string jar = Environment.GetEnvironmentVariable("KTRAPIC_DAEMON_JAR")
-            ?? throw new InvalidOperationException("Set KTRAPIC_DAEMON_JAR to a built ktrapic-daemon_deploy.jar");
-        // java would resolve a relative path against the test's working directory, its build output.
-        if (!Path.IsPathRooted(jar) || !File.Exists(jar))
-            throw new InvalidOperationException($"KTRAPIC_DAEMON_JAR must be the absolute path of a jar that exists: {jar}");
-        string javaHome = Environment.GetEnvironmentVariable("JAVA_HOME");
-        string java = javaHome == null
-            ? "java"
-            : Path.Combine(javaHome, "bin", OperatingSystem.IsWindows() ? "java.exe" : "java");
-        _client = new DaemonClient(java, jar, line => { lock (_log) _log.Add(line); });
+        _client = new DaemonClient(TestDaemon.Java, TestDaemon.Jar, line => { lock (_log) _log.Add(line); });
     }
 
     public void Dispose() => _client.Dispose();

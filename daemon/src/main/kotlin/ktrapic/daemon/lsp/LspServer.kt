@@ -10,6 +10,7 @@ import com.google.gson.stream.JsonToken
 import java.io.InputStream
 import java.io.OutputStream
 import java.io.StringReader
+import java.util.concurrent.Future
 import ktrapic.daemon.Daemon
 
 /** JSON-RPC's and LSP's error codes. */
@@ -35,17 +36,53 @@ internal class ResponseError(val code: Int, message: String) : Exception(message
  * result is the JSON a line-protocol compile request answers with ([Daemon.compile]). Besides those
  * it implements the lifecycle: `initialize`, `initialized`, `shutdown` and `exit`.
  *
- * Messages are handled one at a time, in order. Requests the server doesn't know get
- * MethodNotFound; notifications it doesn't know are ignored. Requests before `initialize` get
- * ServerNotInitialized, and requests after `shutdown` get InvalidRequest.
+ * **Diagnostics.** [debounceMillis] after a `didOpen` or `didChange`, the server compiles the
+ * document and sends `textDocument/publishDiagnostics` with its URI and version: each error of a
+ * failed compile with severity 1, or each warning of a successful one with severity 2, so a clean
+ * compile gives an empty list (see [diagnosticsOf] for the ranges). `didClose` sends an empty list.
+ * A newer change to the document cancels a pending compile, and a compile that finishes after one
+ * is dropped, so diagnostics are never sent for a version the document no longer has. Diagnostics
+ * compiles use the options of the latest `ktrapic/compile`, and the last few compiles are kept, so
+ * a `ktrapic/compile` of the text a diagnostics compile has just compiled (or is compiling) gets
+ * that compile's result, and the other way round.
+ *
+ * **`textDocument/semanticTokens/full`** gets `{"data": []}`, although the server doesn't declare
+ * the capability: the IC10 Editor asks for semantic tokens after every change whatever the server
+ * declares, and an error answer to each would be noise.
+ *
+ * **Threads.** Messages are read and handled one at a time, in order, on the thread that calls
+ * [run]. Diagnostics compiles run on [scheduler]'s worker. Compiles never run at the same time, one
+ * waiting for the other, and every message goes out through one synchronized writer. Documents are
+ * changed, and checked before diagnostics are sent, under one lock, so a change is either applied
+ * after diagnostics for the version before it are sent, or the diagnostics are dropped.
+ *
+ * Requests the server doesn't know get MethodNotFound; notifications it doesn't know are ignored.
+ * Requests before `initialize` get ServerNotInitialized, and requests after `shutdown` get
+ * InvalidRequest.
  *
  * To serve another method, add its handler to [requests] or [notifications].
+ *
+ * @param debounceMillis how long after a change to compile for diagnostics, so that a burst of
+ *   keystrokes compiles once; 150 ms, as the plugin's compile-as-you-type waits.
+ * @param scheduler runs diagnostics compiles; tests can run them by hand.
+ * @param compiler compiles a document's text with a `ktrapic/compile` request's options.
  */
-class LspServer(
+class LspServer
+internal constructor(
     input: InputStream,
     output: OutputStream,
-    private val log: (String) -> Unit = { System.err.println(it) },
+    private val log: (String) -> Unit,
+    private val debounceMillis: Long,
+    private val scheduler: Scheduler,
+    private val compiler: (String, JsonObject?) -> JsonObject,
 ) {
+  constructor(
+      input: InputStream,
+      output: OutputStream,
+      log: (String) -> Unit = { System.err.println(it) },
+      debounceMillis: Long = 150,
+  ) : this(input, output, log, debounceMillis, WorkerScheduler(), Daemon::compile)
+
   private val reader = MessageReader(input, log)
   private val writer = MessageWriter(output)
   private val gson = GsonBuilder().serializeNulls().disableHtmlEscaping().create()
@@ -56,11 +93,25 @@ class LspServer(
     SHUT_DOWN,
   }
 
-  private var state = State.STARTING
+  @Volatile private var state = State.STARTING
   private var exitCode: Int? = null
 
-  /** The open documents, by URI. */
+  /** The open documents, by URI. Changed only under [documentsLock]. */
   internal val documents = mutableMapOf<String, TextDocument>()
+  private val documentsLock = Any()
+
+  /** Each open document's pending or running diagnostics compile. Used on the reading thread. */
+  private val pendingDiagnostics = mutableMapOf<String, Future<*>>()
+
+  /** The options of the latest `ktrapic/compile`, which diagnostics compiles use too. */
+  @Volatile private var latestOptions: JsonObject? = null
+
+  /** The latest compiles' results by text and options, for [compileOnce]. Under its lock. */
+  private val compiles =
+      object : LinkedHashMap<Pair<String, String>, JsonObject>() {
+        override fun removeEldestEntry(eldest: Map.Entry<Pair<String, String>, JsonObject>) =
+            size > KEPT_COMPILES
+      }
 
   /** Request handlers by method: each returns the result, or throws [ResponseError]. */
   private val requests: Map<String, (JsonElement?) -> JsonElement> =
@@ -68,6 +119,7 @@ class LspServer(
           "initialize" to ::initialize,
           "shutdown" to ::shutdown,
           "ktrapic/compile" to ::compile,
+          "textDocument/semanticTokens/full" to ::semanticTokens,
       )
 
   /** Notification handlers by method. `exit` is handled before these. */
@@ -82,9 +134,16 @@ class LspServer(
   /**
    * Serves messages until `exit`, or until no more can be read (the end of the input, or a header
    * block without a valid `Content-Length`), and returns the exit code: 0 if the client shut the
-   * server down first, else 1.
+   * server down first, else 1. Diagnostics compiles not yet finished are then abandoned.
    */
-  fun run(): Int {
+  fun run(): Int =
+      try {
+        serve()
+      } finally {
+        scheduler.close()
+      }
+
+  private fun serve(): Int {
     while (true) {
       exitCode?.let {
         return it
@@ -215,6 +274,8 @@ class LspServer(
 
   private fun shutdown(params: JsonElement?): JsonElement {
     state = State.SHUT_DOWN
+    pendingDiagnostics.values.forEach { it.cancel(false) }
+    pendingDiagnostics.clear()
     return JsonNull.INSTANCE
   }
 
@@ -224,14 +285,33 @@ class LspServer(
     val document =
         documents[uri] ?: throw ResponseError(ErrorCodes.INVALID_PARAMS, "$uri is not open")
     val options = fields["options"]?.takeUnless { it.isJsonNull }?.asObject("options")
-    return Daemon.compile(document.text, options)
+    latestOptions = options
+    return compileOnce(document.text, options)
   }
+
+  /**
+   * [compiler]'s result for [text] and [options], compiled now or kept from a recent compile.
+   * Compiles run one at a time: this waits for one running on another thread, which may well be of
+   * the same text.
+   */
+  private fun compileOnce(text: String, options: JsonObject?): JsonObject {
+    val key = text to (options ?: JsonObject()).toString()
+    synchronized(compiles) {
+      return compiles[key] ?: compiler(text, options).also { compiles[key] = it }
+    }
+  }
+
+  /** Answers semantic tokens with none, so the IC10 Editor's request after each change succeeds. */
+  private fun semanticTokens(params: JsonElement?): JsonElement =
+      JsonObject().apply { add("data", JsonArray()) }
 
   private fun didOpen(params: JsonElement?) {
     val item = params.asObject("params")["textDocument"].asObject("textDocument")
     val uri = item.string("uri")
-    documents[uri] =
+    val document =
         TextDocument(uri, item.string("languageId"), item.int("version"), item.string("text"))
+    synchronized(documentsLock) { documents[uri] = document }
+    scheduleDiagnostics(document)
   }
 
   private fun didChange(params: JsonElement?) {
@@ -247,13 +327,61 @@ class LspServer(
               change.string("text"),
           )
         }
-    document.apply(identifier.int("version"), changes)
+    val version = identifier.int("version")
+    synchronized(documentsLock) { document.apply(version, changes) }
+    scheduleDiagnostics(document)
   }
 
   private fun didClose(params: JsonElement?) {
     val uri = params.asObject("params")["textDocument"].asObject("textDocument").string("uri")
-    documents.remove(uri)
+    pendingDiagnostics.remove(uri)?.cancel(false)
+    synchronized(documentsLock) {
+      if (documents.remove(uri) != null) publishDiagnostics(uri, null, JsonArray())
+    }
   }
+
+  /**
+   * Compiles [document]'s current text after [debounceMillis], in place of any compile still
+   * pending for it, and publishes the diagnostics if the document is still at that text then.
+   */
+  private fun scheduleDiagnostics(document: TextDocument) {
+    val uri = document.uri
+    val version = document.version
+    val text = document.text
+    fun isCurrent() =
+        documents[uri] === document && document.version == version && document.text == text
+    pendingDiagnostics.remove(uri)?.cancel(false)
+    pendingDiagnostics[uri] =
+        scheduler.schedule(debounceMillis) {
+          try {
+            if (synchronized(documentsLock) { !isCurrent() }) return@schedule
+            val diagnostics = diagnosticsOf(compileOnce(text, latestOptions), text)
+            synchronized(documentsLock) {
+              if (isCurrent() && state == State.RUNNING) {
+                publishDiagnostics(uri, version, diagnostics)
+              }
+            }
+          } catch (e: Exception) {
+            log("Compiling $uri for diagnostics failed: ${e.stackTraceToString()}")
+          }
+        }
+  }
+
+  private fun publishDiagnostics(uri: String, version: Int?, diagnostics: JsonArray) =
+      send(
+          JsonObject().apply {
+            addProperty("jsonrpc", "2.0")
+            addProperty("method", "textDocument/publishDiagnostics")
+            add(
+                "params",
+                JsonObject().apply {
+                  addProperty("uri", uri)
+                  if (version != null) addProperty("version", version)
+                  add("diagnostics", diagnostics)
+                },
+            )
+          }
+      )
 
   private fun send(message: JsonObject) = writer.write(gson.toJson(message))
 
@@ -274,6 +402,9 @@ class LspServer(
 
   private companion object {
     const val TEXT_DOCUMENT_SYNC_INCREMENTAL = 2
+
+    /** How many recent compiles [compileOnce] keeps. */
+    const val KEPT_COMPILES = 4
 
     fun invalidParams(message: String) = ResponseError(ErrorCodes.INVALID_PARAMS, message)
 

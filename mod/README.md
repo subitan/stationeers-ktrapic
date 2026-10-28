@@ -110,7 +110,10 @@ set `DaemonJarPath` to it, and `JavaPath` to a JDK 21's `bin/java.exe`.
 
 ### Tests
 
-`mod/tests` tests the plugin's compiler client against a real compile daemon:
+`mod/tests` tests the plugin's compiler client against a real compile daemon, and drives the
+daemon's LSP mode (`--lsp`) through a minimal test-only JSON-RPC client (`DaemonLspTest.cs`):
+diagnostics as you type, `ktrapic/compile` and the lifecycle. The plugin doesn't use the LSP mode
+yet.
 
 ```
 bazel build //daemon:ktrapic-daemon_deploy.jar

@@ -89,7 +89,13 @@ Started with `--lsp`, the daemon speaks the Language Server Protocol on stdin an
 (JSON-RPC with `Content-Length` framing). It keeps the documents a client opens and changes, and
 compiles one on the custom request `ktrapic/compile`, whose params are
 `{"textDocument": {"uri"}, "options": {"compact"}}` and whose result is the same JSON as a
-line-protocol compile. See `daemon/src/main/kotlin/ktrapic/daemon/lsp/LspServer.kt`.
+line-protocol compile. 150 ms after a document is opened or changed it compiles it and sends
+`textDocument/publishDiagnostics` for that version: the compile's errors (severity 1) or warnings
+(severity 2), with ranges in UTF-16 code units, or an empty list once it compiles cleanly or is
+closed. A newer change replaces a compile still pending or running, so diagnostics never arrive
+for an older version, and a `ktrapic/compile` of the same text reuses that compile. It answers
+`textDocument/semanticTokens/full` with no tokens, as the IC10 Editor asks for them after every
+change. See `daemon/src/main/kotlin/ktrapic/daemon/lsp/LspServer.kt`.
 
 ## In game
 
