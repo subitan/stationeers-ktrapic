@@ -587,6 +587,50 @@ interface CryoTube : Sleeper {
 }
 ```
 
+### DigitalChute
+
+```kotlin
+interface DigitalChute {
+  var On: Boolean
+  val Power: Boolean
+  var Quantity: Double
+  val RequiredPower: Double
+  var Setting: Double
+
+  /** StructureChuteDigitalValveLeft. Entry point: DigitalChutes.ValveLeft. */
+  class ValveLeft : TypedDevice, DigitalChute {
+    var Lock: Boolean
+    var Open: Boolean
+    val TransportSlot: DataDiskSlot // slots[0]
+    val slots: Slots<DataDiskSlot>
+  }
+
+  /** StructureChuteDigitalValveRight. Entry point: DigitalChutes.ValveRight. */
+  class ValveRight : TypedDevice, DigitalChute {
+    var Lock: Boolean
+    var Open: Boolean
+    val TransportSlot: DataDiskSlot // slots[0]
+    val slots: Slots<DataDiskSlot>
+  }
+
+  /** StructureChuteDigitalFlipFlopSplitterLeft. Entry point: DigitalChutes.FlipFlopSplitterLeft. */
+  class FlipFlopSplitterLeft : TypedDevice, DigitalChute {
+    var Mode: Double
+    val Ports: Ports
+    val TransportSlot: DataDiskSlot // slots[0]
+    val slots: Slots<DataDiskSlot>
+  }
+
+  /** StructureChuteDigitalFlipFlopSplitterRight. Entry point: DigitalChutes.FlipFlopSplitterRight. */
+  class FlipFlopSplitterRight : TypedDevice, DigitalChute {
+    var Mode: Double
+    val Ports: Ports
+    val TransportSlot: DataDiskSlot // slots[0]
+    val slots: Slots<DataDiskSlot>
+  }
+}
+```
+
 ### DigitalValve
 
 ```kotlin
@@ -2326,58 +2370,6 @@ class Centrifuge : TypedDevice {
   val Power: Boolean
   val Reagents: Double
   val RequiredPower: Double
-  val slots: Slots<DataDiskSlot>
-}
-
-/** StructureChuteDigitalFlipFlopSplitterLeft. Entry point: ChuteDigitalFlipFlopSplitterLefts. */
-class ChuteDigitalFlipFlopSplitterLeft : TypedDevice {
-  var Mode: Double
-  var On: Boolean
-  val Ports: Ports // Output: var Setting
-  val Power: Boolean
-  var Quantity: Double
-  val RequiredPower: Double
-  var Setting: Double
-  val TransportSlot: DataDiskSlot // slots[0]
-  val slots: Slots<DataDiskSlot>
-}
-
-/** StructureChuteDigitalFlipFlopSplitterRight. Entry point: ChuteDigitalFlipFlopSplitterRights. */
-class ChuteDigitalFlipFlopSplitterRight : TypedDevice {
-  var Mode: Double
-  var On: Boolean
-  val Ports: Ports // Output: var Setting
-  val Power: Boolean
-  var Quantity: Double
-  val RequiredPower: Double
-  var Setting: Double
-  val TransportSlot: DataDiskSlot // slots[0]
-  val slots: Slots<DataDiskSlot>
-}
-
-/** StructureChuteDigitalValveLeft. Entry point: ChuteDigitalValveLefts. */
-class ChuteDigitalValveLeft : TypedDevice {
-  var Lock: Boolean
-  var On: Boolean
-  var Open: Boolean
-  val Power: Boolean
-  var Quantity: Double
-  val RequiredPower: Double
-  var Setting: Double
-  val TransportSlot: DataDiskSlot // slots[0]
-  val slots: Slots<DataDiskSlot>
-}
-
-/** StructureChuteDigitalValveRight. Entry point: ChuteDigitalValveRights. */
-class ChuteDigitalValveRight : TypedDevice {
-  var Lock: Boolean
-  var On: Boolean
-  var Open: Boolean
-  val Power: Boolean
-  var Quantity: Double
-  val RequiredPower: Double
-  var Setting: Double
-  val TransportSlot: DataDiskSlot // slots[0]
   val slots: Slots<DataDiskSlot>
 }
 
