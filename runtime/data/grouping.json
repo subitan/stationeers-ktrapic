@@ -430,6 +430,13 @@
         "Hydroponics": "StructureLarreDockHydroponics"
       }
     },
+    "Sequencer": {
+      "plural": "Sequencers",
+      "members": {
+        "LowFrequencyOscillator": "DeviceLfoVolume",
+        "LogicStep": "LogicStepSequencer8"
+      }
+    },
     "LogicWriter": {
       "plural": "LogicWriters",
       "members": {

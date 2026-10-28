@@ -11015,6 +11015,143 @@ object LarreDocks {
 }
 
 /** A device that comes as several prefabs, each a nested class. */
+interface Sequencer {
+  var Activate: Boolean
+
+  var Bpm: Double
+
+  val Error: Boolean
+
+  var Mode: Double
+
+  var On: Boolean
+
+  val Power: Boolean
+
+  val RequiredPower: Double
+
+  var Time: Double
+
+  /** A DeviceLfoVolume. */
+  @PrefabName("DeviceLfoVolume")
+  class LowFrequencyOscillator internal constructor() : TypedDevice(), Sequencer {
+    override var Activate: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override var Bpm: Double
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override val Error: Boolean
+      get() = intrinsic()
+
+    override var Mode: Double
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override var On: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override val Power: Boolean
+      get() = intrinsic()
+
+    override val RequiredPower: Double
+      get() = intrinsic()
+
+    override var Time: Double
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    /** The DeviceLfoVolume prefab. */
+    companion object : Prefab()
+  }
+
+  /** A LogicStepSequencer8. */
+  @PrefabName("LogicStepSequencer8")
+  class LogicStep internal constructor() : TypedDevice(), Sequencer {
+    override var Activate: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override var Bpm: Double
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override val Error: Boolean
+      get() = intrinsic()
+
+    override var Mode: Double
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override var On: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override val Power: Boolean
+      get() = intrinsic()
+
+    override val RequiredPower: Double
+      get() = intrinsic()
+
+    override var Time: Double
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    /** The device's slots, by number. */
+    val slots: Slots<DataDiskSlot>
+      get() = intrinsic()
+
+    /** Slot 0. */
+    @SlotNumber(0)
+    val SoundCartridge: DataDiskSlot
+      get() = intrinsic()
+
+    /** The LogicStepSequencer8 prefab. */
+    companion object : Prefab()
+  }
+}
+
+/** The Sequencer devices on the chip's network, by prefab. */
+object Sequencers {
+  /** The DeviceLfoVolume devices on the chip's network. */
+  @PrefabName("DeviceLfoVolume")
+  object LowFrequencyOscillator {
+    /** The device on [pin], as a DeviceLfoVolume. */
+    fun at(pin: Device): Sequencer.LowFrequencyOscillator = intrinsic()
+
+    /** Every one on the network. */
+    val all: DeviceBatch<Sequencer.LowFrequencyOscillator>
+      get() = intrinsic()
+
+    /** Every one on the network named [name], which must be a constant. */
+    fun named(name: String): DeviceBatch<Sequencer.LowFrequencyOscillator> = intrinsic()
+  }
+
+  /** The LogicStepSequencer8 devices on the chip's network. */
+  @PrefabName("LogicStepSequencer8")
+  object LogicStep {
+    /** The device on [pin], as a LogicStepSequencer8. */
+    fun at(pin: Device): Sequencer.LogicStep = intrinsic()
+
+    /** Every one on the network. */
+    val all: Batch
+      get() = intrinsic()
+
+    /** Every one on the network named [name], which must be a constant. */
+    fun named(name: String): Batch = intrinsic()
+
+    class Batch internal constructor() : DeviceBatch<Sequencer.LogicStep>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+  }
+}
+
+/** A device that comes as several prefabs, each a nested class. */
 interface LogicWriter {
   val Error: Boolean
 
@@ -15107,56 +15244,6 @@ object CompositeRollCovers {
   fun named(name: String): DeviceBatch<CompositeRollCover> = intrinsic()
 }
 
-/** A DeviceLfoVolume. */
-@PrefabName("DeviceLfoVolume")
-class DeviceLfoVolume internal constructor() : TypedDevice() {
-  var Activate: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var Bpm: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val Error: Boolean
-    get() = intrinsic()
-
-  var Mode: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var On: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val Power: Boolean
-    get() = intrinsic()
-
-  val RequiredPower: Double
-    get() = intrinsic()
-
-  var Time: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  /** The DeviceLfoVolume prefab. */
-  companion object : Prefab()
-}
-
-/** The DeviceLfoVolume devices on the chip's network. */
-@PrefabName("DeviceLfoVolume")
-object DeviceLfoVolumes {
-  /** The device on [pin], as a DeviceLfoVolume. */
-  fun at(pin: Device): DeviceLfoVolume = intrinsic()
-
-  /** Every one on the network. */
-  val all: DeviceBatch<DeviceLfoVolume>
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): DeviceBatch<DeviceLfoVolume> = intrinsic()
-}
-
 /** A DeviceStepUnit. */
 @PrefabName("DeviceStepUnit")
 class DeviceStepUnit internal constructor() : TypedDevice() {
@@ -16378,71 +16465,6 @@ object Landingpad_ThreshholdPieces {
 
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): DeviceBatch<Landingpad_ThreshholdPiece> = intrinsic()
-}
-
-/** A LogicStepSequencer8. */
-@PrefabName("LogicStepSequencer8")
-class LogicStepSequencer8 internal constructor() : TypedDevice() {
-  var Activate: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var Bpm: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val Error: Boolean
-    get() = intrinsic()
-
-  var Mode: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var On: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val Power: Boolean
-    get() = intrinsic()
-
-  val RequiredPower: Double
-    get() = intrinsic()
-
-  var Time: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  /** The device's slots, by number. */
-  val slots: Slots<DataDiskSlot>
-    get() = intrinsic()
-
-  /** Slot 0. */
-  @SlotNumber(0)
-  val SoundCartridge: DataDiskSlot
-    get() = intrinsic()
-
-  /** The LogicStepSequencer8 prefab. */
-  companion object : Prefab()
-}
-
-/** The LogicStepSequencer8 devices on the chip's network. */
-@PrefabName("LogicStepSequencer8")
-object LogicStepSequencer8s {
-  /** The device on [pin], as a LogicStepSequencer8. */
-  fun at(pin: Device): LogicStepSequencer8 = intrinsic()
-
-  /** Every one on the network. */
-  val all: Batch
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch<LogicStepSequencer8>() {
-    /** A slot of every one in the batch, by number. */
-    val slots: Slots<SlotBatch<DataDiskSlot>>
-      get() = intrinsic()
-  }
 }
 
 /** A PassiveSpeaker. */

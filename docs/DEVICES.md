@@ -1731,6 +1731,30 @@ interface SatelliteDish {
 }
 ```
 
+### Sequencer
+
+```kotlin
+interface Sequencer {
+  var Activate: Boolean
+  var Bpm: Double
+  val Error: Boolean
+  var Mode: Double
+  var On: Boolean
+  val Power: Boolean
+  val RequiredPower: Double
+  var Time: Double
+
+  /** DeviceLfoVolume. Entry point: Sequencers.LowFrequencyOscillator. */
+  class LowFrequencyOscillator : TypedDevice, Sequencer
+
+  /** LogicStepSequencer8. Entry point: Sequencers.LogicStep. */
+  class LogicStep : TypedDevice, Sequencer {
+    val SoundCartridge: DataDiskSlot // slots[0]
+    val slots: Slots<DataDiskSlot>
+  }
+}
+```
+
 ### Sleeper
 
 ```kotlin
@@ -2632,18 +2656,6 @@ class DeepMiner : TypedDevice {
   val slots: Slots<DataDiskSlot>
 }
 
-/** DeviceLfoVolume. Entry point: DeviceLfoVolumes. */
-class DeviceLfoVolume : TypedDevice {
-  var Activate: Boolean
-  var Bpm: Double
-  val Error: Boolean
-  var Mode: Double
-  var On: Boolean
-  val Power: Boolean
-  val RequiredPower: Double
-  var Time: Double
-}
-
 /** DeviceStepUnit. Entry point: DeviceStepUnits. */
 class DeviceStepUnit : TypedDevice {
   var Activate: Boolean
@@ -3191,20 +3203,6 @@ class LogicSorter : TypedDevice {
   val RequiredPower: Double
   val StackSize: Double
   val Export2: DataDiskSlot // slots[2]
-  val slots: Slots<DataDiskSlot>
-}
-
-/** LogicStepSequencer8. Entry point: LogicStepSequencer8s. */
-class LogicStepSequencer8 : TypedDevice {
-  var Activate: Boolean
-  var Bpm: Double
-  val Error: Boolean
-  var Mode: Double
-  var On: Boolean
-  val Power: Boolean
-  val RequiredPower: Double
-  var Time: Double
-  val SoundCartridge: DataDiskSlot // slots[0]
   val slots: Slots<DataDiskSlot>
 }
 ```
