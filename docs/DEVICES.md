@@ -7,7 +7,7 @@ The typed devices, slots and enums a program can name, as Kotlin declarations: 3
 - [Using a device](#using-a-device)
 - [Views](#views)
 - [Families](#families)
-- Devices: [A](#a) · [B](#b) · [C](#c) · [D](#d) · [E](#e) · [F](#f) · [G](#g) · [H](#h) · [I](#i) · [J](#j) · [K](#k) · [L](#l) · [M](#m) · [N](#n) · [O](#o) · [P](#p) · [R](#r) · [S](#s) · [T](#t) · [U](#u) · [W](#w)
+- Devices: [A](#a) · [B](#b) · [C](#c) · [D](#d) · [E](#e) · [F](#f) · [G](#g) · [H](#h) · [I](#i) · [J](#j) · [L](#l) · [M](#m) · [N](#n) · [O](#o) · [P](#p) · [R](#r) · [S](#s) · [T](#t) · [U](#u) · [W](#w)
 - [Slots](#slots)
 - [Enums](#enums)
 
@@ -1812,6 +1812,26 @@ interface SolarPanel {
 }
 ```
 
+### Speaker
+
+```kotlin
+interface Speaker {
+  var SoundAlert: Double
+  var Volume: Double
+
+  /** PassiveSpeaker. Entry point: Speakers.Passive. */
+  class Passive : TypedDevice, Speaker
+
+  /** StructureKlaxon. Entry point: Speakers.Klaxon. */
+  class Klaxon : TypedDevice, Speaker {
+    var Mode: Double
+    var On: Boolean
+    val Power: Boolean
+    val RequiredPower: Double
+  }
+}
+```
+
 ### Stacker
 
 ```kotlin
@@ -3035,20 +3055,6 @@ class JetpackBasic : TypedDevice {
 }
 ```
 
-### K
-
-```kotlin
-/** StructureKlaxon. Entry point: Klaxons. */
-class Klaxon : TypedDevice {
-  var Mode: Double
-  var On: Boolean
-  val Power: Boolean
-  val RequiredPower: Double
-  var SoundAlert: Double
-  var Volume: Double
-}
-```
-
 ### L
 
 ```kotlin
@@ -3295,12 +3301,6 @@ class Packer : TypedDevice {
   val Recipient: DataDiskSlot // slots[1]
   val Export: DataDiskSlot // slots[2]
   val slots: Slots<DataDiskSlot>
-}
-
-/** PassiveSpeaker. Entry point: PassiveSpeakers. */
-class PassiveSpeaker : TypedDevice {
-  var SoundAlert: Double
-  var Volume: Double
 }
 
 /** StructurePipeIgniter. Entry point: PipeIgniters. */

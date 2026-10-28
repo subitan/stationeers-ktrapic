@@ -86,6 +86,13 @@
         "Refrigerated": "StructureRefrigeratedVendingMachine"
       }
     },
+    "Speaker": {
+      "plural": "Speakers",
+      "members": {
+        "Passive": "PassiveSpeaker",
+        "Klaxon": "StructureKlaxon"
+      }
+    },
     "LightRound": {
       "plural": "LightRounds",
       "members": {
@@ -619,6 +626,10 @@
     {
       "prefabs": [["StructureAirlock", "StructureAirlockWide"], "StructureAirlockGate"],
       "reason": "StructureAirlockGate is the game's Small Hangar Door, a 1 x 1 hangar door piece, not an airlock"
+    },
+    {
+      "prefabs": [["PassiveSpeaker", "StructureKlaxon"], ["ItemTablet", "ItemAdvancedTablet"]],
+      "reason": "the Advanced Tablet can sound an alert, but a tablet is a handheld computer, not a speaker"
     },
     {
       "prefabs": [
