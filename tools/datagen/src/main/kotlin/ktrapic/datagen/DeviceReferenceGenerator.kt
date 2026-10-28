@@ -209,7 +209,7 @@ object DeviceReferenceGenerator {
                   .flatMap {
                     val parent =
                         requireNotNull(familiesByName[it.trim()]) {
-                          "family ${family.name} extends ${it.trim()}, which is not a family"
+                          "family ${family.name} extends ${it.trim()}, but the source declares no interface ${it.trim()}"
                         }
                     writable(parent)
                   }

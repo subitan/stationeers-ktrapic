@@ -150,7 +150,7 @@ class DeviceReferenceGeneratorTest {
   }
 
   @Test
-  fun `rejects a family extending an interface that is not a family`() {
+  fun `rejects a family extending an interface the source does not declare`() {
     val source = sensorFamily.replace("interface Detector {", "interface Unknown {")
 
     val error =
