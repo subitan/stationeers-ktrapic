@@ -110,6 +110,9 @@ it in game. The daemon's JVM options keep it small beside the game:
   don't matter for a compiler.
 - `-XX:+ExitOnOutOfMemoryError`: a daemon that runs out of memory exits, rather than carrying on
   in a broken state, and starts again with the next edit.
+- `-XX:+DisplayVMOutputToStderr`: the JVM's own messages, such as the reason for that exit, go to
+  standard error, so they reach the BepInEx log, rather than to standard output, which carries the
+  protocol.
 - `-Dstderr.encoding=UTF-8`: its log, which goes to the BepInEx log as `[compiler] ...` lines.
 
 ## Not yet

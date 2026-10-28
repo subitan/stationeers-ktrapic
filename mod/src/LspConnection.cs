@@ -48,6 +48,9 @@ namespace KTrapIC
         /// don't matter for a compiler that answers in a few hundred milliseconds.</item>
         /// <item><c>-XX:+ExitOnOutOfMemoryError</c>: a daemon out of memory exits instead of
         /// limping on, and the plugin starts it again with the next edit.</item>
+        /// <item><c>-XX:+DisplayVMOutputToStderr</c>: the JVM's own messages, such as the reason
+        /// for that exit, go to standard error, and so to the log, instead of standard output,
+        /// which carries the protocol.</item>
         /// <item><c>-Dstderr.encoding=UTF-8</c>: its log, read as UTF-8 (the protocol itself is
         /// written as bytes).</item>
         /// </list>
@@ -57,6 +60,7 @@ namespace KTrapIC
             "-Xmx256m",
             "-XX:+UseSerialGC",
             "-XX:+ExitOnOutOfMemoryError",
+            "-XX:+DisplayVMOutputToStderr",
             "-Dstderr.encoding=UTF-8",
         };
 
@@ -198,6 +202,9 @@ namespace KTrapIC
         /// if freeing it failed.
         /// </summary>
         internal Task<bool> Released => _released.Task;
+
+        /// <summary>The daemon's process, for tests to check that it has been freed.</summary>
+        internal Process ProcessForTest => _process;
 
         /// <summary>
         /// Completes with the <c>initialize</c> result once the daemon has answered it and

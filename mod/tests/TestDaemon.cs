@@ -48,6 +48,16 @@ internal static class TestDaemon
         return await task;
     }
 
+    /// <summary>
+    /// Waits for <paramref name="connection"/>'s process to be freed, and checks that it was: a
+    /// disposed process has no handle.
+    /// </summary>
+    public static async Task AssertFreed(LspConnection connection)
+    {
+        Assert.True(await Within(connection.Released, "Freeing the process"));
+        Assert.Throws<InvalidOperationException>(() => connection.ProcessForTest.Handle);
+    }
+
     /// <summary>A program long enough to take many seconds to compile.</summary>
     public static string SlowProgram()
     {

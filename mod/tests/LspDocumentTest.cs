@@ -62,7 +62,8 @@ public class LspDocumentTest : IDisposable
 
         Assert.Equal("java", startInfo.FileName);
         Assert.Equal(
-            "-Xmx256m -XX:+UseSerialGC -XX:+ExitOnOutOfMemoryError -Dstderr.encoding=UTF-8 "
+            "-Xmx256m -XX:+UseSerialGC -XX:+ExitOnOutOfMemoryError -XX:+DisplayVMOutputToStderr "
+                + "-Dstderr.encoding=UTF-8 "
                 + "-jar \"C:/Program Files/a b/ktrapic-daemon.jar\" --lsp",
             startInfo.Arguments);
         Assert.True(startInfo.CreateNoWindow);
@@ -345,7 +346,7 @@ public class LspDocumentTest : IDisposable
         Assert.True(response.Unavailable);
         Assert.False(daemon.Connection.IsRunning);
         Assert.True(daemon.Connection.Stopped.IsCompleted);
-        Assert.True(await TestDaemon.Within(daemon.Connection.Released, "Freeing the process"));
+        await TestDaemon.AssertFreed(daemon.Connection);
         Assert.NotNull(daemon.Connection.ExitCode);
     }
 
@@ -361,7 +362,7 @@ public class LspDocumentTest : IDisposable
 
         await TestDaemon.Within(connection.Stopped, "The connection");
         // Its process is freed once it has exited, and its exit code kept.
-        Assert.True(await TestDaemon.Within(connection.Released, "Freeing the process"));
+        await TestDaemon.AssertFreed(connection);
         Assert.Equal(0, connection.ExitCode);
         Assert.False(connection.IsInitialized);
         var request = connection.Request("ktrapic/compile", new JObject());
@@ -369,5 +370,24 @@ public class LspDocumentTest : IDisposable
         var response = await TestDaemon.Within(document.Compile(false));
         Assert.True(response.Unavailable);
         Assert.Null(document.CompileNow(false, TestDaemon.Timeout));
+    }
+
+    [Fact]
+    public async Task ADaemonOutOfMemoryLogsWhy()
+    {
+        var startInfo = LspConnection.StartInfo(TestDaemon.Java, TestDaemon.Jar);
+        // A later -Xmx wins: a heap too small for the slow program.
+        startInfo.Arguments = startInfo.Arguments.Replace(" -jar ", " -Xmx48m -jar ");
+        var daemon = new TestConnection(startInfo, initialize: true);
+        _daemons.Add(daemon);
+        var document = Open(daemon, TestDaemon.SlowProgram(), out _);
+
+        var response = await TestDaemon.Within(document.Compile(false));
+
+        Assert.True(response.Unavailable, daemon.Log());
+        await TestDaemon.Within(daemon.Connection.Stopped, "The connection");
+        await TestDaemon.AssertFreed(daemon.Connection);
+        Assert.Equal(3, daemon.Connection.ExitCode);
+        Assert.Contains("Terminating due to java.lang.OutOfMemoryError", daemon.Log());
     }
 }
