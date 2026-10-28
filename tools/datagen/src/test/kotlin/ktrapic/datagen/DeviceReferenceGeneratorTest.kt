@@ -80,6 +80,43 @@ class DeviceReferenceGeneratorTest {
   }
 
   @Test
+  fun `shows a logic type a family member can write where its family only reads it`() {
+    val source =
+        """
+        |interface Sensor {
+        |  val Activate: Boolean
+        |
+        |  val Quantity: Double
+        |
+        |  @PrefabName("StructureMotionSensor")
+        |  class Motion internal constructor() : TypedDevice(), Sensor {
+        |    override var Activate: Boolean
+        |      get() = intrinsic()
+        |      set(value) = intrinsic()
+        |
+        |    override val Quantity: Double
+        |      get() = intrinsic()
+        |  }
+        |}
+        |
+        |object Sensors {
+        |  @PrefabName("StructureMotionSensor")
+        |  object Motion {
+        |    fun at(pin: Device): Sensor.Motion = intrinsic()
+        |  }
+        |}
+        |"""
+            .trimMargin()
+
+    val reference = DeviceReferenceGenerator.generate(source, enums, typing)
+
+    assertThat(reference)
+        .contains(
+            "  class Motion : TypedDevice, Sensor {\n    override var Activate: Boolean\n  }\n"
+        )
+  }
+
+  @Test
   fun `lists a typed device whose header is wrapped`() {
     val source =
         device("StructureHidden", "Hidden").replace(": TypedDevice() {", ":\n    TypedDevice() {")
