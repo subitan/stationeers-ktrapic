@@ -733,6 +733,10 @@
     {
       "prefabs": [["StructureFridgeSmall", "StructureFridgeBig"], "StructureHydroponicsStation", "StructureLiquidDrain", "StructureRocketEngineTiny", ["StructureWallCooler", "StructureWaterWallCooler"]],
       "reason": "they share only readings of the gas they put out, from different jobs: keeping food cold, growing plants, draining liquid, propelling a rocket and cooling a room"
+    },
+    {
+      "prefabs": [["StructureChuteDigitalValveLeft", "StructureChuteDigitalValveRight", "StructureChuteDigitalFlipFlopSplitterLeft", "StructureChuteDigitalFlipFlopSplitterRight"], ["StructureGasTankStorage", "StructureLiquidTankStorage"], ["StructureMotionSensor", "StructureProximitySensor", "StructureOccupancySensor"]],
+      "reason": "they share only Quantity, which counts different things: the items a chute valve lets through, the tanks in storage, and the people a sensor sees"
     }
   ],
   "textDisplays": [
