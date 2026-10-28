@@ -4,7 +4,9 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
+using ImGuiEditor.LSP;
 using ImGuiNET;
+using Newtonsoft.Json.Linq;
 using StationeersIC10Editor;
 using StationeersIC10Editor.IC10;
 
@@ -13,11 +15,24 @@ namespace KTrapIC
     /// <summary>
     /// The IC10 Editor's "Kotlin" language: KTrapIC programs, highlighted, compiled as they're
     /// edited, with the IC10 shown in a read-only editor beside them and the IC10 lines of the
-    /// caret's line highlighted there. Exporting writes the IC10 to the chip with the Kotlin
-    /// source appended as encoded comments, which <see cref="ResetCode"/> reads back, so reopening
-    /// the chip shows the Kotlin.
+    /// caret's line highlighted there, and with the compiler's errors marked in the code. Exporting
+    /// writes the IC10 to the chip with the Kotlin source appended as encoded comments, which
+    /// <see cref="ResetCode"/> reads back, so reopening the chip shows the Kotlin.
+    ///
+    /// <para><b>The daemon.</b> Each editor's program is a document (<see cref="LspDocument"/>,
+    /// under its own URI) on the one compile daemon the tabs share, spoken to over LSP
+    /// (<see cref="Daemon"/>). Edits go to it as they're made (<see cref="SubmitChanges"/>); it
+    /// publishes the errors of each version, which are marked in the code, and compiles for the
+    /// preview and the export are <c>ktrapic/compile</c> requests on the same connection. When the
+    /// daemon starts again, after <c>ktrapic restart</c> or a crash, every editor opens its
+    /// document on the new one (<see cref="OnDaemonReady"/>).</para>
+    ///
+    /// <para><b>Threads.</b> Edits, the document's messages and the error marks are handled on
+    /// the main thread; diagnostics arrive on the connection's reader thread and are applied on
+    /// the main thread, if they're still of the current version. Compiles wait on the thread
+    /// pool.</para>
     /// </summary>
-    public class KotlinFormatter : StaticFormatter
+    public class KotlinFormatter : LSPFormatter
     {
         /// <summary>The tag of the Kotlin source encoded in the comments after the IC10.</summary>
         private const string SourceTag = "KTRAPIC_SOURCE";
@@ -25,7 +40,15 @@ namespace KTrapIC
         /// <summary>Starts the comment exported in place of a program that couldn't be compiled.</summary>
         private const string ErrorPrefix = "# KTrapIC: ";
 
+        private const string CommentPrefix = "//";
+
         private const int DebounceMs = 150;
+
+        /// <summary>
+        /// How long an export waits for a compile, on the main thread. A warm compile takes well
+        /// under a second, the first after the daemon starts about ten.
+        /// </summary>
+        private static readonly TimeSpan ExportTimeout = TimeSpan.FromSeconds(30);
 
         // Indices into the IC10 Editor's ColorTheme, as its other languages use them.
         private const uint Keyword = 15;
@@ -63,6 +86,14 @@ namespace KTrapIC
             ["Unit"] = Type,
         };
 
+        /// <summary>Splits lines into tokens and colors keywords and comments, for <see cref="ParseLine"/>.</summary>
+        private static readonly StaticFormatter Tokenizer = new StaticFormatter(
+            TokenSeparators: " \t()[]{}:.,;+-*/%=<>!&|^~?@",
+            StringDelimiters: "\"'",
+            CommentPrefix: CommentPrefix,
+            Keywords: KotlinKeywords,
+            KeepWhitespaces: false);
+
         private static readonly uint PreviewHighlight = ColorFromHTML("#000080");
 
         // The SDK's names, in the colors the editor's theme gives types, enums, variables,
@@ -74,8 +105,20 @@ namespace KTrapIC
         private static readonly Style EnumValueStyle = new Style { Color = ColorFromHTML("#B5CEA8") };
         private static readonly Style FunctionStyle = new Style { Color = ColorFromHTML("#DCDCAA") };
 
+        /// <summary>
+        /// The formatters with a document, so that those whose editor has replaced them or whose
+        /// tab has closed can close theirs (<see cref="CloseOrphans"/>). Used on the main thread.
+        /// </summary>
+        private static readonly HashSet<KotlinFormatter> WithDocuments = new HashSet<KotlinFormatter>();
+
         /// <summary>Bumped on every edit, so a compile can tell whether the code changed since it began.</summary>
         private int _version;
+
+        /// <summary>
+        /// The <see cref="_version"/> whose text the daemon has (as far as the messages queued
+        /// say), so a compile of the document is a compile of that version.
+        /// </summary>
+        private volatile int _syncedVersion = -1;
 
         /// <summary>The code as of the latest edit.</summary>
         private string _text;
@@ -84,6 +127,12 @@ namespace KTrapIC
         private volatile Compiled _compiled;
 
         private Editor _preview;
+
+        /// <summary>This editor's program on the daemon; made when it is first sent.</summary>
+        private LspDocument _document;
+
+        /// <summary>Set once this formatter's editor no longer shows it, after which it sends nothing.</summary>
+        private bool _closed;
 
         private sealed class Compiled
         {
@@ -110,25 +159,24 @@ namespace KTrapIC
         }
 
         public KotlinFormatter()
-            : base(
-                TokenSeparators: " \t()[]{}:.,;+-*/%=<>!&|^~?@",
-                StringDelimiters: "\"'",
-                CommentPrefix: "//",
-                Keywords: KotlinKeywords,
-                KeepWhitespaces: false)
         {
+            Identifier = new VersionedTextDocumentIdentifier { uri = null, version = 0 };
             OnCodeChanged += () =>
             {
                 // The editor signals some changes twice (a reset, then again on its next frame), so
                 // only a change to the text counts as an edit.
                 string text = RawText;
-                if (text == _text)
-                    return;
-                _text = text;
-                Interlocked.Increment(ref _version);
-                // ICodeFormatter's own handler measured the code before the version changed.
-                UpdateCodeSize();
-                CompileSoon().Forget();
+                bool edited = text != _text;
+                if (edited)
+                {
+                    _text = text;
+                    Interlocked.Increment(ref _version);
+                    // ICodeFormatter's own handler measured the code before the version changed.
+                    UpdateCodeSize();
+                }
+                SubmitChanges();
+                if (edited)
+                    CompileSoon().Forget();
             };
             OnCaretMoved += HighlightPreview;
         }
@@ -144,7 +192,7 @@ namespace KTrapIC
         /// </summary>
         public override StyledLine ParseLine(string lineText)
         {
-            var line = base.ParseLine(lineText);
+            var line = Tokenizer.ParseLine(lineText);
             Token qualifier = null;
             Token previous = null;
             foreach (var token in line)
@@ -239,6 +287,134 @@ namespace KTrapIC
         }
 
         /// <summary>
+        /// Sends the edits made since the last call to the daemon, opening the document there
+        /// first if it isn't open (the first time, or on a daemon that has started again since).
+        /// Nothing is sent for a read-only view, such as a library's in the Library window, or
+        /// until the daemon is initialized; the edits are kept until then.
+        /// </summary>
+        public override void SubmitChanges()
+        {
+            if (!HasDocument())
+            {
+                _changes.Clear();
+                return;
+            }
+            var client = Daemon.Client;
+            if (client == null || !client.Connection.IsInitialized)
+                return;
+            if (_document.Connection != client.Connection)
+            {
+                LspClient = client;
+                _document.Bind(client.Connection);
+            }
+            if (_document.Sync(Identifier.version, () => RawText, JArray.FromObject(_changes)))
+            {
+                _changes.Clear();
+                _syncedVersion = _version;
+            }
+        }
+
+        /// <summary>No completion yet: the daemon doesn't offer it.</summary>
+        public override void UpdateAutocomplete()
+        {
+            _autocomplete = null;
+            _autocompleteInsertText = null;
+        }
+
+        /// <summary>
+        /// Whether this editor's program is to be a document on the daemon, making the document
+        /// the first time: only for an editable editor in a tab, and only while the editor still
+        /// shows this formatter.
+        /// </summary>
+        private bool HasDocument()
+        {
+            if (_closed || Editor == null || Editor.IsReadOnly || Editor.ParentTab == null)
+                return false;
+            CloseOrphans();
+            if (_closed)
+                return false;
+            if (_document == null)
+            {
+                _document = new LspDocument(LspDocument.NewUri(Editor.FileName));
+                Identifier.uri = _document.Uri;
+                _document.Diagnostics += OnDiagnostics;
+                Daemon.Ready += OnDaemonReady;
+                WithDocuments.Add(this);
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// Whether this formatter's editor has stopped showing it: the editor picked another
+        /// formatter for code it loaded, or its tab was closed.
+        /// </summary>
+        private bool IsOrphaned
+        {
+            get
+            {
+                if (Editor == null || Editor.CodeFormatter != this)
+                    return true;
+                var tab = Editor.ParentTab;
+                return tab?.ParentWindow != null && !tab.ParentWindow.Tabs.Contains(tab);
+            }
+        }
+
+        /// <summary>
+        /// Closes the documents of formatters no longer shown, which the editor drops without
+        /// telling them.
+        /// </summary>
+        private static void CloseOrphans()
+        {
+            foreach (var formatter in WithDocuments.Where(f => f.IsOrphaned).ToList())
+                formatter.CloseDocument();
+        }
+
+        private void CloseDocument()
+        {
+            _closed = true;
+            if (_document == null)
+                return;
+            WithDocuments.Remove(this);
+            Daemon.Ready -= OnDaemonReady;
+            _document.Diagnostics -= OnDiagnostics;
+            _document.Close();
+        }
+
+        /// <summary>
+        /// A daemon has started (again): opens the document on it, and compiles, so the preview and
+        /// the error marks come back.
+        /// </summary>
+        private void OnDaemonReady(DaemonLspClient client)
+        {
+            if (IsOrphaned)
+            {
+                CloseDocument();
+                return;
+            }
+            SubmitChanges();
+            CompileSoon().Forget();
+        }
+
+        private void OnDiagnostics(JObject parameters) => ApplyDiagnostics(parameters).Forget();
+
+        /// <summary>
+        /// Marks the errors of a version of the document, if it is still the current one: an
+        /// older version's would mark the wrong places, and the current one's follow. The IC10
+        /// Editor marks errors only, not warnings, and replaces all the marks each time.
+        /// </summary>
+        private async UniTaskVoid ApplyDiagnostics(JObject parameters)
+        {
+            await UniTask.SwitchToMainThread();
+            if (_closed || (int?)parameters["version"] != Identifier.version || _changes.Count > 0)
+                return;
+            UpdateDiagnostics(new PublishDiagnosticsParams
+            {
+                diagnostics = parameters["diagnostics"]?.ToObject<Diagnostic[]>() ?? Array.Empty<Diagnostic>(),
+            });
+            UpdateStatus();
+        }
+
+        /// <summary>
         /// The IC10 to write to the chip, followed by the encoded Kotlin source. The editor exports on
         /// the main thread and takes the answer at once, so this uses the latest compile if it's of
         /// the current code, and otherwise compiles here, waiting for the compiler. If the program
@@ -253,7 +429,7 @@ namespace KTrapIC
             var response =
                 compiled != null && compiled.Version == _version && (compiled.Compact ?? compact) == compact
                     ? compiled.Response
-                    : Daemon.CompileNow(source, compact);
+                    : CompileNow(compact);
             string code;
             if (response == null)
                 code = ErrorPrefix + "the compiler is still starting; export again in a moment.";
@@ -262,6 +438,20 @@ namespace KTrapIC
             else
                 code = response.code;
             return code + "\n" + EncodeSource(source, SourceTag);
+        }
+
+        /// <summary>
+        /// Compiles the current code on this thread, once its last edits are sent; null if the
+        /// daemon isn't running and initialized with the document open, as waiting for it to start
+        /// would freeze the game.
+        /// </summary>
+        private CompileResponse CompileNow(bool compact)
+        {
+            SubmitChanges();
+            var client = Daemon.Client;
+            if (_document == null || client == null || _document.Connection != client.Connection || _syncedVersion != _version)
+                return null;
+            return _document.CompileNow(compact, ExportTimeout);
         }
 
         /// <summary>
@@ -290,7 +480,10 @@ namespace KTrapIC
             if (ImGuiUtils.Checkbox("Compact", ref compact, Plugin.Compact.Description.Description))
             {
                 Plugin.Compact.Value = compact;
-                Interlocked.Increment(ref _version);
+                int version = Interlocked.Increment(ref _version);
+                // The text didn't change, so the daemon still has it if it had it before.
+                if (_syncedVersion == version - 1)
+                    _syncedVersion = version;
                 CompileSoon().Forget();
             }
             ImGui.SameLine();
@@ -318,14 +511,16 @@ namespace KTrapIC
                 ? $"line {problem.line}, column {problem.column}: {problem.description}"
                 : problem.description;
 
-        /// <summary>Compiles the code once edits pause, then shows the result.</summary>
+        /// <summary>
+        /// Compiles the code once edits pause, then shows the result. If the daemon isn't running,
+        /// this starts it instead; once it is ready, <see cref="OnDaemonReady"/> compiles.
+        /// </summary>
         private async UniTaskVoid CompileSoon()
         {
             // A library's read-only view in the Library window isn't compiled.
-            if (Editor == null || Editor.IsReadOnly)
+            if (Editor == null || Editor.IsReadOnly || _closed)
                 return;
             int version = _version;
-            string source = RawText;
             bool compact = Plugin.Compact.Value;
             // Waited out on the thread pool, as UniTask's own delays count game time, which can
             // stand still while the editor is open.
@@ -333,16 +528,36 @@ namespace KTrapIC
             await Task.Delay(DebounceMs);
             if (version != _version)
                 return;
-            CompileResponse response;
-            try
+            var client = Daemon.Client;
+            if (client == null || !client.Connection.IsRunning)
             {
-                response = await Daemon.Compile(source, compact);
+                try
+                {
+                    client = await Daemon.Start();
+                }
+                catch (Exception e)
+                {
+                    await Show(version, compact, CompileResponse.Failed($"The KTrapIC compiler couldn't start: {e.Message}"));
+                    return;
+                }
+                // Started by another editor, and ready before this one had a document: open it now.
+                if (client.Connection.IsInitialized)
+                {
+                    await UniTask.SwitchToMainThread();
+                    OnDaemonReady(client);
+                }
+                return;
             }
-            catch (Exception e)
-            {
-                Log.Error($"Compiling failed: {e}");
-                response = CompileResponse.Failed($"Compiling failed: {e.Message}");
-            }
+            // Not yet open on this daemon, or not sent yet: once it is, this compiles again.
+            var document = _document;
+            if (document == null || document.Connection != client.Connection || _syncedVersion != version)
+                return;
+            await Show(version, compact, await document.Compile(compact));
+        }
+
+        /// <summary>Records <paramref name="response"/>, a compile of <paramref name="version"/>, and shows it if that's still current.</summary>
+        private async UniTask Show(int version, bool compact, CompileResponse response)
+        {
             // Recorded before returning to the main thread, which Compile() may be blocking.
             if (version != _version)
                 return;

@@ -4,9 +4,11 @@ A plugin for the [IC10 Editor](https://github.com/aproposmath/StationeersIC10Edi
 a "Kotlin" language to it, so chips can be programmed in KTrapIC's Kotlin (see the
 [language guide](../docs/LANGUAGE.md)). It is a peer of, and modelled on,
 [PyTrapIC](https://github.com/aproposmath/stationeers-pytrapic)'s plugin, which does the same for
-Python. It tries to behave and look like PyTrapIC's plugin in game: its compile daemon speaks
-PyTrapIC's daemon protocol (with small differences, such as error positions being 1-based
-here), and it has the same compile-as-you-type preview and the same export to the chip. Both
+Python. It tries to behave and look like PyTrapIC's plugin in game: it has the same
+compile-as-you-type preview and the same export to the chip, and its compile daemon also speaks
+PyTrapIC's daemon protocol (with small differences, such as error positions being 1-based here),
+although the plugin talks to it over the Language Server Protocol (see
+[How the plugin talks to the compiler](#how-the-plugin-talks-to-the-compiler)). Both
 PyTrapIC and the IC10 Editor, which this plugin is built on and needs, are by
 [aproposmath](https://github.com/aproposmath). Thank you to aproposmath for both, and for the
 [modding template](https://github.com/aproposmath/stationeers-modding-template) whose stand-in game
@@ -40,6 +42,8 @@ moment after typing stops:
 
 - The IC10 it compiles to is shown in a read-only editor beside it, or the first error, with its
   line and column.
+- The compiler's errors are marked in the code, in red: hovering over one, or putting the caret
+  on it, shows the message. Warnings aren't marked, as the IC10 Editor shows errors only.
 - The toolbar shows the IC10's lines, bytes and registers. The editor's size limits (128 lines,
   4096 bytes) apply to the IC10, not to the Kotlin.
 - The IC10 lines that the caret's line compiled to are highlighted.
@@ -68,6 +72,44 @@ settings):
   runtime.
 - `Development.DaemonJarPath`: a compiler jar to use instead of the downloaded one, such as a
   local build of `//daemon:ktrapic-daemon_deploy.jar`.
+
+### How the plugin talks to the compiler
+
+The compiler is the compile daemon (`daemon/` in this repository), run as one java process for
+all the editor's tabs: `java <JVM options> -jar ktrapic-daemon.jar --lsp`, with no console
+window. The plugin starts it the first time a Kotlin program is edited, again with the next edit
+if it stops, and on `ktrapic restart`. It speaks the Language Server Protocol to it over the
+process's standard input and output (JSON-RPC with `Content-Length` framing, UTF-8):
+
+- Each editor's program is a document under a URI of its own, `ktrapic:///<n>/<file name>.kt`.
+  Edits are sent as they're made (`textDocument/didOpen`, then incremental
+  `textDocument/didChange`), in the order they're made, by one writer thread, so the game never
+  waits on the pipe.
+- The daemon compiles each version for its errors and publishes them
+  (`textDocument/publishDiagnostics`). The daemon publishes every document's on the one
+  connection, so each editor applies only its own document's, and only if they're of the
+  version it shows.
+- The preview, the toolbar and the export use the custom request `ktrapic/compile`, sent on the
+  same connection after the edits it compiles. An export waits for it on the main thread, up to
+  30 seconds, but never for the compiler to start: until it has, an export writes a comment
+  saying so.
+- When the daemon starts again (`ktrapic restart`, or after it stopped), each editor opens its
+  document on it again, with its whole text, and compiles it.
+
+The plugin uses its own client for this (`LspConnection`), under the IC10 Editor's LSP formatter,
+rather than the editor's stdio client, which would start a process of its own and can only restart
+it in game. The daemon's JVM options keep it small beside the game:
+
+- `-Xmx256m` caps the heap. Uncapped, the JVM may grow it to a quarter of the RAM: on a 32 GB
+  machine, a series of compiles (40 of a 66-line program and one of a 5,000-line one) peaked at
+  1.16 GB of working set with the default collector, 850 MB with the serial one, and 560 MB with
+  this cap, with at most 110 MB of the heap still in use after a full collection. Warm compiles
+  took about 15% longer than uncapped.
+- `-XX:+UseSerialGC`: one collector thread and less bookkeeping than the default G1. Its pauses
+  don't matter for a compiler.
+- `-XX:+ExitOnOutOfMemoryError`: a daemon that runs out of memory exits, rather than carrying on
+  in a broken state, and starts again with the next edit.
+- `-Dstderr.encoding=UTF-8`: its log, which goes to the BepInEx log as `[compiler] ...` lines.
 
 ## Not yet
 
@@ -110,10 +152,13 @@ set `DaemonJarPath` to it, and `JavaPath` to a JDK 21's `bin/java.exe`.
 
 ### Tests
 
-`mod/tests` tests the plugin's compiler client against a real compile daemon, and drives the
-daemon's LSP mode (`--lsp`) through a minimal test-only JSON-RPC client (`DaemonLspTest.cs`):
-diagnostics as you type, `ktrapic/compile` and the lifecycle. The plugin doesn't use the LSP mode
-yet.
+`mod/tests` tests the plugin's game-independent code: its client of the compile daemon
+(`LspConnection`, `LspDocument`) against a real daemon, started with the plugin's JVM options
+(`LspDocumentTest.cs`: compiles for the preview and the export, edits and compiles in order, each
+document's diagnostics reaching only it, documents opened again on a daemon started again), the
+daemon's LSP mode message by message through that client (`DaemonLspTest.cs`), and the
+highlighting's name lookup. What needs the game, the editor's formatter itself, isn't tested
+here.
 
 ```
 bazel build //daemon:ktrapic-daemon_deploy.jar

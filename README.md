@@ -82,7 +82,7 @@ kotlin playground/playground.main.kts
 then open http://127.0.0.1:8765/. The Open menu lists the programs in `test/cases`; pass
 `--source-dir` (repeatable) to list others, and `--port` to use another port. The script starts
 the compile daemon (`daemon/`) and sends it each compile; the daemon speaks PyTrapIC's protocol
-(one base64 JSON line per request and per response), which the IC10 Editor plugin uses too.
+(one base64 JSON line per request and per response).
 The first compile after starting takes a few seconds while the compiler warms up.
 
 Started with `--lsp`, the daemon speaks the Language Server Protocol on stdin and stdout instead
@@ -95,15 +95,17 @@ line-protocol compile. 150 ms after a document is opened or changed it compiles 
 closed. A newer change replaces a compile still pending or running, so diagnostics never arrive
 for an older version, and a `ktrapic/compile` of the same text reuses that compile. It answers
 `textDocument/semanticTokens/full` with no tokens, as the IC10 Editor asks for them after every
-change. See `daemon/src/main/kotlin/ktrapic/daemon/lsp/LspServer.kt`.
+change. See `daemon/src/main/kotlin/ktrapic/daemon/lsp/LspServer.kt`. The IC10 Editor plugin
+speaks this mode (see [mod/README.md](mod/README.md#how-the-plugin-talks-to-the-compiler)).
 
 ## In game
 
 The plugin in `mod/` adds a "Kotlin" language to the
 [IC10 Editor](https://github.com/aproposmath/StationeersIC10Editor) mod: programs are compiled as
-you type, with the IC10 shown beside them, and exported to the chip as IC10 with the Kotlin
-source kept alongside, so the chip opens as Kotlin again. On first use it downloads the compiler
-and a Java runtime for it from this repository's GitHub release. See [mod/README.md](mod/README.md)
+you type, with the IC10 shown beside them and the compiler's errors marked in the code, and
+exported to the chip as IC10 with the Kotlin source kept alongside, so the chip opens as Kotlin
+again. On first use it downloads the compiler and a Java runtime for it from this repository's
+GitHub release. See [mod/README.md](mod/README.md)
 for installing, using and building it.
 
 ## Editing in IntelliJ

@@ -1,9 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <!--
-    Tests of the plugin's game-independent code. The daemon client's, and DaemonLspTest's of the
+    Tests of the plugin's game-independent code. Its LSP client's tests, and DaemonLspTest's of the
     daemon's LSP mode, run against a real compile daemon: set KTRAPIC_DAEMON_JAR to the absolute
-    path of a built
-    //daemon:ktrapic-daemon_deploy.jar, and JAVA_HOME to a JDK 21+.
+    path of a built //daemon:ktrapic-daemon_deploy.jar, and JAVA_HOME to a JDK 21+.
   -->
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
@@ -11,7 +10,9 @@
     <Nullable>disable</Nullable>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="../src/DaemonClient.cs" Link="DaemonClient.cs" />
+    <Compile Include="../src/CompileResponse.cs" Link="CompileResponse.cs" />
+    <Compile Include="../src/LspConnection.cs" Link="LspConnection.cs" />
+    <Compile Include="../src/LspDocument.cs" Link="LspDocument.cs" />
     <Compile Include="../src/SdkNames.g.cs" Link="SdkNames.g.cs" />
     <Compile Include="../src/SdkNameKinds.cs" Link="SdkNameKinds.cs" />
   </ItemGroup>
