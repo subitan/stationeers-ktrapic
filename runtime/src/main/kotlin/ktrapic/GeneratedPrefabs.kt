@@ -6854,6 +6854,264 @@ object SolarPanels {
 }
 
 /** A device that comes as several prefabs, each a nested class. */
+interface Reprocessor {
+  var ClearMemory: Boolean
+
+  val Error: Boolean
+
+  var On: Boolean
+
+  val Power: Boolean
+
+  val Reagents: Double
+
+  val RequiredPower: Double
+
+  /** A StructureCentrifuge. */
+  @PrefabName("StructureCentrifuge")
+  class Centrifuge internal constructor() : TypedDevice(), Reprocessor {
+    override var ClearMemory: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override val Error: Boolean
+      get() = intrinsic()
+
+    override var On: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    var Open: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override val Power: Boolean
+      get() = intrinsic()
+
+    override val Reagents: Double
+      get() = intrinsic()
+
+    override val RequiredPower: Double
+      get() = intrinsic()
+
+    @LogicTypes(read = "ImportCount", written = "")
+    val Import: Transfer
+      get() = intrinsic()
+
+    @LogicTypes(read = "ExportCount", written = "")
+    val Export: Transfer
+      get() = intrinsic()
+
+    /** The device's slots, by number. */
+    val slots: Slots<DataDiskSlot>
+      get() = intrinsic()
+
+    /** The StructureCentrifuge prefab. */
+    companion object : Prefab()
+  }
+
+  /** A StructureCombustionCentrifuge. */
+  @PrefabName("StructureCombustionCentrifuge")
+  class CombustionCentrifuge internal constructor() : TypedDevice(), Reprocessor {
+    override var ClearMemory: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    val Combustion: Boolean
+      get() = intrinsic()
+
+    var CombustionLimiter: Double
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override val Error: Boolean
+      get() = intrinsic()
+
+    var Lock: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override var On: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    var Open: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override val Power: Boolean
+      get() = intrinsic()
+
+    val Pressure: Double
+      get() = intrinsic()
+
+    override val Reagents: Double
+      get() = intrinsic()
+
+    override val RequiredPower: Double
+      get() = intrinsic()
+
+    val Rpm: Double
+      get() = intrinsic()
+
+    val Stress: Double
+      get() = intrinsic()
+
+    val Temperature: Double
+      get() = intrinsic()
+
+    var Throttle: Double
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    val TotalMoles: Double
+      get() = intrinsic()
+
+    @LogicTypes(
+        read =
+            "CombustionInput,CombustionOutput,PressureInput,PressureOutput,RatioCarbonDioxideInput,RatioCarbonDioxideOutput,RatioHeliumInput,RatioHeliumOutput,RatioHydrazineInput,RatioHydrazineOutput,RatioHydrochloricAcidInput,RatioHydrochloricAcidOutput,RatioHydrogenInput,RatioHydrogenOutput,RatioLiquidAlcoholInput,RatioLiquidAlcoholOutput,RatioLiquidCarbonDioxideInput,RatioLiquidCarbonDioxideOutput,RatioLiquidHydrazineInput,RatioLiquidHydrazineOutput,RatioLiquidHydrochloricAcidInput,RatioLiquidHydrochloricAcidOutput,RatioLiquidHydrogenInput,RatioLiquidHydrogenOutput,RatioLiquidMethaneInput,RatioLiquidMethaneOutput,RatioLiquidNitrogenInput,RatioLiquidNitrogenOutput,RatioLiquidNitrousOxideInput,RatioLiquidNitrousOxideOutput,RatioLiquidOxygenInput,RatioLiquidOxygenOutput,RatioLiquidOzoneInput,RatioLiquidOzoneOutput,RatioLiquidPollutantInput,RatioLiquidPollutantOutput,RatioLiquidSilanolInput,RatioLiquidSilanolOutput,RatioLiquidSodiumChlorideInput,RatioLiquidSodiumChlorideOutput,RatioMethaneInput,RatioMethaneOutput,RatioNitrogenInput,RatioNitrogenOutput,RatioNitrousOxideInput,RatioNitrousOxideOutput,RatioOxygenInput,RatioOxygenOutput,RatioOzoneInput,RatioOzoneOutput,RatioPollutantInput,RatioPollutantOutput,RatioPollutedWaterInput,RatioPollutedWaterOutput,RatioSilanolInput,RatioSilanolOutput,RatioSteamInput,RatioSteamOutput,RatioWaterInput,RatioWaterOutput,TemperatureInput,TemperatureOutput,TotalMolesInput,TotalMolesOutput",
+        written = "",
+    )
+    val Ports: Ports
+      get() = intrinsic()
+
+    @LogicTypes(
+        read =
+            "RatioCarbonDioxide,RatioHelium,RatioHydrazine,RatioHydrochloricAcid,RatioHydrogen,RatioLiquidAlcohol,RatioLiquidCarbonDioxide,RatioLiquidHydrazine,RatioLiquidHydrochloricAcid,RatioLiquidHydrogen,RatioLiquidMethane,RatioLiquidNitrogen,RatioLiquidNitrousOxide,RatioLiquidOxygen,RatioLiquidOzone,RatioLiquidPollutant,RatioLiquidSilanol,RatioLiquidSodiumChloride,RatioMethane,RatioNitrogen,RatioNitrousOxide,RatioOxygen,RatioOzone,RatioPollutant,RatioPollutedWater,RatioSilanol,RatioSteam,RatioWater",
+        written = "",
+    )
+    val Ratios: Ratios
+      get() = intrinsic()
+
+    @LogicTypes(read = "ImportCount", written = "")
+    val Import: Transfer
+      get() = intrinsic()
+
+    @LogicTypes(read = "ExportCount", written = "")
+    val Export: Transfer
+      get() = intrinsic()
+
+    /** The device's slots, by number. */
+    val slots: Slots<DataDiskSlot>
+      get() = intrinsic()
+
+    /** Slot 2. */
+    @SlotNumber(2)
+    val ProgrammableChip: DataDiskSlot
+      get() = intrinsic()
+
+    /** The StructureCombustionCentrifuge prefab. */
+    companion object : Prefab()
+  }
+
+  /** A StructureRecycler. */
+  @PrefabName("StructureRecycler")
+  class Recycler internal constructor() : TypedDevice(), Reprocessor {
+    var Activate: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override var ClearMemory: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override val Error: Boolean
+      get() = intrinsic()
+
+    override var On: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override val Power: Boolean
+      get() = intrinsic()
+
+    override val Reagents: Double
+      get() = intrinsic()
+
+    override val RequiredPower: Double
+      get() = intrinsic()
+
+    @LogicTypes(read = "ImportCount", written = "")
+    val Import: Transfer
+      get() = intrinsic()
+
+    @LogicTypes(read = "ExportCount", written = "")
+    val Export: Transfer
+      get() = intrinsic()
+
+    /** The device's slots, by number. */
+    val slots: Slots<DataDiskSlot>
+      get() = intrinsic()
+
+    /** The StructureRecycler prefab. */
+    companion object : Prefab()
+  }
+}
+
+/** The Reprocessor devices on the chip's network, by prefab. */
+object Reprocessors {
+  /** The StructureCentrifuge devices on the chip's network. */
+  @PrefabName("StructureCentrifuge")
+  object Centrifuge {
+    /** The device on [pin], as a StructureCentrifuge. */
+    fun at(pin: Device): Reprocessor.Centrifuge = intrinsic()
+
+    /** Every one on the network. */
+    val all: Batch
+      get() = intrinsic()
+
+    /** Every one on the network named [name], which must be a constant. */
+    fun named(name: String): Batch = intrinsic()
+
+    class Batch internal constructor() : DeviceBatch<Reprocessor.Centrifuge>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+  }
+
+  /** The StructureCombustionCentrifuge devices on the chip's network. */
+  @PrefabName("StructureCombustionCentrifuge")
+  object CombustionCentrifuge {
+    /** The device on [pin], as a StructureCombustionCentrifuge. */
+    fun at(pin: Device): Reprocessor.CombustionCentrifuge = intrinsic()
+
+    /** Every one on the network. */
+    val all: Batch
+      get() = intrinsic()
+
+    /** Every one on the network named [name], which must be a constant. */
+    fun named(name: String): Batch = intrinsic()
+
+    class Batch internal constructor() : DeviceBatch<Reprocessor.CombustionCentrifuge>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+  }
+
+  /** The StructureRecycler devices on the chip's network. */
+  @PrefabName("StructureRecycler")
+  object Recycler {
+    /** The device on [pin], as a StructureRecycler. */
+    fun at(pin: Device): Reprocessor.Recycler = intrinsic()
+
+    /** Every one on the network. */
+    val all: Batch
+      get() = intrinsic()
+
+    /** Every one on the network named [name], which must be a constant. */
+    fun named(name: String): Batch = intrinsic()
+
+    class Batch internal constructor() : DeviceBatch<Reprocessor.Recycler>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+  }
+}
+
+/** A device that comes as several prefabs, each a nested class. */
 interface Furnace {
   var Activate: Boolean
 
@@ -17539,69 +17797,6 @@ object Cameras {
   fun named(name: String): DeviceBatch<Camera> = intrinsic()
 }
 
-/** A StructureCentrifuge. */
-@PrefabName("StructureCentrifuge")
-class Centrifuge internal constructor() : TypedDevice() {
-  var ClearMemory: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val Error: Boolean
-    get() = intrinsic()
-
-  var On: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var Open: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val Power: Boolean
-    get() = intrinsic()
-
-  val Reagents: Double
-    get() = intrinsic()
-
-  val RequiredPower: Double
-    get() = intrinsic()
-
-  @LogicTypes(read = "ImportCount", written = "")
-  val Import: Transfer
-    get() = intrinsic()
-
-  @LogicTypes(read = "ExportCount", written = "")
-  val Export: Transfer
-    get() = intrinsic()
-
-  /** The device's slots, by number. */
-  val slots: Slots<DataDiskSlot>
-    get() = intrinsic()
-
-  /** The StructureCentrifuge prefab. */
-  companion object : Prefab()
-}
-
-/** The StructureCentrifuge devices on the chip's network. */
-@PrefabName("StructureCentrifuge")
-object Centrifuges {
-  /** The device on [pin], as a StructureCentrifuge. */
-  fun at(pin: Device): Centrifuge = intrinsic()
-
-  /** Every one on the network. */
-  val all: Batch
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch<Centrifuge>() {
-    /** A slot of every one in the batch, by number. */
-    val slots: Slots<SlotBatch<DataDiskSlot>>
-      get() = intrinsic()
-  }
-}
-
 /** A StructureChuteInlet. */
 @PrefabName("StructureChuteInlet")
 class ChuteInlet internal constructor() : TypedDevice() {
@@ -17746,120 +17941,6 @@ object ChuteUmbilicalMales {
   fun named(name: String): Batch = intrinsic()
 
   class Batch internal constructor() : DeviceBatch<ChuteUmbilicalMale>() {
-    /** A slot of every one in the batch, by number. */
-    val slots: Slots<SlotBatch<DataDiskSlot>>
-      get() = intrinsic()
-  }
-}
-
-/** A StructureCombustionCentrifuge. */
-@PrefabName("StructureCombustionCentrifuge")
-class CombustionCentrifuge internal constructor() : TypedDevice() {
-  var ClearMemory: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val Combustion: Boolean
-    get() = intrinsic()
-
-  var CombustionLimiter: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val Error: Boolean
-    get() = intrinsic()
-
-  var Lock: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var On: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var Open: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val Power: Boolean
-    get() = intrinsic()
-
-  val Pressure: Double
-    get() = intrinsic()
-
-  val Reagents: Double
-    get() = intrinsic()
-
-  val RequiredPower: Double
-    get() = intrinsic()
-
-  val Rpm: Double
-    get() = intrinsic()
-
-  val Stress: Double
-    get() = intrinsic()
-
-  val Temperature: Double
-    get() = intrinsic()
-
-  var Throttle: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val TotalMoles: Double
-    get() = intrinsic()
-
-  @LogicTypes(
-      read =
-          "CombustionInput,CombustionOutput,PressureInput,PressureOutput,RatioCarbonDioxideInput,RatioCarbonDioxideOutput,RatioHeliumInput,RatioHeliumOutput,RatioHydrazineInput,RatioHydrazineOutput,RatioHydrochloricAcidInput,RatioHydrochloricAcidOutput,RatioHydrogenInput,RatioHydrogenOutput,RatioLiquidAlcoholInput,RatioLiquidAlcoholOutput,RatioLiquidCarbonDioxideInput,RatioLiquidCarbonDioxideOutput,RatioLiquidHydrazineInput,RatioLiquidHydrazineOutput,RatioLiquidHydrochloricAcidInput,RatioLiquidHydrochloricAcidOutput,RatioLiquidHydrogenInput,RatioLiquidHydrogenOutput,RatioLiquidMethaneInput,RatioLiquidMethaneOutput,RatioLiquidNitrogenInput,RatioLiquidNitrogenOutput,RatioLiquidNitrousOxideInput,RatioLiquidNitrousOxideOutput,RatioLiquidOxygenInput,RatioLiquidOxygenOutput,RatioLiquidOzoneInput,RatioLiquidOzoneOutput,RatioLiquidPollutantInput,RatioLiquidPollutantOutput,RatioLiquidSilanolInput,RatioLiquidSilanolOutput,RatioLiquidSodiumChlorideInput,RatioLiquidSodiumChlorideOutput,RatioMethaneInput,RatioMethaneOutput,RatioNitrogenInput,RatioNitrogenOutput,RatioNitrousOxideInput,RatioNitrousOxideOutput,RatioOxygenInput,RatioOxygenOutput,RatioOzoneInput,RatioOzoneOutput,RatioPollutantInput,RatioPollutantOutput,RatioPollutedWaterInput,RatioPollutedWaterOutput,RatioSilanolInput,RatioSilanolOutput,RatioSteamInput,RatioSteamOutput,RatioWaterInput,RatioWaterOutput,TemperatureInput,TemperatureOutput,TotalMolesInput,TotalMolesOutput",
-      written = "",
-  )
-  val Ports: Ports
-    get() = intrinsic()
-
-  @LogicTypes(
-      read =
-          "RatioCarbonDioxide,RatioHelium,RatioHydrazine,RatioHydrochloricAcid,RatioHydrogen,RatioLiquidAlcohol,RatioLiquidCarbonDioxide,RatioLiquidHydrazine,RatioLiquidHydrochloricAcid,RatioLiquidHydrogen,RatioLiquidMethane,RatioLiquidNitrogen,RatioLiquidNitrousOxide,RatioLiquidOxygen,RatioLiquidOzone,RatioLiquidPollutant,RatioLiquidSilanol,RatioLiquidSodiumChloride,RatioMethane,RatioNitrogen,RatioNitrousOxide,RatioOxygen,RatioOzone,RatioPollutant,RatioPollutedWater,RatioSilanol,RatioSteam,RatioWater",
-      written = "",
-  )
-  val Ratios: Ratios
-    get() = intrinsic()
-
-  @LogicTypes(read = "ImportCount", written = "")
-  val Import: Transfer
-    get() = intrinsic()
-
-  @LogicTypes(read = "ExportCount", written = "")
-  val Export: Transfer
-    get() = intrinsic()
-
-  /** The device's slots, by number. */
-  val slots: Slots<DataDiskSlot>
-    get() = intrinsic()
-
-  /** Slot 2. */
-  @SlotNumber(2)
-  val ProgrammableChip: DataDiskSlot
-    get() = intrinsic()
-
-  /** The StructureCombustionCentrifuge prefab. */
-  companion object : Prefab()
-}
-
-/** The StructureCombustionCentrifuge devices on the chip's network. */
-@PrefabName("StructureCombustionCentrifuge")
-object CombustionCentrifuges {
-  /** The device on [pin], as a StructureCombustionCentrifuge. */
-  fun at(pin: Device): CombustionCentrifuge = intrinsic()
-
-  /** Every one on the network. */
-  val all: Batch
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch<CombustionCentrifuge>() {
     /** A slot of every one in the batch, by number. */
     val slots: Slots<SlotBatch<DataDiskSlot>>
       get() = intrinsic()
@@ -20123,69 +20204,6 @@ object ProximitySensors {
 
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): DeviceBatch<ProximitySensor> = intrinsic()
-}
-
-/** A StructureRecycler. */
-@PrefabName("StructureRecycler")
-class Recycler internal constructor() : TypedDevice() {
-  var Activate: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var ClearMemory: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val Error: Boolean
-    get() = intrinsic()
-
-  var On: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val Power: Boolean
-    get() = intrinsic()
-
-  val Reagents: Double
-    get() = intrinsic()
-
-  val RequiredPower: Double
-    get() = intrinsic()
-
-  @LogicTypes(read = "ImportCount", written = "")
-  val Import: Transfer
-    get() = intrinsic()
-
-  @LogicTypes(read = "ExportCount", written = "")
-  val Export: Transfer
-    get() = intrinsic()
-
-  /** The device's slots, by number. */
-  val slots: Slots<DataDiskSlot>
-    get() = intrinsic()
-
-  /** The StructureRecycler prefab. */
-  companion object : Prefab()
-}
-
-/** The StructureRecycler devices on the chip's network. */
-@PrefabName("StructureRecycler")
-object Recyclers {
-  /** The device on [pin], as a StructureRecycler. */
-  fun at(pin: Device): Recycler = intrinsic()
-
-  /** Every one on the network. */
-  val all: Batch
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch<Recycler>() {
-    /** A slot of every one in the batch, by number. */
-    val slots: Slots<SlotBatch<DataDiskSlot>>
-      get() = intrinsic()
-  }
 }
 
 /** A StructureRobotArmDoor. */

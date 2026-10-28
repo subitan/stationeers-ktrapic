@@ -1674,6 +1674,55 @@ interface Radiator {
 }
 ```
 
+### Reprocessor
+
+```kotlin
+interface Reprocessor {
+  var ClearMemory: Boolean
+  val Error: Boolean
+  var On: Boolean
+  val Power: Boolean
+  val Reagents: Double
+  val RequiredPower: Double
+
+  /** StructureCentrifuge. Entry point: Reprocessors.Centrifuge. */
+  class Centrifuge : TypedDevice, Reprocessor {
+    val Export: Transfer
+    val Import: Transfer
+    var Open: Boolean
+    val slots: Slots<DataDiskSlot>
+  }
+
+  /** StructureCombustionCentrifuge. Entry point: Reprocessors.CombustionCentrifuge. */
+  class CombustionCentrifuge : TypedDevice, Reprocessor {
+    val Combustion: Boolean
+    var CombustionLimiter: Double
+    val Export: Transfer
+    val Import: Transfer
+    var Lock: Boolean
+    var Open: Boolean
+    val Ports: Ports
+    val Pressure: Double
+    val Ratios: Ratios
+    val Rpm: Double
+    val Stress: Double
+    val Temperature: Double
+    var Throttle: Double
+    val TotalMoles: Double
+    val ProgrammableChip: DataDiskSlot // slots[2]
+    val slots: Slots<DataDiskSlot>
+  }
+
+  /** StructureRecycler. Entry point: Reprocessors.Recycler. */
+  class Recycler : TypedDevice, Reprocessor {
+    var Activate: Boolean
+    val Export: Transfer
+    val Import: Transfer
+    val slots: Slots<DataDiskSlot>
+  }
+}
+```
+
 ### RocketEngine
 
 ```kotlin
@@ -2502,20 +2551,6 @@ class Camera : TypedDevice {
   var On: Boolean
 }
 
-/** StructureCentrifuge. Entry point: Centrifuges. */
-class Centrifuge : TypedDevice {
-  var ClearMemory: Boolean
-  val Error: Boolean
-  val Export: Transfer // Count
-  val Import: Transfer // Count
-  var On: Boolean
-  var Open: Boolean
-  val Power: Boolean
-  val Reagents: Double
-  val RequiredPower: Double
-  val slots: Slots<DataDiskSlot>
-}
-
 /** StructureChuteInlet. Entry point: ChuteInlets. */
 class ChuteInlet : TypedDevice {
   var ClearMemory: Boolean
@@ -2543,34 +2578,6 @@ class ChuteUmbilicalMale : TypedDevice {
   val Power: Boolean
   val RequiredPower: Double
   val TransportSlot: DataDiskSlot // slots[0]
-  val slots: Slots<DataDiskSlot>
-}
-
-/** StructureCombustionCentrifuge. Entry point: CombustionCentrifuges. */
-class CombustionCentrifuge : TypedDevice {
-  var ClearMemory: Boolean
-  val Combustion: Boolean
-  var CombustionLimiter: Double
-  val Error: Boolean
-  val Export: Transfer // Count
-  val Import: Transfer // Count
-  var Lock: Boolean
-  var On: Boolean
-  var Open: Boolean
-  val Ports: Ports
-  //   Input: Combustion, Pressure, Temperature, TotalMoles, Ratios[every Substance]
-  //   Output: Combustion, Pressure, Temperature, TotalMoles, Ratios[every Substance]
-  val Power: Boolean
-  val Pressure: Double
-  val Ratios: Ratios // every Substance
-  val Reagents: Double
-  val RequiredPower: Double
-  val Rpm: Double
-  val Stress: Double
-  val Temperature: Double
-  var Throttle: Double
-  val TotalMoles: Double
-  val ProgrammableChip: DataDiskSlot // slots[2]
   val slots: Slots<DataDiskSlot>
 }
 
@@ -3406,20 +3413,6 @@ class ProximitySensor : TypedDevice {
 ### R
 
 ```kotlin
-/** StructureRecycler. Entry point: Recyclers. */
-class Recycler : TypedDevice {
-  var Activate: Boolean
-  var ClearMemory: Boolean
-  val Error: Boolean
-  val Export: Transfer // Count
-  val Import: Transfer // Count
-  var On: Boolean
-  val Power: Boolean
-  val Reagents: Double
-  val RequiredPower: Double
-  val slots: Slots<DataDiskSlot>
-}
-
 /** ItemRemoteDetonator. Entry point: RemoteDetonators. */
 class RemoteDetonator : TypedDevice {
   var Activate: Boolean
