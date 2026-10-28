@@ -184,7 +184,7 @@ in a `val`; a `map` can't.
 greatest or least value with 0, so all four take an on-or-off logic type to be 0 or 1. The game
 reports them so, and clamps a value written to one to that range.
 
-Devices that come in several prefabs are grouped by kind: `Batteries.Small.at(d0)` is a
+Prefabs that do one kind of job are grouped into families: `Batteries.Small.at(d0)` is a
 `Battery.Small`, and `Batteries.Large.all` every large one. On its own, `Battery` is no prefab: it
 is the interface its members share, with the logic types all of them can read, so an inlined
 function can take any battery. It has only those logic types: `PrefabHash`, `NameHash` and

@@ -27,9 +27,9 @@ into `BepInEx/cache/ktrapic`. It checks the release again each time it starts th
 again only if the release's files have changed. A Release build of the plugin uses the release
 tagged with its version (`v0.1.0`); a Debug build uses the rolling `dev` release, which every push
 to `main` replaces. No version has been tagged yet, so for now install from the
-[`dev` release](https://github.com/subitan/stationeers-ktrapic/releases/tag/dev), whose zip is a
-Debug build. Only Windows x64 has a runtime release; elsewhere, set both `JavaPath` and
-`DaemonJarPath` (below).
+[`dev` release](https://github.com/subitan/stationeers-ktrapic/releases/tag/dev), whose zip,
+`KTrapIC-main.zip`, is a Debug build. Only Windows x64 has a runtime release; elsewhere, set both
+`JavaPath` and `DaemonJarPath` (below).
 
 ## Using it
 

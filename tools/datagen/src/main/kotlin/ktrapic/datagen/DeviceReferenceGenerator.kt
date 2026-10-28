@@ -193,8 +193,8 @@ object DeviceReferenceGenerator {
       append("used the same way, such as a lever and a switch (`Switches.Lever`), or a ")
       append("transmitter and a receiver (`PowerTransmissions.MicrowaveReceiver`). Its interface ")
       append("holds the logic types every member has, so a function can take any of them; each ")
-      append("member is a nested class, with an entry point nested the same way, and has its ")
-      append("own logic types too (`DigitalChutes.ValveLeft` adds `Lock` and `Open`). A family ")
+      append("member is a nested class, with an entry point nested the same way, and can have ")
+      append("logic types of its own (`DigitalChutes.ValveLeft` adds `Lock` and `Open`). A family ")
       append("that is a special case of another extends its interface, so a function taking the ")
       append("other takes it too: an `ElevatorLevel` is an `ElevatorShaft`.\n")
       for (family in families.sortedBy { it.name }) {

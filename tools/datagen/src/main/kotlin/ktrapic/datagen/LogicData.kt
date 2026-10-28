@@ -209,7 +209,7 @@ data class Prefabs(
 /**
  * KTrapIC's hand-written grouping of prefabs, which is a choice rather than game data.
  *
- * @property families device kinds that come in several prefabs, by the singular name of their
+ * @property families prefabs grouped by the one kind of job they do, by the singular name of their
  *   interface: the plural name of their entry point, and each member's name and prefab. A prefab in
  *   a family is reachable only through it.
  * @property textDisplays prefabs whose `Setting` shows text (packed by `STR`) in their `String`
