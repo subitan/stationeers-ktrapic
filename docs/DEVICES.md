@@ -7,7 +7,7 @@ The typed devices, slots and enums a program can name, as Kotlin declarations: 3
 - [Using a device](#using-a-device)
 - [Views](#views)
 - [Families](#families)
-- Devices: [A](#a) · [B](#b) · [C](#c) · [D](#d) · [E](#e) · [F](#f) · [G](#g) · [H](#h) · [I](#i) · [J](#j) · [K](#k) · [L](#l) · [M](#m) · [N](#n) · [O](#o) · [P](#p) · [R](#r) · [S](#s) · [T](#t) · [U](#u) · [W](#w)
+- Devices: [A](#a) · [B](#b) · [C](#c) · [D](#d) · [E](#e) · [F](#f) · [G](#g) · [H](#h) · [I](#i) · [J](#j) · [K](#k) · [L](#l) · [N](#n) · [O](#o) · [P](#p) · [R](#r) · [S](#s) · [T](#t) · [U](#u) · [W](#w)
 - [Slots](#slots)
 - [Enums](#enums)
 
@@ -1585,6 +1585,30 @@ interface PoweredVent {
   /** StructurePoweredVentLarge. Entry point: PoweredVents.Large. */
   class Large : TypedDevice, PoweredVent {
     val Ports: Ports
+  }
+}
+```
+
+### PresenceSensor
+
+```kotlin
+interface PresenceSensor {
+  val Activate: Boolean
+  val Quantity: Double
+
+  /** StructureMotionSensor. Entry point: PresenceSensors.Motion. */
+  class Motion : TypedDevice, PresenceSensor {
+    var On: Boolean
+  }
+
+  /** StructureProximitySensor. Entry point: PresenceSensors.Proximity. */
+  class Proximity : TypedDevice, PresenceSensor {
+    var Setting: Double
+  }
+
+  /** StructureOccupancySensor. Entry point: PresenceSensors.Occupancy. */
+  class Occupancy : TypedDevice, PresenceSensor {
+    val StackSize: Double
   }
 }
 ```
@@ -3240,17 +3264,6 @@ class LogicStepSequencer8 : TypedDevice {
 }
 ```
 
-### M
-
-```kotlin
-/** StructureMotionSensor. Entry point: MotionSensors. */
-class MotionSensor : TypedDevice {
-  var Activate: Boolean
-  var On: Boolean
-  val Quantity: Double
-}
-```
-
 ### N
 
 ```kotlin
@@ -3292,13 +3305,6 @@ class NVG : TypedDevice {
 ### O
 
 ```kotlin
-/** StructureOccupancySensor. Entry point: OccupancySensors. */
-class OccupancySensor : TypedDevice {
-  val Activate: Boolean
-  val Quantity: Double
-  val StackSize: Double
-}
-
 /** ItemOreDetector. Entry point: OreDetectors. */
 class OreDetector : TypedDevice {
   val Error: Boolean
@@ -3393,13 +3399,6 @@ class PowerUmbilicalMale : TypedDevice {
   var Open: Boolean
   val Power: Boolean
   val RequiredPower: Double
-}
-
-/** StructureProximitySensor. Entry point: ProximitySensors. */
-class ProximitySensor : TypedDevice {
-  val Activate: Boolean
-  val Quantity: Double
-  var Setting: Double
 }
 ```
 

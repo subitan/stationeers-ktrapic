@@ -1947,6 +1947,109 @@ object SatelliteDishes {
 }
 
 /** A device that comes as several prefabs, each a nested class. */
+interface PresenceSensor {
+  val Activate: Boolean
+
+  val Quantity: Double
+
+  /** A StructureMotionSensor. */
+  @PrefabName("StructureMotionSensor")
+  class Motion internal constructor() : TypedDevice(), PresenceSensor {
+    override var Activate: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    var On: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override val Quantity: Double
+      get() = intrinsic()
+
+    /** The StructureMotionSensor prefab. */
+    companion object : Prefab()
+  }
+
+  /** A StructureProximitySensor. */
+  @PrefabName("StructureProximitySensor")
+  class Proximity internal constructor() : TypedDevice(), PresenceSensor {
+    override val Activate: Boolean
+      get() = intrinsic()
+
+    override val Quantity: Double
+      get() = intrinsic()
+
+    var Setting: Double
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    /** The StructureProximitySensor prefab. */
+    companion object : Prefab()
+  }
+
+  /** A StructureOccupancySensor. */
+  @PrefabName("StructureOccupancySensor")
+  class Occupancy internal constructor() : TypedDevice(), PresenceSensor {
+    override val Activate: Boolean
+      get() = intrinsic()
+
+    override val Quantity: Double
+      get() = intrinsic()
+
+    val StackSize: Double
+      get() = intrinsic()
+
+    /** The StructureOccupancySensor prefab. */
+    companion object : Prefab()
+  }
+}
+
+/** The PresenceSensor devices on the chip's network, by prefab. */
+object PresenceSensors {
+  /** The StructureMotionSensor devices on the chip's network. */
+  @PrefabName("StructureMotionSensor")
+  object Motion {
+    /** The device on [pin], as a StructureMotionSensor. */
+    fun at(pin: Device): PresenceSensor.Motion = intrinsic()
+
+    /** Every one on the network. */
+    val all: DeviceBatch<PresenceSensor.Motion>
+      get() = intrinsic()
+
+    /** Every one on the network named [name], which must be a constant. */
+    fun named(name: String): DeviceBatch<PresenceSensor.Motion> = intrinsic()
+  }
+
+  /** The StructureProximitySensor devices on the chip's network. */
+  @PrefabName("StructureProximitySensor")
+  object Proximity {
+    /** The device on [pin], as a StructureProximitySensor. */
+    fun at(pin: Device): PresenceSensor.Proximity = intrinsic()
+
+    /** Every one on the network. */
+    val all: DeviceBatch<PresenceSensor.Proximity>
+      get() = intrinsic()
+
+    /** Every one on the network named [name], which must be a constant. */
+    fun named(name: String): DeviceBatch<PresenceSensor.Proximity> = intrinsic()
+  }
+
+  /** The StructureOccupancySensor devices on the chip's network. */
+  @PrefabName("StructureOccupancySensor")
+  object Occupancy {
+    /** The device on [pin], as a StructureOccupancySensor. */
+    fun at(pin: Device): PresenceSensor.Occupancy = intrinsic()
+
+    /** Every one on the network. */
+    val all: DeviceBatch<PresenceSensor.Occupancy>
+      get() = intrinsic()
+
+    /** Every one on the network named [name], which must be a constant. */
+    fun named(name: String): DeviceBatch<PresenceSensor.Occupancy> = intrinsic()
+  }
+}
+
+/** A device that comes as several prefabs, each a nested class. */
 interface PressurePlate {
   val Setting: Double
 
@@ -19659,38 +19762,6 @@ object LogicSorters {
   }
 }
 
-/** A StructureMotionSensor. */
-@PrefabName("StructureMotionSensor")
-class MotionSensor internal constructor() : TypedDevice() {
-  var Activate: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var On: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val Quantity: Double
-    get() = intrinsic()
-
-  /** The StructureMotionSensor prefab. */
-  companion object : Prefab()
-}
-
-/** The StructureMotionSensor devices on the chip's network. */
-@PrefabName("StructureMotionSensor")
-object MotionSensors {
-  /** The device on [pin], as a StructureMotionSensor. */
-  fun at(pin: Device): MotionSensor = intrinsic()
-
-  /** Every one on the network. */
-  val all: DeviceBatch<MotionSensor>
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): DeviceBatch<MotionSensor> = intrinsic()
-}
-
 /** A StructureNitrolyzer. */
 @PrefabName("StructureNitrolyzer")
 class Nitrolyzer internal constructor() : TypedDevice() {
@@ -19788,36 +19859,6 @@ object Nitrolyzers {
     val slots: Slots<SlotBatch<DataDiskSlot>>
       get() = intrinsic()
   }
-}
-
-/** A StructureOccupancySensor. */
-@PrefabName("StructureOccupancySensor")
-class OccupancySensor internal constructor() : TypedDevice() {
-  val Activate: Boolean
-    get() = intrinsic()
-
-  val Quantity: Double
-    get() = intrinsic()
-
-  val StackSize: Double
-    get() = intrinsic()
-
-  /** The StructureOccupancySensor prefab. */
-  companion object : Prefab()
-}
-
-/** The StructureOccupancySensor devices on the chip's network. */
-@PrefabName("StructureOccupancySensor")
-object OccupancySensors {
-  /** The device on [pin], as a StructureOccupancySensor. */
-  fun at(pin: Device): OccupancySensor = intrinsic()
-
-  /** Every one on the network. */
-  val all: DeviceBatch<OccupancySensor>
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): DeviceBatch<OccupancySensor> = intrinsic()
 }
 
 /** A StructurePacker. */
@@ -20092,37 +20133,6 @@ object PowerUmbilicalMales {
 
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): DeviceBatch<PowerUmbilicalMale> = intrinsic()
-}
-
-/** A StructureProximitySensor. */
-@PrefabName("StructureProximitySensor")
-class ProximitySensor internal constructor() : TypedDevice() {
-  val Activate: Boolean
-    get() = intrinsic()
-
-  val Quantity: Double
-    get() = intrinsic()
-
-  var Setting: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  /** The StructureProximitySensor prefab. */
-  companion object : Prefab()
-}
-
-/** The StructureProximitySensor devices on the chip's network. */
-@PrefabName("StructureProximitySensor")
-object ProximitySensors {
-  /** The device on [pin], as a StructureProximitySensor. */
-  fun at(pin: Device): ProximitySensor = intrinsic()
-
-  /** Every one on the network. */
-  val all: DeviceBatch<ProximitySensor>
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): DeviceBatch<ProximitySensor> = intrinsic()
 }
 
 /** A StructureRecycler. */
