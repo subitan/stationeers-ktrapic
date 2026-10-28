@@ -188,9 +188,13 @@ object DeviceReferenceGenerator {
       }
       append("## Families\n")
       append("\n")
-      append("A family is a device that comes as several prefabs. Its interface holds the logic ")
-      append("types every member has, so a function can take any of them; each member is a ")
-      append("nested class, with an entry point nested the same way (`Batteries.Small`). A family ")
+      append("A family is a set of prefabs that do one kind of job and share their logic types: ")
+      append("one device in several sizes or fluids (`Batteries.Small`), or different devices ")
+      append("used the same way, such as a lever and a switch (`Switches.Lever`), or a ")
+      append("transmitter and a receiver (`PowerTransmissions.MicrowaveReceiver`). Its interface ")
+      append("holds the logic types every member has, so a function can take any of them; each ")
+      append("member is a nested class, with an entry point nested the same way, and can have ")
+      append("logic types of its own (`DigitalChutes.ValveLeft` adds `Lock` and `Open`). A family ")
       append("that is a special case of another extends its interface, so a function taking the ")
       append("other takes it too: an `ElevatorLevel` is an `ElevatorShaft`.\n")
       for (family in families.sortedBy { it.name }) {

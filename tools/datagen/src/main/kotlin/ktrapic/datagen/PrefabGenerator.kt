@@ -463,7 +463,7 @@ object PrefabGenerator {
     ) {
       val common = common(members.values.toList())
       line()
-      line("/** A device that comes as several prefabs, each a nested class. */")
+      line("/** Devices of one kind that share these logic types, each a nested class. */")
       val supertypes = if (extends.isEmpty()) "" else " : ${extends.joinToString(", ")}"
       block("interface $name$supertypes") {
         for ((logicType, access) in common) {

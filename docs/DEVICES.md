@@ -104,7 +104,7 @@ class Transfer {
 
 ## Families
 
-A family is a device that comes as several prefabs. Its interface holds the logic types every member has, so a function can take any of them; each member is a nested class, with an entry point nested the same way (`Batteries.Small`). A family that is a special case of another extends its interface, so a function taking the other takes it too: an `ElevatorLevel` is an `ElevatorShaft`.
+A family is a set of prefabs that do one kind of job and share their logic types: one device in several sizes or fluids (`Batteries.Small`), or different devices used the same way, such as a lever and a switch (`Switches.Lever`), or a transmitter and a receiver (`PowerTransmissions.MicrowaveReceiver`). Its interface holds the logic types every member has, so a function can take any of them; each member is a nested class, with an entry point nested the same way, and can have logic types of its own (`DigitalChutes.ValveLeft` adds `Lock` and `Open`). A family that is a special case of another extends its interface, so a function taking the other takes it too: an `ElevatorLevel` is an `ElevatorShaft`.
 
 ### Airlock
 
