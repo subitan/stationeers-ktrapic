@@ -64,6 +64,12 @@ namespace KTrapIC
     /// of the last answered gets that answer again. A request the daemon gave no answer to (see
     /// <see cref="LspDocument.Complete"/>) is answered with none, which is not given again.
     ///
+    /// <para>The daemon answers a request for the text it has when the request arrives, which
+    /// only <see cref="Sync"/> changes. So a request is sent only while that text is the
+    /// request's own, and one waiting is dropped when the text changes: it is neither sent nor
+    /// answered. Every answer is thus of its request's text, and is given again only in that
+    /// text.</para>
+    ///
     /// <para>Answers are given on the thread the daemon's answer arrives on, or, for one given
     /// again, on <see cref="Want"/>'s.</para>
     /// </summary>
@@ -72,12 +78,16 @@ namespace KTrapIC
         private readonly Func<int, int, Task<IReadOnlyList<Completion>>> _complete;
         private readonly Action<CompletionRequest, IReadOnlyList<Completion>> _answered;
         private readonly object _lock = new object();
+        private string _synced;
         private CompletionRequest _inFlight;
         private CompletionRequest _next;
         private CompletionRequest _lastAnswered;
         private IReadOnlyList<Completion> _lastAnswer;
 
-        /// <param name="complete">Asks the daemon for the completions at a line and column: null if it gives no answer.</param>
+        /// <param name="complete">
+        /// Asks the daemon for the completions at a line and column of the document as of the
+        /// last <see cref="Sync"/>, sending the request before it returns: null if it gives no answer.
+        /// </param>
         /// <param name="answered">Given each request sent, or answered again, with its completions.</param>
         public CompletionRequests(
             Func<int, int, Task<IReadOnlyList<Completion>>> complete,
@@ -115,6 +125,25 @@ namespace KTrapIC
         }
 
         /// <summary>
+        /// Brings the daemon's copy of the document to <paramref name="text"/> with
+        /// <paramref name="sync"/>, which returns whether it did; no request is sent meanwhile.
+        /// If it did, a request waiting for another text is dropped, as the daemon would answer
+        /// it for this one. Returns what <paramref name="sync"/> returns.
+        /// </summary>
+        public bool Sync(string text, Func<bool> sync)
+        {
+            lock (_lock)
+            {
+                if (!sync())
+                    return false;
+                _synced = text;
+                if (_next != null && !string.Equals(_next.Text, text, StringComparison.Ordinal))
+                    _next = null;
+                return true;
+            }
+        }
+
+        /// <summary>
         /// Forgets the last answer, so it isn't given again: the document is now on another
         /// daemon, which may answer differently.
         /// </summary>
@@ -131,14 +160,32 @@ namespace KTrapIC
         {
             while (request != null)
             {
-                IReadOnlyList<Completion> answer;
-                try
+                Task<IReadOnlyList<Completion>> asked = null;
+                lock (_lock)
                 {
-                    answer = await _complete(request.Line, request.Column).ConfigureAwait(false);
+                    if (string.Equals(request.Text, _synced, StringComparison.Ordinal))
+                    {
+                        try
+                        {
+                            asked = _complete(request.Line, request.Column);
+                        }
+                        catch (Exception exception)
+                        {
+                            asked = Task.FromException<IReadOnlyList<Completion>>(exception);
+                        }
+                    }
                 }
-                catch (Exception)
+                IReadOnlyList<Completion> answer = null;
+                if (asked != null)
                 {
-                    answer = null;
+                    try
+                    {
+                        answer = await asked.ConfigureAwait(false);
+                    }
+                    catch (Exception)
+                    {
+                        answer = null;
+                    }
                 }
                 CompletionRequest next;
                 lock (_lock)
@@ -152,7 +199,8 @@ namespace KTrapIC
                     _next = null;
                     _inFlight = next;
                 }
-                _answered(request, answer ?? Array.Empty<Completion>());
+                if (asked != null)
+                    _answered(request, answer ?? Array.Empty<Completion>());
                 request = next;
             }
         }

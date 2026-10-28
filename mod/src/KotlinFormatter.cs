@@ -315,7 +315,8 @@ namespace KTrapIC
                 _document.Bind(client.Connection);
                 _completionRequests.Forget();
             }
-            if (_document.Sync(Identifier.version, () => RawText, JArray.FromObject(_changes)))
+            string text = RawText;
+            if (_completionRequests.Sync(text, () => _document.Sync(Identifier.version, () => text, JArray.FromObject(_changes))))
             {
                 _changes.Clear();
                 _syncedVersion = _version;
@@ -340,7 +341,8 @@ namespace KTrapIC
         /// Asks the daemon what could be written at the caret, after a word that has begun or
         /// right after a dot (<see cref="Completions.Wanted"/>), and shows the answer once it
         /// comes, if the code and the caret haven't changed since. Requests go one at a time, the
-        /// latest wanted after the one in flight (<see cref="CompletionRequests"/>). The editor calls this when the
+        /// latest wanted after the one in flight if the code is still what it was made in
+        /// (<see cref="CompletionRequests"/>). The editor calls this when the
         /// code changes or the caret moves, with the caret at the end of a word or a line.
         /// </summary>
         public override void UpdateAutocomplete()

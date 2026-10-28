@@ -235,6 +235,22 @@ class K2CompletionTest {
   }
 
   @Test
+  fun `in a function's body, a property declared after it is offered`() {
+    assertThat(labels("fun f() {\n  db.Setting = |\n}\nval late = 1.0\nf()\n")).contains("late")
+    assertThat(labels("db.Setting = |\nval late = 1.0\n")).doesNotContain("late")
+    assertThat(labels("PresenceSensors.Motion.all.forEach { db.Setting = | }\nval late = 1.0\n"))
+        .doesNotContain("late")
+  }
+
+  @Test
+  fun `after a number literal, its type's members and extensions`() {
+    assertThat(labels("val y = 3.|\n")).containsAtLeast("toDouble", "until", "plus", "shl")
+    assertThat(labels("val y = 3.t|\n")).contains("toDouble")
+    assertThat(labels("val y = (-3).|\n")).containsAtLeast("toDouble", "coerceIn")
+    assertThat(labels("val y = 1.5.|\n")).containsAtLeast("toInt", "coerceIn")
+  }
+
+  @Test
   fun `a function declared later in the program is offered`() {
     assertThat(labels("val a = |\nfun later() = 1\n")).contains("later")
   }

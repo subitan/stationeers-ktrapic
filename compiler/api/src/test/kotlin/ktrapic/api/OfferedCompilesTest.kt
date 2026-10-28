@@ -69,9 +69,11 @@ class OfferedCompilesTest {
           unusable = unusable,
       )
 
-  private val forRanges = { name: String ->
-    "for (i in n.$name(3)) db.Setting = i.toDouble()"
-  }
+  /** Uses of the functions that make a range from Int [receiver]. */
+  private fun forRanges(receiver: String) =
+      listOf("rangeTo", "rangeUntil", "until", "downTo").associateWith {
+        "for (i in $receiver.$it(3)) db.Setting = i.toDouble()"
+      }
 
   private val contexts =
       listOf(
@@ -79,9 +81,19 @@ class OfferedCompilesTest {
               "an Int",
               "import kotlin.math.*\nval n = d0.Setting.toInt()\n",
               "n.|",
-              uses = listOf("rangeTo", "rangeUntil", "until", "downTo").associateWith(forRanges),
+              uses = forRanges("n"),
+          ),
+          Context("an Int literal", "import kotlin.math.*\n", "3.|", uses = forRanges("3")),
+          Context(
+              "a negative Int literal",
+              "import kotlin.math.*\n",
+              "(-3).|",
+              // A constant negative Int shifted without its sign differs on the chip and the
+              // JVM, so the compiler rejects one; a shift not known when compiling compiles.
+              uses = forRanges("(-3)") + ("ushr" to "(-3).ushr(d0.Setting.toInt())"),
           ),
           Context("a Double", "val x = d0.Setting\n", "x.|"),
+          Context("a Double literal", "import kotlin.math.*\n", "1.5.|"),
           Context("a Double with kotlin.math", "import kotlin.math.*\nval x = d0.Setting\n", "x.|"),
           Context("a Boolean", "val b = d0.On\n", "b.|"),
           Context("a String", "", "db.Setting = \"abc\".|"),
@@ -196,7 +208,7 @@ class OfferedCompilesTest {
               "bare names in a function",
               "val a = 1\nfun f(p: Int): Int {\n  val q = p\n",
               "  |",
-              "\n  return q\n}\ndb.Setting = f(1).toDouble()\n",
+              "\n  return q\n}\nval late = 2\ndb.Setting = f(1).toDouble()\n",
               classifiers = CLASSIFIERS_NOT_VALUES,
           ),
       )

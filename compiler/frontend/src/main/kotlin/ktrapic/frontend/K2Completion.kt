@@ -57,6 +57,9 @@ import org.jetbrains.kotlin.fir.symbols.impl.FirRegularClassSymbol
 import org.jetbrains.kotlin.fir.symbols.impl.FirTypeAliasSymbol
 import org.jetbrains.kotlin.fir.symbols.impl.FirVariableSymbol
 import org.jetbrains.kotlin.fir.types.ConeClassLikeType
+import org.jetbrains.kotlin.fir.types.ConeDefinitelyNotNullType
+import org.jetbrains.kotlin.fir.types.ConeFlexibleType
+import org.jetbrains.kotlin.fir.types.ConeIntegerLiteralType
 import org.jetbrains.kotlin.fir.types.ConeKotlinType
 import org.jetbrains.kotlin.fir.types.ConeStarProjection
 import org.jetbrains.kotlin.fir.types.ConeTypeParameterType
@@ -383,7 +386,7 @@ object K2Completion {
         val symbol = receiver.qualifierSymbol as? FirRegularClassSymbol ?: return emptyList()
         return statics(symbol).sortedBy { it.label.lowercase() }
       }
-      val type = receiver.resolvedType
+      val type = declarable(receiver.resolvedType)
       // An enum's entry is used only as it is: KTrapIC compiles none of its members, such as an
       // SDK enum's `value`, the game's number for the entry, which the compiler writes itself.
       val classId = (type as? ConeClassLikeType)?.lookupTag?.classId
@@ -405,6 +408,20 @@ object K2Completion {
           .map { callable(it, local = false) }
           .sortedBy { it.label.lowercase() }
     }
+
+    /**
+     * [type] as a program could declare it: an integer literal's type (`3`, `-3`, which K2 types as
+     * any integer type the value fits until something picks one) as `Int`, a flexible type as its
+     * lower bound, and a definitely-non-null type (`T & Any`) as `T`. The supported declarations
+     * are keyed by such a type's class.
+     */
+    private fun declarable(type: ConeKotlinType): ConeKotlinType =
+        when (type) {
+          is ConeIntegerLiteralType -> type.getApproximatedType()
+          is ConeFlexibleType -> declarable(type.lowerBound)
+          is ConeDefinitelyNotNullType -> declarable(type.original)
+          else -> type
+        }
 
     /**
      * How well an overload fits a call on [type], lowest best: one taking only [type] itself
@@ -493,6 +510,10 @@ object K2Completion {
     /** The locals, parameters and members in scope at the caret. */
     private fun inScope(): List<Completion> {
       val items = mutableListOf<Completion>()
+      // The program's top-level code runs in order, as a script's does, so there a top-level
+      // property declared after the caret isn't set yet. A function's body, or a class's, runs
+      // when the function is called or the class made, and may read any of them.
+      val inOrder = path.none { it is FirNamedFunction || it is FirRegularClass && !isProgram(it) }
       for (element in path.asReversed()) {
         when (element) {
           is FirBlock ->
@@ -517,17 +538,16 @@ object K2Completion {
                   ?.let { local(it.symbol) }
                   ?.let(items::add)
           is FirRegularClass -> {
-            // The program's top-level properties are run in order, as a script's are, so one
-            // declared after the caret isn't set yet there.
-            val program = element.symbol.classId.shortClassName.asString() == PROGRAM_OBJECT
+            val program = isProgram(element)
             element.symbol
                 .unsubstitutedScope(session, scopeSession, false, FirResolvePhase.STATUS)
                 .processAllCallables {
                   val later = it is FirPropertySymbol && (it.source?.startOffset ?: 0) > at
                   // The caret is in its own initializer or body: a property can't read itself,
-                  // and a function can't call itself.
+                  // and a function can't call itself. (A function that calls it is still offered,
+                  // though calling that one there is recursion too, which doesn't compile.)
                   val around = it.fir in path
-                  if (shown(it, null) && !(program && later) && !around) {
+                  if (shown(it, null) && !(program && inOrder && later) && !around) {
                     items += callable(it, local = false)
                   }
                 }
@@ -540,6 +560,12 @@ object K2Completion {
       }
       return items
     }
+
+    /**
+     * Whether [klass] is the object the program's top-level declarations and code are wrapped in.
+     */
+    private fun isProgram(klass: FirRegularClass): Boolean =
+        klass.symbol.classId.shortClassName.asString() == PROGRAM_OBJECT
 
     /** The imported packages' classes, objects, functions and properties. */
     private fun topLevel(): List<Completion> =
