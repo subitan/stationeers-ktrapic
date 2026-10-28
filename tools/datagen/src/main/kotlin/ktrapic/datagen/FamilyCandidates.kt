@@ -48,6 +48,8 @@ object FamilyCandidates {
           "Short",
           "Overhead",
           "Nuclear",
+          "Left",
+          "Right",
           "To",
       )
 
