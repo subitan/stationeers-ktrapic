@@ -704,6 +704,81 @@ interface ElevatorShaft {
 }
 ```
 
+### Fabricator
+
+```kotlin
+interface Fabricator {
+  var Activate: Boolean
+  var ClearMemory: Boolean
+  val CompletionRatio: Double
+  val Error: Boolean
+  var Lock: Boolean
+  var On: Boolean
+  var Open: Boolean
+  val Power: Boolean
+  val Reagents: Double
+  var RecipeHash: Double
+  val RequiredPower: Double
+  val StackSize: Double
+
+  /** StructureAutolathe. Entry point: Fabricators.Autolathe. */
+  class Autolathe : TypedDevice, Fabricator {
+    val Export: Transfer
+    val Import: Transfer
+    val slots: Slots<DataDiskSlot>
+  }
+
+  /** StructureElectronicsPrinter. Entry point: Fabricators.ElectronicsPrinter. */
+  class ElectronicsPrinter : TypedDevice, Fabricator {
+    val Export: Transfer
+    val Import: Transfer
+    val slots: Slots<DataDiskSlot>
+  }
+
+  /** StructureSecurityPrinter. Entry point: Fabricators.SecurityPrinter. */
+  class SecurityPrinter : TypedDevice, Fabricator {
+    val Export: Transfer
+    val Import: Transfer
+    val slots: Slots<DataDiskSlot>
+  }
+
+  /** StructureToolManufactory. Entry point: Fabricators.ToolManufactory. */
+  class ToolManufactory : TypedDevice, Fabricator {
+    val Export: Transfer
+    val Import: Transfer
+    val slots: Slots<DataDiskSlot>
+  }
+
+  /** StructureRocketManufactory. Entry point: Fabricators.RocketManufactory. */
+  class RocketManufactory : TypedDevice, Fabricator {
+    val Export: Transfer
+    val Import: Transfer
+    val slots: Slots<DataDiskSlot>
+  }
+
+  /** StructureHydraulicPipeBender. Entry point: Fabricators.HydraulicPipeBender. */
+  class HydraulicPipeBender : TypedDevice, Fabricator {
+    val Export: Transfer
+    val Import: Transfer
+    val slots: Slots<DataDiskSlot>
+  }
+
+  /** StructureAutomatedOven. Entry point: Fabricators.AutomatedOven. */
+  class AutomatedOven : TypedDevice, Fabricator {
+    val Export: Transfer
+    val Import: Transfer
+    val slots: Slots<DataDiskSlot>
+  }
+
+  /** StructureAdvancedPackagingMachine. Entry point: Fabricators.AdvancedPackagingMachine. */
+  class AdvancedPackagingMachine : TypedDevice, Fabricator {
+    val Export: Transfer
+    val Import: Transfer
+    val slots: Slots<DataDiskSlot>
+  }
+}
+```
+
 ### Filtration
 
 ```kotlin
@@ -2163,25 +2238,6 @@ class AdvancedComposter : TypedDevice {
   val slots: Slots<DataDiskSlot>
 }
 
-/** StructureAdvancedPackagingMachine. Entry point: AdvancedPackagingMachines. */
-class AdvancedPackagingMachine : TypedDevice {
-  var Activate: Boolean
-  var ClearMemory: Boolean
-  val CompletionRatio: Double
-  val Error: Boolean
-  val Export: Transfer // Count
-  val Import: Transfer // Count
-  var Lock: Boolean
-  var On: Boolean
-  var Open: Boolean
-  val Power: Boolean
-  val Reagents: Double
-  var RecipeHash: Double
-  val RequiredPower: Double
-  val StackSize: Double
-  val slots: Slots<DataDiskSlot>
-}
-
 /** StructureAirConditioner. Entry point: AirConditioners. */
 class AirConditioner : TypedDevice {
   val Error: Boolean
@@ -2219,44 +2275,6 @@ class ArcFurnace : TypedDevice {
   val Reagents: Double
   val RecipeHash: Double
   val RequiredPower: Double
-  val slots: Slots<DataDiskSlot>
-}
-
-/** StructureAutolathe. Entry point: Autolathes. */
-class Autolathe : TypedDevice {
-  var Activate: Boolean
-  var ClearMemory: Boolean
-  val CompletionRatio: Double
-  val Error: Boolean
-  val Export: Transfer // Count
-  val Import: Transfer // Count
-  var Lock: Boolean
-  var On: Boolean
-  var Open: Boolean
-  val Power: Boolean
-  val Reagents: Double
-  var RecipeHash: Double
-  val RequiredPower: Double
-  val StackSize: Double
-  val slots: Slots<DataDiskSlot>
-}
-
-/** StructureAutomatedOven. Entry point: AutomatedOvens. */
-class AutomatedOven : TypedDevice {
-  var Activate: Boolean
-  var ClearMemory: Boolean
-  val CompletionRatio: Double
-  val Error: Boolean
-  val Export: Transfer // Count
-  val Import: Transfer // Count
-  var Lock: Boolean
-  var On: Boolean
-  var Open: Boolean
-  val Power: Boolean
-  val Reagents: Double
-  var RecipeHash: Double
-  val RequiredPower: Double
-  val StackSize: Double
   val slots: Slots<DataDiskSlot>
 }
 
@@ -2637,25 +2655,6 @@ class Electrolyzer : TypedDevice {
   val slots: Slots<DataDiskSlot>
 }
 
-/** StructureElectronicsPrinter. Entry point: ElectronicsPrinters. */
-class ElectronicsPrinter : TypedDevice {
-  var Activate: Boolean
-  var ClearMemory: Boolean
-  val CompletionRatio: Double
-  val Error: Boolean
-  val Export: Transfer // Count
-  val Import: Transfer // Count
-  var Lock: Boolean
-  var On: Boolean
-  var Open: Boolean
-  val Power: Boolean
-  val Reagents: Double
-  var RecipeHash: Double
-  val RequiredPower: Double
-  val StackSize: Double
-  val slots: Slots<DataDiskSlot>
-}
-
 /** StructureEvaporationChamber. Entry point: EvaporationChambers. */
 class EvaporationChamber : TypedDevice {
   val Combustion: Boolean
@@ -2933,25 +2932,6 @@ class HorizontalAutoMiner : TypedDevice {
   var Open: Boolean
   val Power: Boolean
   val RequiredPower: Double
-  val slots: Slots<DataDiskSlot>
-}
-
-/** StructureHydraulicPipeBender. Entry point: HydraulicPipeBenders. */
-class HydraulicPipeBender : TypedDevice {
-  var Activate: Boolean
-  var ClearMemory: Boolean
-  val CompletionRatio: Double
-  val Error: Boolean
-  val Export: Transfer // Count
-  val Import: Transfer // Count
-  var Lock: Boolean
-  var On: Boolean
-  var Open: Boolean
-  val Power: Boolean
-  val Reagents: Double
-  var RecipeHash: Double
-  val RequiredPower: Double
-  val StackSize: Double
   val slots: Slots<DataDiskSlot>
 }
 
@@ -3550,25 +3530,6 @@ class RocketGasCollector : TypedDevice {
   val TotalMoles: Double
 }
 
-/** StructureRocketManufactory. Entry point: RocketManufactories. */
-class RocketManufactory : TypedDevice {
-  var Activate: Boolean
-  var ClearMemory: Boolean
-  val CompletionRatio: Double
-  val Error: Boolean
-  val Export: Transfer // Count
-  val Import: Transfer // Count
-  var Lock: Boolean
-  var On: Boolean
-  var Open: Boolean
-  val Power: Boolean
-  val Reagents: Double
-  var RecipeHash: Double
-  val RequiredPower: Double
-  val StackSize: Double
-  val slots: Slots<DataDiskSlot>
-}
-
 /** StructureRocketMiner. Entry point: RocketMiners. */
 class RocketMiner : TypedDevice {
   var ClearMemory: Boolean
@@ -3621,25 +3582,6 @@ class SDBSilo : TypedDevice {
   val Power: Boolean
   val Quantity: Double
   val RequiredPower: Double
-  val slots: Slots<DataDiskSlot>
-}
-
-/** StructureSecurityPrinter. Entry point: SecurityPrinters. */
-class SecurityPrinter : TypedDevice {
-  var Activate: Boolean
-  var ClearMemory: Boolean
-  val CompletionRatio: Double
-  val Error: Boolean
-  val Export: Transfer // Count
-  val Import: Transfer // Count
-  var Lock: Boolean
-  var On: Boolean
-  var Open: Boolean
-  val Power: Boolean
-  val Reagents: Double
-  var RecipeHash: Double
-  val RequiredPower: Double
-  val StackSize: Double
   val slots: Slots<DataDiskSlot>
 }
 
@@ -3839,25 +3781,6 @@ class TerrainManipulator : TypedDevice {
   val Battery: ItemBatterySlot // slots[0]
   val DirtCanister: ItemCommonSlot // slots[1]
   val slots: Slots<ItemCommonSlot>
-}
-
-/** StructureToolManufactory. Entry point: ToolManufactories. */
-class ToolManufactory : TypedDevice {
-  var Activate: Boolean
-  var ClearMemory: Boolean
-  val CompletionRatio: Double
-  val Error: Boolean
-  val Export: Transfer // Count
-  val Import: Transfer // Count
-  var Lock: Boolean
-  var On: Boolean
-  var Open: Boolean
-  val Power: Boolean
-  val Reagents: Double
-  var RecipeHash: Double
-  val RequiredPower: Double
-  val StackSize: Double
-  val slots: Slots<DataDiskSlot>
 }
 
 /** StructureTraderWaypoint. Entry point: TraderWaypoints. */
