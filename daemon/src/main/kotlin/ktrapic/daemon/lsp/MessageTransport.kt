@@ -13,23 +13,23 @@ import java.io.OutputStream
 internal class MessageReader(input: InputStream, private val log: (String) -> Unit) {
   private val input = input as? BufferedInputStream ?: BufferedInputStream(input)
 
-  /** The next message's body, or null at the end of the input. */
+  /**
+   * The next message's body, or null at the end of the input or at a header block with no valid
+   * `Content-Length`. Without a length there is no telling where that block's body ends, and so
+   * where the next message starts, so nothing after it can be read.
+   */
   fun read(): String? {
-    while (true) {
-      val length = readHeaders() ?: return null
-      if (length < 0) {
-        // Without a length there is no telling where the body ends; whatever follows is read as
-        // the next header block.
-        log("Skipping a header block with no valid Content-Length")
-        continue
-      }
-      val body = input.readNBytes(length)
-      if (body.size < length) {
-        log("The input ended in the middle of a message")
-        return null
-      }
-      return String(body, Charsets.UTF_8)
+    val length = readHeaders() ?: return null
+    if (length < 0) {
+      log("A header block has no valid Content-Length, so no further messages can be read")
+      return null
     }
+    val body = input.readNBytes(length)
+    if (body.size < length) {
+      log("The input ended in the middle of a message")
+      return null
+    }
+    return String(body, Charsets.UTF_8)
   }
 
   /**

@@ -4,6 +4,8 @@ import com.google.common.truth.Truth.assertThat
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
+import java.io.ByteArrayInputStream
+import java.io.ByteArrayOutputStream
 import java.io.PipedInputStream
 import java.io.PipedOutputStream
 import java.util.Base64
@@ -231,6 +233,11 @@ class LspServerTest {
     val labelled = compile("file:///program.kt")
     val compact = compile("file:///program.kt", """{"compact": true}""")
     val failed = compile("file:///broken.kt")
+    // Nested deeply enough to overflow the compiler's stack, which is answered as an error.
+    val overflowing =
+        "import ktrapic.*\ndb.Setting = ${"(".repeat(20_000)}1.0${")".repeat(20_000)}\n"
+    open("file:///overflowing.kt", overflowing)
+    val crashed = compile("file:///overflowing.kt")
 
     assertThat(labelled["result"]).isEqualTo(lineProtocolCompile(program))
     assertThat(labelled["result"].asJsonObject["code"].asString).contains(":")
@@ -238,6 +245,13 @@ class LspServerTest {
     assertThat(compact["result"].asJsonObject["code"].asString).doesNotContain(":")
     assertThat(failed["result"]).isEqualTo(lineProtocolCompile(broken))
     assertThat(failed["result"].asJsonObject["error"].asJsonObject["line"].asInt).isEqualTo(2)
+    // The stack traces differ, as the two compiles ran on different threads.
+    val crashError = crashed["result"].asJsonObject["error"].asJsonObject
+    val lineProtocolCrashError = lineProtocolCompile(overflowing)["error"].asJsonObject
+    assertThat(crashError["description"]).isEqualTo(lineProtocolCrashError["description"])
+    assertThat(crashError["description"].asString)
+        .startsWith("Internal compiler error: java.lang.StackOverflowError")
+    assertThat(crashError.has("stack_trace")).isTrue()
   }
 
   @Test
@@ -297,5 +311,33 @@ class LspServerTest {
     assertThat(noMethod.errorCode()).isEqualTo(-32600)
     assertThat(noMethod["id"].asInt).isEqualTo(8)
     assertThat(client.request("shutdown").has("result")).isTrue()
+  }
+
+  @Test
+  fun `answers JSON nested too deeply to parse with ParseError and carries on`() {
+    client.initialize()
+
+    client.send("[".repeat(200_000) + "]".repeat(200_000))
+    val tooDeep = client.read()
+
+    assertThat(tooDeep.errorCode()).isEqualTo(-32700)
+    assertThat(tooDeep["id"].isJsonNull).isTrue()
+    assertThat(client.request("shutdown").has("result")).isTrue()
+  }
+
+  @Test
+  fun `stops at a header block with no valid Content-Length`() {
+    val input =
+        "Content-Type: x\r\n\r\n".toByteArray() +
+            """{"jsonrpc": "2.0", "method": "initialized"}""".toByteArray() +
+            Client.frame("""{"jsonrpc": "2.0", "id": 1, "method": "initialize", "params": {}}""")
+    val output = ByteArrayOutputStream()
+    val logged = mutableListOf<String>()
+
+    val exitCode = LspServer(ByteArrayInputStream(input), output, logged::add).run()
+
+    assertThat(exitCode).isEqualTo(1)
+    assertThat(output.size()).isEqualTo(0)
+    assertThat(logged.joinToString()).contains("Content-Length")
   }
 }

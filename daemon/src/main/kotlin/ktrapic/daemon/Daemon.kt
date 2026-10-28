@@ -6,6 +6,8 @@ import com.google.gson.JsonParser
 import java.io.BufferedOutputStream
 import java.io.FileDescriptor
 import java.io.FileOutputStream
+import java.io.InputStream
+import java.io.OutputStream
 import java.util.Base64
 import kotlin.system.exitProcess
 import ktrapic.api.CompileOptions
@@ -139,7 +141,10 @@ object Daemon {
 fun main(args: Array<String>) {
   when (args.toList()) {
     emptyList<String>() -> serveLines()
-    listOf("--lsp") -> exitProcess(serveLsp())
+    listOf("--lsp") ->
+        exitProcess(
+            serveLsp(System.`in`, BufferedOutputStream(FileOutputStream(FileDescriptor.out)))
+        )
     else -> {
       System.err.println("usage: ktrapic-daemon [--lsp]")
       exitProcess(2)
@@ -157,11 +162,14 @@ private fun serveLines() {
   }
 }
 
-private fun serveLsp(): Int {
-  // Only protocol messages may reach stdout, so anything else printed there goes to stderr.
+/**
+ * Serves the Language Server Protocol on [input] and [output], which is stdout, and returns the
+ * exit code. Only protocol messages may reach stdout, so `System.out` is pointed at stderr for the
+ * rest of the process.
+ */
+internal fun serveLsp(input: InputStream, output: OutputStream): Int {
   System.out.flush()
-  val stdout = BufferedOutputStream(FileOutputStream(FileDescriptor.out))
   System.setOut(System.err)
   System.err.println("KTrapIC compile daemon ready (LSP)")
-  return LspServer(System.`in`, stdout).run()
+  return LspServer(input, output).run()
 }

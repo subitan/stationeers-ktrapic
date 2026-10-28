@@ -45,11 +45,14 @@ class MessageTransportTest {
   }
 
   @Test
-  fun `skips a header block with no Content-Length`() {
-    val reader = reader("Content-Type: x\r\n\r\n".toByteArray(), frame("{}"))
+  fun `stops at a header block with no valid Content-Length`() {
+    for (header in listOf("Content-Type: x", "Content-Length: -1", "Content-Length: many")) {
+      logged.clear()
+      val reader = reader("$header\r\n\r\n".toByteArray(), """{"a":1}""".toByteArray(), frame("{}"))
 
-    assertThat(reader.read()).isEqualTo("{}")
-    assertThat(logged).isNotEmpty()
+      assertThat(reader.read()).isNull()
+      assertThat(logged).isNotEmpty()
+    }
   }
 
   @Test

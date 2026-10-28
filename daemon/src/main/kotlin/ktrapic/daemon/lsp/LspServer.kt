@@ -80,8 +80,9 @@ class LspServer(
       )
 
   /**
-   * Serves messages until `exit`, or the end of the input, and returns the exit code: 0 if the
-   * client shut the server down first, else 1.
+   * Serves messages until `exit`, or until no more can be read (the end of the input, or a header
+   * block without a valid `Content-Length`), and returns the exit code: 0 if the client shut the
+   * server down first, else 1.
    */
   fun run(): Int {
     while (true) {
@@ -90,10 +91,17 @@ class LspServer(
       }
       val body = reader.read()
       if (body == null) {
-        log("The input ended without an exit notification")
+        log("Stopped reading messages without an exit notification")
         return if (state == State.SHUT_DOWN) 0 else 1
       }
-      handle(body)
+      try {
+        handle(body)
+      } catch (e: StackOverflowError) {
+        // Deeply nested JSON can overflow the stack wherever it is walked. The stack has unwound
+        // by the time the error is caught, so the server can answer and carry on.
+        log("Handling a message overflowed the stack")
+        sendError(JsonNull.INSTANCE, ErrorCodes.INTERNAL_ERROR, "The message is nested too deeply")
+      }
     }
   }
 
@@ -103,6 +111,13 @@ class LspServer(
           parse(body)
         } catch (e: Exception) {
           return sendError(JsonNull.INSTANCE, ErrorCodes.PARSE_ERROR, "Invalid JSON: ${e.message}")
+        } catch (e: StackOverflowError) {
+          // gson reads JSON recursively, so it overflows the stack on deeply nested input.
+          return sendError(
+              JsonNull.INSTANCE,
+              ErrorCodes.PARSE_ERROR,
+              "The JSON is nested too deeply",
+          )
         }
     if (!message.isJsonObject) {
       return sendError(JsonNull.INSTANCE, ErrorCodes.INVALID_REQUEST, "Not a JSON-RPC message")
