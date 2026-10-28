@@ -1,26 +1,30 @@
 package ktrapic.datagen
 
 /**
- * Prefabs that look like one device in several kinds, which should be a family in `grouping.json`
- * or be listed there as not one, with the reason: the check that keeps new game prefabs from being
- * left out of a family by oversight.
+ * Prefabs that look like one family, which should be a family in `grouping.json` or be listed there
+ * as not one, with the reason: the check that keeps new game prefabs from being left out of a
+ * family by oversight.
  *
- * Two prefabs look alike when either
+ * Two prefabs look alike when
  * - their names are the same once sizes, fluids and variants are taken out ([baseName]:
- *   `StructureLiquidValve` and `StructureValve` are both `Valve`), or
+ *   `StructureLiquidValve` and `StructureValve` are both `Valve`),
  * - they have the same logic types and the same kinds of slot, though maybe not as many, and one's
  *   name has every word of the other's ([words]: `StructureLightLongWide` has those of
  *   `StructureLightLong`, `StructureStorageLocker` those of `StructureLockerSmall`). This finds
- *   kinds told apart by a word not yet in [VARIANT_WORDS], such as `Wide` or `MKII`.
+ *   kinds told apart by a word not yet in [VARIANT_WORDS], such as `Wide` or `MKII`, or
+ * - they have the same, and at least one, of the logic types few prefabs have ([rareLogicTypes]):
+ *   the shape of a job, whatever the devices are called. `StructureSorter` and `StructureUnloader`
+ *   both send items to an `Output`, and the generators all report `PowerGeneration`.
  *
- * Neither sees kinds whose prefab names don't share their words (`StructureCapsuleTankGas` and
- * `StructureMediumRocketGasFuelTank` are the game's "Gas Capsule Tank Small" and "... Medium";
- * `StructureWallLight` and `StructureLightLong` are "Wall Light" and "Wall Light (Long)";
- * `StructureElevatorLevelIndustrial` and `StructureElevatorLevelFront` are "Elevator Level" and
- * "Elevator Level (Cabled)"; the game misspells `StructurePipeAnalysizer`, the gas twin of
- * `StructureLiquidPipeAnalyzer`), nor kinds whose slots hold the same thing but are of different
- * kinds (`StructureCircuitHousing`'s chip slot is `Common`, `StructureCircuitHousingCompact`'s is
- * `ProgrammableChip`): those families come from the game's English names.
+ * The first two don't see kinds whose prefab names don't share their words
+ * (`StructureCapsuleTankGas` and `StructureMediumRocketGasFuelTank` are the game's "Gas Capsule
+ * Tank Small" and "... Medium"; `StructureWallLight` and `StructureLightLong` are "Wall Light" and
+ * "Wall Light (Long)"; `StructureElevatorLevelIndustrial` and `StructureElevatorLevelFront` are
+ * "Elevator Level" and "Elevator Level (Cabled)"; the game misspells `StructurePipeAnalysizer`, the
+ * gas twin of `StructureLiquidPipeAnalyzer`), nor kinds whose slots hold the same thing but are of
+ * different kinds (`StructureCircuitHousing`'s chip slot is `Common`,
+ * `StructureCircuitHousingCompact`'s is `ProgrammableChip`): those families come from the game's
+ * English names.
  */
 object FamilyCandidates {
   private val PREFIXES = listOf("Structure", "Item", "Landingpad_")
@@ -71,33 +75,81 @@ object FamilyCandidates {
   fun words(prefab: String): Set<String> =
       Regex("[A-Z]+(?![a-z])|[A-Z][a-z]*").findAll(baseName(prefab)).map { it.value }.toSet()
 
-  /** Whether [a] and [b] look like one device in two kinds. */
-  fun lookAlike(a: Prefab, b: Prefab): Boolean {
+  /**
+   * The largest share of prefabs a logic type can be on and still mark out a kind of device:
+   * `PowerGeneration` is on a few prefabs, `On` on most.
+   *
+   * Ten percent is a judgement, not derived: it is a value at which every group found in today's
+   * data has been decided, as a family or as not one. Other values find other groups, which nobody
+   * has decided yet. At 5%, where fewer types are rare, the Arc Furnace with the Furnace, the
+   * capsule and rocket fuel tanks with the Gas Sensor, and the Logic Sorter with the Occupancy
+   * Sensor; at 12.5% the SDB hoppers with the Chute Inlet, Ice Crusher and Water Purifier. The
+   * cut-off is a share of all prefabs, so it moves as the game adds them.
+   */
+  private const val RARE_SHARE = 0.1
+
+  /**
+   * The logic types few of [prefabs] have, leaving out every `Ratio*` type. Those are mostly the
+   * gas ratios, one per gas for each atmosphere a device reads, which come with the gas a device
+   * holds rather than with what it does; the filter also takes the bare `Ratio`, the charge of a
+   * battery or area power control. The other readings of an atmosphere, such as `PressureOutput`
+   * and `TemperatureOutput`, still count, so devices that share only those are found and have to be
+   * listed as not a family.
+   */
+  fun rareLogicTypes(prefabs: List<Prefab>): Set<String> =
+      prefabs
+          .flatMap { it.logic.keys }
+          .filterNot { it.startsWith("Ratio") }
+          .groupingBy { it }
+          .eachCount()
+          .filterValues { it <= prefabs.size * RARE_SHARE }
+          .keys
+
+  /** Whether [a] and [b] look like one family, given the [rare] logic types of all prefabs. */
+  fun lookAlike(a: Prefab, b: Prefab, rare: Set<String> = emptySet()): Boolean {
     if (baseName(a.name) == baseName(b.name)) return true
+    val shape = a.logic.keys intersect rare
+    if (shape.isNotEmpty() && shape == b.logic.keys intersect rare) return true
     if (a.logic != b.logic || a.slots.values.toSet() != b.slots.values.toSet()) return false
     val (wordsA, wordsB) = words(a.name) to words(b.name)
     return wordsA.containsAll(wordsB) || wordsB.containsAll(wordsA)
   }
 
   /**
-   * The groups of [prefabs] that look alike but that [grouping] neither puts in one family nor
-   * lists in different groups of a not-family entry: each group's prefab names, sorted. Two prefabs
-   * are in a group when a chain of such look-alike pairs links them.
+   * The groups of [prefabs] that look alike but that [grouping] neither puts in one family (or in
+   * families one of which extends the other) nor lists in different groups of a not-family entry:
+   * each group's prefab names, sorted. A not-family group that lists a family's member stands for
+   * that whole family and every family that extends it. Two prefabs are in a group when a chain of
+   * such look-alike pairs links them.
    */
   fun ungrouped(prefabs: List<Prefab>, grouping: Grouping): List<List<String>> {
     val familyOf = familyOf(grouping)
+    // A family and every family it extends, directly or not.
+    fun lineage(family: String): Set<String> =
+        setOf(family) + grouping.families[family]?.extends.orEmpty().flatMap { lineage(it) }
+    fun related(a: String?, b: String?) =
+        a != null && b != null && (a in lineage(b) || b in lineage(a))
+    // The group of a not-family entry that [prefab] is in, or else that lists a member of its own
+    // family or of a family its family extends: an entry naming one door covers every kind of door.
+    fun groupOf(notFamily: Grouping.NotFamily, prefab: String): Int {
+      val listed = notFamily.groups.indexOfFirst { prefab in it }
+      if (listed >= 0) return listed
+      val ancestors = familyOf[prefab]?.let { lineage(it) }.orEmpty()
+      return notFamily.groups.indexOfFirst { group -> group.any { familyOf[it] in ancestors } }
+    }
     fun decided(a: String, b: String) =
-        familyOf[a]?.let { it == familyOf[b] } == true ||
+        related(familyOf[a], familyOf[b]) ||
             grouping.notFamilies.any { notFamily ->
-              val groupOfA = notFamily.groups.indexOfFirst { a in it }
-              val groupOfB = notFamily.groups.indexOfFirst { b in it }
+              val groupOfA = groupOf(notFamily, a)
+              val groupOfB = groupOf(notFamily, b)
               groupOfA >= 0 && groupOfB >= 0 && groupOfA != groupOfB
             }
 
+    val rare = rareLogicTypes(prefabs)
     val group = prefabs.associate { it.name to mutableSetOf(it.name) }.toMutableMap()
     for ((i, a) in prefabs.withIndex()) {
       for (b in prefabs.subList(i + 1, prefabs.size)) {
-        if (!lookAlike(a, b) || decided(a.name, b.name)) continue
+        if (!lookAlike(a, b, rare) || decided(a.name, b.name)) continue
         val merged = group.getValue(a.name).apply { addAll(group.getValue(b.name)) }
         for (name in merged) group[name] = merged
       }

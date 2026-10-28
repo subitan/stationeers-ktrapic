@@ -713,6 +713,30 @@
     {
       "prefabs": [["StructurePressureFedGasEngine", "StructurePressureFedLiquidEngine", "StructurePressureFedGasEngineHeavy", "StructurePressureFedLiquidEngineHeavy", "StructureGovernedGasEngine", "StructurePumpedLiquidEngine"], "StructureRocketEngineTiny"],
       "reason": "the Rocket Engine (Tiny) has no Throttle or PassedMoles, so a program driving a rocket engine can't drive it; its logic is a valve's"
+    },
+    {
+      "prefabs": [["StructureGlassDoor", "StructureBlastDoor", "StructureCompositeDoor"], ["StructureManualHatch", "StructureManualFloorHatch"], "CompositeRollCover"],
+      "reason": "the manual hatches and the Composite Roll Cover open and close a passage like a door, but the Manual Floor Hatch has no power, Mode or On and the roll cover no power, so they can't share the doors' interface, and the hatches stay one family"
+    },
+    {
+      "prefabs": ["H2Combustor", "StructureElectrolyzer"],
+      "reason": "H2Combustor is the game's Combustor (Deprecated); the current Combustor and the Reverse Electrolyzer are not in the device data yet (#81), so whether combustors and electrolyzers are a family waits for that data"
+    },
+    {
+      "prefabs": [["StructureAreaPowerControl", "StructureAreaPowerControlReversed"], ["StructureBattery", "StructureBatteryLarge", "StructureBatteryMedium", "StructureBatterySmall"]],
+      "reason": "an area power control passes a network's power on and a battery stores it; they share the charge readings, not a job"
+    },
+    {
+      "prefabs": [["StructureConsoleLED5", "StructureConsoleLED1x2", "StructureConsoleLED1x3"], "StructureDiode"],
+      "reason": "the LED (StructureDiode) is a light that shows a Color, and the LED Displays show a number; they share only Color"
+    },
+    {
+      "prefabs": [["StructureFridgeSmall", "StructureFridgeBig"], "StructureHydroponicsStation", "StructureLiquidDrain", "StructureRocketEngineTiny", ["StructureWallCooler", "StructureWaterWallCooler"]],
+      "reason": "they share only readings of the gas they put out, from different jobs: keeping food cold, growing plants, draining liquid, propelling a rocket and cooling a room"
+    },
+    {
+      "prefabs": [["StructureChuteDigitalValveLeft", "StructureChuteDigitalValveRight", "StructureChuteDigitalFlipFlopSplitterLeft", "StructureChuteDigitalFlipFlopSplitterRight"], ["StructureGasTankStorage", "StructureLiquidTankStorage"], ["StructureMotionSensor", "StructureProximitySensor", "StructureOccupancySensor"]],
+      "reason": "they share only Quantity, which means different things: the items a chute valve lets through, the moles in a tank storage's canister, and the people a sensor sees"
     }
   ],
   "textDisplays": [
