@@ -3520,60 +3520,10 @@ interface PressureRegulator {
     /** The StructureLiquidPressureRegulator prefab. */
     companion object : Prefab()
   }
-}
-
-/** The PressureRegulator devices on the chip's network, by prefab. */
-object PressureRegulators {
-  /** The StructurePressureRegulator devices on the chip's network. */
-  @PrefabName("StructurePressureRegulator")
-  object Gas {
-    /** The device on [pin], as a StructurePressureRegulator. */
-    fun at(pin: Device): PressureRegulator.Gas = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<PressureRegulator.Gas>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<PressureRegulator.Gas> = intrinsic()
-  }
-
-  /** The StructureLiquidPressureRegulator devices on the chip's network. */
-  @PrefabName("StructureLiquidPressureRegulator")
-  object Liquid {
-    /** The device on [pin], as a StructureLiquidPressureRegulator. */
-    fun at(pin: Device): PressureRegulator.Liquid = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<PressureRegulator.Liquid>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<PressureRegulator.Liquid> = intrinsic()
-  }
-}
-
-/** A device that comes as several prefabs, each a nested class. */
-interface BackPressureRegulator {
-  val Error: Boolean
-
-  var Lock: Boolean
-
-  val Maximum: Double
-
-  var On: Boolean
-
-  val Power: Boolean
-
-  val Ratio: Double
-
-  val RequiredPower: Double
-
-  var Setting: Double
 
   /** A StructureBackPressureRegulator. */
   @PrefabName("StructureBackPressureRegulator")
-  class Gas internal constructor() : TypedDevice(), BackPressureRegulator {
+  class BackGas internal constructor() : TypedDevice(), PressureRegulator {
     override val Error: Boolean
       get() = intrinsic()
 
@@ -3607,7 +3557,7 @@ interface BackPressureRegulator {
 
   /** A StructureBackLiquidPressureRegulator. */
   @PrefabName("StructureBackLiquidPressureRegulator")
-  class Liquid internal constructor() : TypedDevice(), BackPressureRegulator {
+  class BackLiquid internal constructor() : TypedDevice(), PressureRegulator {
     override val Error: Boolean
       get() = intrinsic()
 
@@ -3638,36 +3588,160 @@ interface BackPressureRegulator {
     /** The StructureBackLiquidPressureRegulator prefab. */
     companion object : Prefab()
   }
+
+  /** A StructurePurgeValve. */
+  @PrefabName("StructurePurgeValve")
+  class Purge internal constructor() : TypedDevice(), PressureRegulator {
+    override val Error: Boolean
+      get() = intrinsic()
+
+    override var Lock: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override val Maximum: Double
+      get() = intrinsic()
+
+    override var On: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override val Power: Boolean
+      get() = intrinsic()
+
+    override val Ratio: Double
+      get() = intrinsic()
+
+    override val RequiredPower: Double
+      get() = intrinsic()
+
+    override var Setting: Double
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    /** The StructurePurgeValve prefab. */
+    companion object : Prefab()
+  }
+
+  /** A StructurePressurantValve. */
+  @PrefabName("StructurePressurantValve")
+  class Pressurant internal constructor() : TypedDevice(), PressureRegulator {
+    override val Error: Boolean
+      get() = intrinsic()
+
+    override var Lock: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override val Maximum: Double
+      get() = intrinsic()
+
+    override var On: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override val Power: Boolean
+      get() = intrinsic()
+
+    override val Ratio: Double
+      get() = intrinsic()
+
+    override val RequiredPower: Double
+      get() = intrinsic()
+
+    override var Setting: Double
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    /** The StructurePressurantValve prefab. */
+    companion object : Prefab()
+  }
 }
 
-/** The BackPressureRegulator devices on the chip's network, by prefab. */
-object BackPressureRegulators {
-  /** The StructureBackPressureRegulator devices on the chip's network. */
-  @PrefabName("StructureBackPressureRegulator")
+/** The PressureRegulator devices on the chip's network, by prefab. */
+object PressureRegulators {
+  /** The StructurePressureRegulator devices on the chip's network. */
+  @PrefabName("StructurePressureRegulator")
   object Gas {
-    /** The device on [pin], as a StructureBackPressureRegulator. */
-    fun at(pin: Device): BackPressureRegulator.Gas = intrinsic()
+    /** The device on [pin], as a StructurePressureRegulator. */
+    fun at(pin: Device): PressureRegulator.Gas = intrinsic()
 
     /** Every one on the network. */
-    val all: DeviceBatch<BackPressureRegulator.Gas>
+    val all: DeviceBatch<PressureRegulator.Gas>
       get() = intrinsic()
 
     /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<BackPressureRegulator.Gas> = intrinsic()
+    fun named(name: String): DeviceBatch<PressureRegulator.Gas> = intrinsic()
+  }
+
+  /** The StructureLiquidPressureRegulator devices on the chip's network. */
+  @PrefabName("StructureLiquidPressureRegulator")
+  object Liquid {
+    /** The device on [pin], as a StructureLiquidPressureRegulator. */
+    fun at(pin: Device): PressureRegulator.Liquid = intrinsic()
+
+    /** Every one on the network. */
+    val all: DeviceBatch<PressureRegulator.Liquid>
+      get() = intrinsic()
+
+    /** Every one on the network named [name], which must be a constant. */
+    fun named(name: String): DeviceBatch<PressureRegulator.Liquid> = intrinsic()
+  }
+
+  /** The StructureBackPressureRegulator devices on the chip's network. */
+  @PrefabName("StructureBackPressureRegulator")
+  object BackGas {
+    /** The device on [pin], as a StructureBackPressureRegulator. */
+    fun at(pin: Device): PressureRegulator.BackGas = intrinsic()
+
+    /** Every one on the network. */
+    val all: DeviceBatch<PressureRegulator.BackGas>
+      get() = intrinsic()
+
+    /** Every one on the network named [name], which must be a constant. */
+    fun named(name: String): DeviceBatch<PressureRegulator.BackGas> = intrinsic()
   }
 
   /** The StructureBackLiquidPressureRegulator devices on the chip's network. */
   @PrefabName("StructureBackLiquidPressureRegulator")
-  object Liquid {
+  object BackLiquid {
     /** The device on [pin], as a StructureBackLiquidPressureRegulator. */
-    fun at(pin: Device): BackPressureRegulator.Liquid = intrinsic()
+    fun at(pin: Device): PressureRegulator.BackLiquid = intrinsic()
 
     /** Every one on the network. */
-    val all: DeviceBatch<BackPressureRegulator.Liquid>
+    val all: DeviceBatch<PressureRegulator.BackLiquid>
       get() = intrinsic()
 
     /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<BackPressureRegulator.Liquid> = intrinsic()
+    fun named(name: String): DeviceBatch<PressureRegulator.BackLiquid> = intrinsic()
+  }
+
+  /** The StructurePurgeValve devices on the chip's network. */
+  @PrefabName("StructurePurgeValve")
+  object Purge {
+    /** The device on [pin], as a StructurePurgeValve. */
+    fun at(pin: Device): PressureRegulator.Purge = intrinsic()
+
+    /** Every one on the network. */
+    val all: DeviceBatch<PressureRegulator.Purge>
+      get() = intrinsic()
+
+    /** Every one on the network named [name], which must be a constant. */
+    fun named(name: String): DeviceBatch<PressureRegulator.Purge> = intrinsic()
+  }
+
+  /** The StructurePressurantValve devices on the chip's network. */
+  @PrefabName("StructurePressurantValve")
+  object Pressurant {
+    /** The device on [pin], as a StructurePressurantValve. */
+    fun at(pin: Device): PressureRegulator.Pressurant = intrinsic()
+
+    /** Every one on the network. */
+    val all: DeviceBatch<PressureRegulator.Pressurant>
+      get() = intrinsic()
+
+    /** Every one on the network named [name], which must be a constant. */
+    fun named(name: String): DeviceBatch<PressureRegulator.Pressurant> = intrinsic()
   }
 }
 
@@ -19473,54 +19547,6 @@ object PowerUmbilicalMales {
   fun named(name: String): DeviceBatch<PowerUmbilicalMale> = intrinsic()
 }
 
-/** A StructurePressurantValve. */
-@PrefabName("StructurePressurantValve")
-class PressurantValve internal constructor() : TypedDevice() {
-  val Error: Boolean
-    get() = intrinsic()
-
-  var Lock: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val Maximum: Double
-    get() = intrinsic()
-
-  var On: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val Power: Boolean
-    get() = intrinsic()
-
-  val Ratio: Double
-    get() = intrinsic()
-
-  val RequiredPower: Double
-    get() = intrinsic()
-
-  var Setting: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  /** The StructurePressurantValve prefab. */
-  companion object : Prefab()
-}
-
-/** The StructurePressurantValve devices on the chip's network. */
-@PrefabName("StructurePressurantValve")
-object PressurantValves {
-  /** The device on [pin], as a StructurePressurantValve. */
-  fun at(pin: Device): PressurantValve = intrinsic()
-
-  /** Every one on the network. */
-  val all: DeviceBatch<PressurantValve>
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): DeviceBatch<PressurantValve> = intrinsic()
-}
-
 /** A StructureProximitySensor. */
 @PrefabName("StructureProximitySensor")
 class ProximitySensor internal constructor() : TypedDevice() {
@@ -19621,54 +19647,6 @@ object PumpedLiquidEngines {
 
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): DeviceBatch<PumpedLiquidEngine> = intrinsic()
-}
-
-/** A StructurePurgeValve. */
-@PrefabName("StructurePurgeValve")
-class PurgeValve internal constructor() : TypedDevice() {
-  val Error: Boolean
-    get() = intrinsic()
-
-  var Lock: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val Maximum: Double
-    get() = intrinsic()
-
-  var On: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val Power: Boolean
-    get() = intrinsic()
-
-  val Ratio: Double
-    get() = intrinsic()
-
-  val RequiredPower: Double
-    get() = intrinsic()
-
-  var Setting: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  /** The StructurePurgeValve prefab. */
-  companion object : Prefab()
-}
-
-/** The StructurePurgeValve devices on the chip's network. */
-@PrefabName("StructurePurgeValve")
-object PurgeValves {
-  /** The device on [pin], as a StructurePurgeValve. */
-  fun at(pin: Device): PurgeValve = intrinsic()
-
-  /** Every one on the network. */
-  val all: DeviceBatch<PurgeValve>
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): DeviceBatch<PurgeValve> = intrinsic()
 }
 
 /** A StructureRecycler. */

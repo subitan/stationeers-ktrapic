@@ -130,14 +130,11 @@
       "plural": "PressureRegulators",
       "members": {
         "Gas": "StructurePressureRegulator",
-        "Liquid": "StructureLiquidPressureRegulator"
-      }
-    },
-    "BackPressureRegulator": {
-      "plural": "BackPressureRegulators",
-      "members": {
-        "Gas": "StructureBackPressureRegulator",
-        "Liquid": "StructureBackLiquidPressureRegulator"
+        "Liquid": "StructureLiquidPressureRegulator",
+        "BackGas": "StructureBackPressureRegulator",
+        "BackLiquid": "StructureBackLiquidPressureRegulator",
+        "Purge": "StructurePurgeValve",
+        "Pressurant": "StructurePressurantValve"
       }
     },
     "PipeHeater": {
@@ -604,13 +601,6 @@
         ["StructureInteriorDoorGlass", "StructureInteriorDoorPadded", "StructureInteriorDoorPaddedThin", "StructureInteriorDoorTriangle"]
       ],
       "reason": "the Glass Door is one of the Doors, like the Blast and Composite Doors, and not one of the Interior Doors, which extend them"
-    },
-    {
-      "prefabs": [
-        ["StructurePressureRegulator", "StructureLiquidPressureRegulator"],
-        ["StructureBackPressureRegulator", "StructureBackLiquidPressureRegulator"]
-      ],
-      "reason": "a Pressure Regulator holds its outlet at the setting, a Back Pressure Regulator opens when its inlet reaches it"
     },
     {
       "prefabs": [
