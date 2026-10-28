@@ -929,6 +929,68 @@ interface Furnace {
 }
 ```
 
+### Generator
+
+```kotlin
+interface Generator {
+  val PowerGeneration: Double
+
+  /** StructureGasGenerator. Entry point: Generators.GasFuel. */
+  class GasFuel : TypedDevice, Generator {
+    val Combustion: Boolean
+    val Error: Boolean
+    val Maximum: Double
+    var On: Boolean
+    val Power: Boolean
+    val Pressure: Double
+    val Ratio: Double
+    val Ratios: Ratios
+    val RequiredPower: Double
+    var Setting: Double
+    val Temperature: Double
+    val TotalMoles: Double
+  }
+
+  /** StructureSolidFuelGenerator. Entry point: Generators.SolidFuel. */
+  class SolidFuel : TypedDevice, Generator {
+    var ClearMemory: Boolean
+    val Import: Transfer
+    var Lock: Boolean
+    var On: Boolean
+    val Input: DataDiskSlot // slots[0]
+    val slots: Slots<DataDiskSlot>
+  }
+
+  /** StructureStirlingEngine. Entry point: Generators.StirlingEngine. */
+  class StirlingEngine : TypedDevice, Generator {
+    val Combustion: Boolean
+    val EnvironmentEfficiency: Double
+    val Error: Boolean
+    val Maximum: Double
+    var On: Boolean
+    val Power: Boolean
+    val Pressure: Double
+    val Quantity: Double
+    val Ratio: Double
+    val Ratios: Ratios
+    val RequiredPower: Double
+    var Setting: Double
+    val Temperature: Double
+    val TotalMoles: Double
+    val Volume: Double
+    val WorkingGasEfficiency: Double
+    val GasCanister: GasCanisterSlot // slots[0]
+    val slots: Slots<GasCanisterSlot>
+  }
+
+  /** StructureWindTurbine. Entry point: Generators.WindTurbine. */
+  class WindTurbine : TypedDevice, Generator
+
+  /** StructureUprightWindTurbine. Entry point: Generators.UprightWindTurbine. */
+  class UprightWindTurbine : TypedDevice, Generator
+}
+```
+
 ### HandDrill
 
 ```kotlin
@@ -2291,20 +2353,6 @@ interface WaterBottleFiller {
 }
 ```
 
-### WindTurbine
-
-```kotlin
-interface WindTurbine {
-  val PowerGeneration: Double
-
-  /** StructureWindTurbine. Entry point: WindTurbines.Standard. */
-  class Standard : TypedDevice, WindTurbine
-
-  /** StructureUprightWindTurbine. Entry point: WindTurbines.Upright. */
-  class Upright : TypedDevice, WindTurbine
-}
-```
-
 ## Devices
 
 ### A
@@ -2790,23 +2838,6 @@ class Flashlight : TypedDevice {
 ### G
 
 ```kotlin
-/** StructureGasGenerator. Entry point: GasGenerators. */
-class GasGenerator : TypedDevice {
-  val Combustion: Boolean
-  val Error: Boolean
-  val Maximum: Double
-  var On: Boolean
-  val Power: Boolean
-  val PowerGeneration: Double
-  val Pressure: Double
-  val Ratio: Double
-  val Ratios: Ratios // every Substance
-  val RequiredPower: Double
-  var Setting: Double
-  val Temperature: Double
-  val TotalMoles: Double
-}
-
 /** ItemGasMask. Entry point: GasMasks. */
 class GasMask : TypedDevice {
   val Combustion: Boolean
@@ -3633,17 +3664,6 @@ class SleeperVerticalDroid : TypedDevice {
   val slots: Slots<DataDiskSlot>
 }
 
-/** StructureSolidFuelGenerator. Entry point: SolidFuelGenerators. */
-class SolidFuelGenerator : TypedDevice {
-  var ClearMemory: Boolean
-  val Import: Transfer // Count
-  var Lock: Boolean
-  var On: Boolean
-  val PowerGeneration: Double
-  val Input: DataDiskSlot // slots[0]
-  val slots: Slots<DataDiskSlot>
-}
-
 /** StructureSorter. Entry point: Sorters. */
 class Sorter : TypedDevice {
   var ClearMemory: Boolean
@@ -3666,29 +3686,6 @@ class Spacepack : TypedDevice {
   var On: Boolean
   val Propellant: ItemAirTankSlot // slots[0]
   val slots: Slots<ItemCommonSlot>
-}
-
-/** StructureStirlingEngine. Entry point: StirlingEngines. */
-class StirlingEngine : TypedDevice {
-  val Combustion: Boolean
-  val EnvironmentEfficiency: Double
-  val Error: Boolean
-  val Maximum: Double
-  var On: Boolean
-  val Power: Boolean
-  val PowerGeneration: Double
-  val Pressure: Double
-  val Quantity: Double
-  val Ratio: Double
-  val Ratios: Ratios // every Substance
-  val RequiredPower: Double
-  var Setting: Double
-  val Temperature: Double
-  val TotalMoles: Double
-  val Volume: Double
-  val WorkingGasEfficiency: Double
-  val GasCanister: GasCanisterSlot // slots[0]
-  val slots: Slots<GasCanisterSlot>
 }
 
 /** StopWatch. Entry point: StopWatches. */

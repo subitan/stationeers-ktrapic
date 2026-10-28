@@ -14312,12 +14312,174 @@ object SuitStorages {
 }
 
 /** A device that comes as several prefabs, each a nested class. */
-interface WindTurbine {
+interface Generator {
   val PowerGeneration: Double
+
+  /** A StructureGasGenerator. */
+  @PrefabName("StructureGasGenerator")
+  class GasFuel internal constructor() : TypedDevice(), Generator {
+    val Combustion: Boolean
+      get() = intrinsic()
+
+    val Error: Boolean
+      get() = intrinsic()
+
+    val Maximum: Double
+      get() = intrinsic()
+
+    var On: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    val Power: Boolean
+      get() = intrinsic()
+
+    override val PowerGeneration: Double
+      get() = intrinsic()
+
+    val Pressure: Double
+      get() = intrinsic()
+
+    val Ratio: Double
+      get() = intrinsic()
+
+    val RequiredPower: Double
+      get() = intrinsic()
+
+    var Setting: Double
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    val Temperature: Double
+      get() = intrinsic()
+
+    val TotalMoles: Double
+      get() = intrinsic()
+
+    @LogicTypes(
+        read =
+            "RatioCarbonDioxide,RatioHelium,RatioHydrazine,RatioHydrochloricAcid,RatioHydrogen,RatioLiquidAlcohol,RatioLiquidCarbonDioxide,RatioLiquidHydrazine,RatioLiquidHydrochloricAcid,RatioLiquidHydrogen,RatioLiquidMethane,RatioLiquidNitrogen,RatioLiquidNitrousOxide,RatioLiquidOxygen,RatioLiquidOzone,RatioLiquidPollutant,RatioLiquidSilanol,RatioLiquidSodiumChloride,RatioMethane,RatioNitrogen,RatioNitrousOxide,RatioOxygen,RatioOzone,RatioPollutant,RatioPollutedWater,RatioSilanol,RatioSteam,RatioWater",
+        written = "",
+    )
+    val Ratios: Ratios
+      get() = intrinsic()
+
+    /** The StructureGasGenerator prefab. */
+    companion object : Prefab()
+  }
+
+  /** A StructureSolidFuelGenerator. */
+  @PrefabName("StructureSolidFuelGenerator")
+  class SolidFuel internal constructor() : TypedDevice(), Generator {
+    var ClearMemory: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    var Lock: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    var On: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override val PowerGeneration: Double
+      get() = intrinsic()
+
+    @LogicTypes(read = "ImportCount", written = "")
+    val Import: Transfer
+      get() = intrinsic()
+
+    /** The device's slots, by number. */
+    val slots: Slots<DataDiskSlot>
+      get() = intrinsic()
+
+    /** Slot 0. */
+    @SlotNumber(0)
+    val Input: DataDiskSlot
+      get() = intrinsic()
+
+    /** The StructureSolidFuelGenerator prefab. */
+    companion object : Prefab()
+  }
+
+  /** A StructureStirlingEngine. */
+  @PrefabName("StructureStirlingEngine")
+  class StirlingEngine internal constructor() : TypedDevice(), Generator {
+    val Combustion: Boolean
+      get() = intrinsic()
+
+    val EnvironmentEfficiency: Double
+      get() = intrinsic()
+
+    val Error: Boolean
+      get() = intrinsic()
+
+    val Maximum: Double
+      get() = intrinsic()
+
+    var On: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    val Power: Boolean
+      get() = intrinsic()
+
+    override val PowerGeneration: Double
+      get() = intrinsic()
+
+    val Pressure: Double
+      get() = intrinsic()
+
+    val Quantity: Double
+      get() = intrinsic()
+
+    val Ratio: Double
+      get() = intrinsic()
+
+    val RequiredPower: Double
+      get() = intrinsic()
+
+    var Setting: Double
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    val Temperature: Double
+      get() = intrinsic()
+
+    val TotalMoles: Double
+      get() = intrinsic()
+
+    val Volume: Double
+      get() = intrinsic()
+
+    val WorkingGasEfficiency: Double
+      get() = intrinsic()
+
+    @LogicTypes(
+        read =
+            "RatioCarbonDioxide,RatioHelium,RatioHydrazine,RatioHydrochloricAcid,RatioHydrogen,RatioLiquidAlcohol,RatioLiquidCarbonDioxide,RatioLiquidHydrazine,RatioLiquidHydrochloricAcid,RatioLiquidHydrogen,RatioLiquidMethane,RatioLiquidNitrogen,RatioLiquidNitrousOxide,RatioLiquidOxygen,RatioLiquidOzone,RatioLiquidPollutant,RatioLiquidSilanol,RatioLiquidSodiumChloride,RatioMethane,RatioNitrogen,RatioNitrousOxide,RatioOxygen,RatioOzone,RatioPollutant,RatioPollutedWater,RatioSilanol,RatioSteam,RatioWater",
+        written = "",
+    )
+    val Ratios: Ratios
+      get() = intrinsic()
+
+    /** The device's slots, by number. */
+    val slots: Slots<GasCanisterSlot>
+      get() = intrinsic()
+
+    /** Slot 0. */
+    @SlotNumber(0)
+    val GasCanister: GasCanisterSlot
+      get() = intrinsic()
+
+    /** The StructureStirlingEngine prefab. */
+    companion object : Prefab()
+  }
 
   /** A StructureWindTurbine. */
   @PrefabName("StructureWindTurbine")
-  class Standard internal constructor() : TypedDevice(), WindTurbine {
+  class WindTurbine internal constructor() : TypedDevice(), Generator {
     override val PowerGeneration: Double
       get() = intrinsic()
 
@@ -14327,7 +14489,7 @@ interface WindTurbine {
 
   /** A StructureUprightWindTurbine. */
   @PrefabName("StructureUprightWindTurbine")
-  class Upright internal constructor() : TypedDevice(), WindTurbine {
+  class UprightWindTurbine internal constructor() : TypedDevice(), Generator {
     override val PowerGeneration: Double
       get() = intrinsic()
 
@@ -14336,34 +14498,88 @@ interface WindTurbine {
   }
 }
 
-/** The WindTurbine devices on the chip's network, by prefab. */
-object WindTurbines {
-  /** The StructureWindTurbine devices on the chip's network. */
-  @PrefabName("StructureWindTurbine")
-  object Standard {
-    /** The device on [pin], as a StructureWindTurbine. */
-    fun at(pin: Device): WindTurbine.Standard = intrinsic()
+/** The Generator devices on the chip's network, by prefab. */
+object Generators {
+  /** The StructureGasGenerator devices on the chip's network. */
+  @PrefabName("StructureGasGenerator")
+  object GasFuel {
+    /** The device on [pin], as a StructureGasGenerator. */
+    fun at(pin: Device): Generator.GasFuel = intrinsic()
 
     /** Every one on the network. */
-    val all: DeviceBatch<WindTurbine.Standard>
+    val all: DeviceBatch<Generator.GasFuel>
       get() = intrinsic()
 
     /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<WindTurbine.Standard> = intrinsic()
+    fun named(name: String): DeviceBatch<Generator.GasFuel> = intrinsic()
+  }
+
+  /** The StructureSolidFuelGenerator devices on the chip's network. */
+  @PrefabName("StructureSolidFuelGenerator")
+  object SolidFuel {
+    /** The device on [pin], as a StructureSolidFuelGenerator. */
+    fun at(pin: Device): Generator.SolidFuel = intrinsic()
+
+    /** Every one on the network. */
+    val all: Batch
+      get() = intrinsic()
+
+    /** Every one on the network named [name], which must be a constant. */
+    fun named(name: String): Batch = intrinsic()
+
+    class Batch internal constructor() : DeviceBatch<Generator.SolidFuel>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+  }
+
+  /** The StructureStirlingEngine devices on the chip's network. */
+  @PrefabName("StructureStirlingEngine")
+  object StirlingEngine {
+    /** The device on [pin], as a StructureStirlingEngine. */
+    fun at(pin: Device): Generator.StirlingEngine = intrinsic()
+
+    /** Every one on the network. */
+    val all: Batch
+      get() = intrinsic()
+
+    /** Every one on the network named [name], which must be a constant. */
+    fun named(name: String): Batch = intrinsic()
+
+    class Batch internal constructor() : DeviceBatch<Generator.StirlingEngine>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<GasCanisterSlot>>
+        get() = intrinsic()
+    }
+  }
+
+  /** The StructureWindTurbine devices on the chip's network. */
+  @PrefabName("StructureWindTurbine")
+  object WindTurbine {
+    /** The device on [pin], as a StructureWindTurbine. */
+    fun at(pin: Device): Generator.WindTurbine = intrinsic()
+
+    /** Every one on the network. */
+    val all: DeviceBatch<Generator.WindTurbine>
+      get() = intrinsic()
+
+    /** Every one on the network named [name], which must be a constant. */
+    fun named(name: String): DeviceBatch<Generator.WindTurbine> = intrinsic()
   }
 
   /** The StructureUprightWindTurbine devices on the chip's network. */
   @PrefabName("StructureUprightWindTurbine")
-  object Upright {
+  object UprightWindTurbine {
     /** The device on [pin], as a StructureUprightWindTurbine. */
-    fun at(pin: Device): WindTurbine.Upright = intrinsic()
+    fun at(pin: Device): Generator.UprightWindTurbine = intrinsic()
 
     /** Every one on the network. */
-    val all: DeviceBatch<WindTurbine.Upright>
+    val all: DeviceBatch<Generator.UprightWindTurbine>
       get() = intrinsic()
 
     /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<WindTurbine.Upright> = intrinsic()
+    fun named(name: String): DeviceBatch<Generator.UprightWindTurbine> = intrinsic()
   }
 }
 
@@ -18424,73 +18640,6 @@ object FlashingLights {
   fun named(name: String): DeviceBatch<FlashingLight> = intrinsic()
 }
 
-/** A StructureGasGenerator. */
-@PrefabName("StructureGasGenerator")
-class GasGenerator internal constructor() : TypedDevice() {
-  val Combustion: Boolean
-    get() = intrinsic()
-
-  val Error: Boolean
-    get() = intrinsic()
-
-  val Maximum: Double
-    get() = intrinsic()
-
-  var On: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val Power: Boolean
-    get() = intrinsic()
-
-  val PowerGeneration: Double
-    get() = intrinsic()
-
-  val Pressure: Double
-    get() = intrinsic()
-
-  val Ratio: Double
-    get() = intrinsic()
-
-  val RequiredPower: Double
-    get() = intrinsic()
-
-  var Setting: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val Temperature: Double
-    get() = intrinsic()
-
-  val TotalMoles: Double
-    get() = intrinsic()
-
-  @LogicTypes(
-      read =
-          "RatioCarbonDioxide,RatioHelium,RatioHydrazine,RatioHydrochloricAcid,RatioHydrogen,RatioLiquidAlcohol,RatioLiquidCarbonDioxide,RatioLiquidHydrazine,RatioLiquidHydrochloricAcid,RatioLiquidHydrogen,RatioLiquidMethane,RatioLiquidNitrogen,RatioLiquidNitrousOxide,RatioLiquidOxygen,RatioLiquidOzone,RatioLiquidPollutant,RatioLiquidSilanol,RatioLiquidSodiumChloride,RatioMethane,RatioNitrogen,RatioNitrousOxide,RatioOxygen,RatioOzone,RatioPollutant,RatioPollutedWater,RatioSilanol,RatioSteam,RatioWater",
-      written = "",
-  )
-  val Ratios: Ratios
-    get() = intrinsic()
-
-  /** The StructureGasGenerator prefab. */
-  companion object : Prefab()
-}
-
-/** The StructureGasGenerator devices on the chip's network. */
-@PrefabName("StructureGasGenerator")
-object GasGenerators {
-  /** The device on [pin], as a StructureGasGenerator. */
-  fun at(pin: Device): GasGenerator = intrinsic()
-
-  /** Every one on the network. */
-  val all: DeviceBatch<GasGenerator>
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): DeviceBatch<GasGenerator> = intrinsic()
-}
-
 /** A StructureGasMixer. */
 @PrefabName("StructureGasMixer")
 class GasMixer internal constructor() : TypedDevice() {
@@ -20830,61 +20979,6 @@ object SleeperVerticalDroids {
   }
 }
 
-/** A StructureSolidFuelGenerator. */
-@PrefabName("StructureSolidFuelGenerator")
-class SolidFuelGenerator internal constructor() : TypedDevice() {
-  var ClearMemory: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var Lock: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var On: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val PowerGeneration: Double
-    get() = intrinsic()
-
-  @LogicTypes(read = "ImportCount", written = "")
-  val Import: Transfer
-    get() = intrinsic()
-
-  /** The device's slots, by number. */
-  val slots: Slots<DataDiskSlot>
-    get() = intrinsic()
-
-  /** Slot 0. */
-  @SlotNumber(0)
-  val Input: DataDiskSlot
-    get() = intrinsic()
-
-  /** The StructureSolidFuelGenerator prefab. */
-  companion object : Prefab()
-}
-
-/** The StructureSolidFuelGenerator devices on the chip's network. */
-@PrefabName("StructureSolidFuelGenerator")
-object SolidFuelGenerators {
-  /** The device on [pin], as a StructureSolidFuelGenerator. */
-  fun at(pin: Device): SolidFuelGenerator = intrinsic()
-
-  /** Every one on the network. */
-  val all: Batch
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch<SolidFuelGenerator>() {
-    /** A slot of every one in the batch, by number. */
-    val slots: Slots<SlotBatch<DataDiskSlot>>
-      get() = intrinsic()
-  }
-}
-
 /** A StructureSorter. */
 @PrefabName("StructureSorter")
 class Sorter internal constructor() : TypedDevice() {
@@ -20954,100 +21048,6 @@ object Sorters {
   class Batch internal constructor() : DeviceBatch<Sorter>() {
     /** A slot of every one in the batch, by number. */
     val slots: Slots<SlotBatch<DataDiskSlot>>
-      get() = intrinsic()
-  }
-}
-
-/** A StructureStirlingEngine. */
-@PrefabName("StructureStirlingEngine")
-class StirlingEngine internal constructor() : TypedDevice() {
-  val Combustion: Boolean
-    get() = intrinsic()
-
-  val EnvironmentEfficiency: Double
-    get() = intrinsic()
-
-  val Error: Boolean
-    get() = intrinsic()
-
-  val Maximum: Double
-    get() = intrinsic()
-
-  var On: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val Power: Boolean
-    get() = intrinsic()
-
-  val PowerGeneration: Double
-    get() = intrinsic()
-
-  val Pressure: Double
-    get() = intrinsic()
-
-  val Quantity: Double
-    get() = intrinsic()
-
-  val Ratio: Double
-    get() = intrinsic()
-
-  val RequiredPower: Double
-    get() = intrinsic()
-
-  var Setting: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val Temperature: Double
-    get() = intrinsic()
-
-  val TotalMoles: Double
-    get() = intrinsic()
-
-  val Volume: Double
-    get() = intrinsic()
-
-  val WorkingGasEfficiency: Double
-    get() = intrinsic()
-
-  @LogicTypes(
-      read =
-          "RatioCarbonDioxide,RatioHelium,RatioHydrazine,RatioHydrochloricAcid,RatioHydrogen,RatioLiquidAlcohol,RatioLiquidCarbonDioxide,RatioLiquidHydrazine,RatioLiquidHydrochloricAcid,RatioLiquidHydrogen,RatioLiquidMethane,RatioLiquidNitrogen,RatioLiquidNitrousOxide,RatioLiquidOxygen,RatioLiquidOzone,RatioLiquidPollutant,RatioLiquidSilanol,RatioLiquidSodiumChloride,RatioMethane,RatioNitrogen,RatioNitrousOxide,RatioOxygen,RatioOzone,RatioPollutant,RatioPollutedWater,RatioSilanol,RatioSteam,RatioWater",
-      written = "",
-  )
-  val Ratios: Ratios
-    get() = intrinsic()
-
-  /** The device's slots, by number. */
-  val slots: Slots<GasCanisterSlot>
-    get() = intrinsic()
-
-  /** Slot 0. */
-  @SlotNumber(0)
-  val GasCanister: GasCanisterSlot
-    get() = intrinsic()
-
-  /** The StructureStirlingEngine prefab. */
-  companion object : Prefab()
-}
-
-/** The StructureStirlingEngine devices on the chip's network. */
-@PrefabName("StructureStirlingEngine")
-object StirlingEngines {
-  /** The device on [pin], as a StructureStirlingEngine. */
-  fun at(pin: Device): StirlingEngine = intrinsic()
-
-  /** Every one on the network. */
-  val all: Batch
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch<StirlingEngine>() {
-    /** A slot of every one in the batch, by number. */
-    val slots: Slots<SlotBatch<GasCanisterSlot>>
       get() = intrinsic()
   }
 }
