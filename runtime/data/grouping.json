@@ -136,7 +136,9 @@
         "Gas": "StructurePressureRegulator",
         "Liquid": "StructureLiquidPressureRegulator",
         "BackGas": "StructureBackPressureRegulator",
-        "BackLiquid": "StructureBackLiquidPressureRegulator"
+        "BackLiquid": "StructureBackLiquidPressureRegulator",
+        "Purge": "StructurePurgeValve",
+        "Pressurant": "StructurePressurantValve"
       }
     },
     "PipeHeater": {

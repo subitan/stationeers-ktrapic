@@ -1436,6 +1436,12 @@ interface PressureRegulator {
 
   /** StructureBackLiquidPressureRegulator. Entry point: PressureRegulators.BackLiquid. */
   class BackLiquid : TypedDevice, PressureRegulator
+
+  /** StructurePurgeValve. Entry point: PressureRegulators.Purge. */
+  class Purge : TypedDevice, PressureRegulator
+
+  /** StructurePressurantValve. Entry point: PressureRegulators.Pressurant. */
+  class Pressurant : TypedDevice, PressureRegulator
 }
 ```
 
@@ -3411,18 +3417,6 @@ class PowerUmbilicalMale : TypedDevice {
   val RequiredPower: Double
 }
 
-/** StructurePressurantValve. Entry point: PressurantValves. */
-class PressurantValve : TypedDevice {
-  val Error: Boolean
-  var Lock: Boolean
-  val Maximum: Double
-  var On: Boolean
-  val Power: Boolean
-  val Ratio: Double
-  val RequiredPower: Double
-  var Setting: Double
-}
-
 /** StructureProximitySensor. Entry point: ProximitySensors. */
 class ProximitySensor : TypedDevice {
   val Activate: Boolean
@@ -3446,18 +3440,6 @@ class PumpedLiquidEngine : TypedDevice {
   val Temperature: Double
   var Throttle: Double
   val TotalMoles: Double
-}
-
-/** StructurePurgeValve. Entry point: PurgeValves. */
-class PurgeValve : TypedDevice {
-  val Error: Boolean
-  var Lock: Boolean
-  val Maximum: Double
-  var On: Boolean
-  val Power: Boolean
-  val Ratio: Double
-  val RequiredPower: Double
-  var Setting: Double
 }
 ```
 
