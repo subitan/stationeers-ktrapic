@@ -782,7 +782,7 @@ class ItemFilteredSlot internal constructor() : DeviceSlot() {
     get() = intrinsic()
 }
 
-/** A device that comes as several prefabs, each a nested class. */
+/** Devices of one kind that share these logic types, each a nested class. */
 interface Battery {
   val Charge: Double
 
@@ -1002,7 +1002,7 @@ object Batteries {
   }
 }
 
-/** A device that comes as several prefabs, each a nested class. */
+/** Devices of one kind that share these logic types, each a nested class. */
 interface BatteryCell {
   var Mode: Double
 
@@ -1160,7 +1160,7 @@ object BatteryCells {
   }
 }
 
-/** A device that comes as several prefabs, each a nested class. */
+/** Devices of one kind that share these logic types, each a nested class. */
 interface LedDisplay {
   var Color: Double
 
@@ -1333,7 +1333,7 @@ object LedDisplays {
   }
 }
 
-/** A device that comes as several prefabs, each a nested class. */
+/** Devices of one kind that share these logic types, each a nested class. */
 interface Transformer {
   val Error: Boolean
 
@@ -1643,7 +1643,7 @@ object Transformers {
   }
 }
 
-/** A device that comes as several prefabs, each a nested class. */
+/** Devices of one kind that share these logic types, each a nested class. */
 interface SatelliteDish {
   var Activate: Boolean
 
@@ -1946,7 +1946,7 @@ object SatelliteDishes {
   }
 }
 
-/** A device that comes as several prefabs, each a nested class. */
+/** Devices of one kind that share these logic types, each a nested class. */
 interface PressurePlate {
   val Setting: Double
 
@@ -2026,7 +2026,7 @@ object PressurePlates {
   }
 }
 
-/** A device that comes as several prefabs, each a nested class. */
+/** Devices of one kind that share these logic types, each a nested class. */
 interface Fridge {
   val Combustion: Boolean
 
@@ -2207,7 +2207,7 @@ object Fridges {
   }
 }
 
-/** A device that comes as several prefabs, each a nested class. */
+/** Devices of one kind that share these logic types, each a nested class. */
 interface CargoStorage {
   var ClearMemory: Boolean
 
@@ -2371,7 +2371,7 @@ object CargoStorages {
   }
 }
 
-/** A device that comes as several prefabs, each a nested class. */
+/** Devices of one kind that share these logic types, each a nested class. */
 interface HangarDoor : Door {
   /** A StructureAirlockGate. */
   @PrefabName("StructureAirlockGate")
@@ -2527,7 +2527,7 @@ object HangarDoors {
   }
 }
 
-/** A device that comes as several prefabs, each a nested class. */
+/** Devices of one kind that share these logic types, each a nested class. */
 interface VendingMachine {
   var Activate: Boolean
 
@@ -2821,7 +2821,7 @@ object VendingMachines {
   }
 }
 
-/** A device that comes as several prefabs, each a nested class. */
+/** Devices of one kind that share these logic types, each a nested class. */
 interface LightRound {
   var Lock: Boolean
 
@@ -2940,7 +2940,7 @@ object LightRounds {
   }
 }
 
-/** A device that comes as several prefabs, each a nested class. */
+/** Devices of one kind that share these logic types, each a nested class. */
 interface BatteryCharger {
   var Activate: Boolean
 
@@ -3052,7 +3052,7 @@ object BatteryChargers {
   }
 }
 
-/** A device that comes as several prefabs, each a nested class. */
+/** Devices of one kind that share these logic types, each a nested class. */
 interface PoweredVent {
   val Error: Boolean
 
@@ -3180,7 +3180,7 @@ object PoweredVents {
   }
 }
 
-/** A device that comes as several prefabs, each a nested class. */
+/** Devices of one kind that share these logic types, each a nested class. */
 interface Valve {
   val Maximum: Double
 
@@ -3404,7 +3404,7 @@ object Valves {
   }
 }
 
-/** A device that comes as several prefabs, each a nested class. */
+/** Devices of one kind that share these logic types, each a nested class. */
 interface VolumePump {
   val Error: Boolean
 
@@ -3522,7 +3522,7 @@ object VolumePumps {
   }
 }
 
-/** A device that comes as several prefabs, each a nested class. */
+/** Devices of one kind that share these logic types, each a nested class. */
 interface TurboVolumePump {
   val Error: Boolean
 
@@ -3650,7 +3650,7 @@ object TurboVolumePumps {
   }
 }
 
-/** A device that comes as several prefabs, each a nested class. */
+/** Devices of one kind that share these logic types, each a nested class. */
 interface PressureRegulator {
   val Error: Boolean
 
@@ -3960,7 +3960,7 @@ object PressureRegulators {
   }
 }
 
-/** A device that comes as several prefabs, each a nested class. */
+/** Devices of one kind that share these logic types, each a nested class. */
 interface PipeHeater {
   val Error: Boolean
 
@@ -4052,7 +4052,7 @@ object PipeHeaters {
   }
 }
 
-/** A device that comes as several prefabs, each a nested class. */
+/** Devices of one kind that share these logic types, each a nested class. */
 interface TankStorage {
   val Pressure: Double
 
@@ -4170,7 +4170,7 @@ object TankStorages {
   }
 }
 
-/** A device that comes as several prefabs, each a nested class. */
+/** Devices of one kind that share these logic types, each a nested class. */
 interface CapsuleTank {
   val Combustion: Boolean
 
@@ -4584,7 +4584,7 @@ object CapsuleTanks {
   }
 }
 
-/** A device that comes as several prefabs, each a nested class. */
+/** Devices of one kind that share these logic types, each a nested class. */
 interface Filtration {
   val Error: Boolean
 
@@ -4768,7 +4768,7 @@ object Filtrations {
   }
 }
 
-/** A device that comes as several prefabs, each a nested class. */
+/** Devices of one kind that share these logic types, each a nested class. */
 interface UmbilicalMale {
   val Error: Boolean
 
@@ -4904,7 +4904,7 @@ object UmbilicalMales {
   }
 }
 
-/** A device that comes as several prefabs, each a nested class. */
+/** Devices of one kind that share these logic types, each a nested class. */
 interface UmbilicalFemale {
   val Maximum: Double
 
@@ -5040,7 +5040,7 @@ object UmbilicalFemales {
   }
 }
 
-/** A device that comes as several prefabs, each a nested class. */
+/** Devices of one kind that share these logic types, each a nested class. */
 interface RocketEngine {
   val Combustion: Boolean
 
@@ -5462,7 +5462,7 @@ object RocketEngines {
   }
 }
 
-/** A device that comes as several prefabs, each a nested class. */
+/** Devices of one kind that share these logic types, each a nested class. */
 interface Radiator {
   val Maximum: Double
 
@@ -5703,7 +5703,7 @@ object Radiators {
   }
 }
 
-/** A device that comes as several prefabs, each a nested class. */
+/** Devices of one kind that share these logic types, each a nested class. */
 interface LandingPadInwardConnector {
   val Combustion: Boolean
 
@@ -5859,7 +5859,7 @@ object LandingPadInwardConnectors {
   }
 }
 
-/** A device that comes as several prefabs, each a nested class. */
+/** Devices of one kind that share these logic types, each a nested class. */
 interface LandingPadOutwardConnector {
   val Combustion: Boolean
 
@@ -6015,7 +6015,7 @@ object LandingPadOutwardConnectors {
   }
 }
 
-/** A device that comes as several prefabs, each a nested class. */
+/** Devices of one kind that share these logic types, each a nested class. */
 interface LandingPadTankConnector {
   val Error: Boolean
 
@@ -6137,7 +6137,7 @@ object LandingPadTankConnectors {
   }
 }
 
-/** A device that comes as several prefabs, each a nested class. */
+/** Devices of one kind that share these logic types, each a nested class. */
 interface DirectHeatExchanger {
   val Maximum: Double
 
@@ -6428,7 +6428,7 @@ object DirectHeatExchangers {
   }
 }
 
-/** A device that comes as several prefabs, each a nested class. */
+/** Devices of one kind that share these logic types, each a nested class. */
 interface PassthroughHeatExchanger {
   val Maximum: Double
 
@@ -6533,7 +6533,7 @@ object PassthroughHeatExchangers {
   }
 }
 
-/** A device that comes as several prefabs, each a nested class. */
+/** Devices of one kind that share these logic types, each a nested class. */
 interface SolarPanel {
   val Charge: Double
 
@@ -6853,7 +6853,7 @@ object SolarPanels {
   }
 }
 
-/** A device that comes as several prefabs, each a nested class. */
+/** Devices of one kind that share these logic types, each a nested class. */
 interface Furnace {
   var Activate: Boolean
 
@@ -7094,7 +7094,7 @@ object Furnaces {
   }
 }
 
-/** A device that comes as several prefabs, each a nested class. */
+/** Devices of one kind that share these logic types, each a nested class. */
 interface Tablet {
   val Error: Boolean
 
@@ -7234,7 +7234,7 @@ object Tablets {
   }
 }
 
-/** A device that comes as several prefabs, each a nested class. */
+/** Devices of one kind that share these logic types, each a nested class. */
 interface SDBHopper {
   var ClearMemory: Boolean
 
@@ -7334,7 +7334,7 @@ object SDBHoppers {
   }
 }
 
-/** A device that comes as several prefabs, each a nested class. */
+/** Devices of one kind that share these logic types, each a nested class. */
 interface Bench {
   val Error: Boolean
 
@@ -7618,7 +7618,7 @@ object Benches {
   }
 }
 
-/** A device that comes as several prefabs, each a nested class. */
+/** Devices of one kind that share these logic types, each a nested class. */
 interface Locker {
   var Lock: Boolean
 
@@ -7901,7 +7901,7 @@ object Lockers {
   }
 }
 
-/** A device that comes as several prefabs, each a nested class. */
+/** Devices of one kind that share these logic types, each a nested class. */
 interface AreaPowerControl {
   val Charge: Double
 
@@ -8093,7 +8093,7 @@ object AreaPowerControls {
   }
 }
 
-/** A device that comes as several prefabs, each a nested class. */
+/** Devices of one kind that share these logic types, each a nested class. */
 interface Console {
   var Activate: Boolean
 
@@ -8293,7 +8293,7 @@ object Consoles {
   }
 }
 
-/** A device that comes as several prefabs, each a nested class. */
+/** Devices of one kind that share these logic types, each a nested class. */
 interface WallLight {
   var Lock: Boolean
 
@@ -8497,7 +8497,7 @@ object WallLights {
   }
 }
 
-/** A device that comes as several prefabs, each a nested class. */
+/** Devices of one kind that share these logic types, each a nested class. */
 interface MiningDrill {
   var Activate: Boolean
 
@@ -8675,7 +8675,7 @@ object MiningDrills {
   }
 }
 
-/** A device that comes as several prefabs, each a nested class. */
+/** Devices of one kind that share these logic types, each a nested class. */
 interface HandDrill {
   var Activate: Boolean
 
@@ -8814,7 +8814,7 @@ object HandDrills {
   }
 }
 
-/** A device that comes as several prefabs, each a nested class. */
+/** Devices of one kind that share these logic types, each a nested class. */
 interface AngleGrinder {
   var Activate: Boolean
 
@@ -8953,7 +8953,7 @@ object AngleGrinders {
   }
 }
 
-/** A device that comes as several prefabs, each a nested class. */
+/** Devices of one kind that share these logic types, each a nested class. */
 interface ArcWelder {
   var Activate: Boolean
 
@@ -9092,7 +9092,7 @@ object ArcWelders {
   }
 }
 
-/** A device that comes as several prefabs, each a nested class. */
+/** Devices of one kind that share these logic types, each a nested class. */
 interface Helmet {
   val Combustion: Boolean
 
@@ -9460,7 +9460,7 @@ object Helmets {
   }
 }
 
-/** A device that comes as several prefabs, each a nested class. */
+/** Devices of one kind that share these logic types, each a nested class. */
 interface Suit {
   var Activate: Boolean
 
@@ -9836,7 +9836,7 @@ object Suits {
   }
 }
 
-/** A device that comes as several prefabs, each a nested class. */
+/** Devices of one kind that share these logic types, each a nested class. */
 interface Airlock : Door {
   /** A StructureAirlock. */
   @PrefabName("StructureAirlock")
@@ -9942,7 +9942,7 @@ object Airlocks {
   }
 }
 
-/** A device that comes as several prefabs, each a nested class. */
+/** Devices of one kind that share these logic types, each a nested class. */
 interface ManualHatch {
   val Idle: Boolean
 
@@ -10042,7 +10042,7 @@ object ManualHatches {
   }
 }
 
-/** A device that comes as several prefabs, each a nested class. */
+/** Devices of one kind that share these logic types, each a nested class. */
 interface Sleeper {
   var Activate: Boolean
 
@@ -10378,7 +10378,7 @@ object Sleepers {
   }
 }
 
-/** A device that comes as several prefabs, each a nested class. */
+/** Devices of one kind that share these logic types, each a nested class. */
 interface CryoTube : Sleeper {
   var Mode: Double
 
@@ -10568,7 +10568,7 @@ object CryoTubes {
   }
 }
 
-/** A device that comes as several prefabs, each a nested class. */
+/** Devices of one kind that share these logic types, each a nested class. */
 interface LarreDock {
   var Activate: Boolean
 
@@ -11014,7 +11014,7 @@ object LarreDocks {
   }
 }
 
-/** A device that comes as several prefabs, each a nested class. */
+/** Devices of one kind that share these logic types, each a nested class. */
 interface LogicWriter {
   val Error: Boolean
 
@@ -11148,7 +11148,7 @@ object LogicWriters {
   }
 }
 
-/** A device that comes as several prefabs, each a nested class. */
+/** Devices of one kind that share these logic types, each a nested class. */
 interface LogicReader {
   val Error: Boolean
 
@@ -11349,7 +11349,7 @@ object LogicReaders {
   }
 }
 
-/** A device that comes as several prefabs, each a nested class. */
+/** Devices of one kind that share these logic types, each a nested class. */
 interface LogicProcessor {
   val Error: Boolean
 
@@ -11613,7 +11613,7 @@ object LogicProcessors {
   }
 }
 
-/** A device that comes as several prefabs, each a nested class. */
+/** Devices of one kind that share these logic types, each a nested class. */
 interface Switch {
   var Lock: Boolean
 
@@ -11689,7 +11689,7 @@ object Switches {
   }
 }
 
-/** A device that comes as several prefabs, each a nested class. */
+/** Devices of one kind that share these logic types, each a nested class. */
 interface Button {
   var Activate: Boolean
 
@@ -11782,7 +11782,7 @@ object Buttons {
   }
 }
 
-/** A device that comes as several prefabs, each a nested class. */
+/** Devices of one kind that share these logic types, each a nested class. */
 interface ChuteBin {
   val Error: Boolean
 
@@ -11914,7 +11914,7 @@ object ChuteBins {
   }
 }
 
-/** A device that comes as several prefabs, each a nested class. */
+/** Devices of one kind that share these logic types, each a nested class. */
 interface PowerTransmission {
   val Charge: Double
 
@@ -12056,7 +12056,7 @@ object PowerTransmissions {
   }
 }
 
-/** A device that comes as several prefabs, each a nested class. */
+/** Devices of one kind that share these logic types, each a nested class. */
 interface Fabricator {
   var Activate: Boolean
 
@@ -12734,7 +12734,7 @@ object Fabricators {
   }
 }
 
-/** A device that comes as several prefabs, each a nested class. */
+/** Devices of one kind that share these logic types, each a nested class. */
 interface DigitalChute {
   var On: Boolean
 
@@ -12998,7 +12998,7 @@ object DigitalChutes {
   }
 }
 
-/** A device that comes as several prefabs, each a nested class. */
+/** Devices of one kind that share these logic types, each a nested class. */
 interface Door {
   val Idle: Boolean
 
@@ -13170,7 +13170,7 @@ object Doors {
   }
 }
 
-/** A device that comes as several prefabs, each a nested class. */
+/** Devices of one kind that share these logic types, each a nested class. */
 interface InteriorDoor : Door {
   /** A StructureInteriorDoorGlass. */
   @PrefabName("StructureInteriorDoorGlass")
@@ -13376,7 +13376,7 @@ object InteriorDoors {
   }
 }
 
-/** A device that comes as several prefabs, each a nested class. */
+/** Devices of one kind that share these logic types, each a nested class. */
 interface Computer {
   val Error: Boolean
 
@@ -13622,7 +13622,7 @@ object Computers {
   }
 }
 
-/** A device that comes as several prefabs, each a nested class. */
+/** Devices of one kind that share these logic types, each a nested class. */
 interface DigitalValve : Valve {
   val Error: Boolean
 
@@ -13732,7 +13732,7 @@ object DigitalValves {
   }
 }
 
-/** A device that comes as several prefabs, each a nested class. */
+/** Devices of one kind that share these logic types, each a nested class. */
 interface WallCooler {
   val Error: Boolean
 
@@ -13896,7 +13896,7 @@ object WallCoolers {
   }
 }
 
-/** A device that comes as several prefabs, each a nested class. */
+/** Devices of one kind that share these logic types, each a nested class. */
 interface Stacker {
   var Activate: Boolean
 
@@ -14084,7 +14084,7 @@ object Stackers {
   }
 }
 
-/** A device that comes as several prefabs, each a nested class. */
+/** Devices of one kind that share these logic types, each a nested class. */
 interface SuitStorage {
   val Error: Boolean
 
@@ -14311,7 +14311,7 @@ object SuitStorages {
   }
 }
 
-/** A device that comes as several prefabs, each a nested class. */
+/** Devices of one kind that share these logic types, each a nested class. */
 interface WindTurbine {
   val PowerGeneration: Double
 
@@ -14367,7 +14367,7 @@ object WindTurbines {
   }
 }
 
-/** A device that comes as several prefabs, each a nested class. */
+/** Devices of one kind that share these logic types, each a nested class. */
 interface WaterBottleFiller {
   var Activate: Boolean
 
@@ -14479,7 +14479,7 @@ object WaterBottleFillers {
   }
 }
 
-/** A device that comes as several prefabs, each a nested class. */
+/** Devices of one kind that share these logic types, each a nested class. */
 interface PipeAnalyzer {
   val Combustion: Boolean
 
@@ -14643,7 +14643,7 @@ object PipeAnalyzers {
   }
 }
 
-/** A device that comes as several prefabs, each a nested class. */
+/** Devices of one kind that share these logic types, each a nested class. */
 interface CircuitHousing {
   val Error: Boolean
 
@@ -14857,7 +14857,7 @@ object CircuitHousings {
   }
 }
 
-/** A device that comes as several prefabs, each a nested class. */
+/** Devices of one kind that share these logic types, each a nested class. */
 interface ElevatorLevel : ElevatorShaft {
   var Activate: Boolean
 
@@ -14985,7 +14985,7 @@ object ElevatorLevels {
   }
 }
 
-/** A device that comes as several prefabs, each a nested class. */
+/** Devices of one kind that share these logic types, each a nested class. */
 interface ElevatorShaft {
   var ElevatorLevel: Double
 

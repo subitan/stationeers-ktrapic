@@ -189,9 +189,16 @@ Devices that come in several prefabs are grouped by kind: `Batteries.Small.at(d0
 is the interface its members share, with the logic types all of them can read, so an inlined
 function can take any battery. It has only those logic types: `PrefabHash`, `NameHash` and
 `ReferenceId` are read from a member (`Batteries.Small.at(d0)`) or its pin. Prefabs are grouped
-this way wherever the game has one device in several sizes, fluids or styles: `Valves.Gas` and
-`Valves.Liquid`, `Transformers.Small`, `SolarPanels.HeavyAngled`,
-`DirectHeatExchangers.LargeGasToLiquid`. A family that is a special case of another extends its
+this way when they do one kind of job and share their logic types. That covers one device in
+several sizes, fluids or styles (`Valves.Gas` and `Valves.Liquid`, `Transformers.Small`,
+`SolarPanels.HeavyAngled`, `DirectHeatExchangers.LargeGasToLiquid`). It also covers different
+devices that a program uses the same way, even when they work in opposite directions:
+`Switches.Lever` and `Switches.Standard` both give an on/off signal, a back pressure regulator is
+`PressureRegulators.BackGas`, and the microwave power transmitter and receiver are
+`PowerTransmissions.MicrowaveTransmitter` and `.MicrowaveReceiver`. A member keeps the logic types
+only it has: `DigitalChutes.ValveLeft` adds `Lock` and `Open` to the `DigitalChute` interface.
+Devices that merely look alike from a chip, with nothing a program would do to both, are not
+grouped. A family that is a special case of another extends its
 interface: an elevator level is a shaft with doors and power, so `ElevatorLevel` extends
 `ElevatorShaft`, and a function taking an `ElevatorShaft` takes an `ElevatorLevels.Standard` too.
 Likewise interior doors, hangar doors and airlocks extend `Door`, the family of the glass, blast
