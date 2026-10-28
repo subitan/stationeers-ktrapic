@@ -348,6 +348,16 @@
         "Battery": "StructureWallLightBattery"
       }
     },
+    "Miner": {
+      "plural": "Miners",
+      "members": {
+        "AutominerSmall": "StructureAutoMinerSmall",
+        "Deep": "StructureDeepMiner",
+        "CombustionDeep": "StructureCombustionDeepMiner",
+        "Ogre": "StructureHorizontalAutoMiner",
+        "Rocket": "StructureRocketMiner"
+      }
+    },
     "MiningDrill": {
       "plural": "MiningDrills",
       "members": {
@@ -631,6 +641,10 @@
     }
   },
   "notFamilies": [
+    {
+      "prefabs": [["StructureAutoMinerSmall", "StructureDeepMiner", "StructureCombustionDeepMiner", "StructureHorizontalAutoMiner", "StructureRocketMiner"], "StructureChuteOutlet"],
+      "reason": "the Chute Outlet passes items out of a chute; it shares only the miners' import and export counts and ClearMemory, and mines nothing"
+    },
     {
       "prefabs": ["ItemBeacon", "StructureBeacon"],
       "reason": "the Tracking Beacon (an item) and the Beacon (a structure) are different devices"
