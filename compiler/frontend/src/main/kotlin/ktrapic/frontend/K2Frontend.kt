@@ -111,7 +111,7 @@ object K2Frontend {
               captured.fir2ir.result.irModuleFragment,
               // Despite its name, the builtins finder searches every class on the classpath (it is
               // the source finder with no file to record lookups against), so it also finds the
-              // runtime library's classes such as ktrapic.LogicType.
+              // SDK's classes such as ktrapic.LogicType.
               captured.fir2ir.result.pluginContext.finderForBuiltins(),
               wrapped,
           )
@@ -226,7 +226,7 @@ private class CollectingMessageCollector : MessageCollector {
 
 /**
  * A program's IR, and how to find where its elements are in the user's source. [symbols] finds
- * declarations by name in the libraries the program compiles against, such as the runtime API.
+ * declarations by name in the libraries the program compiles against, such as the SDK.
  */
 class FrontendIr
 internal constructor(

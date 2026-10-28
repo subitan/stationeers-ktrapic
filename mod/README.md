@@ -33,7 +33,7 @@ to `main` replaces. No version has been tagged yet, so for now install from the
 
 ## Using it
 
-In the IC10 Editor, pick "Kotlin" as the language. Kotlin keywords and the runtime's names are highlighted:
+In the IC10 Editor, pick "Kotlin" as the language. Kotlin keywords and the SDK's names are highlighted:
 types and prefabs (`GrowLights`, `Batteries.Small`), enums and their values (`Color.Red`), logic
 types (`d0.Temperature`), devices and functions. A program is compiled as it is edited, about a
 moment after typing stops:

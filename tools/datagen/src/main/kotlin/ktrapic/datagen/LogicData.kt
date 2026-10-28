@@ -34,7 +34,7 @@ data class LogicEnums(val source: String, val enums: Map<String, Map<String, Int
 }
 
 /**
- * How the runtime API types the game's logic, which is KTrapIC's choice rather than game data.
+ * How the SDK types the game's logic, which is KTrapIC's choice rather than game data.
  *
  * @property operandEnums enums whose entries name an instruction operand (`l r0 d0 Setting`), which
  *   become Kotlin enum classes. Every other enum holds values a program reads or writes, and

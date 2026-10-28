@@ -6,15 +6,15 @@ import kotlin.system.exitProcess
 private const val USAGE =
     """usage:
   datagen import-pytrapic <types_generated.py> <source description>
-      Writes runtime/data/logic-enums.json from PyTrapIC's generated types.
+      Writes sdk/data/logic-enums.json from PyTrapIC's generated types.
   datagen import-pytrapic-structures <structures_generated.py> <source description>
-      Writes runtime/data/prefabs.json from PyTrapIC's generated structures.
+      Writes sdk/data/prefabs.json from PyTrapIC's generated structures.
   datagen generate
-      Writes, from runtime/data, the runtime's generated sources, the in-game plugin's list of
+      Writes, from sdk/data, the SDK's generated sources, the in-game plugin's list of
       their names, and the device reference docs/DEVICES.md."""
 
 /**
- * Maintains the runtime API's data and generated sources. Paths are relative to the workspace root
+ * Maintains the SDK's game data and generated sources. Paths are relative to the workspace root
  * (`bazel run` sets BUILD_WORKSPACE_DIRECTORY), and arguments naming input files are resolved
  * against the directory `bazel run` was started from.
  */
@@ -57,17 +57,17 @@ private fun usage(): Nothing {
   exitProcess(2)
 }
 
-/** Where the runtime's data and generated sources live, relative to a workspace root. */
+/** Where the SDK's data and generated sources live, relative to a workspace root. */
 object DataFiles {
-  fun enums(root: File) = root.resolve("runtime/data/logic-enums.json")
+  fun enums(root: File) = root.resolve("sdk/data/logic-enums.json")
 
-  fun typing(root: File) = root.resolve("runtime/data/typing.json")
+  fun typing(root: File) = root.resolve("sdk/data/typing.json")
 
-  fun prefabs(root: File) = root.resolve("runtime/data/prefabs.json")
+  fun prefabs(root: File) = root.resolve("sdk/data/prefabs.json")
 
-  fun grouping(root: File) = root.resolve("runtime/data/grouping.json")
+  fun grouping(root: File) = root.resolve("sdk/data/grouping.json")
 
-  fun generatedDir(root: File) = root.resolve("runtime/src/main/kotlin/ktrapic")
+  fun generatedDir(root: File) = root.resolve("sdk/src/main/kotlin/ktrapic")
 
   fun modNames(root: File) = root.resolve(ModNamesGenerator.PATH)
 
@@ -75,7 +75,7 @@ object DataFiles {
 
   /** The generated sources for the data under [root]. */
   fun generate(root: File): Map<String, String> =
-      RuntimeGenerator.generate(
+      SdkGenerator.generate(
           LogicEnums.fromJson(enums(root).readText()),
           Typing.fromJson(typing(root).readText()),
           Prefabs.fromJson(prefabs(root).readText()),

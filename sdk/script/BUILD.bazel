@@ -5,11 +5,11 @@ load("//build_defs/kotlin:junit5.bzl", "kt_junit5_tests")
 kt_jvm_library(
     name = "ktrapic-script",
     srcs = glob(["src/main/kotlin/**/*.kt"]),
-    resource_strip_prefix = "runtime/script/src/main/resources",
+    resource_strip_prefix = "sdk/script/src/main/resources",
     resources = glob(["src/main/resources/**"]),
     visibility = ["//visibility:public"],
     deps = [
-        "//runtime",
+        "//sdk",
         "@maven//:org_jetbrains_kotlin_kotlin_scripting_common",
         "@maven//:org_jetbrains_kotlin_kotlin_scripting_jvm",
     ],
@@ -20,8 +20,10 @@ kt_junit5_tests(
     srcs = glob(["src/test/kotlin/**/*.kt"]),
     associates = [":ktrapic-script"],
     deps = [
+        "//sdk",
         "@maven//:com_google_truth_truth",
         "@maven//:org_jetbrains_kotlin_kotlin_scripting_common",
+        "@maven//:org_jetbrains_kotlin_kotlin_scripting_jvm",
         "@maven//:org_junit_jupiter_junit_jupiter_api",
     ],
 )

@@ -33,7 +33,7 @@ maven.install(
         "com.google.truth:truth:1.4.4",
         # The K2 front end (compiler/frontend). Must match kotlinc_version above.
         "org.jetbrains.kotlin:kotlin-compiler-embeddable:2.4.21",
-        # The *.ic10.kts script definition (runtime/script), for IDEs. Same version as above.
+        # The *.ic10.kts script definition (sdk/script), for IDEs. Same version as above.
         "org.jetbrains.kotlin:kotlin-scripting-common:2.4.21",
         "org.jetbrains.kotlin:kotlin-scripting-jvm:2.4.21",
         # JUnit 5, run by the platform's ConsoleLauncher (build_defs/kotlin/junit5.bzl).

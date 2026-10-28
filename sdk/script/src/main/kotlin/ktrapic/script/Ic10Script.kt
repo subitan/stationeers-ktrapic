@@ -16,7 +16,7 @@ import kotlin.script.experimental.jvm.jvm
  *
  * IntelliJ's Kotlin plugin finds the definition through the marker file
  * `META-INF/kotlin/script/templates/ktrapic.script.Ic10Script` in this jar, when the jar (and the
- * runtime jar beside it) is a dependency of the project. Only the IDE uses it: the KTrapIC compiler
+ * SDK jar beside it) is a dependency of the project. Only the IDE uses it: the KTrapIC compiler
  * runs these files itself and never through Kotlin scripting.
  */
 @KotlinScript(
@@ -31,7 +31,7 @@ object Ic10ScriptConfiguration :
     ScriptCompilationConfiguration({
       displayName("KTrapIC program")
       defaultImports("ktrapic.*")
-      jvm { dependenciesFromClassContext(Ic10Script::class, "runtime", wholeClasspath = false) }
+      jvm { dependenciesFromClassContext(Ic10Script::class, "sdk", wholeClasspath = false) }
       ide { acceptedLocations(ScriptAcceptedLocation.Everywhere) }
     }) {
   private fun readResolve(): Any = Ic10ScriptConfiguration

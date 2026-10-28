@@ -4,7 +4,7 @@ import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 
-class RuntimeGeneratorTest {
+class SdkGeneratorTest {
   private val enums =
       PyTrapicImport.enums(
           """
@@ -65,7 +65,7 @@ class RuntimeGeneratorTest {
 
   @Test
   fun `operand enums become enum classes and the rest Double constants`() {
-    val files = RuntimeGenerator.generate(enums, Typing(listOf("LogicType"), listOf("On")))
+    val files = SdkGenerator.generate(enums, Typing(listOf("LogicType"), listOf("On")))
 
     val generatedEnums = files.getValue("GeneratedEnums.kt")
     assertThat(generatedEnums).contains("enum class LogicType(val value: Int) {\n  None(0),\n")
@@ -79,7 +79,7 @@ class RuntimeGeneratorTest {
   @Test
   fun `rejects typing that names logic types the data lacks`() {
     assertThrows<IllegalArgumentException> {
-      RuntimeGenerator.generate(enums, Typing(listOf("LogicType"), listOf("Missing")))
+      SdkGenerator.generate(enums, Typing(listOf("LogicType"), listOf("Missing")))
     }
   }
 
@@ -102,7 +102,7 @@ class RuntimeGeneratorTest {
     val prefabs = Prefabs("test", emptyList(), mapOf("Battery" to listOf("Charge")))
     val grouping = Grouping(emptyMap(), emptyList())
     fun generate(always: List<String>, byKind: Map<String, List<String>>) =
-        RuntimeGenerator.generate(
+        SdkGenerator.generate(
             slotEnums,
             Typing(
                 listOf("LogicType"),
@@ -147,7 +147,7 @@ class RuntimeGeneratorTest {
             "test",
         )
     fun generate(booleans: List<String>, writes: Map<String, List<String>>) =
-        RuntimeGenerator.generate(
+        SdkGenerator.generate(
             slotEnums,
             Typing(
                 listOf("LogicType"),

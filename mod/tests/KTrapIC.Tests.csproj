@@ -11,8 +11,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="../src/DaemonClient.cs" Link="DaemonClient.cs" />
-    <Compile Include="../src/RuntimeNames.g.cs" Link="RuntimeNames.g.cs" />
-    <Compile Include="../src/RuntimeNameKinds.cs" Link="RuntimeNameKinds.cs" />
+    <Compile Include="../src/SdkNames.g.cs" Link="SdkNames.g.cs" />
+    <Compile Include="../src/SdkNameKinds.cs" Link="SdkNameKinds.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
