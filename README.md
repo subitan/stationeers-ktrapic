@@ -42,7 +42,7 @@ functions, devices, the maths and numeric rules, and the chip's size limits. The
 | 3 | IC10 model and emulator | Done |
 | 4 | The basics end to end: values, control flow, functions, devices, slots, batches | Done |
 | 5 | Compile daemon and playground | Done |
-| 6 | IC10 Editor plugin: compiling and highlighting in game ([#41](https://github.com/subitan/stationeers-ktrapic/issues/41)) | Merged; in-game checks and first release pending |
+| 6 | IC10 Editor plugin: compiling and highlighting in game ([#41](https://github.com/subitan/stationeers-ktrapic/issues/41)) | Done |
 | 7 | The typed API: views, static sets, families of related devices | In progress |
 | 8 | Completion, hovers and diagnostics in the IC10 Editor ([#45](https://github.com/subitan/stationeers-ktrapic/issues/45)) | Next |
 | 9 | A test harness in the playground: run a program against fake devices ([#66](https://github.com/subitan/stationeers-ktrapic/issues/66)) | Planned |
