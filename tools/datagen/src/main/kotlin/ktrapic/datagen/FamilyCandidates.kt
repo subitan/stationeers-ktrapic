@@ -12,8 +12,8 @@ package ktrapic.datagen
  *   name has every word of the other's ([words]: `StructureLightLongWide` has those of
  *   `StructureLightLong`, `StructureStorageLocker` those of `StructureLockerSmall`). This finds
  *   kinds told apart by a word not yet in [VARIANT_WORDS], such as `Wide` or `MKII`, or
- * - they have the same logic types of those few prefabs have ([rareLogicTypes]), and some: the
- *   shape of a job, whatever the devices are called. `StructureSorter` and `StructureUnloader` both
+ * - they have the same, and at least one, of the logic types few prefabs have ([rareLogicTypes]):
+ *   the shape of a job, whatever the devices are called. `StructureSorter` and `StructureUnloader` both
  *   send items to an `Output`, and the generators all report `PowerGeneration`.
  *
  * The first two don't see kinds whose prefab names don't share their words
