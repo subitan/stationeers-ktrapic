@@ -8498,6 +8498,220 @@ object WallLights {
 }
 
 /** A device that comes as several prefabs, each a nested class. */
+interface Miner {
+  var ClearMemory: Boolean
+
+  val Error: Boolean
+
+  var On: Boolean
+
+  val Power: Boolean
+
+  val RequiredPower: Double
+
+  /** A StructureAutoMinerSmall. */
+  @PrefabName("StructureAutoMinerSmall")
+  class AutominerSmall internal constructor() : TypedDevice(), Miner {
+    var Activate: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override var ClearMemory: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override val Error: Boolean
+      get() = intrinsic()
+
+    override var On: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    var Open: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override val Power: Boolean
+      get() = intrinsic()
+
+    override val RequiredPower: Double
+      get() = intrinsic()
+
+    @LogicTypes(read = "ImportCount", written = "")
+    val Import: Transfer
+      get() = intrinsic()
+
+    @LogicTypes(read = "ExportCount", written = "")
+    val Export: Transfer
+      get() = intrinsic()
+
+    /** The device's slots, by number. */
+    val slots: Slots<DataDiskSlot>
+      get() = intrinsic()
+
+    /** The StructureAutoMinerSmall prefab. */
+    companion object : Prefab()
+  }
+
+  /** A StructureDeepMiner. */
+  @PrefabName("StructureDeepMiner")
+  class Deep internal constructor() : TypedDevice(), Miner {
+    override var ClearMemory: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override val Error: Boolean
+      get() = intrinsic()
+
+    val Maximum: Double
+      get() = intrinsic()
+
+    override var On: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override val Power: Boolean
+      get() = intrinsic()
+
+    val Ratio: Double
+      get() = intrinsic()
+
+    override val RequiredPower: Double
+      get() = intrinsic()
+
+    var Setting: Double
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    @LogicTypes(read = "ImportCount", written = "")
+    val Import: Transfer
+      get() = intrinsic()
+
+    @LogicTypes(read = "ExportCount", written = "")
+    val Export: Transfer
+      get() = intrinsic()
+
+    /** The device's slots, by number. */
+    val slots: Slots<DataDiskSlot>
+      get() = intrinsic()
+
+    /** The StructureDeepMiner prefab. */
+    companion object : Prefab()
+  }
+
+  /** A StructureHorizontalAutoMiner. */
+  @PrefabName("StructureHorizontalAutoMiner")
+  class Ogre internal constructor() : TypedDevice(), Miner {
+    var Activate: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override var ClearMemory: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override val Error: Boolean
+      get() = intrinsic()
+
+    var Mode: Double
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override var On: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    var Open: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override val Power: Boolean
+      get() = intrinsic()
+
+    override val RequiredPower: Double
+      get() = intrinsic()
+
+    @LogicTypes(read = "ImportCount", written = "")
+    val Import: Transfer
+      get() = intrinsic()
+
+    @LogicTypes(read = "ExportCount", written = "")
+    val Export: Transfer
+      get() = intrinsic()
+
+    /** The device's slots, by number. */
+    val slots: Slots<DataDiskSlot>
+      get() = intrinsic()
+
+    /** The StructureHorizontalAutoMiner prefab. */
+    companion object : Prefab()
+  }
+}
+
+/** The Miner devices on the chip's network, by prefab. */
+object Miners {
+  /** The StructureAutoMinerSmall devices on the chip's network. */
+  @PrefabName("StructureAutoMinerSmall")
+  object AutominerSmall {
+    /** The device on [pin], as a StructureAutoMinerSmall. */
+    fun at(pin: Device): Miner.AutominerSmall = intrinsic()
+
+    /** Every one on the network. */
+    val all: Batch
+      get() = intrinsic()
+
+    /** Every one on the network named [name], which must be a constant. */
+    fun named(name: String): Batch = intrinsic()
+
+    class Batch internal constructor() : DeviceBatch<Miner.AutominerSmall>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+  }
+
+  /** The StructureDeepMiner devices on the chip's network. */
+  @PrefabName("StructureDeepMiner")
+  object Deep {
+    /** The device on [pin], as a StructureDeepMiner. */
+    fun at(pin: Device): Miner.Deep = intrinsic()
+
+    /** Every one on the network. */
+    val all: Batch
+      get() = intrinsic()
+
+    /** Every one on the network named [name], which must be a constant. */
+    fun named(name: String): Batch = intrinsic()
+
+    class Batch internal constructor() : DeviceBatch<Miner.Deep>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+  }
+
+  /** The StructureHorizontalAutoMiner devices on the chip's network. */
+  @PrefabName("StructureHorizontalAutoMiner")
+  object Ogre {
+    /** The device on [pin], as a StructureHorizontalAutoMiner. */
+    fun at(pin: Device): Miner.Ogre = intrinsic()
+
+    /** Every one on the network. */
+    val all: Batch
+      get() = intrinsic()
+
+    /** Every one on the network named [name], which must be a constant. */
+    fun named(name: String): Batch = intrinsic()
+
+    class Batch internal constructor() : DeviceBatch<Miner.Ogre>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+  }
+}
+
+/** A device that comes as several prefabs, each a nested class. */
 interface MiningDrill {
   var Activate: Boolean
 
@@ -17062,70 +17276,6 @@ object ArcFurnaces {
   }
 }
 
-/** A StructureAutoMinerSmall. */
-@PrefabName("StructureAutoMinerSmall")
-class AutoMinerSmall internal constructor() : TypedDevice() {
-  var Activate: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var ClearMemory: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val Error: Boolean
-    get() = intrinsic()
-
-  var On: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var Open: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val Power: Boolean
-    get() = intrinsic()
-
-  val RequiredPower: Double
-    get() = intrinsic()
-
-  @LogicTypes(read = "ImportCount", written = "")
-  val Import: Transfer
-    get() = intrinsic()
-
-  @LogicTypes(read = "ExportCount", written = "")
-  val Export: Transfer
-    get() = intrinsic()
-
-  /** The device's slots, by number. */
-  val slots: Slots<DataDiskSlot>
-    get() = intrinsic()
-
-  /** The StructureAutoMinerSmall prefab. */
-  companion object : Prefab()
-}
-
-/** The StructureAutoMinerSmall devices on the chip's network. */
-@PrefabName("StructureAutoMinerSmall")
-object AutoMinerSmalls {
-  /** The device on [pin], as a StructureAutoMinerSmall. */
-  fun at(pin: Device): AutoMinerSmall = intrinsic()
-
-  /** Every one on the network. */
-  val all: Batch
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch<AutoMinerSmall>() {
-    /** A slot of every one in the batch, by number. */
-    val slots: Slots<SlotBatch<DataDiskSlot>>
-      get() = intrinsic()
-  }
-}
-
 /** A StructureBasketHoop. */
 @PrefabName("StructureBasketHoop")
 class BasketHoop internal constructor() : TypedDevice() {
@@ -17966,72 +18116,6 @@ object DaylightSensors {
   fun named(name: String): DeviceBatch<DaylightSensor> = intrinsic()
 }
 
-/** A StructureDeepMiner. */
-@PrefabName("StructureDeepMiner")
-class DeepMiner internal constructor() : TypedDevice() {
-  var ClearMemory: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val Error: Boolean
-    get() = intrinsic()
-
-  val Maximum: Double
-    get() = intrinsic()
-
-  var On: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val Power: Boolean
-    get() = intrinsic()
-
-  val Ratio: Double
-    get() = intrinsic()
-
-  val RequiredPower: Double
-    get() = intrinsic()
-
-  var Setting: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  @LogicTypes(read = "ImportCount", written = "")
-  val Import: Transfer
-    get() = intrinsic()
-
-  @LogicTypes(read = "ExportCount", written = "")
-  val Export: Transfer
-    get() = intrinsic()
-
-  /** The device's slots, by number. */
-  val slots: Slots<DataDiskSlot>
-    get() = intrinsic()
-
-  /** The StructureDeepMiner prefab. */
-  companion object : Prefab()
-}
-
-/** The StructureDeepMiner devices on the chip's network. */
-@PrefabName("StructureDeepMiner")
-object DeepMiners {
-  /** The device on [pin], as a StructureDeepMiner. */
-  fun at(pin: Device): DeepMiner = intrinsic()
-
-  /** Every one on the network. */
-  val all: Batch
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch<DeepMiner>() {
-    /** A slot of every one in the batch, by number. */
-    val slots: Slots<SlotBatch<DataDiskSlot>>
-      get() = intrinsic()
-  }
-}
-
 /** A StructureDiode. */
 @PrefabName("StructureDiode")
 class Diode internal constructor() : TypedDevice() {
@@ -18785,74 +18869,6 @@ object Harvies {
   fun named(name: String): Batch = intrinsic()
 
   class Batch internal constructor() : DeviceBatch<Harvie>() {
-    /** A slot of every one in the batch, by number. */
-    val slots: Slots<SlotBatch<DataDiskSlot>>
-      get() = intrinsic()
-  }
-}
-
-/** A StructureHorizontalAutoMiner. */
-@PrefabName("StructureHorizontalAutoMiner")
-class HorizontalAutoMiner internal constructor() : TypedDevice() {
-  var Activate: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var ClearMemory: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val Error: Boolean
-    get() = intrinsic()
-
-  var Mode: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var On: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var Open: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val Power: Boolean
-    get() = intrinsic()
-
-  val RequiredPower: Double
-    get() = intrinsic()
-
-  @LogicTypes(read = "ImportCount", written = "")
-  val Import: Transfer
-    get() = intrinsic()
-
-  @LogicTypes(read = "ExportCount", written = "")
-  val Export: Transfer
-    get() = intrinsic()
-
-  /** The device's slots, by number. */
-  val slots: Slots<DataDiskSlot>
-    get() = intrinsic()
-
-  /** The StructureHorizontalAutoMiner prefab. */
-  companion object : Prefab()
-}
-
-/** The StructureHorizontalAutoMiner devices on the chip's network. */
-@PrefabName("StructureHorizontalAutoMiner")
-object HorizontalAutoMiners {
-  /** The device on [pin], as a StructureHorizontalAutoMiner. */
-  fun at(pin: Device): HorizontalAutoMiner = intrinsic()
-
-  /** Every one on the network. */
-  val all: Batch
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch<HorizontalAutoMiner>() {
     /** A slot of every one in the batch, by number. */
     val slots: Slots<SlotBatch<DataDiskSlot>>
       get() = intrinsic()

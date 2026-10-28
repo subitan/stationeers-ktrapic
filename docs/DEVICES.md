@@ -1380,6 +1380,47 @@ interface ManualHatch {
 }
 ```
 
+### Miner
+
+```kotlin
+interface Miner {
+  var ClearMemory: Boolean
+  val Error: Boolean
+  var On: Boolean
+  val Power: Boolean
+  val RequiredPower: Double
+
+  /** StructureAutoMinerSmall. Entry point: Miners.AutominerSmall. */
+  class AutominerSmall : TypedDevice, Miner {
+    var Activate: Boolean
+    val Export: Transfer
+    val Import: Transfer
+    var Open: Boolean
+    val slots: Slots<DataDiskSlot>
+  }
+
+  /** StructureDeepMiner. Entry point: Miners.Deep. */
+  class Deep : TypedDevice, Miner {
+    val Export: Transfer
+    val Import: Transfer
+    val Maximum: Double
+    val Ratio: Double
+    var Setting: Double
+    val slots: Slots<DataDiskSlot>
+  }
+
+  /** StructureHorizontalAutoMiner. Entry point: Miners.Ogre. */
+  class Ogre : TypedDevice, Miner {
+    var Activate: Boolean
+    val Export: Transfer
+    val Import: Transfer
+    var Mode: Double
+    var Open: Boolean
+    val slots: Slots<DataDiskSlot>
+  }
+}
+```
+
 ### MiningDrill
 
 ```kotlin
@@ -2398,20 +2439,6 @@ class ArcFurnace : TypedDevice {
   val RequiredPower: Double
   val slots: Slots<DataDiskSlot>
 }
-
-/** StructureAutoMinerSmall. Entry point: AutoMinerSmalls. */
-class AutoMinerSmall : TypedDevice {
-  var Activate: Boolean
-  var ClearMemory: Boolean
-  val Error: Boolean
-  val Export: Transfer // Count
-  val Import: Transfer // Count
-  var On: Boolean
-  var Open: Boolean
-  val Power: Boolean
-  val RequiredPower: Double
-  val slots: Slots<DataDiskSlot>
-}
 ```
 
 ### B
@@ -2615,21 +2642,6 @@ class DaylightSensor : TypedDevice {
   val SolarAngle: Double
   val SolarIrradiance: Double
   val Vertical: Double
-}
-
-/** StructureDeepMiner. Entry point: DeepMiners. */
-class DeepMiner : TypedDevice {
-  var ClearMemory: Boolean
-  val Error: Boolean
-  val Export: Transfer // Count
-  val Import: Transfer // Count
-  val Maximum: Double
-  var On: Boolean
-  val Power: Boolean
-  val Ratio: Double
-  val RequiredPower: Double
-  var Setting: Double
-  val slots: Slots<DataDiskSlot>
 }
 
 /** DeviceLfoVolume. Entry point: DeviceLfoVolumes. */
@@ -2935,21 +2947,6 @@ class Harvie : TypedDevice {
   val Power: Boolean
   val RequiredPower: Double
   val Hand: DataDiskSlot // slots[2]
-  val slots: Slots<DataDiskSlot>
-}
-
-/** StructureHorizontalAutoMiner. Entry point: HorizontalAutoMiners. */
-class HorizontalAutoMiner : TypedDevice {
-  var Activate: Boolean
-  var ClearMemory: Boolean
-  val Error: Boolean
-  val Export: Transfer // Count
-  val Import: Transfer // Count
-  var Mode: Double
-  var On: Boolean
-  var Open: Boolean
-  val Power: Boolean
-  val RequiredPower: Double
   val slots: Slots<DataDiskSlot>
 }
 
