@@ -1409,6 +1409,26 @@ interface Miner {
     val slots: Slots<DataDiskSlot>
   }
 
+  /** StructureCombustionDeepMiner. Entry point: Miners.CombustionDeep. */
+  class CombustionDeep : TypedDevice, Miner {
+    val Combustion: Boolean
+    var CombustionLimiter: Double
+    val Export: Transfer
+    val Import: Transfer
+    var Lock: Boolean
+    var Open: Boolean
+    val Ports: Ports
+    val Pressure: Double
+    val Ratios: Ratios
+    val Rpm: Double
+    val Stress: Double
+    val Temperature: Double
+    var Throttle: Double
+    val TotalMoles: Double
+    val ProgrammableChip: DataDiskSlot // slots[1]
+    val slots: Slots<DataDiskSlot>
+  }
+
   /** StructureHorizontalAutoMiner. Entry point: Miners.Ogre. */
   class Ogre : TypedDevice, Miner {
     var Activate: Boolean
@@ -1416,6 +1436,17 @@ interface Miner {
     val Import: Transfer
     var Mode: Double
     var Open: Boolean
+    val slots: Slots<DataDiskSlot>
+  }
+
+  /** StructureRocketMiner. Entry point: Miners.Rocket. */
+  class Rocket : TypedDevice, Miner {
+    val DrillCondition: Double
+    val Export: Transfer
+    val Import: Transfer
+    var Lock: Boolean
+    val Quantity: Double
+    val DrillHeadSlot: DataDiskSlot // slots[1]
     val slots: Slots<DataDiskSlot>
   }
 }
@@ -2553,33 +2584,6 @@ class CombustionCentrifuge : TypedDevice {
   val slots: Slots<DataDiskSlot>
 }
 
-/** StructureCombustionDeepMiner. Entry point: CombustionDeepMiners. */
-class CombustionDeepMiner : TypedDevice {
-  var ClearMemory: Boolean
-  val Combustion: Boolean
-  var CombustionLimiter: Double
-  val Error: Boolean
-  val Export: Transfer // Count
-  val Import: Transfer // Count
-  var Lock: Boolean
-  var On: Boolean
-  var Open: Boolean
-  val Ports: Ports
-  //   Input: Combustion, Pressure, Temperature, TotalMoles, Ratios[every Substance]
-  //   Output: Combustion, Pressure, Temperature, TotalMoles, Ratios[every Substance]
-  val Power: Boolean
-  val Pressure: Double
-  val Ratios: Ratios // every Substance
-  val RequiredPower: Double
-  val Rpm: Double
-  val Stress: Double
-  val Temperature: Double
-  var Throttle: Double
-  val TotalMoles: Double
-  val ProgrammableChip: DataDiskSlot // slots[1]
-  val slots: Slots<DataDiskSlot>
-}
-
 /** CompositeRollCover. Entry point: CompositeRollCovers. */
 class CompositeRollCover : TypedDevice {
   val Idle: Boolean
@@ -3527,22 +3531,6 @@ class RocketGasCollector : TypedDevice {
   val RequiredPower: Double
   val Temperature: Double
   val TotalMoles: Double
-}
-
-/** StructureRocketMiner. Entry point: RocketMiners. */
-class RocketMiner : TypedDevice {
-  var ClearMemory: Boolean
-  val DrillCondition: Double
-  val Error: Boolean
-  val Export: Transfer // Count
-  val Import: Transfer // Count
-  var Lock: Boolean
-  var On: Boolean
-  val Power: Boolean
-  val Quantity: Double
-  val RequiredPower: Double
-  val DrillHeadSlot: DataDiskSlot // slots[1]
-  val slots: Slots<DataDiskSlot>
 }
 
 /** StructureRocketScanner. Entry point: RocketScanners. */

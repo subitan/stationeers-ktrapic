@@ -344,7 +344,9 @@
       "members": {
         "AutominerSmall": "StructureAutoMinerSmall",
         "Deep": "StructureDeepMiner",
-        "Ogre": "StructureHorizontalAutoMiner"
+        "CombustionDeep": "StructureCombustionDeepMiner",
+        "Ogre": "StructureHorizontalAutoMiner",
+        "Rocket": "StructureRocketMiner"
       }
     },
     "MiningDrill": {
@@ -622,7 +624,7 @@
   "notFamilies": [
     {
       "prefabs": [["StructureAutoMinerSmall", "StructureDeepMiner", "StructureHorizontalAutoMiner"], "StructureChuteOutlet"],
-      "reason": "the Chute Outlet passes items out of a chute; it shares only the miners' import and export counts and mines nothing"
+      "reason": "the Chute Outlet passes items out of a chute; it shares only the miners' import and export counts and ClearMemory, and mines nothing"
     },
     {
       "prefabs": ["ItemBeacon", "StructureBeacon"],

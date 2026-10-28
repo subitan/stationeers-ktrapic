@@ -8599,6 +8599,97 @@ interface Miner {
     companion object : Prefab()
   }
 
+  /** A StructureCombustionDeepMiner. */
+  @PrefabName("StructureCombustionDeepMiner")
+  class CombustionDeep internal constructor() : TypedDevice(), Miner {
+    override var ClearMemory: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    val Combustion: Boolean
+      get() = intrinsic()
+
+    var CombustionLimiter: Double
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override val Error: Boolean
+      get() = intrinsic()
+
+    var Lock: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override var On: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    var Open: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override val Power: Boolean
+      get() = intrinsic()
+
+    val Pressure: Double
+      get() = intrinsic()
+
+    override val RequiredPower: Double
+      get() = intrinsic()
+
+    val Rpm: Double
+      get() = intrinsic()
+
+    val Stress: Double
+      get() = intrinsic()
+
+    val Temperature: Double
+      get() = intrinsic()
+
+    var Throttle: Double
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    val TotalMoles: Double
+      get() = intrinsic()
+
+    @LogicTypes(
+        read =
+            "CombustionInput,CombustionOutput,PressureInput,PressureOutput,RatioCarbonDioxideInput,RatioCarbonDioxideOutput,RatioHeliumInput,RatioHeliumOutput,RatioHydrazineInput,RatioHydrazineOutput,RatioHydrochloricAcidInput,RatioHydrochloricAcidOutput,RatioHydrogenInput,RatioHydrogenOutput,RatioLiquidAlcoholInput,RatioLiquidAlcoholOutput,RatioLiquidCarbonDioxideInput,RatioLiquidCarbonDioxideOutput,RatioLiquidHydrazineInput,RatioLiquidHydrazineOutput,RatioLiquidHydrochloricAcidInput,RatioLiquidHydrochloricAcidOutput,RatioLiquidHydrogenInput,RatioLiquidHydrogenOutput,RatioLiquidMethaneInput,RatioLiquidMethaneOutput,RatioLiquidNitrogenInput,RatioLiquidNitrogenOutput,RatioLiquidNitrousOxideInput,RatioLiquidNitrousOxideOutput,RatioLiquidOxygenInput,RatioLiquidOxygenOutput,RatioLiquidOzoneInput,RatioLiquidOzoneOutput,RatioLiquidPollutantInput,RatioLiquidPollutantOutput,RatioLiquidSilanolInput,RatioLiquidSilanolOutput,RatioLiquidSodiumChlorideInput,RatioLiquidSodiumChlorideOutput,RatioMethaneInput,RatioMethaneOutput,RatioNitrogenInput,RatioNitrogenOutput,RatioNitrousOxideInput,RatioNitrousOxideOutput,RatioOxygenInput,RatioOxygenOutput,RatioOzoneInput,RatioOzoneOutput,RatioPollutantInput,RatioPollutantOutput,RatioPollutedWaterInput,RatioPollutedWaterOutput,RatioSilanolInput,RatioSilanolOutput,RatioSteamInput,RatioSteamOutput,RatioWaterInput,RatioWaterOutput,TemperatureInput,TemperatureOutput,TotalMolesInput,TotalMolesOutput",
+        written = "",
+    )
+    val Ports: Ports
+      get() = intrinsic()
+
+    @LogicTypes(
+        read =
+            "RatioCarbonDioxide,RatioHelium,RatioHydrazine,RatioHydrochloricAcid,RatioHydrogen,RatioLiquidAlcohol,RatioLiquidCarbonDioxide,RatioLiquidHydrazine,RatioLiquidHydrochloricAcid,RatioLiquidHydrogen,RatioLiquidMethane,RatioLiquidNitrogen,RatioLiquidNitrousOxide,RatioLiquidOxygen,RatioLiquidOzone,RatioLiquidPollutant,RatioLiquidSilanol,RatioLiquidSodiumChloride,RatioMethane,RatioNitrogen,RatioNitrousOxide,RatioOxygen,RatioOzone,RatioPollutant,RatioPollutedWater,RatioSilanol,RatioSteam,RatioWater",
+        written = "",
+    )
+    val Ratios: Ratios
+      get() = intrinsic()
+
+    @LogicTypes(read = "ImportCount", written = "")
+    val Import: Transfer
+      get() = intrinsic()
+
+    @LogicTypes(read = "ExportCount", written = "")
+    val Export: Transfer
+      get() = intrinsic()
+
+    /** The device's slots, by number. */
+    val slots: Slots<DataDiskSlot>
+      get() = intrinsic()
+
+    /** Slot 1. */
+    @SlotNumber(1)
+    val ProgrammableChip: DataDiskSlot
+      get() = intrinsic()
+
+    /** The StructureCombustionDeepMiner prefab. */
+    companion object : Prefab()
+  }
+
   /** A StructureHorizontalAutoMiner. */
   @PrefabName("StructureHorizontalAutoMiner")
   class Ogre internal constructor() : TypedDevice(), Miner {
@@ -8646,6 +8737,57 @@ interface Miner {
     /** The StructureHorizontalAutoMiner prefab. */
     companion object : Prefab()
   }
+
+  /** A StructureRocketMiner. */
+  @PrefabName("StructureRocketMiner")
+  class Rocket internal constructor() : TypedDevice(), Miner {
+    override var ClearMemory: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    val DrillCondition: Double
+      get() = intrinsic()
+
+    override val Error: Boolean
+      get() = intrinsic()
+
+    var Lock: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override var On: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override val Power: Boolean
+      get() = intrinsic()
+
+    val Quantity: Double
+      get() = intrinsic()
+
+    override val RequiredPower: Double
+      get() = intrinsic()
+
+    @LogicTypes(read = "ImportCount", written = "")
+    val Import: Transfer
+      get() = intrinsic()
+
+    @LogicTypes(read = "ExportCount", written = "")
+    val Export: Transfer
+      get() = intrinsic()
+
+    /** The device's slots, by number. */
+    val slots: Slots<DataDiskSlot>
+      get() = intrinsic()
+
+    /** Slot 1. */
+    @SlotNumber(1)
+    val DrillHeadSlot: DataDiskSlot
+      get() = intrinsic()
+
+    /** The StructureRocketMiner prefab. */
+    companion object : Prefab()
+  }
 }
 
 /** The Miner devices on the chip's network, by prefab. */
@@ -8690,6 +8832,26 @@ object Miners {
     }
   }
 
+  /** The StructureCombustionDeepMiner devices on the chip's network. */
+  @PrefabName("StructureCombustionDeepMiner")
+  object CombustionDeep {
+    /** The device on [pin], as a StructureCombustionDeepMiner. */
+    fun at(pin: Device): Miner.CombustionDeep = intrinsic()
+
+    /** Every one on the network. */
+    val all: Batch
+      get() = intrinsic()
+
+    /** Every one on the network named [name], which must be a constant. */
+    fun named(name: String): Batch = intrinsic()
+
+    class Batch internal constructor() : DeviceBatch<Miner.CombustionDeep>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+  }
+
   /** The StructureHorizontalAutoMiner devices on the chip's network. */
   @PrefabName("StructureHorizontalAutoMiner")
   object Ogre {
@@ -8704,6 +8866,26 @@ object Miners {
     fun named(name: String): Batch = intrinsic()
 
     class Batch internal constructor() : DeviceBatch<Miner.Ogre>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+  }
+
+  /** The StructureRocketMiner devices on the chip's network. */
+  @PrefabName("StructureRocketMiner")
+  object Rocket {
+    /** The device on [pin], as a StructureRocketMiner. */
+    fun at(pin: Device): Miner.Rocket = intrinsic()
+
+    /** Every one on the network. */
+    val all: Batch
+      get() = intrinsic()
+
+    /** Every one on the network named [name], which must be a constant. */
+    fun named(name: String): Batch = intrinsic()
+
+    class Batch internal constructor() : DeviceBatch<Miner.Rocket>() {
       /** A slot of every one in the batch, by number. */
       val slots: Slots<SlotBatch<DataDiskSlot>>
         get() = intrinsic()
@@ -17800,117 +17982,6 @@ object CombustionCentrifuges {
   }
 }
 
-/** A StructureCombustionDeepMiner. */
-@PrefabName("StructureCombustionDeepMiner")
-class CombustionDeepMiner internal constructor() : TypedDevice() {
-  var ClearMemory: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val Combustion: Boolean
-    get() = intrinsic()
-
-  var CombustionLimiter: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val Error: Boolean
-    get() = intrinsic()
-
-  var Lock: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var On: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var Open: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val Power: Boolean
-    get() = intrinsic()
-
-  val Pressure: Double
-    get() = intrinsic()
-
-  val RequiredPower: Double
-    get() = intrinsic()
-
-  val Rpm: Double
-    get() = intrinsic()
-
-  val Stress: Double
-    get() = intrinsic()
-
-  val Temperature: Double
-    get() = intrinsic()
-
-  var Throttle: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val TotalMoles: Double
-    get() = intrinsic()
-
-  @LogicTypes(
-      read =
-          "CombustionInput,CombustionOutput,PressureInput,PressureOutput,RatioCarbonDioxideInput,RatioCarbonDioxideOutput,RatioHeliumInput,RatioHeliumOutput,RatioHydrazineInput,RatioHydrazineOutput,RatioHydrochloricAcidInput,RatioHydrochloricAcidOutput,RatioHydrogenInput,RatioHydrogenOutput,RatioLiquidAlcoholInput,RatioLiquidAlcoholOutput,RatioLiquidCarbonDioxideInput,RatioLiquidCarbonDioxideOutput,RatioLiquidHydrazineInput,RatioLiquidHydrazineOutput,RatioLiquidHydrochloricAcidInput,RatioLiquidHydrochloricAcidOutput,RatioLiquidHydrogenInput,RatioLiquidHydrogenOutput,RatioLiquidMethaneInput,RatioLiquidMethaneOutput,RatioLiquidNitrogenInput,RatioLiquidNitrogenOutput,RatioLiquidNitrousOxideInput,RatioLiquidNitrousOxideOutput,RatioLiquidOxygenInput,RatioLiquidOxygenOutput,RatioLiquidOzoneInput,RatioLiquidOzoneOutput,RatioLiquidPollutantInput,RatioLiquidPollutantOutput,RatioLiquidSilanolInput,RatioLiquidSilanolOutput,RatioLiquidSodiumChlorideInput,RatioLiquidSodiumChlorideOutput,RatioMethaneInput,RatioMethaneOutput,RatioNitrogenInput,RatioNitrogenOutput,RatioNitrousOxideInput,RatioNitrousOxideOutput,RatioOxygenInput,RatioOxygenOutput,RatioOzoneInput,RatioOzoneOutput,RatioPollutantInput,RatioPollutantOutput,RatioPollutedWaterInput,RatioPollutedWaterOutput,RatioSilanolInput,RatioSilanolOutput,RatioSteamInput,RatioSteamOutput,RatioWaterInput,RatioWaterOutput,TemperatureInput,TemperatureOutput,TotalMolesInput,TotalMolesOutput",
-      written = "",
-  )
-  val Ports: Ports
-    get() = intrinsic()
-
-  @LogicTypes(
-      read =
-          "RatioCarbonDioxide,RatioHelium,RatioHydrazine,RatioHydrochloricAcid,RatioHydrogen,RatioLiquidAlcohol,RatioLiquidCarbonDioxide,RatioLiquidHydrazine,RatioLiquidHydrochloricAcid,RatioLiquidHydrogen,RatioLiquidMethane,RatioLiquidNitrogen,RatioLiquidNitrousOxide,RatioLiquidOxygen,RatioLiquidOzone,RatioLiquidPollutant,RatioLiquidSilanol,RatioLiquidSodiumChloride,RatioMethane,RatioNitrogen,RatioNitrousOxide,RatioOxygen,RatioOzone,RatioPollutant,RatioPollutedWater,RatioSilanol,RatioSteam,RatioWater",
-      written = "",
-  )
-  val Ratios: Ratios
-    get() = intrinsic()
-
-  @LogicTypes(read = "ImportCount", written = "")
-  val Import: Transfer
-    get() = intrinsic()
-
-  @LogicTypes(read = "ExportCount", written = "")
-  val Export: Transfer
-    get() = intrinsic()
-
-  /** The device's slots, by number. */
-  val slots: Slots<DataDiskSlot>
-    get() = intrinsic()
-
-  /** Slot 1. */
-  @SlotNumber(1)
-  val ProgrammableChip: DataDiskSlot
-    get() = intrinsic()
-
-  /** The StructureCombustionDeepMiner prefab. */
-  companion object : Prefab()
-}
-
-/** The StructureCombustionDeepMiner devices on the chip's network. */
-@PrefabName("StructureCombustionDeepMiner")
-object CombustionDeepMiners {
-  /** The device on [pin], as a StructureCombustionDeepMiner. */
-  fun at(pin: Device): CombustionDeepMiner = intrinsic()
-
-  /** Every one on the network. */
-  val all: Batch
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch<CombustionDeepMiner>() {
-    /** A slot of every one in the batch, by number. */
-    val slots: Slots<SlotBatch<DataDiskSlot>>
-      get() = intrinsic()
-  }
-}
-
 /** A StructureCompositeWindowShutterController. */
 @PrefabName("StructureCompositeWindowShutterController")
 class CompositeWindowShutterController internal constructor() : TypedDevice() {
@@ -20472,77 +20543,6 @@ object RocketGasCollectors {
 
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): DeviceBatch<RocketGasCollector> = intrinsic()
-}
-
-/** A StructureRocketMiner. */
-@PrefabName("StructureRocketMiner")
-class RocketMiner internal constructor() : TypedDevice() {
-  var ClearMemory: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val DrillCondition: Double
-    get() = intrinsic()
-
-  val Error: Boolean
-    get() = intrinsic()
-
-  var Lock: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var On: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val Power: Boolean
-    get() = intrinsic()
-
-  val Quantity: Double
-    get() = intrinsic()
-
-  val RequiredPower: Double
-    get() = intrinsic()
-
-  @LogicTypes(read = "ImportCount", written = "")
-  val Import: Transfer
-    get() = intrinsic()
-
-  @LogicTypes(read = "ExportCount", written = "")
-  val Export: Transfer
-    get() = intrinsic()
-
-  /** The device's slots, by number. */
-  val slots: Slots<DataDiskSlot>
-    get() = intrinsic()
-
-  /** Slot 1. */
-  @SlotNumber(1)
-  val DrillHeadSlot: DataDiskSlot
-    get() = intrinsic()
-
-  /** The StructureRocketMiner prefab. */
-  companion object : Prefab()
-}
-
-/** The StructureRocketMiner devices on the chip's network. */
-@PrefabName("StructureRocketMiner")
-object RocketMiners {
-  /** The device on [pin], as a StructureRocketMiner. */
-  fun at(pin: Device): RocketMiner = intrinsic()
-
-  /** Every one on the network. */
-  val all: Batch
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch<RocketMiner>() {
-    /** A slot of every one in the batch, by number. */
-    val slots: Slots<SlotBatch<DataDiskSlot>>
-      get() = intrinsic()
-  }
 }
 
 /** A StructureRocketScanner. */
