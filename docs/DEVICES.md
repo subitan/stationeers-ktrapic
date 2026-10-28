@@ -852,6 +852,49 @@ interface HangarDoor : Door {
 }
 ```
 
+### Helmet
+
+```kotlin
+interface Helmet {
+  val Combustion: Boolean
+  var Flush: Boolean
+  var Lock: Boolean
+  var On: Boolean
+  var Open: Boolean
+  val Power: Boolean
+  val Pressure: Double
+  var SoundAlert: Double
+  val Temperature: Double
+  val TotalMoles: Double
+  var Volume: Double
+
+  /** ItemSpaceHelmet. Entry point: Helmets.Space. */
+  class Space : TypedDevice, Helmet {
+    val Ratios: Ratios
+  }
+
+  /** ItemEmergencySpaceHelmet. Entry point: Helmets.EmergencySpace. */
+  class EmergencySpace : TypedDevice, Helmet {
+    val Ratios: Ratios
+  }
+
+  /** ItemHardsuitHelmet. Entry point: Helmets.Hardsuit. */
+  class Hardsuit : TypedDevice, Helmet {
+    val Ratios: Ratios
+  }
+
+  /** ItemIcarusHelmet. Entry point: Helmets.Icarus. */
+  class Icarus : TypedDevice, Helmet {
+    val Ratios: Ratios
+  }
+
+  /** ItemSuitHelmetHARM. Entry point: Helmets.Harm. */
+  class Harm : TypedDevice, Helmet {
+    val Ratios: Ratios
+  }
+}
+```
+
 ### InteriorDoor
 
 ```kotlin
@@ -1650,34 +1693,6 @@ interface SolarPanel {
 }
 ```
 
-### SpaceHelmet
-
-```kotlin
-interface SpaceHelmet {
-  val Combustion: Boolean
-  var Flush: Boolean
-  var Lock: Boolean
-  var On: Boolean
-  var Open: Boolean
-  val Power: Boolean
-  val Pressure: Double
-  var SoundAlert: Double
-  val Temperature: Double
-  val TotalMoles: Double
-  var Volume: Double
-
-  /** ItemSpaceHelmet. Entry point: SpaceHelmets.Standard. */
-  class Standard : TypedDevice, SpaceHelmet {
-    val Ratios: Ratios
-  }
-
-  /** ItemEmergencySpaceHelmet. Entry point: SpaceHelmets.Emergency. */
-  class Emergency : TypedDevice, SpaceHelmet {
-    val Ratios: Ratios
-  }
-}
-```
-
 ### Stacker
 
 ```kotlin
@@ -1707,6 +1722,68 @@ interface Stacker {
     val Import: Transfer
     val Processing: DataDiskSlot // slots[2]
     val slots: Slots<DataDiskSlot>
+  }
+}
+```
+
+### Suit
+
+```kotlin
+interface Suit {
+  var Activate: Boolean
+  var AirRelease: Double
+  val Combustion: Boolean
+  val EntityState: Double
+  var Error: Boolean
+  var Filtration: Double
+  var Lock: Boolean
+  var On: Boolean
+  val Orientation: Double
+  val Power: Boolean
+  val Pressure: Double
+  val PressureExternal: Double
+  var PressureSetting: Double
+  var Setting: Double
+  var SoundAlert: Double
+  val Temperature: Double
+  val TemperatureExternal: Double
+  var TemperatureSetting: Double
+  val TotalMoles: Double
+  val VelocityMagnitude: Double
+  var Volume: Double
+
+  /** ItemHardSuit. Entry point: Suits.Hardsuit. */
+  class Hardsuit : TypedDevice, Suit {
+    val Forward: Vector
+    val Position: Vector
+    val Ratios: Ratios
+    val Velocity: Vector
+    val VelocityRelative: Vector
+    val AirTank: ItemAirTankSlot // slots[0]
+    val WasteTank: ItemAirTankSlot // slots[1]
+    val LifeSupport: ItemBatterySlot // slots[2]
+    val ProgrammableChip: ItemCommonSlot // slots[3]
+    val slots: Slots<ItemCommonSlot>
+  }
+
+  /** ItemSuitHARM. Entry point: Suits.Harm. */
+  class Harm : TypedDevice, Suit {
+    val Forward: Vector
+    val Position: Vector
+    val Ratios: Ratios
+    val Velocity: Vector
+    val VelocityRelative: Vector
+    val AirTank: ItemAirTankSlot // slots[0]
+    val WasteTank: ItemAirTankSlot // slots[1]
+    val CoolantTank: ItemCommonSlot // slots[2]
+    val Battery: ItemBatterySlot // slots[3]
+    val Chip: ItemCommonSlot // slots[4]
+    val Filter1: ItemFilteredSlot // slots[5]
+    val Filter2: ItemFilteredSlot // slots[6]
+    val Filter3: ItemFilteredSlot // slots[7]
+    val Filter4: ItemFilteredSlot // slots[8]
+    val Back: ItemCommonSlot // slots[9]
+    val slots: Slots<ItemCommonSlot>
   }
 }
 ```
@@ -2852,57 +2929,6 @@ class HardJetpack : TypedDevice {
   val slots: Slots<ItemCommonSlot>
 }
 
-/** ItemHardSuit. Entry point: HardSuits. */
-class HardSuit : TypedDevice {
-  var Activate: Boolean
-  var AirRelease: Double
-  val Combustion: Boolean
-  val EntityState: Double
-  var Error: Boolean
-  var Filtration: Double
-  val Forward: Vector // X, Y, Z
-  var Lock: Boolean
-  var On: Boolean
-  val Orientation: Double
-  val Position: Vector // X, Y, Z
-  val Power: Boolean
-  val Pressure: Double
-  val PressureExternal: Double
-  var PressureSetting: Double
-  val Ratios: Ratios // every Substance
-  var Setting: Double
-  var SoundAlert: Double
-  val Temperature: Double
-  val TemperatureExternal: Double
-  var TemperatureSetting: Double
-  val TotalMoles: Double
-  val Velocity: Vector // X, Y, Z
-  val VelocityMagnitude: Double
-  val VelocityRelative: Vector // X, Y, Z
-  var Volume: Double
-  val AirTank: ItemAirTankSlot // slots[0]
-  val WasteTank: ItemAirTankSlot // slots[1]
-  val LifeSupport: ItemBatterySlot // slots[2]
-  val ProgrammableChip: ItemCommonSlot // slots[3]
-  val slots: Slots<ItemCommonSlot>
-}
-
-/** ItemHardsuitHelmet. Entry point: HardsuitHelmets. */
-class HardsuitHelmet : TypedDevice {
-  val Combustion: Boolean
-  var Flush: Boolean
-  var Lock: Boolean
-  var On: Boolean
-  var Open: Boolean
-  val Power: Boolean
-  val Pressure: Double
-  val Ratios: Ratios // every Substance
-  var SoundAlert: Double
-  val Temperature: Double
-  val TotalMoles: Double
-  var Volume: Double
-}
-
 /** StructureHarvie. Entry point: Harvies. */
 class Harvie : TypedDevice {
   var Activate: Boolean
@@ -2989,22 +3015,6 @@ class HydroponicsTrayData : TypedDevice {
 ### I
 
 ```kotlin
-/** ItemIcarusHelmet. Entry point: IcarusHelmets. */
-class IcarusHelmet : TypedDevice {
-  val Combustion: Boolean
-  var Flush: Boolean
-  var Lock: Boolean
-  var On: Boolean
-  var Open: Boolean
-  val Power: Boolean
-  val Pressure: Double
-  val Ratios: Ratios // every Substance
-  var SoundAlert: Double
-  val Temperature: Double
-  val TotalMoles: Double
-  var Volume: Double
-}
-
 /** StructureIceCrusher. Entry point: IceCrushers. */
 class IceCrusher : TypedDevice {
   var Activate: Boolean
@@ -3766,63 +3776,6 @@ class StructureBeacon : TypedDevice {
   val Position: Vector // X, Y, Z
   val Power: Boolean
   val RequiredPower: Double
-}
-
-/** ItemSuitHARM. Entry point: SuitHARMs. */
-class SuitHARM : TypedDevice {
-  var Activate: Boolean
-  var AirRelease: Double
-  val Combustion: Boolean
-  val EntityState: Double
-  var Error: Boolean
-  var Filtration: Double
-  val Forward: Vector // X, Y, Z
-  var Lock: Boolean
-  var On: Boolean
-  val Orientation: Double
-  val Position: Vector // X, Y, Z
-  val Power: Boolean
-  val Pressure: Double
-  val PressureExternal: Double
-  var PressureSetting: Double
-  val Ratios: Ratios // every Substance
-  var Setting: Double
-  var SoundAlert: Double
-  val Temperature: Double
-  val TemperatureExternal: Double
-  var TemperatureSetting: Double
-  val TotalMoles: Double
-  val Velocity: Vector // X, Y, Z
-  val VelocityMagnitude: Double
-  val VelocityRelative: Vector // X, Y, Z
-  var Volume: Double
-  val AirTank: ItemAirTankSlot // slots[0]
-  val WasteTank: ItemAirTankSlot // slots[1]
-  val CoolantTank: ItemCommonSlot // slots[2]
-  val Battery: ItemBatterySlot // slots[3]
-  val Chip: ItemCommonSlot // slots[4]
-  val Filter1: ItemFilteredSlot // slots[5]
-  val Filter2: ItemFilteredSlot // slots[6]
-  val Filter3: ItemFilteredSlot // slots[7]
-  val Filter4: ItemFilteredSlot // slots[8]
-  val Back: ItemCommonSlot // slots[9]
-  val slots: Slots<ItemCommonSlot>
-}
-
-/** ItemSuitHelmetHARM. Entry point: SuitHelmetHARMs. */
-class SuitHelmetHARM : TypedDevice {
-  val Combustion: Boolean
-  var Flush: Boolean
-  var Lock: Boolean
-  var On: Boolean
-  var Open: Boolean
-  val Power: Boolean
-  val Pressure: Double
-  val Ratios: Ratios // every Substance
-  var SoundAlert: Double
-  val Temperature: Double
-  val TotalMoles: Double
-  var Volume: Double
 }
 ```
 
