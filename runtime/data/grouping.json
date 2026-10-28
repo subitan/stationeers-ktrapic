@@ -189,13 +189,15 @@
         "LiquidAngle": "StructureLiquidUmbilicalFemaleSide"
       }
     },
-    "PressureFedEngine": {
-      "plural": "PressureFedEngines",
+    "RocketEngine": {
+      "plural": "RocketEngines",
       "members": {
-        "Gas": "StructurePressureFedGasEngine",
-        "Liquid": "StructurePressureFedLiquidEngine",
-        "GasHeavy": "StructurePressureFedGasEngineHeavy",
-        "LiquidHeavy": "StructurePressureFedLiquidEngineHeavy"
+        "PressureFedGas": "StructurePressureFedGasEngine",
+        "PressureFedLiquid": "StructurePressureFedLiquidEngine",
+        "PressureFedGasHeavy": "StructurePressureFedGasEngineHeavy",
+        "PressureFedLiquidHeavy": "StructurePressureFedLiquidEngineHeavy",
+        "PumpedGas": "StructureGovernedGasEngine",
+        "PumpedLiquid": "StructurePumpedLiquidEngine"
       }
     },
     "Radiator": {
@@ -609,6 +611,10 @@
     {
       "prefabs": [["StructureRoboticArmDock", "StructureLarreDockAtmos", "StructureLarreDockCargo", "StructureLarreDockCollector", "StructureLarreDockHydroponics"], "StructureLarreDockBypass"],
       "reason": "the LArRE Dock (Bypass) is a siding an arm moves into so others can pass, not a dock that works; it has no Activate, Error, Extended, Idle, Position or Setting"
+    },
+    {
+      "prefabs": [["StructurePressureFedGasEngine", "StructurePressureFedLiquidEngine", "StructurePressureFedGasEngineHeavy", "StructurePressureFedLiquidEngineHeavy", "StructureGovernedGasEngine", "StructurePumpedLiquidEngine"], "StructureRocketEngineTiny"],
+      "reason": "the Rocket Engine (Tiny) has no Throttle or PassedMoles, so a program driving a rocket engine can't drive it; its logic is a valve's"
     }
   ],
   "textDisplays": [
