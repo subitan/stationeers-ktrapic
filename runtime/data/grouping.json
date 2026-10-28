@@ -14,7 +14,10 @@
       "members": {
         "Small": "ItemBatteryCell",
         "Large": "ItemBatteryCellLarge",
-        "Nuclear": "ItemBatteryCellNuclear"
+        "Nuclear": "ItemBatteryCellNuclear",
+        "Wireless": "Battery_Wireless_cell",
+        "WirelessBig": "Battery_Wireless_cell_Big",
+        "WirelessExtraLarge": "ItemWirelessBatteryCellExtraLarge"
       }
     },
     "LedDisplay": {
@@ -316,14 +319,6 @@
         "Reversed": "StructureAreaPowerControlReversed"
       }
     },
-    "WirelessBatteryCell": {
-      "plural": "WirelessBatteryCells",
-      "members": {
-        "Standard": "Battery_Wireless_cell",
-        "Big": "Battery_Wireless_cell_Big",
-        "ExtraLarge": "ItemWirelessBatteryCellExtraLarge"
-      }
-    },
     "Console": {
       "plural": "Consoles",
       "members": {
@@ -586,13 +581,6 @@
     {
       "prefabs": ["ItemBeacon", "StructureBeacon"],
       "reason": "the Tracking Beacon (an item) and the Beacon (a structure) are different devices"
-    },
-    {
-      "prefabs": [
-        ["ItemBatteryCell", "ItemBatteryCellLarge", "ItemBatteryCellNuclear"],
-        ["Battery_Wireless_cell", "Battery_Wireless_cell_Big", "ItemWirelessBatteryCellExtraLarge"]
-      ],
-      "reason": "the game names the Battery Cells and the Wireless Battery Cells as two kinds, each with sizes of its own"
     },
     {
       "prefabs": [["StructureAirlock", "StructureAirlockWide"], "StructureAirlockGate"],

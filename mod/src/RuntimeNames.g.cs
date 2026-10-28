@@ -56,7 +56,6 @@ namespace KTrapIC
             "BatterySlot",
             "Bench",
             "Benches",
-            "Big",
             "BigScreen",
             "BigScreenWallMounted",
             "Blast",
@@ -162,7 +161,6 @@ namespace KTrapIC
             "EvaporationChambers",
             "Expansion",
             "Export",
-            "ExtraLarge",
             "Fermenter",
             "Fermenters",
             "FilterSlot",
@@ -554,8 +552,9 @@ namespace KTrapIC
             "Wide",
             "WindTurbine",
             "WindTurbines",
-            "WirelessBatteryCell",
-            "WirelessBatteryCells",
+            "Wireless",
+            "WirelessBig",
+            "WirelessExtraLarge",
             "WorkbenchStyle",
         };
 
