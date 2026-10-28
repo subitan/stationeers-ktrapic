@@ -724,7 +724,7 @@
     },
     {
       "prefabs": [["StructureAreaPowerControl", "StructureAreaPowerControlReversed"], ["StructureBattery", "StructureBatteryLarge", "StructureBatteryMedium", "StructureBatterySmall"]],
-      "reason": "an area power control passes a network's power on and a station battery stores it; they share the charge readings, not a job"
+      "reason": "an area power control passes a network's power on and a battery stores it; they share the charge readings, not a job"
     },
     {
       "prefabs": [["StructureConsoleLED5", "StructureConsoleLED1x2", "StructureConsoleLED1x3"], "StructureDiode"],

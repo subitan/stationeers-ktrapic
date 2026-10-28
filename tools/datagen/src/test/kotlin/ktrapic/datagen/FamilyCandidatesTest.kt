@@ -165,7 +165,8 @@ class FamilyCandidatesTest {
 
   @Test
   fun `a family and one that extends it through another are decided`() {
-    // The three share ElevatorSpeed, which the other twenty-seven prefabs lack.
+    // The shaft and the industrial level share ElevatorSpeed, which the other twenty-seven prefabs
+    // lack. The middle family has no prefab here, so only the chain of extends links them.
     val others = ('A'..'Z').map { prefab("StructureThing$it", "On") } + prefab("StructureOther")
     val shaft = prefab("StructureElevatorShaft", "ElevatorSpeed")
     val industrial = prefab("StructureElevatorLevelIndustrial", "ElevatorSpeed")

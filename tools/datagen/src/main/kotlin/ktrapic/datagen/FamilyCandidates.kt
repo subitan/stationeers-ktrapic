@@ -81,10 +81,10 @@ object FamilyCandidates {
    *
    * Ten percent is a judgement, not derived: it is a value at which every group found in today's
    * data has been decided, as a family or as not one. Other values find other groups, which nobody
-   * has decided yet. At 5%, where fewer types are rare, the Arc Furnace with the Furnace and the
-   * Logic Sorter with the Occupancy Sensor; at 12.5% the SDB hoppers with the Chute Inlet, Ice
-   * Crusher and Water Purifier. The cut-off is a share of all prefabs, so it moves as the game adds
-   * them.
+   * has decided yet. At 5%, where fewer types are rare, the Arc Furnace with the Furnace, the
+   * capsule and rocket fuel tanks with the Gas Sensor, and the Logic Sorter with the Occupancy
+   * Sensor; at 12.5% the SDB hoppers with the Chute Inlet, Ice Crusher and Water Purifier. The
+   * cut-off is a share of all prefabs, so it moves as the game adds them.
    */
   private const val RARE_SHARE = 0.1
 
