@@ -1365,49 +1365,6 @@ interface PoweredVent {
 }
 ```
 
-### PressureFedEngine
-
-```kotlin
-interface PressureFedEngine {
-  val Combustion: Boolean
-  val Error: Boolean
-  var On: Boolean
-  val PassedMoles: Double
-  val Power: Boolean
-  val Pressure: Double
-  val RequiredPower: Double
-  val Temperature: Double
-  var Throttle: Double
-  val TotalMoles: Double
-
-  /** StructurePressureFedGasEngine. Entry point: PressureFedEngines.Gas. */
-  class Gas : TypedDevice, PressureFedEngine {
-    val Ratios: Ratios
-  }
-
-  /** StructurePressureFedLiquidEngine. Entry point: PressureFedEngines.Liquid. */
-  class Liquid : TypedDevice, PressureFedEngine {
-    val Maximum: Double
-    val Ratio: Double
-    val Ratios: Ratios
-    var Setting: Double
-  }
-
-  /** StructurePressureFedGasEngineHeavy. Entry point: PressureFedEngines.GasHeavy. */
-  class GasHeavy : TypedDevice, PressureFedEngine {
-    val Ratios: Ratios
-  }
-
-  /** StructurePressureFedLiquidEngineHeavy. Entry point: PressureFedEngines.LiquidHeavy. */
-  class LiquidHeavy : TypedDevice, PressureFedEngine {
-    val Maximum: Double
-    val Ratio: Double
-    val Ratios: Ratios
-    var Setting: Double
-  }
-}
-```
-
 ### PressurePlate
 
 ```kotlin
@@ -1489,6 +1446,62 @@ interface Radiator {
     var Horizontal: Double
     var Lock: Boolean
     var Open: Boolean
+  }
+}
+```
+
+### RocketEngine
+
+```kotlin
+interface RocketEngine {
+  val Combustion: Boolean
+  val Error: Boolean
+  var On: Boolean
+  val PassedMoles: Double
+  val Power: Boolean
+  val Pressure: Double
+  val RequiredPower: Double
+  val Temperature: Double
+  var Throttle: Double
+  val TotalMoles: Double
+
+  /** StructurePressureFedGasEngine. Entry point: RocketEngines.PressureFedGas. */
+  class PressureFedGas : TypedDevice, RocketEngine {
+    val Ratios: Ratios
+  }
+
+  /** StructurePressureFedLiquidEngine. Entry point: RocketEngines.PressureFedLiquid. */
+  class PressureFedLiquid : TypedDevice, RocketEngine {
+    val Maximum: Double
+    val Ratio: Double
+    val Ratios: Ratios
+    var Setting: Double
+  }
+
+  /** StructurePressureFedGasEngineHeavy. Entry point: RocketEngines.PressureFedGasHeavy. */
+  class PressureFedGasHeavy : TypedDevice, RocketEngine {
+    val Ratios: Ratios
+  }
+
+  /** StructurePressureFedLiquidEngineHeavy. Entry point: RocketEngines.PressureFedLiquidHeavy. */
+  class PressureFedLiquidHeavy : TypedDevice, RocketEngine {
+    val Maximum: Double
+    val Ratio: Double
+    val Ratios: Ratios
+    var Setting: Double
+  }
+
+  /** StructureGovernedGasEngine. Entry point: RocketEngines.PumpedGas. */
+  class PumpedGas : TypedDevice, RocketEngine {
+    val Ratios: Ratios
+  }
+
+  /** StructurePumpedLiquidEngine. Entry point: RocketEngines.PumpedLiquid. */
+  class PumpedLiquid : TypedDevice, RocketEngine {
+    val Maximum: Double
+    val Ratio: Double
+    val Ratios: Ratios
+    var Setting: Double
   }
 }
 ```
@@ -2761,21 +2774,6 @@ class GasSensor : TypedDevice {
   val VolumeOfLiquid: Double
 }
 
-/** StructureGovernedGasEngine. Entry point: GovernedGasEngines. */
-class GovernedGasEngine : TypedDevice {
-  val Combustion: Boolean
-  val Error: Boolean
-  var On: Boolean
-  val PassedMoles: Double
-  val Power: Boolean
-  val Pressure: Double
-  val Ratios: Ratios // every Substance
-  val RequiredPower: Double
-  val Temperature: Double
-  var Throttle: Double
-  val TotalMoles: Double
-}
-
 /** StructureGroundBasedTelescope. Entry point: GroundBasedTelescopes. */
 class GroundBasedTelescope : TypedDevice {
   var Activate: Boolean
@@ -3389,24 +3387,6 @@ class ProximitySensor : TypedDevice {
   val Activate: Boolean
   val Quantity: Double
   var Setting: Double
-}
-
-/** StructurePumpedLiquidEngine. Entry point: PumpedLiquidEngines. */
-class PumpedLiquidEngine : TypedDevice {
-  val Combustion: Boolean
-  val Error: Boolean
-  val Maximum: Double
-  var On: Boolean
-  val PassedMoles: Double
-  val Power: Boolean
-  val Pressure: Double
-  val Ratio: Double
-  val Ratios: Ratios // every Substance
-  val RequiredPower: Double
-  var Setting: Double
-  val Temperature: Double
-  var Throttle: Double
-  val TotalMoles: Double
 }
 ```
 
