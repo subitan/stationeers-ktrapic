@@ -340,4 +340,19 @@ class LspServerTest {
     assertThat(output.size()).isEqualTo(0)
     assertThat(logged.joinToString()).contains("Content-Length")
   }
+
+  @Test
+  fun `stops at a header block with no valid Content-Length even when a message follows it`() {
+    val input =
+        "Content-Type: x\r\n\r\n".toByteArray() +
+            Client.frame("""{"jsonrpc": "2.0", "id": 1, "method": "initialize", "params": {}}""")
+    val output = ByteArrayOutputStream()
+    val logged = mutableListOf<String>()
+
+    val exitCode = LspServer(ByteArrayInputStream(input), output, logged::add).run()
+
+    assertThat(exitCode).isEqualTo(1)
+    assertThat(output.size()).isEqualTo(0)
+    assertThat(logged.joinToString()).contains("Content-Length")
+  }
 }

@@ -56,6 +56,17 @@ class MessageTransportTest {
   }
 
   @Test
+  fun `stops at a header block with no valid Content-Length even when a message follows it`() {
+    for (header in listOf("Content-Type: x", "Content-Length: -1", "Content-Length: many")) {
+      logged.clear()
+      val reader = reader("$header\r\n\r\n".toByteArray(), frame("{}"))
+
+      assertThat(reader.read()).isNull()
+      assertThat(logged).isNotEmpty()
+    }
+  }
+
+  @Test
   fun `stops at the end of the input, even in the middle of a message`() {
     assertThat(reader("Content-Length: 10\r\n\r\n{}".toByteArray()).read()).isNull()
     assertThat(reader("Content-Len".toByteArray()).read()).isNull()
