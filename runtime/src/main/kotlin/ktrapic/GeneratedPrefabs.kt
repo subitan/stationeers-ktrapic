@@ -2822,6 +2822,88 @@ object VendingMachines {
 }
 
 /** Devices of one kind that share these logic types, each a nested class. */
+interface Speaker {
+  var SoundAlert: Double
+
+  var Volume: Double
+
+  /** A PassiveSpeaker. */
+  @PrefabName("PassiveSpeaker")
+  class Passive internal constructor() : TypedDevice(), Speaker {
+    override var SoundAlert: Double
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override var Volume: Double
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    /** The PassiveSpeaker prefab. */
+    companion object : Prefab()
+  }
+
+  /** A StructureKlaxon. */
+  @PrefabName("StructureKlaxon")
+  class Klaxon internal constructor() : TypedDevice(), Speaker {
+    var Mode: Double
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    var On: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    val Power: Boolean
+      get() = intrinsic()
+
+    val RequiredPower: Double
+      get() = intrinsic()
+
+    override var SoundAlert: Double
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override var Volume: Double
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    /** The StructureKlaxon prefab. */
+    companion object : Prefab()
+  }
+}
+
+/** The Speaker devices on the chip's network, by prefab. */
+object Speakers {
+  /** The PassiveSpeaker devices on the chip's network. */
+  @PrefabName("PassiveSpeaker")
+  object Passive {
+    /** The device on [pin], as a PassiveSpeaker. */
+    fun at(pin: Device): Speaker.Passive = intrinsic()
+
+    /** Every one on the network. */
+    val all: DeviceBatch<Speaker.Passive>
+      get() = intrinsic()
+
+    /** Every one on the network named [name], which must be a constant. */
+    fun named(name: String): DeviceBatch<Speaker.Passive> = intrinsic()
+  }
+
+  /** The StructureKlaxon devices on the chip's network. */
+  @PrefabName("StructureKlaxon")
+  object Klaxon {
+    /** The device on [pin], as a StructureKlaxon. */
+    fun at(pin: Device): Speaker.Klaxon = intrinsic()
+
+    /** Every one on the network. */
+    val all: DeviceBatch<Speaker.Klaxon>
+      get() = intrinsic()
+
+    /** Every one on the network named [name], which must be a constant. */
+    fun named(name: String): DeviceBatch<Speaker.Klaxon> = intrinsic()
+  }
+}
+
+/** Devices of one kind that share these logic types, each a nested class. */
 interface LightRound {
   var Lock: Boolean
 
@@ -16734,35 +16816,6 @@ object LogicStepSequencer8s {
   }
 }
 
-/** A PassiveSpeaker. */
-@PrefabName("PassiveSpeaker")
-class PassiveSpeaker internal constructor() : TypedDevice() {
-  var SoundAlert: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var Volume: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  /** The PassiveSpeaker prefab. */
-  companion object : Prefab()
-}
-
-/** The PassiveSpeaker devices on the chip's network. */
-@PrefabName("PassiveSpeaker")
-object PassiveSpeakers {
-  /** The device on [pin], as a PassiveSpeaker. */
-  fun at(pin: Device): PassiveSpeaker = intrinsic()
-
-  /** Every one on the network. */
-  val all: DeviceBatch<PassiveSpeaker>
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): DeviceBatch<PassiveSpeaker> = intrinsic()
-}
-
 /** A PortableSolarPanel. */
 @PrefabName("PortableSolarPanel")
 class PortableSolarPanel internal constructor() : TypedDevice() {
@@ -19317,49 +19370,6 @@ object Igniters {
 
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): DeviceBatch<Igniter> = intrinsic()
-}
-
-/** A StructureKlaxon. */
-@PrefabName("StructureKlaxon")
-class Klaxon internal constructor() : TypedDevice() {
-  var Mode: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var On: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val Power: Boolean
-    get() = intrinsic()
-
-  val RequiredPower: Double
-    get() = intrinsic()
-
-  var SoundAlert: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var Volume: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  /** The StructureKlaxon prefab. */
-  companion object : Prefab()
-}
-
-/** The StructureKlaxon devices on the chip's network. */
-@PrefabName("StructureKlaxon")
-object Klaxons {
-  /** The device on [pin], as a StructureKlaxon. */
-  fun at(pin: Device): Klaxon = intrinsic()
-
-  /** Every one on the network. */
-  val all: DeviceBatch<Klaxon>
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): DeviceBatch<Klaxon> = intrinsic()
 }
 
 /** A StructureLarreDockBypass. */
