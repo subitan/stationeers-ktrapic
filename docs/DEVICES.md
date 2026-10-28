@@ -344,6 +344,28 @@ interface Bench {
 }
 ```
 
+### Button
+
+```kotlin
+interface Button {
+  var Activate: Boolean
+  var Lock: Boolean
+  val Setting: Double
+
+  /** StructureLogicButton. Entry point: Buttons.Standard. */
+  class Standard : TypedDevice, Button
+
+  /** StructureEmergencyButton. Entry point: Buttons.Important. */
+  class Important : TypedDevice, Button {
+    val Error: Boolean
+    var On: Boolean
+    var Open: Boolean
+    val Power: Boolean
+    val RequiredPower: Double
+  }
+}
+```
+
 ### CapsuleTank
 
 ```kotlin
@@ -1696,6 +1718,22 @@ interface SuitStorage {
 }
 ```
 
+### Switch
+
+```kotlin
+interface Switch {
+  var Lock: Boolean
+  var Open: Boolean
+  val Setting: Double
+
+  /** StructureLogicSwitch. Entry point: Switches.Lever. */
+  class Lever : TypedDevice, Switch
+
+  /** StructureLogicSwitch2. Entry point: Switches.Standard. */
+  class Standard : TypedDevice, Switch
+}
+```
+
 ### Tablet
 
 ```kotlin
@@ -2624,18 +2662,6 @@ class ElectronicsPrinter : TypedDevice {
   val slots: Slots<DataDiskSlot>
 }
 
-/** StructureEmergencyButton. Entry point: EmergencyButtons. */
-class EmergencyButton : TypedDevice {
-  var Activate: Boolean
-  val Error: Boolean
-  var Lock: Boolean
-  var On: Boolean
-  var Open: Boolean
-  val Power: Boolean
-  val RequiredPower: Double
-  val Setting: Double
-}
-
 /** StructureEvaporationChamber. Entry point: EvaporationChambers. */
 class EvaporationChamber : TypedDevice {
   val Combustion: Boolean
@@ -3162,13 +3188,6 @@ class LiquidVacuum : TypedDevice {
   val slots: Slots<ItemBatterySlot>
 }
 
-/** StructureLogicButton. Entry point: LogicButtons. */
-class LogicButton : TypedDevice {
-  var Activate: Boolean
-  var Lock: Boolean
-  val Setting: Double
-}
-
 /** StructureLogicDial. Entry point: LogicDials. */
 class LogicDial : TypedDevice {
   var Mode: Double
@@ -3244,20 +3263,6 @@ class LogicStepSequencer8 : TypedDevice {
   var Time: Double
   val SoundCartridge: DataDiskSlot // slots[0]
   val slots: Slots<DataDiskSlot>
-}
-
-/** StructureLogicSwitch. Entry point: LogicSwitches. */
-class LogicSwitch : TypedDevice {
-  var Lock: Boolean
-  var Open: Boolean
-  val Setting: Double
-}
-
-/** StructureLogicSwitch2. Entry point: LogicSwitch2s. */
-class LogicSwitch2 : TypedDevice {
-  var Lock: Boolean
-  var Open: Boolean
-  val Setting: Double
 }
 ```
 
