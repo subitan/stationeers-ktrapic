@@ -20,8 +20,10 @@ kt_junit5_tests(
     srcs = glob(["src/test/kotlin/**/*.kt"]),
     associates = [":ktrapic-script"],
     deps = [
+        "//sdk",
         "@maven//:com_google_truth_truth",
         "@maven//:org_jetbrains_kotlin_kotlin_scripting_common",
+        "@maven//:org_jetbrains_kotlin_kotlin_scripting_jvm",
         "@maven//:org_junit_jupiter_junit_jupiter_api",
     ],
 )
