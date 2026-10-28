@@ -713,6 +713,26 @@
     {
       "prefabs": [["StructurePressureFedGasEngine", "StructurePressureFedLiquidEngine", "StructurePressureFedGasEngineHeavy", "StructurePressureFedLiquidEngineHeavy", "StructureGovernedGasEngine", "StructurePumpedLiquidEngine"], "StructureRocketEngineTiny"],
       "reason": "the Rocket Engine (Tiny) has no Throttle or PassedMoles, so a program driving a rocket engine can't drive it; its logic is a valve's"
+    },
+    {
+      "prefabs": [["StructureGlassDoor", "StructureBlastDoor", "StructureCompositeDoor"], ["StructureManualHatch", "StructureManualFloorHatch"], "CompositeRollCover"],
+      "reason": "the manual hatches and the Composite Roll Cover open and close a passage like a door, but the Manual Floor Hatch and the roll cover have no power, Mode or On, so they can't share the doors' interface, and the hatches stay one family"
+    },
+    {
+      "prefabs": ["H2Combustor", "StructureElectrolyzer"],
+      "reason": "H2Combustor is the game's Combustor (Deprecated); the current Combustor and the Reverse Electrolyzer are not in the device data yet (#81), so whether combustors and electrolyzers are a family waits for that data"
+    },
+    {
+      "prefabs": [["StructureAreaPowerControl", "StructureAreaPowerControlReversed"], ["StructureBattery", "StructureBatteryLarge", "StructureBatteryMedium", "StructureBatterySmall"]],
+      "reason": "an area power control passes a network's power on and a station battery stores it; they share the charge readings, not a job"
+    },
+    {
+      "prefabs": [["StructureConsoleLED5", "StructureConsoleLED1x2", "StructureConsoleLED1x3"], "StructureDiode"],
+      "reason": "the Diode is a light that shows a Color, and the LED displays show a number; they share only Color"
+    },
+    {
+      "prefabs": [["StructureFridgeSmall", "StructureFridgeBig"], "StructureHydroponicsStation", "StructureLiquidDrain", "StructureRocketEngineTiny", ["StructureWallCooler", "StructureWaterWallCooler"]],
+      "reason": "they share only readings of the gas they put out, from different jobs: keeping food cold, growing plants, draining liquid, propelling a rocket and cooling a room"
     }
   ],
   "textDisplays": [
