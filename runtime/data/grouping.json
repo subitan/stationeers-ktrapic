@@ -623,7 +623,7 @@
   },
   "notFamilies": [
     {
-      "prefabs": [["StructureAutoMinerSmall", "StructureDeepMiner", "StructureHorizontalAutoMiner"], "StructureChuteOutlet"],
+      "prefabs": [["StructureAutoMinerSmall", "StructureDeepMiner", "StructureCombustionDeepMiner", "StructureHorizontalAutoMiner", "StructureRocketMiner"], "StructureChuteOutlet"],
       "reason": "the Chute Outlet passes items out of a chute; it shares only the miners' import and export counts and ClearMemory, and mines nothing"
     },
     {
