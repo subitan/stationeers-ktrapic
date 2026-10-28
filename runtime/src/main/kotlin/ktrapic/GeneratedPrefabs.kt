@@ -11115,7 +11115,7 @@ object ChuteBins {
 }
 
 /** A device that comes as several prefabs, each a nested class. */
-interface PowerTransmitter {
+interface PowerTransmission {
   val Charge: Double
 
   val Error: Boolean
@@ -11138,7 +11138,7 @@ interface PowerTransmitter {
 
   /** A StructurePowerTransmitter. */
   @PrefabName("StructurePowerTransmitter")
-  class Microwave internal constructor() : TypedDevice(), PowerTransmitter {
+  class MicrowaveTransmitter internal constructor() : TypedDevice(), PowerTransmission {
     override val Charge: Double
       get() = intrinsic()
 
@@ -11182,7 +11182,7 @@ interface PowerTransmitter {
 
   /** A StructurePowerTransmitterReceiver. */
   @PrefabName("StructurePowerTransmitterReceiver")
-  class MicrowaveReceiver internal constructor() : TypedDevice(), PowerTransmitter {
+  class MicrowaveReceiver internal constructor() : TypedDevice(), PowerTransmission {
     override val Charge: Double
       get() = intrinsic()
 
@@ -11225,34 +11225,34 @@ interface PowerTransmitter {
   }
 }
 
-/** The PowerTransmitter devices on the chip's network, by prefab. */
-object PowerTransmitters {
+/** The PowerTransmission devices on the chip's network, by prefab. */
+object PowerTransmissions {
   /** The StructurePowerTransmitter devices on the chip's network. */
   @PrefabName("StructurePowerTransmitter")
-  object Microwave {
+  object MicrowaveTransmitter {
     /** The device on [pin], as a StructurePowerTransmitter. */
-    fun at(pin: Device): PowerTransmitter.Microwave = intrinsic()
+    fun at(pin: Device): PowerTransmission.MicrowaveTransmitter = intrinsic()
 
     /** Every one on the network. */
-    val all: DeviceBatch<PowerTransmitter.Microwave>
+    val all: DeviceBatch<PowerTransmission.MicrowaveTransmitter>
       get() = intrinsic()
 
     /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<PowerTransmitter.Microwave> = intrinsic()
+    fun named(name: String): DeviceBatch<PowerTransmission.MicrowaveTransmitter> = intrinsic()
   }
 
   /** The StructurePowerTransmitterReceiver devices on the chip's network. */
   @PrefabName("StructurePowerTransmitterReceiver")
   object MicrowaveReceiver {
     /** The device on [pin], as a StructurePowerTransmitterReceiver. */
-    fun at(pin: Device): PowerTransmitter.MicrowaveReceiver = intrinsic()
+    fun at(pin: Device): PowerTransmission.MicrowaveReceiver = intrinsic()
 
     /** Every one on the network. */
-    val all: DeviceBatch<PowerTransmitter.MicrowaveReceiver>
+    val all: DeviceBatch<PowerTransmission.MicrowaveReceiver>
       get() = intrinsic()
 
     /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<PowerTransmitter.MicrowaveReceiver> = intrinsic()
+    fun named(name: String): DeviceBatch<PowerTransmission.MicrowaveReceiver> = intrinsic()
   }
 }
 

@@ -471,10 +471,10 @@
         "Export": "StructureChuteExportBin"
       }
     },
-    "PowerTransmitter": {
-      "plural": "PowerTransmitters",
+    "PowerTransmission": {
+      "plural": "PowerTransmissions",
       "members": {
-        "Microwave": "StructurePowerTransmitter",
+        "MicrowaveTransmitter": "StructurePowerTransmitter",
         "MicrowaveReceiver": "StructurePowerTransmitterReceiver"
       }
     },

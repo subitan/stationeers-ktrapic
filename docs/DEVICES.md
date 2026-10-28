@@ -1305,10 +1305,10 @@ interface PipeHeater {
 }
 ```
 
-### PowerTransmitter
+### PowerTransmission
 
 ```kotlin
-interface PowerTransmitter {
+interface PowerTransmission {
   val Charge: Double
   val Error: Boolean
   var Horizontal: Double
@@ -1320,13 +1320,13 @@ interface PowerTransmitter {
   val RequiredPower: Double
   var Vertical: Double
 
-  /** StructurePowerTransmitter. Entry point: PowerTransmitters.Microwave. */
-  class Microwave : TypedDevice, PowerTransmitter {
+  /** StructurePowerTransmitter. Entry point: PowerTransmissions.MicrowaveTransmitter. */
+  class MicrowaveTransmitter : TypedDevice, PowerTransmission {
     val Position: Vector
   }
 
-  /** StructurePowerTransmitterReceiver. Entry point: PowerTransmitters.MicrowaveReceiver. */
-  class MicrowaveReceiver : TypedDevice, PowerTransmitter {
+  /** StructurePowerTransmitterReceiver. Entry point: PowerTransmissions.MicrowaveReceiver. */
+  class MicrowaveReceiver : TypedDevice, PowerTransmission {
     val Position: Vector
   }
 }
