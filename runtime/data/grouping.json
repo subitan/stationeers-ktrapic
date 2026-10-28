@@ -566,11 +566,14 @@
         "Locker": "StructureSuitStorageLocker"
       }
     },
-    "WindTurbine": {
-      "plural": "WindTurbines",
+    "Generator": {
+      "plural": "Generators",
       "members": {
-        "Standard": "StructureWindTurbine",
-        "Upright": "StructureUprightWindTurbine"
+        "GasFuel": "StructureGasGenerator",
+        "SolidFuel": "StructureSolidFuelGenerator",
+        "StirlingEngine": "StructureStirlingEngine",
+        "WindTurbine": "StructureWindTurbine",
+        "UprightWindTurbine": "StructureUprightWindTurbine"
       }
     },
     "WaterBottleFiller": {
