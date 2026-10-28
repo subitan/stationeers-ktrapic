@@ -200,6 +200,20 @@ class LspDiagnosticsTest {
   }
 
   @Test
+  fun `ktrapic-compile gets the result of a diagnostics compile that failed, without compiling again`() {
+    val program = "db.Setting = nope\n"
+    client.initialize()
+    client.open("file:///a.kt", program)
+    assertThat(published().single().diagnostics()).hasSize(1)
+
+    val response = compile("file:///a.kt")
+
+    assertThat(response["result"]).isEqualTo(lineProtocolCompile(program))
+    assertThat(response["result"].asJsonObject.has("error")).isTrue()
+    assertThat(compiled).containsExactly(program)
+  }
+
+  @Test
   fun `an internal compiler error is not kept, so the same text is compiled again`() {
     val program = "db.Setting = 1.0\n"
     // The answer to a compile that overflowed the stack, which another compile of the same text,
