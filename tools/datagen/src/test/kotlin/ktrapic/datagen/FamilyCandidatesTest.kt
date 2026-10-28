@@ -44,6 +44,8 @@ class FamilyCandidatesTest {
         .isEqualTo("TankConnectorPiece")
     assertThat(FamilyCandidates.baseName("Battery_Wireless_cell_Big"))
         .isEqualTo("BatteryWirelessCell")
+    assertThat(FamilyCandidates.baseName("StructureChuteDigitalValveLeft"))
+        .isEqualTo("ChuteDigitalValve")
     // A word inside another isn't a variant: Gasket isn't Gas + ket, Tomato isn't Toma + to.
     assertThat(FamilyCandidates.baseName("StructureGasket")).isEqualTo("Gasket")
     assertThat(FamilyCandidates.baseName("ItemTomato")).isEqualTo("Tomato")
