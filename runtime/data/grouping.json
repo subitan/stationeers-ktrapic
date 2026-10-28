@@ -62,11 +62,12 @@
         "Large": "StructureFridgeBig"
       }
     },
-    "CargoStorage": {
-      "plural": "CargoStorages",
+    "ItemStorage": {
+      "plural": "ItemStorages",
       "members": {
-        "Small": "StructureCargoStorageSmall",
-        "Medium": "StructureCargoStorageMedium"
+        "CargoSmall": "StructureCargoStorageSmall",
+        "CargoMedium": "StructureCargoStorageMedium",
+        "SdbSilo": "StructureSDBSilo"
       }
     },
     "HangarDoor": {
@@ -630,6 +631,10 @@
     {
       "prefabs": [["StructureSleeper", "StructureSleeperLeft", "StructureSleeperRight", "StructureSleeperVertical"], "StructureSleeperVerticalDroid"],
       "reason": "the Droid Sleeper recharges robots and harms anyone else who enters, so it is not a sleeper for players; it has no EntityState, Maximum, Ratio or Setting"
+    },
+    {
+      "prefabs": [["StructureCargoStorageSmall", "StructureCargoStorageMedium", "StructureSDBSilo"], "StructureAdvancedComposter"],
+      "reason": "the Advanced Composter holds items only while it turns them into fertilizer; it is a processor, not storage"
     },
     {
       "prefabs": [["StructureRoboticArmDock", "StructureLarreDockAtmos", "StructureLarreDockCargo", "StructureLarreDockCollector", "StructureLarreDockHydroponics"], "StructureLarreDockBypass"],

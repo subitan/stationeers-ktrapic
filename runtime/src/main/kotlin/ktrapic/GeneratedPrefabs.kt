@@ -2208,7 +2208,7 @@ object Fridges {
 }
 
 /** A device that comes as several prefabs, each a nested class. */
-interface CargoStorage {
+interface ItemStorage {
   var ClearMemory: Boolean
 
   val Error: Boolean
@@ -2223,13 +2223,11 @@ interface CargoStorage {
 
   val Quantity: Double
 
-  val Ratio: Double
-
   val RequiredPower: Double
 
   /** A StructureCargoStorageSmall. */
   @PrefabName("StructureCargoStorageSmall")
-  class Small internal constructor() : TypedDevice(), CargoStorage {
+  class CargoSmall internal constructor() : TypedDevice(), ItemStorage {
     override var ClearMemory: Boolean
       get() = intrinsic()
       set(value) = intrinsic()
@@ -2255,7 +2253,7 @@ interface CargoStorage {
     override val Quantity: Double
       get() = intrinsic()
 
-    override val Ratio: Double
+    val Ratio: Double
       get() = intrinsic()
 
     override val RequiredPower: Double
@@ -2279,7 +2277,7 @@ interface CargoStorage {
 
   /** A StructureCargoStorageMedium. */
   @PrefabName("StructureCargoStorageMedium")
-  class Medium internal constructor() : TypedDevice(), CargoStorage {
+  class CargoMedium internal constructor() : TypedDevice(), ItemStorage {
     override var ClearMemory: Boolean
       get() = intrinsic()
       set(value) = intrinsic()
@@ -2305,7 +2303,7 @@ interface CargoStorage {
     override val Quantity: Double
       get() = intrinsic()
 
-    override val Ratio: Double
+    val Ratio: Double
       get() = intrinsic()
 
     override val RequiredPower: Double
@@ -2326,15 +2324,70 @@ interface CargoStorage {
     /** The StructureCargoStorageMedium prefab. */
     companion object : Prefab()
   }
+
+  /** A StructureSDBSilo. */
+  @PrefabName("StructureSDBSilo")
+  class SdbSilo internal constructor() : TypedDevice(), ItemStorage {
+    var Activate: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override var ClearMemory: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override val Error: Boolean
+      get() = intrinsic()
+
+    override var Lock: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    var Mode: Double
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override var On: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override var Open: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override val Power: Boolean
+      get() = intrinsic()
+
+    override val Quantity: Double
+      get() = intrinsic()
+
+    override val RequiredPower: Double
+      get() = intrinsic()
+
+    @LogicTypes(read = "ImportCount", written = "")
+    val Import: Transfer
+      get() = intrinsic()
+
+    @LogicTypes(read = "ExportCount", written = "")
+    val Export: Transfer
+      get() = intrinsic()
+
+    /** The device's slots, by number. */
+    val slots: Slots<DataDiskSlot>
+      get() = intrinsic()
+
+    /** The StructureSDBSilo prefab. */
+    companion object : Prefab()
+  }
 }
 
-/** The CargoStorage devices on the chip's network, by prefab. */
-object CargoStorages {
+/** The ItemStorage devices on the chip's network, by prefab. */
+object ItemStorages {
   /** The StructureCargoStorageSmall devices on the chip's network. */
   @PrefabName("StructureCargoStorageSmall")
-  object Small {
+  object CargoSmall {
     /** The device on [pin], as a StructureCargoStorageSmall. */
-    fun at(pin: Device): CargoStorage.Small = intrinsic()
+    fun at(pin: Device): ItemStorage.CargoSmall = intrinsic()
 
     /** Every one on the network. */
     val all: Batch
@@ -2343,7 +2396,7 @@ object CargoStorages {
     /** Every one on the network named [name], which must be a constant. */
     fun named(name: String): Batch = intrinsic()
 
-    class Batch internal constructor() : DeviceBatch<CargoStorage.Small>() {
+    class Batch internal constructor() : DeviceBatch<ItemStorage.CargoSmall>() {
       /** A slot of every one in the batch, by number. */
       val slots: Slots<SlotBatch<DataDiskSlot>>
         get() = intrinsic()
@@ -2352,9 +2405,9 @@ object CargoStorages {
 
   /** The StructureCargoStorageMedium devices on the chip's network. */
   @PrefabName("StructureCargoStorageMedium")
-  object Medium {
+  object CargoMedium {
     /** The device on [pin], as a StructureCargoStorageMedium. */
-    fun at(pin: Device): CargoStorage.Medium = intrinsic()
+    fun at(pin: Device): ItemStorage.CargoMedium = intrinsic()
 
     /** Every one on the network. */
     val all: Batch
@@ -2363,7 +2416,27 @@ object CargoStorages {
     /** Every one on the network named [name], which must be a constant. */
     fun named(name: String): Batch = intrinsic()
 
-    class Batch internal constructor() : DeviceBatch<CargoStorage.Medium>() {
+    class Batch internal constructor() : DeviceBatch<ItemStorage.CargoMedium>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+  }
+
+  /** The StructureSDBSilo devices on the chip's network. */
+  @PrefabName("StructureSDBSilo")
+  object SdbSilo {
+    /** The device on [pin], as a StructureSDBSilo. */
+    fun at(pin: Device): ItemStorage.SdbSilo = intrinsic()
+
+    /** Every one on the network. */
+    val all: Batch
+      get() = intrinsic()
+
+    /** Every one on the network named [name], which must be a constant. */
+    fun named(name: String): Batch = intrinsic()
+
+    class Batch internal constructor() : DeviceBatch<ItemStorage.SdbSilo>() {
       /** A slot of every one in the batch, by number. */
       val slots: Slots<SlotBatch<DataDiskSlot>>
         get() = intrinsic()
@@ -20576,81 +20649,6 @@ object RocketScanners {
   fun named(name: String): Batch = intrinsic()
 
   class Batch internal constructor() : DeviceBatch<RocketScanner>() {
-    /** A slot of every one in the batch, by number. */
-    val slots: Slots<SlotBatch<DataDiskSlot>>
-      get() = intrinsic()
-  }
-}
-
-/** A StructureSDBSilo. */
-@PrefabName("StructureSDBSilo")
-class SDBSilo internal constructor() : TypedDevice() {
-  var Activate: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var ClearMemory: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val Error: Boolean
-    get() = intrinsic()
-
-  var Lock: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var Mode: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var On: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var Open: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val Power: Boolean
-    get() = intrinsic()
-
-  val Quantity: Double
-    get() = intrinsic()
-
-  val RequiredPower: Double
-    get() = intrinsic()
-
-  @LogicTypes(read = "ImportCount", written = "")
-  val Import: Transfer
-    get() = intrinsic()
-
-  @LogicTypes(read = "ExportCount", written = "")
-  val Export: Transfer
-    get() = intrinsic()
-
-  /** The device's slots, by number. */
-  val slots: Slots<DataDiskSlot>
-    get() = intrinsic()
-
-  /** The StructureSDBSilo prefab. */
-  companion object : Prefab()
-}
-
-/** The StructureSDBSilo devices on the chip's network. */
-@PrefabName("StructureSDBSilo")
-object SDBSilos {
-  /** The device on [pin], as a StructureSDBSilo. */
-  fun at(pin: Device): SDBSilo = intrinsic()
-
-  /** Every one on the network. */
-  val all: Batch
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch<SDBSilo>() {
     /** A slot of every one in the batch, by number. */
     val slots: Slots<SlotBatch<DataDiskSlot>>
       get() = intrinsic()

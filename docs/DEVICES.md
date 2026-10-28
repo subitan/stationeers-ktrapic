@@ -406,36 +406,6 @@ interface CapsuleTank {
 }
 ```
 
-### CargoStorage
-
-```kotlin
-interface CargoStorage {
-  var ClearMemory: Boolean
-  val Error: Boolean
-  var Lock: Boolean
-  var On: Boolean
-  var Open: Boolean
-  val Power: Boolean
-  val Quantity: Double
-  val Ratio: Double
-  val RequiredPower: Double
-
-  /** StructureCargoStorageSmall. Entry point: CargoStorages.Small. */
-  class Small : TypedDevice, CargoStorage {
-    val Export: Transfer
-    val Import: Transfer
-    val slots: Slots<DataDiskSlot>
-  }
-
-  /** StructureCargoStorageMedium. Entry point: CargoStorages.Medium. */
-  class Medium : TypedDevice, CargoStorage {
-    val Export: Transfer
-    val Import: Transfer
-    val slots: Slots<DataDiskSlot>
-  }
-}
-```
-
 ### ChuteBin
 
 ```kotlin
@@ -1029,6 +999,46 @@ interface InteriorDoor : Door {
 
   /** StructureInteriorDoorTriangle. Entry point: InteriorDoors.Triangle. */
   class Triangle : TypedDevice, InteriorDoor
+}
+```
+
+### ItemStorage
+
+```kotlin
+interface ItemStorage {
+  var ClearMemory: Boolean
+  val Error: Boolean
+  var Lock: Boolean
+  var On: Boolean
+  var Open: Boolean
+  val Power: Boolean
+  val Quantity: Double
+  val RequiredPower: Double
+
+  /** StructureCargoStorageSmall. Entry point: ItemStorages.CargoSmall. */
+  class CargoSmall : TypedDevice, ItemStorage {
+    val Export: Transfer
+    val Import: Transfer
+    val Ratio: Double
+    val slots: Slots<DataDiskSlot>
+  }
+
+  /** StructureCargoStorageMedium. Entry point: ItemStorages.CargoMedium. */
+  class CargoMedium : TypedDevice, ItemStorage {
+    val Export: Transfer
+    val Import: Transfer
+    val Ratio: Double
+    val slots: Slots<DataDiskSlot>
+  }
+
+  /** StructureSDBSilo. Entry point: ItemStorages.SdbSilo. */
+  class SdbSilo : TypedDevice, ItemStorage {
+    var Activate: Boolean
+    val Export: Transfer
+    val Import: Transfer
+    var Mode: Double
+    val slots: Slots<DataDiskSlot>
+  }
 }
 ```
 
@@ -3570,23 +3580,6 @@ class Rover_MkI : TypedDevice {
 ### S
 
 ```kotlin
-/** StructureSDBSilo. Entry point: SDBSilos. */
-class SDBSilo : TypedDevice {
-  var Activate: Boolean
-  var ClearMemory: Boolean
-  val Error: Boolean
-  val Export: Transfer // Count
-  val Import: Transfer // Count
-  var Lock: Boolean
-  var Mode: Double
-  var On: Boolean
-  var Open: Boolean
-  val Power: Boolean
-  val Quantity: Double
-  val RequiredPower: Double
-  val slots: Slots<DataDiskSlot>
-}
-
 /** ItemSensorLenses. Entry point: SensorLenseses. */
 class SensorLenses : TypedDevice {
   var On: Boolean
