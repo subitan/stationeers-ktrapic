@@ -47,6 +47,14 @@
         "Large": "StructureLargeSatelliteDish"
       }
     },
+    "PresenceSensor": {
+      "plural": "PresenceSensors",
+      "members": {
+        "Motion": "StructureMotionSensor",
+        "Proximity": "StructureProximitySensor",
+        "Occupancy": "StructureOccupancySensor"
+      }
+    },
     "PressurePlate": {
       "plural": "PressurePlates",
       "members": {
