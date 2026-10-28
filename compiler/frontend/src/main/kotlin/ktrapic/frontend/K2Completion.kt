@@ -97,7 +97,8 @@ data class Completion(val label: String, val kind: Kind, val detail: String) {
  * compiler's analysis of it: after `receiver.`, the members and extensions of the receiver's type
  * (or, after a class or object name, what it holds); anywhere else, the locals, parameters and
  * members in scope there, the SDK's top-level names, and keywords. Of the standard library's
- * declarations, only those KTrapIC compiles are offered ([SUPPORTED_STDLIB]), and a name shadowed
+ * declarations, only those KTrapIC compiles are offered, on the receivers it compiles them on
+ * ([SUPPORTED_STDLIB]); of the keywords, only those a program can use ([KEYWORDS]). A name shadowed
  * by one declared nearer the caret is offered once.
  *
  * The program is analysed with a placeholder name in place of the word at the caret, so the
@@ -108,77 +109,111 @@ object K2Completion {
   /** The packages whose top-level names a program sees, as `ktrapic.*` imports them. */
   private val IMPORTED_PACKAGES = listOf(FqName("ktrapic"))
 
-  /**
-   * The kotlin-stdlib extensions KTrapIC compiles, by package. `kotlin.ranges` and
-   * `kotlin.collections` are imported by default; `kotlin.math` only where the program imports it.
-   */
-  private val STDLIB_EXTENSIONS =
-      mapOf(
-          FqName("kotlin.math") to listOf("absoluteValue", "pow", "roundToInt"),
-          FqName("kotlin.ranges") to
-              listOf("coerceAtLeast", "coerceAtMost", "coerceIn", "downTo", "step", "until"),
-          FqName("kotlin.collections") to listOf("intersect", "minus", "plus"),
-      )
-
   /** The standard library's packages: `kotlin` and those under it. */
   private val KOTLIN = FqName("kotlin")
 
+  /**
+   * The standard library packages whose extensions KTrapIC compiles some of. `kotlin.ranges` and
+   * `kotlin.collections` are imported by default; `kotlin.math` only where the program imports it.
+   */
+  private val EXTENSION_PACKAGES =
+      listOf("kotlin.math", "kotlin.ranges", "kotlin.collections").map(::FqName)
+
   private val DEFAULT_IMPORTED = setOf(FqName("kotlin.ranges"), FqName("kotlin.collections"))
 
+  /** Int and Double arithmetic, which takes either type. */
+  private val ARITHMETIC =
+      listOf("plus", "minus", "times", "div", "rem").flatMap { listOf("$it(Int)", "$it(Double)") }
+
+  /** What a static set offers, as its members are declared on [owner]. */
+  private fun staticSet(owner: String) =
+      listOf("$owner.contains", "$owner.isEmpty", "$owner.size") +
+          listOf("plus(T)", "plus(Iterable<T>)", "minus(T)", "minus(Iterable<T>)", "intersect")
+              .map { "kotlin.collections.$it" }
+
   /**
-   * The declarations of the `kotlin` packages that KTrapIC compiles, by fully qualified name: a
-   * member (`kotlin.Int.plus`) or a top-level extension (`kotlin.math.roundToInt`). Of the standard
-   * library's declarations, only these are offered; see docs/LANGUAGE.md.
+   * The standard library's declarations KTrapIC compiles, by the class of the receiver they are
+   * offered on. Each is a declaration's fully qualified name, a member's (`kotlin.Int.toDouble`) or
+   * an extension's (`kotlin.math.roundToInt`), followed by the parameter types of the one overload
+   * meant where only some of them compile (`kotlin.ranges.until(Int)`, not `until(Byte)`). Of the
+   * standard library's declarations, only these are offered, and only on these receivers; see
+   * docs/LANGUAGE.md.
    */
-  val SUPPORTED_STDLIB: Set<String> =
-      (listOf(
+  val SUPPORTED_STDLIB: Map<String, Set<String>> =
+      mapOf(
               "kotlin.Int" to
                   listOf(
-                      "and",
-                      "dec",
-                      "div",
-                      "inc",
-                      "inv",
-                      "minus",
-                      "or",
-                      "plus",
-                      "rangeTo",
-                      "rangeUntil",
-                      "rem",
-                      "shl",
-                      "shr",
-                      "times",
-                      "toDouble",
-                      "toInt",
-                      "unaryMinus",
-                      "unaryPlus",
-                      "ushr",
-                      "xor",
-                  ),
+                          "and",
+                          "dec",
+                          "inc",
+                          "inv",
+                          "or",
+                          "rangeTo(Int)",
+                          "rangeUntil(Int)",
+                          "shl",
+                          "shr",
+                          "toDouble",
+                          "toInt",
+                          "unaryMinus",
+                          "unaryPlus",
+                          "ushr",
+                          "xor",
+                      )
+                      .map { "kotlin.Int.$it" } +
+                      ARITHMETIC.map { "kotlin.Int.$it" } +
+                      listOf(
+                          "kotlin.math.absoluteValue",
+                          "kotlin.ranges.coerceAtLeast(Int)",
+                          "kotlin.ranges.coerceAtMost(Int)",
+                          "kotlin.ranges.coerceIn(Int, Int)",
+                          "kotlin.ranges.downTo(Int)",
+                          "kotlin.ranges.until(Int)",
+                      ),
               "kotlin.Double" to
-                  listOf(
-                      "dec",
-                      "div",
-                      "inc",
-                      "minus",
-                      "plus",
-                      "rem",
-                      "times",
-                      "toDouble",
-                      "toInt",
-                      "unaryMinus",
-                      "unaryPlus",
-                  ),
-              "kotlin.Boolean" to listOf("not"),
-              "kotlin.collections.Set" to listOf("contains", "isEmpty", "size"),
-              "kotlin.collections.List" to listOf("contains", "isEmpty", "size"),
-          ) + STDLIB_EXTENSIONS.map { (pkg, names) -> pkg.asString() to names })
-          .flatMap { (owner, names) -> names.map { "$owner.$it" } }
-          .toSet()
+                  listOf("dec", "inc", "toDouble", "toInt", "unaryMinus", "unaryPlus").map {
+                    "kotlin.Double.$it"
+                  } +
+                      ARITHMETIC.map { "kotlin.Double.$it" } +
+                      listOf(
+                          "kotlin.math.absoluteValue",
+                          "kotlin.math.pow(Double)",
+                          "kotlin.math.pow(Int)",
+                          "kotlin.math.roundToInt",
+                          "kotlin.ranges.coerceAtLeast(Double)",
+                          "kotlin.ranges.coerceAtMost(Double)",
+                          "kotlin.ranges.coerceIn(Double, Double)",
+                      ),
+              "kotlin.Boolean" to listOf("kotlin.Boolean.not"),
+              "kotlin.collections.Set" to staticSet("kotlin.collections.Set"),
+              "kotlin.collections.List" to staticSet("kotlin.collections.List"),
+              "kotlin.enums.EnumEntries" to staticSet("kotlin.collections.List"),
+              // A range can only be written in a `for`, where only a step can follow it.
+              "kotlin.ranges.IntRange" to listOf("kotlin.ranges.step"),
+              "kotlin.ranges.IntProgression" to listOf("kotlin.ranges.step"),
+              // A `Ratios` loop's element.
+              "kotlin.collections.Map.Entry" to
+                  listOf("kotlin.collections.Map.Entry.key", "kotlin.collections.Map.Entry.value"),
+          )
+          .mapValues { (_, declarations) -> declarations.toSet() }
+
+  /** The extensions named in [SUPPORTED_STDLIB], by package. */
+  private val STDLIB_EXTENSIONS: Map<FqName, Set<Name>> =
+      SUPPORTED_STDLIB.values
+          .flatten()
+          .map { FqName(it.substringBefore('(')) }
+          .filter { it.parent() in EXTENSION_PACKAGES }
+          .groupBy({ it.parent() }, { it.shortName() })
+          .mapValues { (_, names) -> names.toSet() }
+
+  /** The enums' static members the compiler makes, of which only `Substance.entries` compiles. */
+  private val ENUM_STATICS = setOf("entries", "values", "valueOf")
+
+  private val SUBSTANCE = ClassId.fromString("ktrapic/Substance")
 
   private const val PLACEHOLDER = "ktrapicCompletionPlaceholder"
 
-  private val KEYWORDS =
+  /** The keywords a KTrapIC program can use. */
+  val KEYWORDS =
       listOf(
           "val",
           "var",
@@ -190,16 +225,11 @@ object K2Completion {
           "for",
           "do",
           "in",
-          "is",
           "break",
           "continue",
           "return",
           "true",
           "false",
-          "class",
-          "interface",
-          "object",
-          "enum",
       )
 
   /** `Any`'s members, which every type has and no program needs offered. */
@@ -354,7 +384,12 @@ object K2Completion {
         return statics(symbol).sortedBy { it.label.lowercase() }
       }
       val type = receiver.resolvedType
-      val items = mutableListOf<Completion>()
+      // An enum's entry is used only as it is: KTrapIC compiles none of its members, such as an
+      // SDK enum's `value`, the game's number for the entry, which the compiler writes itself.
+      val classId = (type as? ConeClassLikeType)?.lookupTag?.classId
+      val klass = classId?.let { session.symbolProvider.getClassLikeSymbolByClassId(it) }
+      if ((klass as? FirRegularClassSymbol)?.classKind == ClassKind.ENUM_CLASS) return emptyList()
+      val found = mutableListOf<FirCallableSymbol<*>>()
       val scope =
           type.scope(
               session,
@@ -362,9 +397,26 @@ object K2Completion {
               CallableCopyTypeCalculator.DoNothing,
               FirResolvePhase.STATUS,
           )
-      scope?.processAllCallables { if (shown(it)) items += callable(it, local = false) }
-      items += extensions(type)
-      return items.sortedBy { it.label.lowercase() }
+      scope?.processAllCallables { if (shown(it, type)) found += it }
+      found += extensions(type)
+      // Overloads share one item, whose detail is the first's: the one that fits [type] best.
+      return found
+          .sortedBy { fit(it, type) }
+          .map { callable(it, local = false) }
+          .sortedBy { it.label.lowercase() }
+    }
+
+    /**
+     * How well an overload fits a call on [type], lowest best: one taking only [type] itself
+     * (`Double.plus(Double)` on a `Double`) before one taking anything else, and an extension of
+     * [type]'s own class (`Set.plus` on a `Set`) before one of a supertype (`Iterable.plus`).
+     */
+    private fun fit(symbol: FirCallableSymbol<*>, type: ConeKotlinType): Int {
+      val own = render(type)
+      val parameters = (symbol as? FirFunctionSymbol<*>)?.valueParameterSymbols.orEmpty()
+      val byParameters = if (parameters.all { render(it.resolvedReturnType) == own }) 0 else 2
+      val extended = symbol.resolvedReceiverType ?: return byParameters
+      return byParameters + if (classOf(extended) == classOf(type)) 0 else 1
     }
 
     /** What a class or object's name gives: its nested classes, static members and own members. */
@@ -375,14 +427,19 @@ object K2Completion {
       provider.getNestedClassifierScope(klass, session, scopeSession)?.processAllClassifiers {
         classifier(it)?.let(items::add)
       }
+      val enum = klass.classKind == ClassKind.ENUM_CLASS
       provider.getStaticCallableMemberScope(klass, session, scopeSession)?.processAllCallables {
-        if (shown(it)) items += callable(it, local = false)
+        val name = it.name.asString()
+        val made = enum && name in ENUM_STATICS
+        if (shown(it, null) && (!made || symbol.classId == SUBSTANCE && name == "entries")) {
+          items += callable(it, local = false)
+        }
       }
       val companion = klass.companionObjectSymbol
       val holder = if (klass.classKind == ClassKind.OBJECT) symbol else companion
       holder
           ?.unsubstitutedScope(session, scopeSession, false, FirResolvePhase.STATUS)
-          ?.processAllCallables { if (shown(it)) items += callable(it, local = false) }
+          ?.processAllCallables { if (shown(it, null)) items += callable(it, local = false) }
       return items
     }
 
@@ -390,20 +447,22 @@ object K2Completion {
      * The extensions whose receiver [type] can be: the imported packages' and the supported
      * standard library extensions the program sees.
      */
-    private fun extensions(type: ConeKotlinType): List<Completion> {
+    private fun extensions(type: ConeKotlinType): List<FirCallableSymbol<*>> {
       val candidates =
           IMPORTED_PACKAGES.flatMap { pkg -> names(pkg).callables.map { pkg to it } } +
               STDLIB_EXTENSIONS.flatMap { (pkg, names) ->
-                names.map { pkg to Name.identifier(it) }.filter { (_, name) -> sees(pkg, name) }
+                names.map { pkg to it }.filter { (_, name) -> sees(pkg, name) }
               }
-      return candidates
-          .flatMap { (pkg, name) ->
-            session.symbolProvider.getTopLevelCallableSymbols(pkg, name).filter {
-              shown(it) && accepts(it.resolvedReceiverType ?: return@filter false, type)
-            }
-          }
-          .map { callable(it, local = false) }
+      return candidates.flatMap { (pkg, name) ->
+        session.symbolProvider.getTopLevelCallableSymbols(pkg, name).filter {
+          shown(it, type) && accepts(it.resolvedReceiverType ?: return@filter false, type)
+        }
+      }
     }
+
+    /** The fully qualified name of [type]'s class, or null for a type that has none. */
+    private fun classOf(type: ConeKotlinType): String? =
+        (type as? ConeClassLikeType)?.lookupTag?.classId?.asFqNameString()
 
     /**
      * Whether the program sees [pkg]'s [name] unqualified: imported by default or by the program.
@@ -465,7 +524,12 @@ object K2Completion {
                 .unsubstitutedScope(session, scopeSession, false, FirResolvePhase.STATUS)
                 .processAllCallables {
                   val later = it is FirPropertySymbol && (it.source?.startOffset ?: 0) > at
-                  if (shown(it) && !(program && later)) items += callable(it, local = false)
+                  // The caret is in its own initializer or body: a property can't read itself,
+                  // and a function can't call itself.
+                  val around = it.fir in path
+                  if (shown(it, null) && !(program && later) && !around) {
+                    items += callable(it, local = false)
+                  }
                 }
             session.kotlinScopeProvider
                 .getNestedClassifierScope(element, session, scopeSession)
@@ -489,7 +553,7 @@ object K2Completion {
                   names.callables.flatMap { name ->
                     session.symbolProvider
                         .getTopLevelCallableSymbols(pkg, name)
-                        .filter { shown(it) && it.resolvedReceiverType == null }
+                        .filter { shown(it, null) && it.resolvedReceiverType == null }
                         .map { callable(it, local = false) }
                   }
             }
@@ -518,21 +582,27 @@ object K2Completion {
         if (symbol.name.isSpecial) null else callable(symbol, local = true)
 
     /**
-     * Whether a member or a top-level declaration is offered: one a program can use, which is
-     * public, not deprecated, not one of the SDK's internals (named with a leading `_`) nor of
-     * [ANY_MEMBERS], and, if the standard library declares it, in [SUPPORTED_STDLIB].
+     * Whether a member or a top-level declaration is offered, on [receiver] if it follows one: one
+     * a program can use, which is public, not deprecated, not one of the SDK's internals (named
+     * with a leading `_`) nor of [ANY_MEMBERS], not an `iterator` operator, and, if the standard
+     * library declares it, in [SUPPORTED_STDLIB] for [receiver]'s class.
      */
-    private fun shown(symbol: FirCallableSymbol<*>): Boolean {
+    private fun shown(symbol: FirCallableSymbol<*>, receiver: ConeKotlinType?): Boolean {
       val name = symbol.name
       if (name.isSpecial || name.asString().startsWith("_") || name.asString() in ANY_MEMBERS) {
         return false
       }
+      // What a `for` loop calls to go over a value, which a program can't call itself.
+      if (name.asString() == "iterator" && symbol.resolvedStatus.isOperator) return false
       val declared = symbol.fir.unwrapFakeOverrides().symbol.callableId ?: return false
-      if (
-          declared.packageName.isSubpackageOf(KOTLIN) &&
-              declared.asSingleFqName().asString() !in SUPPORTED_STDLIB
-      ) {
-        return false
+      if (declared.packageName.isSubpackageOf(KOTLIN)) {
+        val supported = SUPPORTED_STDLIB[receiver?.let(::classOf)] ?: return false
+        val fqName = declared.asSingleFqName().asString()
+        val parameters =
+            (symbol as? FirFunctionSymbol<*>)?.valueParameterSymbols?.joinToString(", ") {
+              render(it.resolvedReturnType)
+            }
+        if (fqName !in supported && "$fqName($parameters)" !in supported) return false
       }
       if (symbol.resolvedStatus.visibility != Visibilities.Public) return false
       return symbol.resolvedAnnotationClassIds.none {

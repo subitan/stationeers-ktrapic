@@ -313,6 +313,7 @@ namespace KTrapIC
             {
                 LspClient = client;
                 _document.Bind(client.Connection);
+                _completionRequests.Forget();
             }
             if (_document.Sync(Identifier.version, () => RawText, JArray.FromObject(_changes)))
             {
@@ -355,15 +356,17 @@ namespace KTrapIC
             SubmitChanges();
             if (_document == null || _syncedVersion != _version)
                 return;
+            // Told apart by their text rather than _version: the editor's first call for an edit
+            // comes before the handler that counts the edit in _version has run.
             _completionRequests.Want(
-                new CompletionRequest(_version, caret.Line, caret.Col, Completions.WordBefore(line, caret.Col)));
+                new CompletionRequest(RawText, caret.Line, caret.Col, Completions.WordBefore(line, caret.Col)));
         }
 
         private async UniTaskVoid ShowCompletions(CompletionRequest request, IReadOnlyList<Completion> completions)
         {
             await UniTask.SwitchToMainThread();
             var now = Editor.CaretPos;
-            if (_closed || request.Version != _version || now.Line != request.Line || now.Col != request.Column)
+            if (_closed || now.Line != request.Line || now.Col != request.Column || request.Text != RawText)
                 return;
             var choice = Completions.Choose(completions, request.Word);
             if (choice == null)

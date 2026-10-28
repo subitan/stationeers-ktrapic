@@ -106,6 +106,12 @@ public class CompletionsTest
         }
     }
 
+    /// <summary>
+    /// The code after typing <paramref name="typed"/> on a line of its own, as the editor gives it:
+    /// a new string each time, as a keystroke's two calls each read the code again.
+    /// </summary>
+    private static string Code(string typed) => string.Concat("val x = 1\n", typed);
+
     [Fact]
     public void OneRequestInFlightAndOnlyTheLatestWantedFollowsIt()
     {
@@ -113,25 +119,28 @@ public class CompletionsTest
 
         // A burst of keystrokes while the first request is in flight.
         for (int column = 1; column <= 20; column++)
-            daemon.Requests.Want(new CompletionRequest(column, 0, column, "x"));
+            daemon.Requests.Want(new CompletionRequest(Code(new string('x', column)), 1, column, "x"));
         Assert.Single(daemon.Asked);
         daemon.Answer(0, Item("x1", 0));
 
         Assert.Equal(new[] { 1, 20 }, daemon.Asked.Select(a => a.Column));
         daemon.Answer(1, Item("x20", 0));
-        Assert.Equal(new[] { 1, 20 }, daemon.Answered.Select(a => a.Request.Version));
+        Assert.Equal(new[] { 1, 20 }, daemon.Answered.Select(a => a.Request.Column));
         Assert.Equal("x20", daemon.Answered[1].Completions.Single().label);
     }
 
     [Fact]
-    public void TheSameCaretInTheSameVersionIsAskedOnce()
+    public void AKeystrokesTwoAsksAreSentOnce()
     {
         var daemon = new FakeDaemon();
 
-        daemon.Requests.Want(new CompletionRequest(1, 0, 3, ""));
-        daemon.Requests.Want(new CompletionRequest(1, 0, 3, ""));
+        // The editor asks once before the formatter counts the edit and once after, at the same
+        // caret in the same text.
+        daemon.Requests.Want(new CompletionRequest(Code("d0."), 1, 3, ""));
+        daemon.Requests.Want(new CompletionRequest(Code("d0."), 1, 3, ""));
         daemon.Answer(0, Item("On", 0));
-        daemon.Requests.Want(new CompletionRequest(1, 0, 3, ""));
+        // The caret moves away and back.
+        daemon.Requests.Want(new CompletionRequest(Code("d0."), 1, 3, ""));
 
         Assert.Single(daemon.Asked);
         Assert.Equal(2, daemon.Answered.Count);
@@ -139,13 +148,27 @@ public class CompletionsTest
     }
 
     [Fact]
+    public void AnEditThatKeepsTheCaretIsAskedAgain()
+    {
+        var daemon = new FakeDaemon();
+
+        daemon.Requests.Want(new CompletionRequest(Code("d0.x"), 1, 3, ""));
+        daemon.Answer(0, Item("On", 0));
+        // Delete, to the right of the caret.
+        daemon.Requests.Want(new CompletionRequest(Code("d0."), 1, 3, ""));
+
+        Assert.Equal(2, daemon.Asked.Count);
+        Assert.Single(daemon.Answered);
+    }
+
+    [Fact]
     public void ARequestWantedAgainWhileInFlightDropsTheOneWaiting()
     {
         var daemon = new FakeDaemon();
 
-        daemon.Requests.Want(new CompletionRequest(1, 0, 3, ""));
-        daemon.Requests.Want(new CompletionRequest(2, 0, 4, "S"));
-        daemon.Requests.Want(new CompletionRequest(1, 0, 3, ""));
+        daemon.Requests.Want(new CompletionRequest(Code("d0."), 1, 3, ""));
+        daemon.Requests.Want(new CompletionRequest(Code("d0.S"), 1, 4, "S"));
+        daemon.Requests.Want(new CompletionRequest(Code("d0."), 1, 3, ""));
         daemon.Answer(0);
 
         Assert.Single(daemon.Asked);
@@ -156,11 +179,39 @@ public class CompletionsTest
     {
         var daemon = new FakeDaemon();
 
-        daemon.Requests.Want(new CompletionRequest(1, 0, 3, ""));
-        daemon.Requests.Want(new CompletionRequest(2, 0, 4, "S"));
+        daemon.Requests.Want(new CompletionRequest(Code("d0."), 1, 3, ""));
+        daemon.Requests.Want(new CompletionRequest(Code("d0.S"), 1, 4, "S"));
         daemon.Fail(0, new InvalidOperationException("stopped"));
 
         Assert.Empty(daemon.Answered.Single().Completions);
+        Assert.Equal(2, daemon.Asked.Count);
+    }
+
+    [Fact]
+    public void ARequestWithNoAnswerIsAskedAgain()
+    {
+        var daemon = new FakeDaemon();
+
+        daemon.Requests.Want(new CompletionRequest(Code("d0."), 1, 3, ""));
+        daemon.Answer(0, null);
+        daemon.Requests.Want(new CompletionRequest(Code("d0."), 1, 3, ""));
+        daemon.Fail(1, new InvalidOperationException("stopped"));
+        daemon.Requests.Want(new CompletionRequest(Code("d0."), 1, 3, ""));
+
+        Assert.Equal(3, daemon.Asked.Count);
+        Assert.All(daemon.Answered, a => Assert.Empty(a.Completions));
+    }
+
+    [Fact]
+    public void AForgottenAnswerIsAskedAgain()
+    {
+        var daemon = new FakeDaemon();
+
+        daemon.Requests.Want(new CompletionRequest(Code("d0."), 1, 3, ""));
+        daemon.Answer(0, Item("On", 0));
+        daemon.Requests.Forget();
+        daemon.Requests.Want(new CompletionRequest(Code("d0."), 1, 3, ""));
+
         Assert.Equal(2, daemon.Asked.Count);
     }
 

@@ -275,13 +275,13 @@ public class LspDocumentTest : IDisposable
     }
 
     [Fact]
-    public async Task NoCompletionsForADocumentNotOpen()
+    public async Task NoCompletionAnswerForADocumentNotOpen()
     {
         var daemon = Start();
         var document = new LspDocument(LspDocument.NewUri("chip"));
         document.Bind(daemon.Connection);
 
-        Assert.Empty(await document.Complete(0, 0).WaitAsync(TestDaemon.Timeout));
+        Assert.Null(await document.Complete(0, 0).WaitAsync(TestDaemon.Timeout));
     }
 
     [Fact]

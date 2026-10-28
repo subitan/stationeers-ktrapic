@@ -156,14 +156,14 @@ namespace KTrapIC
         /// <summary>
         /// What could be written at <paramref name="line"/> and <paramref name="character"/>
         /// (0-based, in UTF-16 code units) of the document as of the last <see cref="Sync"/>: the
-        /// daemon's <c>textDocument/completion</c> items. None if it isn't open, or the daemon
-        /// stops or answers with an error.
+        /// daemon's <c>textDocument/completion</c> items. Null if there is no answer: the document
+        /// isn't open, or the daemon stops or answers with an error.
         /// </summary>
         public async Task<IReadOnlyList<Completion>> Complete(int line, int character)
         {
             var connection = _connection;
             if (connection == null || !connection.IsInitialized || !_isOpen)
-                return Array.Empty<Completion>();
+                return null;
             try
             {
                 var result = await connection.Request("textDocument/completion", new JObject
@@ -175,11 +175,11 @@ namespace KTrapIC
             }
             catch (LspConnection.StoppedException)
             {
-                return Array.Empty<Completion>();
+                return null;
             }
             catch (LspConnection.ResponseException)
             {
-                return Array.Empty<Completion>();
+                return null;
             }
         }
 

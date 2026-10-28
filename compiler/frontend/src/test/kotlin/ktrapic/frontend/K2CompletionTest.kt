@@ -54,7 +54,58 @@ class K2CompletionTest {
 
   @Test
   fun `after an enum, its entries`() {
-    assertThat(labels("d0[LogicType.|] = 1.0")).containsAtLeast("Setting", "On")
+    val items = labels("d0[LogicType.|] = 1.0")
+
+    assertThat(items).containsAtLeast("Setting", "On")
+    assertThat(items).containsNoneOf("values", "valueOf", "entries")
+  }
+
+  @Test
+  fun `after Substance, its entries and the static set of them`() {
+    val items = labels("val s = Substance.|\n")
+
+    assertThat(items).containsAtLeast("Oxygen", "entries")
+    assertThat(items).containsNoneOf("values", "valueOf")
+  }
+
+  @Test
+  fun `after a Ratios loop's entry, its key and value`() {
+    assertThat(labels("for (e in GasSensors.at(d0).Ratios) {\n  db.Setting = e.|\n}\n"))
+        .containsExactly("key", "value")
+  }
+
+  @Test
+  fun `after a range, only its step`() {
+    assertThat(labels("for (i in (0..10).|) yield()\n")).containsExactly("step")
+    assertThat(labels("for (i in (10 downTo 0).|) yield()\n")).containsExactly("step")
+  }
+
+  @Test
+  fun `overloads merged into one item are described by one KTrapIC compiles`() {
+    val int = complete("val x = 2\nval y = x.|\n")
+    val double = complete("val x = 2.0\nval y = x.|\n")
+
+    assertThat(int.single { it.label == "until" }.detail).isEqualTo("fun until(to: Int): IntRange")
+    assertThat(int.single { it.label == "plus" }.detail).isEqualTo("fun plus(other: Int): Int")
+    assertThat(double.single { it.label == "plus" }.detail)
+        .isEqualTo("fun plus(other: Double): Double")
+    assertThat(double.single { it.label == "coerceIn" }.detail)
+        .isEqualTo("fun coerceIn(minimumValue: Double, maximumValue: Double): Double")
+  }
+
+  @Test
+  fun `only the keywords a program can use`() {
+    val keywords = complete("val a = 1\n|\n").filter { it.kind == Completion.Kind.KEYWORD }
+
+    assertThat(keywords.map { it.label }).containsAtLeast("val", "fun", "for", "in", "while")
+    assertThat(keywords.map { it.label })
+        .containsNoneOf("class", "interface", "object", "enum", "is")
+  }
+
+  @Test
+  fun `not a property in its own initializer, nor a function in its own body`() {
+    assertThat(labels("val a = 1\nval b = |\n")).doesNotContain("b")
+    assertThat(labels("fun f(): Int {\n  return |\n}\n")).doesNotContain("f")
   }
 
   @Test
@@ -82,7 +133,7 @@ class K2CompletionTest {
             .trimIndent()
     val items = labels(source)
 
-    assertThat(items).containsAtLeast("x", "y", "limit", "square", "d0", "sleep", "PresenceSensors")
+    assertThat(items).containsAtLeast("x", "y", "limit", "d0", "sleep", "PresenceSensors")
     assertThat(items).contains("if")
   }
 
@@ -131,7 +182,11 @@ class K2CompletionTest {
     assertThat(items).containsAtLeast("plus", "toDouble", "toInt", "shl", "coerceIn", "until")
     assertThat(items)
         .containsNoneOf("toLong", "toFloat", "toByte", "toShort", "toChar", "compareTo")
-    assertThat(K2Completion.SUPPORTED_STDLIB.map { it.substringAfterLast('.') })
+    assertThat(
+            K2Completion.SUPPORTED_STDLIB.getValue("kotlin.Int").map {
+              it.substringBefore('(').substringAfterLast('.')
+            }
+        )
         .containsAtLeastElementsIn(items)
   }
 
