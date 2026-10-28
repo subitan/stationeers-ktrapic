@@ -7,6 +7,7 @@ import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.PrintStream
 import java.util.Base64
+import ktrapic.daemon.lsp.MessageReader
 import org.junit.jupiter.api.Test
 
 class DaemonTest {
@@ -90,7 +91,7 @@ class DaemonTest {
     try {
       System.setIn(ByteArrayInputStream(requests.toByteArray()))
       System.setOut(PrintStream(captured, true))
-      main()
+      main(arrayOf())
     } finally {
       System.setIn(stdin)
       System.setOut(stdout)
@@ -113,5 +114,43 @@ class DaemonTest {
         .startsWith("Internal compiler error: java.lang.StackOverflowError")
     assertThat(overflow.has("stack_trace")).isTrue()
     assertThat(responses[4]["code"].asString).isEqualTo("s db Setting 1")
+  }
+
+  @Test
+  fun `serves LSP with only protocol messages on stdout`() {
+    fun frame(body: String) = "Content-Length: ${body.toByteArray().size}\r\n\r\n$body"
+    val messages =
+        listOf(
+                """{"jsonrpc": "2.0", "id": 1, "method": "initialize", "params": {}}""",
+                """{"jsonrpc": "2.0", "method": "initialized", "params": {}}""",
+                """{"jsonrpc": "2.0", "id": 2, "method": "shutdown"}""",
+                """{"jsonrpc": "2.0", "method": "exit"}""",
+            )
+            .joinToString("") { frame(it) }
+    val stdout = System.out
+    val stderr = System.err
+    val capturedOut = ByteArrayOutputStream()
+    val capturedErr = ByteArrayOutputStream()
+    val protocol = ByteArrayOutputStream()
+    val exitCode: Int
+    try {
+      System.setOut(PrintStream(capturedOut, true))
+      System.setErr(PrintStream(capturedErr, true))
+      exitCode = serveLsp(ByteArrayInputStream(messages.toByteArray()), protocol)
+      // Anything printed afterwards goes to stderr too.
+      println("stray")
+    } finally {
+      System.setOut(stdout)
+      System.setErr(stderr)
+    }
+
+    assertThat(exitCode).isEqualTo(0)
+    assertThat(capturedOut.size()).isEqualTo(0)
+    assertThat(capturedErr.toString()).contains("ready (LSP)")
+    assertThat(capturedErr.toString()).contains("stray")
+    val reader = MessageReader(ByteArrayInputStream(protocol.toByteArray())) {}
+    val ids = mutableListOf<Int>()
+    while (true) ids += JsonParser.parseString(reader.read() ?: break).asJsonObject["id"].asInt
+    assertThat(ids).containsExactly(1, 2).inOrder()
   }
 }
