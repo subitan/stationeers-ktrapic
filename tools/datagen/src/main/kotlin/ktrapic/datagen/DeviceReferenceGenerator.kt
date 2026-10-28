@@ -194,11 +194,28 @@ object DeviceReferenceGenerator {
       append("transmitter and a receiver (`PowerTransmissions.MicrowaveReceiver`). Its interface ")
       append("holds the logic types every member has, so a function can take any of them; each ")
       append("member is a nested class, with an entry point nested the same way, and can have ")
-      append("logic types of its own (`DigitalChutes.ValveLeft` adds `Lock` and `Open`). A family ")
+      append("logic types of its own (`DigitalChutes.ValveLeft` adds `Lock` and `Open`), or write ")
+      append("one its family only reads, listed as an `override var`. A family ")
       append("that is a special case of another extends its interface, so a function taking the ")
       append("other takes it too: an `ElevatorLevel` is an `ElevatorShaft`.\n")
+      val familiesByName = families.associateBy { it.name }
+      // The logic types a family can write, its own and those of the families it extends.
+      fun writable(family: Declaration): Set<String> =
+          family.properties.filter { it.writable }.map { it.name }.toSet() +
+              family.supertypes
+                  .removePrefix(" : ")
+                  .split(", ")
+                  .filter { it.isNotBlank() }
+                  .flatMap {
+                    val parent =
+                        requireNotNull(familiesByName[it.trim()]) {
+                          "family ${family.name} extends ${it.trim()}, but the source declares no interface ${it.trim()}"
+                        }
+                    writable(parent)
+                  }
       for (family in families.sortedBy { it.name }) {
         val members = devices.filter { it.name.startsWith("${family.name}.") }
+        val familyWritable = writable(family)
         append("\n")
         append("### ${family.name}\n")
         append("\n")
@@ -207,7 +224,11 @@ object DeviceReferenceGenerator {
         for (property in family.properties) append("  $property\n")
         for ((i, member) in members.withIndex()) {
           val simple = member.name.substringAfter('.')
-          val extra = member.properties.filter { !it.inherited }
+          // A member's own logic types, and those it can write where its family only reads them.
+          val extra =
+              member.properties.filter {
+                !it.inherited || (it.writable && it.name !in familyWritable)
+              }
           // A blank line between declarations, but not at the top of an interface that adds none.
           if (i > 0 || family.properties.isNotEmpty()) append("\n")
           append("  /** ${member.prefab}. Entry point: ${entryPoint(member)}. */\n")
@@ -215,7 +236,9 @@ object DeviceReferenceGenerator {
             append("  class $simple : TypedDevice, ${family.name}\n")
           } else {
             append("  class $simple : TypedDevice, ${family.name} {\n")
-            for (property in extra) append("    $property\n")
+            for (property in extra) {
+              append("    ${if (property.inherited) "override " else ""}$property\n")
+            }
             append("  }\n")
           }
         }
