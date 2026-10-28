@@ -79,41 +79,85 @@ class DeviceReferenceGeneratorTest {
     assertThat(error).hasMessageThat().contains("2 typed device(s) but 1 were read")
   }
 
+  /**
+   * A `Sensor` family extending `Detector`, which writes `Mode`; `Sensor` writes `Lock` and only
+   * reads `Activate` and `Quantity`. Its one member, `Motion`, redeclares all four, writing every
+   * one but `Quantity`.
+   */
+  private val sensorFamily =
+      """
+      |interface Detector {
+      |  var Mode: Double
+      |}
+      |
+      |interface Sensor : Detector {
+      |  val Activate: Boolean
+      |
+      |  var Lock: Boolean
+      |
+      |  val Quantity: Double
+      |
+      |  @PrefabName("StructureMotionSensor")
+      |  class Motion internal constructor() : TypedDevice(), Sensor {
+      |    override var Activate: Boolean
+      |      get() = intrinsic()
+      |      set(value) = intrinsic()
+      |
+      |    override var Lock: Boolean
+      |      get() = intrinsic()
+      |      set(value) = intrinsic()
+      |
+      |    override var Mode: Double
+      |      get() = intrinsic()
+      |      set(value) = intrinsic()
+      |
+      |    override val Quantity: Double
+      |      get() = intrinsic()
+      |  }
+      |}
+      |
+      |object Sensors {
+      |  @PrefabName("StructureMotionSensor")
+      |  object Motion {
+      |    fun at(pin: Device): Sensor.Motion = intrinsic()
+      |  }
+      |}
+      |"""
+          .trimMargin()
+
   @Test
   fun `shows a logic type a family member can write where its family only reads it`() {
-    val source =
-        """
-        |interface Sensor {
-        |  val Activate: Boolean
-        |
-        |  val Quantity: Double
-        |
-        |  @PrefabName("StructureMotionSensor")
-        |  class Motion internal constructor() : TypedDevice(), Sensor {
-        |    override var Activate: Boolean
-        |      get() = intrinsic()
-        |      set(value) = intrinsic()
-        |
-        |    override val Quantity: Double
-        |      get() = intrinsic()
-        |  }
-        |}
-        |
-        |object Sensors {
-        |  @PrefabName("StructureMotionSensor")
-        |  object Motion {
-        |    fun at(pin: Device): Sensor.Motion = intrinsic()
-        |  }
-        |}
-        |"""
-            .trimMargin()
-
-    val reference = DeviceReferenceGenerator.generate(source, enums, typing)
+    val reference = DeviceReferenceGenerator.generate(sensorFamily, enums, typing)
 
     assertThat(reference)
         .contains(
             "  class Motion : TypedDevice, Sensor {\n    override var Activate: Boolean\n  }\n"
         )
+  }
+
+  @Test
+  fun `does not show a logic type a family member writes where its family writes it too`() {
+    val reference = DeviceReferenceGenerator.generate(sensorFamily, enums, typing)
+
+    assertThat(reference).doesNotContain("override var Lock")
+  }
+
+  @Test
+  fun `does not show a logic type a family member writes where a family it extends writes it`() {
+    val reference = DeviceReferenceGenerator.generate(sensorFamily, enums, typing)
+
+    assertThat(reference).doesNotContain("override var Mode")
+  }
+
+  @Test
+  fun `rejects a family extending an interface that is not a family`() {
+    val source = sensorFamily.replace("interface Detector {", "interface Unknown {")
+
+    val error =
+        assertThrows<IllegalArgumentException> {
+          DeviceReferenceGenerator.generate(source, enums, typing)
+        }
+    assertThat(error).hasMessageThat().contains("family Sensor extends Detector")
   }
 
   @Test
