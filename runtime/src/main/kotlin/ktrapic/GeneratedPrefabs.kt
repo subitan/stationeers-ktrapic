@@ -9093,7 +9093,7 @@ object ArcWelders {
 }
 
 /** A device that comes as several prefabs, each a nested class. */
-interface SpaceHelmet {
+interface Helmet {
   val Combustion: Boolean
 
   var Flush: Boolean
@@ -9118,7 +9118,7 @@ interface SpaceHelmet {
 
   /** A ItemSpaceHelmet. */
   @PrefabName("ItemSpaceHelmet")
-  class Standard internal constructor() : TypedDevice(), SpaceHelmet {
+  class Space internal constructor() : TypedDevice(), Helmet {
     override val Combustion: Boolean
       get() = intrinsic()
 
@@ -9172,7 +9172,7 @@ interface SpaceHelmet {
 
   /** A ItemEmergencySpaceHelmet. */
   @PrefabName("ItemEmergencySpaceHelmet")
-  class Emergency internal constructor() : TypedDevice(), SpaceHelmet {
+  class EmergencySpace internal constructor() : TypedDevice(), Helmet {
     override val Combustion: Boolean
       get() = intrinsic()
 
@@ -9223,36 +9223,616 @@ interface SpaceHelmet {
     /** The ItemEmergencySpaceHelmet prefab. */
     companion object : Prefab()
   }
+
+  /** A ItemHardsuitHelmet. */
+  @PrefabName("ItemHardsuitHelmet")
+  class Hardsuit internal constructor() : TypedDevice(), Helmet {
+    override val Combustion: Boolean
+      get() = intrinsic()
+
+    override var Flush: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override var Lock: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override var On: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override var Open: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override val Power: Boolean
+      get() = intrinsic()
+
+    override val Pressure: Double
+      get() = intrinsic()
+
+    override var SoundAlert: Double
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override val Temperature: Double
+      get() = intrinsic()
+
+    override val TotalMoles: Double
+      get() = intrinsic()
+
+    override var Volume: Double
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    @LogicTypes(
+        read =
+            "RatioCarbonDioxide,RatioHelium,RatioHydrazine,RatioHydrochloricAcid,RatioHydrogen,RatioLiquidAlcohol,RatioLiquidCarbonDioxide,RatioLiquidHydrazine,RatioLiquidHydrochloricAcid,RatioLiquidHydrogen,RatioLiquidMethane,RatioLiquidNitrogen,RatioLiquidNitrousOxide,RatioLiquidOxygen,RatioLiquidOzone,RatioLiquidPollutant,RatioLiquidSilanol,RatioLiquidSodiumChloride,RatioMethane,RatioNitrogen,RatioNitrousOxide,RatioOxygen,RatioOzone,RatioPollutant,RatioPollutedWater,RatioSilanol,RatioSteam,RatioWater",
+        written = "",
+    )
+    val Ratios: Ratios
+      get() = intrinsic()
+
+    /** The ItemHardsuitHelmet prefab. */
+    companion object : Prefab()
+  }
+
+  /** A ItemIcarusHelmet. */
+  @PrefabName("ItemIcarusHelmet")
+  class Icarus internal constructor() : TypedDevice(), Helmet {
+    override val Combustion: Boolean
+      get() = intrinsic()
+
+    override var Flush: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override var Lock: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override var On: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override var Open: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override val Power: Boolean
+      get() = intrinsic()
+
+    override val Pressure: Double
+      get() = intrinsic()
+
+    override var SoundAlert: Double
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override val Temperature: Double
+      get() = intrinsic()
+
+    override val TotalMoles: Double
+      get() = intrinsic()
+
+    override var Volume: Double
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    @LogicTypes(
+        read =
+            "RatioCarbonDioxide,RatioHelium,RatioHydrazine,RatioHydrochloricAcid,RatioHydrogen,RatioLiquidAlcohol,RatioLiquidCarbonDioxide,RatioLiquidHydrazine,RatioLiquidHydrochloricAcid,RatioLiquidHydrogen,RatioLiquidMethane,RatioLiquidNitrogen,RatioLiquidNitrousOxide,RatioLiquidOxygen,RatioLiquidOzone,RatioLiquidPollutant,RatioLiquidSilanol,RatioLiquidSodiumChloride,RatioMethane,RatioNitrogen,RatioNitrousOxide,RatioOxygen,RatioOzone,RatioPollutant,RatioPollutedWater,RatioSilanol,RatioSteam,RatioWater",
+        written = "",
+    )
+    val Ratios: Ratios
+      get() = intrinsic()
+
+    /** The ItemIcarusHelmet prefab. */
+    companion object : Prefab()
+  }
+
+  /** A ItemSuitHelmetHARM. */
+  @PrefabName("ItemSuitHelmetHARM")
+  class Harm internal constructor() : TypedDevice(), Helmet {
+    override val Combustion: Boolean
+      get() = intrinsic()
+
+    override var Flush: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override var Lock: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override var On: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override var Open: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override val Power: Boolean
+      get() = intrinsic()
+
+    override val Pressure: Double
+      get() = intrinsic()
+
+    override var SoundAlert: Double
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override val Temperature: Double
+      get() = intrinsic()
+
+    override val TotalMoles: Double
+      get() = intrinsic()
+
+    override var Volume: Double
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    @LogicTypes(
+        read =
+            "RatioCarbonDioxide,RatioHelium,RatioHydrazine,RatioHydrochloricAcid,RatioHydrogen,RatioLiquidAlcohol,RatioLiquidCarbonDioxide,RatioLiquidHydrazine,RatioLiquidHydrochloricAcid,RatioLiquidHydrogen,RatioLiquidMethane,RatioLiquidNitrogen,RatioLiquidNitrousOxide,RatioLiquidOxygen,RatioLiquidOzone,RatioLiquidPollutant,RatioLiquidSilanol,RatioLiquidSodiumChloride,RatioMethane,RatioNitrogen,RatioNitrousOxide,RatioOxygen,RatioOzone,RatioPollutant,RatioPollutedWater,RatioSilanol,RatioSteam,RatioWater",
+        written = "",
+    )
+    val Ratios: Ratios
+      get() = intrinsic()
+
+    /** The ItemSuitHelmetHARM prefab. */
+    companion object : Prefab()
+  }
 }
 
-/** The SpaceHelmet devices on the chip's network, by prefab. */
-object SpaceHelmets {
+/** The Helmet devices on the chip's network, by prefab. */
+object Helmets {
   /** The ItemSpaceHelmet devices on the chip's network. */
   @PrefabName("ItemSpaceHelmet")
-  object Standard {
+  object Space {
     /** The device on [pin], as a ItemSpaceHelmet. */
-    fun at(pin: Device): SpaceHelmet.Standard = intrinsic()
+    fun at(pin: Device): Helmet.Space = intrinsic()
 
     /** Every one on the network. */
-    val all: DeviceBatch<SpaceHelmet.Standard>
+    val all: DeviceBatch<Helmet.Space>
       get() = intrinsic()
 
     /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<SpaceHelmet.Standard> = intrinsic()
+    fun named(name: String): DeviceBatch<Helmet.Space> = intrinsic()
   }
 
   /** The ItemEmergencySpaceHelmet devices on the chip's network. */
   @PrefabName("ItemEmergencySpaceHelmet")
-  object Emergency {
+  object EmergencySpace {
     /** The device on [pin], as a ItemEmergencySpaceHelmet. */
-    fun at(pin: Device): SpaceHelmet.Emergency = intrinsic()
+    fun at(pin: Device): Helmet.EmergencySpace = intrinsic()
 
     /** Every one on the network. */
-    val all: DeviceBatch<SpaceHelmet.Emergency>
+    val all: DeviceBatch<Helmet.EmergencySpace>
       get() = intrinsic()
 
     /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<SpaceHelmet.Emergency> = intrinsic()
+    fun named(name: String): DeviceBatch<Helmet.EmergencySpace> = intrinsic()
+  }
+
+  /** The ItemHardsuitHelmet devices on the chip's network. */
+  @PrefabName("ItemHardsuitHelmet")
+  object Hardsuit {
+    /** The device on [pin], as a ItemHardsuitHelmet. */
+    fun at(pin: Device): Helmet.Hardsuit = intrinsic()
+
+    /** Every one on the network. */
+    val all: DeviceBatch<Helmet.Hardsuit>
+      get() = intrinsic()
+
+    /** Every one on the network named [name], which must be a constant. */
+    fun named(name: String): DeviceBatch<Helmet.Hardsuit> = intrinsic()
+  }
+
+  /** The ItemIcarusHelmet devices on the chip's network. */
+  @PrefabName("ItemIcarusHelmet")
+  object Icarus {
+    /** The device on [pin], as a ItemIcarusHelmet. */
+    fun at(pin: Device): Helmet.Icarus = intrinsic()
+
+    /** Every one on the network. */
+    val all: DeviceBatch<Helmet.Icarus>
+      get() = intrinsic()
+
+    /** Every one on the network named [name], which must be a constant. */
+    fun named(name: String): DeviceBatch<Helmet.Icarus> = intrinsic()
+  }
+
+  /** The ItemSuitHelmetHARM devices on the chip's network. */
+  @PrefabName("ItemSuitHelmetHARM")
+  object Harm {
+    /** The device on [pin], as a ItemSuitHelmetHARM. */
+    fun at(pin: Device): Helmet.Harm = intrinsic()
+
+    /** Every one on the network. */
+    val all: DeviceBatch<Helmet.Harm>
+      get() = intrinsic()
+
+    /** Every one on the network named [name], which must be a constant. */
+    fun named(name: String): DeviceBatch<Helmet.Harm> = intrinsic()
+  }
+}
+
+/** A device that comes as several prefabs, each a nested class. */
+interface Suit {
+  var Activate: Boolean
+
+  var AirRelease: Double
+
+  val Combustion: Boolean
+
+  val EntityState: Double
+
+  var Error: Boolean
+
+  var Filtration: Double
+
+  var Lock: Boolean
+
+  var On: Boolean
+
+  val Orientation: Double
+
+  val Power: Boolean
+
+  val Pressure: Double
+
+  val PressureExternal: Double
+
+  var PressureSetting: Double
+
+  var Setting: Double
+
+  var SoundAlert: Double
+
+  val Temperature: Double
+
+  val TemperatureExternal: Double
+
+  var TemperatureSetting: Double
+
+  val TotalMoles: Double
+
+  val VelocityMagnitude: Double
+
+  var Volume: Double
+
+  /** A ItemHardSuit. */
+  @PrefabName("ItemHardSuit")
+  class Hardsuit internal constructor() : TypedDevice(), Suit {
+    override var Activate: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override var AirRelease: Double
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override val Combustion: Boolean
+      get() = intrinsic()
+
+    override val EntityState: Double
+      get() = intrinsic()
+
+    override var Error: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override var Filtration: Double
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override var Lock: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override var On: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override val Orientation: Double
+      get() = intrinsic()
+
+    override val Power: Boolean
+      get() = intrinsic()
+
+    override val Pressure: Double
+      get() = intrinsic()
+
+    override val PressureExternal: Double
+      get() = intrinsic()
+
+    override var PressureSetting: Double
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override var Setting: Double
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override var SoundAlert: Double
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override val Temperature: Double
+      get() = intrinsic()
+
+    override val TemperatureExternal: Double
+      get() = intrinsic()
+
+    override var TemperatureSetting: Double
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override val TotalMoles: Double
+      get() = intrinsic()
+
+    override val VelocityMagnitude: Double
+      get() = intrinsic()
+
+    override var Volume: Double
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    @LogicTypes(
+        read =
+            "RatioCarbonDioxide,RatioHelium,RatioHydrazine,RatioHydrochloricAcid,RatioHydrogen,RatioLiquidAlcohol,RatioLiquidCarbonDioxide,RatioLiquidHydrazine,RatioLiquidHydrochloricAcid,RatioLiquidHydrogen,RatioLiquidMethane,RatioLiquidNitrogen,RatioLiquidNitrousOxide,RatioLiquidOxygen,RatioLiquidOzone,RatioLiquidPollutant,RatioLiquidSilanol,RatioLiquidSodiumChloride,RatioMethane,RatioNitrogen,RatioNitrousOxide,RatioOxygen,RatioOzone,RatioPollutant,RatioPollutedWater,RatioSilanol,RatioSteam,RatioWater",
+        written = "",
+    )
+    val Ratios: Ratios
+      get() = intrinsic()
+
+    @LogicTypes(read = "PositionX,PositionY,PositionZ", written = "")
+    val Position: Vector
+      get() = intrinsic()
+
+    @LogicTypes(read = "VelocityX,VelocityY,VelocityZ", written = "")
+    val Velocity: Vector
+      get() = intrinsic()
+
+    @LogicTypes(read = "VelocityRelativeX,VelocityRelativeY,VelocityRelativeZ", written = "")
+    val VelocityRelative: Vector
+      get() = intrinsic()
+
+    @LogicTypes(read = "ForwardX,ForwardY,ForwardZ", written = "")
+    val Forward: Vector
+      get() = intrinsic()
+
+    /** The device's slots, by number. */
+    val slots: Slots<ItemCommonSlot>
+      get() = intrinsic()
+
+    /** Slot 0. */
+    @SlotNumber(0)
+    val AirTank: ItemAirTankSlot
+      get() = intrinsic()
+
+    /** Slot 1. */
+    @SlotNumber(1)
+    val WasteTank: ItemAirTankSlot
+      get() = intrinsic()
+
+    /** Slot 2. */
+    @SlotNumber(2)
+    val LifeSupport: ItemBatterySlot
+      get() = intrinsic()
+
+    /** Slot 3. */
+    @SlotNumber(3)
+    val ProgrammableChip: ItemCommonSlot
+      get() = intrinsic()
+
+    /** The ItemHardSuit prefab. */
+    companion object : Prefab()
+  }
+
+  /** A ItemSuitHARM. */
+  @PrefabName("ItemSuitHARM")
+  class Harm internal constructor() : TypedDevice(), Suit {
+    override var Activate: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override var AirRelease: Double
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override val Combustion: Boolean
+      get() = intrinsic()
+
+    override val EntityState: Double
+      get() = intrinsic()
+
+    override var Error: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override var Filtration: Double
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override var Lock: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override var On: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override val Orientation: Double
+      get() = intrinsic()
+
+    override val Power: Boolean
+      get() = intrinsic()
+
+    override val Pressure: Double
+      get() = intrinsic()
+
+    override val PressureExternal: Double
+      get() = intrinsic()
+
+    override var PressureSetting: Double
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override var Setting: Double
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override var SoundAlert: Double
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override val Temperature: Double
+      get() = intrinsic()
+
+    override val TemperatureExternal: Double
+      get() = intrinsic()
+
+    override var TemperatureSetting: Double
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override val TotalMoles: Double
+      get() = intrinsic()
+
+    override val VelocityMagnitude: Double
+      get() = intrinsic()
+
+    override var Volume: Double
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    @LogicTypes(
+        read =
+            "RatioCarbonDioxide,RatioHelium,RatioHydrazine,RatioHydrochloricAcid,RatioHydrogen,RatioLiquidAlcohol,RatioLiquidCarbonDioxide,RatioLiquidHydrazine,RatioLiquidHydrochloricAcid,RatioLiquidHydrogen,RatioLiquidMethane,RatioLiquidNitrogen,RatioLiquidNitrousOxide,RatioLiquidOxygen,RatioLiquidOzone,RatioLiquidPollutant,RatioLiquidSilanol,RatioLiquidSodiumChloride,RatioMethane,RatioNitrogen,RatioNitrousOxide,RatioOxygen,RatioOzone,RatioPollutant,RatioPollutedWater,RatioSilanol,RatioSteam,RatioWater",
+        written = "",
+    )
+    val Ratios: Ratios
+      get() = intrinsic()
+
+    @LogicTypes(read = "PositionX,PositionY,PositionZ", written = "")
+    val Position: Vector
+      get() = intrinsic()
+
+    @LogicTypes(read = "VelocityX,VelocityY,VelocityZ", written = "")
+    val Velocity: Vector
+      get() = intrinsic()
+
+    @LogicTypes(read = "VelocityRelativeX,VelocityRelativeY,VelocityRelativeZ", written = "")
+    val VelocityRelative: Vector
+      get() = intrinsic()
+
+    @LogicTypes(read = "ForwardX,ForwardY,ForwardZ", written = "")
+    val Forward: Vector
+      get() = intrinsic()
+
+    /** The device's slots, by number. */
+    val slots: Slots<ItemCommonSlot>
+      get() = intrinsic()
+
+    /** Slot 0. */
+    @SlotNumber(0)
+    val AirTank: ItemAirTankSlot
+      get() = intrinsic()
+
+    /** Slot 1. */
+    @SlotNumber(1)
+    val WasteTank: ItemAirTankSlot
+      get() = intrinsic()
+
+    /** Slot 2. */
+    @SlotNumber(2)
+    val CoolantTank: ItemCommonSlot
+      get() = intrinsic()
+
+    /** Slot 3. */
+    @SlotNumber(3)
+    val Battery: ItemBatterySlot
+      get() = intrinsic()
+
+    /** Slot 4. */
+    @SlotNumber(4)
+    val Chip: ItemCommonSlot
+      get() = intrinsic()
+
+    /** Slot 5. */
+    @SlotNumber(5)
+    val Filter1: ItemFilteredSlot
+      get() = intrinsic()
+
+    /** Slot 6. */
+    @SlotNumber(6)
+    val Filter2: ItemFilteredSlot
+      get() = intrinsic()
+
+    /** Slot 7. */
+    @SlotNumber(7)
+    val Filter3: ItemFilteredSlot
+      get() = intrinsic()
+
+    /** Slot 8. */
+    @SlotNumber(8)
+    val Filter4: ItemFilteredSlot
+      get() = intrinsic()
+
+    /** Slot 9. */
+    @SlotNumber(9)
+    val Back: ItemCommonSlot
+      get() = intrinsic()
+
+    /** The ItemSuitHARM prefab. */
+    companion object : Prefab()
+  }
+}
+
+/** The Suit devices on the chip's network, by prefab. */
+object Suits {
+  /** The ItemHardSuit devices on the chip's network. */
+  @PrefabName("ItemHardSuit")
+  object Hardsuit {
+    /** The device on [pin], as a ItemHardSuit. */
+    fun at(pin: Device): Suit.Hardsuit = intrinsic()
+
+    /** Every one on the network. */
+    val all: Batch
+      get() = intrinsic()
+
+    /** Every one on the network named [name], which must be a constant. */
+    fun named(name: String): Batch = intrinsic()
+
+    class Batch internal constructor() : DeviceBatch<Suit.Hardsuit>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<ItemCommonSlot>>
+        get() = intrinsic()
+    }
+  }
+
+  /** The ItemSuitHARM devices on the chip's network. */
+  @PrefabName("ItemSuitHARM")
+  object Harm {
+    /** The device on [pin], as a ItemSuitHARM. */
+    fun at(pin: Device): Suit.Harm = intrinsic()
+
+    /** Every one on the network. */
+    val all: Batch
+      get() = intrinsic()
+
+    /** Every one on the network named [name], which must be a constant. */
+    fun named(name: String): Batch = intrinsic()
+
+    class Batch internal constructor() : DeviceBatch<Suit.Harm>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<ItemCommonSlot>>
+        get() = intrinsic()
+    }
   }
 }
 
@@ -14125,291 +14705,6 @@ object HardJetpacks {
   }
 }
 
-/** A ItemHardSuit. */
-@PrefabName("ItemHardSuit")
-class HardSuit internal constructor() : TypedDevice() {
-  var Activate: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var AirRelease: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val Combustion: Boolean
-    get() = intrinsic()
-
-  val EntityState: Double
-    get() = intrinsic()
-
-  var Error: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var Filtration: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var Lock: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var On: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val Orientation: Double
-    get() = intrinsic()
-
-  val Power: Boolean
-    get() = intrinsic()
-
-  val Pressure: Double
-    get() = intrinsic()
-
-  val PressureExternal: Double
-    get() = intrinsic()
-
-  var PressureSetting: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var Setting: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var SoundAlert: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val Temperature: Double
-    get() = intrinsic()
-
-  val TemperatureExternal: Double
-    get() = intrinsic()
-
-  var TemperatureSetting: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val TotalMoles: Double
-    get() = intrinsic()
-
-  val VelocityMagnitude: Double
-    get() = intrinsic()
-
-  var Volume: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  @LogicTypes(
-      read =
-          "RatioCarbonDioxide,RatioHelium,RatioHydrazine,RatioHydrochloricAcid,RatioHydrogen,RatioLiquidAlcohol,RatioLiquidCarbonDioxide,RatioLiquidHydrazine,RatioLiquidHydrochloricAcid,RatioLiquidHydrogen,RatioLiquidMethane,RatioLiquidNitrogen,RatioLiquidNitrousOxide,RatioLiquidOxygen,RatioLiquidOzone,RatioLiquidPollutant,RatioLiquidSilanol,RatioLiquidSodiumChloride,RatioMethane,RatioNitrogen,RatioNitrousOxide,RatioOxygen,RatioOzone,RatioPollutant,RatioPollutedWater,RatioSilanol,RatioSteam,RatioWater",
-      written = "",
-  )
-  val Ratios: Ratios
-    get() = intrinsic()
-
-  @LogicTypes(read = "PositionX,PositionY,PositionZ", written = "")
-  val Position: Vector
-    get() = intrinsic()
-
-  @LogicTypes(read = "VelocityX,VelocityY,VelocityZ", written = "")
-  val Velocity: Vector
-    get() = intrinsic()
-
-  @LogicTypes(read = "VelocityRelativeX,VelocityRelativeY,VelocityRelativeZ", written = "")
-  val VelocityRelative: Vector
-    get() = intrinsic()
-
-  @LogicTypes(read = "ForwardX,ForwardY,ForwardZ", written = "")
-  val Forward: Vector
-    get() = intrinsic()
-
-  /** The device's slots, by number. */
-  val slots: Slots<ItemCommonSlot>
-    get() = intrinsic()
-
-  /** Slot 0. */
-  @SlotNumber(0)
-  val AirTank: ItemAirTankSlot
-    get() = intrinsic()
-
-  /** Slot 1. */
-  @SlotNumber(1)
-  val WasteTank: ItemAirTankSlot
-    get() = intrinsic()
-
-  /** Slot 2. */
-  @SlotNumber(2)
-  val LifeSupport: ItemBatterySlot
-    get() = intrinsic()
-
-  /** Slot 3. */
-  @SlotNumber(3)
-  val ProgrammableChip: ItemCommonSlot
-    get() = intrinsic()
-
-  /** The ItemHardSuit prefab. */
-  companion object : Prefab()
-}
-
-/** The ItemHardSuit devices on the chip's network. */
-@PrefabName("ItemHardSuit")
-object HardSuits {
-  /** The device on [pin], as a ItemHardSuit. */
-  fun at(pin: Device): HardSuit = intrinsic()
-
-  /** Every one on the network. */
-  val all: Batch
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch<HardSuit>() {
-    /** A slot of every one in the batch, by number. */
-    val slots: Slots<SlotBatch<ItemCommonSlot>>
-      get() = intrinsic()
-  }
-}
-
-/** A ItemHardsuitHelmet. */
-@PrefabName("ItemHardsuitHelmet")
-class HardsuitHelmet internal constructor() : TypedDevice() {
-  val Combustion: Boolean
-    get() = intrinsic()
-
-  var Flush: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var Lock: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var On: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var Open: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val Power: Boolean
-    get() = intrinsic()
-
-  val Pressure: Double
-    get() = intrinsic()
-
-  var SoundAlert: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val Temperature: Double
-    get() = intrinsic()
-
-  val TotalMoles: Double
-    get() = intrinsic()
-
-  var Volume: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  @LogicTypes(
-      read =
-          "RatioCarbonDioxide,RatioHelium,RatioHydrazine,RatioHydrochloricAcid,RatioHydrogen,RatioLiquidAlcohol,RatioLiquidCarbonDioxide,RatioLiquidHydrazine,RatioLiquidHydrochloricAcid,RatioLiquidHydrogen,RatioLiquidMethane,RatioLiquidNitrogen,RatioLiquidNitrousOxide,RatioLiquidOxygen,RatioLiquidOzone,RatioLiquidPollutant,RatioLiquidSilanol,RatioLiquidSodiumChloride,RatioMethane,RatioNitrogen,RatioNitrousOxide,RatioOxygen,RatioOzone,RatioPollutant,RatioPollutedWater,RatioSilanol,RatioSteam,RatioWater",
-      written = "",
-  )
-  val Ratios: Ratios
-    get() = intrinsic()
-
-  /** The ItemHardsuitHelmet prefab. */
-  companion object : Prefab()
-}
-
-/** The ItemHardsuitHelmet devices on the chip's network. */
-@PrefabName("ItemHardsuitHelmet")
-object HardsuitHelmets {
-  /** The device on [pin], as a ItemHardsuitHelmet. */
-  fun at(pin: Device): HardsuitHelmet = intrinsic()
-
-  /** Every one on the network. */
-  val all: DeviceBatch<HardsuitHelmet>
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): DeviceBatch<HardsuitHelmet> = intrinsic()
-}
-
-/** A ItemIcarusHelmet. */
-@PrefabName("ItemIcarusHelmet")
-class IcarusHelmet internal constructor() : TypedDevice() {
-  val Combustion: Boolean
-    get() = intrinsic()
-
-  var Flush: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var Lock: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var On: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var Open: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val Power: Boolean
-    get() = intrinsic()
-
-  val Pressure: Double
-    get() = intrinsic()
-
-  var SoundAlert: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val Temperature: Double
-    get() = intrinsic()
-
-  val TotalMoles: Double
-    get() = intrinsic()
-
-  var Volume: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  @LogicTypes(
-      read =
-          "RatioCarbonDioxide,RatioHelium,RatioHydrazine,RatioHydrochloricAcid,RatioHydrogen,RatioLiquidAlcohol,RatioLiquidCarbonDioxide,RatioLiquidHydrazine,RatioLiquidHydrochloricAcid,RatioLiquidHydrogen,RatioLiquidMethane,RatioLiquidNitrogen,RatioLiquidNitrousOxide,RatioLiquidOxygen,RatioLiquidOzone,RatioLiquidPollutant,RatioLiquidSilanol,RatioLiquidSodiumChloride,RatioMethane,RatioNitrogen,RatioNitrousOxide,RatioOxygen,RatioOzone,RatioPollutant,RatioPollutedWater,RatioSilanol,RatioSteam,RatioWater",
-      written = "",
-  )
-  val Ratios: Ratios
-    get() = intrinsic()
-
-  /** The ItemIcarusHelmet prefab. */
-  companion object : Prefab()
-}
-
-/** The ItemIcarusHelmet devices on the chip's network. */
-@PrefabName("ItemIcarusHelmet")
-object IcarusHelmets {
-  /** The device on [pin], as a ItemIcarusHelmet. */
-  fun at(pin: Device): IcarusHelmet = intrinsic()
-
-  /** Every one on the network. */
-  val all: DeviceBatch<IcarusHelmet>
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): DeviceBatch<IcarusHelmet> = intrinsic()
-}
-
 /** A ItemIntegratedCircuit10. */
 @PrefabName("ItemIntegratedCircuit10")
 class IntegratedCircuit10 internal constructor() : TypedDevice() {
@@ -14940,253 +15235,6 @@ object Spacepacks {
     val slots: Slots<SlotBatch<ItemCommonSlot>>
       get() = intrinsic()
   }
-}
-
-/** A ItemSuitHARM. */
-@PrefabName("ItemSuitHARM")
-class SuitHARM internal constructor() : TypedDevice() {
-  var Activate: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var AirRelease: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val Combustion: Boolean
-    get() = intrinsic()
-
-  val EntityState: Double
-    get() = intrinsic()
-
-  var Error: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var Filtration: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var Lock: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var On: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val Orientation: Double
-    get() = intrinsic()
-
-  val Power: Boolean
-    get() = intrinsic()
-
-  val Pressure: Double
-    get() = intrinsic()
-
-  val PressureExternal: Double
-    get() = intrinsic()
-
-  var PressureSetting: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var Setting: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var SoundAlert: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val Temperature: Double
-    get() = intrinsic()
-
-  val TemperatureExternal: Double
-    get() = intrinsic()
-
-  var TemperatureSetting: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val TotalMoles: Double
-    get() = intrinsic()
-
-  val VelocityMagnitude: Double
-    get() = intrinsic()
-
-  var Volume: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  @LogicTypes(
-      read =
-          "RatioCarbonDioxide,RatioHelium,RatioHydrazine,RatioHydrochloricAcid,RatioHydrogen,RatioLiquidAlcohol,RatioLiquidCarbonDioxide,RatioLiquidHydrazine,RatioLiquidHydrochloricAcid,RatioLiquidHydrogen,RatioLiquidMethane,RatioLiquidNitrogen,RatioLiquidNitrousOxide,RatioLiquidOxygen,RatioLiquidOzone,RatioLiquidPollutant,RatioLiquidSilanol,RatioLiquidSodiumChloride,RatioMethane,RatioNitrogen,RatioNitrousOxide,RatioOxygen,RatioOzone,RatioPollutant,RatioPollutedWater,RatioSilanol,RatioSteam,RatioWater",
-      written = "",
-  )
-  val Ratios: Ratios
-    get() = intrinsic()
-
-  @LogicTypes(read = "PositionX,PositionY,PositionZ", written = "")
-  val Position: Vector
-    get() = intrinsic()
-
-  @LogicTypes(read = "VelocityX,VelocityY,VelocityZ", written = "")
-  val Velocity: Vector
-    get() = intrinsic()
-
-  @LogicTypes(read = "VelocityRelativeX,VelocityRelativeY,VelocityRelativeZ", written = "")
-  val VelocityRelative: Vector
-    get() = intrinsic()
-
-  @LogicTypes(read = "ForwardX,ForwardY,ForwardZ", written = "")
-  val Forward: Vector
-    get() = intrinsic()
-
-  /** The device's slots, by number. */
-  val slots: Slots<ItemCommonSlot>
-    get() = intrinsic()
-
-  /** Slot 0. */
-  @SlotNumber(0)
-  val AirTank: ItemAirTankSlot
-    get() = intrinsic()
-
-  /** Slot 1. */
-  @SlotNumber(1)
-  val WasteTank: ItemAirTankSlot
-    get() = intrinsic()
-
-  /** Slot 2. */
-  @SlotNumber(2)
-  val CoolantTank: ItemCommonSlot
-    get() = intrinsic()
-
-  /** Slot 3. */
-  @SlotNumber(3)
-  val Battery: ItemBatterySlot
-    get() = intrinsic()
-
-  /** Slot 4. */
-  @SlotNumber(4)
-  val Chip: ItemCommonSlot
-    get() = intrinsic()
-
-  /** Slot 5. */
-  @SlotNumber(5)
-  val Filter1: ItemFilteredSlot
-    get() = intrinsic()
-
-  /** Slot 6. */
-  @SlotNumber(6)
-  val Filter2: ItemFilteredSlot
-    get() = intrinsic()
-
-  /** Slot 7. */
-  @SlotNumber(7)
-  val Filter3: ItemFilteredSlot
-    get() = intrinsic()
-
-  /** Slot 8. */
-  @SlotNumber(8)
-  val Filter4: ItemFilteredSlot
-    get() = intrinsic()
-
-  /** Slot 9. */
-  @SlotNumber(9)
-  val Back: ItemCommonSlot
-    get() = intrinsic()
-
-  /** The ItemSuitHARM prefab. */
-  companion object : Prefab()
-}
-
-/** The ItemSuitHARM devices on the chip's network. */
-@PrefabName("ItemSuitHARM")
-object SuitHARMs {
-  /** The device on [pin], as a ItemSuitHARM. */
-  fun at(pin: Device): SuitHARM = intrinsic()
-
-  /** Every one on the network. */
-  val all: Batch
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch<SuitHARM>() {
-    /** A slot of every one in the batch, by number. */
-    val slots: Slots<SlotBatch<ItemCommonSlot>>
-      get() = intrinsic()
-  }
-}
-
-/** A ItemSuitHelmetHARM. */
-@PrefabName("ItemSuitHelmetHARM")
-class SuitHelmetHARM internal constructor() : TypedDevice() {
-  val Combustion: Boolean
-    get() = intrinsic()
-
-  var Flush: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var Lock: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var On: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var Open: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val Power: Boolean
-    get() = intrinsic()
-
-  val Pressure: Double
-    get() = intrinsic()
-
-  var SoundAlert: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val Temperature: Double
-    get() = intrinsic()
-
-  val TotalMoles: Double
-    get() = intrinsic()
-
-  var Volume: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  @LogicTypes(
-      read =
-          "RatioCarbonDioxide,RatioHelium,RatioHydrazine,RatioHydrochloricAcid,RatioHydrogen,RatioLiquidAlcohol,RatioLiquidCarbonDioxide,RatioLiquidHydrazine,RatioLiquidHydrochloricAcid,RatioLiquidHydrogen,RatioLiquidMethane,RatioLiquidNitrogen,RatioLiquidNitrousOxide,RatioLiquidOxygen,RatioLiquidOzone,RatioLiquidPollutant,RatioLiquidSilanol,RatioLiquidSodiumChloride,RatioMethane,RatioNitrogen,RatioNitrousOxide,RatioOxygen,RatioOzone,RatioPollutant,RatioPollutedWater,RatioSilanol,RatioSteam,RatioWater",
-      written = "",
-  )
-  val Ratios: Ratios
-    get() = intrinsic()
-
-  /** The ItemSuitHelmetHARM prefab. */
-  companion object : Prefab()
-}
-
-/** The ItemSuitHelmetHARM devices on the chip's network. */
-@PrefabName("ItemSuitHelmetHARM")
-object SuitHelmetHARMs {
-  /** The device on [pin], as a ItemSuitHelmetHARM. */
-  fun at(pin: Device): SuitHelmetHARM = intrinsic()
-
-  /** Every one on the network. */
-  val all: DeviceBatch<SuitHelmetHARM>
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): DeviceBatch<SuitHelmetHARM> = intrinsic()
 }
 
 /** A ItemTerrainManipulator. */
