@@ -487,6 +487,19 @@
         "MicrowaveReceiver": "StructurePowerTransmitterReceiver"
       }
     },
+    "Fabricator": {
+      "plural": "Fabricators",
+      "members": {
+        "Autolathe": "StructureAutolathe",
+        "ElectronicsPrinter": "StructureElectronicsPrinter",
+        "SecurityPrinter": "StructureSecurityPrinter",
+        "ToolManufactory": "StructureToolManufactory",
+        "RocketManufactory": "StructureRocketManufactory",
+        "HydraulicPipeBender": "StructureHydraulicPipeBender",
+        "AutomatedOven": "StructureAutomatedOven",
+        "AdvancedPackagingMachine": "StructureAdvancedPackagingMachine"
+      }
+    },
     "Door": {
       "plural": "Doors",
       "members": {
