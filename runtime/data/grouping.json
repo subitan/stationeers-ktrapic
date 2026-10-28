@@ -552,11 +552,13 @@
         "Liquid": "StructureWaterWallCooler"
       }
     },
-    "Stacker": {
-      "plural": "Stackers",
+    "ItemRouter": {
+      "plural": "ItemRouters",
       "members": {
-        "Standard": "StructureStacker",
-        "Reversed": "StructureStackerReverse"
+        "Sorter": "StructureSorter",
+        "Unloader": "StructureUnloader",
+        "Stacker": "StructureStacker",
+        "StackerReversed": "StructureStackerReverse"
       }
     },
     "SuitStorage": {
@@ -642,6 +644,10 @@
     {
       "prefabs": [["StructureRoboticArmDock", "StructureLarreDockAtmos", "StructureLarreDockCargo", "StructureLarreDockCollector", "StructureLarreDockHydroponics"], "StructureLarreDockBypass"],
       "reason": "the LArRE Dock (Bypass) is a siding an arm moves into so others can pass, not a dock that works; it has no Activate, Error, Extended, Idle, Position or Setting"
+    },
+    {
+      "prefabs": [["StructureSorter", "StructureUnloader", "StructureStacker", "StructureStackerReverse"], "StructureLogicSorter"],
+      "reason": "the Logic Sorter is programmed with sorter instructions and has no Output to set, so a program driving the routers can't drive it"
     },
     {
       "prefabs": [["ItemSpaceHelmet", "ItemEmergencySpaceHelmet", "ItemHardsuitHelmet", "ItemIcarusHelmet", "ItemSuitHelmetHARM"], "ItemGasMask"],

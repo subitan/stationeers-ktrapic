@@ -13970,9 +13970,7 @@ object WallCoolers {
 }
 
 /** Devices of one kind that share these logic types, each a nested class. */
-interface Stacker {
-  var Activate: Boolean
-
+interface ItemRouter {
   var ClearMemory: Boolean
 
   val Error: Boolean
@@ -13989,12 +13987,111 @@ interface Stacker {
 
   val RequiredPower: Double
 
-  var Setting: Double
+  /** A StructureSorter. */
+  @PrefabName("StructureSorter")
+  class Sorter internal constructor() : TypedDevice(), ItemRouter {
+    override var ClearMemory: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override val Error: Boolean
+      get() = intrinsic()
+
+    override var Lock: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override var Mode: Double
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override var On: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override var Output: Double
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override val Power: Boolean
+      get() = intrinsic()
+
+    override val RequiredPower: Double
+      get() = intrinsic()
+
+    @LogicTypes(read = "ImportCount", written = "")
+    val Import: Transfer
+      get() = intrinsic()
+
+    @LogicTypes(read = "ExportCount", written = "")
+    val Export: Transfer
+      get() = intrinsic()
+
+    /** The device's slots, by number. */
+    val slots: Slots<DataDiskSlot>
+      get() = intrinsic()
+
+    /** Slot 2. */
+    @SlotNumber(2)
+    val Export2: DataDiskSlot
+      get() = intrinsic()
+
+    /** The StructureSorter prefab. */
+    companion object : Prefab()
+  }
+
+  /** A StructureUnloader. */
+  @PrefabName("StructureUnloader")
+  class Unloader internal constructor() : TypedDevice(), ItemRouter {
+    override var ClearMemory: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override val Error: Boolean
+      get() = intrinsic()
+
+    override var Lock: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override var Mode: Double
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override var On: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override var Output: Double
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override val Power: Boolean
+      get() = intrinsic()
+
+    override val RequiredPower: Double
+      get() = intrinsic()
+
+    @LogicTypes(read = "ImportCount", written = "")
+    val Import: Transfer
+      get() = intrinsic()
+
+    @LogicTypes(read = "ExportCount", written = "")
+    val Export: Transfer
+      get() = intrinsic()
+
+    /** The device's slots, by number. */
+    val slots: Slots<DataDiskSlot>
+      get() = intrinsic()
+
+    /** The StructureUnloader prefab. */
+    companion object : Prefab()
+  }
 
   /** A StructureStacker. */
   @PrefabName("StructureStacker")
-  class Standard internal constructor() : TypedDevice(), Stacker {
-    override var Activate: Boolean
+  class Stacker internal constructor() : TypedDevice(), ItemRouter {
+    var Activate: Boolean
       get() = intrinsic()
       set(value) = intrinsic()
 
@@ -14027,7 +14124,7 @@ interface Stacker {
     override val RequiredPower: Double
       get() = intrinsic()
 
-    override var Setting: Double
+    var Setting: Double
       get() = intrinsic()
       set(value) = intrinsic()
 
@@ -14054,8 +14151,8 @@ interface Stacker {
 
   /** A StructureStackerReverse. */
   @PrefabName("StructureStackerReverse")
-  class Reversed internal constructor() : TypedDevice(), Stacker {
-    override var Activate: Boolean
+  class StackerReversed internal constructor() : TypedDevice(), ItemRouter {
+    var Activate: Boolean
       get() = intrinsic()
       set(value) = intrinsic()
 
@@ -14088,7 +14185,7 @@ interface Stacker {
     override val RequiredPower: Double
       get() = intrinsic()
 
-    override var Setting: Double
+    var Setting: Double
       get() = intrinsic()
       set(value) = intrinsic()
 
@@ -14114,13 +14211,13 @@ interface Stacker {
   }
 }
 
-/** The Stacker devices on the chip's network, by prefab. */
-object Stackers {
-  /** The StructureStacker devices on the chip's network. */
-  @PrefabName("StructureStacker")
-  object Standard {
-    /** The device on [pin], as a StructureStacker. */
-    fun at(pin: Device): Stacker.Standard = intrinsic()
+/** The ItemRouter devices on the chip's network, by prefab. */
+object ItemRouters {
+  /** The StructureSorter devices on the chip's network. */
+  @PrefabName("StructureSorter")
+  object Sorter {
+    /** The device on [pin], as a StructureSorter. */
+    fun at(pin: Device): ItemRouter.Sorter = intrinsic()
 
     /** Every one on the network. */
     val all: Batch
@@ -14129,7 +14226,47 @@ object Stackers {
     /** Every one on the network named [name], which must be a constant. */
     fun named(name: String): Batch = intrinsic()
 
-    class Batch internal constructor() : DeviceBatch<Stacker.Standard>() {
+    class Batch internal constructor() : DeviceBatch<ItemRouter.Sorter>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+  }
+
+  /** The StructureUnloader devices on the chip's network. */
+  @PrefabName("StructureUnloader")
+  object Unloader {
+    /** The device on [pin], as a StructureUnloader. */
+    fun at(pin: Device): ItemRouter.Unloader = intrinsic()
+
+    /** Every one on the network. */
+    val all: Batch
+      get() = intrinsic()
+
+    /** Every one on the network named [name], which must be a constant. */
+    fun named(name: String): Batch = intrinsic()
+
+    class Batch internal constructor() : DeviceBatch<ItemRouter.Unloader>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+  }
+
+  /** The StructureStacker devices on the chip's network. */
+  @PrefabName("StructureStacker")
+  object Stacker {
+    /** The device on [pin], as a StructureStacker. */
+    fun at(pin: Device): ItemRouter.Stacker = intrinsic()
+
+    /** Every one on the network. */
+    val all: Batch
+      get() = intrinsic()
+
+    /** Every one on the network named [name], which must be a constant. */
+    fun named(name: String): Batch = intrinsic()
+
+    class Batch internal constructor() : DeviceBatch<ItemRouter.Stacker>() {
       /** A slot of every one in the batch, by number. */
       val slots: Slots<SlotBatch<DataDiskSlot>>
         get() = intrinsic()
@@ -14138,9 +14275,9 @@ object Stackers {
 
   /** The StructureStackerReverse devices on the chip's network. */
   @PrefabName("StructureStackerReverse")
-  object Reversed {
+  object StackerReversed {
     /** The device on [pin], as a StructureStackerReverse. */
-    fun at(pin: Device): Stacker.Reversed = intrinsic()
+    fun at(pin: Device): ItemRouter.StackerReversed = intrinsic()
 
     /** Every one on the network. */
     val all: Batch
@@ -14149,7 +14286,7 @@ object Stackers {
     /** Every one on the network named [name], which must be a constant. */
     fun named(name: String): Batch = intrinsic()
 
-    class Batch internal constructor() : DeviceBatch<Stacker.Reversed>() {
+    class Batch internal constructor() : DeviceBatch<ItemRouter.StackerReversed>() {
       /** A slot of every one in the batch, by number. */
       val slots: Slots<SlotBatch<DataDiskSlot>>
         get() = intrinsic()
@@ -20977,79 +21114,6 @@ object SleeperVerticalDroids {
   }
 }
 
-/** A StructureSorter. */
-@PrefabName("StructureSorter")
-class Sorter internal constructor() : TypedDevice() {
-  var ClearMemory: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val Error: Boolean
-    get() = intrinsic()
-
-  var Lock: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var Mode: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var On: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var Output: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val Power: Boolean
-    get() = intrinsic()
-
-  val RequiredPower: Double
-    get() = intrinsic()
-
-  @LogicTypes(read = "ImportCount", written = "")
-  val Import: Transfer
-    get() = intrinsic()
-
-  @LogicTypes(read = "ExportCount", written = "")
-  val Export: Transfer
-    get() = intrinsic()
-
-  /** The device's slots, by number. */
-  val slots: Slots<DataDiskSlot>
-    get() = intrinsic()
-
-  /** Slot 2. */
-  @SlotNumber(2)
-  val Export2: DataDiskSlot
-    get() = intrinsic()
-
-  /** The StructureSorter prefab. */
-  companion object : Prefab()
-}
-
-/** The StructureSorter devices on the chip's network. */
-@PrefabName("StructureSorter")
-object Sorters {
-  /** The device on [pin], as a StructureSorter. */
-  fun at(pin: Device): Sorter = intrinsic()
-
-  /** Every one on the network. */
-  val all: Batch
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch<Sorter>() {
-    /** A slot of every one in the batch, by number. */
-    val slots: Slots<SlotBatch<DataDiskSlot>>
-      get() = intrinsic()
-  }
-}
-
 /** A StructureTraderWaypoint. */
 @PrefabName("StructureTraderWaypoint")
 class TraderWaypoint internal constructor() : TypedDevice() {
@@ -21082,74 +21146,6 @@ object TraderWaypoints {
 
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): DeviceBatch<TraderWaypoint> = intrinsic()
-}
-
-/** A StructureUnloader. */
-@PrefabName("StructureUnloader")
-class Unloader internal constructor() : TypedDevice() {
-  var ClearMemory: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val Error: Boolean
-    get() = intrinsic()
-
-  var Lock: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var Mode: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var On: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var Output: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val Power: Boolean
-    get() = intrinsic()
-
-  val RequiredPower: Double
-    get() = intrinsic()
-
-  @LogicTypes(read = "ImportCount", written = "")
-  val Import: Transfer
-    get() = intrinsic()
-
-  @LogicTypes(read = "ExportCount", written = "")
-  val Export: Transfer
-    get() = intrinsic()
-
-  /** The device's slots, by number. */
-  val slots: Slots<DataDiskSlot>
-    get() = intrinsic()
-
-  /** The StructureUnloader prefab. */
-  companion object : Prefab()
-}
-
-/** The StructureUnloader devices on the chip's network. */
-@PrefabName("StructureUnloader")
-object Unloaders {
-  /** The device on [pin], as a StructureUnloader. */
-  fun at(pin: Device): Unloader = intrinsic()
-
-  /** Every one on the network. */
-  val all: Batch
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch<Unloader>() {
-    /** A slot of every one in the batch, by number. */
-    val slots: Slots<SlotBatch<DataDiskSlot>>
-      get() = intrinsic()
-  }
 }
 
 /** A StructureWallHeater. */

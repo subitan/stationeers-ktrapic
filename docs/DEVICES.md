@@ -7,7 +7,7 @@ The typed devices, slots and enums a program can name, as Kotlin declarations: 3
 - [Using a device](#using-a-device)
 - [Views](#views)
 - [Families](#families)
-- Devices: [A](#a) · [B](#b) · [C](#c) · [D](#d) · [E](#e) · [F](#f) · [G](#g) · [H](#h) · [I](#i) · [J](#j) · [K](#k) · [L](#l) · [M](#m) · [N](#n) · [O](#o) · [P](#p) · [R](#r) · [S](#s) · [T](#t) · [U](#u) · [W](#w)
+- Devices: [A](#a) · [B](#b) · [C](#c) · [D](#d) · [E](#e) · [F](#f) · [G](#g) · [H](#h) · [I](#i) · [J](#j) · [K](#k) · [L](#l) · [M](#m) · [N](#n) · [O](#o) · [P](#p) · [R](#r) · [S](#s) · [T](#t) · [W](#w)
 - [Slots](#slots)
 - [Enums](#enums)
 
@@ -1102,6 +1102,56 @@ interface InteriorDoor : Door {
 }
 ```
 
+### ItemRouter
+
+```kotlin
+interface ItemRouter {
+  var ClearMemory: Boolean
+  val Error: Boolean
+  var Lock: Boolean
+  var Mode: Double
+  var On: Boolean
+  var Output: Double
+  val Power: Boolean
+  val RequiredPower: Double
+
+  /** StructureSorter. Entry point: ItemRouters.Sorter. */
+  class Sorter : TypedDevice, ItemRouter {
+    val Export: Transfer
+    val Import: Transfer
+    val Export2: DataDiskSlot // slots[2]
+    val slots: Slots<DataDiskSlot>
+  }
+
+  /** StructureUnloader. Entry point: ItemRouters.Unloader. */
+  class Unloader : TypedDevice, ItemRouter {
+    val Export: Transfer
+    val Import: Transfer
+    val slots: Slots<DataDiskSlot>
+  }
+
+  /** StructureStacker. Entry point: ItemRouters.Stacker. */
+  class Stacker : TypedDevice, ItemRouter {
+    var Activate: Boolean
+    val Export: Transfer
+    val Import: Transfer
+    var Setting: Double
+    val Processing: DataDiskSlot // slots[2]
+    val slots: Slots<DataDiskSlot>
+  }
+
+  /** StructureStackerReverse. Entry point: ItemRouters.StackerReversed. */
+  class StackerReversed : TypedDevice, ItemRouter {
+    var Activate: Boolean
+    val Export: Transfer
+    val Import: Transfer
+    var Setting: Double
+    val Processing: DataDiskSlot // slots[2]
+    val slots: Slots<DataDiskSlot>
+  }
+}
+```
+
 ### LandingPadInwardConnector
 
 ```kotlin
@@ -1879,39 +1929,6 @@ interface SolarPanel {
 
   /** StructureSolarPanelDualReinforced. Entry point: SolarPanels.HeavyDual. */
   class HeavyDual : TypedDevice, SolarPanel
-}
-```
-
-### Stacker
-
-```kotlin
-interface Stacker {
-  var Activate: Boolean
-  var ClearMemory: Boolean
-  val Error: Boolean
-  var Lock: Boolean
-  var Mode: Double
-  var On: Boolean
-  var Output: Double
-  val Power: Boolean
-  val RequiredPower: Double
-  var Setting: Double
-
-  /** StructureStacker. Entry point: Stackers.Standard. */
-  class Standard : TypedDevice, Stacker {
-    val Export: Transfer
-    val Import: Transfer
-    val Processing: DataDiskSlot // slots[2]
-    val slots: Slots<DataDiskSlot>
-  }
-
-  /** StructureStackerReverse. Entry point: Stackers.Reversed. */
-  class Reversed : TypedDevice, Stacker {
-    val Export: Transfer
-    val Import: Transfer
-    val Processing: DataDiskSlot // slots[2]
-    val slots: Slots<DataDiskSlot>
-  }
 }
 ```
 
@@ -3653,22 +3670,6 @@ class SleeperVerticalDroid : TypedDevice {
   val slots: Slots<DataDiskSlot>
 }
 
-/** StructureSorter. Entry point: Sorters. */
-class Sorter : TypedDevice {
-  var ClearMemory: Boolean
-  val Error: Boolean
-  val Export: Transfer // Count
-  val Import: Transfer // Count
-  var Lock: Boolean
-  var Mode: Double
-  var On: Boolean
-  var Output: Double
-  val Power: Boolean
-  val RequiredPower: Double
-  val Export2: DataDiskSlot // slots[2]
-  val slots: Slots<DataDiskSlot>
-}
-
 /** ItemSpacepack. Entry point: Spacepacks. */
 class Spacepack : TypedDevice {
   var Activate: Boolean
@@ -3720,25 +3721,6 @@ class TraderWaypoint : TypedDevice {
   var On: Boolean
   val Power: Boolean
   val RequiredPower: Double
-}
-```
-
-### U
-
-```kotlin
-/** StructureUnloader. Entry point: Unloaders. */
-class Unloader : TypedDevice {
-  var ClearMemory: Boolean
-  val Error: Boolean
-  val Export: Transfer // Count
-  val Import: Transfer // Count
-  var Lock: Boolean
-  var Mode: Double
-  var On: Boolean
-  var Output: Double
-  val Power: Boolean
-  val RequiredPower: Double
-  val slots: Slots<DataDiskSlot>
 }
 ```
 
