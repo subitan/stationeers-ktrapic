@@ -371,11 +371,21 @@
         "MkII": "ItemMKIIArcWelder"
       }
     },
-    "SpaceHelmet": {
-      "plural": "SpaceHelmets",
+    "Helmet": {
+      "plural": "Helmets",
       "members": {
-        "Standard": "ItemSpaceHelmet",
-        "Emergency": "ItemEmergencySpaceHelmet"
+        "Space": "ItemSpaceHelmet",
+        "EmergencySpace": "ItemEmergencySpaceHelmet",
+        "Hardsuit": "ItemHardsuitHelmet",
+        "Icarus": "ItemIcarusHelmet",
+        "Harm": "ItemSuitHelmetHARM"
+      }
+    },
+    "Suit": {
+      "plural": "Suits",
+      "members": {
+        "Hardsuit": "ItemHardSuit",
+        "Harm": "ItemSuitHARM"
       }
     },
     "Airlock": {
@@ -602,6 +612,10 @@
     {
       "prefabs": [["StructureRoboticArmDock", "StructureLarreDockAtmos", "StructureLarreDockCargo", "StructureLarreDockCollector", "StructureLarreDockHydroponics"], "StructureLarreDockBypass"],
       "reason": "the LArRE Dock (Bypass) is a siding an arm moves into so others can pass, not a dock that works; it has no Activate, Error, Extended, Idle, Position or Setting"
+    },
+    {
+      "prefabs": [["ItemSpaceHelmet", "ItemEmergencySpaceHelmet", "ItemHardsuitHelmet", "ItemIcarusHelmet", "ItemSuitHelmetHARM"], "ItemGasMask"],
+      "reason": "the Gas Mask has a helmet's breathing gas and alerts but no visor or power (Lock, On, Open, Power), so grouping it would take those from every helmet"
     },
     {
       "prefabs": [["StructurePressureFedGasEngine", "StructurePressureFedLiquidEngine", "StructurePressureFedGasEngineHeavy", "StructurePressureFedLiquidEngineHeavy", "StructureGovernedGasEngine", "StructurePumpedLiquidEngine"], "StructureRocketEngineTiny"],
