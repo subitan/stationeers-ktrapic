@@ -9,6 +9,9 @@ import java.io.ByteArrayOutputStream
 import java.io.PipedInputStream
 import java.io.PipedOutputStream
 import java.util.Base64
+import java.util.concurrent.Future
+import java.util.concurrent.FutureTask
+import java.util.concurrent.LinkedBlockingQueue
 import java.util.concurrent.TimeUnit
 import kotlin.concurrent.thread
 import ktrapic.daemon.Daemon
@@ -21,78 +24,9 @@ import org.junit.jupiter.api.Timeout
 class LspServerTest {
   private val gson = Gson()
 
-  /** A client connected to a server running on its own thread. */
-  private class Client : AutoCloseable {
-    private val toServer = PipedOutputStream()
-    private val serverInput = PipedInputStream(toServer, 1 shl 20)
-    private val serverOutput = PipedOutputStream()
-    private val fromServer = PipedInputStream(serverOutput, 1 shl 20)
-    private val reader = MessageReader(fromServer) {}
-    val server = LspServer(serverInput, serverOutput, log = {})
-    @Volatile private var exitCode: Int? = null
-    private val serverThread = thread {
-      try {
-        exitCode = server.run()
-      } finally {
-        serverOutput.close()
-      }
-    }
-    private var nextId = 1
-
-    fun sendBytes(bytes: ByteArray) {
-      toServer.write(bytes)
-      toServer.flush()
-    }
-
-    fun send(body: String) = sendBytes(frame(body))
-
-    fun request(method: String, params: String = "null"): JsonObject {
-      send("""{"jsonrpc": "2.0", "id": ${nextId++}, "method": "$method", "params": $params}""")
-      return read()
-    }
-
-    fun notify(method: String, params: String = "null") =
-        send("""{"jsonrpc": "2.0", "method": "$method", "params": $params}""")
-
-    fun read(): JsonObject =
-        JsonParser.parseString(checkNotNull(reader.read()) { "The server sent nothing" })
-            .asJsonObject
-
-    fun initialize(): JsonObject {
-      val response = request("initialize", """{"processId": null, "rootUri": null}""")
-      notify("initialized", "{}")
-      return response
-    }
-
-    /** Ends the input and waits for the server to stop; its exit code. */
-    fun awaitExit(): Int? {
-      toServer.close()
-      serverThread.join(60_000)
-      return exitCode
-    }
-
-    override fun close() {
-      awaitExit()
-    }
-
-    companion object {
-      fun frame(body: String): ByteArray {
-        val bytes = body.toByteArray()
-        return "Content-Length: ${bytes.size}\r\n\r\n".toByteArray() + bytes
-      }
-    }
-  }
-
-  private val client = Client()
+  private val client = LspTestClient()
 
   @AfterEach fun stop() = client.close()
-
-  private fun open(uri: String, text: String, version: Int = 1) =
-      client.notify(
-          "textDocument/didOpen",
-          """{"textDocument": {"uri": "$uri", "languageId": "python", "version": $version,
-            "text": ${gson.toJson(text)}}}""",
-      )
 
   private fun compile(uri: String, options: String = "{}") =
       client.request(
@@ -124,7 +58,7 @@ class LspServerTest {
   @Test
   fun `answers requests before initialize with ServerNotInitialized and drops notifications`() {
     val early = compile("file:///a.kt")
-    open("file:///a.kt", "text")
+    client.open("file:///a.kt", "text")
     client.initialize()
 
     assertThat(early["id"].asInt).isEqualTo(1)
@@ -171,14 +105,14 @@ class LspServerTest {
   fun `reads messages back to back and split into pieces`() {
     val initialize = """{"jsonrpc": "2.0", "id": "init", "method": "initialize", "params": {}}"""
     val initialized = """{"jsonrpc": "2.0", "method": "initialized", "params": {}}"""
-    client.sendBytes(Client.frame(initialize) + Client.frame(initialized))
+    client.sendBytes(LspTestClient.frame(initialize) + LspTestClient.frame(initialized))
     val response = client.read()
     // A message sent a byte at a time, splitting its header and its multibyte characters.
     val text = "// é 😀 ü\n"
     val didOpen =
         """{"jsonrpc": "2.0", "method": "textDocument/didOpen", "params": {"textDocument":
           {"uri": "file:///a.kt", "languageId": "kotlin", "version": 1, "text": "// é 😀 ü\n"}}}"""
-    for (byte in Client.frame(didOpen)) client.sendBytes(byteArrayOf(byte))
+    for (byte in LspTestClient.frame(didOpen)) client.sendBytes(byteArrayOf(byte))
     // A request after it, so its answer shows the server has read the notification.
     val unknown = client.request("ktrapic/unknown")
 
@@ -191,7 +125,7 @@ class LspServerTest {
   @Test
   fun `applies full and incremental changes, with positions in UTF-16 code units`() {
     client.initialize()
-    open("file:///a.kt", "val s = \"😀a\"\nval t = 1\n")
+    client.open("file:///a.kt", "val s = \"😀a\"\nval t = 1\n")
     // The emoji takes two UTF-16 code units, so "a" is at character 11.
     client.notify(
         "textDocument/didChange",
@@ -227,8 +161,8 @@ class LspServerTest {
     val program = "import ktrapic.*\nvar i = 0\nwhile (i < 3) i++\ndb.Setting = i.toDouble()\n"
     val broken = "import ktrapic.*\nd0.On = 1.0\n"
     client.initialize()
-    open("file:///program.kt", program)
-    open("file:///broken.kt", broken)
+    client.open("file:///program.kt", program)
+    client.open("file:///broken.kt", broken)
 
     val labelled = compile("file:///program.kt")
     val compact = compile("file:///program.kt", """{"compact": true}""")
@@ -236,7 +170,7 @@ class LspServerTest {
     // Nested deeply enough to overflow the compiler's stack, which is answered as an error.
     val overflowing =
         "import ktrapic.*\ndb.Setting = ${"(".repeat(20_000)}1.0${")".repeat(20_000)}\n"
-    open("file:///overflowing.kt", overflowing)
+    client.open("file:///overflowing.kt", overflowing)
     val crashed = compile("file:///overflowing.kt")
 
     assertThat(labelled["result"]).isEqualTo(lineProtocolCompile(program))
@@ -257,7 +191,7 @@ class LspServerTest {
   @Test
   fun `compiles a document's latest text`() {
     client.initialize()
-    open("file:///a.kt", "import ktrapic.*\ndb.Setting = 1.0\n")
+    client.open("file:///a.kt", "import ktrapic.*\ndb.Setting = 1.0\n")
     client.notify(
         "textDocument/didChange",
         """{"textDocument": {"uri": "file:///a.kt", "version": 2}, "contentChanges": [
@@ -330,7 +264,9 @@ class LspServerTest {
     val input =
         "Content-Type: x\r\n\r\n".toByteArray() +
             """{"jsonrpc": "2.0", "method": "initialized"}""".toByteArray() +
-            Client.frame("""{"jsonrpc": "2.0", "id": 1, "method": "initialize", "params": {}}""")
+            LspTestClient.frame(
+                """{"jsonrpc": "2.0", "id": 1, "method": "initialize", "params": {}}"""
+            )
     val output = ByteArrayOutputStream()
     val logged = mutableListOf<String>()
 
@@ -345,7 +281,9 @@ class LspServerTest {
   fun `stops at a header block with no valid Content-Length even when a message follows it`() {
     val input =
         "Content-Type: x\r\n\r\n".toByteArray() +
-            Client.frame("""{"jsonrpc": "2.0", "id": 1, "method": "initialize", "params": {}}""")
+            LspTestClient.frame(
+                """{"jsonrpc": "2.0", "id": 1, "method": "initialize", "params": {}}"""
+            )
     val output = ByteArrayOutputStream()
     val logged = mutableListOf<String>()
 
@@ -354,5 +292,158 @@ class LspServerTest {
     assertThat(exitCode).isEqualTo(1)
     assertThat(output.size()).isEqualTo(0)
     assertThat(logged.joinToString()).contains("Content-Length")
+  }
+}
+
+// The client the LSP tests drive the server with. It lives here, in a test class's file, because
+// every other file under src/test is run as a test class of its own.
+
+/** A [Scheduler] whose tasks run only when a test calls [runAll], on the test's thread. */
+internal class ManualScheduler : Scheduler {
+  private val tasks = LinkedBlockingQueue<FutureTask<Unit>>()
+
+  /** The delay of each task scheduled so far. */
+  val delays: MutableList<Long> = java.util.Collections.synchronizedList(mutableListOf())
+
+  override fun schedule(delayMillis: Long, task: Runnable): Future<*> {
+    delays += delayMillis
+    return FutureTask(task, Unit).also { tasks += it }
+  }
+
+  /** Runs the tasks scheduled so far, and any they schedule, in order; cancelled ones don't run. */
+  fun runAll() {
+    while (true) tasks.poll()?.run() ?: return
+  }
+
+  override fun close() {}
+}
+
+/**
+ * A client connected over pipes to an [LspServer] running on its own thread, as a client would be
+ * over the daemon's stdio. By default the server's diagnostics compiles run on [scheduler], a
+ * [ManualScheduler], only when the test says.
+ */
+internal class LspTestClient(
+    val scheduler: Scheduler = ManualScheduler(),
+    debounceMillis: Long = 150,
+    compiler: (String, JsonObject?) -> JsonObject = Daemon::compile,
+) : AutoCloseable {
+  private val gson = Gson()
+  private val toServer = PipedOutputStream()
+  private val serverInput = PipedInputStream(toServer, 1 shl 20)
+  private val serverOutput = PipedOutputStream()
+  private val fromServer = PipedInputStream(serverOutput, 1 shl 20)
+  private val reader = MessageReader(fromServer) {}
+  val server = LspServer(serverInput, serverOutput, {}, debounceMillis, scheduler, compiler)
+  @Volatile private var exitCode: Int? = null
+  private val serverThread = thread {
+    try {
+      exitCode = server.run()
+    } finally {
+      serverOutput.close()
+    }
+  }
+  private var nextId = 1
+
+  /** The notifications read while waiting for responses, oldest first. */
+  val notifications = ArrayDeque<JsonObject>()
+
+  fun sendBytes(bytes: ByteArray) {
+    toServer.write(bytes)
+    toServer.flush()
+  }
+
+  fun send(body: String) = sendBytes(frame(body))
+
+  /** Sends a request and returns its response, keeping notifications that come before it. */
+  fun request(method: String, params: String = "null"): JsonObject {
+    val id = nextId++
+    send("""{"jsonrpc": "2.0", "id": $id, "method": "$method", "params": $params}""")
+    while (true) {
+      val message = read()
+      if (message.has("method")) notifications += message
+      else if (message["id"]?.takeIf { it.isJsonPrimitive }?.asInt == id) return message
+      else throw AssertionError("Unexpected message $message")
+    }
+  }
+
+  fun notify(method: String, params: String = "null") =
+      send("""{"jsonrpc": "2.0", "method": "$method", "params": $params}""")
+
+  /** The next message the server sends. */
+  fun read(): JsonObject =
+      JsonParser.parseString(checkNotNull(reader.read()) { "The server sent nothing" }).asJsonObject
+
+  /** Waits until the server has handled everything sent so far, with a request it answers. */
+  fun sync() {
+    request("textDocument/semanticTokens/full", """{"textDocument": {"uri": "file:///sync"}}""")
+  }
+
+  /** The `publishDiagnostics` params received so far, after [sync]ing, and forgets them. */
+  fun takeDiagnostics(): List<JsonObject> {
+    sync()
+    return takeNotifications()
+  }
+
+  /** The next `publishDiagnostics` params, waiting for it if none has been received yet. */
+  fun awaitDiagnostics(): JsonObject {
+    takeNotifications().firstOrNull()?.let {
+      return it
+    }
+    while (true) {
+      val message = read()
+      if (message["method"]?.asString == PUBLISH) return message["params"].asJsonObject
+      throw AssertionError("Unexpected message $message")
+    }
+  }
+
+  private fun takeNotifications(): List<JsonObject> {
+    val published =
+        notifications.filter { it["method"].asString == PUBLISH }.map { it["params"].asJsonObject }
+    notifications.clear()
+    return published
+  }
+
+  fun initialize(): JsonObject {
+    val response = request("initialize", """{"processId": null, "rootUri": null}""")
+    notify("initialized", "{}")
+    return response
+  }
+
+  fun open(uri: String, text: String, version: Int = 1) =
+      notify(
+          "textDocument/didOpen",
+          """{"textDocument": {"uri": "$uri", "languageId": "python", "version": $version,
+            "text": ${gson.toJson(text)}}}""",
+      )
+
+  /** Replaces the whole text of [uri]. */
+  fun change(uri: String, version: Int, text: String) =
+      notify(
+          "textDocument/didChange",
+          """{"textDocument": {"uri": "$uri", "version": $version},
+            "contentChanges": [{"text": ${gson.toJson(text)}}]}""",
+      )
+
+  fun close(uri: String) = notify("textDocument/didClose", """{"textDocument": {"uri": "$uri"}}""")
+
+  /** Ends the input and waits for the server to stop; its exit code. */
+  fun awaitExit(): Int? {
+    toServer.close()
+    serverThread.join(60_000)
+    return exitCode
+  }
+
+  override fun close() {
+    awaitExit()
+  }
+
+  companion object {
+    const val PUBLISH = "textDocument/publishDiagnostics"
+
+    fun frame(body: String): ByteArray {
+      val bytes = body.toByteArray()
+      return "Content-Length: ${bytes.size}\r\n\r\n".toByteArray() + bytes
+    }
   }
 }

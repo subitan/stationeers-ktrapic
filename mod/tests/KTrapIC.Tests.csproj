@@ -1,7 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <!--
-    Tests of the plugin's game-independent code. The daemon client's run against a real compile
-    daemon: set KTRAPIC_DAEMON_JAR to the absolute path of a built
+    Tests of the plugin's game-independent code. The daemon client's, and DaemonLspTest's of the
+    daemon's LSP mode, run against a real compile daemon: set KTRAPIC_DAEMON_JAR to the absolute
+    path of a built
     //daemon:ktrapic-daemon_deploy.jar, and JAVA_HOME to a JDK 21+.
   -->
   <PropertyGroup>

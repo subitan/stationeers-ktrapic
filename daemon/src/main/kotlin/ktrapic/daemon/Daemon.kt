@@ -34,7 +34,8 @@ import ktrapic.daemon.lsp.LspServer
  * line per line it writes.
  *
  * Started with `--lsp`, the daemon speaks the Language Server Protocol instead (see [LspServer]),
- * whose `ktrapic/compile` request answers with the same JSON as a compile request here.
+ * whose `ktrapic/compile` request answers with the same JSON as a compile request here, and which
+ * publishes the problems with each version of a document as it is edited.
  */
 object Daemon {
   private val gson = Gson()
