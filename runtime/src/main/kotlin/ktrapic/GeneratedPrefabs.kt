@@ -5041,7 +5041,7 @@ object UmbilicalFemales {
 }
 
 /** A device that comes as several prefabs, each a nested class. */
-interface PressureFedEngine {
+interface RocketEngine {
   val Combustion: Boolean
 
   val Error: Boolean
@@ -5064,7 +5064,7 @@ interface PressureFedEngine {
 
   /** A StructurePressureFedGasEngine. */
   @PrefabName("StructurePressureFedGasEngine")
-  class Gas internal constructor() : TypedDevice(), PressureFedEngine {
+  class PressureFedGas internal constructor() : TypedDevice(), RocketEngine {
     override val Combustion: Boolean
       get() = intrinsic()
 
@@ -5111,7 +5111,7 @@ interface PressureFedEngine {
 
   /** A StructurePressureFedLiquidEngine. */
   @PrefabName("StructurePressureFedLiquidEngine")
-  class Liquid internal constructor() : TypedDevice(), PressureFedEngine {
+  class PressureFedLiquid internal constructor() : TypedDevice(), RocketEngine {
     override val Combustion: Boolean
       get() = intrinsic()
 
@@ -5168,7 +5168,7 @@ interface PressureFedEngine {
 
   /** A StructurePressureFedGasEngineHeavy. */
   @PrefabName("StructurePressureFedGasEngineHeavy")
-  class GasHeavy internal constructor() : TypedDevice(), PressureFedEngine {
+  class PressureFedGasHeavy internal constructor() : TypedDevice(), RocketEngine {
     override val Combustion: Boolean
       get() = intrinsic()
 
@@ -5215,7 +5215,7 @@ interface PressureFedEngine {
 
   /** A StructurePressureFedLiquidEngineHeavy. */
   @PrefabName("StructurePressureFedLiquidEngineHeavy")
-  class LiquidHeavy internal constructor() : TypedDevice(), PressureFedEngine {
+  class PressureFedLiquidHeavy internal constructor() : TypedDevice(), RocketEngine {
     override val Combustion: Boolean
       get() = intrinsic()
 
@@ -5269,64 +5269,196 @@ interface PressureFedEngine {
     /** The StructurePressureFedLiquidEngineHeavy prefab. */
     companion object : Prefab()
   }
+
+  /** A StructureGovernedGasEngine. */
+  @PrefabName("StructureGovernedGasEngine")
+  class PumpedGas internal constructor() : TypedDevice(), RocketEngine {
+    override val Combustion: Boolean
+      get() = intrinsic()
+
+    override val Error: Boolean
+      get() = intrinsic()
+
+    override var On: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override val PassedMoles: Double
+      get() = intrinsic()
+
+    override val Power: Boolean
+      get() = intrinsic()
+
+    override val Pressure: Double
+      get() = intrinsic()
+
+    override val RequiredPower: Double
+      get() = intrinsic()
+
+    override val Temperature: Double
+      get() = intrinsic()
+
+    override var Throttle: Double
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override val TotalMoles: Double
+      get() = intrinsic()
+
+    @LogicTypes(
+        read =
+            "RatioCarbonDioxide,RatioHelium,RatioHydrazine,RatioHydrochloricAcid,RatioHydrogen,RatioLiquidAlcohol,RatioLiquidCarbonDioxide,RatioLiquidHydrazine,RatioLiquidHydrochloricAcid,RatioLiquidHydrogen,RatioLiquidMethane,RatioLiquidNitrogen,RatioLiquidNitrousOxide,RatioLiquidOxygen,RatioLiquidOzone,RatioLiquidPollutant,RatioLiquidSilanol,RatioLiquidSodiumChloride,RatioMethane,RatioNitrogen,RatioNitrousOxide,RatioOxygen,RatioOzone,RatioPollutant,RatioPollutedWater,RatioSilanol,RatioSteam,RatioWater",
+        written = "",
+    )
+    val Ratios: Ratios
+      get() = intrinsic()
+
+    /** The StructureGovernedGasEngine prefab. */
+    companion object : Prefab()
+  }
+
+  /** A StructurePumpedLiquidEngine. */
+  @PrefabName("StructurePumpedLiquidEngine")
+  class PumpedLiquid internal constructor() : TypedDevice(), RocketEngine {
+    override val Combustion: Boolean
+      get() = intrinsic()
+
+    override val Error: Boolean
+      get() = intrinsic()
+
+    val Maximum: Double
+      get() = intrinsic()
+
+    override var On: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override val PassedMoles: Double
+      get() = intrinsic()
+
+    override val Power: Boolean
+      get() = intrinsic()
+
+    override val Pressure: Double
+      get() = intrinsic()
+
+    val Ratio: Double
+      get() = intrinsic()
+
+    override val RequiredPower: Double
+      get() = intrinsic()
+
+    var Setting: Double
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override val Temperature: Double
+      get() = intrinsic()
+
+    override var Throttle: Double
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override val TotalMoles: Double
+      get() = intrinsic()
+
+    @LogicTypes(
+        read =
+            "RatioCarbonDioxide,RatioHelium,RatioHydrazine,RatioHydrochloricAcid,RatioHydrogen,RatioLiquidAlcohol,RatioLiquidCarbonDioxide,RatioLiquidHydrazine,RatioLiquidHydrochloricAcid,RatioLiquidHydrogen,RatioLiquidMethane,RatioLiquidNitrogen,RatioLiquidNitrousOxide,RatioLiquidOxygen,RatioLiquidOzone,RatioLiquidPollutant,RatioLiquidSilanol,RatioLiquidSodiumChloride,RatioMethane,RatioNitrogen,RatioNitrousOxide,RatioOxygen,RatioOzone,RatioPollutant,RatioPollutedWater,RatioSilanol,RatioSteam,RatioWater",
+        written = "",
+    )
+    val Ratios: Ratios
+      get() = intrinsic()
+
+    /** The StructurePumpedLiquidEngine prefab. */
+    companion object : Prefab()
+  }
 }
 
-/** The PressureFedEngine devices on the chip's network, by prefab. */
-object PressureFedEngines {
+/** The RocketEngine devices on the chip's network, by prefab. */
+object RocketEngines {
   /** The StructurePressureFedGasEngine devices on the chip's network. */
   @PrefabName("StructurePressureFedGasEngine")
-  object Gas {
+  object PressureFedGas {
     /** The device on [pin], as a StructurePressureFedGasEngine. */
-    fun at(pin: Device): PressureFedEngine.Gas = intrinsic()
+    fun at(pin: Device): RocketEngine.PressureFedGas = intrinsic()
 
     /** Every one on the network. */
-    val all: DeviceBatch<PressureFedEngine.Gas>
+    val all: DeviceBatch<RocketEngine.PressureFedGas>
       get() = intrinsic()
 
     /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<PressureFedEngine.Gas> = intrinsic()
+    fun named(name: String): DeviceBatch<RocketEngine.PressureFedGas> = intrinsic()
   }
 
   /** The StructurePressureFedLiquidEngine devices on the chip's network. */
   @PrefabName("StructurePressureFedLiquidEngine")
-  object Liquid {
+  object PressureFedLiquid {
     /** The device on [pin], as a StructurePressureFedLiquidEngine. */
-    fun at(pin: Device): PressureFedEngine.Liquid = intrinsic()
+    fun at(pin: Device): RocketEngine.PressureFedLiquid = intrinsic()
 
     /** Every one on the network. */
-    val all: DeviceBatch<PressureFedEngine.Liquid>
+    val all: DeviceBatch<RocketEngine.PressureFedLiquid>
       get() = intrinsic()
 
     /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<PressureFedEngine.Liquid> = intrinsic()
+    fun named(name: String): DeviceBatch<RocketEngine.PressureFedLiquid> = intrinsic()
   }
 
   /** The StructurePressureFedGasEngineHeavy devices on the chip's network. */
   @PrefabName("StructurePressureFedGasEngineHeavy")
-  object GasHeavy {
+  object PressureFedGasHeavy {
     /** The device on [pin], as a StructurePressureFedGasEngineHeavy. */
-    fun at(pin: Device): PressureFedEngine.GasHeavy = intrinsic()
+    fun at(pin: Device): RocketEngine.PressureFedGasHeavy = intrinsic()
 
     /** Every one on the network. */
-    val all: DeviceBatch<PressureFedEngine.GasHeavy>
+    val all: DeviceBatch<RocketEngine.PressureFedGasHeavy>
       get() = intrinsic()
 
     /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<PressureFedEngine.GasHeavy> = intrinsic()
+    fun named(name: String): DeviceBatch<RocketEngine.PressureFedGasHeavy> = intrinsic()
   }
 
   /** The StructurePressureFedLiquidEngineHeavy devices on the chip's network. */
   @PrefabName("StructurePressureFedLiquidEngineHeavy")
-  object LiquidHeavy {
+  object PressureFedLiquidHeavy {
     /** The device on [pin], as a StructurePressureFedLiquidEngineHeavy. */
-    fun at(pin: Device): PressureFedEngine.LiquidHeavy = intrinsic()
+    fun at(pin: Device): RocketEngine.PressureFedLiquidHeavy = intrinsic()
 
     /** Every one on the network. */
-    val all: DeviceBatch<PressureFedEngine.LiquidHeavy>
+    val all: DeviceBatch<RocketEngine.PressureFedLiquidHeavy>
       get() = intrinsic()
 
     /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<PressureFedEngine.LiquidHeavy> = intrinsic()
+    fun named(name: String): DeviceBatch<RocketEngine.PressureFedLiquidHeavy> = intrinsic()
+  }
+
+  /** The StructureGovernedGasEngine devices on the chip's network. */
+  @PrefabName("StructureGovernedGasEngine")
+  object PumpedGas {
+    /** The device on [pin], as a StructureGovernedGasEngine. */
+    fun at(pin: Device): RocketEngine.PumpedGas = intrinsic()
+
+    /** Every one on the network. */
+    val all: DeviceBatch<RocketEngine.PumpedGas>
+      get() = intrinsic()
+
+    /** Every one on the network named [name], which must be a constant. */
+    fun named(name: String): DeviceBatch<RocketEngine.PumpedGas> = intrinsic()
+  }
+
+  /** The StructurePumpedLiquidEngine devices on the chip's network. */
+  @PrefabName("StructurePumpedLiquidEngine")
+  object PumpedLiquid {
+    /** The device on [pin], as a StructurePumpedLiquidEngine. */
+    fun at(pin: Device): RocketEngine.PumpedLiquid = intrinsic()
+
+    /** Every one on the network. */
+    val all: DeviceBatch<RocketEngine.PumpedLiquid>
+      get() = intrinsic()
+
+    /** Every one on the network named [name], which must be a constant. */
+    fun named(name: String): DeviceBatch<RocketEngine.PumpedLiquid> = intrinsic()
   }
 }
 
@@ -18033,67 +18165,6 @@ object GasSensors {
   fun named(name: String): DeviceBatch<GasSensor> = intrinsic()
 }
 
-/** A StructureGovernedGasEngine. */
-@PrefabName("StructureGovernedGasEngine")
-class GovernedGasEngine internal constructor() : TypedDevice() {
-  val Combustion: Boolean
-    get() = intrinsic()
-
-  val Error: Boolean
-    get() = intrinsic()
-
-  var On: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val PassedMoles: Double
-    get() = intrinsic()
-
-  val Power: Boolean
-    get() = intrinsic()
-
-  val Pressure: Double
-    get() = intrinsic()
-
-  val RequiredPower: Double
-    get() = intrinsic()
-
-  val Temperature: Double
-    get() = intrinsic()
-
-  var Throttle: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val TotalMoles: Double
-    get() = intrinsic()
-
-  @LogicTypes(
-      read =
-          "RatioCarbonDioxide,RatioHelium,RatioHydrazine,RatioHydrochloricAcid,RatioHydrogen,RatioLiquidAlcohol,RatioLiquidCarbonDioxide,RatioLiquidHydrazine,RatioLiquidHydrochloricAcid,RatioLiquidHydrogen,RatioLiquidMethane,RatioLiquidNitrogen,RatioLiquidNitrousOxide,RatioLiquidOxygen,RatioLiquidOzone,RatioLiquidPollutant,RatioLiquidSilanol,RatioLiquidSodiumChloride,RatioMethane,RatioNitrogen,RatioNitrousOxide,RatioOxygen,RatioOzone,RatioPollutant,RatioPollutedWater,RatioSilanol,RatioSteam,RatioWater",
-      written = "",
-  )
-  val Ratios: Ratios
-    get() = intrinsic()
-
-  /** The StructureGovernedGasEngine prefab. */
-  companion object : Prefab()
-}
-
-/** The StructureGovernedGasEngine devices on the chip's network. */
-@PrefabName("StructureGovernedGasEngine")
-object GovernedGasEngines {
-  /** The device on [pin], as a StructureGovernedGasEngine. */
-  fun at(pin: Device): GovernedGasEngine = intrinsic()
-
-  /** Every one on the network. */
-  val all: DeviceBatch<GovernedGasEngine>
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): DeviceBatch<GovernedGasEngine> = intrinsic()
-}
-
 /** A StructureGroundBasedTelescope. */
 @PrefabName("StructureGroundBasedTelescope")
 class GroundBasedTelescope internal constructor() : TypedDevice() {
@@ -19566,77 +19637,6 @@ object ProximitySensors {
 
   /** Every one on the network named [name], which must be a constant. */
   fun named(name: String): DeviceBatch<ProximitySensor> = intrinsic()
-}
-
-/** A StructurePumpedLiquidEngine. */
-@PrefabName("StructurePumpedLiquidEngine")
-class PumpedLiquidEngine internal constructor() : TypedDevice() {
-  val Combustion: Boolean
-    get() = intrinsic()
-
-  val Error: Boolean
-    get() = intrinsic()
-
-  val Maximum: Double
-    get() = intrinsic()
-
-  var On: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val PassedMoles: Double
-    get() = intrinsic()
-
-  val Power: Boolean
-    get() = intrinsic()
-
-  val Pressure: Double
-    get() = intrinsic()
-
-  val Ratio: Double
-    get() = intrinsic()
-
-  val RequiredPower: Double
-    get() = intrinsic()
-
-  var Setting: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val Temperature: Double
-    get() = intrinsic()
-
-  var Throttle: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val TotalMoles: Double
-    get() = intrinsic()
-
-  @LogicTypes(
-      read =
-          "RatioCarbonDioxide,RatioHelium,RatioHydrazine,RatioHydrochloricAcid,RatioHydrogen,RatioLiquidAlcohol,RatioLiquidCarbonDioxide,RatioLiquidHydrazine,RatioLiquidHydrochloricAcid,RatioLiquidHydrogen,RatioLiquidMethane,RatioLiquidNitrogen,RatioLiquidNitrousOxide,RatioLiquidOxygen,RatioLiquidOzone,RatioLiquidPollutant,RatioLiquidSilanol,RatioLiquidSodiumChloride,RatioMethane,RatioNitrogen,RatioNitrousOxide,RatioOxygen,RatioOzone,RatioPollutant,RatioPollutedWater,RatioSilanol,RatioSteam,RatioWater",
-      written = "",
-  )
-  val Ratios: Ratios
-    get() = intrinsic()
-
-  /** The StructurePumpedLiquidEngine prefab. */
-  companion object : Prefab()
-}
-
-/** The StructurePumpedLiquidEngine devices on the chip's network. */
-@PrefabName("StructurePumpedLiquidEngine")
-object PumpedLiquidEngines {
-  /** The device on [pin], as a StructurePumpedLiquidEngine. */
-  fun at(pin: Device): PumpedLiquidEngine = intrinsic()
-
-  /** Every one on the network. */
-  val all: DeviceBatch<PumpedLiquidEngine>
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): DeviceBatch<PumpedLiquidEngine> = intrinsic()
 }
 
 /** A StructureRecycler. */
