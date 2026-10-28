@@ -12735,6 +12735,270 @@ object Fabricators {
 }
 
 /** A device that comes as several prefabs, each a nested class. */
+interface DigitalChute {
+  var On: Boolean
+
+  val Power: Boolean
+
+  var Quantity: Double
+
+  val RequiredPower: Double
+
+  var Setting: Double
+
+  /** A StructureChuteDigitalValveLeft. */
+  @PrefabName("StructureChuteDigitalValveLeft")
+  class ValveLeft internal constructor() : TypedDevice(), DigitalChute {
+    var Lock: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override var On: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    var Open: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override val Power: Boolean
+      get() = intrinsic()
+
+    override var Quantity: Double
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override val RequiredPower: Double
+      get() = intrinsic()
+
+    override var Setting: Double
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    /** The device's slots, by number. */
+    val slots: Slots<DataDiskSlot>
+      get() = intrinsic()
+
+    /** Slot 0. */
+    @SlotNumber(0)
+    val TransportSlot: DataDiskSlot
+      get() = intrinsic()
+
+    /** The StructureChuteDigitalValveLeft prefab. */
+    companion object : Prefab()
+  }
+
+  /** A StructureChuteDigitalValveRight. */
+  @PrefabName("StructureChuteDigitalValveRight")
+  class ValveRight internal constructor() : TypedDevice(), DigitalChute {
+    var Lock: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override var On: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    var Open: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override val Power: Boolean
+      get() = intrinsic()
+
+    override var Quantity: Double
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override val RequiredPower: Double
+      get() = intrinsic()
+
+    override var Setting: Double
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    /** The device's slots, by number. */
+    val slots: Slots<DataDiskSlot>
+      get() = intrinsic()
+
+    /** Slot 0. */
+    @SlotNumber(0)
+    val TransportSlot: DataDiskSlot
+      get() = intrinsic()
+
+    /** The StructureChuteDigitalValveRight prefab. */
+    companion object : Prefab()
+  }
+
+  /** A StructureChuteDigitalFlipFlopSplitterLeft. */
+  @PrefabName("StructureChuteDigitalFlipFlopSplitterLeft")
+  class FlipFlopSplitterLeft internal constructor() : TypedDevice(), DigitalChute {
+    var Mode: Double
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override var On: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override val Power: Boolean
+      get() = intrinsic()
+
+    override var Quantity: Double
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override val RequiredPower: Double
+      get() = intrinsic()
+
+    override var Setting: Double
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    @LogicTypes(read = "SettingOutput", written = "SettingOutput")
+    val Ports: Ports
+      get() = intrinsic()
+
+    /** The device's slots, by number. */
+    val slots: Slots<DataDiskSlot>
+      get() = intrinsic()
+
+    /** Slot 0. */
+    @SlotNumber(0)
+    val TransportSlot: DataDiskSlot
+      get() = intrinsic()
+
+    /** The StructureChuteDigitalFlipFlopSplitterLeft prefab. */
+    companion object : Prefab()
+  }
+
+  /** A StructureChuteDigitalFlipFlopSplitterRight. */
+  @PrefabName("StructureChuteDigitalFlipFlopSplitterRight")
+  class FlipFlopSplitterRight internal constructor() : TypedDevice(), DigitalChute {
+    var Mode: Double
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override var On: Boolean
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override val Power: Boolean
+      get() = intrinsic()
+
+    override var Quantity: Double
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    override val RequiredPower: Double
+      get() = intrinsic()
+
+    override var Setting: Double
+      get() = intrinsic()
+      set(value) = intrinsic()
+
+    @LogicTypes(read = "SettingOutput", written = "SettingOutput")
+    val Ports: Ports
+      get() = intrinsic()
+
+    /** The device's slots, by number. */
+    val slots: Slots<DataDiskSlot>
+      get() = intrinsic()
+
+    /** Slot 0. */
+    @SlotNumber(0)
+    val TransportSlot: DataDiskSlot
+      get() = intrinsic()
+
+    /** The StructureChuteDigitalFlipFlopSplitterRight prefab. */
+    companion object : Prefab()
+  }
+}
+
+/** The DigitalChute devices on the chip's network, by prefab. */
+object DigitalChutes {
+  /** The StructureChuteDigitalValveLeft devices on the chip's network. */
+  @PrefabName("StructureChuteDigitalValveLeft")
+  object ValveLeft {
+    /** The device on [pin], as a StructureChuteDigitalValveLeft. */
+    fun at(pin: Device): DigitalChute.ValveLeft = intrinsic()
+
+    /** Every one on the network. */
+    val all: Batch
+      get() = intrinsic()
+
+    /** Every one on the network named [name], which must be a constant. */
+    fun named(name: String): Batch = intrinsic()
+
+    class Batch internal constructor() : DeviceBatch<DigitalChute.ValveLeft>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+  }
+
+  /** The StructureChuteDigitalValveRight devices on the chip's network. */
+  @PrefabName("StructureChuteDigitalValveRight")
+  object ValveRight {
+    /** The device on [pin], as a StructureChuteDigitalValveRight. */
+    fun at(pin: Device): DigitalChute.ValveRight = intrinsic()
+
+    /** Every one on the network. */
+    val all: Batch
+      get() = intrinsic()
+
+    /** Every one on the network named [name], which must be a constant. */
+    fun named(name: String): Batch = intrinsic()
+
+    class Batch internal constructor() : DeviceBatch<DigitalChute.ValveRight>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+  }
+
+  /** The StructureChuteDigitalFlipFlopSplitterLeft devices on the chip's network. */
+  @PrefabName("StructureChuteDigitalFlipFlopSplitterLeft")
+  object FlipFlopSplitterLeft {
+    /** The device on [pin], as a StructureChuteDigitalFlipFlopSplitterLeft. */
+    fun at(pin: Device): DigitalChute.FlipFlopSplitterLeft = intrinsic()
+
+    /** Every one on the network. */
+    val all: Batch
+      get() = intrinsic()
+
+    /** Every one on the network named [name], which must be a constant. */
+    fun named(name: String): Batch = intrinsic()
+
+    class Batch internal constructor() : DeviceBatch<DigitalChute.FlipFlopSplitterLeft>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+  }
+
+  /** The StructureChuteDigitalFlipFlopSplitterRight devices on the chip's network. */
+  @PrefabName("StructureChuteDigitalFlipFlopSplitterRight")
+  object FlipFlopSplitterRight {
+    /** The device on [pin], as a StructureChuteDigitalFlipFlopSplitterRight. */
+    fun at(pin: Device): DigitalChute.FlipFlopSplitterRight = intrinsic()
+
+    /** Every one on the network. */
+    val all: Batch
+      get() = intrinsic()
+
+    /** Every one on the network named [name], which must be a constant. */
+    fun named(name: String): Batch = intrinsic()
+
+    class Batch internal constructor() : DeviceBatch<DigitalChute.FlipFlopSplitterRight>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+  }
+}
+
+/** A device that comes as several prefabs, each a nested class. */
 interface Door {
   val Idle: Boolean
 
@@ -17116,254 +17380,6 @@ object Centrifuges {
   fun named(name: String): Batch = intrinsic()
 
   class Batch internal constructor() : DeviceBatch<Centrifuge>() {
-    /** A slot of every one in the batch, by number. */
-    val slots: Slots<SlotBatch<DataDiskSlot>>
-      get() = intrinsic()
-  }
-}
-
-/** A StructureChuteDigitalFlipFlopSplitterLeft. */
-@PrefabName("StructureChuteDigitalFlipFlopSplitterLeft")
-class ChuteDigitalFlipFlopSplitterLeft internal constructor() : TypedDevice() {
-  var Mode: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var On: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val Power: Boolean
-    get() = intrinsic()
-
-  var Quantity: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val RequiredPower: Double
-    get() = intrinsic()
-
-  var Setting: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  @LogicTypes(read = "SettingOutput", written = "SettingOutput")
-  val Ports: Ports
-    get() = intrinsic()
-
-  /** The device's slots, by number. */
-  val slots: Slots<DataDiskSlot>
-    get() = intrinsic()
-
-  /** Slot 0. */
-  @SlotNumber(0)
-  val TransportSlot: DataDiskSlot
-    get() = intrinsic()
-
-  /** The StructureChuteDigitalFlipFlopSplitterLeft prefab. */
-  companion object : Prefab()
-}
-
-/** The StructureChuteDigitalFlipFlopSplitterLeft devices on the chip's network. */
-@PrefabName("StructureChuteDigitalFlipFlopSplitterLeft")
-object ChuteDigitalFlipFlopSplitterLefts {
-  /** The device on [pin], as a StructureChuteDigitalFlipFlopSplitterLeft. */
-  fun at(pin: Device): ChuteDigitalFlipFlopSplitterLeft = intrinsic()
-
-  /** Every one on the network. */
-  val all: Batch
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch<ChuteDigitalFlipFlopSplitterLeft>() {
-    /** A slot of every one in the batch, by number. */
-    val slots: Slots<SlotBatch<DataDiskSlot>>
-      get() = intrinsic()
-  }
-}
-
-/** A StructureChuteDigitalFlipFlopSplitterRight. */
-@PrefabName("StructureChuteDigitalFlipFlopSplitterRight")
-class ChuteDigitalFlipFlopSplitterRight internal constructor() : TypedDevice() {
-  var Mode: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var On: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val Power: Boolean
-    get() = intrinsic()
-
-  var Quantity: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val RequiredPower: Double
-    get() = intrinsic()
-
-  var Setting: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  @LogicTypes(read = "SettingOutput", written = "SettingOutput")
-  val Ports: Ports
-    get() = intrinsic()
-
-  /** The device's slots, by number. */
-  val slots: Slots<DataDiskSlot>
-    get() = intrinsic()
-
-  /** Slot 0. */
-  @SlotNumber(0)
-  val TransportSlot: DataDiskSlot
-    get() = intrinsic()
-
-  /** The StructureChuteDigitalFlipFlopSplitterRight prefab. */
-  companion object : Prefab()
-}
-
-/** The StructureChuteDigitalFlipFlopSplitterRight devices on the chip's network. */
-@PrefabName("StructureChuteDigitalFlipFlopSplitterRight")
-object ChuteDigitalFlipFlopSplitterRights {
-  /** The device on [pin], as a StructureChuteDigitalFlipFlopSplitterRight. */
-  fun at(pin: Device): ChuteDigitalFlipFlopSplitterRight = intrinsic()
-
-  /** Every one on the network. */
-  val all: Batch
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch<ChuteDigitalFlipFlopSplitterRight>() {
-    /** A slot of every one in the batch, by number. */
-    val slots: Slots<SlotBatch<DataDiskSlot>>
-      get() = intrinsic()
-  }
-}
-
-/** A StructureChuteDigitalValveLeft. */
-@PrefabName("StructureChuteDigitalValveLeft")
-class ChuteDigitalValveLeft internal constructor() : TypedDevice() {
-  var Lock: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var On: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var Open: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val Power: Boolean
-    get() = intrinsic()
-
-  var Quantity: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val RequiredPower: Double
-    get() = intrinsic()
-
-  var Setting: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  /** The device's slots, by number. */
-  val slots: Slots<DataDiskSlot>
-    get() = intrinsic()
-
-  /** Slot 0. */
-  @SlotNumber(0)
-  val TransportSlot: DataDiskSlot
-    get() = intrinsic()
-
-  /** The StructureChuteDigitalValveLeft prefab. */
-  companion object : Prefab()
-}
-
-/** The StructureChuteDigitalValveLeft devices on the chip's network. */
-@PrefabName("StructureChuteDigitalValveLeft")
-object ChuteDigitalValveLefts {
-  /** The device on [pin], as a StructureChuteDigitalValveLeft. */
-  fun at(pin: Device): ChuteDigitalValveLeft = intrinsic()
-
-  /** Every one on the network. */
-  val all: Batch
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch<ChuteDigitalValveLeft>() {
-    /** A slot of every one in the batch, by number. */
-    val slots: Slots<SlotBatch<DataDiskSlot>>
-      get() = intrinsic()
-  }
-}
-
-/** A StructureChuteDigitalValveRight. */
-@PrefabName("StructureChuteDigitalValveRight")
-class ChuteDigitalValveRight internal constructor() : TypedDevice() {
-  var Lock: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var On: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  var Open: Boolean
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val Power: Boolean
-    get() = intrinsic()
-
-  var Quantity: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  val RequiredPower: Double
-    get() = intrinsic()
-
-  var Setting: Double
-    get() = intrinsic()
-    set(value) = intrinsic()
-
-  /** The device's slots, by number. */
-  val slots: Slots<DataDiskSlot>
-    get() = intrinsic()
-
-  /** Slot 0. */
-  @SlotNumber(0)
-  val TransportSlot: DataDiskSlot
-    get() = intrinsic()
-
-  /** The StructureChuteDigitalValveRight prefab. */
-  companion object : Prefab()
-}
-
-/** The StructureChuteDigitalValveRight devices on the chip's network. */
-@PrefabName("StructureChuteDigitalValveRight")
-object ChuteDigitalValveRights {
-  /** The device on [pin], as a StructureChuteDigitalValveRight. */
-  fun at(pin: Device): ChuteDigitalValveRight = intrinsic()
-
-  /** Every one on the network. */
-  val all: Batch
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
-  class Batch internal constructor() : DeviceBatch<ChuteDigitalValveRight>() {
     /** A slot of every one in the batch, by number. */
     val slots: Slots<SlotBatch<DataDiskSlot>>
       get() = intrinsic()

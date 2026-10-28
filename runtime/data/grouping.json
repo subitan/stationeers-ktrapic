@@ -500,6 +500,15 @@
         "AdvancedPackagingMachine": "StructureAdvancedPackagingMachine"
       }
     },
+    "DigitalChute": {
+      "plural": "DigitalChutes",
+      "members": {
+        "ValveLeft": "StructureChuteDigitalValveLeft",
+        "ValveRight": "StructureChuteDigitalValveRight",
+        "FlipFlopSplitterLeft": "StructureChuteDigitalFlipFlopSplitterLeft",
+        "FlipFlopSplitterRight": "StructureChuteDigitalFlipFlopSplitterRight"
+      }
+    },
     "Door": {
       "plural": "Doors",
       "members": {
