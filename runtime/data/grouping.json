@@ -280,6 +280,14 @@
         "HeavyDual": "StructureSolarPanelDualReinforced"
       }
     },
+    "Reprocessor": {
+      "plural": "Reprocessors",
+      "members": {
+        "Centrifuge": "StructureCentrifuge",
+        "CombustionCentrifuge": "StructureCombustionCentrifuge",
+        "Recycler": "StructureRecycler"
+      }
+    },
     "Furnace": {
       "plural": "Furnaces",
       "members": {
@@ -679,6 +687,10 @@
     {
       "prefabs": [["StructureRoboticArmDock", "StructureLarreDockAtmos", "StructureLarreDockCargo", "StructureLarreDockCollector", "StructureLarreDockHydroponics"], "StructureLarreDockBypass"],
       "reason": "the LArRE Dock (Bypass) is a siding an arm moves into so others can pass, not a dock that works; it has no Activate, Error, Extended, Idle, Position or Setting"
+    },
+    {
+      "prefabs": [["StructureCentrifuge", "StructureCombustionCentrifuge", "StructureRecycler"], "StructureArcFurnace"],
+      "reason": "the Arc Furnace has the reprocessors' shared logic types, but it smelts ore into ingots rather than recovering raw materials from items, reagent mix or dirty ore"
     },
     {
       "prefabs": [["ItemSpaceHelmet", "ItemEmergencySpaceHelmet", "ItemHardsuitHelmet", "ItemIcarusHelmet", "ItemSuitHelmetHARM"], "ItemGasMask"],
