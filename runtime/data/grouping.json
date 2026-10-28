@@ -716,7 +716,7 @@
     },
     {
       "prefabs": [["StructureGlassDoor", "StructureBlastDoor", "StructureCompositeDoor"], ["StructureManualHatch", "StructureManualFloorHatch"], "CompositeRollCover"],
-      "reason": "the manual hatches and the Composite Roll Cover open and close a passage like a door, but the Manual Floor Hatch and the roll cover have no power, Mode or On, so they can't share the doors' interface, and the hatches stay one family"
+      "reason": "the manual hatches and the Composite Roll Cover open and close a passage like a door, but the Manual Floor Hatch has no power, Mode or On and the roll cover no power, so they can't share the doors' interface, and the hatches stay one family"
     },
     {
       "prefabs": ["H2Combustor", "StructureElectrolyzer"],
@@ -728,7 +728,7 @@
     },
     {
       "prefabs": [["StructureConsoleLED5", "StructureConsoleLED1x2", "StructureConsoleLED1x3"], "StructureDiode"],
-      "reason": "the Diode is a light that shows a Color, and the LED displays show a number; they share only Color"
+      "reason": "the LED (StructureDiode) is a light that shows a Color, and the LED Displays show a number; they share only Color"
     },
     {
       "prefabs": [["StructureFridgeSmall", "StructureFridgeBig"], "StructureHydroponicsStation", "StructureLiquidDrain", "StructureRocketEngineTiny", ["StructureWallCooler", "StructureWaterWallCooler"]],
@@ -736,7 +736,7 @@
     },
     {
       "prefabs": [["StructureChuteDigitalValveLeft", "StructureChuteDigitalValveRight", "StructureChuteDigitalFlipFlopSplitterLeft", "StructureChuteDigitalFlipFlopSplitterRight"], ["StructureGasTankStorage", "StructureLiquidTankStorage"], ["StructureMotionSensor", "StructureProximitySensor", "StructureOccupancySensor"]],
-      "reason": "they share only Quantity, which counts different things: the items a chute valve lets through, the tanks in storage, and the people a sensor sees"
+      "reason": "they share only Quantity, which means different things: the items a chute valve lets through, the moles in a tank storage's canister, and the people a sensor sees"
     }
   ],
   "textDisplays": [

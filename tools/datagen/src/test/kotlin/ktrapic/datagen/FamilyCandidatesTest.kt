@@ -143,20 +143,17 @@ class FamilyCandidatesTest {
     val level = prefab("StructureElevatorLevelFront", "ElevatorSpeed")
     val shafts = Grouping.Family("ElevatorShafts", mapOf("Cabled" to "StructureElevatorShaft"))
     val levels = Grouping.Family("ElevatorLevels", mapOf("Cabled" to "StructureElevatorLevelFront"))
-
-    assertThat(
-            FamilyCandidates.ungrouped(
-                others + shaft + level,
-                Grouping(
-                    mapOf(
-                        "ElevatorShaft" to shafts,
-                        "ElevatorLevel" to levels.copy(extends = listOf("ElevatorShaft")),
-                    ),
-                    emptyList(),
-                ),
-            )
+    val extending =
+        Grouping(
+            mapOf(
+                "ElevatorShaft" to shafts,
+                "ElevatorLevel" to levels.copy(extends = listOf("ElevatorShaft")),
+            ),
+            emptyList(),
         )
-        .isEmpty()
+
+    assertThat(FamilyCandidates.ungrouped(others + shaft + level, extending)).isEmpty()
+    assertThat(FamilyCandidates.ungrouped(others + level + shaft, extending)).isEmpty()
     assertThat(
             FamilyCandidates.ungrouped(
                 others + shaft + level,
@@ -164,6 +161,46 @@ class FamilyCandidatesTest {
             )
         )
         .containsExactly(listOf("StructureElevatorLevelFront", "StructureElevatorShaft"))
+  }
+
+  @Test
+  fun `a family and one that extends it through another are decided`() {
+    // The three share ElevatorSpeed, which the other twenty-seven prefabs lack.
+    val others = ('A'..'Z').map { prefab("StructureThing$it", "On") } + prefab("StructureOther")
+    val shaft = prefab("StructureElevatorShaft", "ElevatorSpeed")
+    val industrial = prefab("StructureElevatorLevelIndustrial", "ElevatorSpeed")
+    val grouping =
+        Grouping(
+            mapOf(
+                "ElevatorShaft" to
+                    Grouping.Family("ElevatorShafts", mapOf("Cabled" to "StructureElevatorShaft")),
+                "ElevatorLevel" to
+                    Grouping.Family(
+                        "ElevatorLevels",
+                        mapOf("Cabled" to "StructureElevatorLevelFront"),
+                        extends = listOf("ElevatorShaft"),
+                    ),
+                "IndustrialElevatorLevel" to
+                    Grouping.Family(
+                        "IndustrialElevatorLevels",
+                        mapOf("Cabled" to "StructureElevatorLevelIndustrial"),
+                        extends = listOf("ElevatorLevel"),
+                    ),
+            ),
+            emptyList(),
+        )
+
+    assertThat(FamilyCandidates.ungrouped(others + shaft + industrial, grouping)).isEmpty()
+    assertThat(FamilyCandidates.ungrouped(others + industrial + shaft, grouping)).isEmpty()
+    val broken =
+        grouping.copy(
+            families =
+                grouping.families +
+                    ("ElevatorLevel" to
+                        grouping.families.getValue("ElevatorLevel").copy(extends = emptyList()))
+        )
+    assertThat(FamilyCandidates.ungrouped(others + shaft + industrial, broken))
+        .containsExactly(listOf("StructureElevatorLevelIndustrial", "StructureElevatorShaft"))
   }
 
   @Test
@@ -310,7 +347,42 @@ class FamilyCandidatesTest {
   }
 
   @Test
-  fun `a not-family entry covers only the prefabs it lists`() {
+  fun `a not-family entry naming one member of a family covers the others`() {
+    // The doors and the roll cover share Idle, which the other thirty-seven prefabs lack.
+    val others =
+        ('A'..'Z').map { prefab("StructureThing$it", "On") } +
+            ('A'..'K').map { prefab("StructureOther$it", "On") }
+    val doors =
+        listOf(
+            prefab("StructureGlassDoor", "Idle"),
+            prefab("StructureBlastDoor", "Idle"),
+            prefab("CompositeRollCover", "Idle"),
+        )
+    val grouping =
+        Grouping(
+            mapOf(
+                "Door" to
+                    Grouping.Family(
+                        "Doors",
+                        mapOf("Glass" to "StructureGlassDoor", "Blast" to "StructureBlastDoor"),
+                    )
+            ),
+            emptyList(),
+            listOf(
+                Grouping.NotFamily(
+                    listOf(listOf("StructureGlassDoor"), listOf("CompositeRollCover")),
+                    "no power",
+                )
+            ),
+        )
+
+    assertThat(FamilyCandidates.ungrouped(others + doors, grouping)).isEmpty()
+    assertThat(FamilyCandidates.ungrouped(others + doors, grouping.copy(families = emptyMap())))
+        .containsExactly(listOf("CompositeRollCover", "StructureBlastDoor", "StructureGlassDoor"))
+  }
+
+  @Test
+  fun `a not-family entry covers only the prefabs it lists, outside a family`() {
     val switches = listOf("StructureLogicSwitch", "StructureLogicSwitch2")
     val grouping =
         Grouping(

@@ -13,8 +13,8 @@ package ktrapic.datagen
  *   `StructureLightLong`, `StructureStorageLocker` those of `StructureLockerSmall`). This finds
  *   kinds told apart by a word not yet in [VARIANT_WORDS], such as `Wide` or `MKII`, or
  * - they have the same, and at least one, of the logic types few prefabs have ([rareLogicTypes]):
- *   the shape of a job, whatever the devices are called. `StructureSorter` and `StructureUnloader` both
- *   send items to an `Output`, and the generators all report `PowerGeneration`.
+ *   the shape of a job, whatever the devices are called. `StructureSorter` and `StructureUnloader`
+ *   both send items to an `Output`, and the generators all report `PowerGeneration`.
  *
  * The first two don't see kinds whose prefab names don't share their words
  * (`StructureCapsuleTankGas` and `StructureMediumRocketGasFuelTank` are the game's "Gas Capsule
@@ -78,12 +78,23 @@ object FamilyCandidates {
   /**
    * The largest share of prefabs a logic type can be on and still mark out a kind of device:
    * `PowerGeneration` is on a few prefabs, `On` on most.
+   *
+   * Ten percent is a judgement, not derived: it is a value at which every group found in today's
+   * data has been decided, as a family or as not one. Other values find other groups, which nobody
+   * has decided yet. At 5%, where fewer types are rare, the Arc Furnace with the Furnace and the
+   * Logic Sorter with the Occupancy Sensor; at 12.5% the SDB hoppers with the Chute Inlet, Ice
+   * Crusher and Water Purifier. The cut-off is a share of all prefabs, so it moves as the game adds
+   * them.
    */
   private const val RARE_SHARE = 0.1
 
   /**
-   * The logic types few of [prefabs] have, leaving out the gas ratios, which come with any gas a
-   * device holds rather than with what it does.
+   * The logic types few of [prefabs] have, leaving out every `Ratio*` type. Those are mostly the
+   * gas ratios, one per gas for each atmosphere a device reads, which come with the gas a device
+   * holds rather than with what it does; the filter also takes the bare `Ratio`, the charge of a
+   * battery or area power control. The other readings of an atmosphere, such as `PressureOutput`
+   * and `TemperatureOutput`, still count, so devices that share only those are found and have to be
+   * listed as not a family.
    */
   fun rareLogicTypes(prefabs: List<Prefab>): Set<String> =
       prefabs
@@ -107,8 +118,9 @@ object FamilyCandidates {
   /**
    * The groups of [prefabs] that look alike but that [grouping] neither puts in one family (or in
    * families one of which extends the other) nor lists in different groups of a not-family entry:
-   * each group's prefab names, sorted. Two prefabs are in a group when a chain of such look-alike
-   * pairs links them.
+   * each group's prefab names, sorted. A not-family group that lists a family's member stands for
+   * that whole family and every family that extends it. Two prefabs are in a group when a chain of
+   * such look-alike pairs links them.
    */
   fun ungrouped(prefabs: List<Prefab>, grouping: Grouping): List<List<String>> {
     val familyOf = familyOf(grouping)
@@ -117,8 +129,8 @@ object FamilyCandidates {
         setOf(family) + grouping.families[family]?.extends.orEmpty().flatMap { lineage(it) }
     fun related(a: String?, b: String?) =
         a != null && b != null && (a in lineage(b) || b in lineage(a))
-    // The group of a not-family entry that [prefab] is in, or else that lists a family it extends:
-    // an entry naming the doors covers every kind of door.
+    // The group of a not-family entry that [prefab] is in, or else that lists a member of its own
+    // family or of a family its family extends: an entry naming one door covers every kind of door.
     fun groupOf(notFamily: Grouping.NotFamily, prefab: String): Int {
       val listed = notFamily.groups.indexOfFirst { prefab in it }
       if (listed >= 0) return listed
