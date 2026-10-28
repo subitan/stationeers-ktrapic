@@ -11677,7 +11677,7 @@ interface Fabricator {
 
   /** A StructureHydraulicPipeBender. */
   @PrefabName("StructureHydraulicPipeBender")
-  class PipeBender internal constructor() : TypedDevice(), Fabricator {
+  class HydraulicPipeBender internal constructor() : TypedDevice(), Fabricator {
     override var Activate: Boolean
       get() = intrinsic()
       set(value) = intrinsic()
@@ -11963,9 +11963,9 @@ object Fabricators {
 
   /** The StructureHydraulicPipeBender devices on the chip's network. */
   @PrefabName("StructureHydraulicPipeBender")
-  object PipeBender {
+  object HydraulicPipeBender {
     /** The device on [pin], as a StructureHydraulicPipeBender. */
-    fun at(pin: Device): Fabricator.PipeBender = intrinsic()
+    fun at(pin: Device): Fabricator.HydraulicPipeBender = intrinsic()
 
     /** Every one on the network. */
     val all: Batch
@@ -11974,7 +11974,7 @@ object Fabricators {
     /** Every one on the network named [name], which must be a constant. */
     fun named(name: String): Batch = intrinsic()
 
-    class Batch internal constructor() : DeviceBatch<Fabricator.PipeBender>() {
+    class Batch internal constructor() : DeviceBatch<Fabricator.HydraulicPipeBender>() {
       /** A slot of every one in the batch, by number. */
       val slots: Slots<SlotBatch<DataDiskSlot>>
         get() = intrinsic()

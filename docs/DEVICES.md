@@ -756,8 +756,8 @@ interface Fabricator {
     val slots: Slots<DataDiskSlot>
   }
 
-  /** StructureHydraulicPipeBender. Entry point: Fabricators.PipeBender. */
-  class PipeBender : TypedDevice, Fabricator {
+  /** StructureHydraulicPipeBender. Entry point: Fabricators.HydraulicPipeBender. */
+  class HydraulicPipeBender : TypedDevice, Fabricator {
     val Export: Transfer
     val Import: Transfer
     val slots: Slots<DataDiskSlot>

@@ -483,7 +483,7 @@
         "SecurityPrinter": "StructureSecurityPrinter",
         "ToolManufactory": "StructureToolManufactory",
         "RocketManufactory": "StructureRocketManufactory",
-        "PipeBender": "StructureHydraulicPipeBender",
+        "HydraulicPipeBender": "StructureHydraulicPipeBender",
         "AutomatedOven": "StructureAutomatedOven",
         "AdvancedPackagingMachine": "StructureAdvancedPackagingMachine"
       }
