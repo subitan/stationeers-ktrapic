@@ -275,13 +275,45 @@ public class LspDocumentTest : IDisposable
     }
 
     [Fact]
-    public async Task NoCompletionAnswerForADocumentNotOpen()
+    public async Task DescribesTheNameAtAPosition()
+    {
+        var daemon = Start();
+        var document = Open(daemon, "val sign = LedDisplays.Small.at(d5)\nsign.Text = \"HOT\"\n", out _);
+
+        var hover = await document.Hover(1, 6).WaitAsync(TestDaemon.Timeout);
+        var nothing = await document.Hover(0, 1).WaitAsync(TestDaemon.Timeout);
+
+        Assert.StartsWith("LedDisplay.Small\nvar Text: String (write-only)\n\nText of one to six", hover);
+        Assert.Equal("", nothing);
+    }
+
+    [Fact]
+    public async Task GivesTheSignaturesOfTheCallAtAPosition()
+    {
+        var daemon = Start();
+        var document = Open(daemon, "val s = LedDisplays.Small.at(\n", out _);
+
+        var signatures = await document.SignatureHelp(0, 29).WaitAsync(TestDaemon.Timeout);
+        var none = await document.SignatureHelp(0, 3).WaitAsync(TestDaemon.Timeout);
+
+        var at = Assert.Single(signatures.All);
+        Assert.Equal("fun at(pin: Device): LedDisplay.Small", at.Label);
+        Assert.Equal(new[] { "pin: Device" }, at.Parameters);
+        Assert.Equal("The device on pin, as a StructureConsoleLED5.", at.Documentation);
+        Assert.Equal(0, signatures.ActiveParameter);
+        Assert.Empty(none.All);
+    }
+
+    [Fact]
+    public async Task NoAnswerForADocumentNotOpen()
     {
         var daemon = Start();
         var document = new LspDocument(LspDocument.NewUri("chip"));
         document.Bind(daemon.Connection);
 
         Assert.Null(await document.Complete(0, 0).WaitAsync(TestDaemon.Timeout));
+        Assert.Null(await document.Hover(0, 0).WaitAsync(TestDaemon.Timeout));
+        Assert.Null(await document.SignatureHelp(0, 0).WaitAsync(TestDaemon.Timeout));
     }
 
     [Fact]
