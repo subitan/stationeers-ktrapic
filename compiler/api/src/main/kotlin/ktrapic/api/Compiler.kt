@@ -12,6 +12,7 @@ import ktrapic.frontend.K2Completion
 import ktrapic.frontend.K2Frontend
 import ktrapic.frontend.K2Hover
 import ktrapic.frontend.SignatureHelp
+import ktrapic.ic10.Ic10Limits
 import ktrapic.ic10.Line
 import ktrapic.ic10.Program
 import ktrapic.ic10.ProgramSize
@@ -62,7 +63,7 @@ object Compiler {
             // The 0-based line of the user's source that each line of the program comes from.
             val sourceLines =
                 lowered.offsets.map { offset -> offset?.let { ir.position(it) }?.first?.minus(1) }
-            Result.success(lowered.program to sourceLines)
+            Result.success(Triple(lowered.program, sourceLines, lowered.stackCalls))
           } catch (e: CompileException) {
             val (line, column) = ir.position(e.offset) ?: (0 to 0)
             Result.failure(CompileFailure(CompileError(e.message ?: "error", line, column)))
@@ -83,7 +84,7 @@ object Compiler {
         result.value.getOrElse {
           return CompileResult.Failure(listOf((it as CompileFailure).error))
         }
-    val (labelled, sourceLines) = compiled
+    val (labelled, sourceLines, stackCalls) = compiled
     val program = if (options.compact) labelled.compacted() else labelled
     // Compacting keeps exactly the instructions, in order, so their source lines go with them.
     val printedSourceLines =
@@ -99,13 +100,28 @@ object Compiler {
             .groupBy({ it.first }, { it.second })
     val code = program.print()
     val size = ProgramSize.of(code)
+    // Each call on the stack pushes and pops what passes in a register otherwise.
+    val sizeHint =
+        if (stackCalls && size.lines > Ic10Limits.MAX_LINES) {
+          listOf(
+              CompileError(
+                  "The program is ${size.lines} lines, over the chip's ${Ic10Limits.MAX_LINES}: " +
+                      "passing functions' arguments in registers saves lines (turn stack calls " +
+                      "off, or mark the most-called functions @InRegisters)",
+                  0,
+                  0,
+              )
+          )
+        } else {
+          emptyList()
+        }
     return CompileResult.Success(
         program,
         code,
         size.lines,
         size.bytes,
         registersUsed(program),
-        warnings,
+        warnings + sizeHint,
         sourceMap,
     )
   }

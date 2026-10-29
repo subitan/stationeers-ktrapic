@@ -503,6 +503,14 @@ internal class Translator(
       values: List<Value>,
   ): Value {
     if (parameters.any { it.type.isDevice() || it.type.isViewOrKey() }) {
+      if (function in graph.recursive) {
+        fail(
+            call,
+            "${function.name} takes a device, view, substance or set and is in a cycle of calls " +
+                "(${cycleText(function)}): a function taking one must be inlined, which a " +
+                "function in a cycle of calls can't be",
+        )
+      }
       fail(
           call,
           "A function with a device, view, substance or set parameter must be inline, or called only once",

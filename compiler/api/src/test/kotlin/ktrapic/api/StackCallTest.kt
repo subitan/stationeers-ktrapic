@@ -176,6 +176,43 @@ class StackCallTest {
   }
 
   @Test
+  fun `a global counted in a function called in a short-circuit condition is kept`() {
+    val db =
+        run(
+            """
+            var n = 0
+            fun t(x: Int): Boolean { n += x; return x > 1 }
+            val a = t(1) && t(5)
+            val b = t(2) || t(100)
+            db.Setting = n.toDouble()
+            db.Ratio = if (a || !b) 1.0 else 0.0
+            """
+        )
+
+    assertThat(db["Setting"]).isEqualTo(3.0)
+    assertThat(db["Ratio"]).isEqualTo(0.0)
+  }
+
+  @Test
+  fun `a global counted through mutual recursion is kept`() {
+    val db =
+        run(
+            """
+            var hits = 0
+            fun a(n: Int): Int { hits += 1; return if (n <= 0) 0 else b(n - 1) + 1 }
+            fun b(n: Int): Int { hits += 1; return if (n <= 0) 0 else c(n - 1) + 1 }
+            fun c(n: Int): Int { hits += 1; return if (n <= 0) 0 else a(n - 1) + 1 }
+            db.Setting = a(7).toDouble()
+            db.Ratio = hits.toDouble()
+            """,
+            conventions = listOf(true),
+        )
+
+    assertThat(db["Setting"]).isEqualTo(7.0)
+    assertThat(db["Ratio"]).isEqualTo(8.0)
+  }
+
+  @Test
   fun `a global written through an inlined or register function is not undone`() {
     val db =
         run(
@@ -345,6 +382,47 @@ class StackCallTest {
         )
     assertThat(self.message).contains("f -> f")
     assertThat(self.line to self.column).isEqualTo(2 to 40)
+  }
+
+  @Test
+  fun `a function in a cycle with a device parameter is an error naming the cycle`() {
+    val error =
+        error(
+            """
+            fun g(dev: Device, n: Int): Int = if (n == 0) 0 else g(dev, n - 1)
+            db.Setting = g(db, 3).toDouble()
+            """
+        )
+
+    assertThat(error.message)
+        .isEqualTo(
+            "g takes a device, view, substance or set and is in a cycle of calls (g -> g): a " +
+                "function taking one must be inlined, which a function in a cycle of calls can't be"
+        )
+    assertThat(error.line).isEqualTo(3)
+  }
+
+  @Test
+  fun `a program over the line limit with stack calls is warned that registers save lines`() {
+    fun calling(times: Int) =
+        "fun f(x: Double): Double = x + 1.0\n" +
+            (1..times).joinToString("\n") { "db.Setting = f($it.0)" }
+    val source = calling(40)
+
+    val stack = compiled(source)
+    assertThat(stack.lines).isGreaterThan(128)
+    assertThat(stack.warnings.map { it.message })
+        .containsExactly(
+            "The program is ${stack.lines} lines, over the chip's 128: passing functions' " +
+                "arguments in registers saves lines (turn stack calls off, or mark the most-called " +
+                "functions @InRegisters)"
+        )
+    assertThat(stack.warnings.single().line).isEqualTo(0)
+    // Nothing goes on the stack, so there is nothing to suggest, whatever the size.
+    assertThat(compiled(source, CompileOptions(stackCalls = false)).warnings).isEmpty()
+    assertThat(compiled("@InRegisters $source").warnings).isEmpty()
+    // A program that fits isn't warned.
+    assertThat(compiled(calling(3)).warnings).isEmpty()
   }
 
   @Test

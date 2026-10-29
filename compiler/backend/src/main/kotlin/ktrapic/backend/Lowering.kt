@@ -7,9 +7,10 @@ import ktrapic.ic10.Program
 
 /**
  * A compiled [program] and, for each of its lines, the IR start offset of the source statement it
- * comes from ([TirInstruction.offset]), or null.
+ * comes from ([TirInstruction.offset]), or null. [stackCalls] is whether any call passes its
+ * arguments and result on the stack.
  */
-data class Lowered(val program: Program, val offsets: List<Int?>)
+data class Lowered(val program: Program, val offsets: List<Int?>, val stackCalls: Boolean = false)
 
 /**
  * Tidies [TirLine]s, allocates registers and produces the IC10 [Program], expanding each call on
@@ -77,7 +78,11 @@ object Lowering {
         }
       }
     }
-    return Lowered(Program(program), offsets)
+    return Lowered(
+        Program(program),
+        offsets,
+        stackCalls = simplified.any { it is TirInstruction && it.op == TirInstruction.CALL },
+    )
   }
 
   /** Repeats the clean-ups until none changes anything. */
