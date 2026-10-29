@@ -1,7 +1,12 @@
 # Golden programs: each X.ic10.kts compiles to X.ic10, and to X.compact.ic10 with compact output.
-# //compiler/api:GoldenTest checks them.
+# //compiler/api:GoldenTest checks them. An X.test.json beside a program is a test of it against
+# fake devices (see docs/TESTING.md), which //compiler/api:CaseTestsTest runs.
 filegroup(
     name = "cases",
-    srcs = glob(["*.ic10.kts", "*.ic10"]),
+    srcs = glob([
+        "*.ic10.kts",
+        "*.ic10",
+        "*.test.json",
+    ]),
     visibility = ["//compiler/api:__pkg__"],
 )

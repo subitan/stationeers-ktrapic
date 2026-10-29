@@ -36,11 +36,12 @@ class Ic10RuntimeException(val line: Int, message: String) : Exception("line $li
  *
  * Its arithmetic, bitwise operations (see [ktrapic.ic10.Ic10Math]), batch reads, jumps and stack
  * follow the game's IC10 interpreter, with the chip in a circuit housing (so `get`/`put` on `db`
- * reach its own stack). Where it deliberately differs: a runtime error halts and throws (the game
- * retries the failing line every tick), `sleep` resumes after exactly `ceil(seconds / 0.5)` ticks
- * (the game's real tick lengths can make it one tick later at exact multiples of 0.5 s), and a
- * literal jump target, address, slot, device hash or batch mode need only have a whole value (the
- * game also wants it written as an integer, so `j 2.0` is an error there).
+ * reach its own stack, whether or not [pins] has a device on `db` for the housing). Where it
+ * deliberately differs: a runtime error halts and throws (the game retries the failing line every
+ * tick), `sleep` resumes after exactly `ceil(seconds / 0.5)` ticks (the game's real tick lengths
+ * can make it one tick later at exact multiples of 0.5 s), and a literal jump target, address,
+ * slot, device hash or batch mode need only have a whole value (the game also wants it written as
+ * an integer, so `j 2.0` is an error there).
  *
  * Not modelled yet: logic types given as numbers, device reference ids (`ld`, `sd`, `getd`, `d?`
  * from a register), reagents, other hosts (machines, suits, tablets), and indirect registers
@@ -70,6 +71,12 @@ class Emulator(
 
   var halted = false
     private set
+
+  /**
+   * Called after each line the chip runs, with that line's index, so a caller can watch a tick line
+   * by line. A line that fails throws instead.
+   */
+  var onLine: (line: Int) -> Unit = {}
 
   private var sleepUntilTick = 0
   private val aliases = mutableMapOf<String, Operand>()
@@ -136,19 +143,24 @@ class Emulator(
       return Pause.END_TICK
     }
     val line = program.lines[pc]
+    val ran = pc
     steps++
-    if (line !is Line.Instruction) {
-      pc++
-      return Pause.CONTINUE
-    }
-    return try {
-      execute(line)
-    } catch (e: Ic10RuntimeException) {
-      throw e
-    } catch (e: RuntimeException) {
-      halted = true
-      throw Ic10RuntimeException(pc, "${line.op}: ${e.message}")
-    }
+    val pause =
+        if (line !is Line.Instruction) {
+          pc++
+          Pause.CONTINUE
+        } else {
+          try {
+            execute(line)
+          } catch (e: Ic10RuntimeException) {
+            throw e
+          } catch (e: RuntimeException) {
+            halted = true
+            throw Ic10RuntimeException(pc, "${line.op}: ${e.message}")
+          }
+        }
+    onLine(ran)
+    return pause
   }
 
   private fun execute(line: Line.Instruction): Pause {
@@ -442,7 +454,7 @@ class Emulator(
       device(operand) ?: error("no device on ${pinName(operand)}")
 
   private fun memoryOf(operand: Operand): DoubleArray =
-      if (pinName(operand) == "db" && "db" !in pins) stack else requireDevice(operand).memory
+      if (pinName(operand) == "db") stack else requireDevice(operand).memory
 
   private fun logicType(operand: Operand): String =
       (operand as? Name)?.name?.takeIf { it !in aliases && it !in defines }

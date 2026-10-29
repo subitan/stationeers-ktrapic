@@ -689,4 +689,23 @@ class EmulatorTest {
         )
         .inOrder()
   }
+
+  @Test
+  fun getAndPutOnDbReachTheChipStackWhateverIsOnDb() {
+    val emu = run("push 5\nput db 1 7\nget r0 db 0", "db" to FakeDevice())
+
+    assertThat(emu.register("r0")).isEqualTo(5.0)
+    assertThat(emu.stack[1]).isEqualTo(7.0)
+  }
+
+  @Test
+  fun onLineSeesEachLineThatRuns() {
+    val emu = Emulator(Program.parse("move r0 1\nloop:\nyield\nj loop"))
+    val ran = mutableListOf<Int>()
+    emu.onLine = { ran += it }
+
+    emu.runTicks(2)
+
+    assertThat(ran).containsExactly(0, 1, 2, 3, 1, 2).inOrder()
+  }
 }

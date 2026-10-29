@@ -52,6 +52,41 @@ class DaemonTest {
   }
 
   @Test
+  fun `runs a program against a test`() {
+    val source = "import ktrapic.*\\nd1.On = d0.Temperature < 290.0\\n"
+    val test =
+        """
+        {"devices": [
+           {"pin": "d0", "prefab": "StructureGasSensor", "logic": {"Temperature": 280}},
+           {"id": "heater", "pin": "d1", "prefab": "StructureWallHeater"}],
+         "expect": [{"device": "heater", "logic": "On", "equals": 1}]}
+        """
+    val response =
+        request("""{"action": "run", "code": "$source", "test": $test, "trace_tick": 1}""")
+
+    assertThat(response["code"].asString).isNotEmpty()
+    val run = response["run"].asJsonObject
+    assertThat(run["passed"].asBoolean).isTrue()
+    assertThat(run["checks"].asJsonArray[0].asJsonObject["description"].asString)
+        .isEqualTo("heater.On == 1 after the run: was 1")
+    assertThat(run["lines"].asJsonArray).isNotEmpty()
+  }
+
+  @Test
+  fun `answers a test it can't run with the compile result and an error`() {
+    val response =
+        request(
+            """{"action": "run", "code": "import ktrapic.*\ndb.Setting = 1.0\n", "test": {"ticks": 0}}"""
+        )
+
+    assertThat(response["code"].asString).isEqualTo("s db Setting 1")
+    assertThat(response["run"].asJsonObject["error"].asJsonObject["description"].asString)
+        .isEqualTo("ticks must be 1 to 10000")
+    assertThat(request("""{"action": "run", "code": "", "test": []}""").toString())
+        .contains("must be a JSON object")
+  }
+
+  @Test
   fun `rejects bad requests`() {
     assertThat(request("""{"action": "format"}""")["error"].asJsonObject["description"].asString)
         .contains("Invalid action")
