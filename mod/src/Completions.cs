@@ -233,7 +233,24 @@ namespace KTrapIC
             string word = WordBefore(line, column);
             if (word.Length > 0)
                 return !char.IsDigit(word[0]);
-            return column > 0 && line[column - 1] == '.';
+            return AfterDot(line, column);
+        }
+
+        /// <summary>
+        /// Whether the caret at <paramref name="column"/> is right after a dot that follows a name
+        /// or a closing bracket (<c>d0.</c>, <c>f().</c>), not one in a number or a range
+        /// (<c>1.</c>, <c>0..</c>).
+        /// </summary>
+        public static bool AfterDot(string line, int column)
+        {
+            column = Math.Min(column, line.Length);
+            if (column < 2 || line[column - 1] != '.')
+                return false;
+            char before = line[column - 2];
+            if (before == ')' || before == ']')
+                return true;
+            string word = WordBefore(line, column - 1);
+            return word.Length > 0 && !char.IsDigit(word[0]);
         }
 
         /// <summary>

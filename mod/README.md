@@ -50,12 +50,11 @@ moment after typing stops:
 - "Compact" resolves labels to line numbers and drops them, to save lines.
 - Typing a name lists what could go there, from the compiler's reading of the program: a
   device's logic types, a family's prefabs, an enum's values, the members of a local's type, the
-  locals, parameters and functions in scope, and the SDK's names. A dot typed at the end of a
-  line (`d0.`, `PresenceSensors.`) lists them too; in the middle of a line the editor asks only
-  once the first letter after the dot is typed. Of Kotlin's own functions, only those KTrapIC
-  compiles are listed. The list shows at most 20 of the names that start with what's typed, and
-  accepting it (the editor's autocomplete key) types the part that all of them share. Until the
-  compiler has started, nothing is listed.
+  locals, parameters and functions in scope, and the SDK's names. A dot typed after a name
+  lists them too (`d0.`, `PresenceSensors.`), at the end of a line or in the middle of one. Of
+  Kotlin's own functions, only those KTrapIC compiles are listed. The list shows at most 20 of
+  the names that start with what's typed, and accepting it (the editor's autocomplete key) types
+  the part that all of them share. Until the compiler has started, nothing is listed.
 
 Exporting writes the IC10 to the chip, followed by the Kotlin source, compressed and encoded in
 comment lines that the chip skips. Opening the chip again shows the Kotlin. A program that doesn't

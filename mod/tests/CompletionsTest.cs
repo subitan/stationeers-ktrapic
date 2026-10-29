@@ -27,8 +27,21 @@ public class CompletionsTest
     [InlineData("val x = ", 8, false)]
     [InlineData("x = 12", 6, false)]
     [InlineData("", 0, false)]
+    [InlineData("val x = 1.", 10, false)]
     public void WantedAfterAWordOrADot(string line, int column, bool wanted) =>
         Assert.Equal(wanted, Completions.Wanted(line, column));
+
+    [Theory]
+    [InlineData("val e = Leds..at(d0)", 13, true)]
+    [InlineData("f().", 4, true)]
+    [InlineData("d0[LogicType.On]", 13, true)]
+    [InlineData("for (i in 0..3)", 12, false)]
+    [InlineData("for (i in 0..3)", 13, false)]
+    [InlineData("x = 1.5", 6, false)]
+    [InlineData("d0.Se", 5, false)]
+    [InlineData(".", 1, false)]
+    public void AfterDotFollowingANameOrABracket(string line, int column, bool after) =>
+        Assert.Equal(after, Completions.AfterDot(line, column));
 
     [Fact]
     public void ShowsThoseStartingWithTheWordInTheDaemonsOrder()

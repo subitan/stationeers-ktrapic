@@ -338,12 +338,29 @@ namespace KTrapIC
         }
 
         /// <summary>
+        /// Whether the editor should call <see cref="UpdateAutocomplete"/>: where it would (the
+        /// caret at the end of a word or a line), and also right after a dot in the middle of a
+        /// line (<c>PresenceSensors.|.at(d0)</c>), so what can follow a name shows before its
+        /// first letter is typed.
+        /// </summary>
+        public override bool NeedsUpdateAutocomplete()
+        {
+            if (base.NeedsUpdateAutocomplete())
+                return true;
+            if (!Settings.EnableAutoComplete || Editor.KeyMode != KeyMode.Insert)
+                return false;
+            var caret = Editor.CaretPos;
+            return caret.Line < Lines.Count && Completions.AfterDot(Lines[caret.Line].Text, caret.Col);
+        }
+
+        /// <summary>
         /// Asks the daemon what could be written at the caret, after a word that has begun or
         /// right after a dot (<see cref="Completions.Wanted"/>), and shows the answer once it
         /// comes, if the code and the caret haven't changed since. Requests go one at a time, the
         /// latest wanted after the one in flight if the code is still what it was made in
         /// (<see cref="CompletionRequests"/>). The editor calls this when the
-        /// code changes or the caret moves, with the caret at the end of a word or a line.
+        /// code changes or the caret moves, with the caret at the end of a word or a line, or right
+        /// after a dot (<see cref="NeedsUpdateAutocomplete"/>).
         /// </summary>
         public override void UpdateAutocomplete()
         {

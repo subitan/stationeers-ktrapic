@@ -48,6 +48,12 @@ class K2CompletionTest {
   }
 
   @Test
+  fun `after a dot in the middle of a line, what goes there`() {
+    assertThat(labels("val s = PresenceSensors.|.at(d0)\n"))
+        .containsAtLeast("Motion", "Proximity", "Occupancy")
+  }
+
+  @Test
   fun `after a family's object, its entry points`() {
     assertThat(labels("PresenceSensors.Motion.|")).containsAtLeast("at", "all", "named")
   }
