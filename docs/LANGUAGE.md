@@ -471,7 +471,11 @@ A chip holds at most 128 lines of at most 90 characters, and 4096 characters in 
 compiler measures programs as the game's code editor does: every line counts, and each line
 break counts as two characters, so a 128-line program has 3842 characters for its text.
 Compact output (resolving labels to line numbers and dropping them) saves lines. The compiler
-reports these counts but does not reject a program over the limits.
+reports these counts but does not reject a program over the limits. When a program over 128
+lines calls functions with their arguments on the stack, it warns that passing them in registers
+would save lines, naming what to change: turning stack calls off, or marking functions
+`@InRegisters`. Functions in a cycle of calls need the stack, so the warning leaves them out, and
+says the program must be shortened if they are all it calls that way.
 
 Values live in the registers `r0` to `r15`; the compiler reuses a register once its value is no
 longer needed. A program that needs more than 16 values at once is rejected, with an error that

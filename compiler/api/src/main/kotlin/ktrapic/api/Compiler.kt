@@ -3,6 +3,7 @@ package ktrapic.api
 import java.io.File
 import ktrapic.backend.Backend
 import ktrapic.backend.CompileException
+import ktrapic.backend.StackCalled
 import ktrapic.backend.TooManyRegistersException
 import ktrapic.frontend.Completion
 import ktrapic.frontend.Diagnostic
@@ -63,7 +64,7 @@ object Compiler {
             // The 0-based line of the user's source that each line of the program comes from.
             val sourceLines =
                 lowered.offsets.map { offset -> offset?.let { ir.position(it) }?.first?.minus(1) }
-            Result.success(Triple(lowered.program, sourceLines, lowered.stackCalls))
+            Result.success(Triple(lowered.program, sourceLines, lowered.stackCalled))
           } catch (e: CompileException) {
             val (line, column) = ir.position(e.offset) ?: (0 to 0)
             Result.failure(CompileFailure(CompileError(e.message ?: "error", line, column)))
@@ -84,7 +85,7 @@ object Compiler {
         result.value.getOrElse {
           return CompileResult.Failure(listOf((it as CompileFailure).error))
         }
-    val (labelled, sourceLines, stackCalls) = compiled
+    val (labelled, sourceLines, stackCalled) = compiled
     val program = if (options.compact) labelled.compacted() else labelled
     // Compacting keeps exactly the instructions, in order, so their source lines go with them.
     val printedSourceLines =
@@ -100,18 +101,9 @@ object Compiler {
             .groupBy({ it.first }, { it.second })
     val code = program.print()
     val size = ProgramSize.of(code)
-    // Each call on the stack pushes and pops what passes in a register otherwise.
-    val sizeHint =
-        if (stackCalls && size.lines > Ic10Limits.MAX_LINES) {
-          listOf(
-              CompileError(
-                  "The program is ${size.lines} lines, over the chip's ${Ic10Limits.MAX_LINES}: " +
-                      "passing functions' arguments in registers saves lines (turn stack calls " +
-                      "off, or mark the most-called functions @InRegisters)",
-                  0,
-                  0,
-              )
-          )
+    val sizeHints =
+        if (stackCalled.isNotEmpty() && size.lines > Ic10Limits.MAX_LINES) {
+          listOf(CompileError(sizeHint(size.lines, stackCalled), 0, 0))
         } else {
           emptyList()
         }
@@ -121,9 +113,33 @@ object Compiler {
         size.lines,
         size.bytes,
         registersUsed(program),
-        warnings + sizeHint,
+        warnings + sizeHints,
         sourceMap,
     )
+  }
+
+  /**
+   * Why a program of [lines] over the chip's limit could be shorter: each call on the stack pushes
+   * and pops what passes in a register otherwise. Only the functions in [stackCalled] that aren't
+   * in a cycle of calls can pass in registers, as a cycle needs the stack.
+   */
+  private fun sizeHint(lines: Int, stackCalled: List<StackCalled>): String {
+    val over = "The program is $lines lines, over the chip's ${Ic10Limits.MAX_LINES}"
+    val (recursive, plain) = stackCalled.partition { it.recursive }
+    val names = plain.joinToString { it.name }
+    return when {
+      recursive.isEmpty() ->
+          "$over: passing functions' arguments in registers saves lines (turn stack calls off, " +
+              "or mark the most-called functions @InRegisters)"
+      plain.isEmpty() ->
+          "$over: the functions called on the stack (${recursive.joinToString { it.name }}) " +
+              "are in a cycle of calls, so they can't pass their arguments in registers to save " +
+              "lines, and the program must be shortened"
+      else ->
+          "$over: passing functions' arguments in registers saves lines (mark " +
+              (if (plain.size == 1) names else "the most-called of $names") +
+              " @InRegisters; functions in a cycle of calls must pass theirs on the stack)"
+    }
   }
 
   private fun registersUsed(program: Program): Int =

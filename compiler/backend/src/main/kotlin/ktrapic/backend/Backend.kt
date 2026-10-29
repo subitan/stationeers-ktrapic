@@ -19,6 +19,6 @@ object Backend {
   ): Lowered {
     val translator = Translator(symbols, stackCalls)
     translator.translate(module)
-    return Lowering.lower(translator.lines)
+    return Lowering.lower(translator.lines, translator.stackFunctions)
   }
 }

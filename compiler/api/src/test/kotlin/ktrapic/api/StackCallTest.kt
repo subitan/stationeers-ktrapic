@@ -425,6 +425,51 @@ class StackCallTest {
     assertThat(compiled(calling(3)).warnings).isEmpty()
   }
 
+  private val factorial = "fun fact(n: Double): Double = if (n <= 1.0) 1.0 else n * fact(n - 1.0)\n"
+
+  @Test
+  fun `a program over the line limit whose stack calls are all recursive is told to shorten`() {
+    val stack = compiled(factorial + (1..60).joinToString("\n") { "db.Setting = fact($it.0)" })
+
+    assertThat(stack.lines).isGreaterThan(128)
+    assertThat(stack.warnings.map { it.message })
+        .containsExactly(
+            "The program is ${stack.lines} lines, over the chip's 128: the functions called on " +
+                "the stack (fact) are in a cycle of calls, so they can't pass their arguments in " +
+                "registers to save lines, and the program must be shortened"
+        )
+  }
+
+  @Test
+  fun `a program over the line limit with some recursive stack calls is told which to change`() {
+    val plain = "fun f(x: Double): Double = x + 1.0\nfun g(x: Double): Double = x * 2.0\n"
+    fun calls(vararg functions: String) =
+        (1..30).joinToString("\n") { i ->
+          functions.joinToString("\n") { "db.Setting = $it($i.0)" }
+        }
+
+    val one = compiled(factorial + plain.lines().first() + "\n" + calls("f", "fact"))
+    assertThat(one.lines).isGreaterThan(128)
+    assertThat(one.warnings.map { it.message })
+        .containsExactly(
+            "The program is ${one.lines} lines, over the chip's 128: passing functions' arguments " +
+                "in registers saves lines (mark f @InRegisters; functions in a cycle of calls must " +
+                "pass theirs on the stack)"
+        )
+
+    val two = compiled(factorial + plain + calls("f", "g", "fact"))
+    assertThat(two.lines).isGreaterThan(128)
+    assertThat(two.warnings.map { it.message })
+        .containsExactly(
+            "The program is ${two.lines} lines, over the chip's 128: passing functions' arguments " +
+                "in registers saves lines (mark the most-called of f, g @InRegisters; functions in " +
+                "a cycle of calls must pass theirs on the stack)"
+        )
+    // The advice compiles: the functions it names may pass their arguments in registers.
+    val marked = compiled(factorial + "@InRegisters " + plain + calls("f", "fact"))
+    assertThat(marked.lines).isLessThan(one.lines)
+  }
+
   @Test
   fun `an inline function in a cycle is an error`() {
     for (source in

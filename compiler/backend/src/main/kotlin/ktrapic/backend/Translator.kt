@@ -201,6 +201,16 @@ internal class Translator(
   /** Where in [lines] the functions called on the stack have their `j ra`. */
   private val returns = mutableListOf<Int>()
 
+  /** The functions called on the stack, by their labels. */
+  val stackFunctions: Map<String, StackCalled>
+    get() =
+        called
+            .filterValues { it.stack }
+            .entries
+            .associate { (function, target) ->
+              target.label to StackCalled(function.name.asString(), function in graph.recursive)
+            }
+
   /**
    * What an untyped device's views reach: every logic type the game has, read and written, as its
    * flat logic types are. A view's members combine (`Ports.Output2.Setting`) into names the game

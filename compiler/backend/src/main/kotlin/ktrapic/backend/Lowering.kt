@@ -6,18 +6,29 @@ import ktrapic.ic10.Operand
 import ktrapic.ic10.Program
 
 /**
- * A compiled [program] and, for each of its lines, the IR start offset of the source statement it
- * comes from ([TirInstruction.offset]), or null. [stackCalls] is whether any call passes its
- * arguments and result on the stack.
+ * A function called with its arguments and result on the stack: its [name], and whether it is in a
+ * cycle of calls.
  */
-data class Lowered(val program: Program, val offsets: List<Int?>, val stackCalls: Boolean = false)
+data class StackCalled(val name: String, val recursive: Boolean)
+
+/**
+ * A compiled [program] and, for each of its lines, the IR start offset of the source statement it
+ * comes from ([TirInstruction.offset]), or null. [stackCalled] is the functions that the program
+ * still calls on the stack, in the order their first calls appear in it.
+ */
+data class Lowered(
+    val program: Program,
+    val offsets: List<Int?>,
+    val stackCalled: List<StackCalled> = emptyList(),
+)
 
 /**
  * Tidies [TirLine]s, allocates registers and produces the IC10 [Program], expanding each call on
  * the stack ([TirInstruction.CALL]) as it goes.
  */
 object Lowering {
-  fun lower(lines: List<TirLine>): Lowered {
+  /** [stackFunctions] describes the function at each label that calls on the stack go to. */
+  fun lower(lines: List<TirLine>, stackFunctions: Map<String, StackCalled> = emptyMap()): Lowered {
     val simplified = simplify(lines)
     val registers = RegisterAllocator.allocate(simplified)
     val liveOut = Liveness.liveOut(simplified)
@@ -81,7 +92,14 @@ object Lowering {
     return Lowered(
         Program(program),
         offsets,
-        stackCalls = simplified.any { it is TirInstruction && it.op == TirInstruction.CALL },
+        stackCalled =
+            simplified
+                .filter { it is TirInstruction && it.op == TirInstruction.CALL }
+                .mapNotNull { call ->
+                  val label = ((call as TirInstruction).operands.last() as? Fixed)?.operand
+                  (label as? LabelRef)?.let { stackFunctions[it.name] }
+                }
+                .distinct(),
     )
   }
 
