@@ -14,6 +14,8 @@ import java.util.concurrent.Future
 import ktrapic.api.Compiler
 import ktrapic.daemon.Daemon
 import ktrapic.frontend.Completion
+import ktrapic.frontend.Hover
+import ktrapic.frontend.SignatureHelp
 
 /** JSON-RPC's and LSP's error codes. */
 internal object ErrorCodes {
@@ -53,6 +55,11 @@ internal class ResponseError(val code: Int, message: String) : Exception(message
  * analysis of the document's current text (see [completion]); a repeat of the latest request costs
  * nothing, and an analysis that fails is answered with InternalError.
  *
+ * **`textDocument/hover`** describes the name at the position ([hover]), and
+ * **`textDocument/signatureHelp`** the functions the call around it could be to ([signatureHelp]),
+ * both from the same analysis, as plain text; where there is nothing to say, the result is null. An
+ * analysis that fails is answered with InternalError.
+ *
  * **`textDocument/semanticTokens/full`** gets `{"data": []}`, although the server doesn't declare
  * the capability: the IC10 Editor asks for semantic tokens after every change whatever the server
  * declares, and an error answer to each would be noise.
@@ -74,6 +81,8 @@ internal class ResponseError(val code: Int, message: String) : Exception(message
  * @param scheduler runs diagnostics compiles; tests can run them by hand.
  * @param compiler compiles a document's text with a `ktrapic/compile` request's options.
  * @param completer lists what could be written at an index in a document's text.
+ * @param hoverer describes the name at an index in a document's text.
+ * @param signer finds the functions the call around an index in a document's text could be to.
  */
 class LspServer
 internal constructor(
@@ -84,6 +93,8 @@ internal constructor(
     private val scheduler: Scheduler,
     private val compiler: (String, JsonObject?) -> JsonObject,
     private val completer: (String, Int) -> List<Completion> = Compiler::complete,
+    private val hoverer: (String, Int) -> Hover? = Compiler::hover,
+    private val signer: (String, Int) -> SignatureHelp? = Compiler::signatureHelp,
 ) {
   constructor(
       input: InputStream,
@@ -134,6 +145,8 @@ internal constructor(
           "shutdown" to ::shutdown,
           "ktrapic/compile" to ::compile,
           "textDocument/completion" to ::completion,
+          "textDocument/hover" to ::hover,
+          "textDocument/signatureHelp" to ::signatureHelp,
           "textDocument/semanticTokens/full" to ::semanticTokens,
       )
 
@@ -287,6 +300,19 @@ internal constructor(
                   add("triggerCharacters", JsonArray().apply { add(".") })
                 },
             )
+            addProperty("hoverProvider", true)
+            add(
+                "signatureHelpProvider",
+                JsonObject().apply {
+                  add(
+                      "triggerCharacters",
+                      JsonArray().apply {
+                        add("(")
+                        add(",")
+                      },
+                  )
+                },
+            )
           },
       )
       add("serverInfo", JsonObject().apply { addProperty("name", "ktrapic-daemon") })
@@ -339,12 +365,7 @@ internal constructor(
    * for each keystroke. If the analysis fails, the request is answered with InternalError.
    */
   private fun completion(params: JsonElement?): JsonElement {
-    val fields = params.asObject("params")
-    val uri = fields["textDocument"].asObject("textDocument").string("uri")
-    val document =
-        documents[uri] ?: throw ResponseError(ErrorCodes.INVALID_PARAMS, "$uri is not open")
-    val text = document.text
-    val offset = document.offsetAt(fields["position"].asObject("position").toPosition())
+    val (text, offset) = textAndOffset(params)
     val completions =
         synchronized(compiles) {
           lastCompletion?.takeIf { it.text == text && it.offset == offset }?.completions
@@ -367,19 +388,84 @@ internal constructor(
     }
   }
 
+  /** [completer]'s list, or an InternalError answer if it fails ([analysed]). */
+  private fun complete(text: String, offset: Int): List<Completion> =
+      analysed("Completion") { completer(text, offset) }
+
   /**
-   * [completer]'s list, or an InternalError answer if it fails. Like a compile, it can fail with an
-   * Error as well as an Exception: the compiler's parser overflows the stack on deeply nested
+   * What [analysis] gives, or an InternalError answer if it fails. Like a compile, it can fail with
+   * an Error as well as an Exception: the compiler's parser overflows the stack on deeply nested
    * source, and its internal checks throw AssertionError. A stack overflow has unwound by the time
    * it is caught, so the server can answer and carry on; other VirtualMachineErrors mean it cannot.
    */
-  private fun complete(text: String, offset: Int): List<Completion> =
+  private fun <T> analysed(what: String, analysis: () -> T): T =
       try {
-        completer(text, offset)
+        analysis()
       } catch (e: Throwable) {
         if (e is VirtualMachineError && e !is StackOverflowError) throw e
-        log("Completion failed: ${e.stackTraceToString()}")
-        throw ResponseError(ErrorCodes.INTERNAL_ERROR, "Completion failed: $e")
+        log("$what failed: ${e.stackTraceToString()}")
+        throw ResponseError(ErrorCodes.INTERNAL_ERROR, "$what failed: $e")
+      }
+
+  /** An open document's text, and the index in it of a request's `position`. */
+  private fun textAndOffset(params: JsonElement?): Pair<String, Int> {
+    val fields = params.asObject("params")
+    val uri = fields["textDocument"].asObject("textDocument").string("uri")
+    val document =
+        documents[uri] ?: throw ResponseError(ErrorCodes.INVALID_PARAMS, "$uri is not open")
+    return document.text to document.offsetAt(fields["position"].asObject("position").toPosition())
+  }
+
+  /**
+   * A `Hover` of the name at a position in an open document ([hoverer]), its contents plain text
+   * ([Hover.text]), or null where there is none. Runs as compiles do, one at a time.
+   */
+  private fun hover(params: JsonElement?): JsonElement {
+    val (text, offset) = textAndOffset(params)
+    val hover =
+        synchronized(compiles) { analysed("Hover") { hoverer(text, offset) } }
+            ?: return JsonNull.INSTANCE
+    return JsonObject().apply { add("contents", plainText(hover.text())) }
+  }
+
+  /**
+   * The `SignatureHelp` of the call around a position in an open document ([signer]), or null
+   * outside one. Each signature's `documentation`, when it has one, is a `MarkupContent`, as the
+   * IC10 Editor reads it. Runs as compiles do, one at a time.
+   */
+  private fun signatureHelp(params: JsonElement?): JsonElement {
+    val (text, offset) = textAndOffset(params)
+    val help =
+        synchronized(compiles) { analysed("Signature help") { signer(text, offset) } }
+            ?: return JsonNull.INSTANCE
+    val signatures = JsonArray()
+    for (signature in help.signatures) {
+      signatures.add(
+          JsonObject().apply {
+            addProperty("label", signature.label)
+            signature.documentation?.let { add("documentation", plainText(it)) }
+            add(
+                "parameters",
+                JsonArray().apply {
+                  signature.parameters.forEach {
+                    add(JsonObject().apply { addProperty("label", it) })
+                  }
+                },
+            )
+          }
+      )
+    }
+    return JsonObject().apply {
+      add("signatures", signatures)
+      addProperty("activeSignature", 0)
+      addProperty("activeParameter", help.activeParameter)
+    }
+  }
+
+  private fun plainText(value: String) =
+      JsonObject().apply {
+        addProperty("kind", "plaintext")
+        addProperty("value", value)
       }
 
   /** Answers semantic tokens with none, so the IC10 Editor's request after each change succeeds. */

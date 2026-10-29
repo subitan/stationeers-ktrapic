@@ -216,6 +216,15 @@ class K2CompletionTest {
   }
 
   @Test
+  fun `no top-level function of the standard library by name, even imported`() {
+    val names = listOf("max", "abs", "sqrt", "setOf", "listOf")
+
+    assertThat(labels("val y = |\n")).containsNoneIn(names)
+    assertThat(labels("import kotlin.math.*\nval y = |\n")).containsNoneIn(names)
+    assertThat(labels("import kotlin.math.max\nval y = ma|\n")).doesNotContain("max")
+  }
+
+  @Test
   fun `after an enum entry or a static set, only what KTrapIC compiles`() {
     assertThat(labels("val s = setOf(1, 2)\nval n = s.|\n"))
         .containsExactly("contains", "intersect", "isEmpty", "minus", "plus", "size")
@@ -269,6 +278,14 @@ class K2CompletionTest {
   @Test
   fun `positions count Windows line endings`() {
     assertThat(labels("val a = 1\r\nd0.|\r\n")).contains("Setting")
+  }
+
+  @Test
+  fun `the program's own classes are described without the object it is wrapped in`() {
+    val items = complete("class P(val a: Int)\nfun mk(): P = P(1)\nval z = |\n")
+
+    assertThat(items.single { it.label == "P" }.detail).isEqualTo("P")
+    assertThat(items.single { it.label == "mk" }.detail).isEqualTo("fun mk(): P")
   }
 
   @Test

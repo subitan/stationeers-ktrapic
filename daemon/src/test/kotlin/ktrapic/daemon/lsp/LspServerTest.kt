@@ -53,7 +53,9 @@ class LspServerTest {
     assertThat(result["capabilities"].toString())
         .isEqualTo(
             """{"textDocumentSync":{"openClose":true,"change":2},""" +
-                """"completionProvider":{"triggerCharacters":["."]}}"""
+                """"completionProvider":{"triggerCharacters":["."]},""" +
+                """"hoverProvider":true,""" +
+                """"signatureHelpProvider":{"triggerCharacters":["(",","]}}"""
         )
     assertThat(result["serverInfo"].asJsonObject["name"].asString).isEqualTo("ktrapic-daemon")
   }
@@ -221,7 +223,7 @@ class LspServerTest {
     client.initialize()
     client.notify("\$/cancelRequest", """{"id": 1}""")
     client.notify("workspace/didChangeConfiguration", "{}")
-    client.send("""{"jsonrpc": "2.0", "id": "abc", "method": "textDocument/hover"}""")
+    client.send("""{"jsonrpc": "2.0", "id": "abc", "method": "textDocument/definition"}""")
 
     // The next message is the request's answer: the notifications got none.
     val response = client.read()
@@ -330,6 +332,8 @@ internal class LspTestClient(
     val scheduler: Scheduler = ManualScheduler(),
     debounceMillis: Long = 150,
     completer: (String, Int) -> List<ktrapic.frontend.Completion> = ktrapic.api.Compiler::complete,
+    hoverer: (String, Int) -> ktrapic.frontend.Hover? = ktrapic.api.Compiler::hover,
+    signer: (String, Int) -> ktrapic.frontend.SignatureHelp? = ktrapic.api.Compiler::signatureHelp,
     compiler: (String, JsonObject?) -> JsonObject = Daemon::compile,
 ) : AutoCloseable {
   private val gson = Gson()
@@ -339,7 +343,17 @@ internal class LspTestClient(
   private val fromServer = PipedInputStream(serverOutput, 1 shl 20)
   private val reader = MessageReader(fromServer) {}
   val server =
-      LspServer(serverInput, serverOutput, {}, debounceMillis, scheduler, compiler, completer)
+      LspServer(
+          serverInput,
+          serverOutput,
+          {},
+          debounceMillis,
+          scheduler,
+          compiler,
+          completer,
+          hoverer,
+          signer,
+      )
   @Volatile private var exitCode: Int? = null
   private val serverThread = thread {
     try {

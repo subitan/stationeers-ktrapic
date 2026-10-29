@@ -93,7 +93,11 @@ line-protocol compile. 150 ms after a document is opened or changed it compiles 
 `textDocument/publishDiagnostics` for that version: the compile's errors (severity 1) or warnings
 (severity 2), with ranges in UTF-16 code units, or an empty list once it compiles cleanly or is
 closed. A newer change replaces a compile still pending or running, so diagnostics never arrive
-for an older version, and a `ktrapic/compile` of the same text reuses that compile. It answers
+for an older version, and a `ktrapic/compile` of the same text reuses that compile. From the
+compiler's analysis of a document's current text, it answers `textDocument/completion` with what
+could be written at a position, `textDocument/hover` with the declaration of the name there, its
+class, whether it is read-only or write-only, and the SDK's KDoc for it, as plain text, and
+`textDocument/signatureHelp` with the functions the call around a position could be to. It answers
 `textDocument/semanticTokens/full` with no tokens, as the IC10 Editor asks for them after every
 change. See `daemon/src/main/kotlin/ktrapic/daemon/lsp/LspServer.kt`. The IC10 Editor plugin
 speaks this mode (see [mod/README.md](mod/README.md#how-the-plugin-talks-to-the-compiler)).

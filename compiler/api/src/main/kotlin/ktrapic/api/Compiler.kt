@@ -7,8 +7,11 @@ import ktrapic.backend.TooManyRegistersException
 import ktrapic.frontend.Completion
 import ktrapic.frontend.Diagnostic
 import ktrapic.frontend.FrontendResult
+import ktrapic.frontend.Hover
 import ktrapic.frontend.K2Completion
 import ktrapic.frontend.K2Frontend
+import ktrapic.frontend.K2Hover
+import ktrapic.frontend.SignatureHelp
 import ktrapic.ic10.Line
 import ktrapic.ic10.Program
 import ktrapic.ic10.ProgramSize
@@ -119,6 +122,17 @@ object Compiler {
    */
   fun complete(source: String, offset: Int): List<Completion> =
       K2Completion.complete(source, offset, listOf(sdkJar()), listOf("ktrapic.*"))
+
+  /** What the name at [offset] in [source] is, as a program compiles it. See [K2Hover]. */
+  fun hover(source: String, offset: Int): Hover? =
+      K2Hover.hover(source, offset, listOf(sdkJar()), listOf("ktrapic.*"))
+
+  /**
+   * The functions the call around [offset] in [source] could be to, as a program compiles it. See
+   * [K2Hover].
+   */
+  fun signatureHelp(source: String, offset: Int): SignatureHelp? =
+      K2Hover.signatureHelp(source, offset, listOf(sdkJar()), listOf("ktrapic.*"))
 
   /** The SDK's jar, which programs compile against. */
   private fun sdkJar(): File =

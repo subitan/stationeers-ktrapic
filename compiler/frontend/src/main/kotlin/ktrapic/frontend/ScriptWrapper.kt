@@ -15,7 +15,7 @@ const val PROGRAM_OBJECT = "Program"
  */
 class WrappedSource(
     val text: String,
-    original: String,
+    private val original: String,
     private val insertions: Map<Int, List<Insertion>>,
 ) {
   /** Text inserted at [column] (0-based, in the original line) on a line. */
@@ -41,6 +41,25 @@ class WrappedSource(
       shifted += insertion.length
     }
     return line to original
+  }
+
+  /**
+   * Maps an [offset] in the user's source to the offset of the same character in [text]: past the
+   * text inserted before it, including any inserted right at it.
+   */
+  fun wrappedOffset(offset: Int): Int {
+    val at = offset.coerceIn(0, original.length)
+    val line = original.substring(0, at).count { it == '\n' } + 1
+    val column = at - (original.lastIndexOf('\n', at - 1) + 1)
+    val before =
+        insertions.entries.sumOf { (insertedLine, onLine) ->
+          when {
+            insertedLine < line -> onLine.sumOf { it.length }
+            insertedLine == line -> onLine.filter { it.column <= column }.sumOf { it.length }
+            else -> 0
+          }
+        }
+    return at + before
   }
 }
 

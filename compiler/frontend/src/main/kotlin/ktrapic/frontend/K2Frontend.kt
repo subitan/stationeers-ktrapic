@@ -125,6 +125,27 @@ object K2Frontend {
       source: String,
       disposable: org.jetbrains.kotlin.com.intellij.openapi.Disposable,
   ) =
+      psiFactory(disposable)
+          .createFile(
+              "$PROGRAM_OBJECT.kts",
+              source.removePrefix(BYTE_ORDER_MARK.toString()).replace("\r\n", "\n"),
+          )
+
+  /**
+   * The offset in the text [parseScript] parses of the character at [offset] in [source]: before a
+   * leading byte-order mark and each `\r` of a `\r\n` are dropped.
+   */
+  internal fun parsedOffset(source: String, offset: Int): Int {
+    val at = offset.coerceIn(0, source.length)
+    val dropped = (0 until at).count { source[it] == '\r' && source.getOrNull(it + 1) == '\n' }
+    val mark = if (at > 0 && source[0] == BYTE_ORDER_MARK) 1 else 0
+    return at - dropped - mark
+  }
+
+  private const val BYTE_ORDER_MARK = '﻿'
+
+  /** Makes PSI from Kotlin source; the PSI lives until [disposable] is disposed. */
+  internal fun psiFactory(disposable: org.jetbrains.kotlin.com.intellij.openapi.Disposable) =
       KotlinCoreEnvironment.createForProduction(
               disposable,
               CompilerConfiguration().apply {
@@ -133,13 +154,7 @@ object K2Frontend {
               },
               EnvironmentConfigFiles.JVM_CONFIG_FILES,
           )
-          .let {
-            KtPsiFactory(it.project, false)
-                .createFile(
-                    "$PROGRAM_OBJECT.kts",
-                    source.removePrefix(0xFEFF.toChar().toString()).replace("\r\n", "\n"),
-                )
-          }
+          .let { KtPsiFactory(it.project, false) }
 
   /**
    * The compiler arguments for [sourceFile], compiled against kotlin-stdlib and [classpath], with
