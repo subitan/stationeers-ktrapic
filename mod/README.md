@@ -111,8 +111,12 @@ process's standard input and output (JSON-RPC with `Content-Length` framing, UTF
 - Hovers and signatures are the daemon's `textDocument/hover` and `textDocument/signatureHelp`,
   queued the same way, each kind on its own: an editor has at most one request of each kind in
   flight, and the daemon answers them, and compiles, one at a time. A hover is asked for once per
-  name, at its start, once the mouse has rested on it for 400 ms, and not in comments, strings or
-  keywords; it is shown if the mouse is still on the name when the answer comes.
+  name, at its start, once the mouse has rested on it for 400 ms; it is shown if the mouse is still
+  on the name when the answer comes. No hover is asked for on what the editor's line-by-line
+  highlighting marks as a `//` comment, a one-line string or a keyword. That highlighting sees one
+  line at a time, so names in a `/* */` comment or on a raw string's later lines are still asked
+  about (the daemon answers nothing for them), names inside `${}` in a string are not hovered, and
+  a `//` inside a string stops hovers for the rest of that line.
 - When the daemon starts again (`ktrapic restart`, or after it stopped), each editor opens its
   document on it again, with its whole text, and compiles it.
 

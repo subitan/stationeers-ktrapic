@@ -78,6 +78,19 @@ public class HoversTest
         Assert.Equal<(int, int)?>((start, length), span);
     }
 
+    [Theory]
+    [InlineData(0, 6, 20)]
+    [InlineData(1, 28, 6)]
+    public void AFunctionTypeParameterDoesNotEndTheParameters(int active, int start, int length)
+    {
+        var span = Hovers.ParameterSpan(
+            "fun f(g: (Int, Int) -> Int, x: Int): (Int) -> Int",
+            new[] { "g: (Int, Int) -> Int", "x: Int" },
+            active);
+
+        Assert.Equal<(int, int)?>((start, length), span);
+    }
+
     [Fact]
     public void ARepeatedParameterIsFoundAtItsOwnOccurrence()
     {
