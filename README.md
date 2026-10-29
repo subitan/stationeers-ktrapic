@@ -50,6 +50,7 @@ functions, devices, the maths and numeric rules, and the chip's size limits. The
 | 8 | Completion, hovers and diagnostics in the IC10 Editor ([#45](https://github.com/subitan/stationeers-ktrapic/issues/45)) | In progress |
 | 9 | A test harness in the playground: run a program against fake devices ([#66](https://github.com/subitan/stationeers-ktrapic/issues/66)) | Done |
 | 10 | An IntelliJ plugin: KTrapIC's own errors and the compiled IC10 in the IDE ([#23](https://github.com/subitan/stationeers-ktrapic/issues/23)) | Planned |
+| 11 | Advanced compiler features: functions called on the stack by default, with per-function and program-wide opt-outs, and recursion ([#120](https://github.com/subitan/stationeers-ktrapic/issues/120)) | Planned |
 
 ## Credits
 
