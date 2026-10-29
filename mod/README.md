@@ -204,3 +204,11 @@ which checks that the runtime has every module the compiler needs.
 `.github/workflows/release.yml` builds the plugin, the compiler jar and the Windows runtime, and
 publishes them: to the `dev` prerelease on each push to `main`, and to a release on a tag `vX.Y.Z`,
 which must match `About/About.xml`'s version.
+
+### Preview image
+
+`About/Preview.png` and `About/thumb.png` are the picture the game's mod list (and a Workshop
+item) shows. Both are rendered at 1232×706 from `art/preview.svg`, an original drawing; the
+laptop is not the game's model, and the badge is not Kotlin's logo. After editing the SVG,
+render it with any browser, for example headless Edge serving the folder locally:
+`msedge --headless=new --window-size=1232,706 --screenshot=Preview.png <url of preview.svg>`.
