@@ -159,6 +159,23 @@ public class LspDocumentTest : IDisposable
     }
 
     [Fact]
+    public async Task PassesTailCalls()
+    {
+        var daemon = Start();
+        var document = Open(
+            daemon, "fun down(n: Int): Int = if (n == 0) 0 else down(n - 1)\ndb.Setting = down(3).toDouble()\n", out _);
+
+        var loop = await TestDaemon.Within(document.Compile(new CompileOptions(false)));
+        var call = await TestDaemon.Within(document.Compile(new CompileOptions(false, tailCalls: false)));
+
+        daemon.AssertCompiled(loop);
+        daemon.AssertCompiled(call);
+        Assert.Contains("j down_loop1", loop.code);
+        Assert.Equal(1, loop.code.Split('\n').Count(line => line == "jal down"));
+        Assert.Equal(2, call.code.Split('\n').Count(line => line == "jal down"));
+    }
+
+    [Fact]
     public void DiagnosticsReachOnlyTheirOwnDocument()
     {
         var daemon = Start();

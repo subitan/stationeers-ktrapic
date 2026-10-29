@@ -10,14 +10,16 @@ object Backend {
    * declarations. Throws [CompileException] for a construct it cannot compile and
    * [TooManyRegistersException] when the program needs more than 16 registers. With [stackCalls],
    * functions called with `jal` pass their arguments and result on the stack, unless marked
-   * `@InRegisters`; without, in registers.
+   * `@InRegisters`; without, in registers. With [tailCalls], such a function's calls to itself in
+   * tail position loop back rather than call.
    */
   fun compile(
       module: IrModuleFragment,
       symbols: DeclarationFinder,
       stackCalls: Boolean = true,
+      tailCalls: Boolean = true,
   ): Lowered {
-    val translator = Translator(symbols, stackCalls)
+    val translator = Translator(symbols, stackCalls, tailCalls)
     translator.translate(module)
     return Lowering.lower(translator.lines, translator.stackFunctions)
         .copy(hasCycle = translator.hasCycle)

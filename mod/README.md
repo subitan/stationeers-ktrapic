@@ -50,6 +50,9 @@ moment after typing stops:
 - "Compact" resolves labels to line numbers and drops them, to save lines.
 - "Stack calls" (on by default) passes functions' arguments and results on the chip's stack, so
   functions may be recursive; off passes them in registers (see `docs/LANGUAGE.md`'s Functions).
+- "Tail calls" (on by default) compiles a function's call to itself in tail position as a jump
+  back to its start, so it takes no stack and may recurse without limit. It has no effect with
+  stack calls off.
 - Typing a name lists what could go there, from the compiler's reading of the program: a
   device's logic types, a family's prefabs, an enum's values, the members of a local's type, the
   locals, parameters and functions in scope, and the SDK's names. A dot typed after a name
@@ -83,6 +86,7 @@ settings):
 
 - `General.Compact`: the Compact toggle, remembered.
 - `General.StackCalls`: the Stack calls toggle, remembered.
+- `General.TailCalls`: the Tail calls toggle, remembered.
 - `Development.JavaPath`: a java executable (21 or later) to use instead of the downloaded
   runtime.
 - `Development.DaemonJarPath`: a compiler jar to use instead of the downloaded one, such as a

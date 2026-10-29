@@ -30,6 +30,13 @@ data class CompileOptions(
      * registers.
      */
     val stackCalls: Boolean = true,
+    /**
+     * Compile a function's call to itself in tail position (its value the function's result, or in
+     * a `Unit` function its last statement) as a jump back to the top of the function, so it takes
+     * no stack and can recurse without limit. Only functions called on the stack can call
+     * themselves, so without [stackCalls] this has no effect.
+     */
+    val tailCalls: Boolean = true,
 )
 
 /** A problem with the program, at a 1-based [line] and [column] of its source (0 if unknown). */
@@ -60,7 +67,8 @@ object Compiler {
     val result =
         K2Frontend.compile(source, listOf(sdkJar()), listOf("ktrapic.*")) { ir ->
           try {
-            val lowered = Backend.compile(ir.module, ir.symbols, options.stackCalls)
+            val lowered =
+                Backend.compile(ir.module, ir.symbols, options.stackCalls, options.tailCalls)
             // The 0-based line of the user's source that each line of the program comes from.
             val sourceLines =
                 lowered.offsets.map { offset -> offset?.let { ir.position(it) }?.first?.minus(1) }

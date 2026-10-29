@@ -155,7 +155,7 @@ KTrapIC builds with [Bazel](https://bazel.build) (bzlmod), via
 
 ```
 bazel test //...
-bazel run //cli:ktrapic -- [--compact] [--register-calls] program.ic10.kts
+bazel run //cli:ktrapic -- [--compact] [--register-calls] [--no-tail-calls] program.ic10.kts
 ```
 
 ### Dependencies
@@ -221,7 +221,7 @@ java -jar ktfmt-0.64-with-dependencies.jar <files...>
 
 Golden programs live in `test/cases`: each `X.ic10.kts` must compile to `X.ic10`, and to
 `X.compact.ic10` with compact output; one that calls functions with `jal` must also compile to
-`X.registers.ic10` with stack calls turned off. After a deliberate change to the output, rewrite
+`X.registers.ic10` with stack calls turned off, unless it is recursive, which needs them. After a deliberate change to the output, rewrite
 them (the path must be absolute):
 
 ```

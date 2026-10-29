@@ -53,6 +53,20 @@ class DaemonTest {
   }
 
   @Test
+  fun `loops back for a call in tail position unless tail_calls is false`() {
+    val source =
+        "import ktrapic.*\\nfun down(n: Int): Int = if (n == 0) 0 else down(n - 1)\\n" +
+            "db.Setting = down(3).toDouble()\\n"
+    val loop = request("""{"action": "compile", "code": "$source"}""")
+    val call =
+        request("""{"action": "compile", "code": "$source", "options": {"tail_calls": false}}""")
+
+    assertThat(loop["code"].asString).contains("j down_loop1")
+    assertThat(loop["code"].asString.lines().count { it == "jal down" }).isEqualTo(1)
+    assertThat(call["code"].asString.lines().count { it == "jal down" }).isEqualTo(2)
+  }
+
+  @Test
   fun `reports errors with their position`() {
     val error =
         request("""{"action": "compile", "code": {"": "import ktrapic.*\nd0.On = 1.0\n"}}""")[
