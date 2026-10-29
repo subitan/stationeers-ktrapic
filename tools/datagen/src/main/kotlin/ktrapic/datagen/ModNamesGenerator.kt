@@ -2,8 +2,8 @@ package ktrapic.datagen
 
 /**
  * Generates the in-game plugin's list of the SDK's generated names, which its editor highlights:
- * the types the generated sources declare (prefabs, their entry points and families, slot kinds),
- * the enums and their values, and the logic types devices and slots have.
+ * the types the generated sources declare (prefabs and their families, slot kinds), the enums and
+ * their values, and the logic types devices and slots have.
  */
 object ModNamesGenerator {
   /** Where the file goes, relative to the workspace root. */

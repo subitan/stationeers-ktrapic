@@ -31,12 +31,12 @@ class ViewTest {
     val code =
         lines(
             """
-            db.Setting = GasSensors.at(d0).Ratios[Substance.Oxygen]
-            db.Setting = Filtrations.Gas.at(d0).Ports.Input.Pressure
-            db.Setting = Filtrations.Gas.at(d0).Ports.Output.Ratios[Substance.LiquidAlcohol]
-            db.Setting = Robots.at(d0).Position.X
-            db.Setting = SatelliteDishes.Medium.at(d0).Dimensions.Z
-            db.Setting = SDBHoppers.Standard.at(d0).Import.Count
+            db.Setting = GasSensor.at(d0).Ratios[Substance.Oxygen]
+            db.Setting = Filtration.Gas.at(d0).Ports.Input.Pressure
+            db.Setting = Filtration.Gas.at(d0).Ports.Output.Ratios[Substance.LiquidAlcohol]
+            db.Setting = Robot.at(d0).Position.X
+            db.Setting = SatelliteDish.Medium.at(d0).Dimensions.Z
+            db.Setting = SDBHopper.Standard.at(d0).Import.Count
             """
         )
 
@@ -58,8 +58,8 @@ class ViewTest {
     val code =
         compiled(
                 """
-                Furnaces.Advanced.at(d0).Ports.Output.Setting = 2.5
-                Robots.at(d0).Target.Y = 4.0
+                Furnace.Advanced.at(d0).Ports.Output.Setting = 2.5
+                Robot.at(d0).Target.Y = 4.0
                 """
             )
             .code
@@ -117,7 +117,7 @@ class ViewTest {
         .isEqualTo("equals is not supported on a view, only its logic types")
     assertThat(error("db.Setting = d0.Position.hashCode().toDouble()").message)
         .isEqualTo("hashCode is not supported on a view, only its logic types")
-    assertThat(error("db.Setting = Robots.at(d0).Position.hashCode().toDouble()").message)
+    assertThat(error("db.Setting = Robot.at(d0).Position.hashCode().toDouble()").message)
         .isEqualTo("hashCode is not supported on a view, only its logic types")
     assertThat(error("db.Setting = if (d0.Ratios.equals(d1)) 1.0 else 0.0").message)
         .isEqualTo("equals is not supported on a view, only its logic types")
@@ -133,7 +133,7 @@ class ViewTest {
                 inline fun pressure(port: Port) = port.Pressure
                 inline fun portRatio(port: Port, s: Substance) = port.Ratios[s]
                 db.Setting = o2(d0.Ratios) + ratio(Substance.Nitrogen)
-                db.Ratio = pressure(Filtrations.Gas.at(d1).Ports.Output)
+                db.Ratio = pressure(Filtration.Gas.at(d1).Ports.Output)
                 db.Setting = portRatio(d2.Ports.Input2, Substance.Steam)
                 """
             )
@@ -151,7 +151,7 @@ class ViewTest {
             error(
                     """
                     inline fun pressure(port: Port) = port.Pressure
-                    db.Setting = pressure(Filtrations.Gas.at(d0).Ports.Input2)
+                    db.Setting = pressure(Filtration.Gas.at(d0).Ports.Input2)
                     """
                         .trimIndent()
                 )
@@ -182,7 +182,7 @@ class ViewTest {
     val code =
         compiled(
                 """
-                val filtration = Filtrations.Gas.at(d0)
+                val filtration = Filtration.Gas.at(d0)
                 val outlet = filtration.Ports.Output
                 val gas = Substance.Hydrogen
                 db.Setting = outlet.Ratios[gas] + outlet.Pressure
@@ -196,11 +196,11 @@ class ViewTest {
 
   @Test
   fun `a typed device's view has only what its prefab reports`() {
-    assertThat(error("db.Setting = SatelliteDishes.Medium.at(d0).Dimensions.Y").message)
+    assertThat(error("db.Setting = SatelliteDish.Medium.at(d0).Dimensions.Y").message)
         .isEqualTo("SatelliteDish.Medium has no SizeY")
-    assertThat(error("db.Setting = Filtrations.Gas.at(d0).Ports.Input2.Pressure").message)
+    assertThat(error("db.Setting = Filtration.Gas.at(d0).Ports.Input2.Pressure").message)
         .isEqualTo("Filtration.Gas has no PressureInput2")
-    assertThat(error("Filtrations.Gas.at(d0).Ports.Input.Setting = 1.0").message)
+    assertThat(error("Filtration.Gas.at(d0).Ports.Input.Setting = 1.0").message)
         .isEqualTo("Filtration.Gas has no SettingInput")
   }
 
@@ -208,11 +208,11 @@ class ViewTest {
   fun `a read-only view member can't be assigned, nor a view a device lacks named`() {
     // Kotlin's own type errors: Ratios has no set, Position is a Vector of vals, and a gas sensor
     // has no Ports.
-    assertThat(compile("GasSensors.at(d0).Ratios[Substance.Oxygen] = 1.0"))
+    assertThat(compile("GasSensor.at(d0).Ratios[Substance.Oxygen] = 1.0"))
         .isInstanceOf(CompileResult.Failure::class.java)
-    assertThat(compile("Robots.at(d0).Position.X = 1.0"))
+    assertThat(compile("Robot.at(d0).Position.X = 1.0"))
         .isInstanceOf(CompileResult.Failure::class.java)
-    assertThat(compile("db.Setting = GasSensors.at(d0).Ports.Input.Pressure"))
+    assertThat(compile("db.Setting = GasSensor.at(d0).Ports.Input.Pressure"))
         .isInstanceOf(CompileResult.Failure::class.java)
   }
 
@@ -229,9 +229,9 @@ class ViewTest {
     val code =
         compiled(
                 """
-                db.Setting = GasSensors.all.map { it.Ratios[Substance.Oxygen] }.average()
-                db.Ratio = Filtrations.Gas.all.maxOf { it.Ports.Output.Pressure }
-                Furnaces.Advanced.all.forEach { it.Ports.Output.Setting = 3.0 }
+                db.Setting = GasSensor.all.map { it.Ratios[Substance.Oxygen] }.average()
+                db.Ratio = Filtration.Gas.all.maxOf { it.Ports.Output.Pressure }
+                Furnace.Advanced.all.forEach { it.Ports.Output.Setting = 3.0 }
                 """
             )
             .code
@@ -247,7 +247,7 @@ class ViewTest {
   @Test
   fun `a batch's view is checked against the prefab too`() {
     assertThat(
-            error("db.Setting = Filtrations.Gas.all.map { it.Ports.Input2.Pressure }.sum()").message
+            error("db.Setting = Filtration.Gas.all.map { it.Ports.Input2.Pressure }.sum()").message
         )
         .isEqualTo("Filtration.Gas has no PressureInput2")
   }
@@ -263,7 +263,7 @@ class ViewTest {
     val result =
         compiled(
             """
-            val sensor = GasSensors.at(d0)
+            val sensor = GasSensor.at(d0)
             db.Setting = sensor.Ratios[Substance.Oxygen] + sensor.Ratios[Substance.Nitrogen]
             """
         )

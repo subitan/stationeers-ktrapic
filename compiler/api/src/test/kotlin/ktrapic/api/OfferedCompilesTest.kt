@@ -130,13 +130,13 @@ class OfferedCompilesTest {
           ),
           Context(
               "a Ratios view's keys",
-              "val k = GasSensors.at(d0).Ratios.keys\n",
+              "val k = GasSensor.at(d0).Ratios.keys\n",
               "k.|",
               uses = staticSetUses("k", "Substance.Oxygen"),
           ),
           Context(
               "a Ratios loop's entry",
-              "for (e in GasSensors.at(d0).Ratios) {\n",
+              "for (e in GasSensor.at(d0).Ratios) {\n",
               "  e.|",
               "\n}\n",
               uses =
@@ -165,39 +165,39 @@ class OfferedCompilesTest {
                       "set" to "d0.set(LogicType.Setting, 1.0)",
                   ),
           ),
-          Context("a typed device", "val g = GasSensors.at(d0)\n", "val v# = g.|"),
-          Context("a family's member", "val m = PresenceSensors.Motion.at(d0)\n", "val v# = m.|"),
+          Context("a typed device", "val g = GasSensor.at(d0)\n", "val v# = g.|"),
+          Context("a family's member", "val m = PresenceSensor.Motion.at(d0)\n", "val v# = m.|"),
           Context(
               "a family's interface",
               "inline fun f(b: Battery) {\n",
               "  val v# = b.|",
-              "\n}\nf(Batteries.Small.at(d0))\n",
+              "\n}\nf(Battery.Small.at(d0))\n",
           ),
           Context("a view", "", "val v# = d0.Ports.|"),
           Context("a port", "", "val v# = d0.Ports.Input.|"),
           Context("a vector", "", "val v# = d0.Position.|"),
-          Context("a Ratios view", "val r = GasSensors.at(d0).Ratios\n", "val v# = r.|"),
+          Context("a Ratios view", "val r = GasSensor.at(d0).Ratios\n", "val v# = r.|"),
           Context("a device's slots", "", "val v# = d0.slots.|"),
           Context("a slot", "", "val v# = d0.slots[0].|"),
           Context(
               "a batch",
               "",
-              "PresenceSensors.Motion.all.|",
-              uses = batchUses("PresenceSensors.Motion.all"),
+              "PresenceSensor.Motion.all.|",
+              uses = batchUses("PresenceSensor.Motion.all"),
           ),
           Context(
               "a named batch",
               "",
-              "PresenceSensors.Motion.named(\"x\").|",
-              uses = batchUses("PresenceSensors.Motion.named(\"x\")"),
+              "PresenceSensor.Motion.named(\"x\").|",
+              uses = batchUses("PresenceSensor.Motion.named(\"x\")"),
           ),
           Context(
               "a mapped batch",
               "",
-              "db.Setting = PresenceSensors.Motion.all.map { it.Quantity }.|",
+              "db.Setting = PresenceSensor.Motion.all.map { it.Quantity }.|",
           ),
-          Context("a family", "", "val v# = PresenceSensors.|.all"),
-          Context("a family's member's entry point", "", "val v# = PresenceSensors.Motion.|"),
+          Context("a family", "", "val v# = PresenceSensor.|.all"),
+          Context("a family's member's entry point", "", "val v# = PresenceSensor.Motion.|"),
           Context(
               "bare names at the top level",
               "val a = 1\n",
@@ -334,7 +334,7 @@ class OfferedCompilesTest {
 
   @Test
   fun `what LANGUAGE-md documents is offered`() {
-    assertThat(offered("for (e in GasSensors.at(d0).Ratios) {\n  db.Setting = e.|\n}\n"))
+    assertThat(offered("for (e in GasSensor.at(d0).Ratios) {\n  db.Setting = e.|\n}\n"))
         .containsExactly("key", "value")
     assertThat(offered("import kotlin.math.*\nval x = d0.Setting\nx.|\n"))
         .containsAtLeast("roundToInt", "absoluteValue", "pow", "coerceIn", "toInt")
@@ -342,7 +342,7 @@ class OfferedCompilesTest {
         .containsAtLeast("until", "downTo", "rangeTo", "rangeUntil", "toDouble", "shl", "inv")
     assertThat(offered("for (i in (0..10).|) yield()\n")).containsExactly("step")
     assertThat(offered("val s = Substance.|\n")).contains("entries")
-    assertThat(offered("val k = GasSensors.at(d0).Ratios.|\n")).contains("keys")
+    assertThat(offered("val k = GasSensor.at(d0).Ratios.|\n")).contains("keys")
     assertThat(offered("val s = setOf(1, 2)\ns.|\n"))
         .containsExactly("contains", "intersect", "isEmpty", "minus", "plus", "size")
     assertThat(offered("val b = d0.On\nb.|\n")).containsExactly("not")

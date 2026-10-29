@@ -200,7 +200,7 @@ object K2Hover {
       fun smallest(candidates: List<Pair<KtSourceElement, FirBasedSymbol<*>>>) =
           candidates.minByOrNull { (source, _) -> source.endOffset - source.startOffset }?.second
 
-      // The class of what a member was referred to on (`d0.`, `LedDisplays.Small.`), by member.
+      // The class of what a member was referred to on (`d0.`, `LedDisplay.Small.`), by member.
       val receivers = mutableMapOf<FirBasedSymbol<*>, ClassId>()
       val referenced =
           elements.filterIsInstance<FirQualifiedAccessExpression>().mapNotNull { access ->
@@ -220,7 +220,7 @@ object K2Hover {
               else -> null
             }
         if (classId == null || !element.source.covers()) return@mapNotNull null
-        // A qualifier or a type names its outer classes too: `LedDisplays.Small`.
+        // A qualifier or a type names its outer classes too: `LedDisplay.Small`.
         generateSequence(classId) { it.outerClassId }
             .firstOrNull { it.shortClassName.asString() == word }
             ?.let { session.symbolProvider.getClassLikeSymbolByClassId(it) }
@@ -271,7 +271,13 @@ object K2Hover {
           (called + overloadsOf(call, called))
               .filter { shown(it, shownOn) }
               .distinct()
-              .map { Signature(declarationOf(it), parametersOf(it), documentationOf(it)) }
+              .map {
+                Signature(
+                    declarationOf(it, session),
+                    parametersOf(it, session),
+                    documentationOf(it),
+                )
+              }
               .distinctBy { it.label }
       return if (signatures.isEmpty()) null else SignatureHelp(signatures, activeParameter)
     }
@@ -340,7 +346,7 @@ object K2Hover {
         return !callableId.packageName.isSubpackageOf(StandardClassIds.BASE_KOTLIN_PACKAGE) &&
             symbol.resolvedStatus.visibility == Visibilities.Public
       }
-      return K2Completion.shown(symbol, receiver)
+      return K2Completion.shown(symbol, receiver, session)
     }
 
     /**
@@ -416,7 +422,7 @@ object K2Hover {
             else -> null
           }
       return Hover(
-          declarationOf(symbol),
+          declarationOf(symbol, session),
           owner?.let(::nameOf),
           access,
           documentationOf(symbol),
@@ -430,7 +436,7 @@ object K2Hover {
     private fun documentationOf(symbol: FirCallableSymbol<*>): String? {
       val declared = symbol.fir.unwrapFakeOverrides().symbol
       val callableId = declared.callableId ?: return null
-      val receiver = declared.resolvedReceiverType?.let(::render)
+      val receiver = declared.resolvedReceiverType?.let { render(it, session) }
       docs[callableId.asSingleFqName().asString(), receiver]?.let {
         return it
       }

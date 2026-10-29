@@ -1,20 +1,23 @@
 package ktrapic.datagen
 
 /**
- * Generates the typed device API: per prefab, a device class whose companion object is the prefab
- * as a value, and a plural entry point with `at(pin)`, `all` and `named(name)`, whose batches
- * (`Batch` in `Batches.kt`) hold the prefab's typed devices.
+ * Generates the typed device API: per prefab, a device class whose companion object is the prefab,
+ * a `Prefab` with the entry points `at(pin)`, `all` and `named(name)`, whose batches (`Batch` in
+ * `Batches.kt`) hold the prefab's typed devices.
  *
  * A prefab in one of the [Grouping.families] is generated inside it: `Battery.Small` is the device
  * class, nested in the `Battery` interface that holds the logic types every member can read, and
- * `Batteries.Small` its entry point. Every other prefab is generated flat, named after its prefab
- * without a leading `Structure` or `Item` (`StructureGrowLight` is `GrowLight` and `GrowLights`),
- * or with its whole name where that would clash.
+ * `Battery.Small.all` its devices. Every other prefab is generated flat, named after its prefab
+ * without a leading `Structure` or `Item` (`StructureGrowLight` is `GrowLight`), or with its whole
+ * name where that would clash.
  */
 object PrefabGenerator {
   private const val FILE = "GeneratedPrefabs.kt"
   private val PREFIXES = listOf("Structure", "Item")
   private const val CONSOLE_SLOT_KIND = "Circuitboard"
+
+  /** The name of a prefab with slots's batch type, nested in its device class. */
+  private const val BATCH = "Batch"
 
   /** Names declared elsewhere in the `ktrapic` package, which no prefab may take. */
   private val HAND_WRITTEN =
@@ -88,10 +91,7 @@ object PrefabGenerator {
                 .flatMap { p -> p.slots.values.map { it.kind } } + "Common")
             .toSortedSet()
     for (kind in thingKinds) claim(thingSlotClass(kind), "slot kind $kind of things")
-    for ((family, members) in grouping.families) {
-      claim(family, "family $family")
-      claim(members.plural, "family $family")
-    }
+    for (family in grouping.families.keys) claim(family, "family $family")
     val flat = prefabs.prefabs.filter { it.name !in inFamily }
     val shortNames = flat.groupingBy { shortName(it.name) }.eachCount()
     val names = flat.associate { prefab ->
@@ -103,7 +103,6 @@ object PrefabGenerator {
     for (prefab in flat) {
       val name = names.getValue(prefab.name)
       claim(name, prefab.name)
-      claim(plural(name), prefab.name)
     }
 
     val out = Out(typing, grouping.textDisplays.toSet(), prefabs.slotKinds, things, substances)
@@ -125,7 +124,6 @@ object PrefabGenerator {
       val memberPrefabs = members.members.mapValues { byName.getValue(it.value) }
       out.family(
           family,
-          members.plural,
           memberPrefabs,
           members.extends,
           // First, as it checks there's no cycle for ancestors to go round.
@@ -136,12 +134,6 @@ object PrefabGenerator {
     for (prefab in flat) {
       out.line()
       out.deviceClass(names.getValue(prefab.name), prefab, supertypes = "TypedDevice()")
-      out.line()
-      out.entryPoint(
-          "object ${plural(names.getValue(prefab.name))}",
-          names.getValue(prefab.name),
-          prefab,
-      )
     }
     return FILE to out.toString()
   }
@@ -252,15 +244,6 @@ object PrefabGenerator {
   private fun sanitize(name: String): String =
       name.replace(Regex("[^A-Za-z0-9_]+"), "_").trimEnd('_').let {
         if (it.first().isDigit()) "_$it" else it
-      }
-
-  fun plural(name: String): String =
-      when {
-        name.length > 1 &&
-            name.endsWith("y") &&
-            name[name.length - 2].lowercaseChar() !in "aeiou" -> name.dropLast(1) + "ies"
-        listOf("s", "x", "z", "ch", "sh").any { name.endsWith(it) } -> name + "es"
-        else -> name + "s"
       }
 
   /** The class of a kind of slot: `Battery` slots are `BatterySlot`s. */
@@ -404,11 +387,16 @@ object PrefabGenerator {
       }
     }
 
+    /**
+     * A device class, named [name] where it is declared and [type] elsewhere (`Small` and
+     * `LedDisplay.Small`), with its companion object, the prefab ([prefabCompanion]).
+     */
     fun deviceClass(
         name: String,
         prefab: Prefab,
         supertypes: String,
         overrides: Set<String> = emptySet(),
+        type: String = name,
     ) {
       line("/** A ${prefab.name}. */")
       line("@PrefabName(\"${prefab.name}\")")
@@ -432,34 +420,45 @@ object PrefabGenerator {
           textProperty(override = "Text" in overrides)
           line()
         }
-        line("/** The ${prefab.name} prefab. */")
-        line("companion object : Prefab()")
+        if (prefab.slots.isNotEmpty()) {
+          // A nested class can't take its enclosing class's name.
+          require(name != BATCH) { "${prefab.name} has slots, so its class can't be named $BATCH" }
+          batchClass(type, prefab)
+          line()
+        }
+        prefabCompanion(type, prefab)
       }
     }
 
-    fun entryPoint(header: String, deviceType: String, prefab: Prefab) {
-      // A prefab with slots has its own batch type, to give a batch of its devices `slots`.
-      val batch = if (prefab.slots.isEmpty()) "DeviceBatch<$deviceType>" else "Batch"
-      line("/** The ${prefab.name} devices on the chip's network. */")
-      line("@PrefabName(\"${prefab.name}\")")
-      block(header) {
-        line("/** The device on [pin], as a ${prefab.name}. */")
-        line("fun at(pin: Device): $deviceType = intrinsic()")
-        line()
-        line("/** Every one on the network. */")
-        line("val all: $batch")
+    /**
+     * A prefab with slots's own batch type, `BatteryCharger.Standard.Batch`, which gives a batch of
+     * its devices `slots`.
+     */
+    fun batchClass(type: String, prefab: Prefab) {
+      line("/** A batch of ${prefab.name} devices. */")
+      block("class $BATCH internal constructor() : DeviceBatch<$type>()") {
+        line("/** A slot of every one in the batch, by number. */")
+        line("val slots: Slots<SlotBatch<${slotClassOf(prefab, slotsKind(prefab))}>>")
+        line("  get() = intrinsic()")
+      }
+    }
+
+    /**
+     * A device class's companion object: its prefab, with the entry points `at`, `all` and `named`
+     * it inherits from `Prefab`. A prefab with slots overrides `all` and `named` to return its own
+     * batch type ([batchClass]).
+     */
+    fun prefabCompanion(type: String, prefab: Prefab) {
+      line("/** The ${prefab.name} prefab. */")
+      if (prefab.slots.isEmpty()) {
+        line("companion object : Prefab<$type>()")
+        return
+      }
+      block("companion object : Prefab<$type>()") {
+        line("override val all: $type.$BATCH")
         line("  get() = intrinsic()")
         line()
-        line("/** Every one on the network named [name], which must be a constant. */")
-        line("fun named(name: String): $batch = intrinsic()")
-        if (prefab.slots.isNotEmpty()) {
-          line()
-          block("class Batch internal constructor() : DeviceBatch<$deviceType>()") {
-            line("/** A slot of every one in the batch, by number. */")
-            line("val slots: Slots<SlotBatch<${slotClassOf(prefab, slotsKind(prefab))}>>")
-            line("  get() = intrinsic()")
-          }
-        }
+        line("override fun named(name: String): $type.$BATCH = intrinsic()")
       }
     }
 
@@ -476,13 +475,12 @@ object PrefabGenerator {
     }
 
     /**
-     * A family's interface, its members nested in it, and its entry point. A logic type it
-     * [inherited] from the families it [extends] is declared there, and again here only where it is
-     * a `var` here and a `val` there.
+     * A family's interface, with its members nested in it. A logic type it [inherited] from the
+     * families it [extends] is declared there, and again here only where it is a `var` here and a
+     * `val` there.
      */
     fun family(
         name: String,
-        plural: String,
         members: Map<String, Prefab>,
         extends: List<String> = emptyList(),
         inherited: Map<String, Access> = emptyMap(),
@@ -514,16 +512,13 @@ object PrefabGenerator {
         }
         val overrides = if (text || inheritsText) common.keys + "Text" else common.keys
         for ((member, prefab) in members) {
-          deviceClass(member, prefab, "TypedDevice(), $name", overrides = overrides)
-          line()
-        }
-        trimBlankLine()
-      }
-      line()
-      line("/** The $name devices on the chip's network, by prefab. */")
-      block("object $plural") {
-        for ((member, prefab) in members) {
-          entryPoint("object $member", "$name.$member", prefab)
+          deviceClass(
+              member,
+              prefab,
+              "TypedDevice(), $name",
+              overrides = overrides,
+              type = "$name.$member",
+          )
           line()
         }
         trimBlankLine()

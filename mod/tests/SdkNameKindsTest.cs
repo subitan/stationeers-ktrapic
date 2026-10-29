@@ -7,7 +7,7 @@ public class SdkNameKindsTest
 {
     [Theory]
     // Small, Medium and Large are batteries and values of an enum; the qualifier decides.
-    [InlineData("Batteries", "Small", NameKind.Type)]
+    [InlineData("LedDisplay", "Small", NameKind.Type)]
     [InlineData("Battery", "Large", NameKind.Type)]
     [InlineData("Color", "Red", NameKind.EnumValue)]
     // Idle, Fuel and Maximum are values of an enum and logic types; after an enum, they're values.
@@ -23,7 +23,7 @@ public class SdkNameKindsTest
     [InlineData("LogicType", "None", NameKind.EnumValue)]
     // An enum has only its own values, and nothing else has values.
     [InlineData("PowerMode", "Red", NameKind.None)]
-    [InlineData("Batteries", "None", NameKind.None)]
+    [InlineData("Battery", "None", NameKind.None)]
     [InlineData("x", "None", NameKind.None)]
     // Color is an enum and a logic type.
     [InlineData("db", "Color", NameKind.LogicType)]
@@ -40,7 +40,7 @@ public class SdkNameKindsTest
 
     [Theory]
     [InlineData("Color", NameKind.Enum)]
-    [InlineData("Batteries", NameKind.Type)]
+    [InlineData("Battery", NameKind.Type)]
     [InlineData("DeviceBatch", NameKind.Type)]
     [InlineData("db", NameKind.Device)]
     [InlineData("sleep", NameKind.Function)]

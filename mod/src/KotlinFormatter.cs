@@ -216,10 +216,10 @@ namespace KTrapIC
         /// <summary>
         /// Highlights the Kotlin keywords and the SDK's names. A name after a dot is a member,
         /// told apart by the name before the dot: an enum's value (<c>Color.Red</c>), a family's
-        /// prefab (<c>Batteries.Small</c>) or a logic type (<c>d0.Temperature</c>). Anywhere else it
+        /// prefab (<c>Battery.Small</c>) or a logic type (<c>d0.Temperature</c>). Anywhere else it
         /// is a type, an enum, a device or a function, so <c>db.Color = Color.Red</c> colors each
         /// <c>Color</c> as what it is there. The editor parses one line at a time, so a member
-        /// starting a continuation line (<c>.Small</c> below <c>Batteries</c>) has no name before
+        /// starting a continuation line (<c>.Small</c> below <c>Battery</c>) has no name before
         /// its dot and is colored by its name alone.
         /// </summary>
         public override StyledLine ParseLine(string lineText)
@@ -372,7 +372,7 @@ namespace KTrapIC
         /// <summary>
         /// Whether the editor should call <see cref="UpdateAutocomplete"/>: where it would (the
         /// caret at the end of a word or a line), and also right after a dot in the middle of a
-        /// line (<c>PresenceSensors.|.at(d0)</c>), so what can follow a name shows before its
+        /// line (<c>PresenceSensor.|.at(d0)</c>), so what can follow a name shows before its
         /// first letter is typed, and right after a <c>(</c> or a <c>,</c>, for the call's
         /// signatures.
         /// </summary>

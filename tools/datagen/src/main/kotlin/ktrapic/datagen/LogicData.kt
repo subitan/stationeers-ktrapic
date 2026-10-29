@@ -210,8 +210,7 @@ data class Prefabs(
  * KTrapIC's hand-written grouping of prefabs, which is a choice rather than game data.
  *
  * @property families prefabs grouped by the one kind of job they do, by the singular name of their
- *   interface: the plural name of their entry point, and each member's name and prefab. A prefab in
- *   a family is reachable only through it.
+ *   interface: each member's name and prefab. A prefab in a family is reachable only through it.
  * @property textDisplays prefabs whose `Setting` shows text (packed by `STR`) in their `String`
  *   mode, which get a `Text` setter.
  * @property notFamilies prefabs that look like one device in several kinds but aren't, each group
@@ -230,7 +229,6 @@ data class Grouping(
    *   must be one all of this family's members can read, and write where they declare it a `var`.
    */
   data class Family(
-      val plural: String,
       val members: Map<String, String>,
       val extends: List<String> = emptyList(),
   )
@@ -255,7 +253,6 @@ data class Grouping(
             val obj = family.asJsonObject
             name to
                 Family(
-                    obj["plural"].asString,
                     obj["members"].asJsonObject.entrySet().associate { (k, v) -> k to v.asString },
                     obj["extends"]?.asJsonArray?.map { it.asString } ?: emptyList(),
                 )

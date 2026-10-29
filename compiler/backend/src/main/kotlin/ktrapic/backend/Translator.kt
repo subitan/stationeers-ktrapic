@@ -935,8 +935,8 @@ internal class Translator(private val symbols: DeclarationFinder) {
   // The typed device API: typed devices, their entry points, batches and slots.
 
   /**
-   * A call into the generated typed device API, or null if [cls] isn't part of it. An entry point
-   * (`GrowLights`) gives a typed device (`at(d0)`) or a [Batch] (`all`, `named("x")`); a typed
+   * A call into the generated typed device API, or null if [cls] isn't part of it. A prefab
+   * (`GrowLight`) gives a typed device (`at(d0)`) or a [Batch] (`all`, `named("x")`); a typed
    * device's logic types load and store like a pin's; a batch is read and written through its
    * collection operations ([batchCall]).
    */
@@ -946,8 +946,8 @@ internal class Translator(private val symbols: DeclarationFinder) {
     val isSetter = property != null && function == property.setter
     val args = call.arguments
     return when {
-      cls.kind == ClassKind.OBJECT && !cls.isCompanion && cls.prefabName() != null -> {
-        val prefab = prefabHash(cls)
+      cls.isPrefab() -> {
+        val prefab = prefabOf(call, args[0])
         when (name) {
           "at" -> device(call, args[1])
           "all" -> Batch(prefab, null)
@@ -1480,6 +1480,22 @@ internal class Translator(private val symbols: DeclarationFinder) {
         fail(expression, "This expression is not supported")
     return Const(prefabHash(cls.parentAsClass))
   }
+
+  /**
+   * The prefab, `Prefab` or a typed device's companion object, whose `at`, `all` or `named` is
+   * called on [receiver]: the hash of the prefab, which must be known when compiling.
+   */
+  private fun prefabOf(call: IrCall, receiver: IrExpression?): Double =
+      (receiver?.let { value(it) } as? Const)?.number
+          ?: fail(
+              receiver ?: call,
+              "this prefab must be a typed device's, as GrowLight or LedDisplay.Small, " +
+                  "or a val holding one",
+          )
+
+  /** `Prefab`, or a typed device's companion object, which is its prefab. */
+  private fun IrClass.isPrefab() =
+      kotlinFqName.asString() == PREFAB || (isCompanion && isSubclassOf(PREFAB))
 
   private fun prefabHash(cls: IrClass): Double =
       Hashes.hash(cls.prefabName() ?: error("${cls.name} has no prefab name")).toDouble()

@@ -55,7 +55,7 @@ class StaticSetTest {
   fun `a loop over a set of substances is unrolled, one load per substance`() {
     val source =
         """
-        val sensor = GasSensors.at(d0)
+        val sensor = GasSensor.at(d0)
         var total = 0.0
         for (s in setOf(Substance.Oxygen, Substance.Nitrogen)) total += sensor.Ratios[s]
         db.Setting = total
@@ -123,8 +123,8 @@ class StaticSetTest {
         compiled(
                 """
                 var total = 0.0
-                for (s in GasSensors.at(d0).Ratios.keys) total += GasSensors.at(d0).Ratios[s]
-                for (s in Filtrations.Gas.at(d1).Ports.Output.Ratios.keys) total += Filtrations.Gas.at(d1).Ports.Output.Ratios[s]
+                for (s in GasSensor.at(d0).Ratios.keys) total += GasSensor.at(d0).Ratios[s]
+                for (s in Filtration.Gas.at(d1).Ports.Output.Ratios.keys) total += Filtration.Gas.at(d1).Ports.Output.Ratios[s]
                 db.Setting = total + Substance.entries.size
                 """
             )
@@ -160,7 +160,7 @@ class StaticSetTest {
   fun `continue goes on to the next copy and break past the last`() {
     val source =
         """
-        val sensor = GasSensors.at(d0)
+        val sensor = GasSensor.at(d0)
         var total = 0.0
         for (s in setOf(Substance.Oxygen, Substance.Nitrogen, Substance.CarbonDioxide, Substance.Water)) {
           val ratio = sensor.Ratios[s]
@@ -197,7 +197,7 @@ class StaticSetTest {
           for (g in gases) sum += ratios[g]
           return sum
         }
-        db.Setting = total(GasSensors.at(d0).Ratios, setOf(Substance.Oxygen, Substance.CarbonDioxide))
+        db.Setting = total(GasSensor.at(d0).Ratios, setOf(Substance.Oxygen, Substance.CarbonDioxide))
         """
 
     assertThat(run(source, ::sensor)["Setting"]).isWithin(1e-9).of(0.25)
@@ -215,12 +215,12 @@ class StaticSetTest {
     val source =
         """
         var other = 0.0
-        for ((gas, ratio) in GasSensors.at(d0).Ratios) {
+        for ((gas, ratio) in GasSensor.at(d0).Ratios) {
           if (gas == Substance.Oxygen || gas == Substance.Nitrogen) continue
           other += ratio
         }
         var oxygen = 0.0
-        for (entry in GasSensors.at(d0).Ratios) {
+        for (entry in GasSensor.at(d0).Ratios) {
           if (entry.key == Substance.Oxygen) oxygen = entry.value
         }
         db.Setting = other
@@ -251,7 +251,7 @@ class StaticSetTest {
     val source =
         """
         var total = 0.0
-        for (e in GasSensors.at(d0).Ratios) {
+        for (e in GasSensor.at(d0).Ratios) {
           val held = e
           if (held.key == Substance.Oxygen) total += held.value + e.value
         }
@@ -276,11 +276,11 @@ class StaticSetTest {
     for (source in
         listOf(
             "var gases = setOf(Substance.Oxygen)",
-            "var sensor = GasSensors.at(d0)",
+            "var sensor = GasSensor.at(d0)",
             "var pin = d0",
-            "var outlet = Filtrations.Gas.at(d1).Ports.Output",
+            "var outlet = Filtration.Gas.at(d1).Ports.Output",
             "var gas = Substance.Oxygen",
-            "var lights = GrowLights.named(\"P\")",
+            "var lights = GrowLight.named(\"P\")",
             "var slot = d0.slots[0]",
         )) {
       assertWithMessage(source)
@@ -294,10 +294,10 @@ class StaticSetTest {
         listOf(
             local("var pin: Device\npin = d0"),
             local("var pin: GenericDevice\npin = d0"),
-            local("var battery: Battery\nbattery = Batteries.Small.at(d0)"),
-            local("var sensor: GasSensor\nsensor = GasSensors.at(d0)"),
-            local("var lights: DeviceBatch<GrowLight>\nlights = GrowLights.all"),
-            local("var outlet: Port\noutlet = Filtrations.Gas.at(d1).Ports.Output"),
+            local("var battery: Battery\nbattery = Battery.Small.at(d0)"),
+            local("var sensor: GasSensor\nsensor = GasSensor.at(d0)"),
+            local("var lights: DeviceBatch<GrowLight>\nlights = GrowLight.all"),
+            local("var outlet: Port\noutlet = Filtration.Gas.at(d1).Ports.Output"),
             local("var gas: Substance\ngas = Substance.Oxygen"),
             local("var gases: Set<Substance>\ngases = setOf(Substance.Oxygen)"),
             local("var slots: Slots<DeviceSlot>\nslots = d0.slots"),
@@ -309,7 +309,7 @@ class StaticSetTest {
           .contains("can only be held in a val, not a var")
     }
     // A map can't be held even when declared first.
-    assertThat(error(local("var m: Mapped<Boolean>\nm = GrowLights.all.map { it.Power }")).message)
+    assertThat(error(local("var m: Mapped<Boolean>\nm = GrowLight.all.map { it.Power }")).message)
         .contains("a map can't be held")
     // A val of one must be given it where it is declared.
     for (source in

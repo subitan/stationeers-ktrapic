@@ -836,7 +836,7 @@ interface Battery {
       get() = intrinsic()
 
     /** The StructureBattery prefab. */
-    companion object : Prefab()
+    companion object : Prefab<Battery.Station>()
   }
 
   /** A StructureBatteryLarge. */
@@ -875,7 +875,7 @@ interface Battery {
       get() = intrinsic()
 
     /** The StructureBatteryLarge prefab. */
-    companion object : Prefab()
+    companion object : Prefab<Battery.Large>()
   }
 
   /** A StructureBatteryMedium. */
@@ -907,7 +907,7 @@ interface Battery {
       get() = intrinsic()
 
     /** The StructureBatteryMedium prefab. */
-    companion object : Prefab()
+    companion object : Prefab<Battery.Medium>()
   }
 
   /** A StructureBatterySmall. */
@@ -939,66 +939,7 @@ interface Battery {
       get() = intrinsic()
 
     /** The StructureBatterySmall prefab. */
-    companion object : Prefab()
-  }
-}
-
-/** The Battery devices on the chip's network, by prefab. */
-object Batteries {
-  /** The StructureBattery devices on the chip's network. */
-  @PrefabName("StructureBattery")
-  object Station {
-    /** The device on [pin], as a StructureBattery. */
-    fun at(pin: Device): Battery.Station = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<Battery.Station>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<Battery.Station> = intrinsic()
-  }
-
-  /** The StructureBatteryLarge devices on the chip's network. */
-  @PrefabName("StructureBatteryLarge")
-  object Large {
-    /** The device on [pin], as a StructureBatteryLarge. */
-    fun at(pin: Device): Battery.Large = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<Battery.Large>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<Battery.Large> = intrinsic()
-  }
-
-  /** The StructureBatteryMedium devices on the chip's network. */
-  @PrefabName("StructureBatteryMedium")
-  object Medium {
-    /** The device on [pin], as a StructureBatteryMedium. */
-    fun at(pin: Device): Battery.Medium = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<Battery.Medium>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<Battery.Medium> = intrinsic()
-  }
-
-  /** The StructureBatterySmall devices on the chip's network. */
-  @PrefabName("StructureBatterySmall")
-  object Small {
-    /** The device on [pin], as a StructureBatterySmall. */
-    fun at(pin: Device): Battery.Small = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<Battery.Small>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<Battery.Small> = intrinsic()
+    companion object : Prefab<Battery.Small>()
   }
 }
 
@@ -1014,7 +955,7 @@ interface BatteryCell {
       set(value) = intrinsic()
 
     /** The ItemBatteryCell prefab. */
-    companion object : Prefab()
+    companion object : Prefab<BatteryCell.Small>()
   }
 
   /** A ItemBatteryCellLarge. */
@@ -1025,7 +966,7 @@ interface BatteryCell {
       set(value) = intrinsic()
 
     /** The ItemBatteryCellLarge prefab. */
-    companion object : Prefab()
+    companion object : Prefab<BatteryCell.Large>()
   }
 
   /** A ItemBatteryCellNuclear. */
@@ -1036,7 +977,7 @@ interface BatteryCell {
       set(value) = intrinsic()
 
     /** The ItemBatteryCellNuclear prefab. */
-    companion object : Prefab()
+    companion object : Prefab<BatteryCell.Nuclear>()
   }
 
   /** A Battery_Wireless_cell. */
@@ -1047,7 +988,7 @@ interface BatteryCell {
       set(value) = intrinsic()
 
     /** The Battery_Wireless_cell prefab. */
-    companion object : Prefab()
+    companion object : Prefab<BatteryCell.Wireless>()
   }
 
   /** A Battery_Wireless_cell_Big. */
@@ -1058,7 +999,7 @@ interface BatteryCell {
       set(value) = intrinsic()
 
     /** The Battery_Wireless_cell_Big prefab. */
-    companion object : Prefab()
+    companion object : Prefab<BatteryCell.WirelessBig>()
   }
 
   /** A ItemWirelessBatteryCellExtraLarge. */
@@ -1069,94 +1010,7 @@ interface BatteryCell {
       set(value) = intrinsic()
 
     /** The ItemWirelessBatteryCellExtraLarge prefab. */
-    companion object : Prefab()
-  }
-}
-
-/** The BatteryCell devices on the chip's network, by prefab. */
-object BatteryCells {
-  /** The ItemBatteryCell devices on the chip's network. */
-  @PrefabName("ItemBatteryCell")
-  object Small {
-    /** The device on [pin], as a ItemBatteryCell. */
-    fun at(pin: Device): BatteryCell.Small = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<BatteryCell.Small>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<BatteryCell.Small> = intrinsic()
-  }
-
-  /** The ItemBatteryCellLarge devices on the chip's network. */
-  @PrefabName("ItemBatteryCellLarge")
-  object Large {
-    /** The device on [pin], as a ItemBatteryCellLarge. */
-    fun at(pin: Device): BatteryCell.Large = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<BatteryCell.Large>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<BatteryCell.Large> = intrinsic()
-  }
-
-  /** The ItemBatteryCellNuclear devices on the chip's network. */
-  @PrefabName("ItemBatteryCellNuclear")
-  object Nuclear {
-    /** The device on [pin], as a ItemBatteryCellNuclear. */
-    fun at(pin: Device): BatteryCell.Nuclear = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<BatteryCell.Nuclear>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<BatteryCell.Nuclear> = intrinsic()
-  }
-
-  /** The Battery_Wireless_cell devices on the chip's network. */
-  @PrefabName("Battery_Wireless_cell")
-  object Wireless {
-    /** The device on [pin], as a Battery_Wireless_cell. */
-    fun at(pin: Device): BatteryCell.Wireless = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<BatteryCell.Wireless>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<BatteryCell.Wireless> = intrinsic()
-  }
-
-  /** The Battery_Wireless_cell_Big devices on the chip's network. */
-  @PrefabName("Battery_Wireless_cell_Big")
-  object WirelessBig {
-    /** The device on [pin], as a Battery_Wireless_cell_Big. */
-    fun at(pin: Device): BatteryCell.WirelessBig = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<BatteryCell.WirelessBig>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<BatteryCell.WirelessBig> = intrinsic()
-  }
-
-  /** The ItemWirelessBatteryCellExtraLarge devices on the chip's network. */
-  @PrefabName("ItemWirelessBatteryCellExtraLarge")
-  object WirelessExtraLarge {
-    /** The device on [pin], as a ItemWirelessBatteryCellExtraLarge. */
-    fun at(pin: Device): BatteryCell.WirelessExtraLarge = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<BatteryCell.WirelessExtraLarge>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<BatteryCell.WirelessExtraLarge> = intrinsic()
+    companion object : Prefab<BatteryCell.WirelessExtraLarge>()
   }
 }
 
@@ -1214,7 +1068,7 @@ interface LedDisplay {
       set(value) = intrinsic()
 
     /** The StructureConsoleLED5 prefab. */
-    companion object : Prefab()
+    companion object : Prefab<LedDisplay.Small>()
   }
 
   /** A StructureConsoleLED1x2. */
@@ -1251,7 +1105,7 @@ interface LedDisplay {
       set(value) = intrinsic()
 
     /** The StructureConsoleLED1x2 prefab. */
-    companion object : Prefab()
+    companion object : Prefab<LedDisplay.Medium>()
   }
 
   /** A StructureConsoleLED1x3. */
@@ -1288,52 +1142,7 @@ interface LedDisplay {
       set(value) = intrinsic()
 
     /** The StructureConsoleLED1x3 prefab. */
-    companion object : Prefab()
-  }
-}
-
-/** The LedDisplay devices on the chip's network, by prefab. */
-object LedDisplays {
-  /** The StructureConsoleLED5 devices on the chip's network. */
-  @PrefabName("StructureConsoleLED5")
-  object Small {
-    /** The device on [pin], as a StructureConsoleLED5. */
-    fun at(pin: Device): LedDisplay.Small = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<LedDisplay.Small>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<LedDisplay.Small> = intrinsic()
-  }
-
-  /** The StructureConsoleLED1x2 devices on the chip's network. */
-  @PrefabName("StructureConsoleLED1x2")
-  object Medium {
-    /** The device on [pin], as a StructureConsoleLED1x2. */
-    fun at(pin: Device): LedDisplay.Medium = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<LedDisplay.Medium>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<LedDisplay.Medium> = intrinsic()
-  }
-
-  /** The StructureConsoleLED1x3 devices on the chip's network. */
-  @PrefabName("StructureConsoleLED1x3")
-  object Large {
-    /** The device on [pin], as a StructureConsoleLED1x3. */
-    fun at(pin: Device): LedDisplay.Large = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<LedDisplay.Large>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<LedDisplay.Large> = intrinsic()
+    companion object : Prefab<LedDisplay.Large>()
   }
 }
 
@@ -1386,7 +1195,7 @@ interface Transformer {
       set(value) = intrinsic()
 
     /** The StructureTransformer prefab. */
-    companion object : Prefab()
+    companion object : Prefab<Transformer.Large>()
   }
 
   /** A StructureTransformerMedium. */
@@ -1420,7 +1229,7 @@ interface Transformer {
       set(value) = intrinsic()
 
     /** The StructureTransformerMedium prefab. */
-    companion object : Prefab()
+    companion object : Prefab<Transformer.Medium>()
   }
 
   /** A StructureTransformerMedium(Reversed). */
@@ -1454,7 +1263,7 @@ interface Transformer {
       set(value) = intrinsic()
 
     /** The StructureTransformerMedium(Reversed) prefab. */
-    companion object : Prefab()
+    companion object : Prefab<Transformer.MediumReversed>()
   }
 
   /** A StructureTransformerSmall. */
@@ -1488,7 +1297,7 @@ interface Transformer {
       set(value) = intrinsic()
 
     /** The StructureTransformerSmall prefab. */
-    companion object : Prefab()
+    companion object : Prefab<Transformer.Small>()
   }
 
   /** A StructureTransformerSmallReversed. */
@@ -1522,7 +1331,7 @@ interface Transformer {
       set(value) = intrinsic()
 
     /** The StructureTransformerSmallReversed prefab. */
-    companion object : Prefab()
+    companion object : Prefab<Transformer.SmallReversed>()
   }
 
   /** A StructureRocketTransformerSmall. */
@@ -1556,94 +1365,7 @@ interface Transformer {
       set(value) = intrinsic()
 
     /** The StructureRocketTransformerSmall prefab. */
-    companion object : Prefab()
-  }
-}
-
-/** The Transformer devices on the chip's network, by prefab. */
-object Transformers {
-  /** The StructureTransformer devices on the chip's network. */
-  @PrefabName("StructureTransformer")
-  object Large {
-    /** The device on [pin], as a StructureTransformer. */
-    fun at(pin: Device): Transformer.Large = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<Transformer.Large>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<Transformer.Large> = intrinsic()
-  }
-
-  /** The StructureTransformerMedium devices on the chip's network. */
-  @PrefabName("StructureTransformerMedium")
-  object Medium {
-    /** The device on [pin], as a StructureTransformerMedium. */
-    fun at(pin: Device): Transformer.Medium = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<Transformer.Medium>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<Transformer.Medium> = intrinsic()
-  }
-
-  /** The StructureTransformerMedium(Reversed) devices on the chip's network. */
-  @PrefabName("StructureTransformerMedium(Reversed)")
-  object MediumReversed {
-    /** The device on [pin], as a StructureTransformerMedium(Reversed). */
-    fun at(pin: Device): Transformer.MediumReversed = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<Transformer.MediumReversed>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<Transformer.MediumReversed> = intrinsic()
-  }
-
-  /** The StructureTransformerSmall devices on the chip's network. */
-  @PrefabName("StructureTransformerSmall")
-  object Small {
-    /** The device on [pin], as a StructureTransformerSmall. */
-    fun at(pin: Device): Transformer.Small = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<Transformer.Small>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<Transformer.Small> = intrinsic()
-  }
-
-  /** The StructureTransformerSmallReversed devices on the chip's network. */
-  @PrefabName("StructureTransformerSmallReversed")
-  object SmallReversed {
-    /** The device on [pin], as a StructureTransformerSmallReversed. */
-    fun at(pin: Device): Transformer.SmallReversed = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<Transformer.SmallReversed>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<Transformer.SmallReversed> = intrinsic()
-  }
-
-  /** The StructureRocketTransformerSmall devices on the chip's network. */
-  @PrefabName("StructureRocketTransformerSmall")
-  object SmallRocket {
-    /** The device on [pin], as a StructureRocketTransformerSmall. */
-    fun at(pin: Device): Transformer.SmallRocket = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<Transformer.SmallRocket>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<Transformer.SmallRocket> = intrinsic()
+    companion object : Prefab<Transformer.SmallRocket>()
   }
 }
 
@@ -1754,7 +1476,7 @@ interface SatelliteDish {
       get() = intrinsic()
 
     /** The StructureSmallSatelliteDish prefab. */
-    companion object : Prefab()
+    companion object : Prefab<SatelliteDish.Small>()
   }
 
   /** A StructureSatelliteDish. */
@@ -1829,7 +1551,7 @@ interface SatelliteDish {
       get() = intrinsic()
 
     /** The StructureSatelliteDish prefab. */
-    companion object : Prefab()
+    companion object : Prefab<SatelliteDish.Medium>()
   }
 
   /** A StructureLargeSatelliteDish. */
@@ -1901,52 +1623,7 @@ interface SatelliteDish {
       get() = intrinsic()
 
     /** The StructureLargeSatelliteDish prefab. */
-    companion object : Prefab()
-  }
-}
-
-/** The SatelliteDish devices on the chip's network, by prefab. */
-object SatelliteDishes {
-  /** The StructureSmallSatelliteDish devices on the chip's network. */
-  @PrefabName("StructureSmallSatelliteDish")
-  object Small {
-    /** The device on [pin], as a StructureSmallSatelliteDish. */
-    fun at(pin: Device): SatelliteDish.Small = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<SatelliteDish.Small>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<SatelliteDish.Small> = intrinsic()
-  }
-
-  /** The StructureSatelliteDish devices on the chip's network. */
-  @PrefabName("StructureSatelliteDish")
-  object Medium {
-    /** The device on [pin], as a StructureSatelliteDish. */
-    fun at(pin: Device): SatelliteDish.Medium = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<SatelliteDish.Medium>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<SatelliteDish.Medium> = intrinsic()
-  }
-
-  /** The StructureLargeSatelliteDish devices on the chip's network. */
-  @PrefabName("StructureLargeSatelliteDish")
-  object Large {
-    /** The device on [pin], as a StructureLargeSatelliteDish. */
-    fun at(pin: Device): SatelliteDish.Large = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<SatelliteDish.Large>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<SatelliteDish.Large> = intrinsic()
+    companion object : Prefab<SatelliteDish.Large>()
   }
 }
 
@@ -1971,7 +1648,7 @@ interface PresenceSensor {
       get() = intrinsic()
 
     /** The StructureMotionSensor prefab. */
-    companion object : Prefab()
+    companion object : Prefab<PresenceSensor.Motion>()
   }
 
   /** A StructureProximitySensor. */
@@ -1988,7 +1665,7 @@ interface PresenceSensor {
       set(value) = intrinsic()
 
     /** The StructureProximitySensor prefab. */
-    companion object : Prefab()
+    companion object : Prefab<PresenceSensor.Proximity>()
   }
 
   /** A StructureOccupancySensor. */
@@ -2004,52 +1681,7 @@ interface PresenceSensor {
       get() = intrinsic()
 
     /** The StructureOccupancySensor prefab. */
-    companion object : Prefab()
-  }
-}
-
-/** The PresenceSensor devices on the chip's network, by prefab. */
-object PresenceSensors {
-  /** The StructureMotionSensor devices on the chip's network. */
-  @PrefabName("StructureMotionSensor")
-  object Motion {
-    /** The device on [pin], as a StructureMotionSensor. */
-    fun at(pin: Device): PresenceSensor.Motion = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<PresenceSensor.Motion>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<PresenceSensor.Motion> = intrinsic()
-  }
-
-  /** The StructureProximitySensor devices on the chip's network. */
-  @PrefabName("StructureProximitySensor")
-  object Proximity {
-    /** The device on [pin], as a StructureProximitySensor. */
-    fun at(pin: Device): PresenceSensor.Proximity = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<PresenceSensor.Proximity>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<PresenceSensor.Proximity> = intrinsic()
-  }
-
-  /** The StructureOccupancySensor devices on the chip's network. */
-  @PrefabName("StructureOccupancySensor")
-  object Occupancy {
-    /** The device on [pin], as a StructureOccupancySensor. */
-    fun at(pin: Device): PresenceSensor.Occupancy = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<PresenceSensor.Occupancy>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<PresenceSensor.Occupancy> = intrinsic()
+    companion object : Prefab<PresenceSensor.Occupancy>()
   }
 }
 
@@ -2064,7 +1696,7 @@ interface PressurePlate {
       get() = intrinsic()
 
     /** The StructurePressurePlateSmall prefab. */
-    companion object : Prefab()
+    companion object : Prefab<PressurePlate.Small>()
   }
 
   /** A StructurePressurePlateMedium. */
@@ -2074,7 +1706,7 @@ interface PressurePlate {
       get() = intrinsic()
 
     /** The StructurePressurePlateMedium prefab. */
-    companion object : Prefab()
+    companion object : Prefab<PressurePlate.Medium>()
   }
 
   /** A StructurePressurePlateLarge. */
@@ -2084,52 +1716,7 @@ interface PressurePlate {
       get() = intrinsic()
 
     /** The StructurePressurePlateLarge prefab. */
-    companion object : Prefab()
-  }
-}
-
-/** The PressurePlate devices on the chip's network, by prefab. */
-object PressurePlates {
-  /** The StructurePressurePlateSmall devices on the chip's network. */
-  @PrefabName("StructurePressurePlateSmall")
-  object Small {
-    /** The device on [pin], as a StructurePressurePlateSmall. */
-    fun at(pin: Device): PressurePlate.Small = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<PressurePlate.Small>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<PressurePlate.Small> = intrinsic()
-  }
-
-  /** The StructurePressurePlateMedium devices on the chip's network. */
-  @PrefabName("StructurePressurePlateMedium")
-  object Medium {
-    /** The device on [pin], as a StructurePressurePlateMedium. */
-    fun at(pin: Device): PressurePlate.Medium = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<PressurePlate.Medium>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<PressurePlate.Medium> = intrinsic()
-  }
-
-  /** The StructurePressurePlateLarge devices on the chip's network. */
-  @PrefabName("StructurePressurePlateLarge")
-  object Large {
-    /** The device on [pin], as a StructurePressurePlateLarge. */
-    fun at(pin: Device): PressurePlate.Large = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<PressurePlate.Large>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<PressurePlate.Large> = intrinsic()
+    companion object : Prefab<PressurePlate.Large>()
   }
 }
 
@@ -2200,8 +1787,20 @@ interface Fridge {
     val slots: Slots<DataDiskSlot>
       get() = intrinsic()
 
+    /** A batch of StructureFridgeSmall devices. */
+    class Batch internal constructor() : DeviceBatch<Fridge.Small>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureFridgeSmall prefab. */
-    companion object : Prefab()
+    companion object : Prefab<Fridge.Small>() {
+      override val all: Fridge.Small.Batch
+        get() = intrinsic()
+
+      override fun named(name: String): Fridge.Small.Batch = intrinsic()
+    }
   }
 
   /** A StructureFridgeBig. */
@@ -2266,50 +1865,19 @@ interface Fridge {
     val slots: Slots<DataDiskSlot>
       get() = intrinsic()
 
-    /** The StructureFridgeBig prefab. */
-    companion object : Prefab()
-  }
-}
-
-/** The Fridge devices on the chip's network, by prefab. */
-object Fridges {
-  /** The StructureFridgeSmall devices on the chip's network. */
-  @PrefabName("StructureFridgeSmall")
-  object Small {
-    /** The device on [pin], as a StructureFridgeSmall. */
-    fun at(pin: Device): Fridge.Small = intrinsic()
-
-    /** Every one on the network. */
-    val all: Batch
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): Batch = intrinsic()
-
-    class Batch internal constructor() : DeviceBatch<Fridge.Small>() {
-      /** A slot of every one in the batch, by number. */
-      val slots: Slots<SlotBatch<DataDiskSlot>>
-        get() = intrinsic()
-    }
-  }
-
-  /** The StructureFridgeBig devices on the chip's network. */
-  @PrefabName("StructureFridgeBig")
-  object Large {
-    /** The device on [pin], as a StructureFridgeBig. */
-    fun at(pin: Device): Fridge.Large = intrinsic()
-
-    /** Every one on the network. */
-    val all: Batch
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): Batch = intrinsic()
-
+    /** A batch of StructureFridgeBig devices. */
     class Batch internal constructor() : DeviceBatch<Fridge.Large>() {
       /** A slot of every one in the batch, by number. */
       val slots: Slots<SlotBatch<DataDiskSlot>>
         get() = intrinsic()
+    }
+
+    /** The StructureFridgeBig prefab. */
+    companion object : Prefab<Fridge.Large>() {
+      override val all: Fridge.Large.Batch
+        get() = intrinsic()
+
+      override fun named(name: String): Fridge.Large.Batch = intrinsic()
     }
   }
 }
@@ -2378,8 +1946,20 @@ interface ItemStorage {
     val slots: Slots<DataDiskSlot>
       get() = intrinsic()
 
+    /** A batch of StructureCargoStorageSmall devices. */
+    class Batch internal constructor() : DeviceBatch<ItemStorage.CargoSmall>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureCargoStorageSmall prefab. */
-    companion object : Prefab()
+    companion object : Prefab<ItemStorage.CargoSmall>() {
+      override val all: ItemStorage.CargoSmall.Batch
+        get() = intrinsic()
+
+      override fun named(name: String): ItemStorage.CargoSmall.Batch = intrinsic()
+    }
   }
 
   /** A StructureCargoStorageMedium. */
@@ -2428,8 +2008,20 @@ interface ItemStorage {
     val slots: Slots<DataDiskSlot>
       get() = intrinsic()
 
+    /** A batch of StructureCargoStorageMedium devices. */
+    class Batch internal constructor() : DeviceBatch<ItemStorage.CargoMedium>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureCargoStorageMedium prefab. */
-    companion object : Prefab()
+    companion object : Prefab<ItemStorage.CargoMedium>() {
+      override val all: ItemStorage.CargoMedium.Batch
+        get() = intrinsic()
+
+      override fun named(name: String): ItemStorage.CargoMedium.Batch = intrinsic()
+    }
   }
 
   /** A StructureSDBSilo. */
@@ -2483,70 +2075,19 @@ interface ItemStorage {
     val slots: Slots<DataDiskSlot>
       get() = intrinsic()
 
-    /** The StructureSDBSilo prefab. */
-    companion object : Prefab()
-  }
-}
-
-/** The ItemStorage devices on the chip's network, by prefab. */
-object ItemStorages {
-  /** The StructureCargoStorageSmall devices on the chip's network. */
-  @PrefabName("StructureCargoStorageSmall")
-  object CargoSmall {
-    /** The device on [pin], as a StructureCargoStorageSmall. */
-    fun at(pin: Device): ItemStorage.CargoSmall = intrinsic()
-
-    /** Every one on the network. */
-    val all: Batch
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): Batch = intrinsic()
-
-    class Batch internal constructor() : DeviceBatch<ItemStorage.CargoSmall>() {
-      /** A slot of every one in the batch, by number. */
-      val slots: Slots<SlotBatch<DataDiskSlot>>
-        get() = intrinsic()
-    }
-  }
-
-  /** The StructureCargoStorageMedium devices on the chip's network. */
-  @PrefabName("StructureCargoStorageMedium")
-  object CargoMedium {
-    /** The device on [pin], as a StructureCargoStorageMedium. */
-    fun at(pin: Device): ItemStorage.CargoMedium = intrinsic()
-
-    /** Every one on the network. */
-    val all: Batch
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): Batch = intrinsic()
-
-    class Batch internal constructor() : DeviceBatch<ItemStorage.CargoMedium>() {
-      /** A slot of every one in the batch, by number. */
-      val slots: Slots<SlotBatch<DataDiskSlot>>
-        get() = intrinsic()
-    }
-  }
-
-  /** The StructureSDBSilo devices on the chip's network. */
-  @PrefabName("StructureSDBSilo")
-  object SdbSilo {
-    /** The device on [pin], as a StructureSDBSilo. */
-    fun at(pin: Device): ItemStorage.SdbSilo = intrinsic()
-
-    /** Every one on the network. */
-    val all: Batch
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): Batch = intrinsic()
-
+    /** A batch of StructureSDBSilo devices. */
     class Batch internal constructor() : DeviceBatch<ItemStorage.SdbSilo>() {
       /** A slot of every one in the batch, by number. */
       val slots: Slots<SlotBatch<DataDiskSlot>>
         get() = intrinsic()
+    }
+
+    /** The StructureSDBSilo prefab. */
+    companion object : Prefab<ItemStorage.SdbSilo>() {
+      override val all: ItemStorage.SdbSilo.Batch
+        get() = intrinsic()
+
+      override fun named(name: String): ItemStorage.SdbSilo.Batch = intrinsic()
     }
   }
 }
@@ -2586,7 +2127,7 @@ interface HangarDoor : Door {
       set(value) = intrinsic()
 
     /** The StructureAirlockGate prefab. */
-    companion object : Prefab()
+    companion object : Prefab<HangarDoor.Small>()
   }
 
   /** A StructureMediumHangerDoor. */
@@ -2622,7 +2163,7 @@ interface HangarDoor : Door {
       set(value) = intrinsic()
 
     /** The StructureMediumHangerDoor prefab. */
-    companion object : Prefab()
+    companion object : Prefab<HangarDoor.Medium>()
   }
 
   /** A StructureLargeHangerDoor. */
@@ -2658,52 +2199,7 @@ interface HangarDoor : Door {
       set(value) = intrinsic()
 
     /** The StructureLargeHangerDoor prefab. */
-    companion object : Prefab()
-  }
-}
-
-/** The HangarDoor devices on the chip's network, by prefab. */
-object HangarDoors {
-  /** The StructureAirlockGate devices on the chip's network. */
-  @PrefabName("StructureAirlockGate")
-  object Small {
-    /** The device on [pin], as a StructureAirlockGate. */
-    fun at(pin: Device): HangarDoor.Small = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<HangarDoor.Small>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<HangarDoor.Small> = intrinsic()
-  }
-
-  /** The StructureMediumHangerDoor devices on the chip's network. */
-  @PrefabName("StructureMediumHangerDoor")
-  object Medium {
-    /** The device on [pin], as a StructureMediumHangerDoor. */
-    fun at(pin: Device): HangarDoor.Medium = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<HangarDoor.Medium>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<HangarDoor.Medium> = intrinsic()
-  }
-
-  /** The StructureLargeHangerDoor devices on the chip's network. */
-  @PrefabName("StructureLargeHangerDoor")
-  object Large {
-    /** The device on [pin], as a StructureLargeHangerDoor. */
-    fun at(pin: Device): HangarDoor.Large = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<HangarDoor.Large>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<HangarDoor.Large> = intrinsic()
+    companion object : Prefab<HangarDoor.Large>()
   }
 }
 
@@ -2789,8 +2285,20 @@ interface VendingMachine {
     val slots: Slots<DataDiskSlot>
       get() = intrinsic()
 
+    /** A batch of StructureVendingMachine devices. */
+    class Batch internal constructor() : DeviceBatch<VendingMachine.Standard>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureVendingMachine prefab. */
-    companion object : Prefab()
+    companion object : Prefab<VendingMachine.Standard>() {
+      override val all: VendingMachine.Standard.Batch
+        get() = intrinsic()
+
+      override fun named(name: String): VendingMachine.Standard.Batch = intrinsic()
+    }
   }
 
   /** A StructureVendingMachineSmall. */
@@ -2849,8 +2357,20 @@ interface VendingMachine {
     val slots: Slots<DataDiskSlot>
       get() = intrinsic()
 
+    /** A batch of StructureVendingMachineSmall devices. */
+    class Batch internal constructor() : DeviceBatch<VendingMachine.Small>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureVendingMachineSmall prefab. */
-    companion object : Prefab()
+    companion object : Prefab<VendingMachine.Small>() {
+      override val all: VendingMachine.Small.Batch
+        get() = intrinsic()
+
+      override fun named(name: String): VendingMachine.Small.Batch = intrinsic()
+    }
   }
 
   /** A StructureRefrigeratedVendingMachine. */
@@ -2933,70 +2453,19 @@ interface VendingMachine {
     val slots: Slots<DataDiskSlot>
       get() = intrinsic()
 
-    /** The StructureRefrigeratedVendingMachine prefab. */
-    companion object : Prefab()
-  }
-}
-
-/** The VendingMachine devices on the chip's network, by prefab. */
-object VendingMachines {
-  /** The StructureVendingMachine devices on the chip's network. */
-  @PrefabName("StructureVendingMachine")
-  object Standard {
-    /** The device on [pin], as a StructureVendingMachine. */
-    fun at(pin: Device): VendingMachine.Standard = intrinsic()
-
-    /** Every one on the network. */
-    val all: Batch
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): Batch = intrinsic()
-
-    class Batch internal constructor() : DeviceBatch<VendingMachine.Standard>() {
-      /** A slot of every one in the batch, by number. */
-      val slots: Slots<SlotBatch<DataDiskSlot>>
-        get() = intrinsic()
-    }
-  }
-
-  /** The StructureVendingMachineSmall devices on the chip's network. */
-  @PrefabName("StructureVendingMachineSmall")
-  object Small {
-    /** The device on [pin], as a StructureVendingMachineSmall. */
-    fun at(pin: Device): VendingMachine.Small = intrinsic()
-
-    /** Every one on the network. */
-    val all: Batch
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): Batch = intrinsic()
-
-    class Batch internal constructor() : DeviceBatch<VendingMachine.Small>() {
-      /** A slot of every one in the batch, by number. */
-      val slots: Slots<SlotBatch<DataDiskSlot>>
-        get() = intrinsic()
-    }
-  }
-
-  /** The StructureRefrigeratedVendingMachine devices on the chip's network. */
-  @PrefabName("StructureRefrigeratedVendingMachine")
-  object Refrigerated {
-    /** The device on [pin], as a StructureRefrigeratedVendingMachine. */
-    fun at(pin: Device): VendingMachine.Refrigerated = intrinsic()
-
-    /** Every one on the network. */
-    val all: Batch
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): Batch = intrinsic()
-
+    /** A batch of StructureRefrigeratedVendingMachine devices. */
     class Batch internal constructor() : DeviceBatch<VendingMachine.Refrigerated>() {
       /** A slot of every one in the batch, by number. */
       val slots: Slots<SlotBatch<DataDiskSlot>>
         get() = intrinsic()
+    }
+
+    /** The StructureRefrigeratedVendingMachine prefab. */
+    companion object : Prefab<VendingMachine.Refrigerated>() {
+      override val all: VendingMachine.Refrigerated.Batch
+        get() = intrinsic()
+
+      override fun named(name: String): VendingMachine.Refrigerated.Batch = intrinsic()
     }
   }
 }
@@ -3019,7 +2488,7 @@ interface Speaker {
       set(value) = intrinsic()
 
     /** The PassiveSpeaker prefab. */
-    companion object : Prefab()
+    companion object : Prefab<Speaker.Passive>()
   }
 
   /** A StructureKlaxon. */
@@ -3048,38 +2517,7 @@ interface Speaker {
       set(value) = intrinsic()
 
     /** The StructureKlaxon prefab. */
-    companion object : Prefab()
-  }
-}
-
-/** The Speaker devices on the chip's network, by prefab. */
-object Speakers {
-  /** The PassiveSpeaker devices on the chip's network. */
-  @PrefabName("PassiveSpeaker")
-  object Passive {
-    /** The device on [pin], as a PassiveSpeaker. */
-    fun at(pin: Device): Speaker.Passive = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<Speaker.Passive>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<Speaker.Passive> = intrinsic()
-  }
-
-  /** The StructureKlaxon devices on the chip's network. */
-  @PrefabName("StructureKlaxon")
-  object Klaxon {
-    /** The device on [pin], as a StructureKlaxon. */
-    fun at(pin: Device): Speaker.Klaxon = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<Speaker.Klaxon>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<Speaker.Klaxon> = intrinsic()
+    companion object : Prefab<Speaker.Klaxon>()
   }
 }
 
@@ -3111,7 +2549,7 @@ interface LightRound {
       get() = intrinsic()
 
     /** The StructureLightRound prefab. */
-    companion object : Prefab()
+    companion object : Prefab<LightRound.Standard>()
   }
 
   /** A StructureLightRoundSmall. */
@@ -3132,7 +2570,7 @@ interface LightRound {
       get() = intrinsic()
 
     /** The StructureLightRoundSmall prefab. */
-    companion object : Prefab()
+    companion object : Prefab<LightRound.Small>()
   }
 
   /** A StructureLightRoundAngled. */
@@ -3153,52 +2591,7 @@ interface LightRound {
       get() = intrinsic()
 
     /** The StructureLightRoundAngled prefab. */
-    companion object : Prefab()
-  }
-}
-
-/** The LightRound devices on the chip's network, by prefab. */
-object LightRounds {
-  /** The StructureLightRound devices on the chip's network. */
-  @PrefabName("StructureLightRound")
-  object Standard {
-    /** The device on [pin], as a StructureLightRound. */
-    fun at(pin: Device): LightRound.Standard = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<LightRound.Standard>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<LightRound.Standard> = intrinsic()
-  }
-
-  /** The StructureLightRoundSmall devices on the chip's network. */
-  @PrefabName("StructureLightRoundSmall")
-  object Small {
-    /** The device on [pin], as a StructureLightRoundSmall. */
-    fun at(pin: Device): LightRound.Small = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<LightRound.Small>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<LightRound.Small> = intrinsic()
-  }
-
-  /** The StructureLightRoundAngled devices on the chip's network. */
-  @PrefabName("StructureLightRoundAngled")
-  object Angled {
-    /** The device on [pin], as a StructureLightRoundAngled. */
-    fun at(pin: Device): LightRound.Angled = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<LightRound.Angled>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<LightRound.Angled> = intrinsic()
+    companion object : Prefab<LightRound.Angled>()
   }
 }
 
@@ -3238,8 +2631,20 @@ interface BatteryCharger {
     val slots: Slots<BatterySlot>
       get() = intrinsic()
 
+    /** A batch of StructureBatteryCharger devices. */
+    class Batch internal constructor() : DeviceBatch<BatteryCharger.Standard>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<BatterySlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureBatteryCharger prefab. */
-    companion object : Prefab()
+    companion object : Prefab<BatteryCharger.Standard>() {
+      override val all: BatteryCharger.Standard.Batch
+        get() = intrinsic()
+
+      override fun named(name: String): BatteryCharger.Standard.Batch = intrinsic()
+    }
   }
 
   /** A StructureBatteryChargerSmall. */
@@ -3266,50 +2671,19 @@ interface BatteryCharger {
     val slots: Slots<BatterySlot>
       get() = intrinsic()
 
-    /** The StructureBatteryChargerSmall prefab. */
-    companion object : Prefab()
-  }
-}
-
-/** The BatteryCharger devices on the chip's network, by prefab. */
-object BatteryChargers {
-  /** The StructureBatteryCharger devices on the chip's network. */
-  @PrefabName("StructureBatteryCharger")
-  object Standard {
-    /** The device on [pin], as a StructureBatteryCharger. */
-    fun at(pin: Device): BatteryCharger.Standard = intrinsic()
-
-    /** Every one on the network. */
-    val all: Batch
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): Batch = intrinsic()
-
-    class Batch internal constructor() : DeviceBatch<BatteryCharger.Standard>() {
-      /** A slot of every one in the batch, by number. */
-      val slots: Slots<SlotBatch<BatterySlot>>
-        get() = intrinsic()
-    }
-  }
-
-  /** The StructureBatteryChargerSmall devices on the chip's network. */
-  @PrefabName("StructureBatteryChargerSmall")
-  object Small {
-    /** The device on [pin], as a StructureBatteryChargerSmall. */
-    fun at(pin: Device): BatteryCharger.Small = intrinsic()
-
-    /** Every one on the network. */
-    val all: Batch
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): Batch = intrinsic()
-
+    /** A batch of StructureBatteryChargerSmall devices. */
     class Batch internal constructor() : DeviceBatch<BatteryCharger.Small>() {
       /** A slot of every one in the batch, by number. */
       val slots: Slots<SlotBatch<BatterySlot>>
         get() = intrinsic()
+    }
+
+    /** The StructureBatteryChargerSmall prefab. */
+    companion object : Prefab<BatteryCharger.Small>() {
+      override val all: BatteryCharger.Small.Batch
+        get() = intrinsic()
+
+      override fun named(name: String): BatteryCharger.Small.Batch = intrinsic()
     }
   }
 }
@@ -3367,7 +2741,7 @@ interface PoweredVent {
       get() = intrinsic()
 
     /** The StructurePoweredVent prefab. */
-    companion object : Prefab()
+    companion object : Prefab<PoweredVent.Standard>()
   }
 
   /** A StructurePoweredVentLarge. */
@@ -3407,38 +2781,7 @@ interface PoweredVent {
       get() = intrinsic()
 
     /** The StructurePoweredVentLarge prefab. */
-    companion object : Prefab()
-  }
-}
-
-/** The PoweredVent devices on the chip's network, by prefab. */
-object PoweredVents {
-  /** The StructurePoweredVent devices on the chip's network. */
-  @PrefabName("StructurePoweredVent")
-  object Standard {
-    /** The device on [pin], as a StructurePoweredVent. */
-    fun at(pin: Device): PoweredVent.Standard = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<PoweredVent.Standard>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<PoweredVent.Standard> = intrinsic()
-  }
-
-  /** The StructurePoweredVentLarge devices on the chip's network. */
-  @PrefabName("StructurePoweredVentLarge")
-  object Large {
-    /** The device on [pin], as a StructurePoweredVentLarge. */
-    fun at(pin: Device): PoweredVent.Large = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<PoweredVent.Large>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<PoweredVent.Large> = intrinsic()
+    companion object : Prefab<PoweredVent.Large>()
   }
 }
 
@@ -3470,7 +2813,7 @@ interface Valve {
       set(value) = intrinsic()
 
     /** The StructureValve prefab. */
-    companion object : Prefab()
+    companion object : Prefab<Valve.Gas>()
   }
 
   /** A StructureLiquidValve. */
@@ -3491,7 +2834,7 @@ interface Valve {
       set(value) = intrinsic()
 
     /** The StructureLiquidValve prefab. */
-    companion object : Prefab()
+    companion object : Prefab<Valve.Liquid>()
   }
 
   /** A StructurePipeOneWayValveLever. */
@@ -3512,7 +2855,7 @@ interface Valve {
       set(value) = intrinsic()
 
     /** The StructurePipeOneWayValveLever prefab. */
-    companion object : Prefab()
+    companion object : Prefab<Valve.OneWayGas>()
   }
 
   /** A StructurePipeLiquidOneWayValveLever. */
@@ -3533,7 +2876,7 @@ interface Valve {
       set(value) = intrinsic()
 
     /** The StructurePipeLiquidOneWayValveLever prefab. */
-    companion object : Prefab()
+    companion object : Prefab<Valve.OneWayLiquid>()
   }
 
   /** A StructureCondensationValve. */
@@ -3554,7 +2897,7 @@ interface Valve {
       set(value) = intrinsic()
 
     /** The StructureCondensationValve prefab. */
-    companion object : Prefab()
+    companion object : Prefab<Valve.Condensation>()
   }
 
   /** A StructureExpansionValve. */
@@ -3575,94 +2918,7 @@ interface Valve {
       set(value) = intrinsic()
 
     /** The StructureExpansionValve prefab. */
-    companion object : Prefab()
-  }
-}
-
-/** The Valve devices on the chip's network, by prefab. */
-object Valves {
-  /** The StructureValve devices on the chip's network. */
-  @PrefabName("StructureValve")
-  object Gas {
-    /** The device on [pin], as a StructureValve. */
-    fun at(pin: Device): Valve.Gas = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<Valve.Gas>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<Valve.Gas> = intrinsic()
-  }
-
-  /** The StructureLiquidValve devices on the chip's network. */
-  @PrefabName("StructureLiquidValve")
-  object Liquid {
-    /** The device on [pin], as a StructureLiquidValve. */
-    fun at(pin: Device): Valve.Liquid = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<Valve.Liquid>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<Valve.Liquid> = intrinsic()
-  }
-
-  /** The StructurePipeOneWayValveLever devices on the chip's network. */
-  @PrefabName("StructurePipeOneWayValveLever")
-  object OneWayGas {
-    /** The device on [pin], as a StructurePipeOneWayValveLever. */
-    fun at(pin: Device): Valve.OneWayGas = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<Valve.OneWayGas>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<Valve.OneWayGas> = intrinsic()
-  }
-
-  /** The StructurePipeLiquidOneWayValveLever devices on the chip's network. */
-  @PrefabName("StructurePipeLiquidOneWayValveLever")
-  object OneWayLiquid {
-    /** The device on [pin], as a StructurePipeLiquidOneWayValveLever. */
-    fun at(pin: Device): Valve.OneWayLiquid = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<Valve.OneWayLiquid>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<Valve.OneWayLiquid> = intrinsic()
-  }
-
-  /** The StructureCondensationValve devices on the chip's network. */
-  @PrefabName("StructureCondensationValve")
-  object Condensation {
-    /** The device on [pin], as a StructureCondensationValve. */
-    fun at(pin: Device): Valve.Condensation = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<Valve.Condensation>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<Valve.Condensation> = intrinsic()
-  }
-
-  /** The StructureExpansionValve devices on the chip's network. */
-  @PrefabName("StructureExpansionValve")
-  object Expansion {
-    /** The device on [pin], as a StructureExpansionValve. */
-    fun at(pin: Device): Valve.Expansion = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<Valve.Expansion>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<Valve.Expansion> = intrinsic()
+    companion object : Prefab<Valve.Expansion>()
   }
 }
 
@@ -3715,7 +2971,7 @@ interface VolumePump {
       set(value) = intrinsic()
 
     /** The StructureVolumePump prefab. */
-    companion object : Prefab()
+    companion object : Prefab<VolumePump.Gas>()
   }
 
   /** A StructureLiquidVolumePump. */
@@ -3749,38 +3005,7 @@ interface VolumePump {
       set(value) = intrinsic()
 
     /** The StructureLiquidVolumePump prefab. */
-    companion object : Prefab()
-  }
-}
-
-/** The VolumePump devices on the chip's network, by prefab. */
-object VolumePumps {
-  /** The StructureVolumePump devices on the chip's network. */
-  @PrefabName("StructureVolumePump")
-  object Gas {
-    /** The device on [pin], as a StructureVolumePump. */
-    fun at(pin: Device): VolumePump.Gas = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<VolumePump.Gas>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<VolumePump.Gas> = intrinsic()
-  }
-
-  /** The StructureLiquidVolumePump devices on the chip's network. */
-  @PrefabName("StructureLiquidVolumePump")
-  object Liquid {
-    /** The device on [pin], as a StructureLiquidVolumePump. */
-    fun at(pin: Device): VolumePump.Liquid = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<VolumePump.Liquid>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<VolumePump.Liquid> = intrinsic()
+    companion object : Prefab<VolumePump.Liquid>()
   }
 }
 
@@ -3839,7 +3064,7 @@ interface TurboVolumePump {
       set(value) = intrinsic()
 
     /** The StructureTurboVolumePump prefab. */
-    companion object : Prefab()
+    companion object : Prefab<TurboVolumePump.Gas>()
   }
 
   /** A StructureLiquidTurboVolumePump. */
@@ -3877,38 +3102,7 @@ interface TurboVolumePump {
       set(value) = intrinsic()
 
     /** The StructureLiquidTurboVolumePump prefab. */
-    companion object : Prefab()
-  }
-}
-
-/** The TurboVolumePump devices on the chip's network, by prefab. */
-object TurboVolumePumps {
-  /** The StructureTurboVolumePump devices on the chip's network. */
-  @PrefabName("StructureTurboVolumePump")
-  object Gas {
-    /** The device on [pin], as a StructureTurboVolumePump. */
-    fun at(pin: Device): TurboVolumePump.Gas = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<TurboVolumePump.Gas>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<TurboVolumePump.Gas> = intrinsic()
-  }
-
-  /** The StructureLiquidTurboVolumePump devices on the chip's network. */
-  @PrefabName("StructureLiquidTurboVolumePump")
-  object Liquid {
-    /** The device on [pin], as a StructureLiquidTurboVolumePump. */
-    fun at(pin: Device): TurboVolumePump.Liquid = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<TurboVolumePump.Liquid>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<TurboVolumePump.Liquid> = intrinsic()
+    companion object : Prefab<TurboVolumePump.Liquid>()
   }
 }
 
@@ -3961,7 +3155,7 @@ interface PressureRegulator {
       set(value) = intrinsic()
 
     /** The StructurePressureRegulator prefab. */
-    companion object : Prefab()
+    companion object : Prefab<PressureRegulator.Gas>()
   }
 
   /** A StructureLiquidPressureRegulator. */
@@ -3995,7 +3189,7 @@ interface PressureRegulator {
       set(value) = intrinsic()
 
     /** The StructureLiquidPressureRegulator prefab. */
-    companion object : Prefab()
+    companion object : Prefab<PressureRegulator.Liquid>()
   }
 
   /** A StructureBackPressureRegulator. */
@@ -4029,7 +3223,7 @@ interface PressureRegulator {
       set(value) = intrinsic()
 
     /** The StructureBackPressureRegulator prefab. */
-    companion object : Prefab()
+    companion object : Prefab<PressureRegulator.BackGas>()
   }
 
   /** A StructureBackLiquidPressureRegulator. */
@@ -4063,7 +3257,7 @@ interface PressureRegulator {
       set(value) = intrinsic()
 
     /** The StructureBackLiquidPressureRegulator prefab. */
-    companion object : Prefab()
+    companion object : Prefab<PressureRegulator.BackLiquid>()
   }
 
   /** A StructurePurgeValve. */
@@ -4097,7 +3291,7 @@ interface PressureRegulator {
       set(value) = intrinsic()
 
     /** The StructurePurgeValve prefab. */
-    companion object : Prefab()
+    companion object : Prefab<PressureRegulator.Purge>()
   }
 
   /** A StructurePressurantValve. */
@@ -4131,94 +3325,7 @@ interface PressureRegulator {
       set(value) = intrinsic()
 
     /** The StructurePressurantValve prefab. */
-    companion object : Prefab()
-  }
-}
-
-/** The PressureRegulator devices on the chip's network, by prefab. */
-object PressureRegulators {
-  /** The StructurePressureRegulator devices on the chip's network. */
-  @PrefabName("StructurePressureRegulator")
-  object Gas {
-    /** The device on [pin], as a StructurePressureRegulator. */
-    fun at(pin: Device): PressureRegulator.Gas = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<PressureRegulator.Gas>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<PressureRegulator.Gas> = intrinsic()
-  }
-
-  /** The StructureLiquidPressureRegulator devices on the chip's network. */
-  @PrefabName("StructureLiquidPressureRegulator")
-  object Liquid {
-    /** The device on [pin], as a StructureLiquidPressureRegulator. */
-    fun at(pin: Device): PressureRegulator.Liquid = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<PressureRegulator.Liquid>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<PressureRegulator.Liquid> = intrinsic()
-  }
-
-  /** The StructureBackPressureRegulator devices on the chip's network. */
-  @PrefabName("StructureBackPressureRegulator")
-  object BackGas {
-    /** The device on [pin], as a StructureBackPressureRegulator. */
-    fun at(pin: Device): PressureRegulator.BackGas = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<PressureRegulator.BackGas>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<PressureRegulator.BackGas> = intrinsic()
-  }
-
-  /** The StructureBackLiquidPressureRegulator devices on the chip's network. */
-  @PrefabName("StructureBackLiquidPressureRegulator")
-  object BackLiquid {
-    /** The device on [pin], as a StructureBackLiquidPressureRegulator. */
-    fun at(pin: Device): PressureRegulator.BackLiquid = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<PressureRegulator.BackLiquid>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<PressureRegulator.BackLiquid> = intrinsic()
-  }
-
-  /** The StructurePurgeValve devices on the chip's network. */
-  @PrefabName("StructurePurgeValve")
-  object Purge {
-    /** The device on [pin], as a StructurePurgeValve. */
-    fun at(pin: Device): PressureRegulator.Purge = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<PressureRegulator.Purge>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<PressureRegulator.Purge> = intrinsic()
-  }
-
-  /** The StructurePressurantValve devices on the chip's network. */
-  @PrefabName("StructurePressurantValve")
-  object Pressurant {
-    /** The device on [pin], as a StructurePressurantValve. */
-    fun at(pin: Device): PressureRegulator.Pressurant = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<PressureRegulator.Pressurant>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<PressureRegulator.Pressurant> = intrinsic()
+    companion object : Prefab<PressureRegulator.Pressurant>()
   }
 }
 
@@ -4255,7 +3362,7 @@ interface PipeHeater {
       get() = intrinsic()
 
     /** The StructurePipeHeater prefab. */
-    companion object : Prefab()
+    companion object : Prefab<PipeHeater.Gas>()
   }
 
   /** A StructureLiquidPipeHeater. */
@@ -4279,38 +3386,7 @@ interface PipeHeater {
       get() = intrinsic()
 
     /** The StructureLiquidPipeHeater prefab. */
-    companion object : Prefab()
-  }
-}
-
-/** The PipeHeater devices on the chip's network, by prefab. */
-object PipeHeaters {
-  /** The StructurePipeHeater devices on the chip's network. */
-  @PrefabName("StructurePipeHeater")
-  object Gas {
-    /** The device on [pin], as a StructurePipeHeater. */
-    fun at(pin: Device): PipeHeater.Gas = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<PipeHeater.Gas>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<PipeHeater.Gas> = intrinsic()
-  }
-
-  /** The StructureLiquidPipeHeater devices on the chip's network. */
-  @PrefabName("StructureLiquidPipeHeater")
-  object Liquid {
-    /** The device on [pin], as a StructureLiquidPipeHeater. */
-    fun at(pin: Device): PipeHeater.Liquid = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<PipeHeater.Liquid>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<PipeHeater.Liquid> = intrinsic()
+    companion object : Prefab<PipeHeater.Liquid>()
   }
 }
 
@@ -4351,8 +3427,20 @@ interface TankStorage {
     val GasCanister: GasCanisterSlot
       get() = intrinsic()
 
+    /** A batch of StructureGasTankStorage devices. */
+    class Batch internal constructor() : DeviceBatch<TankStorage.Gas>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<GasCanisterSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureGasTankStorage prefab. */
-    companion object : Prefab()
+    companion object : Prefab<TankStorage.Gas>() {
+      override val all: TankStorage.Gas.Batch
+        get() = intrinsic()
+
+      override fun named(name: String): TankStorage.Gas.Batch = intrinsic()
+    }
   }
 
   /** A StructureLiquidTankStorage. */
@@ -4384,50 +3472,19 @@ interface TankStorage {
     val LiquidCanister: GasCanisterSlot
       get() = intrinsic()
 
-    /** The StructureLiquidTankStorage prefab. */
-    companion object : Prefab()
-  }
-}
-
-/** The TankStorage devices on the chip's network, by prefab. */
-object TankStorages {
-  /** The StructureGasTankStorage devices on the chip's network. */
-  @PrefabName("StructureGasTankStorage")
-  object Gas {
-    /** The device on [pin], as a StructureGasTankStorage. */
-    fun at(pin: Device): TankStorage.Gas = intrinsic()
-
-    /** Every one on the network. */
-    val all: Batch
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): Batch = intrinsic()
-
-    class Batch internal constructor() : DeviceBatch<TankStorage.Gas>() {
-      /** A slot of every one in the batch, by number. */
-      val slots: Slots<SlotBatch<GasCanisterSlot>>
-        get() = intrinsic()
-    }
-  }
-
-  /** The StructureLiquidTankStorage devices on the chip's network. */
-  @PrefabName("StructureLiquidTankStorage")
-  object Liquid {
-    /** The device on [pin], as a StructureLiquidTankStorage. */
-    fun at(pin: Device): TankStorage.Liquid = intrinsic()
-
-    /** Every one on the network. */
-    val all: Batch
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): Batch = intrinsic()
-
+    /** A batch of StructureLiquidTankStorage devices. */
     class Batch internal constructor() : DeviceBatch<TankStorage.Liquid>() {
       /** A slot of every one in the batch, by number. */
       val slots: Slots<SlotBatch<GasCanisterSlot>>
         get() = intrinsic()
+    }
+
+    /** The StructureLiquidTankStorage prefab. */
+    companion object : Prefab<TankStorage.Liquid>() {
+      override val all: TankStorage.Liquid.Batch
+        get() = intrinsic()
+
+      override fun named(name: String): TankStorage.Liquid.Batch = intrinsic()
     }
   }
 }
@@ -4500,7 +3557,7 @@ interface CapsuleTank {
       get() = intrinsic()
 
     /** The StructureCapsuleTankGas prefab. */
-    companion object : Prefab()
+    companion object : Prefab<CapsuleTank.SmallGas>()
   }
 
   /** A StructureCapsuleTankLiquid. */
@@ -4551,7 +3608,7 @@ interface CapsuleTank {
       get() = intrinsic()
 
     /** The StructureCapsuleTankLiquid prefab. */
-    companion object : Prefab()
+    companion object : Prefab<CapsuleTank.SmallLiquid>()
   }
 
   /** A StructureMediumRocketGasFuelTank. */
@@ -4602,7 +3659,7 @@ interface CapsuleTank {
       get() = intrinsic()
 
     /** The StructureMediumRocketGasFuelTank prefab. */
-    companion object : Prefab()
+    companion object : Prefab<CapsuleTank.MediumGas>()
   }
 
   /** A StructureMediumRocketLiquidFuelTank. */
@@ -4653,7 +3710,7 @@ interface CapsuleTank {
       get() = intrinsic()
 
     /** The StructureMediumRocketLiquidFuelTank prefab. */
-    companion object : Prefab()
+    companion object : Prefab<CapsuleTank.MediumLiquid>()
   }
 
   /** A StructureLargeRocketGasFuelTank. */
@@ -4704,7 +3761,7 @@ interface CapsuleTank {
       get() = intrinsic()
 
     /** The StructureLargeRocketGasFuelTank prefab. */
-    companion object : Prefab()
+    companion object : Prefab<CapsuleTank.LargeGas>()
   }
 
   /** A StructureLargeRocketLiquidFuelTank. */
@@ -4755,94 +3812,7 @@ interface CapsuleTank {
       get() = intrinsic()
 
     /** The StructureLargeRocketLiquidFuelTank prefab. */
-    companion object : Prefab()
-  }
-}
-
-/** The CapsuleTank devices on the chip's network, by prefab. */
-object CapsuleTanks {
-  /** The StructureCapsuleTankGas devices on the chip's network. */
-  @PrefabName("StructureCapsuleTankGas")
-  object SmallGas {
-    /** The device on [pin], as a StructureCapsuleTankGas. */
-    fun at(pin: Device): CapsuleTank.SmallGas = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<CapsuleTank.SmallGas>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<CapsuleTank.SmallGas> = intrinsic()
-  }
-
-  /** The StructureCapsuleTankLiquid devices on the chip's network. */
-  @PrefabName("StructureCapsuleTankLiquid")
-  object SmallLiquid {
-    /** The device on [pin], as a StructureCapsuleTankLiquid. */
-    fun at(pin: Device): CapsuleTank.SmallLiquid = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<CapsuleTank.SmallLiquid>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<CapsuleTank.SmallLiquid> = intrinsic()
-  }
-
-  /** The StructureMediumRocketGasFuelTank devices on the chip's network. */
-  @PrefabName("StructureMediumRocketGasFuelTank")
-  object MediumGas {
-    /** The device on [pin], as a StructureMediumRocketGasFuelTank. */
-    fun at(pin: Device): CapsuleTank.MediumGas = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<CapsuleTank.MediumGas>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<CapsuleTank.MediumGas> = intrinsic()
-  }
-
-  /** The StructureMediumRocketLiquidFuelTank devices on the chip's network. */
-  @PrefabName("StructureMediumRocketLiquidFuelTank")
-  object MediumLiquid {
-    /** The device on [pin], as a StructureMediumRocketLiquidFuelTank. */
-    fun at(pin: Device): CapsuleTank.MediumLiquid = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<CapsuleTank.MediumLiquid>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<CapsuleTank.MediumLiquid> = intrinsic()
-  }
-
-  /** The StructureLargeRocketGasFuelTank devices on the chip's network. */
-  @PrefabName("StructureLargeRocketGasFuelTank")
-  object LargeGas {
-    /** The device on [pin], as a StructureLargeRocketGasFuelTank. */
-    fun at(pin: Device): CapsuleTank.LargeGas = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<CapsuleTank.LargeGas>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<CapsuleTank.LargeGas> = intrinsic()
-  }
-
-  /** The StructureLargeRocketLiquidFuelTank devices on the chip's network. */
-  @PrefabName("StructureLargeRocketLiquidFuelTank")
-  object LargeLiquid {
-    /** The device on [pin], as a StructureLargeRocketLiquidFuelTank. */
-    fun at(pin: Device): CapsuleTank.LargeLiquid = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<CapsuleTank.LargeLiquid>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<CapsuleTank.LargeLiquid> = intrinsic()
+    companion object : Prefab<CapsuleTank.LargeLiquid>()
   }
 }
 
@@ -4921,8 +3891,20 @@ interface Filtration {
     val ProgrammableChip: DataDiskSlot
       get() = intrinsic()
 
+    /** A batch of StructureFiltration devices. */
+    class Batch internal constructor() : DeviceBatch<Filtration.Gas>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<CommonSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureFiltration prefab. */
-    companion object : Prefab()
+    companion object : Prefab<Filtration.Gas>() {
+      override val all: Filtration.Gas.Batch
+        get() = intrinsic()
+
+      override fun named(name: String): Filtration.Gas.Batch = intrinsic()
+    }
   }
 
   /** A StructureFiltrationLiquid. */
@@ -4980,8 +3962,20 @@ interface Filtration {
     val ProgrammableChip: DataDiskSlot
       get() = intrinsic()
 
+    /** A batch of StructureFiltrationLiquid devices. */
+    class Batch internal constructor() : DeviceBatch<Filtration.Liquid>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<CommonSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureFiltrationLiquid prefab. */
-    companion object : Prefab()
+    companion object : Prefab<Filtration.Liquid>() {
+      override val all: Filtration.Liquid.Batch
+        get() = intrinsic()
+
+      override fun named(name: String): Filtration.Liquid.Batch = intrinsic()
+    }
   }
 
   /** A StructureRocketFiltrationGas. */
@@ -5035,70 +4029,19 @@ interface Filtration {
     val GasFilter: FilterSlot
       get() = intrinsic()
 
-    /** The StructureRocketFiltrationGas prefab. */
-    companion object : Prefab()
-  }
-}
-
-/** The Filtration devices on the chip's network, by prefab. */
-object Filtrations {
-  /** The StructureFiltration devices on the chip's network. */
-  @PrefabName("StructureFiltration")
-  object Gas {
-    /** The device on [pin], as a StructureFiltration. */
-    fun at(pin: Device): Filtration.Gas = intrinsic()
-
-    /** Every one on the network. */
-    val all: Batch
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): Batch = intrinsic()
-
-    class Batch internal constructor() : DeviceBatch<Filtration.Gas>() {
-      /** A slot of every one in the batch, by number. */
-      val slots: Slots<SlotBatch<CommonSlot>>
-        get() = intrinsic()
-    }
-  }
-
-  /** The StructureFiltrationLiquid devices on the chip's network. */
-  @PrefabName("StructureFiltrationLiquid")
-  object Liquid {
-    /** The device on [pin], as a StructureFiltrationLiquid. */
-    fun at(pin: Device): Filtration.Liquid = intrinsic()
-
-    /** Every one on the network. */
-    val all: Batch
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): Batch = intrinsic()
-
-    class Batch internal constructor() : DeviceBatch<Filtration.Liquid>() {
-      /** A slot of every one in the batch, by number. */
-      val slots: Slots<SlotBatch<CommonSlot>>
-        get() = intrinsic()
-    }
-  }
-
-  /** The StructureRocketFiltrationGas devices on the chip's network. */
-  @PrefabName("StructureRocketFiltrationGas")
-  object RocketGas {
-    /** The device on [pin], as a StructureRocketFiltrationGas. */
-    fun at(pin: Device): Filtration.RocketGas = intrinsic()
-
-    /** Every one on the network. */
-    val all: Batch
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): Batch = intrinsic()
-
+    /** A batch of StructureRocketFiltrationGas devices. */
     class Batch internal constructor() : DeviceBatch<Filtration.RocketGas>() {
       /** A slot of every one in the batch, by number. */
       val slots: Slots<SlotBatch<FilterSlot>>
         get() = intrinsic()
+    }
+
+    /** The StructureRocketFiltrationGas prefab. */
+    companion object : Prefab<Filtration.RocketGas>() {
+      override val all: Filtration.RocketGas.Batch
+        get() = intrinsic()
+
+      override fun named(name: String): Filtration.RocketGas.Batch = intrinsic()
     }
   }
 }
@@ -5163,7 +4106,7 @@ interface UmbilicalMale {
       set(value) = intrinsic()
 
     /** The StructureGasUmbilicalMale prefab. */
-    companion object : Prefab()
+    companion object : Prefab<UmbilicalMale.Gas>()
   }
 
   /** A StructureLiquidUmbilicalMale. */
@@ -5204,38 +4147,7 @@ interface UmbilicalMale {
       set(value) = intrinsic()
 
     /** The StructureLiquidUmbilicalMale prefab. */
-    companion object : Prefab()
-  }
-}
-
-/** The UmbilicalMale devices on the chip's network, by prefab. */
-object UmbilicalMales {
-  /** The StructureGasUmbilicalMale devices on the chip's network. */
-  @PrefabName("StructureGasUmbilicalMale")
-  object Gas {
-    /** The device on [pin], as a StructureGasUmbilicalMale. */
-    fun at(pin: Device): UmbilicalMale.Gas = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<UmbilicalMale.Gas>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<UmbilicalMale.Gas> = intrinsic()
-  }
-
-  /** The StructureLiquidUmbilicalMale devices on the chip's network. */
-  @PrefabName("StructureLiquidUmbilicalMale")
-  object Liquid {
-    /** The device on [pin], as a StructureLiquidUmbilicalMale. */
-    fun at(pin: Device): UmbilicalMale.Liquid = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<UmbilicalMale.Liquid>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<UmbilicalMale.Liquid> = intrinsic()
+    companion object : Prefab<UmbilicalMale.Liquid>()
   }
 }
 
@@ -5261,7 +4173,7 @@ interface UmbilicalFemale {
       set(value) = intrinsic()
 
     /** The StructureGasUmbilicalFemale prefab. */
-    companion object : Prefab()
+    companion object : Prefab<UmbilicalFemale.Gas>()
   }
 
   /** A StructureLiquidUmbilicalFemale. */
@@ -5278,7 +4190,7 @@ interface UmbilicalFemale {
       set(value) = intrinsic()
 
     /** The StructureLiquidUmbilicalFemale prefab. */
-    companion object : Prefab()
+    companion object : Prefab<UmbilicalFemale.Liquid>()
   }
 
   /** A StructureGasUmbilicalFemaleSide. */
@@ -5295,7 +4207,7 @@ interface UmbilicalFemale {
       set(value) = intrinsic()
 
     /** The StructureGasUmbilicalFemaleSide prefab. */
-    companion object : Prefab()
+    companion object : Prefab<UmbilicalFemale.GasAngle>()
   }
 
   /** A StructureLiquidUmbilicalFemaleSide. */
@@ -5312,66 +4224,7 @@ interface UmbilicalFemale {
       set(value) = intrinsic()
 
     /** The StructureLiquidUmbilicalFemaleSide prefab. */
-    companion object : Prefab()
-  }
-}
-
-/** The UmbilicalFemale devices on the chip's network, by prefab. */
-object UmbilicalFemales {
-  /** The StructureGasUmbilicalFemale devices on the chip's network. */
-  @PrefabName("StructureGasUmbilicalFemale")
-  object Gas {
-    /** The device on [pin], as a StructureGasUmbilicalFemale. */
-    fun at(pin: Device): UmbilicalFemale.Gas = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<UmbilicalFemale.Gas>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<UmbilicalFemale.Gas> = intrinsic()
-  }
-
-  /** The StructureLiquidUmbilicalFemale devices on the chip's network. */
-  @PrefabName("StructureLiquidUmbilicalFemale")
-  object Liquid {
-    /** The device on [pin], as a StructureLiquidUmbilicalFemale. */
-    fun at(pin: Device): UmbilicalFemale.Liquid = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<UmbilicalFemale.Liquid>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<UmbilicalFemale.Liquid> = intrinsic()
-  }
-
-  /** The StructureGasUmbilicalFemaleSide devices on the chip's network. */
-  @PrefabName("StructureGasUmbilicalFemaleSide")
-  object GasAngle {
-    /** The device on [pin], as a StructureGasUmbilicalFemaleSide. */
-    fun at(pin: Device): UmbilicalFemale.GasAngle = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<UmbilicalFemale.GasAngle>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<UmbilicalFemale.GasAngle> = intrinsic()
-  }
-
-  /** The StructureLiquidUmbilicalFemaleSide devices on the chip's network. */
-  @PrefabName("StructureLiquidUmbilicalFemaleSide")
-  object LiquidAngle {
-    /** The device on [pin], as a StructureLiquidUmbilicalFemaleSide. */
-    fun at(pin: Device): UmbilicalFemale.LiquidAngle = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<UmbilicalFemale.LiquidAngle>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<UmbilicalFemale.LiquidAngle> = intrinsic()
+    companion object : Prefab<UmbilicalFemale.LiquidAngle>()
   }
 }
 
@@ -5441,7 +4294,7 @@ interface RocketEngine {
       get() = intrinsic()
 
     /** The StructurePressureFedGasEngine prefab. */
-    companion object : Prefab()
+    companion object : Prefab<RocketEngine.PressureFedGas>()
   }
 
   /** A StructurePressureFedLiquidEngine. */
@@ -5498,7 +4351,7 @@ interface RocketEngine {
       get() = intrinsic()
 
     /** The StructurePressureFedLiquidEngine prefab. */
-    companion object : Prefab()
+    companion object : Prefab<RocketEngine.PressureFedLiquid>()
   }
 
   /** A StructurePressureFedGasEngineHeavy. */
@@ -5545,7 +4398,7 @@ interface RocketEngine {
       get() = intrinsic()
 
     /** The StructurePressureFedGasEngineHeavy prefab. */
-    companion object : Prefab()
+    companion object : Prefab<RocketEngine.PressureFedGasHeavy>()
   }
 
   /** A StructurePressureFedLiquidEngineHeavy. */
@@ -5602,7 +4455,7 @@ interface RocketEngine {
       get() = intrinsic()
 
     /** The StructurePressureFedLiquidEngineHeavy prefab. */
-    companion object : Prefab()
+    companion object : Prefab<RocketEngine.PressureFedLiquidHeavy>()
   }
 
   /** A StructureGovernedGasEngine. */
@@ -5649,7 +4502,7 @@ interface RocketEngine {
       get() = intrinsic()
 
     /** The StructureGovernedGasEngine prefab. */
-    companion object : Prefab()
+    companion object : Prefab<RocketEngine.PumpedGas>()
   }
 
   /** A StructurePumpedLiquidEngine. */
@@ -5706,94 +4559,7 @@ interface RocketEngine {
       get() = intrinsic()
 
     /** The StructurePumpedLiquidEngine prefab. */
-    companion object : Prefab()
-  }
-}
-
-/** The RocketEngine devices on the chip's network, by prefab. */
-object RocketEngines {
-  /** The StructurePressureFedGasEngine devices on the chip's network. */
-  @PrefabName("StructurePressureFedGasEngine")
-  object PressureFedGas {
-    /** The device on [pin], as a StructurePressureFedGasEngine. */
-    fun at(pin: Device): RocketEngine.PressureFedGas = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<RocketEngine.PressureFedGas>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<RocketEngine.PressureFedGas> = intrinsic()
-  }
-
-  /** The StructurePressureFedLiquidEngine devices on the chip's network. */
-  @PrefabName("StructurePressureFedLiquidEngine")
-  object PressureFedLiquid {
-    /** The device on [pin], as a StructurePressureFedLiquidEngine. */
-    fun at(pin: Device): RocketEngine.PressureFedLiquid = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<RocketEngine.PressureFedLiquid>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<RocketEngine.PressureFedLiquid> = intrinsic()
-  }
-
-  /** The StructurePressureFedGasEngineHeavy devices on the chip's network. */
-  @PrefabName("StructurePressureFedGasEngineHeavy")
-  object PressureFedGasHeavy {
-    /** The device on [pin], as a StructurePressureFedGasEngineHeavy. */
-    fun at(pin: Device): RocketEngine.PressureFedGasHeavy = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<RocketEngine.PressureFedGasHeavy>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<RocketEngine.PressureFedGasHeavy> = intrinsic()
-  }
-
-  /** The StructurePressureFedLiquidEngineHeavy devices on the chip's network. */
-  @PrefabName("StructurePressureFedLiquidEngineHeavy")
-  object PressureFedLiquidHeavy {
-    /** The device on [pin], as a StructurePressureFedLiquidEngineHeavy. */
-    fun at(pin: Device): RocketEngine.PressureFedLiquidHeavy = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<RocketEngine.PressureFedLiquidHeavy>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<RocketEngine.PressureFedLiquidHeavy> = intrinsic()
-  }
-
-  /** The StructureGovernedGasEngine devices on the chip's network. */
-  @PrefabName("StructureGovernedGasEngine")
-  object PumpedGas {
-    /** The device on [pin], as a StructureGovernedGasEngine. */
-    fun at(pin: Device): RocketEngine.PumpedGas = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<RocketEngine.PumpedGas>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<RocketEngine.PumpedGas> = intrinsic()
-  }
-
-  /** The StructurePumpedLiquidEngine devices on the chip's network. */
-  @PrefabName("StructurePumpedLiquidEngine")
-  object PumpedLiquid {
-    /** The device on [pin], as a StructurePumpedLiquidEngine. */
-    fun at(pin: Device): RocketEngine.PumpedLiquid = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<RocketEngine.PumpedLiquid>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<RocketEngine.PumpedLiquid> = intrinsic()
+    companion object : Prefab<RocketEngine.PumpedLiquid>()
   }
 }
 
@@ -5819,7 +4585,7 @@ interface Radiator {
       set(value) = intrinsic()
 
     /** The StructureMediumRadiator prefab. */
-    companion object : Prefab()
+    companion object : Prefab<Radiator.MediumGas>()
   }
 
   /** A StructureMediumRadiatorLiquid. */
@@ -5836,7 +4602,7 @@ interface Radiator {
       set(value) = intrinsic()
 
     /** The StructureMediumRadiatorLiquid prefab. */
-    companion object : Prefab()
+    companion object : Prefab<Radiator.MediumLiquid>()
   }
 
   /** A StructureMediumConvectionRadiator. */
@@ -5853,7 +4619,7 @@ interface Radiator {
       set(value) = intrinsic()
 
     /** The StructureMediumConvectionRadiator prefab. */
-    companion object : Prefab()
+    companion object : Prefab<Radiator.ConvectionGas>()
   }
 
   /** A StructureMediumConvectionRadiatorLiquid. */
@@ -5870,7 +4636,7 @@ interface Radiator {
       set(value) = intrinsic()
 
     /** The StructureMediumConvectionRadiatorLiquid prefab. */
-    companion object : Prefab()
+    companion object : Prefab<Radiator.ConvectionLiquid>()
   }
 
   /** A StructurePassiveLargeRadiatorGas. */
@@ -5887,7 +4653,7 @@ interface Radiator {
       set(value) = intrinsic()
 
     /** The StructurePassiveLargeRadiatorGas prefab. */
-    companion object : Prefab()
+    companion object : Prefab<Radiator.PassiveLargeGas>()
   }
 
   /** A StructurePassiveLargeRadiatorLiquid. */
@@ -5904,7 +4670,7 @@ interface Radiator {
       set(value) = intrinsic()
 
     /** The StructurePassiveLargeRadiatorLiquid prefab. */
-    companion object : Prefab()
+    companion object : Prefab<Radiator.PassiveLargeLiquid>()
   }
 
   /** A StructureLargeExtendableRadiator. */
@@ -5933,108 +4699,7 @@ interface Radiator {
       set(value) = intrinsic()
 
     /** The StructureLargeExtendableRadiator prefab. */
-    companion object : Prefab()
-  }
-}
-
-/** The Radiator devices on the chip's network, by prefab. */
-object Radiators {
-  /** The StructureMediumRadiator devices on the chip's network. */
-  @PrefabName("StructureMediumRadiator")
-  object MediumGas {
-    /** The device on [pin], as a StructureMediumRadiator. */
-    fun at(pin: Device): Radiator.MediumGas = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<Radiator.MediumGas>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<Radiator.MediumGas> = intrinsic()
-  }
-
-  /** The StructureMediumRadiatorLiquid devices on the chip's network. */
-  @PrefabName("StructureMediumRadiatorLiquid")
-  object MediumLiquid {
-    /** The device on [pin], as a StructureMediumRadiatorLiquid. */
-    fun at(pin: Device): Radiator.MediumLiquid = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<Radiator.MediumLiquid>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<Radiator.MediumLiquid> = intrinsic()
-  }
-
-  /** The StructureMediumConvectionRadiator devices on the chip's network. */
-  @PrefabName("StructureMediumConvectionRadiator")
-  object ConvectionGas {
-    /** The device on [pin], as a StructureMediumConvectionRadiator. */
-    fun at(pin: Device): Radiator.ConvectionGas = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<Radiator.ConvectionGas>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<Radiator.ConvectionGas> = intrinsic()
-  }
-
-  /** The StructureMediumConvectionRadiatorLiquid devices on the chip's network. */
-  @PrefabName("StructureMediumConvectionRadiatorLiquid")
-  object ConvectionLiquid {
-    /** The device on [pin], as a StructureMediumConvectionRadiatorLiquid. */
-    fun at(pin: Device): Radiator.ConvectionLiquid = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<Radiator.ConvectionLiquid>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<Radiator.ConvectionLiquid> = intrinsic()
-  }
-
-  /** The StructurePassiveLargeRadiatorGas devices on the chip's network. */
-  @PrefabName("StructurePassiveLargeRadiatorGas")
-  object PassiveLargeGas {
-    /** The device on [pin], as a StructurePassiveLargeRadiatorGas. */
-    fun at(pin: Device): Radiator.PassiveLargeGas = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<Radiator.PassiveLargeGas>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<Radiator.PassiveLargeGas> = intrinsic()
-  }
-
-  /** The StructurePassiveLargeRadiatorLiquid devices on the chip's network. */
-  @PrefabName("StructurePassiveLargeRadiatorLiquid")
-  object PassiveLargeLiquid {
-    /** The device on [pin], as a StructurePassiveLargeRadiatorLiquid. */
-    fun at(pin: Device): Radiator.PassiveLargeLiquid = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<Radiator.PassiveLargeLiquid>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<Radiator.PassiveLargeLiquid> = intrinsic()
-  }
-
-  /** The StructureLargeExtendableRadiator devices on the chip's network. */
-  @PrefabName("StructureLargeExtendableRadiator")
-  object LargeExtendable {
-    /** The device on [pin], as a StructureLargeExtendableRadiator. */
-    fun at(pin: Device): Radiator.LargeExtendable = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<Radiator.LargeExtendable>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<Radiator.LargeExtendable> = intrinsic()
+    companion object : Prefab<Radiator.LargeExtendable>()
   }
 }
 
@@ -6109,7 +4774,7 @@ interface LandingPadInwardConnector {
       get() = intrinsic()
 
     /** The Landingpad_GasConnectorInwardPiece prefab. */
-    companion object : Prefab()
+    companion object : Prefab<LandingPadInwardConnector.Gas>()
   }
 
   /** A Landingpad_LiquidConnectorInwardPiece. */
@@ -6159,38 +4824,7 @@ interface LandingPadInwardConnector {
       get() = intrinsic()
 
     /** The Landingpad_LiquidConnectorInwardPiece prefab. */
-    companion object : Prefab()
-  }
-}
-
-/** The LandingPadInwardConnector devices on the chip's network, by prefab. */
-object LandingPadInwardConnectors {
-  /** The Landingpad_GasConnectorInwardPiece devices on the chip's network. */
-  @PrefabName("Landingpad_GasConnectorInwardPiece")
-  object Gas {
-    /** The device on [pin], as a Landingpad_GasConnectorInwardPiece. */
-    fun at(pin: Device): LandingPadInwardConnector.Gas = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<LandingPadInwardConnector.Gas>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<LandingPadInwardConnector.Gas> = intrinsic()
-  }
-
-  /** The Landingpad_LiquidConnectorInwardPiece devices on the chip's network. */
-  @PrefabName("Landingpad_LiquidConnectorInwardPiece")
-  object Liquid {
-    /** The device on [pin], as a Landingpad_LiquidConnectorInwardPiece. */
-    fun at(pin: Device): LandingPadInwardConnector.Liquid = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<LandingPadInwardConnector.Liquid>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<LandingPadInwardConnector.Liquid> = intrinsic()
+    companion object : Prefab<LandingPadInwardConnector.Liquid>()
   }
 }
 
@@ -6265,7 +4899,7 @@ interface LandingPadOutwardConnector {
       get() = intrinsic()
 
     /** The Landingpad_GasConnectorOutwardPiece prefab. */
-    companion object : Prefab()
+    companion object : Prefab<LandingPadOutwardConnector.Gas>()
   }
 
   /** A Landingpad_LiquidConnectorOutwardPiece. */
@@ -6315,38 +4949,7 @@ interface LandingPadOutwardConnector {
       get() = intrinsic()
 
     /** The Landingpad_LiquidConnectorOutwardPiece prefab. */
-    companion object : Prefab()
-  }
-}
-
-/** The LandingPadOutwardConnector devices on the chip's network, by prefab. */
-object LandingPadOutwardConnectors {
-  /** The Landingpad_GasConnectorOutwardPiece devices on the chip's network. */
-  @PrefabName("Landingpad_GasConnectorOutwardPiece")
-  object Gas {
-    /** The device on [pin], as a Landingpad_GasConnectorOutwardPiece. */
-    fun at(pin: Device): LandingPadOutwardConnector.Gas = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<LandingPadOutwardConnector.Gas>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<LandingPadOutwardConnector.Gas> = intrinsic()
-  }
-
-  /** The Landingpad_LiquidConnectorOutwardPiece devices on the chip's network. */
-  @PrefabName("Landingpad_LiquidConnectorOutwardPiece")
-  object Liquid {
-    /** The device on [pin], as a Landingpad_LiquidConnectorOutwardPiece. */
-    fun at(pin: Device): LandingPadOutwardConnector.Liquid = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<LandingPadOutwardConnector.Liquid>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<LandingPadOutwardConnector.Liquid> = intrinsic()
+    companion object : Prefab<LandingPadOutwardConnector.Liquid>()
   }
 }
 
@@ -6391,8 +4994,20 @@ interface LandingPadTankConnector {
     val PortableSlot: DataDiskSlot
       get() = intrinsic()
 
+    /** A batch of Landingpad_GasTankConnectorPiece devices. */
+    class Batch internal constructor() : DeviceBatch<LandingPadTankConnector.Gas>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+
     /** The Landingpad_GasTankConnectorPiece prefab. */
-    companion object : Prefab()
+    companion object : Prefab<LandingPadTankConnector.Gas>() {
+      override val all: LandingPadTankConnector.Gas.Batch
+        get() = intrinsic()
+
+      override fun named(name: String): LandingPadTankConnector.Gas.Batch = intrinsic()
+    }
   }
 
   /** A Landingpad_LiquidTankConnectorPiece. */
@@ -6424,50 +5039,19 @@ interface LandingPadTankConnector {
     val PortableSlot: DataDiskSlot
       get() = intrinsic()
 
-    /** The Landingpad_LiquidTankConnectorPiece prefab. */
-    companion object : Prefab()
-  }
-}
-
-/** The LandingPadTankConnector devices on the chip's network, by prefab. */
-object LandingPadTankConnectors {
-  /** The Landingpad_GasTankConnectorPiece devices on the chip's network. */
-  @PrefabName("Landingpad_GasTankConnectorPiece")
-  object Gas {
-    /** The device on [pin], as a Landingpad_GasTankConnectorPiece. */
-    fun at(pin: Device): LandingPadTankConnector.Gas = intrinsic()
-
-    /** Every one on the network. */
-    val all: Batch
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): Batch = intrinsic()
-
-    class Batch internal constructor() : DeviceBatch<LandingPadTankConnector.Gas>() {
-      /** A slot of every one in the batch, by number. */
-      val slots: Slots<SlotBatch<DataDiskSlot>>
-        get() = intrinsic()
-    }
-  }
-
-  /** The Landingpad_LiquidTankConnectorPiece devices on the chip's network. */
-  @PrefabName("Landingpad_LiquidTankConnectorPiece")
-  object Liquid {
-    /** The device on [pin], as a Landingpad_LiquidTankConnectorPiece. */
-    fun at(pin: Device): LandingPadTankConnector.Liquid = intrinsic()
-
-    /** Every one on the network. */
-    val all: Batch
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): Batch = intrinsic()
-
+    /** A batch of Landingpad_LiquidTankConnectorPiece devices. */
     class Batch internal constructor() : DeviceBatch<LandingPadTankConnector.Liquid>() {
       /** A slot of every one in the batch, by number. */
       val slots: Slots<SlotBatch<DataDiskSlot>>
         get() = intrinsic()
+    }
+
+    /** The Landingpad_LiquidTankConnectorPiece prefab. */
+    companion object : Prefab<LandingPadTankConnector.Liquid>() {
+      override val all: LandingPadTankConnector.Liquid.Batch
+        get() = intrinsic()
+
+      override fun named(name: String): LandingPadTankConnector.Liquid.Batch = intrinsic()
     }
   }
 }
@@ -6494,7 +5078,7 @@ interface DirectHeatExchanger {
       set(value) = intrinsic()
 
     /** The StructureSmallDirectHeatExchangeGastoGas prefab. */
-    companion object : Prefab()
+    companion object : Prefab<DirectHeatExchanger.SmallGasToGas>()
   }
 
   /** A StructureSmallDirectHeatExchangeLiquidtoGas. */
@@ -6511,7 +5095,7 @@ interface DirectHeatExchanger {
       set(value) = intrinsic()
 
     /** The StructureSmallDirectHeatExchangeLiquidtoGas prefab. */
-    companion object : Prefab()
+    companion object : Prefab<DirectHeatExchanger.SmallLiquidToGas>()
   }
 
   /** A StructureSmallDirectHeatExchangeLiquidtoLiquid. */
@@ -6528,7 +5112,7 @@ interface DirectHeatExchanger {
       set(value) = intrinsic()
 
     /** The StructureSmallDirectHeatExchangeLiquidtoLiquid prefab. */
-    companion object : Prefab()
+    companion object : Prefab<DirectHeatExchanger.SmallLiquidToLiquid>()
   }
 
   /** A StructureLargeDirectHeatExchangeGastoGas. */
@@ -6545,7 +5129,7 @@ interface DirectHeatExchanger {
       set(value) = intrinsic()
 
     /** The StructureLargeDirectHeatExchangeGastoGas prefab. */
-    companion object : Prefab()
+    companion object : Prefab<DirectHeatExchanger.LargeGasToGas>()
   }
 
   /** A StructureLargeDirectHeatExchangeGastoLiquid. */
@@ -6562,7 +5146,7 @@ interface DirectHeatExchanger {
       set(value) = intrinsic()
 
     /** The StructureLargeDirectHeatExchangeGastoLiquid prefab. */
-    companion object : Prefab()
+    companion object : Prefab<DirectHeatExchanger.LargeGasToLiquid>()
   }
 
   /** A StructureLargeDirectHeatExchangeLiquidtoLiquid. */
@@ -6579,7 +5163,7 @@ interface DirectHeatExchanger {
       set(value) = intrinsic()
 
     /** The StructureLargeDirectHeatExchangeLiquidtoLiquid prefab. */
-    companion object : Prefab()
+    companion object : Prefab<DirectHeatExchanger.LargeLiquidToLiquid>()
   }
 
   /** A StructureSuperLargeDirectHeatExchangeGastoGas. */
@@ -6596,7 +5180,7 @@ interface DirectHeatExchanger {
       set(value) = intrinsic()
 
     /** The StructureSuperLargeDirectHeatExchangeGastoGas prefab. */
-    companion object : Prefab()
+    companion object : Prefab<DirectHeatExchanger.SuperLargeGasToGas>()
   }
 
   /** A StructureSuperLargeDirectHeatExchangeGastoLiquid. */
@@ -6613,7 +5197,7 @@ interface DirectHeatExchanger {
       set(value) = intrinsic()
 
     /** The StructureSuperLargeDirectHeatExchangeGastoLiquid prefab. */
-    companion object : Prefab()
+    companion object : Prefab<DirectHeatExchanger.SuperLargeGasToLiquid>()
   }
 
   /** A StructureSuperLargeDirectHeatExchangeLiquidToLiquid. */
@@ -6630,136 +5214,7 @@ interface DirectHeatExchanger {
       set(value) = intrinsic()
 
     /** The StructureSuperLargeDirectHeatExchangeLiquidToLiquid prefab. */
-    companion object : Prefab()
-  }
-}
-
-/** The DirectHeatExchanger devices on the chip's network, by prefab. */
-object DirectHeatExchangers {
-  /** The StructureSmallDirectHeatExchangeGastoGas devices on the chip's network. */
-  @PrefabName("StructureSmallDirectHeatExchangeGastoGas")
-  object SmallGasToGas {
-    /** The device on [pin], as a StructureSmallDirectHeatExchangeGastoGas. */
-    fun at(pin: Device): DirectHeatExchanger.SmallGasToGas = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<DirectHeatExchanger.SmallGasToGas>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<DirectHeatExchanger.SmallGasToGas> = intrinsic()
-  }
-
-  /** The StructureSmallDirectHeatExchangeLiquidtoGas devices on the chip's network. */
-  @PrefabName("StructureSmallDirectHeatExchangeLiquidtoGas")
-  object SmallLiquidToGas {
-    /** The device on [pin], as a StructureSmallDirectHeatExchangeLiquidtoGas. */
-    fun at(pin: Device): DirectHeatExchanger.SmallLiquidToGas = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<DirectHeatExchanger.SmallLiquidToGas>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<DirectHeatExchanger.SmallLiquidToGas> = intrinsic()
-  }
-
-  /** The StructureSmallDirectHeatExchangeLiquidtoLiquid devices on the chip's network. */
-  @PrefabName("StructureSmallDirectHeatExchangeLiquidtoLiquid")
-  object SmallLiquidToLiquid {
-    /** The device on [pin], as a StructureSmallDirectHeatExchangeLiquidtoLiquid. */
-    fun at(pin: Device): DirectHeatExchanger.SmallLiquidToLiquid = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<DirectHeatExchanger.SmallLiquidToLiquid>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<DirectHeatExchanger.SmallLiquidToLiquid> = intrinsic()
-  }
-
-  /** The StructureLargeDirectHeatExchangeGastoGas devices on the chip's network. */
-  @PrefabName("StructureLargeDirectHeatExchangeGastoGas")
-  object LargeGasToGas {
-    /** The device on [pin], as a StructureLargeDirectHeatExchangeGastoGas. */
-    fun at(pin: Device): DirectHeatExchanger.LargeGasToGas = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<DirectHeatExchanger.LargeGasToGas>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<DirectHeatExchanger.LargeGasToGas> = intrinsic()
-  }
-
-  /** The StructureLargeDirectHeatExchangeGastoLiquid devices on the chip's network. */
-  @PrefabName("StructureLargeDirectHeatExchangeGastoLiquid")
-  object LargeGasToLiquid {
-    /** The device on [pin], as a StructureLargeDirectHeatExchangeGastoLiquid. */
-    fun at(pin: Device): DirectHeatExchanger.LargeGasToLiquid = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<DirectHeatExchanger.LargeGasToLiquid>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<DirectHeatExchanger.LargeGasToLiquid> = intrinsic()
-  }
-
-  /** The StructureLargeDirectHeatExchangeLiquidtoLiquid devices on the chip's network. */
-  @PrefabName("StructureLargeDirectHeatExchangeLiquidtoLiquid")
-  object LargeLiquidToLiquid {
-    /** The device on [pin], as a StructureLargeDirectHeatExchangeLiquidtoLiquid. */
-    fun at(pin: Device): DirectHeatExchanger.LargeLiquidToLiquid = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<DirectHeatExchanger.LargeLiquidToLiquid>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<DirectHeatExchanger.LargeLiquidToLiquid> = intrinsic()
-  }
-
-  /** The StructureSuperLargeDirectHeatExchangeGastoGas devices on the chip's network. */
-  @PrefabName("StructureSuperLargeDirectHeatExchangeGastoGas")
-  object SuperLargeGasToGas {
-    /** The device on [pin], as a StructureSuperLargeDirectHeatExchangeGastoGas. */
-    fun at(pin: Device): DirectHeatExchanger.SuperLargeGasToGas = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<DirectHeatExchanger.SuperLargeGasToGas>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<DirectHeatExchanger.SuperLargeGasToGas> = intrinsic()
-  }
-
-  /** The StructureSuperLargeDirectHeatExchangeGastoLiquid devices on the chip's network. */
-  @PrefabName("StructureSuperLargeDirectHeatExchangeGastoLiquid")
-  object SuperLargeGasToLiquid {
-    /** The device on [pin], as a StructureSuperLargeDirectHeatExchangeGastoLiquid. */
-    fun at(pin: Device): DirectHeatExchanger.SuperLargeGasToLiquid = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<DirectHeatExchanger.SuperLargeGasToLiquid>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<DirectHeatExchanger.SuperLargeGasToLiquid> = intrinsic()
-  }
-
-  /** The StructureSuperLargeDirectHeatExchangeLiquidToLiquid devices on the chip's network. */
-  @PrefabName("StructureSuperLargeDirectHeatExchangeLiquidToLiquid")
-  object SuperLargeLiquidToLiquid {
-    /** The device on [pin], as a StructureSuperLargeDirectHeatExchangeLiquidToLiquid. */
-    fun at(pin: Device): DirectHeatExchanger.SuperLargeLiquidToLiquid = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<DirectHeatExchanger.SuperLargeLiquidToLiquid>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<DirectHeatExchanger.SuperLargeLiquidToLiquid> = intrinsic()
+    companion object : Prefab<DirectHeatExchanger.SuperLargeLiquidToLiquid>()
   }
 }
 
@@ -6785,7 +5240,7 @@ interface PassthroughHeatExchanger {
       set(value) = intrinsic()
 
     /** The StructurePassthroughHeatExchangerGasToGas prefab. */
-    companion object : Prefab()
+    companion object : Prefab<PassthroughHeatExchanger.GasToGas>()
   }
 
   /** A StructurePassthroughHeatExchangerGasToLiquid. */
@@ -6802,7 +5257,7 @@ interface PassthroughHeatExchanger {
       set(value) = intrinsic()
 
     /** The StructurePassthroughHeatExchangerGasToLiquid prefab. */
-    companion object : Prefab()
+    companion object : Prefab<PassthroughHeatExchanger.GasToLiquid>()
   }
 
   /** A StructurePassthroughHeatExchangerLiquidToLiquid. */
@@ -6819,52 +5274,7 @@ interface PassthroughHeatExchanger {
       set(value) = intrinsic()
 
     /** The StructurePassthroughHeatExchangerLiquidToLiquid prefab. */
-    companion object : Prefab()
-  }
-}
-
-/** The PassthroughHeatExchanger devices on the chip's network, by prefab. */
-object PassthroughHeatExchangers {
-  /** The StructurePassthroughHeatExchangerGasToGas devices on the chip's network. */
-  @PrefabName("StructurePassthroughHeatExchangerGasToGas")
-  object GasToGas {
-    /** The device on [pin], as a StructurePassthroughHeatExchangerGasToGas. */
-    fun at(pin: Device): PassthroughHeatExchanger.GasToGas = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<PassthroughHeatExchanger.GasToGas>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<PassthroughHeatExchanger.GasToGas> = intrinsic()
-  }
-
-  /** The StructurePassthroughHeatExchangerGasToLiquid devices on the chip's network. */
-  @PrefabName("StructurePassthroughHeatExchangerGasToLiquid")
-  object GasToLiquid {
-    /** The device on [pin], as a StructurePassthroughHeatExchangerGasToLiquid. */
-    fun at(pin: Device): PassthroughHeatExchanger.GasToLiquid = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<PassthroughHeatExchanger.GasToLiquid>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<PassthroughHeatExchanger.GasToLiquid> = intrinsic()
-  }
-
-  /** The StructurePassthroughHeatExchangerLiquidToLiquid devices on the chip's network. */
-  @PrefabName("StructurePassthroughHeatExchangerLiquidToLiquid")
-  object LiquidToLiquid {
-    /** The device on [pin], as a StructurePassthroughHeatExchangerLiquidToLiquid. */
-    fun at(pin: Device): PassthroughHeatExchanger.LiquidToLiquid = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<PassthroughHeatExchanger.LiquidToLiquid>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<PassthroughHeatExchanger.LiquidToLiquid> = intrinsic()
+    companion object : Prefab<PassthroughHeatExchanger.LiquidToLiquid>()
   }
 }
 
@@ -6901,7 +5311,7 @@ interface SolarPanel {
       set(value) = intrinsic()
 
     /** The StructureSolarPanel prefab. */
-    companion object : Prefab()
+    companion object : Prefab<SolarPanel.Standard>()
   }
 
   /** A StructureSolarPanel45. */
@@ -6925,7 +5335,7 @@ interface SolarPanel {
       set(value) = intrinsic()
 
     /** The StructureSolarPanel45 prefab. */
-    companion object : Prefab()
+    companion object : Prefab<SolarPanel.Angled>()
   }
 
   /** A StructureSolarPanelReinforced. */
@@ -6949,7 +5359,7 @@ interface SolarPanel {
       set(value) = intrinsic()
 
     /** The StructureSolarPanelReinforced prefab. */
-    companion object : Prefab()
+    companion object : Prefab<SolarPanel.Heavy>()
   }
 
   /** A StructureSolarPanel45Reinforced. */
@@ -6973,7 +5383,7 @@ interface SolarPanel {
       set(value) = intrinsic()
 
     /** The StructureSolarPanel45Reinforced prefab. */
-    companion object : Prefab()
+    companion object : Prefab<SolarPanel.HeavyAngled>()
   }
 
   /** A StructureSolarPanelFlat. */
@@ -6997,7 +5407,7 @@ interface SolarPanel {
       set(value) = intrinsic()
 
     /** The StructureSolarPanelFlat prefab. */
-    companion object : Prefab()
+    companion object : Prefab<SolarPanel.Flat>()
   }
 
   /** A StructureSolarPanelFlatReinforced. */
@@ -7021,7 +5431,7 @@ interface SolarPanel {
       set(value) = intrinsic()
 
     /** The StructureSolarPanelFlatReinforced prefab. */
-    companion object : Prefab()
+    companion object : Prefab<SolarPanel.HeavyFlat>()
   }
 
   /** A StructureSolarPanelDual. */
@@ -7045,7 +5455,7 @@ interface SolarPanel {
       set(value) = intrinsic()
 
     /** The StructureSolarPanelDual prefab. */
-    companion object : Prefab()
+    companion object : Prefab<SolarPanel.Dual>()
   }
 
   /** A StructureSolarPanelDualReinforced. */
@@ -7069,122 +5479,7 @@ interface SolarPanel {
       set(value) = intrinsic()
 
     /** The StructureSolarPanelDualReinforced prefab. */
-    companion object : Prefab()
-  }
-}
-
-/** The SolarPanel devices on the chip's network, by prefab. */
-object SolarPanels {
-  /** The StructureSolarPanel devices on the chip's network. */
-  @PrefabName("StructureSolarPanel")
-  object Standard {
-    /** The device on [pin], as a StructureSolarPanel. */
-    fun at(pin: Device): SolarPanel.Standard = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<SolarPanel.Standard>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<SolarPanel.Standard> = intrinsic()
-  }
-
-  /** The StructureSolarPanel45 devices on the chip's network. */
-  @PrefabName("StructureSolarPanel45")
-  object Angled {
-    /** The device on [pin], as a StructureSolarPanel45. */
-    fun at(pin: Device): SolarPanel.Angled = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<SolarPanel.Angled>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<SolarPanel.Angled> = intrinsic()
-  }
-
-  /** The StructureSolarPanelReinforced devices on the chip's network. */
-  @PrefabName("StructureSolarPanelReinforced")
-  object Heavy {
-    /** The device on [pin], as a StructureSolarPanelReinforced. */
-    fun at(pin: Device): SolarPanel.Heavy = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<SolarPanel.Heavy>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<SolarPanel.Heavy> = intrinsic()
-  }
-
-  /** The StructureSolarPanel45Reinforced devices on the chip's network. */
-  @PrefabName("StructureSolarPanel45Reinforced")
-  object HeavyAngled {
-    /** The device on [pin], as a StructureSolarPanel45Reinforced. */
-    fun at(pin: Device): SolarPanel.HeavyAngled = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<SolarPanel.HeavyAngled>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<SolarPanel.HeavyAngled> = intrinsic()
-  }
-
-  /** The StructureSolarPanelFlat devices on the chip's network. */
-  @PrefabName("StructureSolarPanelFlat")
-  object Flat {
-    /** The device on [pin], as a StructureSolarPanelFlat. */
-    fun at(pin: Device): SolarPanel.Flat = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<SolarPanel.Flat>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<SolarPanel.Flat> = intrinsic()
-  }
-
-  /** The StructureSolarPanelFlatReinforced devices on the chip's network. */
-  @PrefabName("StructureSolarPanelFlatReinforced")
-  object HeavyFlat {
-    /** The device on [pin], as a StructureSolarPanelFlatReinforced. */
-    fun at(pin: Device): SolarPanel.HeavyFlat = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<SolarPanel.HeavyFlat>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<SolarPanel.HeavyFlat> = intrinsic()
-  }
-
-  /** The StructureSolarPanelDual devices on the chip's network. */
-  @PrefabName("StructureSolarPanelDual")
-  object Dual {
-    /** The device on [pin], as a StructureSolarPanelDual. */
-    fun at(pin: Device): SolarPanel.Dual = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<SolarPanel.Dual>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<SolarPanel.Dual> = intrinsic()
-  }
-
-  /** The StructureSolarPanelDualReinforced devices on the chip's network. */
-  @PrefabName("StructureSolarPanelDualReinforced")
-  object HeavyDual {
-    /** The device on [pin], as a StructureSolarPanelDualReinforced. */
-    fun at(pin: Device): SolarPanel.HeavyDual = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<SolarPanel.HeavyDual>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<SolarPanel.HeavyDual> = intrinsic()
+    companion object : Prefab<SolarPanel.HeavyDual>()
   }
 }
 
@@ -7241,8 +5536,20 @@ interface Reprocessor {
     val slots: Slots<DataDiskSlot>
       get() = intrinsic()
 
+    /** A batch of StructureCentrifuge devices. */
+    class Batch internal constructor() : DeviceBatch<Reprocessor.Centrifuge>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureCentrifuge prefab. */
-    companion object : Prefab()
+    companion object : Prefab<Reprocessor.Centrifuge>() {
+      override val all: Reprocessor.Centrifuge.Batch
+        get() = intrinsic()
+
+      override fun named(name: String): Reprocessor.Centrifuge.Batch = intrinsic()
+    }
   }
 
   /** A StructureCombustionCentrifuge. */
@@ -7335,8 +5642,20 @@ interface Reprocessor {
     val ProgrammableChip: DataDiskSlot
       get() = intrinsic()
 
+    /** A batch of StructureCombustionCentrifuge devices. */
+    class Batch internal constructor() : DeviceBatch<Reprocessor.CombustionCentrifuge>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureCombustionCentrifuge prefab. */
-    companion object : Prefab()
+    companion object : Prefab<Reprocessor.CombustionCentrifuge>() {
+      override val all: Reprocessor.CombustionCentrifuge.Batch
+        get() = intrinsic()
+
+      override fun named(name: String): Reprocessor.CombustionCentrifuge.Batch = intrinsic()
+    }
   }
 
   /** A StructureRecycler. */
@@ -7378,70 +5697,19 @@ interface Reprocessor {
     val slots: Slots<DataDiskSlot>
       get() = intrinsic()
 
-    /** The StructureRecycler prefab. */
-    companion object : Prefab()
-  }
-}
-
-/** The Reprocessor devices on the chip's network, by prefab. */
-object Reprocessors {
-  /** The StructureCentrifuge devices on the chip's network. */
-  @PrefabName("StructureCentrifuge")
-  object Centrifuge {
-    /** The device on [pin], as a StructureCentrifuge. */
-    fun at(pin: Device): Reprocessor.Centrifuge = intrinsic()
-
-    /** Every one on the network. */
-    val all: Batch
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): Batch = intrinsic()
-
-    class Batch internal constructor() : DeviceBatch<Reprocessor.Centrifuge>() {
-      /** A slot of every one in the batch, by number. */
-      val slots: Slots<SlotBatch<DataDiskSlot>>
-        get() = intrinsic()
-    }
-  }
-
-  /** The StructureCombustionCentrifuge devices on the chip's network. */
-  @PrefabName("StructureCombustionCentrifuge")
-  object CombustionCentrifuge {
-    /** The device on [pin], as a StructureCombustionCentrifuge. */
-    fun at(pin: Device): Reprocessor.CombustionCentrifuge = intrinsic()
-
-    /** Every one on the network. */
-    val all: Batch
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): Batch = intrinsic()
-
-    class Batch internal constructor() : DeviceBatch<Reprocessor.CombustionCentrifuge>() {
-      /** A slot of every one in the batch, by number. */
-      val slots: Slots<SlotBatch<DataDiskSlot>>
-        get() = intrinsic()
-    }
-  }
-
-  /** The StructureRecycler devices on the chip's network. */
-  @PrefabName("StructureRecycler")
-  object Recycler {
-    /** The device on [pin], as a StructureRecycler. */
-    fun at(pin: Device): Reprocessor.Recycler = intrinsic()
-
-    /** Every one on the network. */
-    val all: Batch
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): Batch = intrinsic()
-
+    /** A batch of StructureRecycler devices. */
     class Batch internal constructor() : DeviceBatch<Reprocessor.Recycler>() {
       /** A slot of every one in the batch, by number. */
       val slots: Slots<SlotBatch<DataDiskSlot>>
         get() = intrinsic()
+    }
+
+    /** The StructureRecycler prefab. */
+    companion object : Prefab<Reprocessor.Recycler>() {
+      override val all: Reprocessor.Recycler.Batch
+        get() = intrinsic()
+
+      override fun named(name: String): Reprocessor.Recycler.Batch = intrinsic()
     }
   }
 }
@@ -7547,8 +5815,20 @@ interface Furnace {
     val slots: Slots<DataDiskSlot>
       get() = intrinsic()
 
+    /** A batch of StructureFurnace devices. */
+    class Batch internal constructor() : DeviceBatch<Furnace.Standard>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureFurnace prefab. */
-    companion object : Prefab()
+    companion object : Prefab<Furnace.Standard>() {
+      override val all: Furnace.Standard.Batch
+        get() = intrinsic()
+
+      override fun named(name: String): Furnace.Standard.Batch = intrinsic()
+    }
   }
 
   /** A StructureAdvancedFurnace. */
@@ -7639,50 +5919,19 @@ interface Furnace {
     val slots: Slots<DataDiskSlot>
       get() = intrinsic()
 
-    /** The StructureAdvancedFurnace prefab. */
-    companion object : Prefab()
-  }
-}
-
-/** The Furnace devices on the chip's network, by prefab. */
-object Furnaces {
-  /** The StructureFurnace devices on the chip's network. */
-  @PrefabName("StructureFurnace")
-  object Standard {
-    /** The device on [pin], as a StructureFurnace. */
-    fun at(pin: Device): Furnace.Standard = intrinsic()
-
-    /** Every one on the network. */
-    val all: Batch
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): Batch = intrinsic()
-
-    class Batch internal constructor() : DeviceBatch<Furnace.Standard>() {
-      /** A slot of every one in the batch, by number. */
-      val slots: Slots<SlotBatch<DataDiskSlot>>
-        get() = intrinsic()
-    }
-  }
-
-  /** The StructureAdvancedFurnace devices on the chip's network. */
-  @PrefabName("StructureAdvancedFurnace")
-  object Advanced {
-    /** The device on [pin], as a StructureAdvancedFurnace. */
-    fun at(pin: Device): Furnace.Advanced = intrinsic()
-
-    /** Every one on the network. */
-    val all: Batch
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): Batch = intrinsic()
-
+    /** A batch of StructureAdvancedFurnace devices. */
     class Batch internal constructor() : DeviceBatch<Furnace.Advanced>() {
       /** A slot of every one in the batch, by number. */
       val slots: Slots<SlotBatch<DataDiskSlot>>
         get() = intrinsic()
+    }
+
+    /** The StructureAdvancedFurnace prefab. */
+    companion object : Prefab<Furnace.Advanced>() {
+      override val all: Furnace.Advanced.Batch
+        get() = intrinsic()
+
+      override fun named(name: String): Furnace.Advanced.Batch = intrinsic()
     }
   }
 }
@@ -7722,8 +5971,20 @@ interface Tablet {
     val Cartridge: ItemCommonSlot
       get() = intrinsic()
 
+    /** A batch of ItemTablet devices. */
+    class Batch internal constructor() : DeviceBatch<Tablet.Standard>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<ItemCommonSlot>>
+        get() = intrinsic()
+    }
+
     /** The ItemTablet prefab. */
-    companion object : Prefab()
+    companion object : Prefab<Tablet.Standard>() {
+      override val all: Tablet.Standard.Batch
+        get() = intrinsic()
+
+      override fun named(name: String): Tablet.Standard.Batch = intrinsic()
+    }
   }
 
   /** A ItemAdvancedTablet. */
@@ -7779,50 +6040,19 @@ interface Tablet {
     val ProgrammableChip: ItemCommonSlot
       get() = intrinsic()
 
-    /** The ItemAdvancedTablet prefab. */
-    companion object : Prefab()
-  }
-}
-
-/** The Tablet devices on the chip's network, by prefab. */
-object Tablets {
-  /** The ItemTablet devices on the chip's network. */
-  @PrefabName("ItemTablet")
-  object Standard {
-    /** The device on [pin], as a ItemTablet. */
-    fun at(pin: Device): Tablet.Standard = intrinsic()
-
-    /** Every one on the network. */
-    val all: Batch
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): Batch = intrinsic()
-
-    class Batch internal constructor() : DeviceBatch<Tablet.Standard>() {
-      /** A slot of every one in the batch, by number. */
-      val slots: Slots<SlotBatch<ItemCommonSlot>>
-        get() = intrinsic()
-    }
-  }
-
-  /** The ItemAdvancedTablet devices on the chip's network. */
-  @PrefabName("ItemAdvancedTablet")
-  object Advanced {
-    /** The device on [pin], as a ItemAdvancedTablet. */
-    fun at(pin: Device): Tablet.Advanced = intrinsic()
-
-    /** Every one on the network. */
-    val all: Batch
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): Batch = intrinsic()
-
+    /** A batch of ItemAdvancedTablet devices. */
     class Batch internal constructor() : DeviceBatch<Tablet.Advanced>() {
       /** A slot of every one in the batch, by number. */
       val slots: Slots<SlotBatch<ItemCommonSlot>>
         get() = intrinsic()
+    }
+
+    /** The ItemAdvancedTablet prefab. */
+    companion object : Prefab<Tablet.Advanced>() {
+      override val all: Tablet.Advanced.Batch
+        get() = intrinsic()
+
+      override fun named(name: String): Tablet.Advanced.Batch = intrinsic()
     }
   }
 }
@@ -7852,8 +6082,20 @@ interface SDBHopper {
     val slots: Slots<DataDiskSlot>
       get() = intrinsic()
 
+    /** A batch of StructureSDBHopper devices. */
+    class Batch internal constructor() : DeviceBatch<SDBHopper.Standard>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureSDBHopper prefab. */
-    companion object : Prefab()
+    companion object : Prefab<SDBHopper.Standard>() {
+      override val all: SDBHopper.Standard.Batch
+        get() = intrinsic()
+
+      override fun named(name: String): SDBHopper.Standard.Batch = intrinsic()
+    }
   }
 
   /** A StructureSDBHopperAdvanced. */
@@ -7879,50 +6121,19 @@ interface SDBHopper {
     val slots: Slots<DataDiskSlot>
       get() = intrinsic()
 
-    /** The StructureSDBHopperAdvanced prefab. */
-    companion object : Prefab()
-  }
-}
-
-/** The SDBHopper devices on the chip's network, by prefab. */
-object SDBHoppers {
-  /** The StructureSDBHopper devices on the chip's network. */
-  @PrefabName("StructureSDBHopper")
-  object Standard {
-    /** The device on [pin], as a StructureSDBHopper. */
-    fun at(pin: Device): SDBHopper.Standard = intrinsic()
-
-    /** Every one on the network. */
-    val all: Batch
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): Batch = intrinsic()
-
-    class Batch internal constructor() : DeviceBatch<SDBHopper.Standard>() {
-      /** A slot of every one in the batch, by number. */
-      val slots: Slots<SlotBatch<DataDiskSlot>>
-        get() = intrinsic()
-    }
-  }
-
-  /** The StructureSDBHopperAdvanced devices on the chip's network. */
-  @PrefabName("StructureSDBHopperAdvanced")
-  object Advanced {
-    /** The device on [pin], as a StructureSDBHopperAdvanced. */
-    fun at(pin: Device): SDBHopper.Advanced = intrinsic()
-
-    /** Every one on the network. */
-    val all: Batch
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): Batch = intrinsic()
-
+    /** A batch of StructureSDBHopperAdvanced devices. */
     class Batch internal constructor() : DeviceBatch<SDBHopper.Advanced>() {
       /** A slot of every one in the batch, by number. */
       val slots: Slots<SlotBatch<DataDiskSlot>>
         get() = intrinsic()
+    }
+
+    /** The StructureSDBHopperAdvanced prefab. */
+    companion object : Prefab<SDBHopper.Advanced>() {
+      override val all: SDBHopper.Advanced.Batch
+        get() = intrinsic()
+
+      override fun named(name: String): SDBHopper.Advanced.Batch = intrinsic()
     }
   }
 }
@@ -7967,8 +6178,20 @@ interface Bench {
     val Appliance2: ApplianceSlot
       get() = intrinsic()
 
+    /** A batch of StructureBench devices. */
+    class Batch internal constructor() : DeviceBatch<Bench.Powered>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<ApplianceSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureBench prefab. */
-    companion object : Prefab()
+    companion object : Prefab<Bench.Powered>() {
+      override val all: Bench.Powered.Batch
+        get() = intrinsic()
+
+      override fun named(name: String): Bench.Powered.Batch = intrinsic()
+    }
   }
 
   /** A StructureBench1. */
@@ -8001,8 +6224,20 @@ interface Bench {
     val Appliance2: ApplianceSlot
       get() = intrinsic()
 
+    /** A batch of StructureBench1 devices. */
+    class Batch internal constructor() : DeviceBatch<Bench.CounterStyle>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<ApplianceSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureBench1 prefab. */
-    companion object : Prefab()
+    companion object : Prefab<Bench.CounterStyle>() {
+      override val all: Bench.CounterStyle.Batch
+        get() = intrinsic()
+
+      override fun named(name: String): Bench.CounterStyle.Batch = intrinsic()
+    }
   }
 
   /** A StructureBench2. */
@@ -8035,8 +6270,20 @@ interface Bench {
     val Appliance2: ApplianceSlot
       get() = intrinsic()
 
+    /** A batch of StructureBench2 devices. */
+    class Batch internal constructor() : DeviceBatch<Bench.HighTechStyle>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<ApplianceSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureBench2 prefab. */
-    companion object : Prefab()
+    companion object : Prefab<Bench.HighTechStyle>() {
+      override val all: Bench.HighTechStyle.Batch
+        get() = intrinsic()
+
+      override fun named(name: String): Bench.HighTechStyle.Batch = intrinsic()
+    }
   }
 
   /** A StructureBench3. */
@@ -8069,8 +6316,20 @@ interface Bench {
     val Appliance2: ApplianceSlot
       get() = intrinsic()
 
+    /** A batch of StructureBench3 devices. */
+    class Batch internal constructor() : DeviceBatch<Bench.FrameStyle>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<ApplianceSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureBench3 prefab. */
-    companion object : Prefab()
+    companion object : Prefab<Bench.FrameStyle>() {
+      override val all: Bench.FrameStyle.Batch
+        get() = intrinsic()
+
+      override fun named(name: String): Bench.FrameStyle.Batch = intrinsic()
+    }
   }
 
   /** A StructureBench4. */
@@ -8103,110 +6362,19 @@ interface Bench {
     val Appliance2: ApplianceSlot
       get() = intrinsic()
 
-    /** The StructureBench4 prefab. */
-    companion object : Prefab()
-  }
-}
-
-/** The Bench devices on the chip's network, by prefab. */
-object Benches {
-  /** The StructureBench devices on the chip's network. */
-  @PrefabName("StructureBench")
-  object Powered {
-    /** The device on [pin], as a StructureBench. */
-    fun at(pin: Device): Bench.Powered = intrinsic()
-
-    /** Every one on the network. */
-    val all: Batch
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): Batch = intrinsic()
-
-    class Batch internal constructor() : DeviceBatch<Bench.Powered>() {
-      /** A slot of every one in the batch, by number. */
-      val slots: Slots<SlotBatch<ApplianceSlot>>
-        get() = intrinsic()
-    }
-  }
-
-  /** The StructureBench1 devices on the chip's network. */
-  @PrefabName("StructureBench1")
-  object CounterStyle {
-    /** The device on [pin], as a StructureBench1. */
-    fun at(pin: Device): Bench.CounterStyle = intrinsic()
-
-    /** Every one on the network. */
-    val all: Batch
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): Batch = intrinsic()
-
-    class Batch internal constructor() : DeviceBatch<Bench.CounterStyle>() {
-      /** A slot of every one in the batch, by number. */
-      val slots: Slots<SlotBatch<ApplianceSlot>>
-        get() = intrinsic()
-    }
-  }
-
-  /** The StructureBench2 devices on the chip's network. */
-  @PrefabName("StructureBench2")
-  object HighTechStyle {
-    /** The device on [pin], as a StructureBench2. */
-    fun at(pin: Device): Bench.HighTechStyle = intrinsic()
-
-    /** Every one on the network. */
-    val all: Batch
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): Batch = intrinsic()
-
-    class Batch internal constructor() : DeviceBatch<Bench.HighTechStyle>() {
-      /** A slot of every one in the batch, by number. */
-      val slots: Slots<SlotBatch<ApplianceSlot>>
-        get() = intrinsic()
-    }
-  }
-
-  /** The StructureBench3 devices on the chip's network. */
-  @PrefabName("StructureBench3")
-  object FrameStyle {
-    /** The device on [pin], as a StructureBench3. */
-    fun at(pin: Device): Bench.FrameStyle = intrinsic()
-
-    /** Every one on the network. */
-    val all: Batch
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): Batch = intrinsic()
-
-    class Batch internal constructor() : DeviceBatch<Bench.FrameStyle>() {
-      /** A slot of every one in the batch, by number. */
-      val slots: Slots<SlotBatch<ApplianceSlot>>
-        get() = intrinsic()
-    }
-  }
-
-  /** The StructureBench4 devices on the chip's network. */
-  @PrefabName("StructureBench4")
-  object WorkbenchStyle {
-    /** The device on [pin], as a StructureBench4. */
-    fun at(pin: Device): Bench.WorkbenchStyle = intrinsic()
-
-    /** Every one on the network. */
-    val all: Batch
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): Batch = intrinsic()
-
+    /** A batch of StructureBench4 devices. */
     class Batch internal constructor() : DeviceBatch<Bench.WorkbenchStyle>() {
       /** A slot of every one in the batch, by number. */
       val slots: Slots<SlotBatch<ApplianceSlot>>
         get() = intrinsic()
+    }
+
+    /** The StructureBench4 prefab. */
+    companion object : Prefab<Bench.WorkbenchStyle>() {
+      override val all: Bench.WorkbenchStyle.Batch
+        get() = intrinsic()
+
+      override fun named(name: String): Bench.WorkbenchStyle.Batch = intrinsic()
     }
   }
 }
@@ -8232,8 +6400,20 @@ interface Locker {
     val slots: Slots<DataDiskSlot>
       get() = intrinsic()
 
+    /** A batch of StructureStorageLocker devices. */
+    class Batch internal constructor() : DeviceBatch<Locker.Standard>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureStorageLocker prefab. */
-    companion object : Prefab()
+    companion object : Prefab<Locker.Standard>() {
+      override val all: Locker.Standard.Batch
+        get() = intrinsic()
+
+      override fun named(name: String): Locker.Standard.Batch = intrinsic()
+    }
   }
 
   /** A StructureLockerSmall. */
@@ -8251,8 +6431,20 @@ interface Locker {
     val slots: Slots<DataDiskSlot>
       get() = intrinsic()
 
+    /** A batch of StructureLockerSmall devices. */
+    class Batch internal constructor() : DeviceBatch<Locker.Small>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureLockerSmall prefab. */
-    companion object : Prefab()
+    companion object : Prefab<Locker.Small>() {
+      override val all: Locker.Small.Batch
+        get() = intrinsic()
+
+      override fun named(name: String): Locker.Small.Batch = intrinsic()
+    }
   }
 
   /** A StructureCornerLocker. */
@@ -8270,8 +6462,20 @@ interface Locker {
     val slots: Slots<DataDiskSlot>
       get() = intrinsic()
 
+    /** A batch of StructureCornerLocker devices. */
+    class Batch internal constructor() : DeviceBatch<Locker.Corner>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureCornerLocker prefab. */
-    companion object : Prefab()
+    companion object : Prefab<Locker.Corner>() {
+      override val all: Locker.Corner.Batch
+        get() = intrinsic()
+
+      override fun named(name: String): Locker.Corner.Batch = intrinsic()
+    }
   }
 
   /** A StructureShortLocker. */
@@ -8289,8 +6493,20 @@ interface Locker {
     val slots: Slots<DataDiskSlot>
       get() = intrinsic()
 
+    /** A batch of StructureShortLocker devices. */
+    class Batch internal constructor() : DeviceBatch<Locker.Short>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureShortLocker prefab. */
-    companion object : Prefab()
+    companion object : Prefab<Locker.Short>() {
+      override val all: Locker.Short.Batch
+        get() = intrinsic()
+
+      override fun named(name: String): Locker.Short.Batch = intrinsic()
+    }
   }
 
   /** A StructureShortCornerLocker. */
@@ -8308,8 +6524,20 @@ interface Locker {
     val slots: Slots<DataDiskSlot>
       get() = intrinsic()
 
+    /** A batch of StructureShortCornerLocker devices. */
+    class Batch internal constructor() : DeviceBatch<Locker.ShortCorner>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureShortCornerLocker prefab. */
-    companion object : Prefab()
+    companion object : Prefab<Locker.ShortCorner>() {
+      override val all: Locker.ShortCorner.Batch
+        get() = intrinsic()
+
+      override fun named(name: String): Locker.ShortCorner.Batch = intrinsic()
+    }
   }
 
   /** A StructureOverheadShortLocker. */
@@ -8327,8 +6555,20 @@ interface Locker {
     val slots: Slots<DataDiskSlot>
       get() = intrinsic()
 
+    /** A batch of StructureOverheadShortLocker devices. */
+    class Batch internal constructor() : DeviceBatch<Locker.Overhead>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureOverheadShortLocker prefab. */
-    companion object : Prefab()
+    companion object : Prefab<Locker.Overhead>() {
+      override val all: Locker.Overhead.Batch
+        get() = intrinsic()
+
+      override fun named(name: String): Locker.Overhead.Batch = intrinsic()
+    }
   }
 
   /** A StructureOverheadShortCornerLocker. */
@@ -8346,150 +6586,19 @@ interface Locker {
     val slots: Slots<DataDiskSlot>
       get() = intrinsic()
 
-    /** The StructureOverheadShortCornerLocker prefab. */
-    companion object : Prefab()
-  }
-}
-
-/** The Locker devices on the chip's network, by prefab. */
-object Lockers {
-  /** The StructureStorageLocker devices on the chip's network. */
-  @PrefabName("StructureStorageLocker")
-  object Standard {
-    /** The device on [pin], as a StructureStorageLocker. */
-    fun at(pin: Device): Locker.Standard = intrinsic()
-
-    /** Every one on the network. */
-    val all: Batch
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): Batch = intrinsic()
-
-    class Batch internal constructor() : DeviceBatch<Locker.Standard>() {
-      /** A slot of every one in the batch, by number. */
-      val slots: Slots<SlotBatch<DataDiskSlot>>
-        get() = intrinsic()
-    }
-  }
-
-  /** The StructureLockerSmall devices on the chip's network. */
-  @PrefabName("StructureLockerSmall")
-  object Small {
-    /** The device on [pin], as a StructureLockerSmall. */
-    fun at(pin: Device): Locker.Small = intrinsic()
-
-    /** Every one on the network. */
-    val all: Batch
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): Batch = intrinsic()
-
-    class Batch internal constructor() : DeviceBatch<Locker.Small>() {
-      /** A slot of every one in the batch, by number. */
-      val slots: Slots<SlotBatch<DataDiskSlot>>
-        get() = intrinsic()
-    }
-  }
-
-  /** The StructureCornerLocker devices on the chip's network. */
-  @PrefabName("StructureCornerLocker")
-  object Corner {
-    /** The device on [pin], as a StructureCornerLocker. */
-    fun at(pin: Device): Locker.Corner = intrinsic()
-
-    /** Every one on the network. */
-    val all: Batch
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): Batch = intrinsic()
-
-    class Batch internal constructor() : DeviceBatch<Locker.Corner>() {
-      /** A slot of every one in the batch, by number. */
-      val slots: Slots<SlotBatch<DataDiskSlot>>
-        get() = intrinsic()
-    }
-  }
-
-  /** The StructureShortLocker devices on the chip's network. */
-  @PrefabName("StructureShortLocker")
-  object Short {
-    /** The device on [pin], as a StructureShortLocker. */
-    fun at(pin: Device): Locker.Short = intrinsic()
-
-    /** Every one on the network. */
-    val all: Batch
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): Batch = intrinsic()
-
-    class Batch internal constructor() : DeviceBatch<Locker.Short>() {
-      /** A slot of every one in the batch, by number. */
-      val slots: Slots<SlotBatch<DataDiskSlot>>
-        get() = intrinsic()
-    }
-  }
-
-  /** The StructureShortCornerLocker devices on the chip's network. */
-  @PrefabName("StructureShortCornerLocker")
-  object ShortCorner {
-    /** The device on [pin], as a StructureShortCornerLocker. */
-    fun at(pin: Device): Locker.ShortCorner = intrinsic()
-
-    /** Every one on the network. */
-    val all: Batch
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): Batch = intrinsic()
-
-    class Batch internal constructor() : DeviceBatch<Locker.ShortCorner>() {
-      /** A slot of every one in the batch, by number. */
-      val slots: Slots<SlotBatch<DataDiskSlot>>
-        get() = intrinsic()
-    }
-  }
-
-  /** The StructureOverheadShortLocker devices on the chip's network. */
-  @PrefabName("StructureOverheadShortLocker")
-  object Overhead {
-    /** The device on [pin], as a StructureOverheadShortLocker. */
-    fun at(pin: Device): Locker.Overhead = intrinsic()
-
-    /** Every one on the network. */
-    val all: Batch
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): Batch = intrinsic()
-
-    class Batch internal constructor() : DeviceBatch<Locker.Overhead>() {
-      /** A slot of every one in the batch, by number. */
-      val slots: Slots<SlotBatch<DataDiskSlot>>
-        get() = intrinsic()
-    }
-  }
-
-  /** The StructureOverheadShortCornerLocker devices on the chip's network. */
-  @PrefabName("StructureOverheadShortCornerLocker")
-  object OverheadCorner {
-    /** The device on [pin], as a StructureOverheadShortCornerLocker. */
-    fun at(pin: Device): Locker.OverheadCorner = intrinsic()
-
-    /** Every one on the network. */
-    val all: Batch
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): Batch = intrinsic()
-
+    /** A batch of StructureOverheadShortCornerLocker devices. */
     class Batch internal constructor() : DeviceBatch<Locker.OverheadCorner>() {
       /** A slot of every one in the batch, by number. */
       val slots: Slots<SlotBatch<DataDiskSlot>>
         get() = intrinsic()
+    }
+
+    /** The StructureOverheadShortCornerLocker prefab. */
+    companion object : Prefab<Locker.OverheadCorner>() {
+      override val all: Locker.OverheadCorner.Batch
+        get() = intrinsic()
+
+      override fun named(name: String): Locker.OverheadCorner.Batch = intrinsic()
     }
   }
 }
@@ -8577,8 +6686,20 @@ interface AreaPowerControl {
     val DataDisk: DataDiskSlot
       get() = intrinsic()
 
+    /** A batch of StructureAreaPowerControl devices. */
+    class Batch internal constructor() : DeviceBatch<AreaPowerControl.Standard>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<CommonSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureAreaPowerControl prefab. */
-    companion object : Prefab()
+    companion object : Prefab<AreaPowerControl.Standard>() {
+      override val all: AreaPowerControl.Standard.Batch
+        get() = intrinsic()
+
+      override fun named(name: String): AreaPowerControl.Standard.Batch = intrinsic()
+    }
   }
 
   /** A StructureAreaPowerControlReversed. */
@@ -8638,50 +6759,19 @@ interface AreaPowerControl {
     val DataDisk: DataDiskSlot
       get() = intrinsic()
 
-    /** The StructureAreaPowerControlReversed prefab. */
-    companion object : Prefab()
-  }
-}
-
-/** The AreaPowerControl devices on the chip's network, by prefab. */
-object AreaPowerControls {
-  /** The StructureAreaPowerControl devices on the chip's network. */
-  @PrefabName("StructureAreaPowerControl")
-  object Standard {
-    /** The device on [pin], as a StructureAreaPowerControl. */
-    fun at(pin: Device): AreaPowerControl.Standard = intrinsic()
-
-    /** Every one on the network. */
-    val all: Batch
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): Batch = intrinsic()
-
-    class Batch internal constructor() : DeviceBatch<AreaPowerControl.Standard>() {
-      /** A slot of every one in the batch, by number. */
-      val slots: Slots<SlotBatch<CommonSlot>>
-        get() = intrinsic()
-    }
-  }
-
-  /** The StructureAreaPowerControlReversed devices on the chip's network. */
-  @PrefabName("StructureAreaPowerControlReversed")
-  object Reversed {
-    /** The device on [pin], as a StructureAreaPowerControlReversed. */
-    fun at(pin: Device): AreaPowerControl.Reversed = intrinsic()
-
-    /** Every one on the network. */
-    val all: Batch
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): Batch = intrinsic()
-
+    /** A batch of StructureAreaPowerControlReversed devices. */
     class Batch internal constructor() : DeviceBatch<AreaPowerControl.Reversed>() {
       /** A slot of every one in the batch, by number. */
       val slots: Slots<SlotBatch<CommonSlot>>
         get() = intrinsic()
+    }
+
+    /** The StructureAreaPowerControlReversed prefab. */
+    companion object : Prefab<AreaPowerControl.Reversed>() {
+      override val all: AreaPowerControl.Reversed.Batch
+        get() = intrinsic()
+
+      override fun named(name: String): AreaPowerControl.Reversed.Batch = intrinsic()
     }
   }
 }
@@ -8738,8 +6828,20 @@ interface Console {
     val Circuitboard: CircuitboardSlot
       get() = intrinsic()
 
+    /** A batch of StructureConsole devices. */
+    class Batch internal constructor() : DeviceBatch<Console.Standard>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<CircuitboardSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureConsole prefab. */
-    companion object : Prefab()
+    companion object : Prefab<Console.Standard>() {
+      override val all: Console.Standard.Batch
+        get() = intrinsic()
+
+      override fun named(name: String): Console.Standard.Batch = intrinsic()
+    }
   }
 
   /** A StructureConsoleDual. */
@@ -8778,8 +6880,20 @@ interface Console {
     val Circuitboard: CircuitboardSlot
       get() = intrinsic()
 
+    /** A batch of StructureConsoleDual devices. */
+    class Batch internal constructor() : DeviceBatch<Console.Dual>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<CircuitboardSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureConsoleDual prefab. */
-    companion object : Prefab()
+    companion object : Prefab<Console.Dual>() {
+      override val all: Console.Dual.Batch
+        get() = intrinsic()
+
+      override fun named(name: String): Console.Dual.Batch = intrinsic()
+    }
   }
 
   /** A StructureConsoleMonitor. */
@@ -8818,70 +6932,19 @@ interface Console {
     val Circuitboard: CircuitboardSlot
       get() = intrinsic()
 
-    /** The StructureConsoleMonitor prefab. */
-    companion object : Prefab()
-  }
-}
-
-/** The Console devices on the chip's network, by prefab. */
-object Consoles {
-  /** The StructureConsole devices on the chip's network. */
-  @PrefabName("StructureConsole")
-  object Standard {
-    /** The device on [pin], as a StructureConsole. */
-    fun at(pin: Device): Console.Standard = intrinsic()
-
-    /** Every one on the network. */
-    val all: Batch
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): Batch = intrinsic()
-
-    class Batch internal constructor() : DeviceBatch<Console.Standard>() {
-      /** A slot of every one in the batch, by number. */
-      val slots: Slots<SlotBatch<CircuitboardSlot>>
-        get() = intrinsic()
-    }
-  }
-
-  /** The StructureConsoleDual devices on the chip's network. */
-  @PrefabName("StructureConsoleDual")
-  object Dual {
-    /** The device on [pin], as a StructureConsoleDual. */
-    fun at(pin: Device): Console.Dual = intrinsic()
-
-    /** Every one on the network. */
-    val all: Batch
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): Batch = intrinsic()
-
-    class Batch internal constructor() : DeviceBatch<Console.Dual>() {
-      /** A slot of every one in the batch, by number. */
-      val slots: Slots<SlotBatch<CircuitboardSlot>>
-        get() = intrinsic()
-    }
-  }
-
-  /** The StructureConsoleMonitor devices on the chip's network. */
-  @PrefabName("StructureConsoleMonitor")
-  object Monitor {
-    /** The device on [pin], as a StructureConsoleMonitor. */
-    fun at(pin: Device): Console.Monitor = intrinsic()
-
-    /** Every one on the network. */
-    val all: Batch
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): Batch = intrinsic()
-
+    /** A batch of StructureConsoleMonitor devices. */
     class Batch internal constructor() : DeviceBatch<Console.Monitor>() {
       /** A slot of every one in the batch, by number. */
       val slots: Slots<SlotBatch<CircuitboardSlot>>
         get() = intrinsic()
+    }
+
+    /** The StructureConsoleMonitor prefab. */
+    companion object : Prefab<Console.Monitor>() {
+      override val all: Console.Monitor.Batch
+        get() = intrinsic()
+
+      override fun named(name: String): Console.Monitor.Batch = intrinsic()
     }
   }
 }
@@ -8914,7 +6977,7 @@ interface WallLight {
       get() = intrinsic()
 
     /** The StructureWallLight prefab. */
-    companion object : Prefab()
+    companion object : Prefab<WallLight.Standard>()
   }
 
   /** A StructureLightLong. */
@@ -8935,7 +6998,7 @@ interface WallLight {
       get() = intrinsic()
 
     /** The StructureLightLong prefab. */
-    companion object : Prefab()
+    companion object : Prefab<WallLight.Long>()
   }
 
   /** A StructureLightLongAngled. */
@@ -8956,7 +7019,7 @@ interface WallLight {
       get() = intrinsic()
 
     /** The StructureLightLongAngled prefab. */
-    companion object : Prefab()
+    companion object : Prefab<WallLight.LongAngled>()
   }
 
   /** A StructureLightLongWide. */
@@ -8977,7 +7040,7 @@ interface WallLight {
       get() = intrinsic()
 
     /** The StructureLightLongWide prefab. */
-    companion object : Prefab()
+    companion object : Prefab<WallLight.LongWide>()
   }
 
   /** A StructureWallLightBattery. */
@@ -9006,86 +7069,19 @@ interface WallLight {
     val Battery: BatterySlot
       get() = intrinsic()
 
-    /** The StructureWallLightBattery prefab. */
-    companion object : Prefab()
-  }
-}
-
-/** The WallLight devices on the chip's network, by prefab. */
-object WallLights {
-  /** The StructureWallLight devices on the chip's network. */
-  @PrefabName("StructureWallLight")
-  object Standard {
-    /** The device on [pin], as a StructureWallLight. */
-    fun at(pin: Device): WallLight.Standard = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<WallLight.Standard>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<WallLight.Standard> = intrinsic()
-  }
-
-  /** The StructureLightLong devices on the chip's network. */
-  @PrefabName("StructureLightLong")
-  object Long {
-    /** The device on [pin], as a StructureLightLong. */
-    fun at(pin: Device): WallLight.Long = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<WallLight.Long>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<WallLight.Long> = intrinsic()
-  }
-
-  /** The StructureLightLongAngled devices on the chip's network. */
-  @PrefabName("StructureLightLongAngled")
-  object LongAngled {
-    /** The device on [pin], as a StructureLightLongAngled. */
-    fun at(pin: Device): WallLight.LongAngled = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<WallLight.LongAngled>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<WallLight.LongAngled> = intrinsic()
-  }
-
-  /** The StructureLightLongWide devices on the chip's network. */
-  @PrefabName("StructureLightLongWide")
-  object LongWide {
-    /** The device on [pin], as a StructureLightLongWide. */
-    fun at(pin: Device): WallLight.LongWide = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<WallLight.LongWide>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<WallLight.LongWide> = intrinsic()
-  }
-
-  /** The StructureWallLightBattery devices on the chip's network. */
-  @PrefabName("StructureWallLightBattery")
-  object Battery {
-    /** The device on [pin], as a StructureWallLightBattery. */
-    fun at(pin: Device): WallLight.Battery = intrinsic()
-
-    /** Every one on the network. */
-    val all: Batch
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): Batch = intrinsic()
-
+    /** A batch of StructureWallLightBattery devices. */
     class Batch internal constructor() : DeviceBatch<WallLight.Battery>() {
       /** A slot of every one in the batch, by number. */
       val slots: Slots<SlotBatch<BatterySlot>>
         get() = intrinsic()
+    }
+
+    /** The StructureWallLightBattery prefab. */
+    companion object : Prefab<WallLight.Battery>() {
+      override val all: WallLight.Battery.Batch
+        get() = intrinsic()
+
+      override fun named(name: String): WallLight.Battery.Batch = intrinsic()
     }
   }
 }
@@ -9142,8 +7138,20 @@ interface Miner {
     val slots: Slots<DataDiskSlot>
       get() = intrinsic()
 
+    /** A batch of StructureAutoMinerSmall devices. */
+    class Batch internal constructor() : DeviceBatch<Miner.AutominerSmall>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureAutoMinerSmall prefab. */
-    companion object : Prefab()
+    companion object : Prefab<Miner.AutominerSmall>() {
+      override val all: Miner.AutominerSmall.Batch
+        get() = intrinsic()
+
+      override fun named(name: String): Miner.AutominerSmall.Batch = intrinsic()
+    }
   }
 
   /** A StructureDeepMiner. */
@@ -9188,8 +7196,20 @@ interface Miner {
     val slots: Slots<DataDiskSlot>
       get() = intrinsic()
 
+    /** A batch of StructureDeepMiner devices. */
+    class Batch internal constructor() : DeviceBatch<Miner.Deep>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureDeepMiner prefab. */
-    companion object : Prefab()
+    companion object : Prefab<Miner.Deep>() {
+      override val all: Miner.Deep.Batch
+        get() = intrinsic()
+
+      override fun named(name: String): Miner.Deep.Batch = intrinsic()
+    }
   }
 
   /** A StructureCombustionDeepMiner. */
@@ -9279,8 +7299,20 @@ interface Miner {
     val ProgrammableChip: DataDiskSlot
       get() = intrinsic()
 
+    /** A batch of StructureCombustionDeepMiner devices. */
+    class Batch internal constructor() : DeviceBatch<Miner.CombustionDeep>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureCombustionDeepMiner prefab. */
-    companion object : Prefab()
+    companion object : Prefab<Miner.CombustionDeep>() {
+      override val all: Miner.CombustionDeep.Batch
+        get() = intrinsic()
+
+      override fun named(name: String): Miner.CombustionDeep.Batch = intrinsic()
+    }
   }
 
   /** A StructureHorizontalAutoMiner. */
@@ -9327,8 +7359,20 @@ interface Miner {
     val slots: Slots<DataDiskSlot>
       get() = intrinsic()
 
+    /** A batch of StructureHorizontalAutoMiner devices. */
+    class Batch internal constructor() : DeviceBatch<Miner.Ogre>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureHorizontalAutoMiner prefab. */
-    companion object : Prefab()
+    companion object : Prefab<Miner.Ogre>() {
+      override val all: Miner.Ogre.Batch
+        get() = intrinsic()
+
+      override fun named(name: String): Miner.Ogre.Batch = intrinsic()
+    }
   }
 
   /** A StructureRocketMiner. */
@@ -9378,110 +7422,19 @@ interface Miner {
     val DrillHeadSlot: DataDiskSlot
       get() = intrinsic()
 
-    /** The StructureRocketMiner prefab. */
-    companion object : Prefab()
-  }
-}
-
-/** The Miner devices on the chip's network, by prefab. */
-object Miners {
-  /** The StructureAutoMinerSmall devices on the chip's network. */
-  @PrefabName("StructureAutoMinerSmall")
-  object AutominerSmall {
-    /** The device on [pin], as a StructureAutoMinerSmall. */
-    fun at(pin: Device): Miner.AutominerSmall = intrinsic()
-
-    /** Every one on the network. */
-    val all: Batch
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): Batch = intrinsic()
-
-    class Batch internal constructor() : DeviceBatch<Miner.AutominerSmall>() {
-      /** A slot of every one in the batch, by number. */
-      val slots: Slots<SlotBatch<DataDiskSlot>>
-        get() = intrinsic()
-    }
-  }
-
-  /** The StructureDeepMiner devices on the chip's network. */
-  @PrefabName("StructureDeepMiner")
-  object Deep {
-    /** The device on [pin], as a StructureDeepMiner. */
-    fun at(pin: Device): Miner.Deep = intrinsic()
-
-    /** Every one on the network. */
-    val all: Batch
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): Batch = intrinsic()
-
-    class Batch internal constructor() : DeviceBatch<Miner.Deep>() {
-      /** A slot of every one in the batch, by number. */
-      val slots: Slots<SlotBatch<DataDiskSlot>>
-        get() = intrinsic()
-    }
-  }
-
-  /** The StructureCombustionDeepMiner devices on the chip's network. */
-  @PrefabName("StructureCombustionDeepMiner")
-  object CombustionDeep {
-    /** The device on [pin], as a StructureCombustionDeepMiner. */
-    fun at(pin: Device): Miner.CombustionDeep = intrinsic()
-
-    /** Every one on the network. */
-    val all: Batch
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): Batch = intrinsic()
-
-    class Batch internal constructor() : DeviceBatch<Miner.CombustionDeep>() {
-      /** A slot of every one in the batch, by number. */
-      val slots: Slots<SlotBatch<DataDiskSlot>>
-        get() = intrinsic()
-    }
-  }
-
-  /** The StructureHorizontalAutoMiner devices on the chip's network. */
-  @PrefabName("StructureHorizontalAutoMiner")
-  object Ogre {
-    /** The device on [pin], as a StructureHorizontalAutoMiner. */
-    fun at(pin: Device): Miner.Ogre = intrinsic()
-
-    /** Every one on the network. */
-    val all: Batch
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): Batch = intrinsic()
-
-    class Batch internal constructor() : DeviceBatch<Miner.Ogre>() {
-      /** A slot of every one in the batch, by number. */
-      val slots: Slots<SlotBatch<DataDiskSlot>>
-        get() = intrinsic()
-    }
-  }
-
-  /** The StructureRocketMiner devices on the chip's network. */
-  @PrefabName("StructureRocketMiner")
-  object Rocket {
-    /** The device on [pin], as a StructureRocketMiner. */
-    fun at(pin: Device): Miner.Rocket = intrinsic()
-
-    /** Every one on the network. */
-    val all: Batch
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): Batch = intrinsic()
-
+    /** A batch of StructureRocketMiner devices. */
     class Batch internal constructor() : DeviceBatch<Miner.Rocket>() {
       /** A slot of every one in the batch, by number. */
       val slots: Slots<SlotBatch<DataDiskSlot>>
         get() = intrinsic()
+    }
+
+    /** The StructureRocketMiner prefab. */
+    companion object : Prefab<Miner.Rocket>() {
+      override val all: Miner.Rocket.Batch
+        get() = intrinsic()
+
+      override fun named(name: String): Miner.Rocket.Batch = intrinsic()
     }
   }
 }
@@ -9528,8 +7481,20 @@ interface MiningDrill {
     val Battery: ItemBatterySlot
       get() = intrinsic()
 
+    /** A batch of ItemMiningDrill devices. */
+    class Batch internal constructor() : DeviceBatch<MiningDrill.Standard>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<ItemBatterySlot>>
+        get() = intrinsic()
+    }
+
     /** The ItemMiningDrill prefab. */
-    companion object : Prefab()
+    companion object : Prefab<MiningDrill.Standard>() {
+      override val all: MiningDrill.Standard.Batch
+        get() = intrinsic()
+
+      override fun named(name: String): MiningDrill.Standard.Batch = intrinsic()
+    }
   }
 
   /** A ItemMiningDrillHeavy. */
@@ -9562,8 +7527,20 @@ interface MiningDrill {
     val Battery: ItemBatterySlot
       get() = intrinsic()
 
+    /** A batch of ItemMiningDrillHeavy devices. */
+    class Batch internal constructor() : DeviceBatch<MiningDrill.Heavy>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<ItemBatterySlot>>
+        get() = intrinsic()
+    }
+
     /** The ItemMiningDrillHeavy prefab. */
-    companion object : Prefab()
+    companion object : Prefab<MiningDrill.Heavy>() {
+      override val all: MiningDrill.Heavy.Batch
+        get() = intrinsic()
+
+      override fun named(name: String): MiningDrill.Heavy.Batch = intrinsic()
+    }
   }
 
   /** A ItemMKIIMiningDrill. */
@@ -9596,70 +7573,19 @@ interface MiningDrill {
     val Battery: ItemBatterySlot
       get() = intrinsic()
 
-    /** The ItemMKIIMiningDrill prefab. */
-    companion object : Prefab()
-  }
-}
-
-/** The MiningDrill devices on the chip's network, by prefab. */
-object MiningDrills {
-  /** The ItemMiningDrill devices on the chip's network. */
-  @PrefabName("ItemMiningDrill")
-  object Standard {
-    /** The device on [pin], as a ItemMiningDrill. */
-    fun at(pin: Device): MiningDrill.Standard = intrinsic()
-
-    /** Every one on the network. */
-    val all: Batch
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): Batch = intrinsic()
-
-    class Batch internal constructor() : DeviceBatch<MiningDrill.Standard>() {
-      /** A slot of every one in the batch, by number. */
-      val slots: Slots<SlotBatch<ItemBatterySlot>>
-        get() = intrinsic()
-    }
-  }
-
-  /** The ItemMiningDrillHeavy devices on the chip's network. */
-  @PrefabName("ItemMiningDrillHeavy")
-  object Heavy {
-    /** The device on [pin], as a ItemMiningDrillHeavy. */
-    fun at(pin: Device): MiningDrill.Heavy = intrinsic()
-
-    /** Every one on the network. */
-    val all: Batch
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): Batch = intrinsic()
-
-    class Batch internal constructor() : DeviceBatch<MiningDrill.Heavy>() {
-      /** A slot of every one in the batch, by number. */
-      val slots: Slots<SlotBatch<ItemBatterySlot>>
-        get() = intrinsic()
-    }
-  }
-
-  /** The ItemMKIIMiningDrill devices on the chip's network. */
-  @PrefabName("ItemMKIIMiningDrill")
-  object MkII {
-    /** The device on [pin], as a ItemMKIIMiningDrill. */
-    fun at(pin: Device): MiningDrill.MkII = intrinsic()
-
-    /** Every one on the network. */
-    val all: Batch
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): Batch = intrinsic()
-
+    /** A batch of ItemMKIIMiningDrill devices. */
     class Batch internal constructor() : DeviceBatch<MiningDrill.MkII>() {
       /** A slot of every one in the batch, by number. */
       val slots: Slots<SlotBatch<ItemBatterySlot>>
         get() = intrinsic()
+    }
+
+    /** The ItemMKIIMiningDrill prefab. */
+    companion object : Prefab<MiningDrill.MkII>() {
+      override val all: MiningDrill.MkII.Batch
+        get() = intrinsic()
+
+      override fun named(name: String): MiningDrill.MkII.Batch = intrinsic()
     }
   }
 }
@@ -9689,8 +7615,20 @@ interface HandDrill {
     val Battery: ItemBatterySlot
       get() = intrinsic()
 
+    /** A batch of ItemDrill devices. */
+    class Batch internal constructor() : DeviceBatch<HandDrill.Standard>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<ItemBatterySlot>>
+        get() = intrinsic()
+    }
+
     /** The ItemDrill prefab. */
-    companion object : Prefab()
+    companion object : Prefab<HandDrill.Standard>() {
+      override val all: HandDrill.Standard.Batch
+        get() = intrinsic()
+
+      override fun named(name: String): HandDrill.Standard.Batch = intrinsic()
+    }
   }
 
   /** A ItemEmergencyDrill. */
@@ -9712,8 +7650,20 @@ interface HandDrill {
     val Battery: ItemBatterySlot
       get() = intrinsic()
 
+    /** A batch of ItemEmergencyDrill devices. */
+    class Batch internal constructor() : DeviceBatch<HandDrill.Emergency>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<ItemBatterySlot>>
+        get() = intrinsic()
+    }
+
     /** The ItemEmergencyDrill prefab. */
-    companion object : Prefab()
+    companion object : Prefab<HandDrill.Emergency>() {
+      override val all: HandDrill.Emergency.Batch
+        get() = intrinsic()
+
+      override fun named(name: String): HandDrill.Emergency.Batch = intrinsic()
+    }
   }
 
   /** A ItemMKIIDrill. */
@@ -9735,70 +7685,19 @@ interface HandDrill {
     val Battery: ItemBatterySlot
       get() = intrinsic()
 
-    /** The ItemMKIIDrill prefab. */
-    companion object : Prefab()
-  }
-}
-
-/** The HandDrill devices on the chip's network, by prefab. */
-object HandDrills {
-  /** The ItemDrill devices on the chip's network. */
-  @PrefabName("ItemDrill")
-  object Standard {
-    /** The device on [pin], as a ItemDrill. */
-    fun at(pin: Device): HandDrill.Standard = intrinsic()
-
-    /** Every one on the network. */
-    val all: Batch
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): Batch = intrinsic()
-
-    class Batch internal constructor() : DeviceBatch<HandDrill.Standard>() {
-      /** A slot of every one in the batch, by number. */
-      val slots: Slots<SlotBatch<ItemBatterySlot>>
-        get() = intrinsic()
-    }
-  }
-
-  /** The ItemEmergencyDrill devices on the chip's network. */
-  @PrefabName("ItemEmergencyDrill")
-  object Emergency {
-    /** The device on [pin], as a ItemEmergencyDrill. */
-    fun at(pin: Device): HandDrill.Emergency = intrinsic()
-
-    /** Every one on the network. */
-    val all: Batch
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): Batch = intrinsic()
-
-    class Batch internal constructor() : DeviceBatch<HandDrill.Emergency>() {
-      /** A slot of every one in the batch, by number. */
-      val slots: Slots<SlotBatch<ItemBatterySlot>>
-        get() = intrinsic()
-    }
-  }
-
-  /** The ItemMKIIDrill devices on the chip's network. */
-  @PrefabName("ItemMKIIDrill")
-  object MkII {
-    /** The device on [pin], as a ItemMKIIDrill. */
-    fun at(pin: Device): HandDrill.MkII = intrinsic()
-
-    /** Every one on the network. */
-    val all: Batch
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): Batch = intrinsic()
-
+    /** A batch of ItemMKIIDrill devices. */
     class Batch internal constructor() : DeviceBatch<HandDrill.MkII>() {
       /** A slot of every one in the batch, by number. */
       val slots: Slots<SlotBatch<ItemBatterySlot>>
         get() = intrinsic()
+    }
+
+    /** The ItemMKIIDrill prefab. */
+    companion object : Prefab<HandDrill.MkII>() {
+      override val all: HandDrill.MkII.Batch
+        get() = intrinsic()
+
+      override fun named(name: String): HandDrill.MkII.Batch = intrinsic()
     }
   }
 }
@@ -9828,8 +7727,20 @@ interface AngleGrinder {
     val Battery: ItemBatterySlot
       get() = intrinsic()
 
+    /** A batch of ItemAngleGrinder devices. */
+    class Batch internal constructor() : DeviceBatch<AngleGrinder.Standard>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<ItemBatterySlot>>
+        get() = intrinsic()
+    }
+
     /** The ItemAngleGrinder prefab. */
-    companion object : Prefab()
+    companion object : Prefab<AngleGrinder.Standard>() {
+      override val all: AngleGrinder.Standard.Batch
+        get() = intrinsic()
+
+      override fun named(name: String): AngleGrinder.Standard.Batch = intrinsic()
+    }
   }
 
   /** A ItemEmergencyAngleGrinder. */
@@ -9851,8 +7762,20 @@ interface AngleGrinder {
     val Battery: ItemBatterySlot
       get() = intrinsic()
 
+    /** A batch of ItemEmergencyAngleGrinder devices. */
+    class Batch internal constructor() : DeviceBatch<AngleGrinder.Emergency>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<ItemBatterySlot>>
+        get() = intrinsic()
+    }
+
     /** The ItemEmergencyAngleGrinder prefab. */
-    companion object : Prefab()
+    companion object : Prefab<AngleGrinder.Emergency>() {
+      override val all: AngleGrinder.Emergency.Batch
+        get() = intrinsic()
+
+      override fun named(name: String): AngleGrinder.Emergency.Batch = intrinsic()
+    }
   }
 
   /** A ItemMKIIAngleGrinder. */
@@ -9874,70 +7797,19 @@ interface AngleGrinder {
     val Battery: ItemBatterySlot
       get() = intrinsic()
 
-    /** The ItemMKIIAngleGrinder prefab. */
-    companion object : Prefab()
-  }
-}
-
-/** The AngleGrinder devices on the chip's network, by prefab. */
-object AngleGrinders {
-  /** The ItemAngleGrinder devices on the chip's network. */
-  @PrefabName("ItemAngleGrinder")
-  object Standard {
-    /** The device on [pin], as a ItemAngleGrinder. */
-    fun at(pin: Device): AngleGrinder.Standard = intrinsic()
-
-    /** Every one on the network. */
-    val all: Batch
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): Batch = intrinsic()
-
-    class Batch internal constructor() : DeviceBatch<AngleGrinder.Standard>() {
-      /** A slot of every one in the batch, by number. */
-      val slots: Slots<SlotBatch<ItemBatterySlot>>
-        get() = intrinsic()
-    }
-  }
-
-  /** The ItemEmergencyAngleGrinder devices on the chip's network. */
-  @PrefabName("ItemEmergencyAngleGrinder")
-  object Emergency {
-    /** The device on [pin], as a ItemEmergencyAngleGrinder. */
-    fun at(pin: Device): AngleGrinder.Emergency = intrinsic()
-
-    /** Every one on the network. */
-    val all: Batch
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): Batch = intrinsic()
-
-    class Batch internal constructor() : DeviceBatch<AngleGrinder.Emergency>() {
-      /** A slot of every one in the batch, by number. */
-      val slots: Slots<SlotBatch<ItemBatterySlot>>
-        get() = intrinsic()
-    }
-  }
-
-  /** The ItemMKIIAngleGrinder devices on the chip's network. */
-  @PrefabName("ItemMKIIAngleGrinder")
-  object MkII {
-    /** The device on [pin], as a ItemMKIIAngleGrinder. */
-    fun at(pin: Device): AngleGrinder.MkII = intrinsic()
-
-    /** Every one on the network. */
-    val all: Batch
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): Batch = intrinsic()
-
+    /** A batch of ItemMKIIAngleGrinder devices. */
     class Batch internal constructor() : DeviceBatch<AngleGrinder.MkII>() {
       /** A slot of every one in the batch, by number. */
       val slots: Slots<SlotBatch<ItemBatterySlot>>
         get() = intrinsic()
+    }
+
+    /** The ItemMKIIAngleGrinder prefab. */
+    companion object : Prefab<AngleGrinder.MkII>() {
+      override val all: AngleGrinder.MkII.Batch
+        get() = intrinsic()
+
+      override fun named(name: String): AngleGrinder.MkII.Batch = intrinsic()
     }
   }
 }
@@ -9967,8 +7839,20 @@ interface ArcWelder {
     val Battery: ItemBatterySlot
       get() = intrinsic()
 
+    /** A batch of ItemArcWelder devices. */
+    class Batch internal constructor() : DeviceBatch<ArcWelder.Standard>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<ItemBatterySlot>>
+        get() = intrinsic()
+    }
+
     /** The ItemArcWelder prefab. */
-    companion object : Prefab()
+    companion object : Prefab<ArcWelder.Standard>() {
+      override val all: ArcWelder.Standard.Batch
+        get() = intrinsic()
+
+      override fun named(name: String): ArcWelder.Standard.Batch = intrinsic()
+    }
   }
 
   /** A ItemEmergencyArcWelder. */
@@ -9990,8 +7874,20 @@ interface ArcWelder {
     val Battery: ItemBatterySlot
       get() = intrinsic()
 
+    /** A batch of ItemEmergencyArcWelder devices. */
+    class Batch internal constructor() : DeviceBatch<ArcWelder.Emergency>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<ItemBatterySlot>>
+        get() = intrinsic()
+    }
+
     /** The ItemEmergencyArcWelder prefab. */
-    companion object : Prefab()
+    companion object : Prefab<ArcWelder.Emergency>() {
+      override val all: ArcWelder.Emergency.Batch
+        get() = intrinsic()
+
+      override fun named(name: String): ArcWelder.Emergency.Batch = intrinsic()
+    }
   }
 
   /** A ItemMKIIArcWelder. */
@@ -10013,70 +7909,19 @@ interface ArcWelder {
     val Battery: ItemBatterySlot
       get() = intrinsic()
 
-    /** The ItemMKIIArcWelder prefab. */
-    companion object : Prefab()
-  }
-}
-
-/** The ArcWelder devices on the chip's network, by prefab. */
-object ArcWelders {
-  /** The ItemArcWelder devices on the chip's network. */
-  @PrefabName("ItemArcWelder")
-  object Standard {
-    /** The device on [pin], as a ItemArcWelder. */
-    fun at(pin: Device): ArcWelder.Standard = intrinsic()
-
-    /** Every one on the network. */
-    val all: Batch
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): Batch = intrinsic()
-
-    class Batch internal constructor() : DeviceBatch<ArcWelder.Standard>() {
-      /** A slot of every one in the batch, by number. */
-      val slots: Slots<SlotBatch<ItemBatterySlot>>
-        get() = intrinsic()
-    }
-  }
-
-  /** The ItemEmergencyArcWelder devices on the chip's network. */
-  @PrefabName("ItemEmergencyArcWelder")
-  object Emergency {
-    /** The device on [pin], as a ItemEmergencyArcWelder. */
-    fun at(pin: Device): ArcWelder.Emergency = intrinsic()
-
-    /** Every one on the network. */
-    val all: Batch
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): Batch = intrinsic()
-
-    class Batch internal constructor() : DeviceBatch<ArcWelder.Emergency>() {
-      /** A slot of every one in the batch, by number. */
-      val slots: Slots<SlotBatch<ItemBatterySlot>>
-        get() = intrinsic()
-    }
-  }
-
-  /** The ItemMKIIArcWelder devices on the chip's network. */
-  @PrefabName("ItemMKIIArcWelder")
-  object MkII {
-    /** The device on [pin], as a ItemMKIIArcWelder. */
-    fun at(pin: Device): ArcWelder.MkII = intrinsic()
-
-    /** Every one on the network. */
-    val all: Batch
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): Batch = intrinsic()
-
+    /** A batch of ItemMKIIArcWelder devices. */
     class Batch internal constructor() : DeviceBatch<ArcWelder.MkII>() {
       /** A slot of every one in the batch, by number. */
       val slots: Slots<SlotBatch<ItemBatterySlot>>
         get() = intrinsic()
+    }
+
+    /** The ItemMKIIArcWelder prefab. */
+    companion object : Prefab<ArcWelder.MkII>() {
+      override val all: ArcWelder.MkII.Batch
+        get() = intrinsic()
+
+      override fun named(name: String): ArcWelder.MkII.Batch = intrinsic()
     }
   }
 }
@@ -10156,7 +8001,7 @@ interface Helmet {
       get() = intrinsic()
 
     /** The ItemSpaceHelmet prefab. */
-    companion object : Prefab()
+    companion object : Prefab<Helmet.Space>()
   }
 
   /** A ItemEmergencySpaceHelmet. */
@@ -10210,7 +8055,7 @@ interface Helmet {
       get() = intrinsic()
 
     /** The ItemEmergencySpaceHelmet prefab. */
-    companion object : Prefab()
+    companion object : Prefab<Helmet.EmergencySpace>()
   }
 
   /** A ItemHardsuitHelmet. */
@@ -10264,7 +8109,7 @@ interface Helmet {
       get() = intrinsic()
 
     /** The ItemHardsuitHelmet prefab. */
-    companion object : Prefab()
+    companion object : Prefab<Helmet.Hardsuit>()
   }
 
   /** A ItemIcarusHelmet. */
@@ -10318,7 +8163,7 @@ interface Helmet {
       get() = intrinsic()
 
     /** The ItemIcarusHelmet prefab. */
-    companion object : Prefab()
+    companion object : Prefab<Helmet.Icarus>()
   }
 
   /** A ItemSuitHelmetHARM. */
@@ -10372,80 +8217,7 @@ interface Helmet {
       get() = intrinsic()
 
     /** The ItemSuitHelmetHARM prefab. */
-    companion object : Prefab()
-  }
-}
-
-/** The Helmet devices on the chip's network, by prefab. */
-object Helmets {
-  /** The ItemSpaceHelmet devices on the chip's network. */
-  @PrefabName("ItemSpaceHelmet")
-  object Space {
-    /** The device on [pin], as a ItemSpaceHelmet. */
-    fun at(pin: Device): Helmet.Space = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<Helmet.Space>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<Helmet.Space> = intrinsic()
-  }
-
-  /** The ItemEmergencySpaceHelmet devices on the chip's network. */
-  @PrefabName("ItemEmergencySpaceHelmet")
-  object EmergencySpace {
-    /** The device on [pin], as a ItemEmergencySpaceHelmet. */
-    fun at(pin: Device): Helmet.EmergencySpace = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<Helmet.EmergencySpace>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<Helmet.EmergencySpace> = intrinsic()
-  }
-
-  /** The ItemHardsuitHelmet devices on the chip's network. */
-  @PrefabName("ItemHardsuitHelmet")
-  object Hardsuit {
-    /** The device on [pin], as a ItemHardsuitHelmet. */
-    fun at(pin: Device): Helmet.Hardsuit = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<Helmet.Hardsuit>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<Helmet.Hardsuit> = intrinsic()
-  }
-
-  /** The ItemIcarusHelmet devices on the chip's network. */
-  @PrefabName("ItemIcarusHelmet")
-  object Icarus {
-    /** The device on [pin], as a ItemIcarusHelmet. */
-    fun at(pin: Device): Helmet.Icarus = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<Helmet.Icarus>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<Helmet.Icarus> = intrinsic()
-  }
-
-  /** The ItemSuitHelmetHARM devices on the chip's network. */
-  @PrefabName("ItemSuitHelmetHARM")
-  object Harm {
-    /** The device on [pin], as a ItemSuitHelmetHARM. */
-    fun at(pin: Device): Helmet.Harm = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<Helmet.Harm>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<Helmet.Harm> = intrinsic()
+    companion object : Prefab<Helmet.Harm>()
   }
 }
 
@@ -10618,8 +8390,20 @@ interface Suit {
     val ProgrammableChip: ItemCommonSlot
       get() = intrinsic()
 
+    /** A batch of ItemHardSuit devices. */
+    class Batch internal constructor() : DeviceBatch<Suit.Hardsuit>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<ItemCommonSlot>>
+        get() = intrinsic()
+    }
+
     /** The ItemHardSuit prefab. */
-    companion object : Prefab()
+    companion object : Prefab<Suit.Hardsuit>() {
+      override val all: Suit.Hardsuit.Batch
+        get() = intrinsic()
+
+      override fun named(name: String): Suit.Hardsuit.Batch = intrinsic()
+    }
   }
 
   /** A ItemSuitHARM. */
@@ -10777,50 +8561,19 @@ interface Suit {
     val Back: ItemCommonSlot
       get() = intrinsic()
 
-    /** The ItemSuitHARM prefab. */
-    companion object : Prefab()
-  }
-}
-
-/** The Suit devices on the chip's network, by prefab. */
-object Suits {
-  /** The ItemHardSuit devices on the chip's network. */
-  @PrefabName("ItemHardSuit")
-  object Hardsuit {
-    /** The device on [pin], as a ItemHardSuit. */
-    fun at(pin: Device): Suit.Hardsuit = intrinsic()
-
-    /** Every one on the network. */
-    val all: Batch
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): Batch = intrinsic()
-
-    class Batch internal constructor() : DeviceBatch<Suit.Hardsuit>() {
-      /** A slot of every one in the batch, by number. */
-      val slots: Slots<SlotBatch<ItemCommonSlot>>
-        get() = intrinsic()
-    }
-  }
-
-  /** The ItemSuitHARM devices on the chip's network. */
-  @PrefabName("ItemSuitHARM")
-  object Harm {
-    /** The device on [pin], as a ItemSuitHARM. */
-    fun at(pin: Device): Suit.Harm = intrinsic()
-
-    /** Every one on the network. */
-    val all: Batch
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): Batch = intrinsic()
-
+    /** A batch of ItemSuitHARM devices. */
     class Batch internal constructor() : DeviceBatch<Suit.Harm>() {
       /** A slot of every one in the batch, by number. */
       val slots: Slots<SlotBatch<ItemCommonSlot>>
         get() = intrinsic()
+    }
+
+    /** The ItemSuitHARM prefab. */
+    companion object : Prefab<Suit.Harm>() {
+      override val all: Suit.Harm.Batch
+        get() = intrinsic()
+
+      override fun named(name: String): Suit.Harm.Batch = intrinsic()
     }
   }
 }
@@ -10860,7 +8613,7 @@ interface Airlock : Door {
       set(value) = intrinsic()
 
     /** The StructureAirlock prefab. */
-    companion object : Prefab()
+    companion object : Prefab<Airlock.Standard>()
   }
 
   /** A StructureAirlockWide. */
@@ -10896,38 +8649,7 @@ interface Airlock : Door {
       set(value) = intrinsic()
 
     /** The StructureAirlockWide prefab. */
-    companion object : Prefab()
-  }
-}
-
-/** The Airlock devices on the chip's network, by prefab. */
-object Airlocks {
-  /** The StructureAirlock devices on the chip's network. */
-  @PrefabName("StructureAirlock")
-  object Standard {
-    /** The device on [pin], as a StructureAirlock. */
-    fun at(pin: Device): Airlock.Standard = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<Airlock.Standard>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<Airlock.Standard> = intrinsic()
-  }
-
-  /** The StructureAirlockWide devices on the chip's network. */
-  @PrefabName("StructureAirlockWide")
-  object Wide {
-    /** The device on [pin], as a StructureAirlockWide. */
-    fun at(pin: Device): Airlock.Wide = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<Airlock.Wide>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<Airlock.Wide> = intrinsic()
+    companion object : Prefab<Airlock.Wide>()
   }
 }
 
@@ -10974,7 +8696,7 @@ interface ManualHatch {
       set(value) = intrinsic()
 
     /** The StructureManualHatch prefab. */
-    companion object : Prefab()
+    companion object : Prefab<ManualHatch.Standard>()
   }
 
   /** A StructureManualFloorHatch. */
@@ -10996,38 +8718,7 @@ interface ManualHatch {
       set(value) = intrinsic()
 
     /** The StructureManualFloorHatch prefab. */
-    companion object : Prefab()
-  }
-}
-
-/** The ManualHatch devices on the chip's network, by prefab. */
-object ManualHatches {
-  /** The StructureManualHatch devices on the chip's network. */
-  @PrefabName("StructureManualHatch")
-  object Standard {
-    /** The device on [pin], as a StructureManualHatch. */
-    fun at(pin: Device): ManualHatch.Standard = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<ManualHatch.Standard>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<ManualHatch.Standard> = intrinsic()
-  }
-
-  /** The StructureManualFloorHatch devices on the chip's network. */
-  @PrefabName("StructureManualFloorHatch")
-  object Floor {
-    /** The device on [pin], as a StructureManualFloorHatch. */
-    fun at(pin: Device): ManualHatch.Floor = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<ManualHatch.Floor>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<ManualHatch.Floor> = intrinsic()
+    companion object : Prefab<ManualHatch.Floor>()
   }
 }
 
@@ -11105,8 +8796,20 @@ interface Sleeper {
     val Bed: DataDiskSlot
       get() = intrinsic()
 
+    /** A batch of StructureSleeper devices. */
+    class Batch internal constructor() : DeviceBatch<Sleeper.Standard>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureSleeper prefab. */
-    companion object : Prefab()
+    companion object : Prefab<Sleeper.Standard>() {
+      override val all: Sleeper.Standard.Batch
+        get() = intrinsic()
+
+      override fun named(name: String): Sleeper.Standard.Batch = intrinsic()
+    }
   }
 
   /** A StructureSleeperLeft. */
@@ -11163,8 +8866,20 @@ interface Sleeper {
     val Player: DataDiskSlot
       get() = intrinsic()
 
+    /** A batch of StructureSleeperLeft devices. */
+    class Batch internal constructor() : DeviceBatch<Sleeper.Left>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureSleeperLeft prefab. */
-    companion object : Prefab()
+    companion object : Prefab<Sleeper.Left>() {
+      override val all: Sleeper.Left.Batch
+        get() = intrinsic()
+
+      override fun named(name: String): Sleeper.Left.Batch = intrinsic()
+    }
   }
 
   /** A StructureSleeperRight. */
@@ -11221,8 +8936,20 @@ interface Sleeper {
     val Player: DataDiskSlot
       get() = intrinsic()
 
+    /** A batch of StructureSleeperRight devices. */
+    class Batch internal constructor() : DeviceBatch<Sleeper.Right>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureSleeperRight prefab. */
-    companion object : Prefab()
+    companion object : Prefab<Sleeper.Right>() {
+      override val all: Sleeper.Right.Batch
+        get() = intrinsic()
+
+      override fun named(name: String): Sleeper.Right.Batch = intrinsic()
+    }
   }
 
   /** A StructureSleeperVertical. */
@@ -11279,90 +9006,19 @@ interface Sleeper {
     val Player: DataDiskSlot
       get() = intrinsic()
 
-    /** The StructureSleeperVertical prefab. */
-    companion object : Prefab()
-  }
-}
-
-/** The Sleeper devices on the chip's network, by prefab. */
-object Sleepers {
-  /** The StructureSleeper devices on the chip's network. */
-  @PrefabName("StructureSleeper")
-  object Standard {
-    /** The device on [pin], as a StructureSleeper. */
-    fun at(pin: Device): Sleeper.Standard = intrinsic()
-
-    /** Every one on the network. */
-    val all: Batch
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): Batch = intrinsic()
-
-    class Batch internal constructor() : DeviceBatch<Sleeper.Standard>() {
-      /** A slot of every one in the batch, by number. */
-      val slots: Slots<SlotBatch<DataDiskSlot>>
-        get() = intrinsic()
-    }
-  }
-
-  /** The StructureSleeperLeft devices on the chip's network. */
-  @PrefabName("StructureSleeperLeft")
-  object Left {
-    /** The device on [pin], as a StructureSleeperLeft. */
-    fun at(pin: Device): Sleeper.Left = intrinsic()
-
-    /** Every one on the network. */
-    val all: Batch
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): Batch = intrinsic()
-
-    class Batch internal constructor() : DeviceBatch<Sleeper.Left>() {
-      /** A slot of every one in the batch, by number. */
-      val slots: Slots<SlotBatch<DataDiskSlot>>
-        get() = intrinsic()
-    }
-  }
-
-  /** The StructureSleeperRight devices on the chip's network. */
-  @PrefabName("StructureSleeperRight")
-  object Right {
-    /** The device on [pin], as a StructureSleeperRight. */
-    fun at(pin: Device): Sleeper.Right = intrinsic()
-
-    /** Every one on the network. */
-    val all: Batch
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): Batch = intrinsic()
-
-    class Batch internal constructor() : DeviceBatch<Sleeper.Right>() {
-      /** A slot of every one in the batch, by number. */
-      val slots: Slots<SlotBatch<DataDiskSlot>>
-        get() = intrinsic()
-    }
-  }
-
-  /** The StructureSleeperVertical devices on the chip's network. */
-  @PrefabName("StructureSleeperVertical")
-  object Vertical {
-    /** The device on [pin], as a StructureSleeperVertical. */
-    fun at(pin: Device): Sleeper.Vertical = intrinsic()
-
-    /** Every one on the network. */
-    val all: Batch
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): Batch = intrinsic()
-
+    /** A batch of StructureSleeperVertical devices. */
     class Batch internal constructor() : DeviceBatch<Sleeper.Vertical>() {
       /** A slot of every one in the batch, by number. */
       val slots: Slots<SlotBatch<DataDiskSlot>>
         get() = intrinsic()
+    }
+
+    /** The StructureSleeperVertical prefab. */
+    companion object : Prefab<Sleeper.Vertical>() {
+      override val all: Sleeper.Vertical.Batch
+        get() = intrinsic()
+
+      override fun named(name: String): Sleeper.Vertical.Batch = intrinsic()
     }
   }
 }
@@ -11440,8 +9096,20 @@ interface CryoTube : Sleeper {
     val Mask: MaskSlot
       get() = intrinsic()
 
+    /** A batch of StructureCryoTubeHorizontal devices. */
+    class Batch internal constructor() : DeviceBatch<CryoTube.Horizontal>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<CommonSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureCryoTubeHorizontal prefab. */
-    companion object : Prefab()
+    companion object : Prefab<CryoTube.Horizontal>() {
+      override val all: CryoTube.Horizontal.Batch
+        get() = intrinsic()
+
+      override fun named(name: String): CryoTube.Horizontal.Batch = intrinsic()
+    }
   }
 
   /** A StructureCryoTubeVertical. */
@@ -11509,50 +9177,19 @@ interface CryoTube : Sleeper {
     val Mask: MaskSlot
       get() = intrinsic()
 
-    /** The StructureCryoTubeVertical prefab. */
-    companion object : Prefab()
-  }
-}
-
-/** The CryoTube devices on the chip's network, by prefab. */
-object CryoTubes {
-  /** The StructureCryoTubeHorizontal devices on the chip's network. */
-  @PrefabName("StructureCryoTubeHorizontal")
-  object Horizontal {
-    /** The device on [pin], as a StructureCryoTubeHorizontal. */
-    fun at(pin: Device): CryoTube.Horizontal = intrinsic()
-
-    /** Every one on the network. */
-    val all: Batch
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): Batch = intrinsic()
-
-    class Batch internal constructor() : DeviceBatch<CryoTube.Horizontal>() {
-      /** A slot of every one in the batch, by number. */
-      val slots: Slots<SlotBatch<CommonSlot>>
-        get() = intrinsic()
-    }
-  }
-
-  /** The StructureCryoTubeVertical devices on the chip's network. */
-  @PrefabName("StructureCryoTubeVertical")
-  object Vertical {
-    /** The device on [pin], as a StructureCryoTubeVertical. */
-    fun at(pin: Device): CryoTube.Vertical = intrinsic()
-
-    /** Every one on the network. */
-    val all: Batch
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): Batch = intrinsic()
-
+    /** A batch of StructureCryoTubeVertical devices. */
     class Batch internal constructor() : DeviceBatch<CryoTube.Vertical>() {
       /** A slot of every one in the batch, by number. */
       val slots: Slots<SlotBatch<CommonSlot>>
         get() = intrinsic()
+    }
+
+    /** The StructureCryoTubeVertical prefab. */
+    companion object : Prefab<CryoTube.Vertical>() {
+      override val all: CryoTube.Vertical.Batch
+        get() = intrinsic()
+
+      override fun named(name: String): CryoTube.Vertical.Batch = intrinsic()
     }
   }
 }
@@ -11618,8 +9255,20 @@ interface LarreDock {
     val ArmSlot: DataDiskSlot
       get() = intrinsic()
 
+    /** A batch of StructureRoboticArmDock devices. */
+    class Batch internal constructor() : DeviceBatch<LarreDock.Standard>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureRoboticArmDock prefab. */
-    companion object : Prefab()
+    companion object : Prefab<LarreDock.Standard>() {
+      override val all: LarreDock.Standard.Batch
+        get() = intrinsic()
+
+      override fun named(name: String): LarreDock.Standard.Batch = intrinsic()
+    }
   }
 
   /** A StructureLarreDockAtmos. */
@@ -11709,8 +9358,20 @@ interface LarreDock {
     val Filter: FilterSlot
       get() = intrinsic()
 
+    /** A batch of StructureLarreDockAtmos devices. */
+    class Batch internal constructor() : DeviceBatch<LarreDock.Atmos>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<FilterSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureLarreDockAtmos prefab. */
-    companion object : Prefab()
+    companion object : Prefab<LarreDock.Atmos>() {
+      override val all: LarreDock.Atmos.Batch
+        get() = intrinsic()
+
+      override fun named(name: String): LarreDock.Atmos.Batch = intrinsic()
+    }
   }
 
   /** A StructureLarreDockCargo. */
@@ -11772,8 +9433,20 @@ interface LarreDock {
     val TargetSlot: CommonSlot
       get() = intrinsic()
 
+    /** A batch of StructureLarreDockCargo devices. */
+    class Batch internal constructor() : DeviceBatch<LarreDock.Cargo>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<CommonSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureLarreDockCargo prefab. */
-    companion object : Prefab()
+    companion object : Prefab<LarreDock.Cargo>() {
+      override val all: LarreDock.Cargo.Batch
+        get() = intrinsic()
+
+      override fun named(name: String): LarreDock.Cargo.Batch = intrinsic()
+    }
   }
 
   /** A StructureLarreDockCollector. */
@@ -11828,8 +9501,20 @@ interface LarreDock {
     val slots: Slots<DataDiskSlot>
       get() = intrinsic()
 
+    /** A batch of StructureLarreDockCollector devices. */
+    class Batch internal constructor() : DeviceBatch<LarreDock.Collector>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureLarreDockCollector prefab. */
-    companion object : Prefab()
+    companion object : Prefab<LarreDock.Collector>() {
+      override val all: LarreDock.Collector.Batch
+        get() = intrinsic()
+
+      override fun named(name: String): LarreDock.Collector.Batch = intrinsic()
+    }
   }
 
   /** A StructureLarreDockHydroponics. */
@@ -11895,110 +9580,19 @@ interface LarreDock {
     val TargetSlot: CommonSlot
       get() = intrinsic()
 
-    /** The StructureLarreDockHydroponics prefab. */
-    companion object : Prefab()
-  }
-}
-
-/** The LarreDock devices on the chip's network, by prefab. */
-object LarreDocks {
-  /** The StructureRoboticArmDock devices on the chip's network. */
-  @PrefabName("StructureRoboticArmDock")
-  object Standard {
-    /** The device on [pin], as a StructureRoboticArmDock. */
-    fun at(pin: Device): LarreDock.Standard = intrinsic()
-
-    /** Every one on the network. */
-    val all: Batch
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): Batch = intrinsic()
-
-    class Batch internal constructor() : DeviceBatch<LarreDock.Standard>() {
-      /** A slot of every one in the batch, by number. */
-      val slots: Slots<SlotBatch<DataDiskSlot>>
-        get() = intrinsic()
-    }
-  }
-
-  /** The StructureLarreDockAtmos devices on the chip's network. */
-  @PrefabName("StructureLarreDockAtmos")
-  object Atmos {
-    /** The device on [pin], as a StructureLarreDockAtmos. */
-    fun at(pin: Device): LarreDock.Atmos = intrinsic()
-
-    /** Every one on the network. */
-    val all: Batch
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): Batch = intrinsic()
-
-    class Batch internal constructor() : DeviceBatch<LarreDock.Atmos>() {
-      /** A slot of every one in the batch, by number. */
-      val slots: Slots<SlotBatch<FilterSlot>>
-        get() = intrinsic()
-    }
-  }
-
-  /** The StructureLarreDockCargo devices on the chip's network. */
-  @PrefabName("StructureLarreDockCargo")
-  object Cargo {
-    /** The device on [pin], as a StructureLarreDockCargo. */
-    fun at(pin: Device): LarreDock.Cargo = intrinsic()
-
-    /** Every one on the network. */
-    val all: Batch
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): Batch = intrinsic()
-
-    class Batch internal constructor() : DeviceBatch<LarreDock.Cargo>() {
-      /** A slot of every one in the batch, by number. */
-      val slots: Slots<SlotBatch<CommonSlot>>
-        get() = intrinsic()
-    }
-  }
-
-  /** The StructureLarreDockCollector devices on the chip's network. */
-  @PrefabName("StructureLarreDockCollector")
-  object Collector {
-    /** The device on [pin], as a StructureLarreDockCollector. */
-    fun at(pin: Device): LarreDock.Collector = intrinsic()
-
-    /** Every one on the network. */
-    val all: Batch
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): Batch = intrinsic()
-
-    class Batch internal constructor() : DeviceBatch<LarreDock.Collector>() {
-      /** A slot of every one in the batch, by number. */
-      val slots: Slots<SlotBatch<DataDiskSlot>>
-        get() = intrinsic()
-    }
-  }
-
-  /** The StructureLarreDockHydroponics devices on the chip's network. */
-  @PrefabName("StructureLarreDockHydroponics")
-  object Hydroponics {
-    /** The device on [pin], as a StructureLarreDockHydroponics. */
-    fun at(pin: Device): LarreDock.Hydroponics = intrinsic()
-
-    /** Every one on the network. */
-    val all: Batch
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): Batch = intrinsic()
-
+    /** A batch of StructureLarreDockHydroponics devices. */
     class Batch internal constructor() : DeviceBatch<LarreDock.Hydroponics>() {
       /** A slot of every one in the batch, by number. */
       val slots: Slots<SlotBatch<CommonSlot>>
         get() = intrinsic()
+    }
+
+    /** The StructureLarreDockHydroponics prefab. */
+    companion object : Prefab<LarreDock.Hydroponics>() {
+      override val all: LarreDock.Hydroponics.Batch
+        get() = intrinsic()
+
+      override fun named(name: String): LarreDock.Hydroponics.Batch = intrinsic()
     }
   }
 }
@@ -12054,7 +9648,7 @@ interface Sequencer {
       set(value) = intrinsic()
 
     /** The DeviceLfoVolume prefab. */
-    companion object : Prefab()
+    companion object : Prefab<Sequencer.LowFrequencyOscillator>()
   }
 
   /** A LogicStepSequencer8. */
@@ -12098,44 +9692,19 @@ interface Sequencer {
     val SoundCartridge: DataDiskSlot
       get() = intrinsic()
 
-    /** The LogicStepSequencer8 prefab. */
-    companion object : Prefab()
-  }
-}
-
-/** The Sequencer devices on the chip's network, by prefab. */
-object Sequencers {
-  /** The DeviceLfoVolume devices on the chip's network. */
-  @PrefabName("DeviceLfoVolume")
-  object LowFrequencyOscillator {
-    /** The device on [pin], as a DeviceLfoVolume. */
-    fun at(pin: Device): Sequencer.LowFrequencyOscillator = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<Sequencer.LowFrequencyOscillator>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<Sequencer.LowFrequencyOscillator> = intrinsic()
-  }
-
-  /** The LogicStepSequencer8 devices on the chip's network. */
-  @PrefabName("LogicStepSequencer8")
-  object LogicStep {
-    /** The device on [pin], as a LogicStepSequencer8. */
-    fun at(pin: Device): Sequencer.LogicStep = intrinsic()
-
-    /** Every one on the network. */
-    val all: Batch
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): Batch = intrinsic()
-
+    /** A batch of LogicStepSequencer8 devices. */
     class Batch internal constructor() : DeviceBatch<Sequencer.LogicStep>() {
       /** A slot of every one in the batch, by number. */
       val slots: Slots<SlotBatch<DataDiskSlot>>
         get() = intrinsic()
+    }
+
+    /** The LogicStepSequencer8 prefab. */
+    companion object : Prefab<Sequencer.LogicStep>() {
+      override val all: Sequencer.LogicStep.Batch
+        get() = intrinsic()
+
+      override fun named(name: String): Sequencer.LogicStep.Batch = intrinsic()
     }
   }
 }
@@ -12173,7 +9742,7 @@ interface LogicWriter {
       get() = intrinsic()
 
     /** The StructureLogicWriter prefab. */
-    companion object : Prefab()
+    companion object : Prefab<LogicWriter.Standard>()
   }
 
   /** A StructureLogicBatchWriter. */
@@ -12197,7 +9766,7 @@ interface LogicWriter {
       get() = intrinsic()
 
     /** The StructureLogicBatchWriter prefab. */
-    companion object : Prefab()
+    companion object : Prefab<LogicWriter.Batch>()
   }
 
   /** A StructureLogicWriterSwitch. */
@@ -12225,52 +9794,7 @@ interface LogicWriter {
       get() = intrinsic()
 
     /** The StructureLogicWriterSwitch prefab. */
-    companion object : Prefab()
-  }
-}
-
-/** The LogicWriter devices on the chip's network, by prefab. */
-object LogicWriters {
-  /** The StructureLogicWriter devices on the chip's network. */
-  @PrefabName("StructureLogicWriter")
-  object Standard {
-    /** The device on [pin], as a StructureLogicWriter. */
-    fun at(pin: Device): LogicWriter.Standard = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<LogicWriter.Standard>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<LogicWriter.Standard> = intrinsic()
-  }
-
-  /** The StructureLogicBatchWriter devices on the chip's network. */
-  @PrefabName("StructureLogicBatchWriter")
-  object Batch {
-    /** The device on [pin], as a StructureLogicBatchWriter. */
-    fun at(pin: Device): LogicWriter.Batch = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<LogicWriter.Batch>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<LogicWriter.Batch> = intrinsic()
-  }
-
-  /** The StructureLogicWriterSwitch devices on the chip's network. */
-  @PrefabName("StructureLogicWriterSwitch")
-  object Switch {
-    /** The device on [pin], as a StructureLogicWriterSwitch. */
-    fun at(pin: Device): LogicWriter.Switch = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<LogicWriter.Switch>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<LogicWriter.Switch> = intrinsic()
+    companion object : Prefab<LogicWriter.Switch>()
   }
 }
 
@@ -12306,7 +9830,7 @@ interface LogicReader {
       get() = intrinsic()
 
     /** The StructureLogicReader prefab. */
-    companion object : Prefab()
+    companion object : Prefab<LogicReader.Standard>()
   }
 
   /** A StructureLogicSlotReader. */
@@ -12329,7 +9853,7 @@ interface LogicReader {
       get() = intrinsic()
 
     /** The StructureLogicSlotReader prefab. */
-    companion object : Prefab()
+    companion object : Prefab<LogicReader.Slot>()
   }
 
   /** A StructureLogicReagentReader. */
@@ -12352,7 +9876,7 @@ interface LogicReader {
       get() = intrinsic()
 
     /** The StructureLogicReagentReader prefab. */
-    companion object : Prefab()
+    companion object : Prefab<LogicReader.Reagent>()
   }
 
   /** A StructureLogicBatchReader. */
@@ -12375,7 +9899,7 @@ interface LogicReader {
       get() = intrinsic()
 
     /** The StructureLogicBatchReader prefab. */
-    companion object : Prefab()
+    companion object : Prefab<LogicReader.Batch>()
   }
 
   /** A StructureLogicBatchSlotReader. */
@@ -12398,80 +9922,7 @@ interface LogicReader {
       get() = intrinsic()
 
     /** The StructureLogicBatchSlotReader prefab. */
-    companion object : Prefab()
-  }
-}
-
-/** The LogicReader devices on the chip's network, by prefab. */
-object LogicReaders {
-  /** The StructureLogicReader devices on the chip's network. */
-  @PrefabName("StructureLogicReader")
-  object Standard {
-    /** The device on [pin], as a StructureLogicReader. */
-    fun at(pin: Device): LogicReader.Standard = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<LogicReader.Standard>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<LogicReader.Standard> = intrinsic()
-  }
-
-  /** The StructureLogicSlotReader devices on the chip's network. */
-  @PrefabName("StructureLogicSlotReader")
-  object Slot {
-    /** The device on [pin], as a StructureLogicSlotReader. */
-    fun at(pin: Device): LogicReader.Slot = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<LogicReader.Slot>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<LogicReader.Slot> = intrinsic()
-  }
-
-  /** The StructureLogicReagentReader devices on the chip's network. */
-  @PrefabName("StructureLogicReagentReader")
-  object Reagent {
-    /** The device on [pin], as a StructureLogicReagentReader. */
-    fun at(pin: Device): LogicReader.Reagent = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<LogicReader.Reagent>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<LogicReader.Reagent> = intrinsic()
-  }
-
-  /** The StructureLogicBatchReader devices on the chip's network. */
-  @PrefabName("StructureLogicBatchReader")
-  object Batch {
-    /** The device on [pin], as a StructureLogicBatchReader. */
-    fun at(pin: Device): LogicReader.Batch = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<LogicReader.Batch>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<LogicReader.Batch> = intrinsic()
-  }
-
-  /** The StructureLogicBatchSlotReader devices on the chip's network. */
-  @PrefabName("StructureLogicBatchSlotReader")
-  object BatchSlot {
-    /** The device on [pin], as a StructureLogicBatchSlotReader. */
-    fun at(pin: Device): LogicReader.BatchSlot = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<LogicReader.BatchSlot>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<LogicReader.BatchSlot> = intrinsic()
+    companion object : Prefab<LogicReader.BatchSlot>()
   }
 }
 
@@ -12513,7 +9964,7 @@ interface LogicProcessor {
       get() = intrinsic()
 
     /** The StructureLogicCompare prefab. */
-    companion object : Prefab()
+    companion object : Prefab<LogicProcessor.Compare>()
   }
 
   /** A StructureLogicGate. */
@@ -12540,7 +9991,7 @@ interface LogicProcessor {
       get() = intrinsic()
 
     /** The StructureLogicGate prefab. */
-    companion object : Prefab()
+    companion object : Prefab<LogicProcessor.Gate>()
   }
 
   /** A StructureLogicMath. */
@@ -12567,7 +10018,7 @@ interface LogicProcessor {
       get() = intrinsic()
 
     /** The StructureLogicMath prefab. */
-    companion object : Prefab()
+    companion object : Prefab<LogicProcessor.Math>()
   }
 
   /** A StructureLogicMathUnary. */
@@ -12594,7 +10045,7 @@ interface LogicProcessor {
       get() = intrinsic()
 
     /** The StructureLogicMathUnary prefab. */
-    companion object : Prefab()
+    companion object : Prefab<LogicProcessor.MathUnary>()
   }
 
   /** A StructureLogicMinMax. */
@@ -12621,7 +10072,7 @@ interface LogicProcessor {
       get() = intrinsic()
 
     /** The StructureLogicMinMax prefab. */
-    companion object : Prefab()
+    companion object : Prefab<LogicProcessor.MinMax>()
   }
 
   /** A StructureLogicSelect. */
@@ -12648,94 +10099,7 @@ interface LogicProcessor {
       get() = intrinsic()
 
     /** The StructureLogicSelect prefab. */
-    companion object : Prefab()
-  }
-}
-
-/** The LogicProcessor devices on the chip's network, by prefab. */
-object LogicProcessors {
-  /** The StructureLogicCompare devices on the chip's network. */
-  @PrefabName("StructureLogicCompare")
-  object Compare {
-    /** The device on [pin], as a StructureLogicCompare. */
-    fun at(pin: Device): LogicProcessor.Compare = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<LogicProcessor.Compare>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<LogicProcessor.Compare> = intrinsic()
-  }
-
-  /** The StructureLogicGate devices on the chip's network. */
-  @PrefabName("StructureLogicGate")
-  object Gate {
-    /** The device on [pin], as a StructureLogicGate. */
-    fun at(pin: Device): LogicProcessor.Gate = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<LogicProcessor.Gate>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<LogicProcessor.Gate> = intrinsic()
-  }
-
-  /** The StructureLogicMath devices on the chip's network. */
-  @PrefabName("StructureLogicMath")
-  object Math {
-    /** The device on [pin], as a StructureLogicMath. */
-    fun at(pin: Device): LogicProcessor.Math = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<LogicProcessor.Math>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<LogicProcessor.Math> = intrinsic()
-  }
-
-  /** The StructureLogicMathUnary devices on the chip's network. */
-  @PrefabName("StructureLogicMathUnary")
-  object MathUnary {
-    /** The device on [pin], as a StructureLogicMathUnary. */
-    fun at(pin: Device): LogicProcessor.MathUnary = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<LogicProcessor.MathUnary>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<LogicProcessor.MathUnary> = intrinsic()
-  }
-
-  /** The StructureLogicMinMax devices on the chip's network. */
-  @PrefabName("StructureLogicMinMax")
-  object MinMax {
-    /** The device on [pin], as a StructureLogicMinMax. */
-    fun at(pin: Device): LogicProcessor.MinMax = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<LogicProcessor.MinMax>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<LogicProcessor.MinMax> = intrinsic()
-  }
-
-  /** The StructureLogicSelect devices on the chip's network. */
-  @PrefabName("StructureLogicSelect")
-  object Select {
-    /** The device on [pin], as a StructureLogicSelect. */
-    fun at(pin: Device): LogicProcessor.Select = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<LogicProcessor.Select>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<LogicProcessor.Select> = intrinsic()
+    companion object : Prefab<LogicProcessor.Select>()
   }
 }
 
@@ -12762,7 +10126,7 @@ interface Switch {
       get() = intrinsic()
 
     /** The StructureLogicSwitch prefab. */
-    companion object : Prefab()
+    companion object : Prefab<Switch.Lever>()
   }
 
   /** A StructureLogicSwitch2. */
@@ -12780,38 +10144,7 @@ interface Switch {
       get() = intrinsic()
 
     /** The StructureLogicSwitch2 prefab. */
-    companion object : Prefab()
-  }
-}
-
-/** The Switch devices on the chip's network, by prefab. */
-object Switches {
-  /** The StructureLogicSwitch devices on the chip's network. */
-  @PrefabName("StructureLogicSwitch")
-  object Lever {
-    /** The device on [pin], as a StructureLogicSwitch. */
-    fun at(pin: Device): Switch.Lever = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<Switch.Lever>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<Switch.Lever> = intrinsic()
-  }
-
-  /** The StructureLogicSwitch2 devices on the chip's network. */
-  @PrefabName("StructureLogicSwitch2")
-  object Standard {
-    /** The device on [pin], as a StructureLogicSwitch2. */
-    fun at(pin: Device): Switch.Standard = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<Switch.Standard>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<Switch.Standard> = intrinsic()
+    companion object : Prefab<Switch.Standard>()
   }
 }
 
@@ -12838,7 +10171,7 @@ interface Button {
       get() = intrinsic()
 
     /** The StructureLogicButton prefab. */
-    companion object : Prefab()
+    companion object : Prefab<Button.Standard>()
   }
 
   /** A StructureEmergencyButton. */
@@ -12873,38 +10206,7 @@ interface Button {
       get() = intrinsic()
 
     /** The StructureEmergencyButton prefab. */
-    companion object : Prefab()
-  }
-}
-
-/** The Button devices on the chip's network, by prefab. */
-object Buttons {
-  /** The StructureLogicButton devices on the chip's network. */
-  @PrefabName("StructureLogicButton")
-  object Standard {
-    /** The device on [pin], as a StructureLogicButton. */
-    fun at(pin: Device): Button.Standard = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<Button.Standard>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<Button.Standard> = intrinsic()
-  }
-
-  /** The StructureEmergencyButton devices on the chip's network. */
-  @PrefabName("StructureEmergencyButton")
-  object Important {
-    /** The device on [pin], as a StructureEmergencyButton. */
-    fun at(pin: Device): Button.Important = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<Button.Important>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<Button.Important> = intrinsic()
+    companion object : Prefab<Button.Important>()
   }
 }
 
@@ -12955,8 +10257,20 @@ interface ChuteBin {
     val Input: DataDiskSlot
       get() = intrinsic()
 
+    /** A batch of StructureChuteBin devices. */
+    class Batch internal constructor() : DeviceBatch<ChuteBin.Import>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureChuteBin prefab. */
-    companion object : Prefab()
+    companion object : Prefab<ChuteBin.Import>() {
+      override val all: ChuteBin.Import.Batch
+        get() = intrinsic()
+
+      override fun named(name: String): ChuteBin.Import.Batch = intrinsic()
+    }
   }
 
   /** A StructureChuteExportBin. */
@@ -12992,50 +10306,19 @@ interface ChuteBin {
     val Input: DataDiskSlot
       get() = intrinsic()
 
-    /** The StructureChuteExportBin prefab. */
-    companion object : Prefab()
-  }
-}
-
-/** The ChuteBin devices on the chip's network, by prefab. */
-object ChuteBins {
-  /** The StructureChuteBin devices on the chip's network. */
-  @PrefabName("StructureChuteBin")
-  object Import {
-    /** The device on [pin], as a StructureChuteBin. */
-    fun at(pin: Device): ChuteBin.Import = intrinsic()
-
-    /** Every one on the network. */
-    val all: Batch
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): Batch = intrinsic()
-
-    class Batch internal constructor() : DeviceBatch<ChuteBin.Import>() {
-      /** A slot of every one in the batch, by number. */
-      val slots: Slots<SlotBatch<DataDiskSlot>>
-        get() = intrinsic()
-    }
-  }
-
-  /** The StructureChuteExportBin devices on the chip's network. */
-  @PrefabName("StructureChuteExportBin")
-  object Export {
-    /** The device on [pin], as a StructureChuteExportBin. */
-    fun at(pin: Device): ChuteBin.Export = intrinsic()
-
-    /** Every one on the network. */
-    val all: Batch
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): Batch = intrinsic()
-
+    /** A batch of StructureChuteExportBin devices. */
     class Batch internal constructor() : DeviceBatch<ChuteBin.Export>() {
       /** A slot of every one in the batch, by number. */
       val slots: Slots<SlotBatch<DataDiskSlot>>
         get() = intrinsic()
+    }
+
+    /** The StructureChuteExportBin prefab. */
+    companion object : Prefab<ChuteBin.Export>() {
+      override val all: ChuteBin.Export.Batch
+        get() = intrinsic()
+
+      override fun named(name: String): ChuteBin.Export.Batch = intrinsic()
     }
   }
 }
@@ -13103,7 +10386,7 @@ interface PowerTransmission {
       get() = intrinsic()
 
     /** The StructurePowerTransmitter prefab. */
-    companion object : Prefab()
+    companion object : Prefab<PowerTransmission.MicrowaveTransmitter>()
   }
 
   /** A StructurePowerTransmitterReceiver. */
@@ -13147,38 +10430,7 @@ interface PowerTransmission {
       get() = intrinsic()
 
     /** The StructurePowerTransmitterReceiver prefab. */
-    companion object : Prefab()
-  }
-}
-
-/** The PowerTransmission devices on the chip's network, by prefab. */
-object PowerTransmissions {
-  /** The StructurePowerTransmitter devices on the chip's network. */
-  @PrefabName("StructurePowerTransmitter")
-  object MicrowaveTransmitter {
-    /** The device on [pin], as a StructurePowerTransmitter. */
-    fun at(pin: Device): PowerTransmission.MicrowaveTransmitter = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<PowerTransmission.MicrowaveTransmitter>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<PowerTransmission.MicrowaveTransmitter> = intrinsic()
-  }
-
-  /** The StructurePowerTransmitterReceiver devices on the chip's network. */
-  @PrefabName("StructurePowerTransmitterReceiver")
-  object MicrowaveReceiver {
-    /** The device on [pin], as a StructurePowerTransmitterReceiver. */
-    fun at(pin: Device): PowerTransmission.MicrowaveReceiver = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<PowerTransmission.MicrowaveReceiver>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<PowerTransmission.MicrowaveReceiver> = intrinsic()
+    companion object : Prefab<PowerTransmission.MicrowaveReceiver>()
   }
 }
 
@@ -13265,8 +10517,20 @@ interface Fabricator {
     val slots: Slots<DataDiskSlot>
       get() = intrinsic()
 
+    /** A batch of StructureAutolathe devices. */
+    class Batch internal constructor() : DeviceBatch<Fabricator.Autolathe>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureAutolathe prefab. */
-    companion object : Prefab()
+    companion object : Prefab<Fabricator.Autolathe>() {
+      override val all: Fabricator.Autolathe.Batch
+        get() = intrinsic()
+
+      override fun named(name: String): Fabricator.Autolathe.Batch = intrinsic()
+    }
   }
 
   /** A StructureElectronicsPrinter. */
@@ -13326,8 +10590,20 @@ interface Fabricator {
     val slots: Slots<DataDiskSlot>
       get() = intrinsic()
 
+    /** A batch of StructureElectronicsPrinter devices. */
+    class Batch internal constructor() : DeviceBatch<Fabricator.ElectronicsPrinter>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureElectronicsPrinter prefab. */
-    companion object : Prefab()
+    companion object : Prefab<Fabricator.ElectronicsPrinter>() {
+      override val all: Fabricator.ElectronicsPrinter.Batch
+        get() = intrinsic()
+
+      override fun named(name: String): Fabricator.ElectronicsPrinter.Batch = intrinsic()
+    }
   }
 
   /** A StructureSecurityPrinter. */
@@ -13387,8 +10663,20 @@ interface Fabricator {
     val slots: Slots<DataDiskSlot>
       get() = intrinsic()
 
+    /** A batch of StructureSecurityPrinter devices. */
+    class Batch internal constructor() : DeviceBatch<Fabricator.SecurityPrinter>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureSecurityPrinter prefab. */
-    companion object : Prefab()
+    companion object : Prefab<Fabricator.SecurityPrinter>() {
+      override val all: Fabricator.SecurityPrinter.Batch
+        get() = intrinsic()
+
+      override fun named(name: String): Fabricator.SecurityPrinter.Batch = intrinsic()
+    }
   }
 
   /** A StructureToolManufactory. */
@@ -13448,8 +10736,20 @@ interface Fabricator {
     val slots: Slots<DataDiskSlot>
       get() = intrinsic()
 
+    /** A batch of StructureToolManufactory devices. */
+    class Batch internal constructor() : DeviceBatch<Fabricator.ToolManufactory>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureToolManufactory prefab. */
-    companion object : Prefab()
+    companion object : Prefab<Fabricator.ToolManufactory>() {
+      override val all: Fabricator.ToolManufactory.Batch
+        get() = intrinsic()
+
+      override fun named(name: String): Fabricator.ToolManufactory.Batch = intrinsic()
+    }
   }
 
   /** A StructureRocketManufactory. */
@@ -13509,8 +10809,20 @@ interface Fabricator {
     val slots: Slots<DataDiskSlot>
       get() = intrinsic()
 
+    /** A batch of StructureRocketManufactory devices. */
+    class Batch internal constructor() : DeviceBatch<Fabricator.RocketManufactory>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureRocketManufactory prefab. */
-    companion object : Prefab()
+    companion object : Prefab<Fabricator.RocketManufactory>() {
+      override val all: Fabricator.RocketManufactory.Batch
+        get() = intrinsic()
+
+      override fun named(name: String): Fabricator.RocketManufactory.Batch = intrinsic()
+    }
   }
 
   /** A StructureHydraulicPipeBender. */
@@ -13570,8 +10882,20 @@ interface Fabricator {
     val slots: Slots<DataDiskSlot>
       get() = intrinsic()
 
+    /** A batch of StructureHydraulicPipeBender devices. */
+    class Batch internal constructor() : DeviceBatch<Fabricator.HydraulicPipeBender>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureHydraulicPipeBender prefab. */
-    companion object : Prefab()
+    companion object : Prefab<Fabricator.HydraulicPipeBender>() {
+      override val all: Fabricator.HydraulicPipeBender.Batch
+        get() = intrinsic()
+
+      override fun named(name: String): Fabricator.HydraulicPipeBender.Batch = intrinsic()
+    }
   }
 
   /** A StructureAutomatedOven. */
@@ -13631,8 +10955,20 @@ interface Fabricator {
     val slots: Slots<DataDiskSlot>
       get() = intrinsic()
 
+    /** A batch of StructureAutomatedOven devices. */
+    class Batch internal constructor() : DeviceBatch<Fabricator.AutomatedOven>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureAutomatedOven prefab. */
-    companion object : Prefab()
+    companion object : Prefab<Fabricator.AutomatedOven>() {
+      override val all: Fabricator.AutomatedOven.Batch
+        get() = intrinsic()
+
+      override fun named(name: String): Fabricator.AutomatedOven.Batch = intrinsic()
+    }
   }
 
   /** A StructureAdvancedPackagingMachine. */
@@ -13692,170 +11028,19 @@ interface Fabricator {
     val slots: Slots<DataDiskSlot>
       get() = intrinsic()
 
-    /** The StructureAdvancedPackagingMachine prefab. */
-    companion object : Prefab()
-  }
-}
-
-/** The Fabricator devices on the chip's network, by prefab. */
-object Fabricators {
-  /** The StructureAutolathe devices on the chip's network. */
-  @PrefabName("StructureAutolathe")
-  object Autolathe {
-    /** The device on [pin], as a StructureAutolathe. */
-    fun at(pin: Device): Fabricator.Autolathe = intrinsic()
-
-    /** Every one on the network. */
-    val all: Batch
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): Batch = intrinsic()
-
-    class Batch internal constructor() : DeviceBatch<Fabricator.Autolathe>() {
-      /** A slot of every one in the batch, by number. */
-      val slots: Slots<SlotBatch<DataDiskSlot>>
-        get() = intrinsic()
-    }
-  }
-
-  /** The StructureElectronicsPrinter devices on the chip's network. */
-  @PrefabName("StructureElectronicsPrinter")
-  object ElectronicsPrinter {
-    /** The device on [pin], as a StructureElectronicsPrinter. */
-    fun at(pin: Device): Fabricator.ElectronicsPrinter = intrinsic()
-
-    /** Every one on the network. */
-    val all: Batch
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): Batch = intrinsic()
-
-    class Batch internal constructor() : DeviceBatch<Fabricator.ElectronicsPrinter>() {
-      /** A slot of every one in the batch, by number. */
-      val slots: Slots<SlotBatch<DataDiskSlot>>
-        get() = intrinsic()
-    }
-  }
-
-  /** The StructureSecurityPrinter devices on the chip's network. */
-  @PrefabName("StructureSecurityPrinter")
-  object SecurityPrinter {
-    /** The device on [pin], as a StructureSecurityPrinter. */
-    fun at(pin: Device): Fabricator.SecurityPrinter = intrinsic()
-
-    /** Every one on the network. */
-    val all: Batch
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): Batch = intrinsic()
-
-    class Batch internal constructor() : DeviceBatch<Fabricator.SecurityPrinter>() {
-      /** A slot of every one in the batch, by number. */
-      val slots: Slots<SlotBatch<DataDiskSlot>>
-        get() = intrinsic()
-    }
-  }
-
-  /** The StructureToolManufactory devices on the chip's network. */
-  @PrefabName("StructureToolManufactory")
-  object ToolManufactory {
-    /** The device on [pin], as a StructureToolManufactory. */
-    fun at(pin: Device): Fabricator.ToolManufactory = intrinsic()
-
-    /** Every one on the network. */
-    val all: Batch
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): Batch = intrinsic()
-
-    class Batch internal constructor() : DeviceBatch<Fabricator.ToolManufactory>() {
-      /** A slot of every one in the batch, by number. */
-      val slots: Slots<SlotBatch<DataDiskSlot>>
-        get() = intrinsic()
-    }
-  }
-
-  /** The StructureRocketManufactory devices on the chip's network. */
-  @PrefabName("StructureRocketManufactory")
-  object RocketManufactory {
-    /** The device on [pin], as a StructureRocketManufactory. */
-    fun at(pin: Device): Fabricator.RocketManufactory = intrinsic()
-
-    /** Every one on the network. */
-    val all: Batch
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): Batch = intrinsic()
-
-    class Batch internal constructor() : DeviceBatch<Fabricator.RocketManufactory>() {
-      /** A slot of every one in the batch, by number. */
-      val slots: Slots<SlotBatch<DataDiskSlot>>
-        get() = intrinsic()
-    }
-  }
-
-  /** The StructureHydraulicPipeBender devices on the chip's network. */
-  @PrefabName("StructureHydraulicPipeBender")
-  object HydraulicPipeBender {
-    /** The device on [pin], as a StructureHydraulicPipeBender. */
-    fun at(pin: Device): Fabricator.HydraulicPipeBender = intrinsic()
-
-    /** Every one on the network. */
-    val all: Batch
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): Batch = intrinsic()
-
-    class Batch internal constructor() : DeviceBatch<Fabricator.HydraulicPipeBender>() {
-      /** A slot of every one in the batch, by number. */
-      val slots: Slots<SlotBatch<DataDiskSlot>>
-        get() = intrinsic()
-    }
-  }
-
-  /** The StructureAutomatedOven devices on the chip's network. */
-  @PrefabName("StructureAutomatedOven")
-  object AutomatedOven {
-    /** The device on [pin], as a StructureAutomatedOven. */
-    fun at(pin: Device): Fabricator.AutomatedOven = intrinsic()
-
-    /** Every one on the network. */
-    val all: Batch
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): Batch = intrinsic()
-
-    class Batch internal constructor() : DeviceBatch<Fabricator.AutomatedOven>() {
-      /** A slot of every one in the batch, by number. */
-      val slots: Slots<SlotBatch<DataDiskSlot>>
-        get() = intrinsic()
-    }
-  }
-
-  /** The StructureAdvancedPackagingMachine devices on the chip's network. */
-  @PrefabName("StructureAdvancedPackagingMachine")
-  object AdvancedPackagingMachine {
-    /** The device on [pin], as a StructureAdvancedPackagingMachine. */
-    fun at(pin: Device): Fabricator.AdvancedPackagingMachine = intrinsic()
-
-    /** Every one on the network. */
-    val all: Batch
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): Batch = intrinsic()
-
+    /** A batch of StructureAdvancedPackagingMachine devices. */
     class Batch internal constructor() : DeviceBatch<Fabricator.AdvancedPackagingMachine>() {
       /** A slot of every one in the batch, by number. */
       val slots: Slots<SlotBatch<DataDiskSlot>>
         get() = intrinsic()
+    }
+
+    /** The StructureAdvancedPackagingMachine prefab. */
+    companion object : Prefab<Fabricator.AdvancedPackagingMachine>() {
+      override val all: Fabricator.AdvancedPackagingMachine.Batch
+        get() = intrinsic()
+
+      override fun named(name: String): Fabricator.AdvancedPackagingMachine.Batch = intrinsic()
     }
   }
 }
@@ -13910,8 +11095,20 @@ interface DigitalChute {
     val TransportSlot: DataDiskSlot
       get() = intrinsic()
 
+    /** A batch of StructureChuteDigitalValveLeft devices. */
+    class Batch internal constructor() : DeviceBatch<DigitalChute.ValveLeft>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureChuteDigitalValveLeft prefab. */
-    companion object : Prefab()
+    companion object : Prefab<DigitalChute.ValveLeft>() {
+      override val all: DigitalChute.ValveLeft.Batch
+        get() = intrinsic()
+
+      override fun named(name: String): DigitalChute.ValveLeft.Batch = intrinsic()
+    }
   }
 
   /** A StructureChuteDigitalValveRight. */
@@ -13952,8 +11149,20 @@ interface DigitalChute {
     val TransportSlot: DataDiskSlot
       get() = intrinsic()
 
+    /** A batch of StructureChuteDigitalValveRight devices. */
+    class Batch internal constructor() : DeviceBatch<DigitalChute.ValveRight>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureChuteDigitalValveRight prefab. */
-    companion object : Prefab()
+    companion object : Prefab<DigitalChute.ValveRight>() {
+      override val all: DigitalChute.ValveRight.Batch
+        get() = intrinsic()
+
+      override fun named(name: String): DigitalChute.ValveRight.Batch = intrinsic()
+    }
   }
 
   /** A StructureChuteDigitalFlipFlopSplitterLeft. */
@@ -13994,8 +11203,20 @@ interface DigitalChute {
     val TransportSlot: DataDiskSlot
       get() = intrinsic()
 
+    /** A batch of StructureChuteDigitalFlipFlopSplitterLeft devices. */
+    class Batch internal constructor() : DeviceBatch<DigitalChute.FlipFlopSplitterLeft>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureChuteDigitalFlipFlopSplitterLeft prefab. */
-    companion object : Prefab()
+    companion object : Prefab<DigitalChute.FlipFlopSplitterLeft>() {
+      override val all: DigitalChute.FlipFlopSplitterLeft.Batch
+        get() = intrinsic()
+
+      override fun named(name: String): DigitalChute.FlipFlopSplitterLeft.Batch = intrinsic()
+    }
   }
 
   /** A StructureChuteDigitalFlipFlopSplitterRight. */
@@ -14036,90 +11257,19 @@ interface DigitalChute {
     val TransportSlot: DataDiskSlot
       get() = intrinsic()
 
-    /** The StructureChuteDigitalFlipFlopSplitterRight prefab. */
-    companion object : Prefab()
-  }
-}
-
-/** The DigitalChute devices on the chip's network, by prefab. */
-object DigitalChutes {
-  /** The StructureChuteDigitalValveLeft devices on the chip's network. */
-  @PrefabName("StructureChuteDigitalValveLeft")
-  object ValveLeft {
-    /** The device on [pin], as a StructureChuteDigitalValveLeft. */
-    fun at(pin: Device): DigitalChute.ValveLeft = intrinsic()
-
-    /** Every one on the network. */
-    val all: Batch
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): Batch = intrinsic()
-
-    class Batch internal constructor() : DeviceBatch<DigitalChute.ValveLeft>() {
-      /** A slot of every one in the batch, by number. */
-      val slots: Slots<SlotBatch<DataDiskSlot>>
-        get() = intrinsic()
-    }
-  }
-
-  /** The StructureChuteDigitalValveRight devices on the chip's network. */
-  @PrefabName("StructureChuteDigitalValveRight")
-  object ValveRight {
-    /** The device on [pin], as a StructureChuteDigitalValveRight. */
-    fun at(pin: Device): DigitalChute.ValveRight = intrinsic()
-
-    /** Every one on the network. */
-    val all: Batch
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): Batch = intrinsic()
-
-    class Batch internal constructor() : DeviceBatch<DigitalChute.ValveRight>() {
-      /** A slot of every one in the batch, by number. */
-      val slots: Slots<SlotBatch<DataDiskSlot>>
-        get() = intrinsic()
-    }
-  }
-
-  /** The StructureChuteDigitalFlipFlopSplitterLeft devices on the chip's network. */
-  @PrefabName("StructureChuteDigitalFlipFlopSplitterLeft")
-  object FlipFlopSplitterLeft {
-    /** The device on [pin], as a StructureChuteDigitalFlipFlopSplitterLeft. */
-    fun at(pin: Device): DigitalChute.FlipFlopSplitterLeft = intrinsic()
-
-    /** Every one on the network. */
-    val all: Batch
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): Batch = intrinsic()
-
-    class Batch internal constructor() : DeviceBatch<DigitalChute.FlipFlopSplitterLeft>() {
-      /** A slot of every one in the batch, by number. */
-      val slots: Slots<SlotBatch<DataDiskSlot>>
-        get() = intrinsic()
-    }
-  }
-
-  /** The StructureChuteDigitalFlipFlopSplitterRight devices on the chip's network. */
-  @PrefabName("StructureChuteDigitalFlipFlopSplitterRight")
-  object FlipFlopSplitterRight {
-    /** The device on [pin], as a StructureChuteDigitalFlipFlopSplitterRight. */
-    fun at(pin: Device): DigitalChute.FlipFlopSplitterRight = intrinsic()
-
-    /** Every one on the network. */
-    val all: Batch
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): Batch = intrinsic()
-
+    /** A batch of StructureChuteDigitalFlipFlopSplitterRight devices. */
     class Batch internal constructor() : DeviceBatch<DigitalChute.FlipFlopSplitterRight>() {
       /** A slot of every one in the batch, by number. */
       val slots: Slots<SlotBatch<DataDiskSlot>>
         get() = intrinsic()
+    }
+
+    /** The StructureChuteDigitalFlipFlopSplitterRight prefab. */
+    companion object : Prefab<DigitalChute.FlipFlopSplitterRight>() {
+      override val all: DigitalChute.FlipFlopSplitterRight.Batch
+        get() = intrinsic()
+
+      override fun named(name: String): DigitalChute.FlipFlopSplitterRight.Batch = intrinsic()
     }
   }
 }
@@ -14175,7 +11325,7 @@ interface Door {
       set(value) = intrinsic()
 
     /** The StructureGlassDoor prefab. */
-    companion object : Prefab()
+    companion object : Prefab<Door.Glass>()
   }
 
   /** A StructureBlastDoor. */
@@ -14211,7 +11361,7 @@ interface Door {
       set(value) = intrinsic()
 
     /** The StructureBlastDoor prefab. */
-    companion object : Prefab()
+    companion object : Prefab<Door.Blast>()
   }
 
   /** A StructureCompositeDoor. */
@@ -14247,52 +11397,7 @@ interface Door {
       set(value) = intrinsic()
 
     /** The StructureCompositeDoor prefab. */
-    companion object : Prefab()
-  }
-}
-
-/** The Door devices on the chip's network, by prefab. */
-object Doors {
-  /** The StructureGlassDoor devices on the chip's network. */
-  @PrefabName("StructureGlassDoor")
-  object Glass {
-    /** The device on [pin], as a StructureGlassDoor. */
-    fun at(pin: Device): Door.Glass = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<Door.Glass>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<Door.Glass> = intrinsic()
-  }
-
-  /** The StructureBlastDoor devices on the chip's network. */
-  @PrefabName("StructureBlastDoor")
-  object Blast {
-    /** The device on [pin], as a StructureBlastDoor. */
-    fun at(pin: Device): Door.Blast = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<Door.Blast>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<Door.Blast> = intrinsic()
-  }
-
-  /** The StructureCompositeDoor devices on the chip's network. */
-  @PrefabName("StructureCompositeDoor")
-  object Composite {
-    /** The device on [pin], as a StructureCompositeDoor. */
-    fun at(pin: Device): Door.Composite = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<Door.Composite>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<Door.Composite> = intrinsic()
+    companion object : Prefab<Door.Composite>()
   }
 }
 
@@ -14331,7 +11436,7 @@ interface InteriorDoor : Door {
       set(value) = intrinsic()
 
     /** The StructureInteriorDoorGlass prefab. */
-    companion object : Prefab()
+    companion object : Prefab<InteriorDoor.Glass>()
   }
 
   /** A StructureInteriorDoorPadded. */
@@ -14367,7 +11472,7 @@ interface InteriorDoor : Door {
       set(value) = intrinsic()
 
     /** The StructureInteriorDoorPadded prefab. */
-    companion object : Prefab()
+    companion object : Prefab<InteriorDoor.Padded>()
   }
 
   /** A StructureInteriorDoorPaddedThin. */
@@ -14403,7 +11508,7 @@ interface InteriorDoor : Door {
       set(value) = intrinsic()
 
     /** The StructureInteriorDoorPaddedThin prefab. */
-    companion object : Prefab()
+    companion object : Prefab<InteriorDoor.PaddedThin>()
   }
 
   /** A StructureInteriorDoorTriangle. */
@@ -14439,66 +11544,7 @@ interface InteriorDoor : Door {
       set(value) = intrinsic()
 
     /** The StructureInteriorDoorTriangle prefab. */
-    companion object : Prefab()
-  }
-}
-
-/** The InteriorDoor devices on the chip's network, by prefab. */
-object InteriorDoors {
-  /** The StructureInteriorDoorGlass devices on the chip's network. */
-  @PrefabName("StructureInteriorDoorGlass")
-  object Glass {
-    /** The device on [pin], as a StructureInteriorDoorGlass. */
-    fun at(pin: Device): InteriorDoor.Glass = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<InteriorDoor.Glass>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<InteriorDoor.Glass> = intrinsic()
-  }
-
-  /** The StructureInteriorDoorPadded devices on the chip's network. */
-  @PrefabName("StructureInteriorDoorPadded")
-  object Padded {
-    /** The device on [pin], as a StructureInteriorDoorPadded. */
-    fun at(pin: Device): InteriorDoor.Padded = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<InteriorDoor.Padded>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<InteriorDoor.Padded> = intrinsic()
-  }
-
-  /** The StructureInteriorDoorPaddedThin devices on the chip's network. */
-  @PrefabName("StructureInteriorDoorPaddedThin")
-  object PaddedThin {
-    /** The device on [pin], as a StructureInteriorDoorPaddedThin. */
-    fun at(pin: Device): InteriorDoor.PaddedThin = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<InteriorDoor.PaddedThin>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<InteriorDoor.PaddedThin> = intrinsic()
-  }
-
-  /** The StructureInteriorDoorTriangle devices on the chip's network. */
-  @PrefabName("StructureInteriorDoorTriangle")
-  object Triangle {
-    /** The device on [pin], as a StructureInteriorDoorTriangle. */
-    fun at(pin: Device): InteriorDoor.Triangle = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<InteriorDoor.Triangle>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<InteriorDoor.Triangle> = intrinsic()
+    companion object : Prefab<InteriorDoor.Triangle>()
   }
 }
 
@@ -14549,8 +11595,20 @@ interface Computer {
     val Motherboard: DataDiskSlot
       get() = intrinsic()
 
+    /** A batch of StructureComputer devices. */
+    class Batch internal constructor() : DeviceBatch<Computer.Modern>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureComputer prefab. */
-    companion object : Prefab()
+    companion object : Prefab<Computer.Modern>() {
+      override val all: Computer.Modern.Batch
+        get() = intrinsic()
+
+      override fun named(name: String): Computer.Modern.Batch = intrinsic()
+    }
   }
 
   /** A StructureComputerUpright. */
@@ -14586,8 +11644,20 @@ interface Computer {
     val Motherboard: DataDiskSlot
       get() = intrinsic()
 
+    /** A batch of StructureComputerUpright devices. */
+    class Batch internal constructor() : DeviceBatch<Computer.Retro>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureComputerUpright prefab. */
-    companion object : Prefab()
+    companion object : Prefab<Computer.Retro>() {
+      override val all: Computer.Retro.Batch
+        get() = intrinsic()
+
+      override fun named(name: String): Computer.Retro.Batch = intrinsic()
+    }
   }
 
   /** A StructureComputerBigScreen. */
@@ -14623,8 +11693,20 @@ interface Computer {
     val Motherboard: DataDiskSlot
       get() = intrinsic()
 
+    /** A batch of StructureComputerBigScreen devices. */
+    class Batch internal constructor() : DeviceBatch<Computer.BigScreen>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureComputerBigScreen prefab. */
-    companion object : Prefab()
+    companion object : Prefab<Computer.BigScreen>() {
+      override val all: Computer.BigScreen.Batch
+        get() = intrinsic()
+
+      override fun named(name: String): Computer.BigScreen.Batch = intrinsic()
+    }
   }
 
   /** A StructureComputerBigScreenWallMounted. */
@@ -14660,90 +11742,19 @@ interface Computer {
     val Motherboard: DataDiskSlot
       get() = intrinsic()
 
-    /** The StructureComputerBigScreenWallMounted prefab. */
-    companion object : Prefab()
-  }
-}
-
-/** The Computer devices on the chip's network, by prefab. */
-object Computers {
-  /** The StructureComputer devices on the chip's network. */
-  @PrefabName("StructureComputer")
-  object Modern {
-    /** The device on [pin], as a StructureComputer. */
-    fun at(pin: Device): Computer.Modern = intrinsic()
-
-    /** Every one on the network. */
-    val all: Batch
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): Batch = intrinsic()
-
-    class Batch internal constructor() : DeviceBatch<Computer.Modern>() {
-      /** A slot of every one in the batch, by number. */
-      val slots: Slots<SlotBatch<DataDiskSlot>>
-        get() = intrinsic()
-    }
-  }
-
-  /** The StructureComputerUpright devices on the chip's network. */
-  @PrefabName("StructureComputerUpright")
-  object Retro {
-    /** The device on [pin], as a StructureComputerUpright. */
-    fun at(pin: Device): Computer.Retro = intrinsic()
-
-    /** Every one on the network. */
-    val all: Batch
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): Batch = intrinsic()
-
-    class Batch internal constructor() : DeviceBatch<Computer.Retro>() {
-      /** A slot of every one in the batch, by number. */
-      val slots: Slots<SlotBatch<DataDiskSlot>>
-        get() = intrinsic()
-    }
-  }
-
-  /** The StructureComputerBigScreen devices on the chip's network. */
-  @PrefabName("StructureComputerBigScreen")
-  object BigScreen {
-    /** The device on [pin], as a StructureComputerBigScreen. */
-    fun at(pin: Device): Computer.BigScreen = intrinsic()
-
-    /** Every one on the network. */
-    val all: Batch
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): Batch = intrinsic()
-
-    class Batch internal constructor() : DeviceBatch<Computer.BigScreen>() {
-      /** A slot of every one in the batch, by number. */
-      val slots: Slots<SlotBatch<DataDiskSlot>>
-        get() = intrinsic()
-    }
-  }
-
-  /** The StructureComputerBigScreenWallMounted devices on the chip's network. */
-  @PrefabName("StructureComputerBigScreenWallMounted")
-  object BigScreenWallMounted {
-    /** The device on [pin], as a StructureComputerBigScreenWallMounted. */
-    fun at(pin: Device): Computer.BigScreenWallMounted = intrinsic()
-
-    /** Every one on the network. */
-    val all: Batch
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): Batch = intrinsic()
-
+    /** A batch of StructureComputerBigScreenWallMounted devices. */
     class Batch internal constructor() : DeviceBatch<Computer.BigScreenWallMounted>() {
       /** A slot of every one in the batch, by number. */
       val slots: Slots<SlotBatch<DataDiskSlot>>
         get() = intrinsic()
+    }
+
+    /** The StructureComputerBigScreenWallMounted prefab. */
+    companion object : Prefab<Computer.BigScreenWallMounted>() {
+      override val all: Computer.BigScreenWallMounted.Batch
+        get() = intrinsic()
+
+      override fun named(name: String): Computer.BigScreenWallMounted.Batch = intrinsic()
     }
   }
 }
@@ -14789,7 +11800,7 @@ interface DigitalValve : Valve {
       set(value) = intrinsic()
 
     /** The StructureDigitalValve prefab. */
-    companion object : Prefab()
+    companion object : Prefab<DigitalValve.Gas>()
   }
 
   /** A StructureWaterDigitalValve. */
@@ -14823,38 +11834,7 @@ interface DigitalValve : Valve {
       set(value) = intrinsic()
 
     /** The StructureWaterDigitalValve prefab. */
-    companion object : Prefab()
-  }
-}
-
-/** The DigitalValve devices on the chip's network, by prefab. */
-object DigitalValves {
-  /** The StructureDigitalValve devices on the chip's network. */
-  @PrefabName("StructureDigitalValve")
-  object Gas {
-    /** The device on [pin], as a StructureDigitalValve. */
-    fun at(pin: Device): DigitalValve.Gas = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<DigitalValve.Gas>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<DigitalValve.Gas> = intrinsic()
-  }
-
-  /** The StructureWaterDigitalValve devices on the chip's network. */
-  @PrefabName("StructureWaterDigitalValve")
-  object Liquid {
-    /** The device on [pin], as a StructureWaterDigitalValve. */
-    fun at(pin: Device): DigitalValve.Liquid = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<DigitalValve.Liquid>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<DigitalValve.Liquid> = intrinsic()
+    companion object : Prefab<DigitalValve.Liquid>()
   }
 }
 
@@ -14923,8 +11903,20 @@ interface WallCooler {
     val DataDisk: DataDiskSlot
       get() = intrinsic()
 
+    /** A batch of StructureWallCooler devices. */
+    class Batch internal constructor() : DeviceBatch<WallCooler.Gas>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureWallCooler prefab. */
-    companion object : Prefab()
+    companion object : Prefab<WallCooler.Gas>() {
+      override val all: WallCooler.Gas.Batch
+        get() = intrinsic()
+
+      override fun named(name: String): WallCooler.Gas.Batch = intrinsic()
+    }
   }
 
   /** A StructureWaterWallCooler. */
@@ -14974,50 +11966,19 @@ interface WallCooler {
     val DataDisk: DataDiskSlot
       get() = intrinsic()
 
-    /** The StructureWaterWallCooler prefab. */
-    companion object : Prefab()
-  }
-}
-
-/** The WallCooler devices on the chip's network, by prefab. */
-object WallCoolers {
-  /** The StructureWallCooler devices on the chip's network. */
-  @PrefabName("StructureWallCooler")
-  object Gas {
-    /** The device on [pin], as a StructureWallCooler. */
-    fun at(pin: Device): WallCooler.Gas = intrinsic()
-
-    /** Every one on the network. */
-    val all: Batch
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): Batch = intrinsic()
-
-    class Batch internal constructor() : DeviceBatch<WallCooler.Gas>() {
-      /** A slot of every one in the batch, by number. */
-      val slots: Slots<SlotBatch<DataDiskSlot>>
-        get() = intrinsic()
-    }
-  }
-
-  /** The StructureWaterWallCooler devices on the chip's network. */
-  @PrefabName("StructureWaterWallCooler")
-  object Liquid {
-    /** The device on [pin], as a StructureWaterWallCooler. */
-    fun at(pin: Device): WallCooler.Liquid = intrinsic()
-
-    /** Every one on the network. */
-    val all: Batch
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): Batch = intrinsic()
-
+    /** A batch of StructureWaterWallCooler devices. */
     class Batch internal constructor() : DeviceBatch<WallCooler.Liquid>() {
       /** A slot of every one in the batch, by number. */
       val slots: Slots<SlotBatch<DataDiskSlot>>
         get() = intrinsic()
+    }
+
+    /** The StructureWaterWallCooler prefab. */
+    companion object : Prefab<WallCooler.Liquid>() {
+      override val all: WallCooler.Liquid.Batch
+        get() = intrinsic()
+
+      override fun named(name: String): WallCooler.Liquid.Batch = intrinsic()
     }
   }
 }
@@ -15089,8 +12050,20 @@ interface ItemRouter {
     val Export2: DataDiskSlot
       get() = intrinsic()
 
+    /** A batch of StructureSorter devices. */
+    class Batch internal constructor() : DeviceBatch<ItemRouter.Sorter>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureSorter prefab. */
-    companion object : Prefab()
+    companion object : Prefab<ItemRouter.Sorter>() {
+      override val all: ItemRouter.Sorter.Batch
+        get() = intrinsic()
+
+      override fun named(name: String): ItemRouter.Sorter.Batch = intrinsic()
+    }
   }
 
   /** A StructureUnloader. */
@@ -15137,8 +12110,20 @@ interface ItemRouter {
     val slots: Slots<DataDiskSlot>
       get() = intrinsic()
 
+    /** A batch of StructureUnloader devices. */
+    class Batch internal constructor() : DeviceBatch<ItemRouter.Unloader>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureUnloader prefab. */
-    companion object : Prefab()
+    companion object : Prefab<ItemRouter.Unloader>() {
+      override val all: ItemRouter.Unloader.Batch
+        get() = intrinsic()
+
+      override fun named(name: String): ItemRouter.Unloader.Batch = intrinsic()
+    }
   }
 
   /** A StructureStacker. */
@@ -15198,8 +12183,20 @@ interface ItemRouter {
     val Processing: DataDiskSlot
       get() = intrinsic()
 
+    /** A batch of StructureStacker devices. */
+    class Batch internal constructor() : DeviceBatch<ItemRouter.Stacker>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureStacker prefab. */
-    companion object : Prefab()
+    companion object : Prefab<ItemRouter.Stacker>() {
+      override val all: ItemRouter.Stacker.Batch
+        get() = intrinsic()
+
+      override fun named(name: String): ItemRouter.Stacker.Batch = intrinsic()
+    }
   }
 
   /** A StructureStackerReverse. */
@@ -15259,90 +12256,19 @@ interface ItemRouter {
     val Processing: DataDiskSlot
       get() = intrinsic()
 
-    /** The StructureStackerReverse prefab. */
-    companion object : Prefab()
-  }
-}
-
-/** The ItemRouter devices on the chip's network, by prefab. */
-object ItemRouters {
-  /** The StructureSorter devices on the chip's network. */
-  @PrefabName("StructureSorter")
-  object Sorter {
-    /** The device on [pin], as a StructureSorter. */
-    fun at(pin: Device): ItemRouter.Sorter = intrinsic()
-
-    /** Every one on the network. */
-    val all: Batch
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): Batch = intrinsic()
-
-    class Batch internal constructor() : DeviceBatch<ItemRouter.Sorter>() {
-      /** A slot of every one in the batch, by number. */
-      val slots: Slots<SlotBatch<DataDiskSlot>>
-        get() = intrinsic()
-    }
-  }
-
-  /** The StructureUnloader devices on the chip's network. */
-  @PrefabName("StructureUnloader")
-  object Unloader {
-    /** The device on [pin], as a StructureUnloader. */
-    fun at(pin: Device): ItemRouter.Unloader = intrinsic()
-
-    /** Every one on the network. */
-    val all: Batch
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): Batch = intrinsic()
-
-    class Batch internal constructor() : DeviceBatch<ItemRouter.Unloader>() {
-      /** A slot of every one in the batch, by number. */
-      val slots: Slots<SlotBatch<DataDiskSlot>>
-        get() = intrinsic()
-    }
-  }
-
-  /** The StructureStacker devices on the chip's network. */
-  @PrefabName("StructureStacker")
-  object Stacker {
-    /** The device on [pin], as a StructureStacker. */
-    fun at(pin: Device): ItemRouter.Stacker = intrinsic()
-
-    /** Every one on the network. */
-    val all: Batch
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): Batch = intrinsic()
-
-    class Batch internal constructor() : DeviceBatch<ItemRouter.Stacker>() {
-      /** A slot of every one in the batch, by number. */
-      val slots: Slots<SlotBatch<DataDiskSlot>>
-        get() = intrinsic()
-    }
-  }
-
-  /** The StructureStackerReverse devices on the chip's network. */
-  @PrefabName("StructureStackerReverse")
-  object StackerReversed {
-    /** The device on [pin], as a StructureStackerReverse. */
-    fun at(pin: Device): ItemRouter.StackerReversed = intrinsic()
-
-    /** Every one on the network. */
-    val all: Batch
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): Batch = intrinsic()
-
+    /** A batch of StructureStackerReverse devices. */
     class Batch internal constructor() : DeviceBatch<ItemRouter.StackerReversed>() {
       /** A slot of every one in the batch, by number. */
       val slots: Slots<SlotBatch<DataDiskSlot>>
         get() = intrinsic()
+    }
+
+    /** The StructureStackerReverse prefab. */
+    companion object : Prefab<ItemRouter.StackerReversed>() {
+      override val all: ItemRouter.StackerReversed.Batch
+        get() = intrinsic()
+
+      override fun named(name: String): ItemRouter.StackerReversed.Batch = intrinsic()
     }
   }
 }
@@ -15408,8 +12334,20 @@ interface SuitStorage {
     val Back: BackSlot
       get() = intrinsic()
 
+    /** A batch of StructureSuitStorage devices. */
+    class Batch internal constructor() : DeviceBatch<SuitStorage.Standard>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<CommonSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureSuitStorage prefab. */
-    companion object : Prefab()
+    companion object : Prefab<SuitStorage.Standard>() {
+      override val all: SuitStorage.Standard.Batch
+        get() = intrinsic()
+
+      override fun named(name: String): SuitStorage.Standard.Batch = intrinsic()
+    }
   }
 
   /** A StructureSuitStorageFrame. */
@@ -15457,8 +12395,20 @@ interface SuitStorage {
     val Back: BackSlot
       get() = intrinsic()
 
+    /** A batch of StructureSuitStorageFrame devices. */
+    class Batch internal constructor() : DeviceBatch<SuitStorage.Frame>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<CommonSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureSuitStorageFrame prefab. */
-    companion object : Prefab()
+    companion object : Prefab<SuitStorage.Frame>() {
+      override val all: SuitStorage.Frame.Batch
+        get() = intrinsic()
+
+      override fun named(name: String): SuitStorage.Frame.Batch = intrinsic()
+    }
   }
 
   /** A StructureSuitStorageLocker. */
@@ -15506,70 +12456,19 @@ interface SuitStorage {
     val Back: BackSlot
       get() = intrinsic()
 
-    /** The StructureSuitStorageLocker prefab. */
-    companion object : Prefab()
-  }
-}
-
-/** The SuitStorage devices on the chip's network, by prefab. */
-object SuitStorages {
-  /** The StructureSuitStorage devices on the chip's network. */
-  @PrefabName("StructureSuitStorage")
-  object Standard {
-    /** The device on [pin], as a StructureSuitStorage. */
-    fun at(pin: Device): SuitStorage.Standard = intrinsic()
-
-    /** Every one on the network. */
-    val all: Batch
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): Batch = intrinsic()
-
-    class Batch internal constructor() : DeviceBatch<SuitStorage.Standard>() {
-      /** A slot of every one in the batch, by number. */
-      val slots: Slots<SlotBatch<CommonSlot>>
-        get() = intrinsic()
-    }
-  }
-
-  /** The StructureSuitStorageFrame devices on the chip's network. */
-  @PrefabName("StructureSuitStorageFrame")
-  object Frame {
-    /** The device on [pin], as a StructureSuitStorageFrame. */
-    fun at(pin: Device): SuitStorage.Frame = intrinsic()
-
-    /** Every one on the network. */
-    val all: Batch
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): Batch = intrinsic()
-
-    class Batch internal constructor() : DeviceBatch<SuitStorage.Frame>() {
-      /** A slot of every one in the batch, by number. */
-      val slots: Slots<SlotBatch<CommonSlot>>
-        get() = intrinsic()
-    }
-  }
-
-  /** The StructureSuitStorageLocker devices on the chip's network. */
-  @PrefabName("StructureSuitStorageLocker")
-  object Locker {
-    /** The device on [pin], as a StructureSuitStorageLocker. */
-    fun at(pin: Device): SuitStorage.Locker = intrinsic()
-
-    /** Every one on the network. */
-    val all: Batch
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): Batch = intrinsic()
-
+    /** A batch of StructureSuitStorageLocker devices. */
     class Batch internal constructor() : DeviceBatch<SuitStorage.Locker>() {
       /** A slot of every one in the batch, by number. */
       val slots: Slots<SlotBatch<CommonSlot>>
         get() = intrinsic()
+    }
+
+    /** The StructureSuitStorageLocker prefab. */
+    companion object : Prefab<SuitStorage.Locker>() {
+      override val all: SuitStorage.Locker.Batch
+        get() = intrinsic()
+
+      override fun named(name: String): SuitStorage.Locker.Batch = intrinsic()
     }
   }
 }
@@ -15628,7 +12527,7 @@ interface Generator {
       get() = intrinsic()
 
     /** The StructureGasGenerator prefab. */
-    companion object : Prefab()
+    companion object : Prefab<Generator.GasFuel>()
   }
 
   /** A StructureSolidFuelGenerator. */
@@ -15662,8 +12561,20 @@ interface Generator {
     val Input: DataDiskSlot
       get() = intrinsic()
 
+    /** A batch of StructureSolidFuelGenerator devices. */
+    class Batch internal constructor() : DeviceBatch<Generator.SolidFuel>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureSolidFuelGenerator prefab. */
-    companion object : Prefab()
+    companion object : Prefab<Generator.SolidFuel>() {
+      override val all: Generator.SolidFuel.Batch
+        get() = intrinsic()
+
+      override fun named(name: String): Generator.SolidFuel.Batch = intrinsic()
+    }
   }
 
   /** A StructureStirlingEngine. */
@@ -15736,8 +12647,20 @@ interface Generator {
     val GasCanister: GasCanisterSlot
       get() = intrinsic()
 
+    /** A batch of StructureStirlingEngine devices. */
+    class Batch internal constructor() : DeviceBatch<Generator.StirlingEngine>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<GasCanisterSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureStirlingEngine prefab. */
-    companion object : Prefab()
+    companion object : Prefab<Generator.StirlingEngine>() {
+      override val all: Generator.StirlingEngine.Batch
+        get() = intrinsic()
+
+      override fun named(name: String): Generator.StirlingEngine.Batch = intrinsic()
+    }
   }
 
   /** A StructureWindTurbine. */
@@ -15747,7 +12670,7 @@ interface Generator {
       get() = intrinsic()
 
     /** The StructureWindTurbine prefab. */
-    companion object : Prefab()
+    companion object : Prefab<Generator.WindTurbine>()
   }
 
   /** A StructureUprightWindTurbine. */
@@ -15757,92 +12680,7 @@ interface Generator {
       get() = intrinsic()
 
     /** The StructureUprightWindTurbine prefab. */
-    companion object : Prefab()
-  }
-}
-
-/** The Generator devices on the chip's network, by prefab. */
-object Generators {
-  /** The StructureGasGenerator devices on the chip's network. */
-  @PrefabName("StructureGasGenerator")
-  object GasFuel {
-    /** The device on [pin], as a StructureGasGenerator. */
-    fun at(pin: Device): Generator.GasFuel = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<Generator.GasFuel>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<Generator.GasFuel> = intrinsic()
-  }
-
-  /** The StructureSolidFuelGenerator devices on the chip's network. */
-  @PrefabName("StructureSolidFuelGenerator")
-  object SolidFuel {
-    /** The device on [pin], as a StructureSolidFuelGenerator. */
-    fun at(pin: Device): Generator.SolidFuel = intrinsic()
-
-    /** Every one on the network. */
-    val all: Batch
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): Batch = intrinsic()
-
-    class Batch internal constructor() : DeviceBatch<Generator.SolidFuel>() {
-      /** A slot of every one in the batch, by number. */
-      val slots: Slots<SlotBatch<DataDiskSlot>>
-        get() = intrinsic()
-    }
-  }
-
-  /** The StructureStirlingEngine devices on the chip's network. */
-  @PrefabName("StructureStirlingEngine")
-  object StirlingEngine {
-    /** The device on [pin], as a StructureStirlingEngine. */
-    fun at(pin: Device): Generator.StirlingEngine = intrinsic()
-
-    /** Every one on the network. */
-    val all: Batch
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): Batch = intrinsic()
-
-    class Batch internal constructor() : DeviceBatch<Generator.StirlingEngine>() {
-      /** A slot of every one in the batch, by number. */
-      val slots: Slots<SlotBatch<GasCanisterSlot>>
-        get() = intrinsic()
-    }
-  }
-
-  /** The StructureWindTurbine devices on the chip's network. */
-  @PrefabName("StructureWindTurbine")
-  object WindTurbine {
-    /** The device on [pin], as a StructureWindTurbine. */
-    fun at(pin: Device): Generator.WindTurbine = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<Generator.WindTurbine>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<Generator.WindTurbine> = intrinsic()
-  }
-
-  /** The StructureUprightWindTurbine devices on the chip's network. */
-  @PrefabName("StructureUprightWindTurbine")
-  object UprightWindTurbine {
-    /** The device on [pin], as a StructureUprightWindTurbine. */
-    fun at(pin: Device): Generator.UprightWindTurbine = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<Generator.UprightWindTurbine>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<Generator.UprightWindTurbine> = intrinsic()
+    companion object : Prefab<Generator.UprightWindTurbine>()
   }
 }
 
@@ -15882,8 +12720,20 @@ interface WaterBottleFiller {
     val slots: Slots<GasCanisterSlot>
       get() = intrinsic()
 
+    /** A batch of StructureWaterBottleFillerPowered devices. */
+    class Batch internal constructor() : DeviceBatch<WaterBottleFiller.Powered>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<GasCanisterSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureWaterBottleFillerPowered prefab. */
-    companion object : Prefab()
+    companion object : Prefab<WaterBottleFiller.Powered>() {
+      override val all: WaterBottleFiller.Powered.Batch
+        get() = intrinsic()
+
+      override fun named(name: String): WaterBottleFiller.Powered.Batch = intrinsic()
+    }
   }
 
   /** A StructureWaterBottleFillerPoweredBottom. */
@@ -15910,50 +12760,19 @@ interface WaterBottleFiller {
     val slots: Slots<GasCanisterSlot>
       get() = intrinsic()
 
-    /** The StructureWaterBottleFillerPoweredBottom prefab. */
-    companion object : Prefab()
-  }
-}
-
-/** The WaterBottleFiller devices on the chip's network, by prefab. */
-object WaterBottleFillers {
-  /** The StructureWaterBottleFillerPowered devices on the chip's network. */
-  @PrefabName("StructureWaterBottleFillerPowered")
-  object Powered {
-    /** The device on [pin], as a StructureWaterBottleFillerPowered. */
-    fun at(pin: Device): WaterBottleFiller.Powered = intrinsic()
-
-    /** Every one on the network. */
-    val all: Batch
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): Batch = intrinsic()
-
-    class Batch internal constructor() : DeviceBatch<WaterBottleFiller.Powered>() {
-      /** A slot of every one in the batch, by number. */
-      val slots: Slots<SlotBatch<GasCanisterSlot>>
-        get() = intrinsic()
-    }
-  }
-
-  /** The StructureWaterBottleFillerPoweredBottom devices on the chip's network. */
-  @PrefabName("StructureWaterBottleFillerPoweredBottom")
-  object PoweredBottom {
-    /** The device on [pin], as a StructureWaterBottleFillerPoweredBottom. */
-    fun at(pin: Device): WaterBottleFiller.PoweredBottom = intrinsic()
-
-    /** Every one on the network. */
-    val all: Batch
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): Batch = intrinsic()
-
+    /** A batch of StructureWaterBottleFillerPoweredBottom devices. */
     class Batch internal constructor() : DeviceBatch<WaterBottleFiller.PoweredBottom>() {
       /** A slot of every one in the batch, by number. */
       val slots: Slots<SlotBatch<GasCanisterSlot>>
         get() = intrinsic()
+    }
+
+    /** The StructureWaterBottleFillerPoweredBottom prefab. */
+    companion object : Prefab<WaterBottleFiller.PoweredBottom>() {
+      override val all: WaterBottleFiller.PoweredBottom.Batch
+        get() = intrinsic()
+
+      override fun named(name: String): WaterBottleFiller.PoweredBottom.Batch = intrinsic()
     }
   }
 }
@@ -16034,7 +12853,7 @@ interface PipeAnalyzer {
       get() = intrinsic()
 
     /** The StructurePipeAnalysizer prefab. */
-    companion object : Prefab()
+    companion object : Prefab<PipeAnalyzer.Gas>()
   }
 
   /** A StructureLiquidPipeAnalyzer. */
@@ -16087,38 +12906,7 @@ interface PipeAnalyzer {
       get() = intrinsic()
 
     /** The StructureLiquidPipeAnalyzer prefab. */
-    companion object : Prefab()
-  }
-}
-
-/** The PipeAnalyzer devices on the chip's network, by prefab. */
-object PipeAnalyzers {
-  /** The StructurePipeAnalysizer devices on the chip's network. */
-  @PrefabName("StructurePipeAnalysizer")
-  object Gas {
-    /** The device on [pin], as a StructurePipeAnalysizer. */
-    fun at(pin: Device): PipeAnalyzer.Gas = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<PipeAnalyzer.Gas>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<PipeAnalyzer.Gas> = intrinsic()
-  }
-
-  /** The StructureLiquidPipeAnalyzer devices on the chip's network. */
-  @PrefabName("StructureLiquidPipeAnalyzer")
-  object Liquid {
-    /** The device on [pin], as a StructureLiquidPipeAnalyzer. */
-    fun at(pin: Device): PipeAnalyzer.Liquid = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<PipeAnalyzer.Liquid>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<PipeAnalyzer.Liquid> = intrinsic()
+    companion object : Prefab<PipeAnalyzer.Liquid>()
   }
 }
 
@@ -16180,8 +12968,20 @@ interface CircuitHousing {
     val ProgrammableChip: CommonSlot
       get() = intrinsic()
 
+    /** A batch of StructureCircuitHousing devices. */
+    class Batch internal constructor() : DeviceBatch<CircuitHousing.Standard>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<CommonSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureCircuitHousing prefab. */
-    companion object : Prefab()
+    companion object : Prefab<CircuitHousing.Standard>() {
+      override val all: CircuitHousing.Standard.Batch
+        get() = intrinsic()
+
+      override fun named(name: String): CircuitHousing.Standard.Batch = intrinsic()
+    }
   }
 
   /** A StructureCircuitHousingCompact. */
@@ -16224,8 +13024,20 @@ interface CircuitHousing {
     val ProgrammableChip: ProgrammableChipSlot
       get() = intrinsic()
 
+    /** A batch of StructureCircuitHousingCompact devices. */
+    class Batch internal constructor() : DeviceBatch<CircuitHousing.Compact>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<ProgrammableChipSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureCircuitHousingCompact prefab. */
-    companion object : Prefab()
+    companion object : Prefab<CircuitHousing.Compact>() {
+      override val all: CircuitHousing.Compact.Batch
+        get() = intrinsic()
+
+      override fun named(name: String): CircuitHousing.Compact.Batch = intrinsic()
+    }
   }
 
   /** A StructureRocketCircuitHousing. */
@@ -16268,70 +13080,19 @@ interface CircuitHousing {
     val ProgrammableChip: ProgrammableChipSlot
       get() = intrinsic()
 
-    /** The StructureRocketCircuitHousing prefab. */
-    companion object : Prefab()
-  }
-}
-
-/** The CircuitHousing devices on the chip's network, by prefab. */
-object CircuitHousings {
-  /** The StructureCircuitHousing devices on the chip's network. */
-  @PrefabName("StructureCircuitHousing")
-  object Standard {
-    /** The device on [pin], as a StructureCircuitHousing. */
-    fun at(pin: Device): CircuitHousing.Standard = intrinsic()
-
-    /** Every one on the network. */
-    val all: Batch
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): Batch = intrinsic()
-
-    class Batch internal constructor() : DeviceBatch<CircuitHousing.Standard>() {
-      /** A slot of every one in the batch, by number. */
-      val slots: Slots<SlotBatch<CommonSlot>>
-        get() = intrinsic()
-    }
-  }
-
-  /** The StructureCircuitHousingCompact devices on the chip's network. */
-  @PrefabName("StructureCircuitHousingCompact")
-  object Compact {
-    /** The device on [pin], as a StructureCircuitHousingCompact. */
-    fun at(pin: Device): CircuitHousing.Compact = intrinsic()
-
-    /** Every one on the network. */
-    val all: Batch
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): Batch = intrinsic()
-
-    class Batch internal constructor() : DeviceBatch<CircuitHousing.Compact>() {
-      /** A slot of every one in the batch, by number. */
-      val slots: Slots<SlotBatch<ProgrammableChipSlot>>
-        get() = intrinsic()
-    }
-  }
-
-  /** The StructureRocketCircuitHousing devices on the chip's network. */
-  @PrefabName("StructureRocketCircuitHousing")
-  object Rocket {
-    /** The device on [pin], as a StructureRocketCircuitHousing. */
-    fun at(pin: Device): CircuitHousing.Rocket = intrinsic()
-
-    /** Every one on the network. */
-    val all: Batch
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): Batch = intrinsic()
-
+    /** A batch of StructureRocketCircuitHousing devices. */
     class Batch internal constructor() : DeviceBatch<CircuitHousing.Rocket>() {
       /** A slot of every one in the batch, by number. */
       val slots: Slots<SlotBatch<ProgrammableChipSlot>>
         get() = intrinsic()
+    }
+
+    /** The StructureRocketCircuitHousing prefab. */
+    companion object : Prefab<CircuitHousing.Rocket>() {
+      override val all: CircuitHousing.Rocket.Batch
+        get() = intrinsic()
+
+      override fun named(name: String): CircuitHousing.Rocket.Batch = intrinsic()
     }
   }
 }
@@ -16389,7 +13150,7 @@ interface ElevatorLevel : ElevatorShaft {
       get() = intrinsic()
 
     /** The StructureElevatorLevelIndustrial prefab. */
-    companion object : Prefab()
+    companion object : Prefab<ElevatorLevel.Standard>()
   }
 
   /** A StructureElevatorLevelFront. */
@@ -16429,38 +13190,7 @@ interface ElevatorLevel : ElevatorShaft {
       get() = intrinsic()
 
     /** The StructureElevatorLevelFront prefab. */
-    companion object : Prefab()
-  }
-}
-
-/** The ElevatorLevel devices on the chip's network, by prefab. */
-object ElevatorLevels {
-  /** The StructureElevatorLevelIndustrial devices on the chip's network. */
-  @PrefabName("StructureElevatorLevelIndustrial")
-  object Standard {
-    /** The device on [pin], as a StructureElevatorLevelIndustrial. */
-    fun at(pin: Device): ElevatorLevel.Standard = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<ElevatorLevel.Standard>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<ElevatorLevel.Standard> = intrinsic()
-  }
-
-  /** The StructureElevatorLevelFront devices on the chip's network. */
-  @PrefabName("StructureElevatorLevelFront")
-  object Cabled {
-    /** The device on [pin], as a StructureElevatorLevelFront. */
-    fun at(pin: Device): ElevatorLevel.Cabled = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<ElevatorLevel.Cabled>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<ElevatorLevel.Cabled> = intrinsic()
+    companion object : Prefab<ElevatorLevel.Cabled>()
   }
 }
 
@@ -16482,7 +13212,7 @@ interface ElevatorShaft {
       set(value) = intrinsic()
 
     /** The StructureElevatorShaftIndustrial prefab. */
-    companion object : Prefab()
+    companion object : Prefab<ElevatorShaft.Standard>()
   }
 
   /** A StructureElevatorShaft. */
@@ -16507,38 +13237,7 @@ interface ElevatorShaft {
       get() = intrinsic()
 
     /** The StructureElevatorShaft prefab. */
-    companion object : Prefab()
-  }
-}
-
-/** The ElevatorShaft devices on the chip's network, by prefab. */
-object ElevatorShafts {
-  /** The StructureElevatorShaftIndustrial devices on the chip's network. */
-  @PrefabName("StructureElevatorShaftIndustrial")
-  object Standard {
-    /** The device on [pin], as a StructureElevatorShaftIndustrial. */
-    fun at(pin: Device): ElevatorShaft.Standard = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<ElevatorShaft.Standard>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<ElevatorShaft.Standard> = intrinsic()
-  }
-
-  /** The StructureElevatorShaft devices on the chip's network. */
-  @PrefabName("StructureElevatorShaft")
-  object Cabled {
-    /** The device on [pin], as a StructureElevatorShaft. */
-    fun at(pin: Device): ElevatorShaft.Cabled = intrinsic()
-
-    /** Every one on the network. */
-    val all: DeviceBatch<ElevatorShaft.Cabled>
-      get() = intrinsic()
-
-    /** Every one on the network named [name], which must be a constant. */
-    fun named(name: String): DeviceBatch<ElevatorShaft.Cabled> = intrinsic()
+    companion object : Prefab<ElevatorShaft.Cabled>()
   }
 }
 
@@ -16569,21 +13268,7 @@ class CompositeRollCover internal constructor() : TypedDevice() {
     set(value) = intrinsic()
 
   /** The CompositeRollCover prefab. */
-  companion object : Prefab()
-}
-
-/** The CompositeRollCover devices on the chip's network. */
-@PrefabName("CompositeRollCover")
-object CompositeRollCovers {
-  /** The device on [pin], as a CompositeRollCover. */
-  fun at(pin: Device): CompositeRollCover = intrinsic()
-
-  /** Every one on the network. */
-  val all: DeviceBatch<CompositeRollCover>
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): DeviceBatch<CompositeRollCover> = intrinsic()
+  companion object : Prefab<CompositeRollCover>()
 }
 
 /** A DeviceStepUnit. */
@@ -16615,21 +13300,7 @@ class DeviceStepUnit internal constructor() : TypedDevice() {
     set(value) = intrinsic()
 
   /** The DeviceStepUnit prefab. */
-  companion object : Prefab()
-}
-
-/** The DeviceStepUnit devices on the chip's network. */
-@PrefabName("DeviceStepUnit")
-object DeviceStepUnits {
-  /** The device on [pin], as a DeviceStepUnit. */
-  fun at(pin: Device): DeviceStepUnit = intrinsic()
-
-  /** Every one on the network. */
-  val all: DeviceBatch<DeviceStepUnit>
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): DeviceBatch<DeviceStepUnit> = intrinsic()
+  companion object : Prefab<DeviceStepUnit>()
 }
 
 /** A DynamicGPR. */
@@ -16655,27 +13326,19 @@ class DynamicGPR internal constructor() : TypedDevice() {
   val Battery: ItemBatterySlot
     get() = intrinsic()
 
-  /** The DynamicGPR prefab. */
-  companion object : Prefab()
-}
-
-/** The DynamicGPR devices on the chip's network. */
-@PrefabName("DynamicGPR")
-object DynamicGPRs {
-  /** The device on [pin], as a DynamicGPR. */
-  fun at(pin: Device): DynamicGPR = intrinsic()
-
-  /** Every one on the network. */
-  val all: Batch
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
+  /** A batch of DynamicGPR devices. */
   class Batch internal constructor() : DeviceBatch<DynamicGPR>() {
     /** A slot of every one in the batch, by number. */
     val slots: Slots<SlotBatch<ItemBatterySlot>>
       get() = intrinsic()
+  }
+
+  /** The DynamicGPR prefab. */
+  companion object : Prefab<DynamicGPR>() {
+    override val all: DynamicGPR.Batch
+      get() = intrinsic()
+
+    override fun named(name: String): DynamicGPR.Batch = intrinsic()
   }
 }
 
@@ -16706,27 +13369,19 @@ class DynamicLight internal constructor() : TypedDevice() {
   val Battery: ItemBatterySlot
     get() = intrinsic()
 
-  /** The DynamicLight prefab. */
-  companion object : Prefab()
-}
-
-/** The DynamicLight devices on the chip's network. */
-@PrefabName("DynamicLight")
-object DynamicLights {
-  /** The device on [pin], as a DynamicLight. */
-  fun at(pin: Device): DynamicLight = intrinsic()
-
-  /** Every one on the network. */
-  val all: Batch
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
+  /** A batch of DynamicLight devices. */
   class Batch internal constructor() : DeviceBatch<DynamicLight>() {
     /** A slot of every one in the batch, by number. */
     val slots: Slots<SlotBatch<ItemBatterySlot>>
       get() = intrinsic()
+  }
+
+  /** The DynamicLight prefab. */
+  companion object : Prefab<DynamicLight>() {
+    override val all: DynamicLight.Batch
+      get() = intrinsic()
+
+    override fun named(name: String): DynamicLight.Batch = intrinsic()
   }
 }
 
@@ -16809,27 +13464,19 @@ class H2Combustor internal constructor() : TypedDevice() {
   val ProgrammableChip: DataDiskSlot
     get() = intrinsic()
 
-  /** The H2Combustor prefab. */
-  companion object : Prefab()
-}
-
-/** The H2Combustor devices on the chip's network. */
-@PrefabName("H2Combustor")
-object H2Combustors {
-  /** The device on [pin], as a H2Combustor. */
-  fun at(pin: Device): H2Combustor = intrinsic()
-
-  /** Every one on the network. */
-  val all: Batch
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
+  /** A batch of H2Combustor devices. */
   class Batch internal constructor() : DeviceBatch<H2Combustor>() {
     /** A slot of every one in the batch, by number. */
     val slots: Slots<SlotBatch<DataDiskSlot>>
       get() = intrinsic()
+  }
+
+  /** The H2Combustor prefab. */
+  companion object : Prefab<H2Combustor>() {
+    override val all: H2Combustor.Batch
+      get() = intrinsic()
+
+    override fun named(name: String): H2Combustor.Batch = intrinsic()
   }
 }
 
@@ -16855,27 +13502,19 @@ class ItemBeacon internal constructor() : TypedDevice() {
   val Battery: ItemBatterySlot
     get() = intrinsic()
 
-  /** The ItemBeacon prefab. */
-  companion object : Prefab()
-}
-
-/** The ItemBeacon devices on the chip's network. */
-@PrefabName("ItemBeacon")
-object ItemBeacons {
-  /** The device on [pin], as a ItemBeacon. */
-  fun at(pin: Device): ItemBeacon = intrinsic()
-
-  /** Every one on the network. */
-  val all: Batch
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
+  /** A batch of ItemBeacon devices. */
   class Batch internal constructor() : DeviceBatch<ItemBeacon>() {
     /** A slot of every one in the batch, by number. */
     val slots: Slots<SlotBatch<ItemBatterySlot>>
       get() = intrinsic()
+  }
+
+  /** The ItemBeacon prefab. */
+  companion object : Prefab<ItemBeacon>() {
+    override val all: ItemBeacon.Batch
+      get() = intrinsic()
+
+    override fun named(name: String): ItemBeacon.Batch = intrinsic()
   }
 }
 
@@ -16902,27 +13541,19 @@ class Flashlight internal constructor() : TypedDevice() {
   val Battery: ItemBatterySlot
     get() = intrinsic()
 
-  /** The ItemFlashlight prefab. */
-  companion object : Prefab()
-}
-
-/** The ItemFlashlight devices on the chip's network. */
-@PrefabName("ItemFlashlight")
-object Flashlights {
-  /** The device on [pin], as a ItemFlashlight. */
-  fun at(pin: Device): Flashlight = intrinsic()
-
-  /** Every one on the network. */
-  val all: Batch
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
+  /** A batch of ItemFlashlight devices. */
   class Batch internal constructor() : DeviceBatch<Flashlight>() {
     /** A slot of every one in the batch, by number. */
     val slots: Slots<SlotBatch<ItemBatterySlot>>
       get() = intrinsic()
+  }
+
+  /** The ItemFlashlight prefab. */
+  companion object : Prefab<Flashlight>() {
+    override val all: Flashlight.Batch
+      get() = intrinsic()
+
+    override fun named(name: String): Flashlight.Batch = intrinsic()
   }
 }
 
@@ -16965,27 +13596,19 @@ class GasMask internal constructor() : TypedDevice() {
   val slots: Slots<ItemFilteredSlot>
     get() = intrinsic()
 
-  /** The ItemGasMask prefab. */
-  companion object : Prefab()
-}
-
-/** The ItemGasMask devices on the chip's network. */
-@PrefabName("ItemGasMask")
-object GasMasks {
-  /** The device on [pin], as a ItemGasMask. */
-  fun at(pin: Device): GasMask = intrinsic()
-
-  /** Every one on the network. */
-  val all: Batch
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
+  /** A batch of ItemGasMask devices. */
   class Batch internal constructor() : DeviceBatch<GasMask>() {
     /** A slot of every one in the batch, by number. */
     val slots: Slots<SlotBatch<ItemFilteredSlot>>
       get() = intrinsic()
+  }
+
+  /** The ItemGasMask prefab. */
+  companion object : Prefab<GasMask>() {
+    override val all: GasMask.Batch
+      get() = intrinsic()
+
+    override fun named(name: String): GasMask.Batch = intrinsic()
   }
 }
 
@@ -17008,27 +13631,19 @@ class HardHat internal constructor() : TypedDevice() {
   val Battery: ItemBatterySlot
     get() = intrinsic()
 
-  /** The ItemHardHat prefab. */
-  companion object : Prefab()
-}
-
-/** The ItemHardHat devices on the chip's network. */
-@PrefabName("ItemHardHat")
-object HardHats {
-  /** The device on [pin], as a ItemHardHat. */
-  fun at(pin: Device): HardHat = intrinsic()
-
-  /** Every one on the network. */
-  val all: Batch
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
+  /** A batch of ItemHardHat devices. */
   class Batch internal constructor() : DeviceBatch<HardHat>() {
     /** A slot of every one in the batch, by number. */
     val slots: Slots<SlotBatch<ItemBatterySlot>>
       get() = intrinsic()
+  }
+
+  /** The ItemHardHat prefab. */
+  companion object : Prefab<HardHat>() {
+    override val all: HardHat.Batch
+      get() = intrinsic()
+
+    override fun named(name: String): HardHat.Batch = intrinsic()
   }
 }
 
@@ -17052,27 +13667,19 @@ class HardJetpack internal constructor() : TypedDevice() {
   val Propellant: ItemAirTankSlot
     get() = intrinsic()
 
-  /** The ItemHardJetpack prefab. */
-  companion object : Prefab()
-}
-
-/** The ItemHardJetpack devices on the chip's network. */
-@PrefabName("ItemHardJetpack")
-object HardJetpacks {
-  /** The device on [pin], as a ItemHardJetpack. */
-  fun at(pin: Device): HardJetpack = intrinsic()
-
-  /** Every one on the network. */
-  val all: Batch
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
+  /** A batch of ItemHardJetpack devices. */
   class Batch internal constructor() : DeviceBatch<HardJetpack>() {
     /** A slot of every one in the batch, by number. */
     val slots: Slots<SlotBatch<ItemCommonSlot>>
       get() = intrinsic()
+  }
+
+  /** The ItemHardJetpack prefab. */
+  companion object : Prefab<HardJetpack>() {
+    override val all: HardJetpack.Batch
+      get() = intrinsic()
+
+    override fun named(name: String): HardJetpack.Batch = intrinsic()
   }
 }
 
@@ -17083,21 +13690,7 @@ class IntegratedCircuit10 internal constructor() : TypedDevice() {
     get() = intrinsic()
 
   /** The ItemIntegratedCircuit10 prefab. */
-  companion object : Prefab()
-}
-
-/** The ItemIntegratedCircuit10 devices on the chip's network. */
-@PrefabName("ItemIntegratedCircuit10")
-object IntegratedCircuit10s {
-  /** The device on [pin], as a ItemIntegratedCircuit10. */
-  fun at(pin: Device): IntegratedCircuit10 = intrinsic()
-
-  /** Every one on the network. */
-  val all: DeviceBatch<IntegratedCircuit10>
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): DeviceBatch<IntegratedCircuit10> = intrinsic()
+  companion object : Prefab<IntegratedCircuit10>()
 }
 
 /** A ItemJetpackBasic. */
@@ -17120,27 +13713,19 @@ class JetpackBasic internal constructor() : TypedDevice() {
   val Propellant: ItemAirTankSlot
     get() = intrinsic()
 
-  /** The ItemJetpackBasic prefab. */
-  companion object : Prefab()
-}
-
-/** The ItemJetpackBasic devices on the chip's network. */
-@PrefabName("ItemJetpackBasic")
-object JetpackBasics {
-  /** The device on [pin], as a ItemJetpackBasic. */
-  fun at(pin: Device): JetpackBasic = intrinsic()
-
-  /** Every one on the network. */
-  val all: Batch
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
+  /** A batch of ItemJetpackBasic devices. */
   class Batch internal constructor() : DeviceBatch<JetpackBasic>() {
     /** A slot of every one in the batch, by number. */
     val slots: Slots<SlotBatch<ItemCommonSlot>>
       get() = intrinsic()
+  }
+
+  /** The ItemJetpackBasic prefab. */
+  companion object : Prefab<JetpackBasic>() {
+    override val all: JetpackBasic.Batch
+      get() = intrinsic()
+
+    override fun named(name: String): JetpackBasic.Batch = intrinsic()
   }
 }
 
@@ -17166,27 +13751,19 @@ class Labeller internal constructor() : TypedDevice() {
   val Battery: ItemBatterySlot
     get() = intrinsic()
 
-  /** The ItemLabeller prefab. */
-  companion object : Prefab()
-}
-
-/** The ItemLabeller devices on the chip's network. */
-@PrefabName("ItemLabeller")
-object Labellers {
-  /** The device on [pin], as a ItemLabeller. */
-  fun at(pin: Device): Labeller = intrinsic()
-
-  /** Every one on the network. */
-  val all: Batch
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
+  /** A batch of ItemLabeller devices. */
   class Batch internal constructor() : DeviceBatch<Labeller>() {
     /** A slot of every one in the batch, by number. */
     val slots: Slots<SlotBatch<ItemBatterySlot>>
       get() = intrinsic()
+  }
+
+  /** The ItemLabeller prefab. */
+  companion object : Prefab<Labeller>() {
+    override val all: Labeller.Batch
+      get() = intrinsic()
+
+    override fun named(name: String): Labeller.Batch = intrinsic()
   }
 }
 
@@ -17232,27 +13809,19 @@ class Laptop internal constructor() : TypedDevice() {
   val Motherboard: ItemCommonSlot
     get() = intrinsic()
 
-  /** The ItemLaptop prefab. */
-  companion object : Prefab()
-}
-
-/** The ItemLaptop devices on the chip's network. */
-@PrefabName("ItemLaptop")
-object Laptops {
-  /** The device on [pin], as a ItemLaptop. */
-  fun at(pin: Device): Laptop = intrinsic()
-
-  /** Every one on the network. */
-  val all: Batch
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
+  /** A batch of ItemLaptop devices. */
   class Batch internal constructor() : DeviceBatch<Laptop>() {
     /** A slot of every one in the batch, by number. */
     val slots: Slots<SlotBatch<ItemCommonSlot>>
       get() = intrinsic()
+  }
+
+  /** The ItemLaptop prefab. */
+  companion object : Prefab<Laptop>() {
+    override val all: Laptop.Batch
+      get() = intrinsic()
+
+    override fun named(name: String): Laptop.Batch = intrinsic()
   }
 }
 
@@ -17286,27 +13855,19 @@ class LiquidVacuum internal constructor() : TypedDevice() {
   val Battery: ItemBatterySlot
     get() = intrinsic()
 
-  /** The ItemLiquidVacuum prefab. */
-  companion object : Prefab()
-}
-
-/** The ItemLiquidVacuum devices on the chip's network. */
-@PrefabName("ItemLiquidVacuum")
-object LiquidVacuums {
-  /** The device on [pin], as a ItemLiquidVacuum. */
-  fun at(pin: Device): LiquidVacuum = intrinsic()
-
-  /** Every one on the network. */
-  val all: Batch
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
+  /** A batch of ItemLiquidVacuum devices. */
   class Batch internal constructor() : DeviceBatch<LiquidVacuum>() {
     /** A slot of every one in the batch, by number. */
     val slots: Slots<SlotBatch<ItemBatterySlot>>
       get() = intrinsic()
+  }
+
+  /** The ItemLiquidVacuum prefab. */
+  companion object : Prefab<LiquidVacuum>() {
+    override val all: LiquidVacuum.Batch
+      get() = intrinsic()
+
+    override fun named(name: String): LiquidVacuum.Batch = intrinsic()
   }
 }
 
@@ -17333,27 +13894,19 @@ class NVG internal constructor() : TypedDevice() {
   val Battery: ItemBatterySlot
     get() = intrinsic()
 
-  /** The ItemNVG prefab. */
-  companion object : Prefab()
-}
-
-/** The ItemNVG devices on the chip's network. */
-@PrefabName("ItemNVG")
-object NVGs {
-  /** The device on [pin], as a ItemNVG. */
-  fun at(pin: Device): NVG = intrinsic()
-
-  /** Every one on the network. */
-  val all: Batch
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
+  /** A batch of ItemNVG devices. */
   class Batch internal constructor() : DeviceBatch<NVG>() {
     /** A slot of every one in the batch, by number. */
     val slots: Slots<SlotBatch<ItemBatterySlot>>
       get() = intrinsic()
+  }
+
+  /** The ItemNVG prefab. */
+  companion object : Prefab<NVG>() {
+    override val all: NVG.Batch
+      get() = intrinsic()
+
+    override fun named(name: String): NVG.Batch = intrinsic()
   }
 }
 
@@ -17383,27 +13936,19 @@ class OreDetector internal constructor() : TypedDevice() {
   val Battery: ItemBatterySlot
     get() = intrinsic()
 
-  /** The ItemOreDetector prefab. */
-  companion object : Prefab()
-}
-
-/** The ItemOreDetector devices on the chip's network. */
-@PrefabName("ItemOreDetector")
-object OreDetectors {
-  /** The device on [pin], as a ItemOreDetector. */
-  fun at(pin: Device): OreDetector = intrinsic()
-
-  /** Every one on the network. */
-  val all: Batch
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
+  /** A batch of ItemOreDetector devices. */
   class Batch internal constructor() : DeviceBatch<OreDetector>() {
     /** A slot of every one in the batch, by number. */
     val slots: Slots<SlotBatch<ItemBatterySlot>>
       get() = intrinsic()
+  }
+
+  /** The ItemOreDetector prefab. */
+  companion object : Prefab<OreDetector>() {
+    override val all: OreDetector.Batch
+      get() = intrinsic()
+
+    override fun named(name: String): OreDetector.Batch = intrinsic()
   }
 }
 
@@ -17434,27 +13979,19 @@ class PlantSampler internal constructor() : TypedDevice() {
   val Battery: ItemBatterySlot
     get() = intrinsic()
 
-  /** The ItemPlantSampler prefab. */
-  companion object : Prefab()
-}
-
-/** The ItemPlantSampler devices on the chip's network. */
-@PrefabName("ItemPlantSampler")
-object PlantSamplers {
-  /** The device on [pin], as a ItemPlantSampler. */
-  fun at(pin: Device): PlantSampler = intrinsic()
-
-  /** Every one on the network. */
-  val all: Batch
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
+  /** A batch of ItemPlantSampler devices. */
   class Batch internal constructor() : DeviceBatch<PlantSampler>() {
     /** A slot of every one in the batch, by number. */
     val slots: Slots<SlotBatch<ItemBatterySlot>>
       get() = intrinsic()
+  }
+
+  /** The ItemPlantSampler prefab. */
+  companion object : Prefab<PlantSampler>() {
+    override val all: PlantSampler.Batch
+      get() = intrinsic()
+
+    override fun named(name: String): PlantSampler.Batch = intrinsic()
   }
 }
 
@@ -17492,27 +14029,19 @@ class RemoteDetonator internal constructor() : TypedDevice() {
   val Battery: ItemBatterySlot
     get() = intrinsic()
 
-  /** The ItemRemoteDetonator prefab. */
-  companion object : Prefab()
-}
-
-/** The ItemRemoteDetonator devices on the chip's network. */
-@PrefabName("ItemRemoteDetonator")
-object RemoteDetonators {
-  /** The device on [pin], as a ItemRemoteDetonator. */
-  fun at(pin: Device): RemoteDetonator = intrinsic()
-
-  /** Every one on the network. */
-  val all: Batch
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
+  /** A batch of ItemRemoteDetonator devices. */
   class Batch internal constructor() : DeviceBatch<RemoteDetonator>() {
     /** A slot of every one in the batch, by number. */
     val slots: Slots<SlotBatch<ItemBatterySlot>>
       get() = intrinsic()
+  }
+
+  /** The ItemRemoteDetonator prefab. */
+  companion object : Prefab<RemoteDetonator>() {
+    override val all: RemoteDetonator.Batch
+      get() = intrinsic()
+
+    override fun named(name: String): RemoteDetonator.Batch = intrinsic()
   }
 }
 
@@ -17540,27 +14069,19 @@ class SensorLenses internal constructor() : TypedDevice() {
   val SensorProcessingUnit: ItemCommonSlot
     get() = intrinsic()
 
-  /** The ItemSensorLenses prefab. */
-  companion object : Prefab()
-}
-
-/** The ItemSensorLenses devices on the chip's network. */
-@PrefabName("ItemSensorLenses")
-object SensorLenseses {
-  /** The device on [pin], as a ItemSensorLenses. */
-  fun at(pin: Device): SensorLenses = intrinsic()
-
-  /** Every one on the network. */
-  val all: Batch
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
+  /** A batch of ItemSensorLenses devices. */
   class Batch internal constructor() : DeviceBatch<SensorLenses>() {
     /** A slot of every one in the batch, by number. */
     val slots: Slots<SlotBatch<ItemCommonSlot>>
       get() = intrinsic()
+  }
+
+  /** The ItemSensorLenses prefab. */
+  companion object : Prefab<SensorLenses>() {
+    override val all: SensorLenses.Batch
+      get() = intrinsic()
+
+    override fun named(name: String): SensorLenses.Batch = intrinsic()
   }
 }
 
@@ -17584,27 +14105,19 @@ class Spacepack internal constructor() : TypedDevice() {
   val Propellant: ItemAirTankSlot
     get() = intrinsic()
 
-  /** The ItemSpacepack prefab. */
-  companion object : Prefab()
-}
-
-/** The ItemSpacepack devices on the chip's network. */
-@PrefabName("ItemSpacepack")
-object Spacepacks {
-  /** The device on [pin], as a ItemSpacepack. */
-  fun at(pin: Device): Spacepack = intrinsic()
-
-  /** Every one on the network. */
-  val all: Batch
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
+  /** A batch of ItemSpacepack devices. */
   class Batch internal constructor() : DeviceBatch<Spacepack>() {
     /** A slot of every one in the batch, by number. */
     val slots: Slots<SlotBatch<ItemCommonSlot>>
       get() = intrinsic()
+  }
+
+  /** The ItemSpacepack prefab. */
+  companion object : Prefab<Spacepack>() {
+    override val all: Spacepack.Batch
+      get() = intrinsic()
+
+    override fun named(name: String): Spacepack.Batch = intrinsic()
   }
 }
 
@@ -17643,27 +14156,19 @@ class TerrainManipulator internal constructor() : TypedDevice() {
   val DirtCanister: ItemCommonSlot
     get() = intrinsic()
 
-  /** The ItemTerrainManipulator prefab. */
-  companion object : Prefab()
-}
-
-/** The ItemTerrainManipulator devices on the chip's network. */
-@PrefabName("ItemTerrainManipulator")
-object TerrainManipulators {
-  /** The device on [pin], as a ItemTerrainManipulator. */
-  fun at(pin: Device): TerrainManipulator = intrinsic()
-
-  /** Every one on the network. */
-  val all: Batch
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
+  /** A batch of ItemTerrainManipulator devices. */
   class Batch internal constructor() : DeviceBatch<TerrainManipulator>() {
     /** A slot of every one in the batch, by number. */
     val slots: Slots<SlotBatch<ItemCommonSlot>>
       get() = intrinsic()
+  }
+
+  /** The ItemTerrainManipulator prefab. */
+  companion object : Prefab<TerrainManipulator>() {
+    override val all: TerrainManipulator.Batch
+      get() = intrinsic()
+
+    override fun named(name: String): TerrainManipulator.Batch = intrinsic()
   }
 }
 
@@ -17686,27 +14191,19 @@ class WearLamp internal constructor() : TypedDevice() {
   val Battery: ItemBatterySlot
     get() = intrinsic()
 
-  /** The ItemWearLamp prefab. */
-  companion object : Prefab()
-}
-
-/** The ItemWearLamp devices on the chip's network. */
-@PrefabName("ItemWearLamp")
-object WearLamps {
-  /** The device on [pin], as a ItemWearLamp. */
-  fun at(pin: Device): WearLamp = intrinsic()
-
-  /** Every one on the network. */
-  val all: Batch
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
+  /** A batch of ItemWearLamp devices. */
   class Batch internal constructor() : DeviceBatch<WearLamp>() {
     /** A slot of every one in the batch, by number. */
     val slots: Slots<SlotBatch<ItemBatterySlot>>
       get() = intrinsic()
+  }
+
+  /** The ItemWearLamp prefab. */
+  companion object : Prefab<WearLamp>() {
+    override val all: WearLamp.Batch
+      get() = intrinsic()
+
+    override fun named(name: String): WearLamp.Batch = intrinsic()
   }
 }
 
@@ -17761,21 +14258,7 @@ class Landingpad_DataConnectionPiece internal constructor() : TypedDevice() {
     get() = intrinsic()
 
   /** The Landingpad_DataConnectionPiece prefab. */
-  companion object : Prefab()
-}
-
-/** The Landingpad_DataConnectionPiece devices on the chip's network. */
-@PrefabName("Landingpad_DataConnectionPiece")
-object Landingpad_DataConnectionPieces {
-  /** The device on [pin], as a Landingpad_DataConnectionPiece. */
-  fun at(pin: Device): Landingpad_DataConnectionPiece = intrinsic()
-
-  /** Every one on the network. */
-  val all: DeviceBatch<Landingpad_DataConnectionPiece>
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): DeviceBatch<Landingpad_DataConnectionPiece> = intrinsic()
+  companion object : Prefab<Landingpad_DataConnectionPiece>()
 }
 
 /** A Landingpad_ThreshholdPiece. */
@@ -17792,21 +14275,7 @@ class Landingpad_ThreshholdPiece internal constructor() : TypedDevice() {
     get() = intrinsic()
 
   /** The Landingpad_ThreshholdPiece prefab. */
-  companion object : Prefab()
-}
-
-/** The Landingpad_ThreshholdPiece devices on the chip's network. */
-@PrefabName("Landingpad_ThreshholdPiece")
-object Landingpad_ThreshholdPieces {
-  /** The device on [pin], as a Landingpad_ThreshholdPiece. */
-  fun at(pin: Device): Landingpad_ThreshholdPiece = intrinsic()
-
-  /** Every one on the network. */
-  val all: DeviceBatch<Landingpad_ThreshholdPiece>
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): DeviceBatch<Landingpad_ThreshholdPiece> = intrinsic()
+  companion object : Prefab<Landingpad_ThreshholdPiece>()
 }
 
 /** A PortableSolarPanel. */
@@ -17825,27 +14294,19 @@ class PortableSolarPanel internal constructor() : TypedDevice() {
   val Battery: ItemBatterySlot
     get() = intrinsic()
 
-  /** The PortableSolarPanel prefab. */
-  companion object : Prefab()
-}
-
-/** The PortableSolarPanel devices on the chip's network. */
-@PrefabName("PortableSolarPanel")
-object PortableSolarPanels {
-  /** The device on [pin], as a PortableSolarPanel. */
-  fun at(pin: Device): PortableSolarPanel = intrinsic()
-
-  /** Every one on the network. */
-  val all: Batch
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
+  /** A batch of PortableSolarPanel devices. */
   class Batch internal constructor() : DeviceBatch<PortableSolarPanel>() {
     /** A slot of every one in the batch, by number. */
     val slots: Slots<SlotBatch<ItemBatterySlot>>
       get() = intrinsic()
+  }
+
+  /** The PortableSolarPanel prefab. */
+  companion object : Prefab<PortableSolarPanel>() {
+    override val all: PortableSolarPanel.Batch
+      get() = intrinsic()
+
+    override fun named(name: String): PortableSolarPanel.Batch = intrinsic()
   }
 }
 
@@ -17918,27 +14379,19 @@ class Robot internal constructor() : TypedDevice() {
   val ProgrammableChip: ItemCommonSlot
     get() = intrinsic()
 
-  /** The Robot prefab. */
-  companion object : Prefab()
-}
-
-/** The Robot devices on the chip's network. */
-@PrefabName("Robot")
-object Robots {
-  /** The device on [pin], as a Robot. */
-  fun at(pin: Device): Robot = intrinsic()
-
-  /** Every one on the network. */
-  val all: Batch
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
+  /** A batch of Robot devices. */
   class Batch internal constructor() : DeviceBatch<Robot>() {
     /** A slot of every one in the batch, by number. */
     val slots: Slots<SlotBatch<ItemCommonSlot>>
       get() = intrinsic()
+  }
+
+  /** The Robot prefab. */
+  companion object : Prefab<Robot>() {
+    override val all: Robot.Batch
+      get() = intrinsic()
+
+    override fun named(name: String): Robot.Batch = intrinsic()
   }
 }
 
@@ -17956,27 +14409,19 @@ class Rover_MkI internal constructor() : TypedDevice() {
   val slots: Slots<ItemCommonSlot>
     get() = intrinsic()
 
-  /** The Rover_MkI prefab. */
-  companion object : Prefab()
-}
-
-/** The Rover_MkI devices on the chip's network. */
-@PrefabName("Rover_MkI")
-object Rover_MkIs {
-  /** The device on [pin], as a Rover_MkI. */
-  fun at(pin: Device): Rover_MkI = intrinsic()
-
-  /** Every one on the network. */
-  val all: Batch
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
+  /** A batch of Rover_MkI devices. */
   class Batch internal constructor() : DeviceBatch<Rover_MkI>() {
     /** A slot of every one in the batch, by number. */
     val slots: Slots<SlotBatch<ItemCommonSlot>>
       get() = intrinsic()
+  }
+
+  /** The Rover_MkI prefab. */
+  companion object : Prefab<Rover_MkI>() {
+    override val all: Rover_MkI.Batch
+      get() = intrinsic()
+
+    override fun named(name: String): Rover_MkI.Batch = intrinsic()
   }
 }
 
@@ -18004,21 +14449,7 @@ class StopWatch internal constructor() : TypedDevice() {
     get() = intrinsic()
 
   /** The StopWatch prefab. */
-  companion object : Prefab()
-}
-
-/** The StopWatch devices on the chip's network. */
-@PrefabName("StopWatch")
-object StopWatches {
-  /** The device on [pin], as a StopWatch. */
-  fun at(pin: Device): StopWatch = intrinsic()
-
-  /** Every one on the network. */
-  val all: DeviceBatch<StopWatch>
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): DeviceBatch<StopWatch> = intrinsic()
+  companion object : Prefab<StopWatch>()
 }
 
 /** A StructureAccessBridge. */
@@ -18047,21 +14478,7 @@ class AccessBridge internal constructor() : TypedDevice() {
     get() = intrinsic()
 
   /** The StructureAccessBridge prefab. */
-  companion object : Prefab()
-}
-
-/** The StructureAccessBridge devices on the chip's network. */
-@PrefabName("StructureAccessBridge")
-object AccessBridges {
-  /** The device on [pin], as a StructureAccessBridge. */
-  fun at(pin: Device): AccessBridge = intrinsic()
-
-  /** Every one on the network. */
-  val all: DeviceBatch<AccessBridge>
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): DeviceBatch<AccessBridge> = intrinsic()
+  companion object : Prefab<AccessBridge>()
 }
 
 /** A StructureActiveVent. */
@@ -18127,27 +14544,19 @@ class ActiveVent internal constructor() : TypedDevice() {
   val DataDisk: DataDiskSlot
     get() = intrinsic()
 
-  /** The StructureActiveVent prefab. */
-  companion object : Prefab()
-}
-
-/** The StructureActiveVent devices on the chip's network. */
-@PrefabName("StructureActiveVent")
-object ActiveVents {
-  /** The device on [pin], as a StructureActiveVent. */
-  fun at(pin: Device): ActiveVent = intrinsic()
-
-  /** Every one on the network. */
-  val all: Batch
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
+  /** A batch of StructureActiveVent devices. */
   class Batch internal constructor() : DeviceBatch<ActiveVent>() {
     /** A slot of every one in the batch, by number. */
     val slots: Slots<SlotBatch<DataDiskSlot>>
       get() = intrinsic()
+  }
+
+  /** The StructureActiveVent prefab. */
+  companion object : Prefab<ActiveVent>() {
+    override val all: ActiveVent.Batch
+      get() = intrinsic()
+
+    override fun named(name: String): ActiveVent.Batch = intrinsic()
   }
 }
 
@@ -18212,27 +14621,19 @@ class AdvancedComposter internal constructor() : TypedDevice() {
   val slots: Slots<DataDiskSlot>
     get() = intrinsic()
 
-  /** The StructureAdvancedComposter prefab. */
-  companion object : Prefab()
-}
-
-/** The StructureAdvancedComposter devices on the chip's network. */
-@PrefabName("StructureAdvancedComposter")
-object AdvancedComposters {
-  /** The device on [pin], as a StructureAdvancedComposter. */
-  fun at(pin: Device): AdvancedComposter = intrinsic()
-
-  /** Every one on the network. */
-  val all: Batch
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
+  /** A batch of StructureAdvancedComposter devices. */
   class Batch internal constructor() : DeviceBatch<AdvancedComposter>() {
     /** A slot of every one in the batch, by number. */
     val slots: Slots<SlotBatch<DataDiskSlot>>
       get() = intrinsic()
+  }
+
+  /** The StructureAdvancedComposter prefab. */
+  companion object : Prefab<AdvancedComposter>() {
+    override val all: AdvancedComposter.Batch
+      get() = intrinsic()
+
+    override fun named(name: String): AdvancedComposter.Batch = intrinsic()
   }
 }
 
@@ -18300,27 +14701,19 @@ class AirConditioner internal constructor() : TypedDevice() {
   val ProgrammableChip: DataDiskSlot
     get() = intrinsic()
 
-  /** The StructureAirConditioner prefab. */
-  companion object : Prefab()
-}
-
-/** The StructureAirConditioner devices on the chip's network. */
-@PrefabName("StructureAirConditioner")
-object AirConditioners {
-  /** The device on [pin], as a StructureAirConditioner. */
-  fun at(pin: Device): AirConditioner = intrinsic()
-
-  /** Every one on the network. */
-  val all: Batch
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
+  /** A batch of StructureAirConditioner devices. */
   class Batch internal constructor() : DeviceBatch<AirConditioner>() {
     /** A slot of every one in the batch, by number. */
     val slots: Slots<SlotBatch<DataDiskSlot>>
       get() = intrinsic()
+  }
+
+  /** The StructureAirConditioner prefab. */
+  companion object : Prefab<AirConditioner>() {
+    override val all: AirConditioner.Batch
+      get() = intrinsic()
+
+    override fun named(name: String): AirConditioner.Batch = intrinsic()
   }
 }
 
@@ -18373,27 +14766,19 @@ class ArcFurnace internal constructor() : TypedDevice() {
   val slots: Slots<DataDiskSlot>
     get() = intrinsic()
 
-  /** The StructureArcFurnace prefab. */
-  companion object : Prefab()
-}
-
-/** The StructureArcFurnace devices on the chip's network. */
-@PrefabName("StructureArcFurnace")
-object ArcFurnaces {
-  /** The device on [pin], as a StructureArcFurnace. */
-  fun at(pin: Device): ArcFurnace = intrinsic()
-
-  /** Every one on the network. */
-  val all: Batch
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
+  /** A batch of StructureArcFurnace devices. */
   class Batch internal constructor() : DeviceBatch<ArcFurnace>() {
     /** A slot of every one in the batch, by number. */
     val slots: Slots<SlotBatch<DataDiskSlot>>
       get() = intrinsic()
+  }
+
+  /** The StructureArcFurnace prefab. */
+  companion object : Prefab<ArcFurnace>() {
+    override val all: ArcFurnace.Batch
+      get() = intrinsic()
+
+    override fun named(name: String): ArcFurnace.Batch = intrinsic()
   }
 }
 
@@ -18419,21 +14804,7 @@ class BasketHoop internal constructor() : TypedDevice() {
     set(value) = intrinsic()
 
   /** The StructureBasketHoop prefab. */
-  companion object : Prefab()
-}
-
-/** The StructureBasketHoop devices on the chip's network. */
-@PrefabName("StructureBasketHoop")
-object BasketHoops {
-  /** The device on [pin], as a StructureBasketHoop. */
-  fun at(pin: Device): BasketHoop = intrinsic()
-
-  /** Every one on the network. */
-  val all: DeviceBatch<BasketHoop>
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): DeviceBatch<BasketHoop> = intrinsic()
+  companion object : Prefab<BasketHoop>()
 }
 
 /** A StructureBeacon. */
@@ -18465,21 +14836,7 @@ class StructureBeacon internal constructor() : TypedDevice() {
     get() = intrinsic()
 
   /** The StructureBeacon prefab. */
-  companion object : Prefab()
-}
-
-/** The StructureBeacon devices on the chip's network. */
-@PrefabName("StructureBeacon")
-object StructureBeacons {
-  /** The device on [pin], as a StructureBeacon. */
-  fun at(pin: Device): StructureBeacon = intrinsic()
-
-  /** Every one on the network. */
-  val all: DeviceBatch<StructureBeacon>
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): DeviceBatch<StructureBeacon> = intrinsic()
+  companion object : Prefab<StructureBeacon>()
 }
 
 /** A StructureBlockBed. */
@@ -18511,27 +14868,19 @@ class BlockBed internal constructor() : TypedDevice() {
   val Bed: DataDiskSlot
     get() = intrinsic()
 
-  /** The StructureBlockBed prefab. */
-  companion object : Prefab()
-}
-
-/** The StructureBlockBed devices on the chip's network. */
-@PrefabName("StructureBlockBed")
-object BlockBeds {
-  /** The device on [pin], as a StructureBlockBed. */
-  fun at(pin: Device): BlockBed = intrinsic()
-
-  /** Every one on the network. */
-  val all: Batch
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
+  /** A batch of StructureBlockBed devices. */
   class Batch internal constructor() : DeviceBatch<BlockBed>() {
     /** A slot of every one in the batch, by number. */
     val slots: Slots<SlotBatch<DataDiskSlot>>
       get() = intrinsic()
+  }
+
+  /** The StructureBlockBed prefab. */
+  companion object : Prefab<BlockBed>() {
+    override val all: BlockBed.Batch
+      get() = intrinsic()
+
+    override fun named(name: String): BlockBed.Batch = intrinsic()
   }
 }
 
@@ -18548,21 +14897,7 @@ class CableAnalysizer internal constructor() : TypedDevice() {
     get() = intrinsic()
 
   /** The StructureCableAnalysizer prefab. */
-  companion object : Prefab()
-}
-
-/** The StructureCableAnalysizer devices on the chip's network. */
-@PrefabName("StructureCableAnalysizer")
-object CableAnalysizers {
-  /** The device on [pin], as a StructureCableAnalysizer. */
-  fun at(pin: Device): CableAnalysizer = intrinsic()
-
-  /** Every one on the network. */
-  val all: DeviceBatch<CableAnalysizer>
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): DeviceBatch<CableAnalysizer> = intrinsic()
+  companion object : Prefab<CableAnalysizer>()
 }
 
 /** A StructureCamera. */
@@ -18577,21 +14912,7 @@ class Camera internal constructor() : TypedDevice() {
     set(value) = intrinsic()
 
   /** The StructureCamera prefab. */
-  companion object : Prefab()
-}
-
-/** The StructureCamera devices on the chip's network. */
-@PrefabName("StructureCamera")
-object Cameras {
-  /** The device on [pin], as a StructureCamera. */
-  fun at(pin: Device): Camera = intrinsic()
-
-  /** Every one on the network. */
-  val all: DeviceBatch<Camera>
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): DeviceBatch<Camera> = intrinsic()
+  companion object : Prefab<Camera>()
 }
 
 /** A StructureChuteInlet. */
@@ -18613,27 +14934,19 @@ class ChuteInlet internal constructor() : TypedDevice() {
   val slots: Slots<DataDiskSlot>
     get() = intrinsic()
 
-  /** The StructureChuteInlet prefab. */
-  companion object : Prefab()
-}
-
-/** The StructureChuteInlet devices on the chip's network. */
-@PrefabName("StructureChuteInlet")
-object ChuteInlets {
-  /** The device on [pin], as a StructureChuteInlet. */
-  fun at(pin: Device): ChuteInlet = intrinsic()
-
-  /** Every one on the network. */
-  val all: Batch
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
+  /** A batch of StructureChuteInlet devices. */
   class Batch internal constructor() : DeviceBatch<ChuteInlet>() {
     /** A slot of every one in the batch, by number. */
     val slots: Slots<SlotBatch<DataDiskSlot>>
       get() = intrinsic()
+  }
+
+  /** The StructureChuteInlet prefab. */
+  companion object : Prefab<ChuteInlet>() {
+    override val all: ChuteInlet.Batch
+      get() = intrinsic()
+
+    override fun named(name: String): ChuteInlet.Batch = intrinsic()
   }
 }
 
@@ -18660,27 +14973,19 @@ class ChuteOutlet internal constructor() : TypedDevice() {
   val slots: Slots<DataDiskSlot>
     get() = intrinsic()
 
-  /** The StructureChuteOutlet prefab. */
-  companion object : Prefab()
-}
-
-/** The StructureChuteOutlet devices on the chip's network. */
-@PrefabName("StructureChuteOutlet")
-object ChuteOutlets {
-  /** The device on [pin], as a StructureChuteOutlet. */
-  fun at(pin: Device): ChuteOutlet = intrinsic()
-
-  /** Every one on the network. */
-  val all: Batch
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
+  /** A batch of StructureChuteOutlet devices. */
   class Batch internal constructor() : DeviceBatch<ChuteOutlet>() {
     /** A slot of every one in the batch, by number. */
     val slots: Slots<SlotBatch<DataDiskSlot>>
       get() = intrinsic()
+  }
+
+  /** The StructureChuteOutlet prefab. */
+  companion object : Prefab<ChuteOutlet>() {
+    override val all: ChuteOutlet.Batch
+      get() = intrinsic()
+
+    override fun named(name: String): ChuteOutlet.Batch = intrinsic()
   }
 }
 
@@ -18720,27 +15025,19 @@ class ChuteUmbilicalMale internal constructor() : TypedDevice() {
   val TransportSlot: DataDiskSlot
     get() = intrinsic()
 
-  /** The StructureChuteUmbilicalMale prefab. */
-  companion object : Prefab()
-}
-
-/** The StructureChuteUmbilicalMale devices on the chip's network. */
-@PrefabName("StructureChuteUmbilicalMale")
-object ChuteUmbilicalMales {
-  /** The device on [pin], as a StructureChuteUmbilicalMale. */
-  fun at(pin: Device): ChuteUmbilicalMale = intrinsic()
-
-  /** Every one on the network. */
-  val all: Batch
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
+  /** A batch of StructureChuteUmbilicalMale devices. */
   class Batch internal constructor() : DeviceBatch<ChuteUmbilicalMale>() {
     /** A slot of every one in the batch, by number. */
     val slots: Slots<SlotBatch<DataDiskSlot>>
       get() = intrinsic()
+  }
+
+  /** The StructureChuteUmbilicalMale prefab. */
+  companion object : Prefab<ChuteUmbilicalMale>() {
+    override val all: ChuteUmbilicalMale.Batch
+      get() = intrinsic()
+
+    override fun named(name: String): ChuteUmbilicalMale.Batch = intrinsic()
   }
 }
 
@@ -18769,21 +15066,7 @@ class CompositeWindowShutterController internal constructor() : TypedDevice() {
     get() = intrinsic()
 
   /** The StructureCompositeWindowShutterController prefab. */
-  companion object : Prefab()
-}
-
-/** The StructureCompositeWindowShutterController devices on the chip's network. */
-@PrefabName("StructureCompositeWindowShutterController")
-object CompositeWindowShutterControllers {
-  /** The device on [pin], as a StructureCompositeWindowShutterController. */
-  fun at(pin: Device): CompositeWindowShutterController = intrinsic()
-
-  /** Every one on the network. */
-  val all: DeviceBatch<CompositeWindowShutterController>
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): DeviceBatch<CompositeWindowShutterController> = intrinsic()
+  companion object : Prefab<CompositeWindowShutterController>()
 }
 
 /** A StructureCondensationChamber. */
@@ -18841,21 +15124,7 @@ class CondensationChamber internal constructor() : TypedDevice() {
     get() = intrinsic()
 
   /** The StructureCondensationChamber prefab. */
-  companion object : Prefab()
-}
-
-/** The StructureCondensationChamber devices on the chip's network. */
-@PrefabName("StructureCondensationChamber")
-object CondensationChambers {
-  /** The device on [pin], as a StructureCondensationChamber. */
-  fun at(pin: Device): CondensationChamber = intrinsic()
-
-  /** Every one on the network. */
-  val all: DeviceBatch<CondensationChamber>
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): DeviceBatch<CondensationChamber> = intrinsic()
+  companion object : Prefab<CondensationChamber>()
 }
 
 /** A StructureCrewUmbilical. */
@@ -18887,21 +15156,7 @@ class CrewUmbilical internal constructor() : TypedDevice() {
     get() = intrinsic()
 
   /** The StructureCrewUmbilical prefab. */
-  companion object : Prefab()
-}
-
-/** The StructureCrewUmbilical devices on the chip's network. */
-@PrefabName("StructureCrewUmbilical")
-object CrewUmbilicals {
-  /** The device on [pin], as a StructureCrewUmbilical. */
-  fun at(pin: Device): CrewUmbilical = intrinsic()
-
-  /** Every one on the network. */
-  val all: DeviceBatch<CrewUmbilical>
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): DeviceBatch<CrewUmbilical> = intrinsic()
+  companion object : Prefab<CrewUmbilical>()
 }
 
 /** A StructureDaylightSensor. */
@@ -18932,21 +15187,7 @@ class DaylightSensor internal constructor() : TypedDevice() {
     get() = intrinsic()
 
   /** The StructureDaylightSensor prefab. */
-  companion object : Prefab()
-}
-
-/** The StructureDaylightSensor devices on the chip's network. */
-@PrefabName("StructureDaylightSensor")
-object DaylightSensors {
-  /** The device on [pin], as a StructureDaylightSensor. */
-  fun at(pin: Device): DaylightSensor = intrinsic()
-
-  /** Every one on the network. */
-  val all: DeviceBatch<DaylightSensor>
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): DeviceBatch<DaylightSensor> = intrinsic()
+  companion object : Prefab<DaylightSensor>()
 }
 
 /** A StructureDiode. */
@@ -18971,21 +15212,7 @@ class Diode internal constructor() : TypedDevice() {
     get() = intrinsic()
 
   /** The StructureDiode prefab. */
-  companion object : Prefab()
-}
-
-/** The StructureDiode devices on the chip's network. */
-@PrefabName("StructureDiode")
-object Diodes {
-  /** The device on [pin], as a StructureDiode. */
-  fun at(pin: Device): Diode = intrinsic()
-
-  /** Every one on the network. */
-  val all: DeviceBatch<Diode>
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): DeviceBatch<Diode> = intrinsic()
+  companion object : Prefab<Diode>()
 }
 
 /** A StructureDiodeSlide. */
@@ -19010,21 +15237,7 @@ class DiodeSlide internal constructor() : TypedDevice() {
     set(value) = intrinsic()
 
   /** The StructureDiodeSlide prefab. */
-  companion object : Prefab()
-}
-
-/** The StructureDiodeSlide devices on the chip's network. */
-@PrefabName("StructureDiodeSlide")
-object DiodeSlides {
-  /** The device on [pin], as a StructureDiodeSlide. */
-  fun at(pin: Device): DiodeSlide = intrinsic()
-
-  /** Every one on the network. */
-  val all: DeviceBatch<DiodeSlide>
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): DeviceBatch<DiodeSlide> = intrinsic()
+  companion object : Prefab<DiodeSlide>()
 }
 
 /** A StructureDrinkingFountain2x1. */
@@ -19044,21 +15257,7 @@ class DrinkingFountain2x1 internal constructor() : TypedDevice() {
     get() = intrinsic()
 
   /** The StructureDrinkingFountain2x1 prefab. */
-  companion object : Prefab()
-}
-
-/** The StructureDrinkingFountain2x1 devices on the chip's network. */
-@PrefabName("StructureDrinkingFountain2x1")
-object DrinkingFountain2x1s {
-  /** The device on [pin], as a StructureDrinkingFountain2x1. */
-  fun at(pin: Device): DrinkingFountain2x1 = intrinsic()
-
-  /** Every one on the network. */
-  val all: DeviceBatch<DrinkingFountain2x1>
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): DeviceBatch<DrinkingFountain2x1> = intrinsic()
+  companion object : Prefab<DrinkingFountain2x1>()
 }
 
 /** A StructureElectrolyzer. */
@@ -19120,27 +15319,19 @@ class Electrolyzer internal constructor() : TypedDevice() {
   val ProgrammableChip: DataDiskSlot
     get() = intrinsic()
 
-  /** The StructureElectrolyzer prefab. */
-  companion object : Prefab()
-}
-
-/** The StructureElectrolyzer devices on the chip's network. */
-@PrefabName("StructureElectrolyzer")
-object Electrolyzers {
-  /** The device on [pin], as a StructureElectrolyzer. */
-  fun at(pin: Device): Electrolyzer = intrinsic()
-
-  /** Every one on the network. */
-  val all: Batch
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
+  /** A batch of StructureElectrolyzer devices. */
   class Batch internal constructor() : DeviceBatch<Electrolyzer>() {
     /** A slot of every one in the batch, by number. */
     val slots: Slots<SlotBatch<DataDiskSlot>>
       get() = intrinsic()
+  }
+
+  /** The StructureElectrolyzer prefab. */
+  companion object : Prefab<Electrolyzer>() {
+    override val all: Electrolyzer.Batch
+      get() = intrinsic()
+
+    override fun named(name: String): Electrolyzer.Batch = intrinsic()
   }
 }
 
@@ -19199,21 +15390,7 @@ class EvaporationChamber internal constructor() : TypedDevice() {
     get() = intrinsic()
 
   /** The StructureEvaporationChamber prefab. */
-  companion object : Prefab()
-}
-
-/** The StructureEvaporationChamber devices on the chip's network. */
-@PrefabName("StructureEvaporationChamber")
-object EvaporationChambers {
-  /** The device on [pin], as a StructureEvaporationChamber. */
-  fun at(pin: Device): EvaporationChamber = intrinsic()
-
-  /** Every one on the network. */
-  val all: DeviceBatch<EvaporationChamber>
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): DeviceBatch<EvaporationChamber> = intrinsic()
+  companion object : Prefab<EvaporationChamber>()
 }
 
 /** A StructureFermenter. */
@@ -19282,27 +15459,19 @@ class Fermenter internal constructor() : TypedDevice() {
   val ProgrammableChip: DataDiskSlot
     get() = intrinsic()
 
-  /** The StructureFermenter prefab. */
-  companion object : Prefab()
-}
-
-/** The StructureFermenter devices on the chip's network. */
-@PrefabName("StructureFermenter")
-object Fermenters {
-  /** The device on [pin], as a StructureFermenter. */
-  fun at(pin: Device): Fermenter = intrinsic()
-
-  /** Every one on the network. */
-  val all: Batch
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
+  /** A batch of StructureFermenter devices. */
   class Batch internal constructor() : DeviceBatch<Fermenter>() {
     /** A slot of every one in the batch, by number. */
     val slots: Slots<SlotBatch<DataDiskSlot>>
       get() = intrinsic()
+  }
+
+  /** The StructureFermenter prefab. */
+  companion object : Prefab<Fermenter>() {
+    override val all: Fermenter.Batch
+      get() = intrinsic()
+
+    override fun named(name: String): Fermenter.Batch = intrinsic()
   }
 }
 
@@ -19324,21 +15493,7 @@ class FlashingLight internal constructor() : TypedDevice() {
     get() = intrinsic()
 
   /** The StructureFlashingLight prefab. */
-  companion object : Prefab()
-}
-
-/** The StructureFlashingLight devices on the chip's network. */
-@PrefabName("StructureFlashingLight")
-object FlashingLights {
-  /** The device on [pin], as a StructureFlashingLight. */
-  fun at(pin: Device): FlashingLight = intrinsic()
-
-  /** Every one on the network. */
-  val all: DeviceBatch<FlashingLight>
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): DeviceBatch<FlashingLight> = intrinsic()
+  companion object : Prefab<FlashingLight>()
 }
 
 /** A StructureGasMixer. */
@@ -19372,21 +15527,7 @@ class GasMixer internal constructor() : TypedDevice() {
     set(value) = intrinsic()
 
   /** The StructureGasMixer prefab. */
-  companion object : Prefab()
-}
-
-/** The StructureGasMixer devices on the chip's network. */
-@PrefabName("StructureGasMixer")
-object GasMixers {
-  /** The device on [pin], as a StructureGasMixer. */
-  fun at(pin: Device): GasMixer = intrinsic()
-
-  /** Every one on the network. */
-  val all: DeviceBatch<GasMixer>
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): DeviceBatch<GasMixer> = intrinsic()
+  companion object : Prefab<GasMixer>()
 }
 
 /** A StructureGasSensor. */
@@ -19416,21 +15557,7 @@ class GasSensor internal constructor() : TypedDevice() {
     get() = intrinsic()
 
   /** The StructureGasSensor prefab. */
-  companion object : Prefab()
-}
-
-/** The StructureGasSensor devices on the chip's network. */
-@PrefabName("StructureGasSensor")
-object GasSensors {
-  /** The device on [pin], as a StructureGasSensor. */
-  fun at(pin: Device): GasSensor = intrinsic()
-
-  /** Every one on the network. */
-  val all: DeviceBatch<GasSensor>
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): DeviceBatch<GasSensor> = intrinsic()
+  companion object : Prefab<GasSensor>()
 }
 
 /** A StructureGroundBasedTelescope. */
@@ -19508,21 +15635,7 @@ class GroundBasedTelescope internal constructor() : TypedDevice() {
     set(value) = intrinsic()
 
   /** The StructureGroundBasedTelescope prefab. */
-  companion object : Prefab()
-}
-
-/** The StructureGroundBasedTelescope devices on the chip's network. */
-@PrefabName("StructureGroundBasedTelescope")
-object GroundBasedTelescopes {
-  /** The device on [pin], as a StructureGroundBasedTelescope. */
-  fun at(pin: Device): GroundBasedTelescope = intrinsic()
-
-  /** Every one on the network. */
-  val all: DeviceBatch<GroundBasedTelescope>
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): DeviceBatch<GroundBasedTelescope> = intrinsic()
+  companion object : Prefab<GroundBasedTelescope>()
 }
 
 /** A StructureGrowLight. */
@@ -19543,21 +15656,7 @@ class GrowLight internal constructor() : TypedDevice() {
     get() = intrinsic()
 
   /** The StructureGrowLight prefab. */
-  companion object : Prefab()
-}
-
-/** The StructureGrowLight devices on the chip's network. */
-@PrefabName("StructureGrowLight")
-object GrowLights {
-  /** The device on [pin], as a StructureGrowLight. */
-  fun at(pin: Device): GrowLight = intrinsic()
-
-  /** Every one on the network. */
-  val all: DeviceBatch<GrowLight>
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): DeviceBatch<GrowLight> = intrinsic()
+  companion object : Prefab<GrowLight>()
 }
 
 /** A StructureHarvie. */
@@ -19617,27 +15716,19 @@ class Harvie internal constructor() : TypedDevice() {
   val Hand: DataDiskSlot
     get() = intrinsic()
 
-  /** The StructureHarvie prefab. */
-  companion object : Prefab()
-}
-
-/** The StructureHarvie devices on the chip's network. */
-@PrefabName("StructureHarvie")
-object Harvies {
-  /** The device on [pin], as a StructureHarvie. */
-  fun at(pin: Device): Harvie = intrinsic()
-
-  /** Every one on the network. */
-  val all: Batch
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
+  /** A batch of StructureHarvie devices. */
   class Batch internal constructor() : DeviceBatch<Harvie>() {
     /** A slot of every one in the batch, by number. */
     val slots: Slots<SlotBatch<DataDiskSlot>>
       get() = intrinsic()
+  }
+
+  /** The StructureHarvie prefab. */
+  companion object : Prefab<Harvie>() {
+    override val all: Harvie.Batch
+      get() = intrinsic()
+
+    override fun named(name: String): Harvie.Batch = intrinsic()
   }
 }
 
@@ -19699,27 +15790,19 @@ class HydroponicsStation internal constructor() : TypedDevice() {
   val slots: Slots<PlantSlot>
     get() = intrinsic()
 
-  /** The StructureHydroponicsStation prefab. */
-  companion object : Prefab()
-}
-
-/** The StructureHydroponicsStation devices on the chip's network. */
-@PrefabName("StructureHydroponicsStation")
-object HydroponicsStations {
-  /** The device on [pin], as a StructureHydroponicsStation. */
-  fun at(pin: Device): HydroponicsStation = intrinsic()
-
-  /** Every one on the network. */
-  val all: Batch
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
+  /** A batch of StructureHydroponicsStation devices. */
   class Batch internal constructor() : DeviceBatch<HydroponicsStation>() {
     /** A slot of every one in the batch, by number. */
     val slots: Slots<SlotBatch<PlantSlot>>
       get() = intrinsic()
+  }
+
+  /** The StructureHydroponicsStation prefab. */
+  companion object : Prefab<HydroponicsStation>() {
+    override val all: HydroponicsStation.Batch
+      get() = intrinsic()
+
+    override fun named(name: String): HydroponicsStation.Batch = intrinsic()
   }
 }
 
@@ -19760,27 +15843,19 @@ class HydroponicsTrayData internal constructor() : TypedDevice() {
   val Fertiliser: DataDiskSlot
     get() = intrinsic()
 
-  /** The StructureHydroponicsTrayData prefab. */
-  companion object : Prefab()
-}
-
-/** The StructureHydroponicsTrayData devices on the chip's network. */
-@PrefabName("StructureHydroponicsTrayData")
-object HydroponicsTrayDatas {
-  /** The device on [pin], as a StructureHydroponicsTrayData. */
-  fun at(pin: Device): HydroponicsTrayData = intrinsic()
-
-  /** Every one on the network. */
-  val all: Batch
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
+  /** A batch of StructureHydroponicsTrayData devices. */
   class Batch internal constructor() : DeviceBatch<HydroponicsTrayData>() {
     /** A slot of every one in the batch, by number. */
     val slots: Slots<SlotBatch<CommonSlot>>
       get() = intrinsic()
+  }
+
+  /** The StructureHydroponicsTrayData prefab. */
+  companion object : Prefab<HydroponicsTrayData>() {
+    override val all: HydroponicsTrayData.Batch
+      get() = intrinsic()
+
+    override fun named(name: String): HydroponicsTrayData.Batch = intrinsic()
   }
 }
 
@@ -19830,27 +15905,19 @@ class IceCrusher internal constructor() : TypedDevice() {
   val slots: Slots<DataDiskSlot>
     get() = intrinsic()
 
-  /** The StructureIceCrusher prefab. */
-  companion object : Prefab()
-}
-
-/** The StructureIceCrusher devices on the chip's network. */
-@PrefabName("StructureIceCrusher")
-object IceCrushers {
-  /** The device on [pin], as a StructureIceCrusher. */
-  fun at(pin: Device): IceCrusher = intrinsic()
-
-  /** Every one on the network. */
-  val all: Batch
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
+  /** A batch of StructureIceCrusher devices. */
   class Batch internal constructor() : DeviceBatch<IceCrusher>() {
     /** A slot of every one in the batch, by number. */
     val slots: Slots<SlotBatch<DataDiskSlot>>
       get() = intrinsic()
+  }
+
+  /** The StructureIceCrusher prefab. */
+  companion object : Prefab<IceCrusher>() {
+    override val all: IceCrusher.Batch
+      get() = intrinsic()
+
+    override fun named(name: String): IceCrusher.Batch = intrinsic()
   }
 }
 
@@ -19862,21 +15929,7 @@ class Igniter internal constructor() : TypedDevice() {
     set(value) = intrinsic()
 
   /** The StructureIgniter prefab. */
-  companion object : Prefab()
-}
-
-/** The StructureIgniter devices on the chip's network. */
-@PrefabName("StructureIgniter")
-object Igniters {
-  /** The device on [pin], as a StructureIgniter. */
-  fun at(pin: Device): Igniter = intrinsic()
-
-  /** Every one on the network. */
-  val all: DeviceBatch<Igniter>
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): DeviceBatch<Igniter> = intrinsic()
+  companion object : Prefab<Igniter>()
 }
 
 /** A StructureLarreDockBypass. */
@@ -19897,21 +15950,7 @@ class LarreDockBypass internal constructor() : TypedDevice() {
     get() = intrinsic()
 
   /** The StructureLarreDockBypass prefab. */
-  companion object : Prefab()
-}
-
-/** The StructureLarreDockBypass devices on the chip's network. */
-@PrefabName("StructureLarreDockBypass")
-object LarreDockBypasses {
-  /** The device on [pin], as a StructureLarreDockBypass. */
-  fun at(pin: Device): LarreDockBypass = intrinsic()
-
-  /** Every one on the network. */
-  val all: DeviceBatch<LarreDockBypass>
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): DeviceBatch<LarreDockBypass> = intrinsic()
+  companion object : Prefab<LarreDockBypass>()
 }
 
 /** A StructureLiquidDrain. */
@@ -19953,21 +15992,7 @@ class LiquidDrain internal constructor() : TypedDevice() {
     get() = intrinsic()
 
   /** The StructureLiquidDrain prefab. */
-  companion object : Prefab()
-}
-
-/** The StructureLiquidDrain devices on the chip's network. */
-@PrefabName("StructureLiquidDrain")
-object LiquidDrains {
-  /** The device on [pin], as a StructureLiquidDrain. */
-  fun at(pin: Device): LiquidDrain = intrinsic()
-
-  /** Every one on the network. */
-  val all: DeviceBatch<LiquidDrain>
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): DeviceBatch<LiquidDrain> = intrinsic()
+  companion object : Prefab<LiquidDrain>()
 }
 
 /** A StructureLogicDial. */
@@ -19985,21 +16010,7 @@ class LogicDial internal constructor() : TypedDevice() {
     set(value) = intrinsic()
 
   /** The StructureLogicDial prefab. */
-  companion object : Prefab()
-}
-
-/** The StructureLogicDial devices on the chip's network. */
-@PrefabName("StructureLogicDial")
-object LogicDials {
-  /** The device on [pin], as a StructureLogicDial. */
-  fun at(pin: Device): LogicDial = intrinsic()
-
-  /** Every one on the network. */
-  val all: DeviceBatch<LogicDial>
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): DeviceBatch<LogicDial> = intrinsic()
+  companion object : Prefab<LogicDial>()
 }
 
 /** A StructureLogicHashGen. */
@@ -20009,21 +16020,7 @@ class LogicHashGen internal constructor() : TypedDevice() {
     get() = intrinsic()
 
   /** The StructureLogicHashGen prefab. */
-  companion object : Prefab()
-}
-
-/** The StructureLogicHashGen devices on the chip's network. */
-@PrefabName("StructureLogicHashGen")
-object LogicHashGens {
-  /** The device on [pin], as a StructureLogicHashGen. */
-  fun at(pin: Device): LogicHashGen = intrinsic()
-
-  /** Every one on the network. */
-  val all: DeviceBatch<LogicHashGen>
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): DeviceBatch<LogicHashGen> = intrinsic()
+  companion object : Prefab<LogicHashGen>()
 }
 
 /** A StructureLogicMemory. */
@@ -20034,21 +16031,7 @@ class LogicMemory internal constructor() : TypedDevice() {
     set(value) = intrinsic()
 
   /** The StructureLogicMemory prefab. */
-  companion object : Prefab()
-}
-
-/** The StructureLogicMemory devices on the chip's network. */
-@PrefabName("StructureLogicMemory")
-object LogicMemories {
-  /** The device on [pin], as a StructureLogicMemory. */
-  fun at(pin: Device): LogicMemory = intrinsic()
-
-  /** Every one on the network. */
-  val all: DeviceBatch<LogicMemory>
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): DeviceBatch<LogicMemory> = intrinsic()
+  companion object : Prefab<LogicMemory>()
 }
 
 /** A StructureLogicPidController. */
@@ -20099,21 +16082,7 @@ class LogicPidController internal constructor() : TypedDevice() {
     get() = intrinsic()
 
   /** The StructureLogicPidController prefab. */
-  companion object : Prefab()
-}
-
-/** The StructureLogicPidController devices on the chip's network. */
-@PrefabName("StructureLogicPidController")
-object LogicPidControllers {
-  /** The device on [pin], as a StructureLogicPidController. */
-  fun at(pin: Device): LogicPidController = intrinsic()
-
-  /** Every one on the network. */
-  val all: DeviceBatch<LogicPidController>
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): DeviceBatch<LogicPidController> = intrinsic()
+  companion object : Prefab<LogicPidController>()
 }
 
 /** A StructureLogicRocketDownlink. */
@@ -20126,21 +16095,7 @@ class LogicRocketDownlink internal constructor() : TypedDevice() {
     get() = intrinsic()
 
   /** The StructureLogicRocketDownlink prefab. */
-  companion object : Prefab()
-}
-
-/** The StructureLogicRocketDownlink devices on the chip's network. */
-@PrefabName("StructureLogicRocketDownlink")
-object LogicRocketDownlinks {
-  /** The device on [pin], as a StructureLogicRocketDownlink. */
-  fun at(pin: Device): LogicRocketDownlink = intrinsic()
-
-  /** Every one on the network. */
-  val all: DeviceBatch<LogicRocketDownlink>
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): DeviceBatch<LogicRocketDownlink> = intrinsic()
+  companion object : Prefab<LogicRocketDownlink>()
 }
 
 /** A StructureLogicRocketUplink. */
@@ -20160,21 +16115,7 @@ class LogicRocketUplink internal constructor() : TypedDevice() {
     get() = intrinsic()
 
   /** The StructureLogicRocketUplink prefab. */
-  companion object : Prefab()
-}
-
-/** The StructureLogicRocketUplink devices on the chip's network. */
-@PrefabName("StructureLogicRocketUplink")
-object LogicRocketUplinks {
-  /** The device on [pin], as a StructureLogicRocketUplink. */
-  fun at(pin: Device): LogicRocketUplink = intrinsic()
-
-  /** Every one on the network. */
-  val all: DeviceBatch<LogicRocketUplink>
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): DeviceBatch<LogicRocketUplink> = intrinsic()
+  companion object : Prefab<LogicRocketUplink>()
 }
 
 /** A StructureLogicSorter. */
@@ -20225,27 +16166,19 @@ class LogicSorter internal constructor() : TypedDevice() {
   val Export2: DataDiskSlot
     get() = intrinsic()
 
-  /** The StructureLogicSorter prefab. */
-  companion object : Prefab()
-}
-
-/** The StructureLogicSorter devices on the chip's network. */
-@PrefabName("StructureLogicSorter")
-object LogicSorters {
-  /** The device on [pin], as a StructureLogicSorter. */
-  fun at(pin: Device): LogicSorter = intrinsic()
-
-  /** Every one on the network. */
-  val all: Batch
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
+  /** A batch of StructureLogicSorter devices. */
   class Batch internal constructor() : DeviceBatch<LogicSorter>() {
     /** A slot of every one in the batch, by number. */
     val slots: Slots<SlotBatch<DataDiskSlot>>
       get() = intrinsic()
+  }
+
+  /** The StructureLogicSorter prefab. */
+  companion object : Prefab<LogicSorter>() {
+    override val all: LogicSorter.Batch
+      get() = intrinsic()
+
+    override fun named(name: String): LogicSorter.Batch = intrinsic()
   }
 }
 
@@ -20324,27 +16257,19 @@ class Nitrolyzer internal constructor() : TypedDevice() {
   val ProgrammableChip: DataDiskSlot
     get() = intrinsic()
 
-  /** The StructureNitrolyzer prefab. */
-  companion object : Prefab()
-}
-
-/** The StructureNitrolyzer devices on the chip's network. */
-@PrefabName("StructureNitrolyzer")
-object Nitrolyzers {
-  /** The device on [pin], as a StructureNitrolyzer. */
-  fun at(pin: Device): Nitrolyzer = intrinsic()
-
-  /** Every one on the network. */
-  val all: Batch
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
+  /** A batch of StructureNitrolyzer devices. */
   class Batch internal constructor() : DeviceBatch<Nitrolyzer>() {
     /** A slot of every one in the batch, by number. */
     val slots: Slots<SlotBatch<DataDiskSlot>>
       get() = intrinsic()
+  }
+
+  /** The StructureNitrolyzer prefab. */
+  companion object : Prefab<Nitrolyzer>() {
+    override val all: Nitrolyzer.Batch
+      get() = intrinsic()
+
+    override fun named(name: String): Nitrolyzer.Batch = intrinsic()
   }
 }
 
@@ -20395,27 +16320,19 @@ class Packer internal constructor() : TypedDevice() {
   val Export: DataDiskSlot
     get() = intrinsic()
 
-  /** The StructurePacker prefab. */
-  companion object : Prefab()
-}
-
-/** The StructurePacker devices on the chip's network. */
-@PrefabName("StructurePacker")
-object Packers {
-  /** The device on [pin], as a StructurePacker. */
-  fun at(pin: Device): Packer = intrinsic()
-
-  /** Every one on the network. */
-  val all: Batch
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
+  /** A batch of StructurePacker devices. */
   class Batch internal constructor() : DeviceBatch<Packer>() {
     /** A slot of every one in the batch, by number. */
     val slots: Slots<SlotBatch<DataDiskSlot>>
       get() = intrinsic()
+  }
+
+  /** The StructurePacker prefab. */
+  companion object : Prefab<Packer>() {
+    override val all: Packer.Batch
+      get() = intrinsic()
+
+    override fun named(name: String): Packer.Batch = intrinsic()
   }
 }
 
@@ -20436,21 +16353,7 @@ class PipeIgniter internal constructor() : TypedDevice() {
     get() = intrinsic()
 
   /** The StructurePipeIgniter prefab. */
-  companion object : Prefab()
-}
-
-/** The StructurePipeIgniter devices on the chip's network. */
-@PrefabName("StructurePipeIgniter")
-object PipeIgniters {
-  /** The device on [pin], as a StructurePipeIgniter. */
-  fun at(pin: Device): PipeIgniter = intrinsic()
-
-  /** Every one on the network. */
-  val all: DeviceBatch<PipeIgniter>
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): DeviceBatch<PipeIgniter> = intrinsic()
+  companion object : Prefab<PipeIgniter>()
 }
 
 /** A StructurePortablesConnector. */
@@ -20479,27 +16382,19 @@ class PortablesConnector internal constructor() : TypedDevice() {
   val PortableSlot: DataDiskSlot
     get() = intrinsic()
 
-  /** The StructurePortablesConnector prefab. */
-  companion object : Prefab()
-}
-
-/** The StructurePortablesConnector devices on the chip's network. */
-@PrefabName("StructurePortablesConnector")
-object PortablesConnectors {
-  /** The device on [pin], as a StructurePortablesConnector. */
-  fun at(pin: Device): PortablesConnector = intrinsic()
-
-  /** Every one on the network. */
-  val all: Batch
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
+  /** A batch of StructurePortablesConnector devices. */
   class Batch internal constructor() : DeviceBatch<PortablesConnector>() {
     /** A slot of every one in the batch, by number. */
     val slots: Slots<SlotBatch<DataDiskSlot>>
       get() = intrinsic()
+  }
+
+  /** The StructurePortablesConnector prefab. */
+  companion object : Prefab<PortablesConnector>() {
+    override val all: PortablesConnector.Batch
+      get() = intrinsic()
+
+    override fun named(name: String): PortablesConnector.Batch = intrinsic()
   }
 }
 
@@ -20519,27 +16414,19 @@ class PowerConnector internal constructor() : TypedDevice() {
   val Portableslot: DataDiskSlot
     get() = intrinsic()
 
-  /** The StructurePowerConnector prefab. */
-  companion object : Prefab()
-}
-
-/** The StructurePowerConnector devices on the chip's network. */
-@PrefabName("StructurePowerConnector")
-object PowerConnectors {
-  /** The device on [pin], as a StructurePowerConnector. */
-  fun at(pin: Device): PowerConnector = intrinsic()
-
-  /** Every one on the network. */
-  val all: Batch
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
+  /** A batch of StructurePowerConnector devices. */
   class Batch internal constructor() : DeviceBatch<PowerConnector>() {
     /** A slot of every one in the batch, by number. */
     val slots: Slots<SlotBatch<DataDiskSlot>>
       get() = intrinsic()
+  }
+
+  /** The StructurePowerConnector prefab. */
+  companion object : Prefab<PowerConnector>() {
+    override val all: PowerConnector.Batch
+      get() = intrinsic()
+
+    override fun named(name: String): PowerConnector.Batch = intrinsic()
   }
 }
 
@@ -20560,21 +16447,7 @@ class PowerTransmitterOmni internal constructor() : TypedDevice() {
     get() = intrinsic()
 
   /** The StructurePowerTransmitterOmni prefab. */
-  companion object : Prefab()
-}
-
-/** The StructurePowerTransmitterOmni devices on the chip's network. */
-@PrefabName("StructurePowerTransmitterOmni")
-object PowerTransmitterOmnis {
-  /** The device on [pin], as a StructurePowerTransmitterOmni. */
-  fun at(pin: Device): PowerTransmitterOmni = intrinsic()
-
-  /** Every one on the network. */
-  val all: DeviceBatch<PowerTransmitterOmni>
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): DeviceBatch<PowerTransmitterOmni> = intrinsic()
+  companion object : Prefab<PowerTransmitterOmni>()
 }
 
 /** A StructurePowerUmbilicalMale. */
@@ -20605,21 +16478,7 @@ class PowerUmbilicalMale internal constructor() : TypedDevice() {
     get() = intrinsic()
 
   /** The StructurePowerUmbilicalMale prefab. */
-  companion object : Prefab()
-}
-
-/** The StructurePowerUmbilicalMale devices on the chip's network. */
-@PrefabName("StructurePowerUmbilicalMale")
-object PowerUmbilicalMales {
-  /** The device on [pin], as a StructurePowerUmbilicalMale. */
-  fun at(pin: Device): PowerUmbilicalMale = intrinsic()
-
-  /** Every one on the network. */
-  val all: DeviceBatch<PowerUmbilicalMale>
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): DeviceBatch<PowerUmbilicalMale> = intrinsic()
+  companion object : Prefab<PowerUmbilicalMale>()
 }
 
 /** A StructureRobotArmDoor. */
@@ -20636,21 +16495,7 @@ class RobotArmDoor internal constructor() : TypedDevice() {
     get() = intrinsic()
 
   /** The StructureRobotArmDoor prefab. */
-  companion object : Prefab()
-}
-
-/** The StructureRobotArmDoor devices on the chip's network. */
-@PrefabName("StructureRobotArmDoor")
-object RobotArmDoors {
-  /** The device on [pin], as a StructureRobotArmDoor. */
-  fun at(pin: Device): RobotArmDoor = intrinsic()
-
-  /** Every one on the network. */
-  val all: DeviceBatch<RobotArmDoor>
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): DeviceBatch<RobotArmDoor> = intrinsic()
+  companion object : Prefab<RobotArmDoor>()
 }
 
 /** A StructureRocketAvionics. */
@@ -20788,21 +16633,7 @@ class RocketAvionics internal constructor() : TypedDevice() {
     get() = intrinsic()
 
   /** The StructureRocketAvionics prefab. */
-  companion object : Prefab()
-}
-
-/** The StructureRocketAvionics devices on the chip's network. */
-@PrefabName("StructureRocketAvionics")
-object RocketAvionicses {
-  /** The device on [pin], as a StructureRocketAvionics. */
-  fun at(pin: Device): RocketAvionics = intrinsic()
-
-  /** Every one on the network. */
-  val all: DeviceBatch<RocketAvionics>
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): DeviceBatch<RocketAvionics> = intrinsic()
+  companion object : Prefab<RocketAvionics>()
 }
 
 /** A StructureRocketCelestialTracker. */
@@ -20838,21 +16669,7 @@ class RocketCelestialTracker internal constructor() : TypedDevice() {
     get() = intrinsic()
 
   /** The StructureRocketCelestialTracker prefab. */
-  companion object : Prefab()
-}
-
-/** The StructureRocketCelestialTracker devices on the chip's network. */
-@PrefabName("StructureRocketCelestialTracker")
-object RocketCelestialTrackers {
-  /** The device on [pin], as a StructureRocketCelestialTracker. */
-  fun at(pin: Device): RocketCelestialTracker = intrinsic()
-
-  /** Every one on the network. */
-  val all: DeviceBatch<RocketCelestialTracker>
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): DeviceBatch<RocketCelestialTracker> = intrinsic()
+  companion object : Prefab<RocketCelestialTracker>()
 }
 
 /** A StructureRocketEngineTiny. */
@@ -20894,21 +16711,7 @@ class RocketEngineTiny internal constructor() : TypedDevice() {
     get() = intrinsic()
 
   /** The StructureRocketEngineTiny prefab. */
-  companion object : Prefab()
-}
-
-/** The StructureRocketEngineTiny devices on the chip's network. */
-@PrefabName("StructureRocketEngineTiny")
-object RocketEngineTinies {
-  /** The device on [pin], as a StructureRocketEngineTiny. */
-  fun at(pin: Device): RocketEngineTiny = intrinsic()
-
-  /** Every one on the network. */
-  val all: DeviceBatch<RocketEngineTiny>
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): DeviceBatch<RocketEngineTiny> = intrinsic()
+  companion object : Prefab<RocketEngineTiny>()
 }
 
 /** A StructureRocketGasCollector. */
@@ -20949,21 +16752,7 @@ class RocketGasCollector internal constructor() : TypedDevice() {
     get() = intrinsic()
 
   /** The StructureRocketGasCollector prefab. */
-  companion object : Prefab()
-}
-
-/** The StructureRocketGasCollector devices on the chip's network. */
-@PrefabName("StructureRocketGasCollector")
-object RocketGasCollectors {
-  /** The device on [pin], as a StructureRocketGasCollector. */
-  fun at(pin: Device): RocketGasCollector = intrinsic()
-
-  /** Every one on the network. */
-  val all: DeviceBatch<RocketGasCollector>
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): DeviceBatch<RocketGasCollector> = intrinsic()
+  companion object : Prefab<RocketGasCollector>()
 }
 
 /** A StructureRocketScanner. */
@@ -20995,27 +16784,19 @@ class RocketScanner internal constructor() : TypedDevice() {
   val ScannerHeadSlot: DataDiskSlot
     get() = intrinsic()
 
-  /** The StructureRocketScanner prefab. */
-  companion object : Prefab()
-}
-
-/** The StructureRocketScanner devices on the chip's network. */
-@PrefabName("StructureRocketScanner")
-object RocketScanners {
-  /** The device on [pin], as a StructureRocketScanner. */
-  fun at(pin: Device): RocketScanner = intrinsic()
-
-  /** Every one on the network. */
-  val all: Batch
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
+  /** A batch of StructureRocketScanner devices. */
   class Batch internal constructor() : DeviceBatch<RocketScanner>() {
     /** A slot of every one in the batch, by number. */
     val slots: Slots<SlotBatch<DataDiskSlot>>
       get() = intrinsic()
+  }
+
+  /** The StructureRocketScanner prefab. */
+  companion object : Prefab<RocketScanner>() {
+    override val all: RocketScanner.Batch
+      get() = intrinsic()
+
+    override fun named(name: String): RocketScanner.Batch = intrinsic()
   }
 }
 
@@ -21030,27 +16811,19 @@ class ShelfMedium internal constructor() : TypedDevice() {
   val slots: Slots<DataDiskSlot>
     get() = intrinsic()
 
-  /** The StructureShelfMedium prefab. */
-  companion object : Prefab()
-}
-
-/** The StructureShelfMedium devices on the chip's network. */
-@PrefabName("StructureShelfMedium")
-object ShelfMediums {
-  /** The device on [pin], as a StructureShelfMedium. */
-  fun at(pin: Device): ShelfMedium = intrinsic()
-
-  /** Every one on the network. */
-  val all: Batch
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
+  /** A batch of StructureShelfMedium devices. */
   class Batch internal constructor() : DeviceBatch<ShelfMedium>() {
     /** A slot of every one in the batch, by number. */
     val slots: Slots<SlotBatch<DataDiskSlot>>
       get() = intrinsic()
+  }
+
+  /** The StructureShelfMedium prefab. */
+  companion object : Prefab<ShelfMedium>() {
+    override val all: ShelfMedium.Batch
+      get() = intrinsic()
+
+    override fun named(name: String): ShelfMedium.Batch = intrinsic()
   }
 }
 
@@ -21076,21 +16849,7 @@ class Shower internal constructor() : TypedDevice() {
     set(value) = intrinsic()
 
   /** The StructureShower prefab. */
-  companion object : Prefab()
-}
-
-/** The StructureShower devices on the chip's network. */
-@PrefabName("StructureShower")
-object Showers {
-  /** The device on [pin], as a StructureShower. */
-  fun at(pin: Device): Shower = intrinsic()
-
-  /** Every one on the network. */
-  val all: DeviceBatch<Shower>
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): DeviceBatch<Shower> = intrinsic()
+  companion object : Prefab<Shower>()
 }
 
 /** A StructureShowerPowered. */
@@ -21114,21 +16873,7 @@ class ShowerPowered internal constructor() : TypedDevice() {
     get() = intrinsic()
 
   /** The StructureShowerPowered prefab. */
-  companion object : Prefab()
-}
-
-/** The StructureShowerPowered devices on the chip's network. */
-@PrefabName("StructureShowerPowered")
-object ShowerPowereds {
-  /** The device on [pin], as a StructureShowerPowered. */
-  fun at(pin: Device): ShowerPowered = intrinsic()
-
-  /** Every one on the network. */
-  val all: DeviceBatch<ShowerPowered>
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): DeviceBatch<ShowerPowered> = intrinsic()
+  companion object : Prefab<ShowerPowered>()
 }
 
 /** A StructureSleeperVerticalDroid. */
@@ -21168,27 +16913,19 @@ class SleeperVerticalDroid internal constructor() : TypedDevice() {
   val Player: DataDiskSlot
     get() = intrinsic()
 
-  /** The StructureSleeperVerticalDroid prefab. */
-  companion object : Prefab()
-}
-
-/** The StructureSleeperVerticalDroid devices on the chip's network. */
-@PrefabName("StructureSleeperVerticalDroid")
-object SleeperVerticalDroids {
-  /** The device on [pin], as a StructureSleeperVerticalDroid. */
-  fun at(pin: Device): SleeperVerticalDroid = intrinsic()
-
-  /** Every one on the network. */
-  val all: Batch
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
+  /** A batch of StructureSleeperVerticalDroid devices. */
   class Batch internal constructor() : DeviceBatch<SleeperVerticalDroid>() {
     /** A slot of every one in the batch, by number. */
     val slots: Slots<SlotBatch<DataDiskSlot>>
       get() = intrinsic()
+  }
+
+  /** The StructureSleeperVerticalDroid prefab. */
+  companion object : Prefab<SleeperVerticalDroid>() {
+    override val all: SleeperVerticalDroid.Batch
+      get() = intrinsic()
+
+    override fun named(name: String): SleeperVerticalDroid.Batch = intrinsic()
   }
 }
 
@@ -21209,21 +16946,7 @@ class TraderWaypoint internal constructor() : TypedDevice() {
     get() = intrinsic()
 
   /** The StructureTraderWaypoint prefab. */
-  companion object : Prefab()
-}
-
-/** The StructureTraderWaypoint devices on the chip's network. */
-@PrefabName("StructureTraderWaypoint")
-object TraderWaypoints {
-  /** The device on [pin], as a StructureTraderWaypoint. */
-  fun at(pin: Device): TraderWaypoint = intrinsic()
-
-  /** Every one on the network. */
-  val all: DeviceBatch<TraderWaypoint>
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): DeviceBatch<TraderWaypoint> = intrinsic()
+  companion object : Prefab<TraderWaypoint>()
 }
 
 /** A StructureWallHeater. */
@@ -21255,27 +16978,19 @@ class WallHeater internal constructor() : TypedDevice() {
   val DataDisk: DataDiskSlot
     get() = intrinsic()
 
-  /** The StructureWallHeater prefab. */
-  companion object : Prefab()
-}
-
-/** The StructureWallHeater devices on the chip's network. */
-@PrefabName("StructureWallHeater")
-object WallHeaters {
-  /** The device on [pin], as a StructureWallHeater. */
-  fun at(pin: Device): WallHeater = intrinsic()
-
-  /** Every one on the network. */
-  val all: Batch
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
+  /** A batch of StructureWallHeater devices. */
   class Batch internal constructor() : DeviceBatch<WallHeater>() {
     /** A slot of every one in the batch, by number. */
     val slots: Slots<SlotBatch<DataDiskSlot>>
       get() = intrinsic()
+  }
+
+  /** The StructureWallHeater prefab. */
+  companion object : Prefab<WallHeater>() {
+    override val all: WallHeater.Batch
+      get() = intrinsic()
+
+    override fun named(name: String): WallHeater.Batch = intrinsic()
   }
 }
 
@@ -21311,27 +17026,19 @@ class WaterPurifier internal constructor() : TypedDevice() {
   val slots: Slots<DataDiskSlot>
     get() = intrinsic()
 
-  /** The StructureWaterPurifier prefab. */
-  companion object : Prefab()
-}
-
-/** The StructureWaterPurifier devices on the chip's network. */
-@PrefabName("StructureWaterPurifier")
-object WaterPurifiers {
-  /** The device on [pin], as a StructureWaterPurifier. */
-  fun at(pin: Device): WaterPurifier = intrinsic()
-
-  /** Every one on the network. */
-  val all: Batch
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): Batch = intrinsic()
-
+  /** A batch of StructureWaterPurifier devices. */
   class Batch internal constructor() : DeviceBatch<WaterPurifier>() {
     /** A slot of every one in the batch, by number. */
     val slots: Slots<SlotBatch<DataDiskSlot>>
       get() = intrinsic()
+  }
+
+  /** The StructureWaterPurifier prefab. */
+  companion object : Prefab<WaterPurifier>() {
+    override val all: WaterPurifier.Batch
+      get() = intrinsic()
+
+    override fun named(name: String): WaterPurifier.Batch = intrinsic()
   }
 }
 
@@ -21369,19 +17076,5 @@ class WeatherStation internal constructor() : TypedDevice() {
     get() = intrinsic()
 
   /** The StructureWeatherStation prefab. */
-  companion object : Prefab()
-}
-
-/** The StructureWeatherStation devices on the chip's network. */
-@PrefabName("StructureWeatherStation")
-object WeatherStations {
-  /** The device on [pin], as a StructureWeatherStation. */
-  fun at(pin: Device): WeatherStation = intrinsic()
-
-  /** Every one on the network. */
-  val all: DeviceBatch<WeatherStation>
-    get() = intrinsic()
-
-  /** Every one on the network named [name], which must be a constant. */
-  fun named(name: String): DeviceBatch<WeatherStation> = intrinsic()
+  companion object : Prefab<WeatherStation>()
 }

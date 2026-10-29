@@ -255,7 +255,7 @@ abstract class GenericDevice internal constructor() {
     get() = intrinsic()
     set(value) = intrinsic()
 
-  val PrefabHash: Prefab
+  val PrefabHash: Prefab<*>
     get() = intrinsic()
 
   var ForceWrite: Boolean

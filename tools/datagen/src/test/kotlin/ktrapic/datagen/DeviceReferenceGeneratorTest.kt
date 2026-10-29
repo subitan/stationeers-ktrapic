@@ -19,11 +19,8 @@ class DeviceReferenceGeneratorTest {
       |  @SlotNumber(0)
       |  val DataDisk: DataDiskSlot
       |    get() = intrinsic()
-      |}
       |
-      |@PrefabName("$prefab")
-      |object ${type}s {
-      |  fun at(pin: Device): $type = intrinsic()
+      |  companion object : Prefab<$type>()
       |}
       |"""
           .trimMargin()
@@ -39,7 +36,7 @@ class DeviceReferenceGeneratorTest {
 
     assertThat(reference)
         .contains(
-            "/** StructureTransformerMedium(Reversed). Entry point: TransformerMedium_Reverseds. */\n" +
+            "/** StructureTransformerMedium(Reversed). */\n" +
                 "class TransformerMedium_Reversed : TypedDevice {\n"
         )
     assertThat(reference).contains("1 prefab in all")
@@ -113,13 +110,8 @@ class DeviceReferenceGeneratorTest {
       |
       |    override val Quantity: Double
       |      get() = intrinsic()
-      |  }
-      |}
       |
-      |object Sensors {
-      |  @PrefabName("StructureMotionSensor")
-      |  object Motion {
-      |    fun at(pin: Device): Sensor.Motion = intrinsic()
+      |    companion object : Prefab<Sensor.Motion>()
       |  }
       |}
       |"""
@@ -167,6 +159,18 @@ class DeviceReferenceGeneratorTest {
 
     val reference = DeviceReferenceGenerator.generate(source, enums, typing)
 
-    assertThat(reference).contains("/** StructureHidden. Entry point: Hiddens. */\n")
+    assertThat(reference).contains("/** StructureHidden. */\n")
+  }
+
+  @Test
+  fun `rejects a typed device without a prefab companion object`() {
+    val source =
+        device("StructureVent", "Vent").replace("  companion object : Prefab<Vent>()\n", "")
+
+    val error =
+        assertThrows<IllegalArgumentException> {
+          DeviceReferenceGenerator.generate(source, enums, typing)
+        }
+    assertThat(error).hasMessageThat().contains("without a prefab companion object: [Vent]")
   }
 }

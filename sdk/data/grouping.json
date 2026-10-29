@@ -1,7 +1,6 @@
 {
   "families": {
     "Battery": {
-      "plural": "Batteries",
       "members": {
         "Station": "StructureBattery",
         "Large": "StructureBatteryLarge",
@@ -10,7 +9,6 @@
       }
     },
     "BatteryCell": {
-      "plural": "BatteryCells",
       "members": {
         "Small": "ItemBatteryCell",
         "Large": "ItemBatteryCellLarge",
@@ -21,7 +19,6 @@
       }
     },
     "LedDisplay": {
-      "plural": "LedDisplays",
       "members": {
         "Small": "StructureConsoleLED5",
         "Medium": "StructureConsoleLED1x2",
@@ -29,7 +26,6 @@
       }
     },
     "Transformer": {
-      "plural": "Transformers",
       "members": {
         "Large": "StructureTransformer",
         "Medium": "StructureTransformerMedium",
@@ -40,7 +36,6 @@
       }
     },
     "SatelliteDish": {
-      "plural": "SatelliteDishes",
       "members": {
         "Small": "StructureSmallSatelliteDish",
         "Medium": "StructureSatelliteDish",
@@ -48,7 +43,6 @@
       }
     },
     "PresenceSensor": {
-      "plural": "PresenceSensors",
       "members": {
         "Motion": "StructureMotionSensor",
         "Proximity": "StructureProximitySensor",
@@ -56,7 +50,6 @@
       }
     },
     "PressurePlate": {
-      "plural": "PressurePlates",
       "members": {
         "Small": "StructurePressurePlateSmall",
         "Medium": "StructurePressurePlateMedium",
@@ -64,14 +57,12 @@
       }
     },
     "Fridge": {
-      "plural": "Fridges",
       "members": {
         "Small": "StructureFridgeSmall",
         "Large": "StructureFridgeBig"
       }
     },
     "ItemStorage": {
-      "plural": "ItemStorages",
       "members": {
         "CargoSmall": "StructureCargoStorageSmall",
         "CargoMedium": "StructureCargoStorageMedium",
@@ -79,7 +70,6 @@
       }
     },
     "HangarDoor": {
-      "plural": "HangarDoors",
       "extends": ["Door"],
       "members": {
         "Small": "StructureAirlockGate",
@@ -88,7 +78,6 @@
       }
     },
     "VendingMachine": {
-      "plural": "VendingMachines",
       "members": {
         "Standard": "StructureVendingMachine",
         "Small": "StructureVendingMachineSmall",
@@ -96,14 +85,12 @@
       }
     },
     "Speaker": {
-      "plural": "Speakers",
       "members": {
         "Passive": "PassiveSpeaker",
         "Klaxon": "StructureKlaxon"
       }
     },
     "LightRound": {
-      "plural": "LightRounds",
       "members": {
         "Standard": "StructureLightRound",
         "Small": "StructureLightRoundSmall",
@@ -111,21 +98,18 @@
       }
     },
     "BatteryCharger": {
-      "plural": "BatteryChargers",
       "members": {
         "Standard": "StructureBatteryCharger",
         "Small": "StructureBatteryChargerSmall"
       }
     },
     "PoweredVent": {
-      "plural": "PoweredVents",
       "members": {
         "Standard": "StructurePoweredVent",
         "Large": "StructurePoweredVentLarge"
       }
     },
     "Valve": {
-      "plural": "Valves",
       "members": {
         "Gas": "StructureValve",
         "Liquid": "StructureLiquidValve",
@@ -136,21 +120,18 @@
       }
     },
     "VolumePump": {
-      "plural": "VolumePumps",
       "members": {
         "Gas": "StructureVolumePump",
         "Liquid": "StructureLiquidVolumePump"
       }
     },
     "TurboVolumePump": {
-      "plural": "TurboVolumePumps",
       "members": {
         "Gas": "StructureTurboVolumePump",
         "Liquid": "StructureLiquidTurboVolumePump"
       }
     },
     "PressureRegulator": {
-      "plural": "PressureRegulators",
       "members": {
         "Gas": "StructurePressureRegulator",
         "Liquid": "StructureLiquidPressureRegulator",
@@ -161,21 +142,18 @@
       }
     },
     "PipeHeater": {
-      "plural": "PipeHeaters",
       "members": {
         "Gas": "StructurePipeHeater",
         "Liquid": "StructureLiquidPipeHeater"
       }
     },
     "TankStorage": {
-      "plural": "TankStorages",
       "members": {
         "Gas": "StructureGasTankStorage",
         "Liquid": "StructureLiquidTankStorage"
       }
     },
     "CapsuleTank": {
-      "plural": "CapsuleTanks",
       "members": {
         "SmallGas": "StructureCapsuleTankGas",
         "SmallLiquid": "StructureCapsuleTankLiquid",
@@ -186,7 +164,6 @@
       }
     },
     "Filtration": {
-      "plural": "Filtrations",
       "members": {
         "Gas": "StructureFiltration",
         "Liquid": "StructureFiltrationLiquid",
@@ -194,14 +171,12 @@
       }
     },
     "UmbilicalMale": {
-      "plural": "UmbilicalMales",
       "members": {
         "Gas": "StructureGasUmbilicalMale",
         "Liquid": "StructureLiquidUmbilicalMale"
       }
     },
     "UmbilicalFemale": {
-      "plural": "UmbilicalFemales",
       "members": {
         "Gas": "StructureGasUmbilicalFemale",
         "Liquid": "StructureLiquidUmbilicalFemale",
@@ -210,7 +185,6 @@
       }
     },
     "RocketEngine": {
-      "plural": "RocketEngines",
       "members": {
         "PressureFedGas": "StructurePressureFedGasEngine",
         "PressureFedLiquid": "StructurePressureFedLiquidEngine",
@@ -221,7 +195,6 @@
       }
     },
     "Radiator": {
-      "plural": "Radiators",
       "members": {
         "MediumGas": "StructureMediumRadiator",
         "MediumLiquid": "StructureMediumRadiatorLiquid",
@@ -233,28 +206,24 @@
       }
     },
     "LandingPadInwardConnector": {
-      "plural": "LandingPadInwardConnectors",
       "members": {
         "Gas": "Landingpad_GasConnectorInwardPiece",
         "Liquid": "Landingpad_LiquidConnectorInwardPiece"
       }
     },
     "LandingPadOutwardConnector": {
-      "plural": "LandingPadOutwardConnectors",
       "members": {
         "Gas": "Landingpad_GasConnectorOutwardPiece",
         "Liquid": "Landingpad_LiquidConnectorOutwardPiece"
       }
     },
     "LandingPadTankConnector": {
-      "plural": "LandingPadTankConnectors",
       "members": {
         "Gas": "Landingpad_GasTankConnectorPiece",
         "Liquid": "Landingpad_LiquidTankConnectorPiece"
       }
     },
     "DirectHeatExchanger": {
-      "plural": "DirectHeatExchangers",
       "members": {
         "SmallGasToGas": "StructureSmallDirectHeatExchangeGastoGas",
         "SmallLiquidToGas": "StructureSmallDirectHeatExchangeLiquidtoGas",
@@ -268,7 +237,6 @@
       }
     },
     "PassthroughHeatExchanger": {
-      "plural": "PassthroughHeatExchangers",
       "members": {
         "GasToGas": "StructurePassthroughHeatExchangerGasToGas",
         "GasToLiquid": "StructurePassthroughHeatExchangerGasToLiquid",
@@ -276,7 +244,6 @@
       }
     },
     "SolarPanel": {
-      "plural": "SolarPanels",
       "members": {
         "Standard": "StructureSolarPanel",
         "Angled": "StructureSolarPanel45",
@@ -289,7 +256,6 @@
       }
     },
     "Reprocessor": {
-      "plural": "Reprocessors",
       "members": {
         "Centrifuge": "StructureCentrifuge",
         "CombustionCentrifuge": "StructureCombustionCentrifuge",
@@ -297,28 +263,24 @@
       }
     },
     "Furnace": {
-      "plural": "Furnaces",
       "members": {
         "Standard": "StructureFurnace",
         "Advanced": "StructureAdvancedFurnace"
       }
     },
     "Tablet": {
-      "plural": "Tablets",
       "members": {
         "Standard": "ItemTablet",
         "Advanced": "ItemAdvancedTablet"
       }
     },
     "SDBHopper": {
-      "plural": "SDBHoppers",
       "members": {
         "Standard": "StructureSDBHopper",
         "Advanced": "StructureSDBHopperAdvanced"
       }
     },
     "Bench": {
-      "plural": "Benches",
       "members": {
         "Powered": "StructureBench",
         "CounterStyle": "StructureBench1",
@@ -328,7 +290,6 @@
       }
     },
     "Locker": {
-      "plural": "Lockers",
       "members": {
         "Standard": "StructureStorageLocker",
         "Small": "StructureLockerSmall",
@@ -340,14 +301,12 @@
       }
     },
     "AreaPowerControl": {
-      "plural": "AreaPowerControls",
       "members": {
         "Standard": "StructureAreaPowerControl",
         "Reversed": "StructureAreaPowerControlReversed"
       }
     },
     "Console": {
-      "plural": "Consoles",
       "members": {
         "Standard": "StructureConsole",
         "Dual": "StructureConsoleDual",
@@ -355,7 +314,6 @@
       }
     },
     "WallLight": {
-      "plural": "WallLights",
       "members": {
         "Standard": "StructureWallLight",
         "Long": "StructureLightLong",
@@ -365,7 +323,6 @@
       }
     },
     "Miner": {
-      "plural": "Miners",
       "members": {
         "AutominerSmall": "StructureAutoMinerSmall",
         "Deep": "StructureDeepMiner",
@@ -375,7 +332,6 @@
       }
     },
     "MiningDrill": {
-      "plural": "MiningDrills",
       "members": {
         "Standard": "ItemMiningDrill",
         "Heavy": "ItemMiningDrillHeavy",
@@ -383,7 +339,6 @@
       }
     },
     "HandDrill": {
-      "plural": "HandDrills",
       "members": {
         "Standard": "ItemDrill",
         "Emergency": "ItemEmergencyDrill",
@@ -391,7 +346,6 @@
       }
     },
     "AngleGrinder": {
-      "plural": "AngleGrinders",
       "members": {
         "Standard": "ItemAngleGrinder",
         "Emergency": "ItemEmergencyAngleGrinder",
@@ -399,7 +353,6 @@
       }
     },
     "ArcWelder": {
-      "plural": "ArcWelders",
       "members": {
         "Standard": "ItemArcWelder",
         "Emergency": "ItemEmergencyArcWelder",
@@ -407,7 +360,6 @@
       }
     },
     "Helmet": {
-      "plural": "Helmets",
       "members": {
         "Space": "ItemSpaceHelmet",
         "EmergencySpace": "ItemEmergencySpaceHelmet",
@@ -417,14 +369,12 @@
       }
     },
     "Suit": {
-      "plural": "Suits",
       "members": {
         "Hardsuit": "ItemHardSuit",
         "Harm": "ItemSuitHARM"
       }
     },
     "Airlock": {
-      "plural": "Airlocks",
       "extends": ["Door"],
       "members": {
         "Standard": "StructureAirlock",
@@ -432,14 +382,12 @@
       }
     },
     "ManualHatch": {
-      "plural": "ManualHatches",
       "members": {
         "Standard": "StructureManualHatch",
         "Floor": "StructureManualFloorHatch"
       }
     },
     "Sleeper": {
-      "plural": "Sleepers",
       "members": {
         "Standard": "StructureSleeper",
         "Left": "StructureSleeperLeft",
@@ -448,7 +396,6 @@
       }
     },
     "CryoTube": {
-      "plural": "CryoTubes",
       "extends": ["Sleeper"],
       "members": {
         "Horizontal": "StructureCryoTubeHorizontal",
@@ -456,7 +403,6 @@
       }
     },
     "LarreDock": {
-      "plural": "LarreDocks",
       "members": {
         "Standard": "StructureRoboticArmDock",
         "Atmos": "StructureLarreDockAtmos",
@@ -466,14 +412,12 @@
       }
     },
     "Sequencer": {
-      "plural": "Sequencers",
       "members": {
         "LowFrequencyOscillator": "DeviceLfoVolume",
         "LogicStep": "LogicStepSequencer8"
       }
     },
     "LogicWriter": {
-      "plural": "LogicWriters",
       "members": {
         "Standard": "StructureLogicWriter",
         "Batch": "StructureLogicBatchWriter",
@@ -481,7 +425,6 @@
       }
     },
     "LogicReader": {
-      "plural": "LogicReaders",
       "members": {
         "Standard": "StructureLogicReader",
         "Slot": "StructureLogicSlotReader",
@@ -491,7 +434,6 @@
       }
     },
     "LogicProcessor": {
-      "plural": "LogicProcessors",
       "members": {
         "Compare": "StructureLogicCompare",
         "Gate": "StructureLogicGate",
@@ -502,35 +444,30 @@
       }
     },
     "Switch": {
-      "plural": "Switches",
       "members": {
         "Lever": "StructureLogicSwitch",
         "Standard": "StructureLogicSwitch2"
       }
     },
     "Button": {
-      "plural": "Buttons",
       "members": {
         "Standard": "StructureLogicButton",
         "Important": "StructureEmergencyButton"
       }
     },
     "ChuteBin": {
-      "plural": "ChuteBins",
       "members": {
         "Import": "StructureChuteBin",
         "Export": "StructureChuteExportBin"
       }
     },
     "PowerTransmission": {
-      "plural": "PowerTransmissions",
       "members": {
         "MicrowaveTransmitter": "StructurePowerTransmitter",
         "MicrowaveReceiver": "StructurePowerTransmitterReceiver"
       }
     },
     "Fabricator": {
-      "plural": "Fabricators",
       "members": {
         "Autolathe": "StructureAutolathe",
         "ElectronicsPrinter": "StructureElectronicsPrinter",
@@ -543,7 +480,6 @@
       }
     },
     "DigitalChute": {
-      "plural": "DigitalChutes",
       "members": {
         "ValveLeft": "StructureChuteDigitalValveLeft",
         "ValveRight": "StructureChuteDigitalValveRight",
@@ -552,7 +488,6 @@
       }
     },
     "Door": {
-      "plural": "Doors",
       "members": {
         "Glass": "StructureGlassDoor",
         "Blast": "StructureBlastDoor",
@@ -560,7 +495,6 @@
       }
     },
     "InteriorDoor": {
-      "plural": "InteriorDoors",
       "extends": ["Door"],
       "members": {
         "Glass": "StructureInteriorDoorGlass",
@@ -570,7 +504,6 @@
       }
     },
     "Computer": {
-      "plural": "Computers",
       "members": {
         "Modern": "StructureComputer",
         "Retro": "StructureComputerUpright",
@@ -579,7 +512,6 @@
       }
     },
     "DigitalValve": {
-      "plural": "DigitalValves",
       "extends": ["Valve"],
       "members": {
         "Gas": "StructureDigitalValve",
@@ -587,14 +519,12 @@
       }
     },
     "WallCooler": {
-      "plural": "WallCoolers",
       "members": {
         "Gas": "StructureWallCooler",
         "Liquid": "StructureWaterWallCooler"
       }
     },
     "ItemRouter": {
-      "plural": "ItemRouters",
       "members": {
         "Sorter": "StructureSorter",
         "Unloader": "StructureUnloader",
@@ -603,7 +533,6 @@
       }
     },
     "SuitStorage": {
-      "plural": "SuitStorages",
       "members": {
         "Standard": "StructureSuitStorage",
         "Frame": "StructureSuitStorageFrame",
@@ -611,7 +540,6 @@
       }
     },
     "Generator": {
-      "plural": "Generators",
       "members": {
         "GasFuel": "StructureGasGenerator",
         "SolidFuel": "StructureSolidFuelGenerator",
@@ -621,21 +549,18 @@
       }
     },
     "WaterBottleFiller": {
-      "plural": "WaterBottleFillers",
       "members": {
         "Powered": "StructureWaterBottleFillerPowered",
         "PoweredBottom": "StructureWaterBottleFillerPoweredBottom"
       }
     },
     "PipeAnalyzer": {
-      "plural": "PipeAnalyzers",
       "members": {
         "Gas": "StructurePipeAnalysizer",
         "Liquid": "StructureLiquidPipeAnalyzer"
       }
     },
     "CircuitHousing": {
-      "plural": "CircuitHousings",
       "members": {
         "Standard": "StructureCircuitHousing",
         "Compact": "StructureCircuitHousingCompact",
@@ -643,7 +568,6 @@
       }
     },
     "ElevatorLevel": {
-      "plural": "ElevatorLevels",
       "extends": ["ElevatorShaft"],
       "members": {
         "Standard": "StructureElevatorLevelIndustrial",
@@ -651,7 +575,6 @@
       }
     },
     "ElevatorShaft": {
-      "plural": "ElevatorShafts",
       "members": {
         "Standard": "StructureElevatorShaftIndustrial",
         "Cabled": "StructureElevatorShaft"

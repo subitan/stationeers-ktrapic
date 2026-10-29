@@ -278,7 +278,7 @@ public class LspDocumentTest : IDisposable
     public async Task DescribesTheNameAtAPosition()
     {
         var daemon = Start();
-        var document = Open(daemon, "val sign = LedDisplays.Small.at(d5)\nsign.Text = \"HOT\"\n", out _);
+        var document = Open(daemon, "val sign = LedDisplay.Small.at(d5)\nsign.Text = \"HOT\"\n", out _);
 
         var hover = await document.Hover(1, 6).WaitAsync(TestDaemon.Timeout);
         var nothing = await document.Hover(0, 1).WaitAsync(TestDaemon.Timeout);
@@ -291,7 +291,7 @@ public class LspDocumentTest : IDisposable
     public async Task GivesTheSignaturesOfTheCallAtAPosition()
     {
         var daemon = Start();
-        var document = Open(daemon, "val s = LedDisplays.Small.at(\n", out _);
+        var document = Open(daemon, "val s = LedDisplay.Small.at(\n", out _);
 
         var signatures = await document.SignatureHelp(0, 29).WaitAsync(TestDaemon.Timeout);
         var none = await document.SignatureHelp(0, 3).WaitAsync(TestDaemon.Timeout);
@@ -299,7 +299,7 @@ public class LspDocumentTest : IDisposable
         var at = Assert.Single(signatures.All);
         Assert.Equal("fun at(pin: Device): LedDisplay.Small", at.Label);
         Assert.Equal(new[] { "pin: Device" }, at.Parameters);
-        Assert.Equal("The device on pin, as a StructureConsoleLED5.", at.Documentation);
+        Assert.Equal("The device on pin, as one of this prefab.", at.Documentation);
         Assert.Equal(0, signatures.ActiveParameter);
         Assert.Empty(none.All);
     }

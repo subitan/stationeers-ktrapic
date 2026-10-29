@@ -78,8 +78,8 @@ class BatchTest {
   fun `forEach writes every device of the prefab, or of the name`() {
     val source =
         """
-        GrowLights.all.forEach { it.On = true }
-        GrowLights.named("Tomatoes").forEach { light -> light.On = false }
+        GrowLight.all.forEach { it.On = true }
+        GrowLight.named("Tomatoes").forEach { light -> light.On = false }
         """
     val code = compiled(source).code
 
@@ -92,17 +92,30 @@ class BatchTest {
   }
 
   @Test
+  fun `a prefab held in a val reaches its devices like its type's name`() {
+    val held =
+        compiled(
+            "val p = GrowLight\np.all.forEach { it.On = true }\nval d = p.at(d0)\nd.On = false"
+        )
+    val named = compiled("GrowLight.all.forEach { it.On = true }\nGrowLight.at(d0).On = false")
+
+    assertThat(held.code).isEqualTo(named.code)
+    assertThat(error("val n = GrowLight.at(d0).PrefabHash.all.count()").message)
+        .contains("this prefab must be a typed device's")
+  }
+
+  @Test
   fun `forEach writes several logic types, values computed once, slots and Text`() {
     val source =
         """
         val level = db.Setting * 2.0
-        GrowLights.all.forEach {
+        GrowLight.all.forEach {
           it.On = level > 1.0
           it.Lock = true
         }
-        TankStorages.Gas.all.forEach { it.GasCanister.Open = true }
-        TankStorages.Gas.all.forEach { it.slots[0].Open = false }
-        LedDisplays.Large.all.forEach { it.Text = "OK" }
+        TankStorage.Gas.all.forEach { it.GasCanister.Open = true }
+        TankStorage.Gas.all.forEach { it.slots[0].Open = false }
+        LedDisplay.Large.all.forEach { it.Text = "OK" }
         """
     val code = compiled(source).code
 
@@ -116,10 +129,10 @@ class BatchTest {
   fun `map and a terminal read the batch with one batch method`() {
     val source =
         """
-        db.Setting = Batteries.Small.all.map { it.Charge }.average()
-        db.Ratio = Batteries.Small.all.map(Battery.Small::Charge).sum()
-        db.Maximum = Batteries.Small.named("B").map { it.Charge }.max()
-        db.Mode = Batteries.Large.all.map { it.Charge }.min()
+        db.Setting = Battery.Small.all.map { it.Charge }.average()
+        db.Ratio = Battery.Small.all.map(Battery.Small::Charge).sum()
+        db.Maximum = Battery.Small.named("B").map { it.Charge }.max()
+        db.Mode = Battery.Large.all.map { it.Charge }.min()
         """
     val code = compiled(source).code
 
@@ -139,10 +152,10 @@ class BatchTest {
   fun `sumOf, minOf, maxOf and count read with one batch method`() {
     val source =
         """
-        db.Setting = Batteries.Small.all.sumOf { it.Charge }
-        db.Ratio = Batteries.Small.all.minOf { it.Charge } + Batteries.Small.all.maxOf { it.Charge }
-        db.Mode = GrowLights.named("Potatoes").count { it.On }.toDouble()
-        db.Maximum = GrowLights.all.count().toDouble()
+        db.Setting = Battery.Small.all.sumOf { it.Charge }
+        db.Ratio = Battery.Small.all.minOf { it.Charge } + Battery.Small.all.maxOf { it.Charge }
+        db.Mode = GrowLight.named("Potatoes").count { it.On }.toDouble()
+        db.Maximum = GrowLight.all.count().toDouble()
         """
     val code = compiled(source).code
 
@@ -160,9 +173,9 @@ class BatchTest {
   fun `any, all and none read once and compare, or branch in a condition`() {
     val source =
         """
-        db.Setting = if (GrowLights.all.any { it.On }) 1.0 else 0.0
-        db.Ratio = if (GrowLights.named("Potatoes").all { it.On }) 1.0 else 0.0
-        val dark = GrowLights.named("Tomatoes").none { it.On }
+        db.Setting = if (GrowLight.all.any { it.On }) 1.0 else 0.0
+        db.Ratio = if (GrowLight.named("Potatoes").all { it.On }) 1.0 else 0.0
+        val dark = GrowLight.named("Tomatoes").none { it.On }
         db.Mode = if (dark) 1.0 else 0.0
         """
     val code = compiled(source).code
@@ -187,12 +200,12 @@ class BatchTest {
   fun `a batch test negated, before an or, or as a loop condition branches as in Kotlin`() {
     val source =
         """
-        db.Setting = if (!GrowLights.all.any { it.On }) 1.0 else 0.0
-        db.Ratio = if (GrowLights.named("Tomatoes").all { it.On } || db.Setting > 5.0) 1.0 else 0.0
+        db.Setting = if (!GrowLight.all.any { it.On }) 1.0 else 0.0
+        db.Ratio = if (GrowLight.named("Tomatoes").all { it.On } || db.Setting > 5.0) 1.0 else 0.0
         var i = 0
-        while (GrowLights.named("Potatoes").any { it.On }) {
+        while (GrowLight.named("Potatoes").any { it.On }) {
           i++
-          if (i == 3) GrowLights.named("Potatoes").forEach { it.On = false }
+          if (i == 3) GrowLight.named("Potatoes").forEach { it.On = false }
         }
         db.Mode = i.toDouble()
         """
@@ -210,9 +223,9 @@ class BatchTest {
   fun `on an empty batch, any is false and none true as in Kotlin, and all is false`() {
     val source =
         """
-        db.Setting = if (GrowLights.all.any { it.On }) 1.0 else 0.0
-        db.Ratio = if (GrowLights.all.none { it.On }) 1.0 else 0.0
-        db.Mode = if (GrowLights.all.all { it.On }) 1.0 else 0.0
+        db.Setting = if (GrowLight.all.any { it.On }) 1.0 else 0.0
+        db.Ratio = if (GrowLight.all.none { it.On }) 1.0 else 0.0
+        db.Mode = if (GrowLight.all.all { it.On }) 1.0 else 0.0
         """
     val db = run(source) { listOf(FakeDevice(), FakeDevice()) }[0]
 
@@ -225,9 +238,9 @@ class BatchTest {
   fun `an empty batch reads as the game gives`() {
     val source =
         """
-        db.Setting = Batteries.Small.all.maxOf { it.Charge }
-        db.Ratio = Batteries.Small.all.map { it.Charge }.average()
-        db.Mode = Batteries.Small.all.minOf { it.Charge }
+        db.Setting = Battery.Small.all.maxOf { it.Charge }
+        db.Ratio = Battery.Small.all.map { it.Charge }.average()
+        db.Mode = Battery.Small.all.minOf { it.Charge }
         """
     val db = run(source) { listOf(FakeDevice(), FakeDevice()) }[0]
 
@@ -240,8 +253,8 @@ class BatchTest {
   fun `a batch's slots read with lbs and lbns`() {
     val source =
         """
-        db.Setting = BatteryChargers.Standard.all.slots[0].map { it.Charge }.average()
-        db.Ratio = BatteryChargers.Standard.named("North").slots[1].maxOf { it.Charge }
+        db.Setting = BatteryCharger.Standard.all.slots[0].map { it.Charge }.average()
+        db.Ratio = BatteryCharger.Standard.named("North").slots[1].maxOf { it.Charge }
         """
     val code = compiled(source).code
 
@@ -264,10 +277,10 @@ class BatchTest {
   fun `batches and their slots can be held in vals, a slot keeping its number`() {
     val source =
         """
-        val lights = GrowLights.named("Potatoes")
+        val lights = GrowLight.named("Potatoes")
         lights.forEach { it.On = false }
         var i = 1
-        val charges = BatteryChargers.Standard.all.slots[i]
+        val charges = BatteryCharger.Standard.all.slots[i]
         i = 0
         db.Setting = charges.map { it.Charge }.sum()
         """
@@ -282,43 +295,41 @@ class BatchTest {
     for ((source, at) in
         listOf(
             // A reading lambda picks one logic type of it.
-            "val x = 1\nval c = Batteries.Small.all.map { it.Charge * 2.0 }.average()" to (2 to 33),
-            "val x = 1\nval c = Batteries.Small.all.sumOf { db.Setting }" to (2 to 35),
-            "val x = 1\nval c = Batteries.Small.all.sumOf { val v = it.Charge; v }" to (2 to 35),
-            "val x = 1\nval c = Batteries.Small.all.sumOf { it.run { Charge } }" to (2 to 35),
-            "val x = 1\nval c = Batteries.Small.all.sumOf { it.let { b -> b.Charge } }" to
-                (2 to 35),
+            "val x = 1\nval c = Battery.Small.all.map { it.Charge * 2.0 }.average()" to (2 to 31),
+            "val x = 1\nval c = Battery.Small.all.sumOf { db.Setting }" to (2 to 33),
+            "val x = 1\nval c = Battery.Small.all.sumOf { val v = it.Charge; v }" to (2 to 33),
+            "val x = 1\nval c = Battery.Small.all.sumOf { it.run { Charge } }" to (2 to 33),
+            "val x = 1\nval c = Battery.Small.all.sumOf { it.let { b -> b.Charge } }" to (2 to 33),
             // A writing lambda only assigns the logic types of it, or of its slots.
-            "val x = 1\nGrowLights.all.forEach { db.On = true }" to (2 to 26),
-            "val x = 1\nGrowLights.all.forEach { it.On = it.Power }" to (2 to 37),
-            "val x = 1\nGrowLights.all.forEach { sleep(1) }" to (2 to 26),
-            "val x = 1\nGrowLights.all.forEach { GrowLights.all.forEach { it.On = true } }" to
-                (2 to 41),
-            "val x = 1\nGrowLights.all.forEach { val v = true; it.On = v }" to (2 to 26),
-            "var n = 0.0\nGrowLights.all.forEach { n = 1.0 }" to (2 to 26),
-            "val x = 1\nTankStorages.Gas.all.forEach { it.slots[it.ReferenceId.toInt()].Open = true }" to
-                (2 to 32),
-            "val x = 1\nBatteries.Small.all.forEach { it.On = Batteries.Small.all.sumOf { b -> it.Charge } > 0 }" to
+            "val x = 1\nGrowLight.all.forEach { db.On = true }" to (2 to 25),
+            "val x = 1\nGrowLight.all.forEach { it.On = it.Power }" to (2 to 36),
+            "val x = 1\nGrowLight.all.forEach { sleep(1) }" to (2 to 25),
+            "val x = 1\nGrowLight.all.forEach { GrowLight.all.forEach { it.On = true } }" to
                 (2 to 39),
-            "val x = 1\nval f = { l: GrowLight -> l.On = true }\nGrowLights.all.forEach(f)" to
-                (2 to 9),
-            "fun on(l: GrowLight) { l.On = true }\nGrowLights.all.forEach(::on)" to (2 to 24),
-            // A lambda that can't return, nor run a written value or slot number more than once.
-            "val x = 1\nGrowLights.all.forEach {\n  return@forEach\n  it.On = true\n}" to (3 to 3),
-            "var n = 0\nGrowLights.all.forEach { it.Lock = n++ > 100 }" to (2 to 36),
-            "var n = 0\nTankStorages.Gas.all.forEach { it.slots[n++].Open = true }" to (2 to 41),
-            "fun w(): Boolean {\n  yield()\n  return true\n}\nGrowLights.all.forEach { it.On = w() }" to
-                (5 to 34),
-            // The game has no named batch slot write, nor count of a named batch.
-            "val x = 1\nTankStorages.Gas.named(\"N\").forEach { it.slots[0].Open = true }" to
-                (2 to 51),
-            "val x = 1\nval c = GrowLights.named(\"N\").count()" to (2 to 31),
-            // A batch is not a value, nor are its other members, and a map can't be held.
-            "val x = 1\nval b = if (db.On) GrowLights.all else GrowLights.named(\"x\")" to
+            "val x = 1\nGrowLight.all.forEach { val v = true; it.On = v }" to (2 to 25),
+            "var n = 0.0\nGrowLight.all.forEach { n = 1.0 }" to (2 to 25),
+            "val x = 1\nTankStorage.Gas.all.forEach { it.slots[it.ReferenceId.toInt()].Open = true }" to
                 (2 to 31),
-            "val x = 1\nval h = GrowLights.all.hashCode()" to (2 to 24),
-            "val x = 1\nval m = GrowLights.all.map { it.Power }" to (2 to 24),
-            "fun f() {\n  val m = GrowLights.all.map { it.Power }\n}\nf()" to (2 to 26),
+            "val x = 1\nBattery.Small.all.forEach { it.On = Battery.Small.all.sumOf { b -> it.Charge } > 0 }" to
+                (2 to 37),
+            "val x = 1\nval f = { l: GrowLight -> l.On = true }\nGrowLight.all.forEach(f)" to
+                (2 to 9),
+            "fun on(l: GrowLight) { l.On = true }\nGrowLight.all.forEach(::on)" to (2 to 23),
+            // A lambda that can't return, nor run a written value or slot number more than once.
+            "val x = 1\nGrowLight.all.forEach {\n  return@forEach\n  it.On = true\n}" to (3 to 3),
+            "var n = 0\nGrowLight.all.forEach { it.Lock = n++ > 100 }" to (2 to 35),
+            "var n = 0\nTankStorage.Gas.all.forEach { it.slots[n++].Open = true }" to (2 to 40),
+            "fun w(): Boolean {\n  yield()\n  return true\n}\nGrowLight.all.forEach { it.On = w() }" to
+                (5 to 33),
+            // The game has no named batch slot write, nor count of a named batch.
+            "val x = 1\nTankStorage.Gas.named(\"N\").forEach { it.slots[0].Open = true }" to
+                (2 to 50),
+            "val x = 1\nval c = GrowLight.named(\"N\").count()" to (2 to 30),
+            // A batch is not a value, nor are its other members, and a map can't be held.
+            "val x = 1\nval b = if (db.On) GrowLight.all else GrowLight.named(\"x\")" to (2 to 30),
+            "val x = 1\nval h = GrowLight.all.hashCode()" to (2 to 23),
+            "val x = 1\nval m = GrowLight.all.map { it.Power }" to (2 to 23),
+            "fun f() {\n  val m = GrowLight.all.map { it.Power }\n}\nf()" to (2 to 25),
         )) {
       val error = error(source)
       assertWithMessage("$source\n${error.message}").that(error.line to error.column).isEqualTo(at)
@@ -329,26 +340,26 @@ class BatchTest {
   fun `a batch error says what the game or Kotlin would do differently`() {
     for ((source, message) in
         listOf(
-            "var n = 0\nGrowLights.all.forEach { it.Lock = n++ > 100 }" to "computed once",
-            "var n = 0\nTankStorages.Gas.all.forEach { it.slots[n++].Open = true }" to
+            "var n = 0\nGrowLight.all.forEach { it.Lock = n++ > 100 }" to "computed once",
+            "var n = 0\nTankStorage.Gas.all.forEach { it.slots[n++].Open = true }" to
                 "computed once",
-            "fun on(): Boolean {\n  db.On = true\n  return true\n}\nGrowLights.all.forEach { it.On = on() }" to
+            "fun on(): Boolean {\n  db.On = true\n  return true\n}\nGrowLight.all.forEach { it.On = on() }" to
                 "computed once",
             "fun bump(): Boolean {\n  d0[LogicType.Setting] = d0[LogicType.Setting] + 1.0\n" +
-                "  return true\n}\nGrowLights.all.forEach { it.On = bump() }" to "computed once",
-            "fun w(): Boolean {\n  yield()\n  return true\n}\nGrowLights.all.forEach { it.On = w() }" to
+                "  return true\n}\nGrowLight.all.forEach { it.On = bump() }" to "computed once",
+            "fun w(): Boolean {\n  yield()\n  return true\n}\nGrowLight.all.forEach { it.On = w() }" to
                 "computed once",
-            "fun n(): Int {\n  sleep(1)\n  return 0\n}\nTankStorages.Gas.all.forEach { it.slots[n()].Open = true }" to
+            "fun n(): Int {\n  sleep(1)\n  return 0\n}\nTankStorage.Gas.all.forEach { it.slots[n()].Open = true }" to
                 "computed once",
-            "fun g(): Boolean {\n  GrowLights.all.forEach { it.Lock = true }\n  return true\n}\n" +
-                "GrowLights.all.forEach { it.On = g() }" to "computed once",
-            "GrowLights.all.forEach { it.On = !it.On }" to "can't use the batch's devices",
-            "GrowLights.all.forEach { return@forEach }" to "can't return",
-            "GrowLights.all.forEach { sleep(1) }" to "may only assign logic types",
-            "GrowLights.all.forEach { GrowLights.all.forEach { it.On = true } }" to
+            "fun g(): Boolean {\n  GrowLight.all.forEach { it.Lock = true }\n  return true\n}\n" +
+                "GrowLight.all.forEach { it.On = g() }" to "computed once",
+            "GrowLight.all.forEach { it.On = !it.On }" to "can't use the batch's devices",
+            "GrowLight.all.forEach { return@forEach }" to "can't return",
+            "GrowLight.all.forEach { sleep(1) }" to "may only assign logic types",
+            "GrowLight.all.forEach { GrowLight.all.forEach { it.On = true } }" to
                 "may only assign logic types",
-            "val c = GrowLights.named(\"N\").count()" to "can't count a named batch",
-            "val m = GrowLights.all.map { it.Power }" to "a map can't be held",
+            "val c = GrowLight.named(\"N\").count()" to "can't count a named batch",
+            "val m = GrowLight.all.map { it.Power }" to "a map can't be held",
         )) {
       assertWithMessage(source).that(error(source).message).contains(message)
     }
@@ -356,8 +367,7 @@ class BatchTest {
 
   @Test
   fun `Text can't be read from a display`() {
-    for (source in
-        listOf("LedDisplays.Small.at(d0).Text", "LedDisplays.Small.all.map { it.Text }")) {
+    for (source in listOf("LedDisplay.Small.at(d0).Text", "LedDisplay.Small.all.map { it.Text }")) {
       assertWithMessage(source).that(error("val t = $source").message).contains("written")
     }
   }

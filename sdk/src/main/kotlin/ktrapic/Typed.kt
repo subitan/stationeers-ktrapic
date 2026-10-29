@@ -1,19 +1,32 @@
 package ktrapic
 
 /**
- * A prefab, as a value: the game's hash of its name. Each typed device's companion object is one,
- * so `d0.PrefabHash == GrowLight` compares a device's prefab with the grow light's. It is not a
- * number, so it can't be used in arithmetic.
+ * A prefab: the game's hash of its name, and the way to its devices. Each typed device's companion
+ * object is one, so `GrowLight` is the grow light's prefab. As a value, `d0.PrefabHash ==
+ * GrowLight` compares a device's prefab with it; it is not a number, so it can't be used in
+ * arithmetic. Its devices are `GrowLight.at(d0)`, `GrowLight.all` and
+ * `GrowLight.named("Potatoes")`, and a family member's are its nested class's, as
+ * `LedDisplay.Small.all`.
  */
-abstract class Prefab internal constructor()
+abstract class Prefab<T : TypedDevice> internal constructor() {
+  /** The device on [pin], as one of this prefab. */
+  fun at(pin: Device): T = intrinsic()
+
+  /** Every device of this prefab on the chip's network. */
+  open val all: DeviceBatch<T>
+    get() = intrinsic()
+
+  /** Every device of this prefab on the network named [name], which must be a constant. */
+  open fun named(name: String): DeviceBatch<T> = intrinsic()
+}
 
 /**
- * A device whose prefab is known, such as `GrowLights.at(d0)`. It has only the logic types its
+ * A device whose prefab is known, such as `GrowLight.at(d0)`. It has only the logic types its
  * prefab has, `val` where they can only be read.
  */
 abstract class TypedDevice internal constructor() {
   /** The device's prefab. */
-  val PrefabHash: Prefab
+  val PrefabHash: Prefab<*>
     get() = intrinsic()
 
   /** The game's hash of the device's name. */
@@ -39,7 +52,7 @@ internal const val WRITE_ONLY = "this logic type can only be written"
 @Retention(AnnotationRetention.BINARY)
 annotation class LogicTypes(val read: String, val written: String)
 
-/** The game's name of the prefab a generated typed device or entry point stands for. */
+/** The game's name of the prefab a generated typed device stands for. */
 @Target(AnnotationTarget.CLASS)
 @Retention(AnnotationRetention.BINARY)
 annotation class PrefabName(val name: String)

@@ -49,7 +49,7 @@ class StringParameterTest {
   fun `an inlined function writes its String parameter as Text`() {
     val source =
         """
-        val panel = LedDisplays.Large.at(d0)
+        val panel = LedDisplay.Large.at(d0)
         fun debug(msg: String) {
           panel.Mode = DisplayMode.String
           panel.Text = msg
@@ -87,7 +87,7 @@ class StringParameterTest {
     val source =
         """
         fun debug(msg: String) {
-          LedDisplays.Large.at(d0).Text = msg
+          LedDisplay.Large.at(d0).Text = msg
         }
         debug("one")
         debug("two")
@@ -149,7 +149,7 @@ class StringParameterTest {
     val source =
         """
         inline fun lightsOn(name: String) {
-          GrowLights.named(name).forEach { it.On = true }
+          GrowLight.named(name).forEach { it.On = true }
         }
         lightsOn("Tomatoes")
         """
@@ -170,7 +170,7 @@ class StringParameterTest {
     val named =
         error(
             """
-            fun f(msg: String) { GrowLights.named(msg).forEach { it.On = true } }
+            fun f(msg: String) { GrowLight.named(msg).forEach { it.On = true } }
             f("a")
             f("b")
             """
@@ -195,7 +195,7 @@ class StringParameterTest {
     val named =
         error(
             """
-            inline fun h(m: String) { GrowLights.named(m).forEach { it.On = true } }
+            inline fun h(m: String) { GrowLight.named(m).forEach { it.On = true } }
             fun g(m: String) { h(m) }
             g("a")
             g("b")
@@ -232,7 +232,7 @@ class StringParameterTest {
         fun f(msg: String) {
           val s = msg
           d0.Setting = str(s)
-          LedDisplays.Large.at(d1).Text = s
+          LedDisplay.Large.at(d1).Text = s
         }
         f("one")
         f("two")
@@ -294,7 +294,7 @@ class StringParameterTest {
     val error =
         error(
             """
-            fun f(msg: String) { LedDisplays.Large.at(d0).Text = msg }
+            fun f(msg: String) { LedDisplay.Large.at(d0).Text = msg }
             f("a".repeat(2))
             """
         )

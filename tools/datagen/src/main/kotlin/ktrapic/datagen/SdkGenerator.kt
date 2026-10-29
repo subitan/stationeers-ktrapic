@@ -112,7 +112,7 @@ object SdkGenerator {
       if (index > 0) append('\n')
       // A device's prefab is a Prefab, compared with prefabs rather than used as a number.
       if (logicType == "PrefabHash") {
-        append("  val PrefabHash: Prefab\n")
+        append("  val PrefabHash: Prefab<*>\n")
         append("    get() = intrinsic()\n")
         continue
       }
