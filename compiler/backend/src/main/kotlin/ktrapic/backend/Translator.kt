@@ -211,6 +211,10 @@ internal class Translator(
               target.label to StackCalled(function.name.asString(), function in graph.recursive)
             }
 
+  /** Whether the program declares a cycle of calls, whether or not anything calls into it. */
+  val hasCycle: Boolean
+    get() = graph.cycles.isNotEmpty()
+
   /**
    * What an untyped device's views reach: every logic type the game has, read and written, as its
    * flat logic types are. A view's members combine (`Ports.Output2.Setting`) into names the game

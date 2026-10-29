@@ -471,6 +471,31 @@ class StackCallTest {
   }
 
   @Test
+  fun `a program over the line limit that declares a cycle is not told to turn stack calls off`() {
+    val plain = "fun f(x: Double): Double = x + 1.0\n"
+    val calls = (1..60).joinToString("\n") { "db.Setting = f($it.0)" }
+
+    for (cycle in listOf(factorial, factorial + "if (false) db.Mode = fact(3.0)\n")) {
+      val source = cycle + plain + calls
+      val stack = compiled(source)
+      assertWithMessage(source).that(stack.lines).isGreaterThan(128)
+      assertWithMessage(source)
+          .that(stack.warnings.map { it.message })
+          .containsExactly(
+              "The program is ${stack.lines} lines, over the chip's 128: passing functions' " +
+                  "arguments in registers saves lines (mark f @InRegisters; functions in a cycle " +
+                  "of calls must pass theirs on the stack)"
+          )
+      // Turning stack calls off would fail on the cycle, called or not; the advice given compiles.
+      assertWithMessage(source)
+          .that(error(source, CompileOptions(stackCalls = false)).message)
+          .contains("Recursive calls through a function passing arguments in registers")
+      val marked = compiled(cycle + "@InRegisters " + plain + calls)
+      assertWithMessage(source).that(marked.lines).isLessThan(stack.lines)
+    }
+  }
+
+  @Test
   fun `an inline function in a cycle is an error`() {
     for (source in
         listOf(

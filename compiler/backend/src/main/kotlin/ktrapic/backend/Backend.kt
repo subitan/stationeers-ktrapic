@@ -20,5 +20,6 @@ object Backend {
     val translator = Translator(symbols, stackCalls)
     translator.translate(module)
     return Lowering.lower(translator.lines, translator.stackFunctions)
+        .copy(hasCycle = translator.hasCycle)
   }
 }

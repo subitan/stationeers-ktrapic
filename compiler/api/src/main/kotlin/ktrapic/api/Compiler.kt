@@ -64,7 +64,7 @@ object Compiler {
             // The 0-based line of the user's source that each line of the program comes from.
             val sourceLines =
                 lowered.offsets.map { offset -> offset?.let { ir.position(it) }?.first?.minus(1) }
-            Result.success(Triple(lowered.program, sourceLines, lowered.stackCalled))
+            Result.success(lowered to sourceLines)
           } catch (e: CompileException) {
             val (line, column) = ir.position(e.offset) ?: (0 to 0)
             Result.failure(CompileFailure(CompileError(e.message ?: "error", line, column)))
@@ -85,7 +85,8 @@ object Compiler {
         result.value.getOrElse {
           return CompileResult.Failure(listOf((it as CompileFailure).error))
         }
-    val (labelled, sourceLines, stackCalled) = compiled
+    val (lowered, sourceLines) = compiled
+    val labelled = lowered.program
     val program = if (options.compact) labelled.compacted() else labelled
     // Compacting keeps exactly the instructions, in order, so their source lines go with them.
     val printedSourceLines =
@@ -102,8 +103,8 @@ object Compiler {
     val code = program.print()
     val size = ProgramSize.of(code)
     val sizeHints =
-        if (stackCalled.isNotEmpty() && size.lines > Ic10Limits.MAX_LINES) {
-          listOf(CompileError(sizeHint(size.lines, stackCalled), 0, 0))
+        if (lowered.stackCalled.isNotEmpty() && size.lines > Ic10Limits.MAX_LINES) {
+          listOf(CompileError(sizeHint(size.lines, lowered.stackCalled, lowered.hasCycle), 0, 0))
         } else {
           emptyList()
         }
@@ -121,14 +122,15 @@ object Compiler {
   /**
    * Why a program of [lines] over the chip's limit could be shorter: each call on the stack pushes
    * and pops what passes in a register otherwise. Only the functions in [stackCalled] that aren't
-   * in a cycle of calls can pass in registers, as a cycle needs the stack.
+   * in a cycle of calls can pass in registers, as a cycle needs the stack. Turning stack calls off
+   * works only when the program declares no cycle at all ([hasCycle]), called or not.
    */
-  private fun sizeHint(lines: Int, stackCalled: List<StackCalled>): String {
+  private fun sizeHint(lines: Int, stackCalled: List<StackCalled>, hasCycle: Boolean): String {
     val over = "The program is $lines lines, over the chip's ${Ic10Limits.MAX_LINES}"
     val (recursive, plain) = stackCalled.partition { it.recursive }
     val names = plain.joinToString { it.name }
     return when {
-      recursive.isEmpty() ->
+      !hasCycle ->
           "$over: passing functions' arguments in registers saves lines (turn stack calls off, " +
               "or mark the most-called functions @InRegisters)"
       plain.isEmpty() ->
