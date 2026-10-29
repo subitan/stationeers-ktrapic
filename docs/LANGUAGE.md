@@ -255,7 +255,8 @@ a modded prefab.
 
 LED displays have a `Text` property that writes one to six ASCII characters to their `Setting`,
 which they show while their `Mode` is `DisplayMode.String`. The text must be written out; longer
-text, or anything but printable ASCII, is a compile error.
+text, or anything but printable ASCII, is a compile error. `Text` is on the `LedDisplay`
+interface too, so an inlined function taking any LED display can write it.
 
 ```kotlin
 val sign = LedDisplays.Small.at(d5)

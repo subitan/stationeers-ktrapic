@@ -1176,6 +1176,10 @@ interface LedDisplay {
 
   var Setting: Double
 
+  /** Text of one to six ASCII characters, shown in the `String` mode. */
+  var Text: String
+    @Deprecated(WRITE_ONLY, level = DeprecationLevel.ERROR) get
+
   /** A StructureConsoleLED5. */
   @PrefabName("StructureConsoleLED5")
   class Small internal constructor() : TypedDevice(), LedDisplay {
@@ -1205,7 +1209,7 @@ interface LedDisplay {
       set(value) = intrinsic()
 
     /** Text of one to six ASCII characters, shown in the `String` mode. */
-    var Text: String
+    override var Text: String
       @Deprecated(WRITE_ONLY, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
 
@@ -1242,7 +1246,7 @@ interface LedDisplay {
       set(value) = intrinsic()
 
     /** Text of one to six ASCII characters, shown in the `String` mode. */
-    var Text: String
+    override var Text: String
       @Deprecated(WRITE_ONLY, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
 
@@ -1279,7 +1283,7 @@ interface LedDisplay {
       set(value) = intrinsic()
 
     /** Text of one to six ASCII characters, shown in the `String` mode. */
-    var Text: String
+    override var Text: String
       @Deprecated(WRITE_ONLY, level = DeprecationLevel.ERROR) get() = intrinsic()
       set(value) = intrinsic()
 

@@ -340,6 +340,63 @@ class PrefabGeneratorTest {
   }
 
   @Test
+  fun `a family that extends a text family inherits Text, and its members must all show text`() {
+    val rw = Access(read = true, write = true)
+    fun prefab(name: String) = Prefab(name, hash(name), mapOf("Setting" to rw), emptyMap())
+    val prefabs =
+        Prefabs(
+            "test",
+            listOf(
+                prefab("StructureShaft"),
+                prefab("StructureShaftCabled"),
+                prefab("StructureFloor"),
+                prefab("StructureFloorCabled"),
+            ),
+            emptyMap(),
+        )
+    val families =
+        mapOf(
+            "Shaft" to
+                Grouping.Family(
+                    "Shafts",
+                    mapOf("A" to "StructureShaft", "B" to "StructureShaftCabled"),
+                ),
+            "Floor" to
+                Grouping.Family(
+                    "Floors",
+                    mapOf("A" to "StructureFloor", "B" to "StructureFloorCabled"),
+                    extends = listOf("Shaft"),
+                ),
+        )
+    fun generate(vararg textDisplays: String) =
+        PrefabGenerator.generate(
+                prefabs,
+                Grouping(families, textDisplays.toList()),
+                setOf("LogicType"),
+                typing,
+            )
+            .second
+
+    val code =
+        generate("StructureShaft", "StructureShaftCabled", "StructureFloor", "StructureFloorCabled")
+
+    // Text is declared once, on the parent, and every member of the child overrides it.
+    assertThat(code).contains("interface Shaft {\n  var Setting: Double\n\n  /** Text")
+    assertThat(code).contains("interface Floor : Shaft {\n  /**")
+    val floor = code.substringAfter("interface Floor").substringBefore("object Floors")
+    assertThat(floor).doesNotContain("\n  var Text: String")
+    assertThat(floor.split("    override var Text: String")).hasSize(3)
+
+    val error =
+        assertThrows<IllegalArgumentException> {
+          generate("StructureShaft", "StructureShaftCabled")
+        }
+    assertThat(error)
+        .hasMessageThat()
+        .contains("family Floor extends a family that shows text, but not all of its members")
+  }
+
+  @Test
   fun `the consoles must be exactly the prefabs with Circuitboard slots`() {
     fun prefab(name: String, vararg kinds: String) =
         Prefab(

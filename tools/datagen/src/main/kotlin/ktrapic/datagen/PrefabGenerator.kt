@@ -116,6 +116,11 @@ object PrefabGenerator {
         grouping.families.mapValues { (_, members) ->
           out.common(members.members.values.map { byName.getValue(it) })
         }
+    // A family whose members all show text has `Text` on its interface, as do those extending it.
+    val textFamilies =
+        grouping.families
+            .filterValues { family -> family.members.values.all { it in grouping.textDisplays } }
+            .keys
     for ((family, members) in grouping.families) {
       val memberPrefabs = members.members.mapValues { byName.getValue(it.value) }
       out.family(
@@ -123,7 +128,9 @@ object PrefabGenerator {
           members.plural,
           memberPrefabs,
           members.extends,
+          // First, as it checks there's no cycle for ancestors to go round.
           inherited(family, grouping, common),
+          inheritsText = ancestors(family, grouping).any { it in textFamilies },
       )
     }
     for (prefab in flat) {
@@ -138,6 +145,12 @@ object PrefabGenerator {
     }
     return FILE to out.toString()
   }
+
+  /** The families [family] extends, directly or through them. */
+  private fun ancestors(family: String, grouping: Grouping): Set<String> =
+      grouping.families.getValue(family).extends.flatMapTo(mutableSetOf()) {
+        ancestors(it, grouping) + it
+      }
 
   /**
    * The logic types [family] inherits from the families it extends, directly or through them, with
@@ -377,6 +390,20 @@ object PrefabGenerator {
       }
     }
 
+    /**
+     * `Text`, which writes one to six ASCII characters to `Setting`: abstract on a family's
+     * interface, an [override] of it on a member's class.
+     */
+    fun textProperty(override: Boolean = false, abstract: Boolean = false) {
+      line("/** Text of one to six ASCII characters, shown in the `String` mode. */")
+      if (abstract) {
+        line("var Text: String")
+        line("  @Deprecated(WRITE_ONLY, level = DeprecationLevel.ERROR) get")
+      } else {
+        property("Text", "String", Access(read = false, write = true), override = override)
+      }
+    }
+
     fun deviceClass(
         name: String,
         prefab: Prefab,
@@ -402,8 +429,7 @@ object PrefabGenerator {
                 setOf("Text", "slots", "PrefabHash", "NameHash", "ReferenceId"),
         )
         if (prefab.name in textDisplays) {
-          line("/** Text of one to six ASCII characters, shown in the `String` mode. */")
-          property("Text", "String", Access(read = false, write = true))
+          textProperty(override = "Text" in overrides)
           line()
         }
         line("/** The ${prefab.name} prefab. */")
@@ -460,8 +486,14 @@ object PrefabGenerator {
         members: Map<String, Prefab>,
         extends: List<String> = emptyList(),
         inherited: Map<String, Access> = emptyMap(),
+        inheritsText: Boolean = false,
     ) {
       val common = common(members.values.toList())
+      val text = members.values.all { it.name in textDisplays }
+      // Each member must implement the `Text` it inherits.
+      require(!inheritsText || text) {
+        "family $name extends a family that shows text, but not all of its members show text"
+      }
       line()
       line("/** Devices of one kind that share these logic types, each a nested class. */")
       val supertypes = if (extends.isEmpty()) "" else " : ${extends.joinToString(", ")}"
@@ -476,8 +508,13 @@ object PrefabGenerator {
           )
           line()
         }
+        if (text && !inheritsText) {
+          textProperty(abstract = true)
+          line()
+        }
+        val overrides = if (text || inheritsText) common.keys + "Text" else common.keys
         for ((member, prefab) in members) {
-          deviceClass(member, prefab, "TypedDevice(), $name", overrides = common.keys)
+          deviceClass(member, prefab, "TypedDevice(), $name", overrides = overrides)
           line()
         }
         trimBlankLine()
