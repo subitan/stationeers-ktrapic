@@ -7,6 +7,7 @@ import org.jetbrains.kotlin.com.intellij.psi.PsiComment
 import org.jetbrains.kotlin.com.intellij.psi.PsiElement
 import org.jetbrains.kotlin.descriptors.ClassKind
 import org.jetbrains.kotlin.fir.FirSession
+import org.jetbrains.kotlin.fir.declarations.processAllDeclaredCallables
 import org.jetbrains.kotlin.fir.resolve.providers.symbolProvider
 import org.jetbrains.kotlin.fir.symbols.impl.FirCallableSymbol
 import org.jetbrains.kotlin.fir.symbols.impl.FirClassLikeSymbol
@@ -16,6 +17,7 @@ import org.jetbrains.kotlin.fir.symbols.impl.FirFunctionSymbol
 import org.jetbrains.kotlin.fir.symbols.impl.FirPropertySymbol
 import org.jetbrains.kotlin.fir.symbols.impl.FirRegularClassSymbol
 import org.jetbrains.kotlin.fir.symbols.impl.FirVariableSymbol
+import org.jetbrains.kotlin.fir.types.ConeCapturedType
 import org.jetbrains.kotlin.fir.types.ConeClassLikeType
 import org.jetbrains.kotlin.fir.types.ConeKotlinType
 import org.jetbrains.kotlin.fir.types.ConeTypeParameterType
@@ -23,12 +25,14 @@ import org.jetbrains.kotlin.fir.types.ConeTypeProjection
 import org.jetbrains.kotlin.fir.types.ProjectionKind
 import org.jetbrains.kotlin.fir.types.isMarkedNullable
 import org.jetbrains.kotlin.fir.types.type
+import org.jetbrains.kotlin.fir.types.typeApproximator
 import org.jetbrains.kotlin.name.ClassId
 import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.name.SpecialNames
 import org.jetbrains.kotlin.psi.KtFile
 import org.jetbrains.kotlin.psi.KtLiteralStringTemplateEntry
 import org.jetbrains.kotlin.psi.KtStringTemplateEntryWithExpression
+import org.jetbrains.kotlin.types.TypeApproximatorConfiguration
 
 /**
  * [classId]'s name within its package, as a program names it in code: `LedDisplay.Small`, and a
@@ -56,12 +60,22 @@ internal val PREFAB = ClassId.topLevel(FqName("ktrapic.Prefab"))
 
 /**
  * The `Prefab<T>` a typed device's companion object ([classId]) is, which a program writes as its
- * type (`Prefab<GrowLight>`); null for any other class.
+ * type (`Prefab<GrowLight>`); null for any other class. Also null for a companion that declares
+ * members of its own, such as a prefab with slots, whose `all` and `named` give its own batch (with
+ * `slots`): `Prefab<T>` would lose them, so that companion is written as itself
+ * (`BatteryCharger.Standard.Companion`).
  */
 private fun prefabOf(classId: ClassId, session: FirSession): ConeClassLikeType? {
   if (classId.shortClassName != SpecialNames.DEFAULT_NAME_FOR_COMPANION_OBJECT) return null
-  val symbol = session.symbolProvider.getClassLikeSymbolByClassId(classId) as? FirRegularClassSymbol
-  return symbol?.resolvedSuperTypes?.firstNotNullOfOrNull { supertype ->
+  val symbol =
+      session.symbolProvider.getClassLikeSymbolByClassId(classId) as? FirRegularClassSymbol
+          ?: return null
+  var ownMembers = false
+  symbol.processAllDeclaredCallables(session) {
+    if (it !is FirConstructorSymbol) ownMembers = true
+  }
+  if (ownMembers) return null
+  return symbol.resolvedSuperTypes.firstNotNullOfOrNull { supertype ->
     (supertype as? ConeClassLikeType)?.takeIf { it.lookupTag.classId == PREFAB }
   }
 }
@@ -77,7 +91,9 @@ private val FUNCTION_TYPE = Regex("""Function\d+""")
  * [type] as a program would write it: classes by their names (`LedDisplay.Small`), `Device?`, a
  * star projection as `Prefab<*>`, and a function type as `(Device) -> Double`. A typed device's
  * companion object, its prefab, is the `Prefab` it is (`Prefab<GrowLight>`), as the companion's own
- * type can't be told from the device's by name; another companion is `P.Companion`.
+ * type can't be told from the device's by name; a prefab with slots, and another companion, is
+ * `BatteryCharger.Standard.Companion`. A captured type (what a star projection stands for in one
+ * expression, as `at` on a `Prefab<*>` gives) is its approximation (`TypedDevice`).
  *
  * An extension function type renders as a plain one (`Int.() -> Int` as `(Int) -> Int`), and a
  * `suspend` function type as its class (`SuspendFunction1<Int, Int>`): the SDK declares neither and
@@ -85,6 +101,17 @@ private val FUNCTION_TYPE = Regex("""Function\d+""")
  * declarations would show them.
  */
 internal fun render(type: ConeKotlinType, session: FirSession): String {
+  if (hasCapturedType(type)) {
+    session.typeApproximator
+        .approximateToSuperType(
+            type,
+            TypeApproximatorConfiguration.FinalApproximationAfterResolutionAndInference,
+        )
+        ?.takeIf { !hasCapturedType(it) }
+        ?.let {
+          return render(it, session)
+        }
+  }
   if (type is ConeClassLikeType) {
     val classId = type.lookupTag.classId
     prefabOf(classId, session)?.let { prefab ->
@@ -111,9 +138,22 @@ internal fun render(type: ConeKotlinType, session: FirSession): String {
             if (projections.isEmpty()) "" else projections.joinToString(", ", "<", ">")
     return if (type.isMarkedNullable) "$text?" else text
   }
-  val text = if (type is ConeTypeParameterType) type.lookupTag.name.asString() else type.toString()
+  val text =
+      when (type) {
+        is ConeTypeParameterType -> type.lookupTag.name.asString()
+        is ConeCapturedType ->
+            return type.constructor.supertypes?.firstOrNull()?.let { render(it, session) } ?: "Any?"
+        else -> type.toString()
+      }
   return if (type.isMarkedNullable) "$text?" else text
 }
+
+/**
+ * Whether [type] is or has as an argument a captured type, the compiler's own type for what a star
+ * or variance projection stands for in one expression, which a program can't write.
+ */
+private fun hasCapturedType(type: ConeKotlinType): Boolean =
+    type is ConeCapturedType || type.typeArguments.any { it.type?.let(::hasCapturedType) == true }
 
 /** A type argument as a program would write it: `*`, `out Device`, or its type. */
 private fun render(projection: ConeTypeProjection, session: FirSession): String {

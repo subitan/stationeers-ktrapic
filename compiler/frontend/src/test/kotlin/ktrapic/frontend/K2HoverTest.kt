@@ -115,6 +115,22 @@ class K2HoverTest {
   }
 
   @Test
+  fun `an entry point on a device's prefab gives what its star projection stands for`() {
+    val hover = hover("val g = GrowLight.at(d0)\nval h = g.PrefabHash.|at(d1)\n")!!
+    val help = signatures("val g = GrowLight.at(d0)\nval h = g.PrefabHash.at(|d1)\n")!!
+
+    assertThat(hover.declaration).isEqualTo("fun at(pin: Device): TypedDevice")
+    assertThat(help.signatures.single().label).isEqualTo("fun at(pin: Device): TypedDevice")
+  }
+
+  @Test
+  fun `a prefab with slots is its companion, whose entry points give its own batch`() {
+    val hover = hover("val p = BatteryCharger.Standard\nval q = |p\n")!!
+
+    assertThat(hover.declaration).isEqualTo("val p: BatteryCharger.Standard.Companion")
+  }
+
+  @Test
   fun `an entry point a prefab with slots overrides, with Prefab's KDoc`() {
     val hover = hover("val chargers = BatteryCharger.Standard.a|ll\n")!!
 

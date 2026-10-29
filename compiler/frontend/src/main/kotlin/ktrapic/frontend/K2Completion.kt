@@ -229,6 +229,9 @@ object K2Completion {
 
   private val SUBSTANCE = ClassId.fromString("ktrapic/Substance")
 
+  /** The kinds of class whose name is itself something an expression uses: a value, or entries. */
+  private val VALUE_CLASS_KINDS = setOf(ClassKind.OBJECT, ClassKind.ENUM_CLASS)
+
   private const val PLACEHOLDER = "ktrapicCompletionPlaceholder"
 
   /** The keywords a KTrapIC program can use. */
@@ -525,8 +528,11 @@ object K2Completion {
       val klass = symbol.fir
       val provider = session.kotlinScopeProvider
       val items = mutableListOf<Completion>()
+      // After `X.` is an expression, where a nested class is written only as a value (an object,
+      // or a class's companion) or to name what is in it (`LedDisplay.Small`, an enum's entries):
+      // a class that is neither, such as a prefab's `Batch`, is only ever a type.
       provider.getNestedClassifierScope(klass, session, scopeSession)?.processAllClassifiers {
-        classifier(it)?.let(items::add)
+        if (usableInExpression(it)) classifier(it)?.let(items::add)
       }
       val enum = klass.classKind == ClassKind.ENUM_CLASS
       provider.getStaticCallableMemberScope(klass, session, scopeSession)?.processAllCallables {
@@ -678,6 +684,20 @@ object K2Completion {
             else -> Completion.Kind.PROPERTY
           }
       return Completion(symbol.name.asString(), kind, declarationOf(symbol, session))
+    }
+
+    /**
+     * Whether [symbol], a nested classifier, can be written in an expression: an object, a class
+     * with a companion, an enum class, or a class with classes nested in it.
+     */
+    private fun usableInExpression(symbol: FirClassifierSymbol<*>): Boolean {
+      val klass = symbol as? FirRegularClassSymbol ?: return true
+      if (klass.classKind in VALUE_CLASS_KINDS || klass.companionObjectSymbol != null) return true
+      var nested = false
+      session.kotlinScopeProvider
+          .getNestedClassifierScope(klass.fir, session, scopeSession)
+          ?.processAllClassifiers { nested = true }
+      return nested
     }
 
     private fun classifier(symbol: FirClassifierSymbol<*>): Completion? {

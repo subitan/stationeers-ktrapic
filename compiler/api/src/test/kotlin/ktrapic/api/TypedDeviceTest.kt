@@ -101,6 +101,9 @@ class TypedDeviceTest {
             "val x = BatteryCharger.Standard.all\ndb.Setting = |x.count().toDouble()" to
                 "BatteryCharger.Standard.Batch",
             "val x = GrowLight.at(d0).PrefabHash\ndb.On = |x == GrowLight" to "Prefab<*>",
+            "val x = BatteryCharger.Standard\n" +
+                "db.Setting = |x.all.slots[0].map { it.Charge }.average()" to
+                "BatteryCharger.Standard.Companion",
         )
     for ((source, expected) in sources) {
       val offset = source.indexOf('|')

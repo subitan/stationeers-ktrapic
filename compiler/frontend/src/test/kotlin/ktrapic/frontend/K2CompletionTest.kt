@@ -90,14 +90,19 @@ class K2CompletionTest {
   }
 
   @Test
-  fun `after a prefab with slots, entry points whose batches have slots, and the batch type`() {
-    val items = complete("BatteryCharger.Standard.|\n")
+  fun `after a prefab with slots, entry points whose batches have slots, not the batch type`() {
+    // `Batch` is a class with no companion, so it is never a value after
+    // `BatteryCharger.Standard.`.
+    val items = complete("val b = BatteryCharger.Standard.|\n")
 
-    assertThat(items.map { it.label }).containsExactly("at", "all", "named", "Batch")
+    assertThat(items.map { it.label }).containsExactly("at", "all", "named")
     assertThat(items.single { it.label == "all" }.detail)
         .isEqualTo("val all: BatteryCharger.Standard.Batch")
-    assertThat(items.single { it.label == "Batch" }.detail)
-        .isEqualTo("ktrapic.BatteryCharger.Standard.Batch")
+  }
+
+  @Test
+  fun `after a name, the classes nested in it that an expression can use`() {
+    assertThat(labels("LedDisplay.|\n")).contains("Small")
   }
 
   @Test
