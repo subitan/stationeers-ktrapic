@@ -102,7 +102,10 @@ with what a compile request answers, plus `run` if the program compiled:
   the last line (the chip ran off the end of the program and halted) or no line ran (a
   change before a tick the chip sleeps through), a last snapshot without `ran` holds it. The
   tick before plus every snapshot in `lines` gives that tick's snapshot. `trace_tick` must
-  be a whole number, one of the test's ticks.
+  be a whole number, one of the test's ticks. A traced tick the run never reached (the chip
+  halted or hit a runtime error in an earlier tick) has no snapshot in `ticks` and an empty
+  `lines`, the same `lines` as a tick that ran and changed nothing, so check that `ticks`
+  goes up to the traced tick before reading `lines`.
 
 A snapshot holds `tick`, `line` (the line that runs next), `halted`, and only what changed
 since the snapshot before: `registers`, `stack` (by index; an entry back to 0 shows as 0),
