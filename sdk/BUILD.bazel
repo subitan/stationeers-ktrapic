@@ -10,6 +10,7 @@ kt_jvm_library(
     resources = glob(["src/main/kotlin/**/*.kt"]),
     visibility = ["//visibility:public"],
 )
+
 # The game data the generated sources come from, and the generated sources themselves, for
 # //tools/datagen's check that they are up to date.
 filegroup(

@@ -611,7 +611,7 @@ object K2Completion {
                 if (classLike is FirTypeAliasSymbol) Completion.Kind.CLASS
                 else Completion.Kind.CLASS
           }
-      return Completion(label, kind, classLike.classId.asFqNameString())
+      return Completion(label, kind, qualifiedNameOf(classLike.classId))
     }
   }
 }
