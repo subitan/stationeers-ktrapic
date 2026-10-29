@@ -1325,21 +1325,16 @@ interface LedDisplay {
   val Power: Boolean
   val RequiredPower: Double
   var Setting: Double
+  var Text: String
 
   /** StructureConsoleLED5. Entry point: LedDisplays.Small. */
-  class Small : TypedDevice, LedDisplay {
-    var Text: String
-  }
+  class Small : TypedDevice, LedDisplay
 
   /** StructureConsoleLED1x2. Entry point: LedDisplays.Medium. */
-  class Medium : TypedDevice, LedDisplay {
-    var Text: String
-  }
+  class Medium : TypedDevice, LedDisplay
 
   /** StructureConsoleLED1x3. Entry point: LedDisplays.Large. */
-  class Large : TypedDevice, LedDisplay {
-    var Text: String
-  }
+  class Large : TypedDevice, LedDisplay
 }
 ```
 

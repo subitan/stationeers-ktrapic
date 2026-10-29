@@ -132,6 +132,31 @@ class TypedDeviceTest {
   }
 
   @Test
+  fun `Text is on the LED displays' interface, for any of them`() {
+    val source =
+        """
+        inline fun show(display: LedDisplay) {
+          display.Mode = DisplayMode.String
+          display.Text = "HOT"
+        }
+        show(LedDisplays.Small.at(d0))
+        show(LedDisplays.Large.at(db))
+        """
+    val devices =
+        run(source) {
+          listOf(FakeDevice("StructureConsoleLED1x3"), FakeDevice("StructureConsoleLED5"))
+        }
+    for (display in devices) assertThat(display["Setting"]).isEqualTo(Hashes.str("HOT"))
+  }
+
+  @Test
+  fun `Text can't be read through the LED displays' interface either`() {
+    val error = error("inline fun f(display: LedDisplay) { db.Setting = display.Text.hash() }")
+
+    assertThat(error.message).contains("this logic type can only be written")
+  }
+
+  @Test
   fun `Text must be one to six ASCII characters, written out`() {
     val computed = "\"T\${db.Setting}\""
     for (bad in listOf("\"SEVENCH\"", "\"\"", "\"Ä\"", "\"A\\tB\"", computed)) {
