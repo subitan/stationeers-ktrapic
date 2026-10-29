@@ -85,5 +85,48 @@ namespace KTrapIC
                 before--;
             return before >= 0 && (line[before] == '(' || line[before] == ',');
         }
+
+        /// <summary>
+        /// Where parameter <paramref name="active"/> (0 for the first) is in
+        /// <paramref name="label"/>, a function's declaration, or null if it has no such
+        /// parameter or the parameters aren't all found. Each of <paramref name="parameters"/> is
+        /// looked for in turn inside the label's parentheses, after the one before it, so a
+        /// parameter whose text also ends an earlier one (<c>x: Int</c> after <c>max: Int</c>) is
+        /// found in its own place.
+        /// </summary>
+        public static (int Start, int Length)? ParameterSpan(string label, IReadOnlyList<string> parameters, int active)
+        {
+            if (active < 0 || active >= parameters.Count)
+                return null;
+            int open = label.IndexOf('(');
+            if (open < 0)
+                return null;
+            int close = ClosingParenthesis(label, open);
+            int from = open + 1;
+            for (int i = 0; ; i++)
+            {
+                string parameter = parameters[i];
+                int at = parameter.Length == 0 ? -1 : label.IndexOf(parameter, from, StringComparison.Ordinal);
+                if (at < 0 || at + parameter.Length > close)
+                    return null;
+                if (i == active)
+                    return (at, parameter.Length);
+                from = at + parameter.Length;
+            }
+        }
+
+        /// <summary>The index of the <c>)</c> that closes the <c>(</c> at <paramref name="open"/>, or the label's length if none does.</summary>
+        private static int ClosingParenthesis(string label, int open)
+        {
+            int depth = 0;
+            for (int i = open; i < label.Length; i++)
+            {
+                if (label[i] == '(')
+                    depth++;
+                else if (label[i] == ')' && --depth == 0)
+                    return i;
+            }
+            return label.Length;
+        }
     }
 }

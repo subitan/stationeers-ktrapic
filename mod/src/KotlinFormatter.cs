@@ -45,6 +45,9 @@ namespace KTrapIC
 
         private const int DebounceMs = 150;
 
+        /// <summary>How long the mouse rests on a name before its hover is asked for.</summary>
+        private const int HoverDelayMs = 400;
+
         /// <summary>
         /// How long an export waits for a compile, on the main thread. A warm compile takes well
         /// under a second, the first after the daemon starts about ten.
@@ -338,6 +341,8 @@ namespace KTrapIC
                 _completionRequests.Forget();
                 _hoverRequests.Forget();
                 _signatureRequests.Forget();
+                _hovered = null;
+                _hoverText = null;
             }
             string text = RawText;
             // Each kind of request is sent only for the text the daemon has, so all three see it
@@ -435,39 +440,53 @@ namespace KTrapIC
             var popup = new StyledText();
             foreach (var signature in signatures.All)
             {
-                var entry = new StyledLine(signature.Label);
-                entry.Add(new Token(0, signature.Label, DefaultStyle));
-                var active = signatures.ActiveParameter < signature.Parameters.Count
-                    ? signature.Parameters[signatures.ActiveParameter]
-                    : null;
-                int at = active == null ? -1 : signature.Label.IndexOf(active, StringComparison.Ordinal);
-                if (at >= 0)
+                string label = signature.Label;
+                var entry = new StyledLine(label);
+                var active = Hovers.ParameterSpan(label, signature.Parameters, signatures.ActiveParameter);
+                if (active is (int at, int length))
                 {
-                    entry.Clear();
-                    entry.Add(new Token(0, signature.Label.Substring(0, at), DefaultStyle));
-                    entry.Add(new Token(at, active, FunctionStyle));
-                    entry.Add(new Token(at + active.Length, signature.Label.Substring(at + active.Length), DefaultStyle));
+                    entry.Add(new Token(0, label.Substring(0, at), DefaultStyle));
+                    entry.Add(new Token(at, label.Substring(at, length), FunctionStyle));
+                    entry.Add(new Token(at + length, label.Substring(at + length), DefaultStyle));
                 }
+                else
+                    entry.Add(new Token(0, label, DefaultStyle));
                 popup.Add(entry);
                 if (!string.IsNullOrEmpty(signature.Documentation))
-                    foreach (var paragraph in signature.Documentation.Split('\n'))
-                        popup.AddWrapped(paragraph, Hovers.Width, DefaultStyle);
+                    AddParagraphs(popup, signature.Documentation);
             }
             _autocomplete = popup;
             _autocompleteInsertText = null;
         }
 
         /// <summary>
+        /// Adds <paramref name="text"/>'s lines to <paramref name="styled"/>, each wrapped, and an
+        /// empty one as an empty line: <see cref="StyledText.AddWrapped"/> adds nothing for it, and
+        /// empty lines part a declaration from its KDoc and the KDoc's paragraphs.
+        /// </summary>
+        private static void AddParagraphs(StyledText styled, string text)
+        {
+            foreach (var paragraph in text.Split('\n'))
+            {
+                if (paragraph.Length == 0)
+                    styled.AddLine("", DefaultStyle);
+                else
+                    styled.AddWrapped(paragraph, Hovers.Width, DefaultStyle);
+            }
+        }
+
+        /// <summary>
         /// The tooltip at <paramref name="mouseTextPos"/>: the editor's (an error's message, if
         /// the mouse is on one), followed by what the daemon says of the name there
-        /// (<c>textDocument/hover</c>). That is asked for once per name, at its start, when the
-        /// mouse moves onto it, and shown once it comes if the mouse is still on that name and the
-        /// code hasn't changed (<see cref="ShowHover"/>). The editor calls this when the mouse
-        /// moves.
+        /// (<c>textDocument/hover</c>). That is asked for once per name, at its start, once the
+        /// mouse has been on it for <see cref="HoverDelayMs"/> (<see cref="AskHoverSoon"/>), and
+        /// shown once it comes if the mouse is still on that name and the code hasn't changed
+        /// (<see cref="ShowHover"/>). The editor calls this when the mouse moves.
         /// </summary>
         public override void UpdateTooltip(TextPosition mouseTextPos)
         {
             base.UpdateTooltip(mouseTextPos);
+            var previous = _hoverWanted;
             var wanted = HoverAt(mouseTextPos);
             _hoverWanted = wanted;
             if (wanted == null)
@@ -484,19 +503,53 @@ namespace KTrapIC
                 }
                 return;
             }
+            if (!wanted.IsAt(previous))
+                AskHoverSoon(wanted).Forget();
+        }
+
+        /// <summary>
+        /// Asks for the hover <paramref name="wanted"/> once the mouse has been on its name for
+        /// <see cref="HoverDelayMs"/>, if it still is and the code hasn't changed: each hover is an
+        /// analysis of the whole program, which the daemon runs one at a time with the compiles
+        /// and completions, so the names the mouse only passes over aren't asked about.
+        /// </summary>
+        private async UniTaskVoid AskHoverSoon(CaretRequest wanted)
+        {
+            // Waited out on the thread pool, as UniTask's own delays count game time.
+            await UniTask.SwitchToThreadPool();
+            await Task.Delay(HoverDelayMs);
+            await UniTask.SwitchToMainThread();
+            if (_closed || !wanted.IsAt(_hoverWanted) || wanted.IsAt(_hovered) || wanted.Text != RawText)
+                return;
             SubmitChanges();
             if (_document != null && _syncedVersion == _version)
                 _hoverRequests.Want(wanted);
         }
 
-        /// <summary>The hover request for the name at <paramref name="position"/>, at its start; null where there is none.</summary>
+        /// <summary>
+        /// The hover request for the name at <paramref name="position"/>, at its start; null where
+        /// there is none, or the name is in a comment or a string, or is a keyword.
+        /// </summary>
         private CaretRequest HoverAt(TextPosition position)
         {
             if (!(bool)position || position.Line >= Lines.Count)
                 return null;
-            int? start = Hovers.NameStart(Lines[position.Line].Text, position.Col);
+            var line = Lines[position.Line];
+            var token = line.GetTokenAt(position.Col);
+            if (token != null && !MayBeHovered(token.Text))
+                return null;
+            int? start = Hovers.NameStart(line.Text, position.Col);
             return start == null ? null : new CaretRequest(RawText, position.Line, start.Value);
         }
+
+        /// <summary>
+        /// Whether a token of <see cref="Tokenizer"/>'s may be a name the daemon can say something
+        /// of: not a comment (the rest of the line), a string, or a keyword other than a type's name.
+        /// </summary>
+        private static bool MayBeHovered(string token) =>
+            !token.StartsWith(CommentPrefix, StringComparison.Ordinal)
+            && !(token.Length > 0 && (token[0] == '"' || token[0] == '\''))
+            && !(KotlinKeywords.TryGetValue(token, out uint kind) && kind != Type);
 
         private async UniTaskVoid ShowHover(CaretRequest request, string text)
         {
@@ -504,8 +557,7 @@ namespace KTrapIC
             if (_closed || request.Text != RawText)
                 return;
             var hover = new StyledText();
-            foreach (var paragraph in text.Split('\n'))
-                hover.AddWrapped(paragraph, Hovers.Width, DefaultStyle);
+            AddParagraphs(hover, text);
             _hovered = request;
             _hoverText = string.IsNullOrEmpty(text) ? null : hover;
             if (request.IsAt(_hoverWanted))

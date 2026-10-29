@@ -106,11 +106,13 @@ process's standard input and output (JSON-RPC with `Content-Length` framing, UTF
   30 seconds, but never for the compiler to start: until it has, an export writes a comment
   saying so.
 - Completion is the daemon's `textDocument/completion`, at the caret, after the edits before it.
-  Each analyses the whole program, so an editor has one request in flight at a time; when it is
-  answered, only the latest one wanted meanwhile is sent.
+  Each analyses the whole program, so an editor has one completion request in flight at a time;
+  when it is answered, only the latest one wanted meanwhile is sent.
 - Hovers and signatures are the daemon's `textDocument/hover` and `textDocument/signatureHelp`,
-  queued the same way, each kind on its own. A hover is asked for once per name, at its start,
-  when the mouse moves onto it, and shown if the mouse is still on it when the answer comes.
+  queued the same way, each kind on its own: an editor has at most one request of each kind in
+  flight, and the daemon answers them, and compiles, one at a time. A hover is asked for once per
+  name, at its start, once the mouse has rested on it for 400 ms, and not in comments, strings or
+  keywords; it is shown if the mouse is still on the name when the answer comes.
 - When the daemon starts again (`ktrapic restart`, or after it stopped), each editor opens its
   document on it again, with its whole text, and compiles it.
 
@@ -179,7 +181,8 @@ set `DaemonJarPath` to it, and `JavaPath` to a JDK 21's `bin/java.exe`.
 document's diagnostics reaching only it, documents opened again on a daemon started again,
 completions, hovers and signatures), the daemon's LSP mode message by message through that client
 (`DaemonLspTest.cs`), the request queues and which completions are shown (`CompletionsTest.cs`),
-where hovers and signatures are asked for (`HoversTest.cs`), and the highlighting's name lookup.
+where hovers and signatures are asked for and where a signature's active parameter is
+(`HoversTest.cs`), and the highlighting's name lookup.
 What needs the game, the editor's formatter itself, isn't tested here.
 
 ```

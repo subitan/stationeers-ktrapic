@@ -67,6 +67,39 @@ public class HoversTest
         Assert.Equal(1, signatures.ActiveParameter);
     }
 
+    [Theory]
+    [InlineData(0, 6, 8)]
+    [InlineData(1, 16, 6)]
+    public void TheActiveParameterIsFoundInItsOwnPlace(int active, int start, int length)
+    {
+        // "x: Int" also ends "max: Int", before it.
+        var span = Hovers.ParameterSpan("fun f(max: Int, x: Int): Int", new[] { "max: Int", "x: Int" }, active);
+
+        Assert.Equal<(int, int)?>((start, length), span);
+    }
+
+    [Fact]
+    public void ARepeatedParameterIsFoundAtItsOwnOccurrence()
+    {
+        var span = Hovers.ParameterSpan("fun f(a: Int, a: Int, a: Int)", new[] { "a: Int", "a: Int", "a: Int" }, 2);
+
+        Assert.Equal<(int, int)?>((22, 6), span);
+    }
+
+    [Theory]
+    [InlineData(2)]
+    [InlineData(-1)]
+    public void AnActiveParameterOutOfRangeIsNowhere(int active)
+    {
+        Assert.Null(Hovers.ParameterSpan("fun f(a: Int, b: Int)", new[] { "a: Int", "b: Int" }, active));
+    }
+
+    [Fact]
+    public void AParameterOnlyAfterTheParenthesesIsNowhere()
+    {
+        Assert.Null(Hovers.ParameterSpan("fun f(a: Int): Int", new[] { "a: Int", "Int" }, 1));
+    }
+
     [Fact]
     public void ANullSignatureHelpHasNone()
     {
