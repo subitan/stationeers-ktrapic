@@ -603,7 +603,12 @@ $("line-next").onclick = () => { lineAt = Math.min(lineStates.length - 1, lineAt
 $("test").addEventListener("input", keepDraft);
 for (const el of [src, $("test")]) {
   el.addEventListener("keydown", (e) => {
-    if ((e.ctrlKey || e.metaKey) && e.key === "Enter") { e.preventDefault(); runTest(); }
+    if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
+      e.preventDefault();
+      // Running opens the Test pane, so the results it shows can be seen.
+      if (!$("main").classList.contains("testing")) $("toggle-test").click();
+      runTest();
+    }
   });
 }
 $("toggle-test").onclick = () => store(TESTING_KEY, $("main").classList.toggle("testing"));
