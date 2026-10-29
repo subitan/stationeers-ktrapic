@@ -44,10 +44,17 @@ with its `run` action; in this repository, `//compiler/api:CaseTestsTest` runs e
   slot the prefab has, and each slot given here, starts with every slot logic type at 0.
 
 Values are numbers; `true` and `false` are 1 and 0. Without a device on `db`, the network
-gets a circuit housing (`StructureCircuitHousing`) there, with the id `db`. Whatever is on
-`db`, `get` and `put` on `db` reach the chip's own stack.
+gets a circuit housing (`StructureCircuitHousing`) there, with the id `db`.
+
+The harness models the chip in a circuit housing. A device put on `db` stands in for the
+housing, and `get` and `put` on `db` reach the chip's own stack whatever its prefab. In the
+game, only the circuit housings and suits work that way: a chip in a machine, tablet or laptop
+gets a runtime error from `get` or `put` on `db`, which a test here won't show.
 
 A device without a `name` has a name hash of 0, where the game would hash its default name.
+
+The emulator doesn't check that a device can be written with a logic type: a program's `s`
+of a type the prefab lacks, or can only read, succeeds here, where the game raises an error.
 
 ## Running
 
@@ -61,16 +68,20 @@ chip.
 - `rampTo` (optional), `{"tick", "value"}`: carries on in a straight line to that value at
   that tick, set before each tick in between.
 
+A change's ticks must be ticks the test runs, and its `logic` a type the device has: one of
+its prefab's, or one its starting `logic` gives it.
+
 ## Expectations
 
 Each entry of `expect` reads one value and compares it with exactly one of `equals`,
-`notEquals`, `below`, `atMost`, `above` or `atLeast`. It reads:
+`notEquals`, `below`, `atMost`, `above` or `atLeast`. It reads exactly one of:
 
 - `device` and `logic`: a device's logic value.
 - `device`, `slot` and `logic`: a slot's value.
-- `batch` and `logic`: a batch read over the network, as `lb`/`lbn` reads it, with
-  `batch` holding `prefab`, an optional `name`, and `mode`: `Average`, `Sum`, `Minimum`,
-  `Maximum` or `Count`.
+- `batch` and `logic`: a batch read over the network, computed by the same code as the
+  emulator's `lb`/`lbn`, with `batch` holding `prefab`, an optional `name`, and `mode`:
+  `Average`, `Sum`, `Minimum`, `Maximum` or `Count`. As with `lbn`, `Count` counts every
+  device of the prefab, whatever its name.
 - `register`: a register, `r0` to `r15`, `sp` or `ra`.
 
 With `tick`, it is checked after that tick runs, and fails if the run stopped before then;
@@ -86,7 +97,12 @@ with what a compile request answers, plus `run` if the program compiled:
 - `checks`: each expectation's `description` (`heater.On == 1 after tick 3: was 0`),
   `tick`, `actual` value (null if it couldn't be read) and `passed`.
 - `ticks`: a snapshot of the start (tick 0) and one after each tick that ran.
-- `lines`: with `trace_tick`, a snapshot after each line that tick ran, `ran` being the line.
+- `lines`: with `trace_tick`, a snapshot after each line that tick ran, `ran` being the line;
+  a line that hits a runtime error has one too, with `halted` true. If anything changed after
+  the last line (the chip ran off the end of the program and halted) or no line ran (a
+  change before a tick the chip sleeps through), a last snapshot without `ran` holds it. The
+  tick before plus every snapshot in `lines` gives that tick's snapshot. `trace_tick` must
+  be a whole number, one of the test's ticks.
 
 A snapshot holds `tick`, `line` (the line that runs next), `halted`, and only what changed
 since the snapshot before: `registers`, `stack` (by index; an entry back to 0 shows as 0),

@@ -64,7 +64,7 @@ class TestSpecTest {
     assertThat(problem("[]")).isEqualTo("a test is a JSON object")
     assertThat(problem("""{"device": []}""")).isEqualTo("test: unknown device")
     assertThat(problem("""{"devices": [{"prefab": "Nope"}]}"""))
-        .isEqualTo("devices[0]: no prefab is named Nope")
+        .isEqualTo("devices[0].prefab: no prefab is named Nope")
     assertThat(problem("""{"devices": [{"pin": "d6", "prefab": "StructureWallHeater"}]}"""))
         .isEqualTo("devices[0].pin: d6 is not a pin (d0 to d5, or db)")
     assertThat(
@@ -102,5 +102,86 @@ class TestSpecTest {
             "expect[0].batch.mode: Median is not one of Average, Sum, Minimum, Maximum, Count"
         )
     assertThat(problem("""{"ticks": 1.5}""")).isEqualTo("ticks must be a whole number")
+    assertThat(problem("""{"ticks": 1e10}""")).isEqualTo("ticks must be 1 to 10000")
+    assertThat(
+            problem(
+                """{"expect": [{"batch": {"prefab": "Nope", "mode": "Sum"},
+                                "logic": "On", "equals": 1}]}"""
+            )
+        )
+        .isEqualTo("expect[0].batch.prefab: no prefab is named Nope")
+  }
+
+  @Test
+  fun `an expectation names exactly one subject`() {
+    val heater = """"devices": [{"id": "heater", "prefab": "StructureWallHeater"}]"""
+    val oneOf = "expect[0] needs exactly one of register, batch, device"
+
+    assertThat(problem("""{"expect": [{"logic": "On", "equals": 1}]}""")).isEqualTo(oneOf)
+    assertThat(
+            problem(
+                """{$heater, "expect": [{"register": "r0", "device": "heater", "logic": "On",
+                                          "equals": 1}]}"""
+            )
+        )
+        .isEqualTo(oneOf)
+    assertThat(
+            problem(
+                """{$heater, "expect": [{"batch": {"prefab": "StructureWallHeater", "mode": "Sum"},
+                                          "device": "heater", "logic": "On", "equals": 1}]}"""
+            )
+        )
+        .isEqualTo(oneOf)
+    assertThat(problem("""{"expect": [{"register": "r0", "slot": 0, "equals": 1}]}"""))
+        .isEqualTo("expect[0].slot: only a device has slots")
+    assertThat(problem("""{"expect": [{"register": "r0", "logic": "On", "equals": 1}]}"""))
+        .isEqualTo("expect[0].logic: a register has no logic type")
+    assertThat(
+            problem(
+                """{$heater, "expect": [{"device": "heater", "slot": -1, "logic": "Quantity",
+                                          "equals": 0}]}"""
+            )
+        )
+        .isEqualTo("expect[0].slot: -1 is not a slot number")
+  }
+
+  @Test
+  fun `a change must fall within the run and name a logic type the device has`() {
+    fun changes(change: String) =
+        """
+        {"devices": [{"id": "s", "prefab": "StructureGasSensor", "logic": {"Extra": 1}}],
+         "ticks": 5, "changes": [$change]}
+        """
+
+    assertThat(
+            problem(changes("""{"tick": 6, "device": "s", "logic": "Temperature", "value": 1}"""))
+        )
+        .isEqualTo("changes[0].tick: the test runs ticks 1 to 5")
+    assertThat(
+            problem(changes("""{"tick": 0, "device": "s", "logic": "Temperature", "value": 1}"""))
+        )
+        .isEqualTo("changes[0].tick: the test runs ticks 1 to 5")
+    assertThat(
+            problem(
+                changes(
+                    """{"tick": 2, "device": "s", "logic": "Temperature", "value": 1,
+                        "rampTo": {"tick": 9, "value": 2}}"""
+                )
+            )
+        )
+        .isEqualTo("changes[0].rampTo.tick: the test runs ticks 1 to 5")
+    assertThat(
+            problem(changes("""{"tick": 1, "device": "s", "logic": "Temprature", "value": 1}"""))
+        )
+        .isEqualTo("changes[0].logic: s (StructureGasSensor) has no Temprature")
+
+    val spec =
+        TestSpec.parse(
+            changes(
+                """{"tick": 1, "device": "s", "logic": "Temperature", "value": 1},
+                   {"tick": 5, "device": "s", "logic": "Extra", "value": 2}"""
+            )
+        )
+    assertThat(spec.changes.map { it.logic }).containsExactly("Temperature", "Extra").inOrder()
   }
 }
