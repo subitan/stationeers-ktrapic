@@ -97,6 +97,19 @@ class LspDiagnosticsTest {
   }
 
   @Test
+  fun `publishes a back end error's prefab type as a hover shows it, never as Companion`() {
+    client.initialize()
+    client.open(
+        "file:///a.kt",
+        "fun f() = GrowLight\nval p = f()\np.all.forEach { it.On = true }\n",
+    )
+
+    val message = published().single().diagnostics().single()["message"].asString
+
+    assertThat(message).isEqualTo("Functions returning Prefab<GrowLight> are not supported")
+  }
+
+  @Test
   fun `publishes every error of a failed compile`() {
     client.initialize()
     client.open("file:///a.kt", "db.Setting = nope\nd0.On = foo\n")

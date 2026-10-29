@@ -17,12 +17,12 @@ object DeviceReferenceGenerator {
   private val PREFAB_NAME = Regex("""@PrefabName\("([^"]+)"\)""")
   /**
    * A prefab companion, `Prefab<T>`, or `SlottedPrefab<T, T.Batch>` for a prefab with slots, which
-   * ktfmt may break over lines.
+   * ktfmt may break over lines, a type argument a line, with or without a comma after the last.
    */
   private val COMPANION =
       Regex(
           """companion object :\s*""" +
-              """(?:Prefab<([\w.]+)>|SlottedPrefab<\s*([\w.]+),\s*\2\.Batch,?\s*>)\(\)"""
+              """(?:Prefab<\s*([\w.]+),?\s*>|SlottedPrefab<\s*([\w.]+),\s*\2\.Batch,?\s*>)\(\)"""
       )
   private val SLOT_NUMBER = Regex("""^\s*@SlotNumber\((\d+)\)$""")
   private val LOGIC_TYPES = Regex("""^\s*@LogicTypes\(read = "([^"]*)", written = "([^"]*)"\)$""")

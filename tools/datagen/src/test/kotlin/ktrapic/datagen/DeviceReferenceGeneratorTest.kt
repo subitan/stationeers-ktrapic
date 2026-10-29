@@ -1,6 +1,7 @@
 package ktrapic.datagen
 
 import com.google.common.truth.Truth.assertThat
+import com.google.common.truth.Truth.assertWithMessage
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 
@@ -190,5 +191,25 @@ class DeviceReferenceGeneratorTest {
           DeviceReferenceGenerator.generate(otherBatch, enums, typing)
         }
     assertThat(error).hasMessageThat().contains("without a prefab companion object: [Vent]")
+  }
+
+  @Test
+  fun `takes a companion broken over lines, a type argument a line`() {
+    val companions =
+        listOf(
+            "  companion object :\n      Prefab<\n          Vent\n      >()\n",
+            "  companion object :\n      Prefab<\n          Vent,\n      >()\n",
+            "  companion object :\n      SlottedPrefab<\n          Vent,\n          Vent.Batch\n      >()\n",
+            "  companion object :\n      SlottedPrefab<\n          Vent,\n          Vent.Batch,\n      >()\n",
+        )
+    for (companion in companions) {
+      val source =
+          device("StructureVent", "Vent")
+              .replace("  companion object : Prefab<Vent>()\n", companion)
+
+      assertWithMessage(companion)
+          .that(DeviceReferenceGenerator.generate(source, enums, typing))
+          .contains("class Vent ")
+    }
   }
 }

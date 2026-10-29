@@ -136,6 +136,26 @@ class TypedDeviceTest {
   }
 
   @Test
+  fun `a back end error writes a prefab's type as a hover shows it, never as Companion`() {
+    val errors =
+        mapOf(
+            "fun f() = GrowLight\nval p = f()\np.all.forEach { it.On = true }" to
+                "Functions returning Prefab<GrowLight> are not supported",
+            "fun f() = BatteryCharger.Standard\ndb.Setting = f().all.count().toDouble()" to
+                "Functions returning " +
+                    "SlottedPrefab<BatteryCharger.Standard, BatteryCharger.Standard.Batch> " +
+                    "are not supported",
+            "fun f(p: GrowLight.Companion) = 1\ndb.Setting = f(GrowLight).toDouble()" to
+                "Parameters of type Prefab<GrowLight> are not supported",
+        )
+    for ((source, expected) in errors) {
+      val message = error(source).message
+      assertWithMessage(source).that(message).isEqualTo(expected)
+      assertWithMessage(source).that(message).doesNotContain("Companion")
+    }
+  }
+
+  @Test
   fun `a typed device reads its NameHash`() {
     val db =
         run("db.Setting = GrowLight.at(d0).NameHash") {
