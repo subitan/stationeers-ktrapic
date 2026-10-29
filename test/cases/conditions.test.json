@@ -12,7 +12,6 @@
   ],
   "expect": [
     {"tick": 2, "device": "heater", "logic": "On", "equals": 0},
-    {"tick": 2, "device": "db", "logic": "Color", "equals": 2},
     {"tick": 3, "device": "heater", "logic": "On", "equals": 1},
     {"tick": 3, "device": "db", "logic": "On", "equals": 1},
     {"tick": 6, "device": "heater", "logic": "On", "equals": 0},

@@ -708,4 +708,16 @@ class EmulatorTest {
 
     assertThat(ran).containsExactly(0, 1, 2, 3, 1, 2).inOrder()
   }
+
+  @Test
+  fun onLineSeesAFailingLineOnceTheChipHasHalted() {
+    val emu = Emulator(Program.parse("move r0 1\nl r1 d3 On\nmove r2 1"))
+    val ran = mutableListOf<Pair<Int, Boolean>>()
+    emu.onLine = { ran += it to emu.halted }
+
+    val error = assertThrows<Ic10RuntimeException> { emu.tick() }
+
+    assertThat(error.line).isEqualTo(1)
+    assertThat(ran).containsExactly(0 to false, 1 to true).inOrder()
+  }
 }

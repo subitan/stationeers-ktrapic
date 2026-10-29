@@ -98,7 +98,8 @@ object Daemon {
    * The response to running [test], a test file's JSON object (see `docs/TESTING.md`), against
    * [source] compiled with [options]: the compile response, with `run` added if it compiled. `run`
    * is the harness's result (see [RunResult.toJson]), with a snapshot per line of tick [traceTick]
-   * if given, or `{"error": {"description"}}` if the test can't be run as written.
+   * if given, or `{"error": {"description"}}` if the test can't be run as written or [traceTick]
+   * isn't one of its ticks.
    */
   fun run(source: String, options: JsonObject?, test: JsonObject?, traceTick: Int?): JsonObject =
       guarded {
@@ -107,8 +108,11 @@ object Daemon {
         if (code != null) {
           val run =
               try {
-                Harness.run(Program.parse(code), TestSpec.parse(test ?: JsonObject()), traceTick)
-                    .toJson()
+                val spec = TestSpec.parse(test ?: JsonObject())
+                if (traceTick != null && traceTick !in 1..spec.ticks) {
+                  throw TestSpecException("trace_tick: the test runs ticks 1 to ${spec.ticks}")
+                }
+                Harness.run(Program.parse(code), spec, traceTick).toJson()
               } catch (e: TestSpecException) {
                 JsonObject().apply {
                   add("error", JsonObject().apply { addProperty("description", e.message) })
@@ -154,9 +158,17 @@ object Daemon {
     if (action == "compile") return compile(source, options)
     val test = request["test"]
     if (test != null && !test.isJsonObject) return error("A run's test must be a JSON object")
-    val traceTick = request["trace_tick"]?.takeIf { it.isJsonPrimitive }?.asJsonPrimitive
-    if (traceTick != null && !traceTick.isNumber) return error("trace_tick must be a number")
-    return run(source, options, test?.asJsonObject, traceTick?.asInt)
+    val traceTick =
+        request["trace_tick"]?.let { tick ->
+          tick
+              .takeIf { it.isJsonPrimitive && it.asJsonPrimitive.isNumber }
+              ?.asDouble
+              ?.takeIf { it == Math.rint(it) }
+              // A whole number too big for an Int saturates, so it is still outside the test's
+              // ticks.
+              ?.toInt() ?: return error("trace_tick must be a whole number")
+        }
+    return run(source, options, test?.asJsonObject, traceTick)
   }
 
   private fun describe(error: ktrapic.api.CompileError) =

@@ -87,6 +87,26 @@ class DaemonTest {
   }
 
   @Test
+  fun `trace_tick must be a whole number within the test's ticks`() {
+    fun run(traceTick: String) =
+        request(
+            """{"action": "run", "code": "import ktrapic.*\ndb.Setting = 1.0\n",
+                "test": {"ticks": 4}, "trace_tick": $traceTick}"""
+        )
+    fun runError(traceTick: String) =
+        run(traceTick)["run"].asJsonObject["error"].asJsonObject["description"].asString
+
+    assertThat(run("1.5")["error"].asJsonObject["description"].asString)
+        .isEqualTo("trace_tick must be a whole number")
+    assertThat(run("\"2\"")["error"].asJsonObject["description"].asString)
+        .isEqualTo("trace_tick must be a whole number")
+    assertThat(runError("0")).isEqualTo("trace_tick: the test runs ticks 1 to 4")
+    assertThat(runError("5")).isEqualTo("trace_tick: the test runs ticks 1 to 4")
+    assertThat(runError("1e20")).isEqualTo("trace_tick: the test runs ticks 1 to 4")
+    assertThat(run("4")["run"].asJsonObject["passed"].asBoolean).isTrue()
+  }
+
+  @Test
   fun `rejects bad requests`() {
     assertThat(request("""{"action": "format"}""")["error"].asJsonObject["description"].asString)
         .contains("Invalid action")

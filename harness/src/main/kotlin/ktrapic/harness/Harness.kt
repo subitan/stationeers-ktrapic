@@ -5,6 +5,7 @@ import com.google.gson.JsonElement
 import com.google.gson.JsonNull
 import com.google.gson.JsonObject
 import com.google.gson.JsonPrimitive
+import ktrapic.emu.Batch
 import ktrapic.emu.Emulator
 import ktrapic.emu.FakeDevice
 import ktrapic.emu.Ic10RuntimeException
@@ -46,7 +47,9 @@ data class Check(
 
 /**
  * A run of a test: [ticks] holds a snapshot of the start and one after each tick that ran, [lines]
- * one after each line of the traced tick, if any, starting from the tick before it.
+ * one after each line of the traced tick, if any, starting from the tick before it, then one
+ * without [Snapshot.ran] if anything changed in that tick after its last line (or no line ran). The
+ * tick before plus every snapshot in [lines] gives the traced tick's snapshot.
  */
 data class RunResult(
     val ticks: List<Snapshot>,
@@ -151,10 +154,8 @@ object Harness {
       for (change in spec.changes) {
         change.valueAt(tick)?.let { devices.getValue(change.device)[change.logic] = it }
       }
-      if (tick == traceTick) {
-        val traced = Recorder(devices).also { it.copyFrom(recorder) }
-        emulator.onLine = { ran -> lines += traced.snapshot(emulator, tick, ran) }
-      }
+      val traced = if (tick == traceTick) Recorder(devices).also { it.copyFrom(recorder) } else null
+      if (traced != null) emulator.onLine = { ran -> lines += traced.snapshot(emulator, tick, ran) }
       try {
         emulator.tick()
       } catch (e: Ic10RuntimeException) {
@@ -162,6 +163,9 @@ object Harness {
       } finally {
         emulator.onLine = {}
       }
+      // What changed in the traced tick after its last line, or in a tick in which no line ran: the
+      // chip halting by running off the end of the program, or a change set before the tick.
+      traced?.changes(emulator, tick)?.let { lines += it }
       ticks += recorder.snapshot(emulator, tick)
       for (expectation in spec.expectations) {
         if (expectation.tick == tick) checks += check(expectation, tick, emulator, devices)
@@ -180,7 +184,7 @@ object Harness {
                     tick,
                     null,
                     false,
-                    "${describe(expectation)}: the run stopped at tick $last",
+                    "${describe(expectation)} after tick $tick: the run stopped at tick $last",
                 )
       }
     }
@@ -223,35 +227,18 @@ object Harness {
   ): Double =
       when (subject) {
         is Subject.Register -> emulator.register(subject.name)
-        is Subject.Logic -> logic(devices.getValue(subject.device), subject.logic)
-        is Subject.Slot ->
-            devices.getValue(subject.device).slots[subject.slot]?.get(subject.logic)
-                ?: error("slot ${subject.slot} has no ${subject.logic}")
-        is Subject.Batch -> {
-          val nameHash = subject.name?.let(Hashes::hash)
-          val matching =
-              devices.values.filter {
-                it.prefabHash == subject.prefab.hash &&
-                    (nameHash == null || it.nameHash == nameHash)
-              }
-          val values = matching.map { logic(it, subject.logic) }
-          when (subject.mode) {
-            "Average" -> values.sum() / values.size
-            "Sum" -> values.sum()
-            "Minimum" -> values.minOrNull() ?: 0.0
-            "Maximum" -> values.maxOrNull() ?: Double.NEGATIVE_INFINITY
-            else -> values.size.toDouble()
-          }
-        }
+        is Subject.Logic -> devices.getValue(subject.device).read(subject.logic)
+        is Subject.Slot -> devices.getValue(subject.device).readSlot(subject.slot, subject.logic)
+        is Subject.Batch ->
+            Batch.read(
+                emulator.network,
+                subject.prefab.hash,
+                subject.name?.let(Hashes::hash),
+                Batch.METHODS.getValue(subject.mode),
+            ) {
+              it.read(subject.logic)
+            }
       }
-
-  private fun logic(device: FakeDevice, type: String): Double =
-      device[type]
-          ?: when (type) {
-            "PrefabHash" -> device.prefabHash.toDouble()
-            "NameHash" -> device.nameHash.toDouble()
-            else -> error("has no $type")
-          }
 
   /** How an expectation reads, as `heater.On == 1`. */
   fun describe(expectation: Expectation): String {
@@ -279,12 +266,30 @@ object Harness {
     private var stack = mapOf<Int, Double>()
     private var logic = mapOf<String, Map<String, Double>>()
     private var slots = mapOf<String, Map<Int, Map<String, Double>>>()
+    private var line: Int? = null
+    private var halted: Boolean? = null
 
     fun copyFrom(other: Recorder) {
       registers = other.registers
       stack = other.stack
       logic = other.logic
       slots = other.slots
+      line = other.line
+      halted = other.halted
+    }
+
+    /** A snapshot, or null if nothing has changed since the one before. */
+    fun changes(emulator: Emulator, tick: Int): Snapshot? {
+      val line = this.line
+      val halted = this.halted
+      return snapshot(emulator, tick).takeIf {
+        it.line != line ||
+            it.halted != halted ||
+            it.registers.isNotEmpty() ||
+            it.stack.isNotEmpty() ||
+            it.logic.isNotEmpty() ||
+            it.slots.isNotEmpty()
+      }
     }
 
     fun snapshot(emulator: Emulator, tick: Int, ran: Int? = null): Snapshot {
@@ -320,6 +325,8 @@ object Harness {
       this.stack = stack
       this.logic = logic
       this.slots = slots
+      this.line = snapshot.line
+      this.halted = snapshot.halted
       return snapshot
     }
 

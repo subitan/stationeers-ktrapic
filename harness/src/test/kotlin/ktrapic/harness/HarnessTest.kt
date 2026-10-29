@@ -132,7 +132,8 @@ class HarnessTest {
             spec("""{"ticks": 5, "expect": [{"tick": 3, "register": "r0", "equals": 1}]}"""),
         )
 
-    assertThat(result.checks.single().description).isEqualTo("r0 == 1: the run stopped at tick 1")
+    assertThat(result.checks.single().description)
+        .isEqualTo("r0 == 1 after tick 3: the run stopped at tick 1")
   }
 
   @Test
@@ -165,7 +166,9 @@ class HarnessTest {
                     {"batch": {"prefab": "StructureBatterySmall", "name": "B", "mode": "Average"},
                      "logic": "Charge", "equals": 30},
                     {"batch": {"prefab": "StructureBatterySmall", "mode": "Count"},
-                     "logic": "Charge", "atLeast": 2}
+                     "logic": "Charge", "atLeast": 2},
+                    {"batch": {"prefab": "StructureBatterySmall", "name": "B", "mode": "Count"},
+                     "logic": "Charge", "equals": 2}
                   ]
                 }
                 """
@@ -173,6 +176,137 @@ class HarnessTest {
         )
 
     assertThat(result.checks.filter { !it.passed }.map { it.description }).isEmpty()
+  }
+
+  @Test
+  fun `batch expectations read NaN and infinities as lb reads them`() {
+    // d1's Lock goes to NaN, then, with d0's, to positive infinity; lb reads each into registers.
+    val result =
+        Harness.run(
+            Program.parse(
+                """
+                |define HEATER HASH("StructureWallHeater")
+                |move r0 0
+                |div r0 r0 0
+                |s d1 Lock r0
+                |lb r1 HEATER Lock Minimum
+                |lb r2 HEATER Lock Maximum
+                |yield
+                |move r0 1
+                |div r0 r0 0
+                |s d0 Lock r0
+                |s d1 Lock r0
+                |lb r3 HEATER Lock Minimum
+                |lb r4 HEATER Lock Maximum
+                |yield
+                """
+                    .trimMargin()
+            ),
+            spec(
+                """
+                {
+                  "devices": [
+                    {"pin": "d0", "prefab": "StructureWallHeater", "logic": {"Lock": 5}},
+                    {"pin": "d1", "prefab": "StructureWallHeater"}
+                  ],
+                  "ticks": 2,
+                  "expect": [
+                    {"tick": 1, "batch": {"prefab": "StructureWallHeater", "mode": "Minimum"},
+                     "logic": "Lock", "equals": 5},
+                    {"tick": 1, "batch": {"prefab": "StructureWallHeater", "mode": "Maximum"},
+                     "logic": "Lock", "equals": 5},
+                    {"tick": 1, "register": "r1", "equals": 5},
+                    {"tick": 1, "register": "r2", "equals": 5},
+                    {"tick": 2, "batch": {"prefab": "StructureWallHeater", "mode": "Minimum"},
+                     "logic": "Lock", "equals": 0},
+                    {"tick": 2, "batch": {"prefab": "StructureWallHeater", "mode": "Maximum"},
+                     "logic": "Lock", "above": 1e308},
+                    {"tick": 2, "register": "r3", "equals": 0},
+                    {"tick": 2, "register": "r4", "above": 1e308}
+                  ]
+                }
+                """
+            ),
+        )
+
+    assertThat(result.error).isNull()
+    assertThat(result.checks.filter { !it.passed }.map { it.description }).isEmpty()
+  }
+
+  /** A program's whole state, as snapshots add up to. */
+  private data class State(
+      val line: Int,
+      val halted: Boolean,
+      val registers: Map<String, Double>,
+      val stack: Map<Int, Double>,
+      val logic: Map<String, Map<String, Double>>,
+      val slots: Map<String, Map<Int, Map<String, Double>>>,
+  )
+
+  private fun fold(snapshots: List<Snapshot>): State {
+    val registers = mutableMapOf<String, Double>()
+    val stack = mutableMapOf<Int, Double>()
+    val logic = mutableMapOf<String, MutableMap<String, Double>>()
+    val slots = mutableMapOf<String, MutableMap<Int, MutableMap<String, Double>>>()
+    for (snapshot in snapshots) {
+      registers += snapshot.registers
+      stack += snapshot.stack
+      snapshot.logic.forEach { (id, values) -> logic.getOrPut(id) { mutableMapOf() } += values }
+      snapshot.slots.forEach { (id, bySlot) ->
+        bySlot.forEach { (slot, values) ->
+          slots.getOrPut(id) { mutableMapOf() }.getOrPut(slot) { mutableMapOf() } += values
+        }
+      }
+    }
+    val last = snapshots.last()
+    return State(last.line, last.halted, registers, stack.filterValues { it != 0.0 }, logic, slots)
+  }
+
+  /**
+   * Checks the tick before [tick] plus the traced lines give the same state as [tick]'s snapshot.
+   */
+  private fun assertRebuilds(result: RunResult, tick: Int) {
+    assertThat(fold(result.ticks.take(tick) + result.lines))
+        .isEqualTo(fold(result.ticks.take(tick + 1)))
+  }
+
+  @Test
+  fun `the tick before plus a traced tick's lines rebuild that tick`() {
+    val traced = Harness.run(thermostat, spec("{$network, \"ticks\": 3}"), traceTick = 2)
+    assertRebuilds(traced, 2)
+
+    val failing =
+        Harness.run(
+            Program.parse("move r0 1\nyield\nmove r1 2\npush 7\nl r2 d3 On"),
+            spec("""{"ticks": 3}"""),
+            traceTick = 2,
+        )
+    assertThat(failing.error).isEqualTo(RunError(2, 4, "l: no device on d3"))
+    assertThat(failing.lines.map { it.ran to it.halted })
+        .containsExactly(2 to false, 3 to false, 4 to true)
+        .inOrder()
+    assertRebuilds(failing, 2)
+
+    val ending =
+        Harness.run(Program.parse("move r0 1\nyield\nmove r1 2"), spec("{}"), traceTick = 2)
+    assertThat(ending.lines.map { it.ran to it.halted })
+        .containsExactly(2 to false, null to true)
+        .inOrder()
+    assertRebuilds(ending, 2)
+
+    val sleeping =
+        Harness.run(
+            Program.parse("sleep 10"),
+            spec(
+                """
+                {"devices": [{"id": "sensor", "prefab": "StructureGasSensor"}], "ticks": 3,
+                 "changes": [{"tick": 2, "device": "sensor", "logic": "Temperature", "value": 300}]}
+                """
+            ),
+            traceTick = 2,
+        )
+    assertThat(sleeping.lines.single().ran).isNull()
+    assertRebuilds(sleeping, 2)
   }
 
   @Test

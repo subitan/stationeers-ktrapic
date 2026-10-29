@@ -4,6 +4,7 @@ import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import com.google.gson.JsonParseException
 import com.google.gson.JsonParser
+import ktrapic.emu.Batch
 import ktrapic.ic10.Device
 import ktrapic.ic10.Register
 
@@ -94,7 +95,7 @@ data class TestSpec(
     const val DEFAULT_TICKS = 20
     const val MAX_TICKS = 10_000
     const val HOUSING = "StructureCircuitHousing"
-    val BATCH_MODES = listOf("Average", "Sum", "Minimum", "Maximum", "Count")
+    val BATCH_MODES = Batch.METHODS.keys.toList()
 
     /**
      * Reads a test file's JSON (see `docs/TESTING.md`). A network without a device on `db` gets a
@@ -132,11 +133,15 @@ data class TestSpec(
       for ((pin, count) in pinned.groupingBy { it }.eachCount()) {
         if (count > 1) throw TestSpecException("two devices are on $pin")
       }
-      val ids = network.map { it.id }.toSet()
-      val ticks = root["ticks"]?.let { int(it, "ticks") } ?: DEFAULT_TICKS
-      if (ticks !in 1..MAX_TICKS) throw TestSpecException("ticks must be 1 to $MAX_TICKS")
+      val byId = network.associateBy { it.id }
+      val ids = byId.keys
+      val ticks =
+          root["ticks"]?.let { int(it, "ticks", 1..MAX_TICKS) { "ticks must be 1 to $MAX_TICKS" } }
+              ?: DEFAULT_TICKS
       val changes =
-          array(root, "changes", "test").mapIndexed { i, it -> change(it, "changes[$i]", ids) }
+          array(root, "changes", "test").mapIndexed { i, it ->
+            change(it, "changes[$i]", byId, ticks)
+          }
       val expectations =
           array(root, "expect", "test").mapIndexed { i, it ->
             expectation(it, "expect[$i]", ids, ticks)
@@ -151,7 +156,8 @@ data class TestSpec(
       if (pin != null && pin !in Device.NAMES) {
         throw TestSpecException("$where.pin: $pin is not a pin (d0 to d5, or db)")
       }
-      val prefab = prefab(string(required(device, "prefab", where), "$where.prefab"), where)
+      val prefab =
+          prefab(string(required(device, "prefab", where), "$where.prefab"), "$where.prefab")
       val name = device["name"]?.let { string(it, "$where.name") }
       val logic = values(device["logic"], "$where.logic")
       val slots =
@@ -169,23 +175,36 @@ data class TestSpec(
       return DeviceSpec(id, prefab, pin, name, logic, slots)
     }
 
-    private fun change(element: JsonElement, where: String, ids: Set<String>): Change {
+    /**
+     * A change of a logic value the device has: one of its prefab's, or one the test gives it a
+     * starting value for. Its ticks, and its ramp's, must be ticks the test runs.
+     */
+    private fun change(
+        element: JsonElement,
+        where: String,
+        devices: Map<String, DeviceSpec>,
+        ticks: Int,
+    ): Change {
       val change = obj(element, where)
       known(change, where, "tick", "device", "logic", "value", "rampTo")
-      val tick = int(required(change, "tick", where), "$where.tick")
-      if (tick < 1) throw TestSpecException("$where.tick: ticks count from 1")
+      val tick = tick(required(change, "tick", where), "$where.tick", ticks)
       val rampTo =
           change["rampTo"]?.let {
             val ramp = obj(it, "$where.rampTo")
             known(ramp, "$where.rampTo", "tick", "value")
-            val to = int(required(ramp, "tick", "$where.rampTo"), "$where.rampTo.tick")
+            val to = tick(required(ramp, "tick", "$where.rampTo"), "$where.rampTo.tick", ticks)
             if (to <= tick) throw TestSpecException("$where.rampTo.tick must be after $where.tick")
             Change.Ramp(to, number(required(ramp, "value", "$where.rampTo"), "$where.rampTo.value"))
           }
+      val device = devices.getValue(deviceId(change, where, devices.keys))
+      val logic = string(required(change, "logic", where), "$where.logic")
+      if (logic !in device.prefab.logicTypes && logic !in device.logic) {
+        throw TestSpecException("$where.logic: ${device.id} (${device.prefab.name}) has no $logic")
+      }
       return Change(
           tick,
-          deviceId(change, where, ids),
-          string(required(change, "logic", where), "$where.logic"),
+          device.id,
+          logic,
           number(required(change, "value", where), "$where.value"),
           rampTo,
       )
@@ -205,16 +224,23 @@ data class TestSpec(
           *(listOf("tick", "device", "slot", "logic", "batch", "register") + comparisons)
               .toTypedArray(),
       )
-      val tick = expectation["tick"]?.let { int(it, "$where.tick") }
-      if (tick != null && tick !in 1..ticks) {
-        throw TestSpecException("$where.tick: the test runs ticks 1 to $ticks")
-      }
+      val tick = expectation["tick"]?.let { tick(it, "$where.tick", ticks) }
       val given = Comparison.entries.filter { expectation.has(it.key) }
       val comparison =
           given.singleOrNull()
               ?: throw TestSpecException(
                   "$where needs exactly one of ${comparisons.joinToString(", ")}"
               )
+      val subjects = listOf("register", "batch", "device").filter { expectation.has(it) }
+      if (subjects.size != 1) {
+        throw TestSpecException("$where needs exactly one of register, batch, device")
+      }
+      if (expectation.has("slot") && !expectation.has("device")) {
+        throw TestSpecException("$where.slot: only a device has slots")
+      }
+      if (expectation.has("logic") && expectation.has("register")) {
+        throw TestSpecException("$where.logic: a register has no logic type")
+      }
       val subject =
           when {
             expectation.has("register") -> {
@@ -236,7 +262,7 @@ data class TestSpec(
               Subject.Batch(
                   prefab(
                       string(required(batch, "prefab", "$where.batch"), "$where.batch.prefab"),
-                      where,
+                      "$where.batch.prefab",
                   ),
                   batch["name"]?.let { string(it, "$where.batch.name") },
                   string(required(expectation, "logic", where), "$where.logic"),
@@ -246,7 +272,11 @@ data class TestSpec(
             expectation.has("slot") ->
                 Subject.Slot(
                     deviceId(expectation, where, ids),
-                    int(expectation["slot"], "$where.slot"),
+                    expectation["slot"].let { slot ->
+                      int(slot, "$where.slot", 0..Int.MAX_VALUE) {
+                        "$where.slot: $slot is not a slot number"
+                      }
+                    },
                     string(required(expectation, "logic", where), "$where.logic"),
                 )
             else ->
@@ -317,12 +347,21 @@ data class TestSpec(
       }
     }
 
-    private fun int(element: JsonElement, where: String): Int {
+    /** A whole number in [range]; one outside it is reported with [outside]. */
+    private fun int(
+        element: JsonElement,
+        where: String,
+        range: IntRange,
+        outside: () -> String,
+    ): Int {
       val value = number(element, where)
-      if (value != Math.rint(value) || value !in -1e9..1e9) {
-        throw TestSpecException("$where must be a whole number")
-      }
+      if (value != Math.rint(value)) throw TestSpecException("$where must be a whole number")
+      if (value < range.first || value > range.last) throw TestSpecException(outside())
       return value.toInt()
     }
+
+    /** A tick the test runs, 1 to [ticks]. */
+    private fun tick(element: JsonElement, where: String, ticks: Int): Int =
+        int(element, where, 1..ticks) { "$where: the test runs ticks 1 to $ticks" }
   }
 }
