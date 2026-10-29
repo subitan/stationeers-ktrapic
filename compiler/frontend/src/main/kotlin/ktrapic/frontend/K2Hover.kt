@@ -6,7 +6,6 @@ import java.io.File
 import org.jetbrains.kotlin.KtFakeSourceElementKind
 import org.jetbrains.kotlin.KtRealSourceElementKind
 import org.jetbrains.kotlin.KtSourceElement
-import org.jetbrains.kotlin.descriptors.Visibilities
 import org.jetbrains.kotlin.fir.FirElement
 import org.jetbrains.kotlin.fir.FirSession
 import org.jetbrains.kotlin.fir.containingClassLookupTag
@@ -267,9 +266,11 @@ object K2Hover {
 
     /**
      * The other functions a call that resolved to [resolved] could be to as its arguments are
-     * written: those of the same name that its explicit receiver's type has, or, for a top-level
-     * function called without one, those of the same name in its package. A call with no arguments
-     * yet resolves to an overload that takes none, though the user may mean another.
+     * written: those of the same name that its receiver's type has, explicit (`all.count(`) or
+     * implicit (a member of the program or of a class, called from within it), or, for a top-level
+     * function, those of the same name in its package. Only those completion offers are listed
+     * ([K2Completion.shown]): of the standard library's, only those KTrapIC compiles. A call with
+     * no arguments yet resolves to an overload that takes none, though the user may mean another.
      */
     private fun overloadsOf(
         call: FirFunctionCall,
@@ -277,10 +278,10 @@ object K2Hover {
     ): List<FirBasedSymbol<*>> {
       val function = resolved as? FirNamedFunctionSymbol ?: return emptyList()
       if (function.resolvedReceiverType != null) return emptyList()
-      val receiver = call.explicitReceiver
+      val receiver = (call.explicitReceiver ?: call.dispatchReceiver)?.resolvedType
       val found = mutableListOf<FirNamedFunctionSymbol>()
       if (receiver != null) {
-        receiver.resolvedType
+        receiver
             .scope(
                 session,
                 scopeSession,
@@ -294,12 +295,9 @@ object K2Hover {
                 .getTopLevelFunctionSymbols(function.callableId.packageName, function.name)
                 .filter { it.resolvedReceiverType == null }
       }
-      return found.filter { candidate ->
-        candidate.resolvedStatus.visibility == Visibilities.Public &&
-            candidate.resolvedAnnotationClassIds.none {
-              it == StandardClassIds.Annotations.Deprecated
-            }
-      }
+      val shownOn =
+          receiver?.takeIf { call.explicitReceiver != null }?.let(K2Completion::declarable)
+      return found.filter { K2Completion.shown(it, shownOn) }
     }
 
     /**

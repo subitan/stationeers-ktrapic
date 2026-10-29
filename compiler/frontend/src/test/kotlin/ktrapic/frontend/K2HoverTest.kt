@@ -30,6 +30,9 @@ class K2HoverTest {
     )
   }
 
+  /** The labels of the signatures [signatures] gives. */
+  private fun labels(source: String) = signatures(source)?.signatures?.map { it.label }
+
   @Test
   fun `a device's logic type, with its class`() {
     val hover = hover("d0.Sett|ing = 1.0\n")!!
@@ -233,7 +236,6 @@ class K2HoverTest {
   @Test
   fun `signature help where a top-level statement ends`() {
     val sleep = listOf("fun sleep(seconds: Double): Unit", "fun sleep(seconds: Int): Unit")
-    fun labels(source: String) = signatures(source)?.signatures?.map { it.label }
 
     assertThat(labels("sleep(|")).containsExactlyElementsIn(sleep)
     assertThat(labels("d0.Setting = 1.0\nsleep(|")).containsExactlyElementsIn(sleep)
@@ -255,6 +257,27 @@ class K2HoverTest {
             "fun count(predicate: (PresenceSensor.Motion) -> Boolean): Int",
         )
         .inOrder()
+  }
+
+  @Test
+  fun `signature help offers the program's own overloads, and a class's own`() {
+    val g = "fun g() = 1\nfun g(a: Int) = a\n"
+
+    assertThat(labels(g + "val x = g(|)\n"))
+        .containsExactly("fun g(): Int", "fun g(a: Int): Int")
+        .inOrder()
+    assertThat(labels(g + "g(|")).containsExactly("fun g(): Int", "fun g(a: Int): Int")
+    assertThat(labels("class K {\n  fun m() = 1\n  fun m(a: Int) = a\n  fun t() = m(|)\n}\n"))
+        .containsExactly("fun m(): Int", "fun m(a: Int): Int")
+        .inOrder()
+  }
+
+  @Test
+  fun `signature help lists only the standard library overloads KTrapIC compiles`() {
+    assertThat(labels("import kotlin.math.max\nval m = max(1.0, 2.0|)\n"))
+        .containsExactly("fun max(a: Double, b: Double): Double")
+    assertThat(labels("val n = 1.plus(2|)\n"))
+        .containsExactly("fun plus(other: Int): Int", "fun plus(other: Double): Double")
   }
 
   @Test

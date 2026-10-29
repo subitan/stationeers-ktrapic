@@ -45,6 +45,11 @@ private val FUNCTION_TYPE = Regex("""Function\d+""")
 /**
  * [type] as a program would write it: classes by [nameOf], `Device?`, and a function type as
  * `(Device) -> Double`.
+ *
+ * An extension function type renders as a plain one (`Int.() -> Int` as `(Int) -> Int`), and a
+ * `suspend` function type as its class (`SuspendFunction1<Int, Int>`): the SDK declares neither and
+ * KTrapIC compiles neither, so only the standard library's scope functions and a program's own
+ * declarations would show them.
  */
 internal fun render(type: ConeKotlinType): String {
   if (type is ConeClassLikeType) {
@@ -72,7 +77,12 @@ internal fun render(type: ConeKotlinType): String {
   return if (type.isMarkedNullable) "$text?" else text
 }
 
-/** A function's parameters as declared: `pin: Device`, one per parameter. */
+/**
+ * A function's parameters as declared: `pin: Device`, one per parameter.
+ *
+ * A `vararg` parameter renders as its array type (`xs: IntArray`), and a default value is not
+ * shown: KTrapIC programs and the SDK use no varargs, and the SDK no defaults.
+ */
 internal fun parametersOf(symbol: FirFunctionSymbol<*>): List<String> =
     symbol.valueParameterSymbols.map { "${it.name}: ${render(it.resolvedReturnType)}" }
 

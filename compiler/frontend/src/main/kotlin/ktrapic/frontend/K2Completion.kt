@@ -258,6 +258,51 @@ object K2Completion {
           name !in HARD_KEYWORDS
 
   /**
+   * Whether a member or a top-level declaration is offered, on [receiver] if it follows one: one a
+   * program can use, which is public, not deprecated, not one of the SDK's internals (named with a
+   * leading `_`) nor of [ANY_MEMBERS], not an `iterator` operator, and, if the standard library
+   * declares it, in [SUPPORTED_STDLIB] for [receiver]'s class.
+   */
+  internal fun shown(symbol: FirCallableSymbol<*>, receiver: ConeKotlinType?): Boolean {
+    val name = symbol.name
+    if (name.isSpecial || name.asString().startsWith("_") || name.asString() in ANY_MEMBERS) {
+      return false
+    }
+    // What a `for` loop calls to go over a value, which a program can't call itself.
+    if (name.asString() == "iterator" && symbol.resolvedStatus.isOperator) return false
+    val declared = symbol.fir.unwrapFakeOverrides().symbol.callableId ?: return false
+    if (declared.packageName.isSubpackageOf(KOTLIN)) {
+      val supported = SUPPORTED_STDLIB[receiver?.let(::classOf)] ?: return false
+      val fqName = declared.asSingleFqName().asString()
+      val parameters =
+          (symbol as? FirFunctionSymbol<*>)?.valueParameterSymbols?.joinToString(", ") {
+            render(it.resolvedReturnType)
+          }
+      if (fqName !in supported && "$fqName($parameters)" !in supported) return false
+    }
+    if (symbol.resolvedStatus.visibility != Visibilities.Public) return false
+    return symbol.resolvedAnnotationClassIds.none { it == StandardClassIds.Annotations.Deprecated }
+  }
+
+  /**
+   * [type] as a program could declare it: an integer literal's type (`3`, `-3`, which K2 types as
+   * any integer type the value fits until something picks one) as `Int`, a flexible type as its
+   * lower bound, and a definitely-non-null type (`T & Any`) as `T`. The supported declarations are
+   * keyed by such a type's class.
+   */
+  internal fun declarable(type: ConeKotlinType): ConeKotlinType =
+      when (type) {
+        is ConeIntegerLiteralType -> type.getApproximatedType()
+        is ConeFlexibleType -> declarable(type.lowerBound)
+        is ConeDefinitelyNotNullType -> declarable(type.original)
+        else -> type
+      }
+
+  /** The fully qualified name of [type]'s class, or null for a type that has none. */
+  private fun classOf(type: ConeKotlinType): String? =
+      (type as? ConeClassLikeType)?.lookupTag?.classId?.asFqNameString()
+
+  /**
    * What could be written at [offset] (a `String` index) in [source], compiled against
    * kotlin-stdlib and the jars in [classpath] with [defaultImports]. Returns an empty list when
    * nothing applies, such as inside a comment or a string.
@@ -357,20 +402,6 @@ object K2Completion {
     }
 
     /**
-     * [type] as a program could declare it: an integer literal's type (`3`, `-3`, which K2 types as
-     * any integer type the value fits until something picks one) as `Int`, a flexible type as its
-     * lower bound, and a definitely-non-null type (`T & Any`) as `T`. The supported declarations
-     * are keyed by such a type's class.
-     */
-    private fun declarable(type: ConeKotlinType): ConeKotlinType =
-        when (type) {
-          is ConeIntegerLiteralType -> type.getApproximatedType()
-          is ConeFlexibleType -> declarable(type.lowerBound)
-          is ConeDefinitelyNotNullType -> declarable(type.original)
-          else -> type
-        }
-
-    /**
      * How well an overload fits a call on [type], lowest best: one taking only [type] itself
      * (`Double.plus(Double)` on a `Double`) before one taking anything else, and an extension of
      * [type]'s own class (`Set.plus` on a `Set`) before one of a supertype (`Iterable.plus`).
@@ -423,10 +454,6 @@ object K2Completion {
         }
       }
     }
-
-    /** The fully qualified name of [type]'s class, or null for a type that has none. */
-    private fun classOf(type: ConeKotlinType): String? =
-        (type as? ConeClassLikeType)?.lookupTag?.classId?.asFqNameString()
 
     /**
      * Whether the program sees [pkg]'s [name] unqualified: imported by default or by the program.
@@ -553,35 +580,6 @@ object K2Completion {
      */
     private fun local(symbol: FirCallableSymbol<*>): Completion? =
         if (symbol.name.isSpecial) null else callable(symbol, local = true)
-
-    /**
-     * Whether a member or a top-level declaration is offered, on [receiver] if it follows one: one
-     * a program can use, which is public, not deprecated, not one of the SDK's internals (named
-     * with a leading `_`) nor of [ANY_MEMBERS], not an `iterator` operator, and, if the standard
-     * library declares it, in [SUPPORTED_STDLIB] for [receiver]'s class.
-     */
-    private fun shown(symbol: FirCallableSymbol<*>, receiver: ConeKotlinType?): Boolean {
-      val name = symbol.name
-      if (name.isSpecial || name.asString().startsWith("_") || name.asString() in ANY_MEMBERS) {
-        return false
-      }
-      // What a `for` loop calls to go over a value, which a program can't call itself.
-      if (name.asString() == "iterator" && symbol.resolvedStatus.isOperator) return false
-      val declared = symbol.fir.unwrapFakeOverrides().symbol.callableId ?: return false
-      if (declared.packageName.isSubpackageOf(KOTLIN)) {
-        val supported = SUPPORTED_STDLIB[receiver?.let(::classOf)] ?: return false
-        val fqName = declared.asSingleFqName().asString()
-        val parameters =
-            (symbol as? FirFunctionSymbol<*>)?.valueParameterSymbols?.joinToString(", ") {
-              render(it.resolvedReturnType)
-            }
-        if (fqName !in supported && "$fqName($parameters)" !in supported) return false
-      }
-      if (symbol.resolvedStatus.visibility != Visibilities.Public) return false
-      return symbol.resolvedAnnotationClassIds.none {
-        it == StandardClassIds.Annotations.Deprecated
-      }
-    }
 
     private fun callable(symbol: FirCallableSymbol<*>, local: Boolean): Completion {
       val kind =
