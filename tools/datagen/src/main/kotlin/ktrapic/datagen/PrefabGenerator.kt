@@ -490,6 +490,10 @@ object PrefabGenerator {
     ) {
       val common = common(members.values.toList())
       val text = members.values.all { it.name in textDisplays }
+      // Each member must implement the `Text` it inherits.
+      require(!inheritsText || text) {
+        "family $name extends a family that shows text, but not all of its members show text"
+      }
       line()
       line("/** Devices of one kind that share these logic types, each a nested class. */")
       val supertypes = if (extends.isEmpty()) "" else " : ${extends.joinToString(", ")}"
