@@ -315,16 +315,86 @@ class TailCallTest {
     assertThat(body(code, "spin")).contains("j spin")
   }
 
+  /** [source]'s errors, compiled with [options], which must fail. */
+  private fun failure(source: String, options: CompileOptions): CompileResult.Failure {
+    val result = Compiler.compile("import ktrapic.*\n" + source.trimIndent(), options)
+    assertWithMessage("$options").that(result).isInstanceOf(CompileResult.Failure::class.java)
+    return result as CompileResult.Failure
+  }
+
   @Test
   fun `tail calls have no effect without stack calls`() {
     val source =
         """
-        fun add(a: Double, b: Double): Double = a + b
-        db.Setting = add(1.0, 2.0)
-        db.Ratio = add(3.0, 4.0)
+        fun down(n: Int): Int = if (n == 0) 0 else down(n - 1)
+        db.Setting = down(5).toDouble()
         """
 
-    assertThat(compiled(source, CompileOptions(stackCalls = false, tailCalls = true)).code)
-        .isEqualTo(compiled(source, CompileOptions(stackCalls = false, tailCalls = false)).code)
+    assertThat(failure(source, CompileOptions(stackCalls = false, tailCalls = true)))
+        .isEqualTo(failure(source, CompileOptions(stackCalls = false, tailCalls = false)))
+  }
+
+  @Test
+  fun `tail calls have no effect on a function passing its arguments in registers`() {
+    val source =
+        """
+        @InRegisters fun down(n: Int): Int = if (n == 0) 0 else down(n - 1)
+        db.Setting = down(5).toDouble()
+        """
+
+    assertThat(failure(source, CompileOptions(tailCalls = true)))
+        .isEqualTo(failure(source, CompileOptions(tailCalls = false)))
+  }
+
+  /**
+   * A program with [globals] top-level properties, all live across the calls to a function whose
+   * tail call swaps its arguments, which takes a register more as a loop than as a call.
+   */
+  private fun crowded(globals: Int): String {
+    val names = (1..globals).map { "g$it" }
+    return names.withIndex().joinToString("\n") { (i, g) -> "var $g = d0.Setting + ${i + 1}" } +
+        "\nfun fib(n: Int, a: Int, b: Int): Int = if (n == 0) a else fib(n - 1, b, a + b)\n" +
+        "fun main() {\n" +
+        "  db.Setting = fib(d0.Setting.toInt(), 0, 1).toDouble() + ${names.joinToString(" + ")}\n" +
+        names.joinToString("\n") { "  $it += 1.0" } +
+        "\n}\n" +
+        "while (true) { main(); main(); yield() }\n"
+  }
+
+  private fun CompileResult.Success.tailCallWarnings() = warnings.filter {
+    "tail calls compiled as loops" in it.message
+  }
+
+  @Test
+  fun `a program out of registers with tail calls as loops makes them as calls instead`() {
+    val source = crowded(13)
+    val withLoops = compiled(source)
+    val withCalls = compiled(source, CompileOptions(tailCalls = false))
+
+    assertThat(withLoops.code).isEqualTo(withCalls.code)
+    assertThat(withLoops.tailCallWarnings().map { it.message })
+        .containsExactly(
+            "The program needs 17 registers with tail calls compiled as loops, over the chip's 16; " +
+                "its tail calls are made as ordinary stack calls instead (turn tail calls off to " +
+                "skip this)"
+        )
+    assertThat(withCalls.tailCallWarnings()).isEmpty()
+  }
+
+  @Test
+  fun `a program with registers to spare keeps its tail calls as loops, without a warning`() {
+    val source = crowded(12)
+    val withLoops = compiled(source)
+
+    assertThat(withLoops.code).contains("j fib_loop1")
+    assertThat(withLoops.tailCallWarnings()).isEmpty()
+  }
+
+  @Test
+  fun `a program out of registers either way reports the error with tail calls as loops`() {
+    val errors = failure(crowded(14), CompileOptions()).errors
+
+    assertThat(errors.map { it.message })
+        .containsExactly("The program needs 18 registers at once; the chip has 16 (r0–r15)")
   }
 }
