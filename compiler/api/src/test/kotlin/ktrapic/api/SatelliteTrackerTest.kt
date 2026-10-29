@@ -53,8 +53,9 @@ class SatelliteTrackerTest {
 
   @Test
   fun `the tracker finds the satellite`() {
-    for (compact in listOf(false, true)) {
-      val result = Compiler.compile(source, CompileOptions(compact = compact))
+    for ((compact, stackCalls) in
+        listOf(false, true).flatMap { c -> listOf(c to true, c to false) }) {
+      val result = Compiler.compile(source, CompileOptions(compact, stackCalls))
       assertWithMessage("compile").that(result).isInstanceOf(CompileResult.Success::class.java)
       result as CompileResult.Success
       if (compact) assertThat(result.lines).isAtMost(Ic10Limits.MAX_LINES)
@@ -79,7 +80,9 @@ class SatelliteTrackerTest {
         dish.update()
       }
 
-      assertWithMessage("halted (compact=$compact)").that(emulator.halted).isTrue()
+      assertWithMessage("halted (compact=$compact, stackCalls=$stackCalls)")
+          .that(emulator.halted)
+          .isTrue()
       assertThat(dish.strength()).isAtLeast(97.0)
       assertThat(console["Setting"]).isEqualTo(Hashes.str("Done!"))
       assertThat(console["Mode"]).isEqualTo(10.0)

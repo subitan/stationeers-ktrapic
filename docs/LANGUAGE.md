@@ -99,19 +99,47 @@ supported, including early `return`, expression bodies, and reading and writing 
 properties.
 
 - A function called once, or marked `inline`, is compiled into the place it is called.
-- Any other function gets one body, called with `jal`. Its arguments and result travel in
-  registers set aside for it, and it saves `ra` on the stack only if it calls another function.
+- Any other function gets one body, called with `jal`, and passes its arguments and result on the
+  chip's stack: the caller pushes the arguments, the function pops them and pushes its result,
+  and the caller pops that. The caller also pushes the registers it still needs after the call,
+  and pops them back after it, so the function's registers are its own and can be the caller's
+  too. The function saves `ra` on the stack only if it calls another function.
+- A function marked `@InRegisters` instead takes its arguments and gives its result in registers
+  set aside for it, with no pushes or pops: smaller calls, but every value its callers need after
+  the call keeps its register throughout the function. Compiling with stack calls turned off
+  (`CompileOptions(stackCalls = false)`, the playground's and the plugin's Stack calls option, or
+  the command line's `--register-calls`) does this for every function.
+- Top-level properties a function called on the stack reads or writes, itself or through the
+  functions it calls, keep their registers for the whole program rather than being saved around
+  calls.
+- A function may call itself, directly or through others, when every function in the cycle is
+  called on the stack: none is `inline` or `@InRegisters`, and stack calls are on. Such a function
+  is never inlined, even if the program calls it only once. The stack holds 512 values, and a
+  recursion deep enough to fill it stops the chip with a stack overflow.
 - Only an inlined function can take a `Device`, a view, a `Substance` or a static set parameter.
 - A `String` parameter takes a constant string, or another `String` parameter, as its argument.
   In an inlined function it stands for that text wherever a constant string can go: `Text = msg`,
   `str(msg)`, `hash(msg)`, `msg.hash()`, `named(msg)`, or another call's `String` argument. A
-  function called with `jal` gets the text packed by `STR` in a register, so there it can only be
-  written with `Text = msg`, read as `str(msg)`, or passed on; `hash` and `named` need the function
-  marked `inline`. Each call to such a function checks its text against `STR`'s limits. A `val`
-  can hold a `String` parameter and is used as the parameter is; a `var` can't, and a `String`
-  can't be compared, so it can't be a `when` subject.
-- Not supported: recursion, default arguments, `vararg`, and extension, generic and local
-  functions.
+  function called with `jal` gets the text packed by `STR`, on the stack or in a register, so
+  there it can only be written with `Text = msg`, read as `str(msg)`, or passed on; `hash` and
+  `named` need the function marked `inline`. Each call to such a function checks its text against
+  `STR`'s limits. A `val` can hold a `String` parameter and is used as the parameter is; a `var`
+  can't, and a `String` can't be compared, so it can't be a `when` subject.
+- Not supported: default arguments, `vararg`, and extension, generic and local functions.
+
+```kotlin
+fun fact(n: Int): Int = if (n <= 1) 1 else n * fact(n - 1)
+
+fun isEven(n: Int): Boolean = if (n == 0) true else isOdd(n - 1)
+fun isOdd(n: Int): Boolean = if (n == 0) false else isEven(n - 1)
+
+@InRegisters
+fun scale(x: Double, by: Double): Double = x * by
+
+db.Setting = fact(5).toDouble()
+db.On = isEven(d0.Setting.toInt())
+db.Ratio = scale(d0.Ratio, 2.0) + scale(d1.Ratio, 3.0)
+```
 
 A call made before a property the function reads has been declared is an error when the call is
 inlined, reported where the function reads the property. When it is called with `jal`, it
@@ -443,7 +471,11 @@ A chip holds at most 128 lines of at most 90 characters, and 4096 characters in 
 compiler measures programs as the game's code editor does: every line counts, and each line
 break counts as two characters, so a 128-line program has 3842 characters for its text.
 Compact output (resolving labels to line numbers and dropping them) saves lines. The compiler
-reports these counts but does not reject a program over the limits.
+reports these counts but does not reject a program over the limits. When a program over 128
+lines calls functions with their arguments on the stack, it warns that passing them in registers
+would save lines, naming what to change: turning stack calls off, or marking functions
+`@InRegisters`. Functions in a cycle of calls need the stack, so the warning leaves them out, and
+says the program must be shortened if they are all it calls that way.
 
 Values live in the registers `r0` to `r15`; the compiler reuses a register once its value is no
 longer needed. A program that needs more than 16 values at once is rejected, with an error that
@@ -465,5 +497,5 @@ nullable types, exceptions, casts and type checks, and coroutines.
 [`test/cases/satellite_tracker.ic10.kts`](../test/cases/satellite_tracker.ic10.kts) is a port of
 a chip from the game: it points a dish at a satellite, scanning the horizon until it hears a
 signal and then nudging the dish while the signal improves. It uses functions (some inlined, some
-called with `jal`), device properties, `str` for status text, and `sleep`, and compiles to 87
-lines in compact form.
+called with `jal`), device properties, `str` for status text, and `sleep`, and compiles to 99
+lines in compact form, or 87 with stack calls turned off.

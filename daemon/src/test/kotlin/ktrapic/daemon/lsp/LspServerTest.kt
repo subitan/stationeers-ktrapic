@@ -171,6 +171,9 @@ class LspServerTest {
 
     val labelled = compile("file:///program.kt")
     val compact = compile("file:///program.kt", """{"compact": true}""")
+    val calls = "import ktrapic.*\nfun f(x: Double) = x + 1.0\ndb.Setting = f(1.0) + f(2.0)\n"
+    client.open("file:///calls.kt", calls)
+    val registers = compile("file:///calls.kt", """{"stack_calls": false}""")
     val failed = compile("file:///broken.kt")
     // Nested deeply enough to overflow the compiler's stack, which is answered as an error.
     val overflowing =
@@ -182,6 +185,9 @@ class LspServerTest {
     assertThat(labelled["result"].asJsonObject["code"].asString).contains(":")
     assertThat(compact["result"]).isEqualTo(lineProtocolCompile(program, """{"compact": true}"""))
     assertThat(compact["result"].asJsonObject["code"].asString).doesNotContain(":")
+    assertThat(registers["result"])
+        .isEqualTo(lineProtocolCompile(calls, """{"stack_calls": false}"""))
+    assertThat(registers["result"].asJsonObject["code"].asString).doesNotContain("push")
     assertThat(failed["result"]).isEqualTo(lineProtocolCompile(broken))
     assertThat(failed["result"].asJsonObject["error"].asJsonObject["line"].asInt).isEqualTo(2)
     // The stack traces differ, as the two compiles ran on different threads.

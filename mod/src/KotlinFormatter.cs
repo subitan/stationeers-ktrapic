@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using BepInEx.Configuration;
 using Cysharp.Threading.Tasks;
 using ImGuiEditor.LSP;
 using ImGuiNET;
@@ -159,8 +160,8 @@ namespace KTrapIC
         {
             public readonly int Version;
 
-            /// <summary>Null for IC10 read back from a chip, compiled with whichever setting it was.</summary>
-            public readonly bool? Compact;
+            /// <summary>Null for IC10 read back from a chip, compiled with whichever settings it was.</summary>
+            public readonly CompileOptions? Options;
 
             public readonly CompileResponse Response;
 
@@ -170,10 +171,10 @@ namespace KTrapIC
             /// </summary>
             public readonly string Unavailable;
 
-            public Compiled(int version, bool? compact, CompileResponse response, string unavailable = null)
+            public Compiled(int version, CompileOptions? options, CompileResponse response, string unavailable = null)
             {
                 Version = version;
-                Compact = compact;
+                Options = options;
                 Response = response;
                 Unavailable = unavailable;
             }
@@ -726,12 +727,12 @@ namespace KTrapIC
         public override string Compile()
         {
             string source = RawText;
-            bool compact = Plugin.Compact.Value;
+            var options = Plugin.CompileOptions;
             var compiled = _compiled;
             var response =
-                compiled != null && compiled.Version == _version && (compiled.Compact ?? compact) == compact
+                compiled != null && compiled.Version == _version && (compiled.Options ?? options) == options
                     ? compiled.Response
-                    : CompileNow(compact);
+                    : CompileNow(options);
             string code;
             if (response == null)
                 code = ErrorPrefix + "the compiler is still starting; export again in a moment.";
@@ -747,13 +748,13 @@ namespace KTrapIC
         /// daemon isn't running and initialized with the document open, as waiting for it to start
         /// would freeze the game.
         /// </summary>
-        private CompileResponse CompileNow(bool compact)
+        private CompileResponse CompileNow(CompileOptions options)
         {
             SubmitChanges();
             var client = Daemon.Client;
             if (_document == null || client == null || _document.Connection != client.Connection || _syncedVersion != _version)
                 return null;
-            return _document.CompileNow(compact, ExportTimeout);
+            return _document.CompileNow(options, ExportTimeout);
         }
 
         /// <summary>
@@ -778,18 +779,25 @@ namespace KTrapIC
 
         public override void DrawButtons()
         {
-            bool compact = Plugin.Compact.Value;
-            if (ImGuiUtils.Checkbox("Compact", ref compact, Plugin.Compact.Description.Description))
-            {
-                Plugin.Compact.Value = compact;
-                int version = Interlocked.Increment(ref _version);
-                // The text didn't change, so the daemon still has it if it had it before.
-                if (_syncedVersion == version - 1)
-                    _syncedVersion = version;
-                CompileSoon().Forget();
-            }
+            OptionCheckbox("Compact", Plugin.Compact);
+            ImGui.SameLine();
+            OptionCheckbox("Stack calls", Plugin.StackCalls);
             ImGui.SameLine();
             ImGui.TextUnformatted(StatusText());
+        }
+
+        /// <summary>A checkbox for a compile option's <paramref name="setting"/>, which compiles again when changed.</summary>
+        private void OptionCheckbox(string label, ConfigEntry<bool> setting)
+        {
+            bool value = setting.Value;
+            if (!ImGuiUtils.Checkbox(label, ref value, setting.Description.Description))
+                return;
+            setting.Value = value;
+            int version = Interlocked.Increment(ref _version);
+            // The text didn't change, so the daemon still has it if it had it before.
+            if (_syncedVersion == version - 1)
+                _syncedVersion = version;
+            CompileSoon().Forget();
         }
 
         private string StatusText()
@@ -799,7 +807,7 @@ namespace KTrapIC
             var compiled = _compiled;
             var response = compiled?.Response;
             // IC10 read back from a chip doesn't say how many registers it uses.
-            if (response == null || compiled.Compact == null)
+            if (response == null || compiled.Options == null)
                 return Daemon.StartError
                     ?? (compiled?.Version == _version ? compiled.Unavailable : null)
                     ?? "Compiling...";
@@ -823,7 +831,7 @@ namespace KTrapIC
             if (Editor == null || Editor.IsReadOnly || _closed)
                 return;
             int version = _version;
-            bool compact = Plugin.Compact.Value;
+            var options = Plugin.CompileOptions;
             // Waited out on the thread pool, as UniTask's own delays count game time, which can
             // stand still while the editor is open.
             await UniTask.SwitchToThreadPool();
@@ -839,7 +847,7 @@ namespace KTrapIC
                 }
                 catch (Exception e)
                 {
-                    await Show(version, compact, CompileResponse.Failed($"The KTrapIC compiler couldn't start: {e.Message}"));
+                    await Show(version, options, CompileResponse.Failed($"The KTrapIC compiler couldn't start: {e.Message}"));
                     return;
                 }
                 // Started by another editor, and ready before this one had a document: open it now.
@@ -854,11 +862,11 @@ namespace KTrapIC
             var document = _document;
             if (document == null || document.Connection != client.Connection || _syncedVersion != version)
                 return;
-            await Show(version, compact, await document.Compile(compact));
+            await Show(version, options, await document.Compile(options));
         }
 
         /// <summary>Records <paramref name="response"/>, a compile of <paramref name="version"/>, and shows it if that's still current.</summary>
-        private async UniTask Show(int version, bool compact, CompileResponse response)
+        private async UniTask Show(int version, CompileOptions options, CompileResponse response)
         {
             // Recorded before returning to the main thread, which Compile() may be blocking.
             if (version != _version)
@@ -867,12 +875,12 @@ namespace KTrapIC
             // program, so an unchanged chip still exports as it is while the compiler is down; the
             // toolbar says why it's down.
             var kept = _compiled;
-            if (response.Unavailable && kept != null && kept.Version == version && kept.Compact == null)
+            if (response.Unavailable && kept != null && kept.Version == version && kept.Options == null)
             {
                 _compiled = new Compiled(kept.Version, null, kept.Response, response.error?.description);
                 return;
             }
-            _compiled = new Compiled(version, compact, response);
+            _compiled = new Compiled(version, options, response);
             await UniTask.SwitchToMainThread();
             if (version == _version)
             {

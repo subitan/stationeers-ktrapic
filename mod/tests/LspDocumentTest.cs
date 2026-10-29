@@ -89,7 +89,7 @@ public class LspDocumentTest : IDisposable
         var daemon = Start();
         var document = Open(daemon, "var i = 0\nwhile (i < 3) i++\ndb.Setting = i.toDouble()\n", out _);
 
-        var response = await TestDaemon.Within(document.Compile(false));
+        var response = await TestDaemon.Within(document.Compile(new CompileOptions(false)));
 
         daemon.AssertCompiled(response);
         Assert.Contains("s db Setting r0", response.code);
@@ -117,7 +117,7 @@ public class LspDocumentTest : IDisposable
             int end = text.Length - 1;
             Assert.True(document.Sync(i + 1, () => throw new InvalidOperationException("It's open"), Replace(0, start, end, number)));
             text = text.Substring(0, start) + number + "\n";
-            compiles.Add((i, document.Compile(false)));
+            compiles.Add((i, document.Compile(new CompileOptions(false))));
         }
 
         foreach (var (i, compile) in compiles)
@@ -134,13 +134,28 @@ public class LspDocumentTest : IDisposable
         var daemon = Start();
         var document = Open(daemon, "var i = 0\nwhile (i < 3) i++\n", out _);
 
-        var compact = await TestDaemon.Within(document.Compile(true));
-        var labelled = await TestDaemon.Within(document.Compile(false));
+        var compact = await TestDaemon.Within(document.Compile(new CompileOptions(true)));
+        var labelled = await TestDaemon.Within(document.Compile(new CompileOptions(false)));
 
         daemon.AssertCompiled(compact);
         daemon.AssertCompiled(labelled);
         Assert.DoesNotContain(":", compact.code);
         Assert.Contains(":", labelled.code);
+    }
+
+    [Fact]
+    public async Task PassesStackCalls()
+    {
+        var daemon = Start();
+        var document = Open(daemon, "fun f(x: Double) = x + 1.0\ndb.Setting = f(1.0) + f(2.0)\n", out _);
+
+        var stack = await TestDaemon.Within(document.Compile(new CompileOptions(false)));
+        var registers = await TestDaemon.Within(document.Compile(new CompileOptions(false, stackCalls: false)));
+
+        daemon.AssertCompiled(stack);
+        daemon.AssertCompiled(registers);
+        Assert.Contains("push 1\njal f", stack.code);
+        Assert.DoesNotContain("push", registers.code);
     }
 
     [Fact]
@@ -183,7 +198,7 @@ public class LspDocumentTest : IDisposable
         text = "db.Setting = 1.0\n";
         first.Connection.Dispose();
 
-        var stopped = await TestDaemon.Within(document.Compile(false));
+        var stopped = await TestDaemon.Within(document.Compile(new CompileOptions(false)));
         Assert.True(stopped.Unavailable);
         Assert.Equal(LspConnection.StoppedMessage, stopped.error.description);
         Assert.False(document.Sync(3, () => text, new JArray()));
@@ -202,7 +217,7 @@ public class LspDocumentTest : IDisposable
             reopened = second.Next(diagnostics);
         while ((int?)reopened["version"] != 3);
         Assert.Empty(reopened["diagnostics"]);
-        var response = await TestDaemon.Within(document.Compile(false));
+        var response = await TestDaemon.Within(document.Compile(new CompileOptions(false)));
         second.AssertCompiled(response);
         Assert.Equal("s db Setting 1", response.code);
     }
@@ -223,10 +238,10 @@ public class LspDocumentTest : IDisposable
         // Text inserted on the line after the last lands on a line of its own if the daemon kept
         // a line break the editor no longer has, and at the end of the last line if not.
         Assert.True(document.Sync(3, null, Replace(lines.Count, 0, 0, " + 4.0")));
-        var edited = await TestDaemon.Within(document.Compile(false));
+        var edited = await TestDaemon.Within(document.Compile(new CompileOptions(false)));
 
         var exact = Open(daemon, string.Join("\n", lines) + " + 4.0", out _);
-        var expected = await TestDaemon.Within(exact.Compile(false));
+        var expected = await TestDaemon.Within(exact.Compile(new CompileOptions(false)));
         daemon.AssertCompiled(expected);
         daemon.AssertCompiled(edited);
         Assert.Equal(expected.code, edited.code);
@@ -240,7 +255,7 @@ public class LspDocumentTest : IDisposable
 
         Assert.True(document.Sync(2, null, new JArray(LspDocument.LineRemoval(0, 1, _ => 17))));
         Assert.True(document.Sync(3, null, Replace(0, 0, 0, "db.Setting = 5.0")));
-        var response = await TestDaemon.Within(document.Compile(false));
+        var response = await TestDaemon.Within(document.Compile(new CompileOptions(false)));
 
         daemon.AssertCompiled(response);
         Assert.Equal("s db Setting 5", response.code);
@@ -253,7 +268,7 @@ public class LspDocumentTest : IDisposable
         var document = Open(daemon, "db.Setting = 1.0\n", out _);
         Assert.True(document.Sync(2, null, Replace(0, 13, 16, "2.0")));
 
-        var response = document.CompileNow(false, TestDaemon.Timeout);
+        var response = document.CompileNow(new CompileOptions(false), TestDaemon.Timeout);
 
         daemon.AssertCompiled(response);
         Assert.Equal("s db Setting 2", response.code);
@@ -336,7 +351,7 @@ public class LspDocumentTest : IDisposable
             Assert.False(document.Sync(1, () => "db.Setting = 1.0\n", new JArray()));
             Assert.False(document.IsOpen);
             var watch = Stopwatch.StartNew();
-            Assert.Null(document.CompileNow(false, TestDaemon.Timeout));
+            Assert.Null(document.CompileNow(new CompileOptions(false), TestDaemon.Timeout));
             Assert.True(watch.Elapsed < TimeSpan.FromSeconds(1), $"CompileNow waited {watch.Elapsed}");
             Assert.True(daemon.Connection.IsRunning, daemon.Log());
             Assert.False(daemon.Connection.IsInitialized);
@@ -379,7 +394,7 @@ public class LspDocumentTest : IDisposable
         var document = Open(daemon, TestDaemon.SlowProgram(), out _);
 
         var watch = Stopwatch.StartNew();
-        var response = document.CompileNow(false, TimeSpan.FromMilliseconds(500));
+        var response = document.CompileNow(new CompileOptions(false), TimeSpan.FromMilliseconds(500));
 
         Assert.True(watch.Elapsed < TimeSpan.FromSeconds(5), $"CompileNow waited {watch.Elapsed}");
         Assert.True(response.Unavailable);
@@ -391,7 +406,7 @@ public class LspDocumentTest : IDisposable
     {
         var daemon = Start();
         var document = Open(daemon, TestDaemon.SlowProgram(), out _);
-        var compile = document.Compile(false);
+        var compile = document.Compile(new CompileOptions(false));
         await Task.Delay(500);
         Assert.False(compile.IsCompleted, "The compile finished before Dispose; it should take longer.");
 
@@ -425,9 +440,9 @@ public class LspDocumentTest : IDisposable
         Assert.False(connection.IsInitialized);
         var request = connection.Request("ktrapic/compile", new JObject());
         await Assert.ThrowsAsync<LspConnection.StoppedException>(() => TestDaemon.Within(request));
-        var response = await TestDaemon.Within(document.Compile(false));
+        var response = await TestDaemon.Within(document.Compile(new CompileOptions(false)));
         Assert.True(response.Unavailable);
-        Assert.Null(document.CompileNow(false, TestDaemon.Timeout));
+        Assert.Null(document.CompileNow(new CompileOptions(false), TestDaemon.Timeout));
     }
 
     [Fact]
@@ -440,7 +455,7 @@ public class LspDocumentTest : IDisposable
         _daemons.Add(daemon);
         var document = Open(daemon, TestDaemon.SlowProgram(), out _);
 
-        var response = await TestDaemon.Within(document.Compile(false));
+        var response = await TestDaemon.Within(document.Compile(new CompileOptions(false)));
 
         Assert.True(response.Unavailable, daemon.Log());
         await TestDaemon.Within(daemon.Connection.Stopped, "The connection");

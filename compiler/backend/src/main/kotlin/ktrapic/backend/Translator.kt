@@ -71,6 +71,7 @@ import org.jetbrains.kotlin.ir.types.isInt
 import org.jetbrains.kotlin.ir.types.isNothing
 import org.jetbrains.kotlin.ir.types.isString
 import org.jetbrains.kotlin.ir.types.isUnit
+import org.jetbrains.kotlin.ir.util.hasAnnotation
 import org.jetbrains.kotlin.ir.util.kotlinFqName
 import org.jetbrains.kotlin.ir.util.parentAsClass
 import org.jetbrains.kotlin.ir.util.parentClassOrNull
@@ -177,8 +178,13 @@ internal data class RatioEntry(val view: View, val key: Key) : Value
 /**
  * Translates the IR of a wrapped script-style program into [TirLine]s: the `Program` object's
  * property initializers and `init` blocks, in source order. [symbols] finds the SDK's declarations.
+ * With [stackCalls], a function called with `jal` takes its arguments and gives its result on the
+ * stack unless it is marked `@InRegisters`; without, every such function passes them in registers.
  */
-internal class Translator(private val symbols: DeclarationFinder) {
+internal class Translator(
+    private val symbols: DeclarationFinder,
+    private val stackCalls: Boolean = true,
+) {
   val lines = mutableListOf<TirLine>()
   private var vregs = 0
   private val labelCounts = mutableMapOf<String, Int>()
@@ -192,6 +198,22 @@ internal class Translator(private val symbols: DeclarationFinder) {
   private val exits = mutableMapOf<IrSimpleFunction, FunctionExit>()
   /** Functions that have a body of their own, called with `jal`, in the order first called. */
   private val called = linkedMapOf<IrSimpleFunction, CalledFunction>()
+  /** Where in [lines] the functions called on the stack have their `j ra`. */
+  private val returns = mutableListOf<Int>()
+
+  /** The functions called on the stack, by their labels. */
+  val stackFunctions: Map<String, StackCalled>
+    get() =
+        called
+            .filterValues { it.stack }
+            .entries
+            .associate { (function, target) ->
+              target.label to StackCalled(function.name.asString(), function in graph.recursive)
+            }
+
+  /** Whether the program declares a cycle of calls, whether or not anything calls into it. */
+  val hasCycle: Boolean
+    get() = graph.cycles.isNotEmpty()
 
   /**
    * What an untyped device's views reach: every logic type the game has, read and written, as its
@@ -234,8 +256,17 @@ internal class Translator(private val symbols: DeclarationFinder) {
 
   private class FunctionExit(val label: String, val result: VReg?)
 
-  /** Where a called function's arguments and result travel: registers of its own. */
-  private class CalledFunction(val label: String, val parameters: List<VReg>, val result: VReg?)
+  /**
+   * A function called with `jal`: its label, and the registers its parameters and result are in
+   * within it. With [stack], its arguments and result travel on the stack; without, in those
+   * registers.
+   */
+  private class CalledFunction(
+      val label: String,
+      val parameters: List<VReg>,
+      val result: VReg?,
+      val stack: Boolean,
+  )
 
   fun translate(module: IrModuleFragment) {
     val program =
@@ -244,7 +275,7 @@ internal class Translator(private val symbols: DeclarationFinder) {
             .filterIsInstance<IrClass>()
             .singleOrNull { it.name.asString() == PROGRAM_OBJECT } ?: return
     graph = CallGraph(program)
-    graph.recursiveCall()?.let { fail(it, "Recursive calls are not supported") }
+    checkRecursion()
     collectAssigned(program)
     takenLabels += END_LABEL
     for (function in graph.functions) {
@@ -281,7 +312,88 @@ internal class Translator(private val symbols: DeclarationFinder) {
       }
       label(END_LABEL)
     }
+    markGlobals()
   }
+
+  /**
+   * Gives each call on the stack, and each such function's `j ra`, the registers of the top-level
+   * properties that any function called on the stack reads or writes, itself or through the
+   * functions it calls (see [TirInstruction.globals]); they are known once every property has its
+   * register. One set for all of them keeps a global in its register across every such call, where
+   * a set per function would have the caller push and pop the globals the function doesn't touch,
+   * two lines for each.
+   */
+  private fun markGlobals() {
+    val stacked = called.filterValues { it.stack }.keys
+    val globals =
+        graph
+            .reachable(stacked)
+            .flatMap { propertiesUsed(it) }
+            .mapNotNullTo(linkedSetOf()) { (properties[it] as? Reg)?.reg }
+    if (globals.isEmpty()) return
+    for ((index, line) in lines.withIndex()) {
+      if (line is TirInstruction && line.op == TirInstruction.CALL) {
+        lines[index] = line.copy(globals = globals)
+      }
+    }
+    for (index in returns) lines[index] = (lines[index] as TirInstruction).copy(globals = globals)
+  }
+
+  /** The top-level properties [function]'s body reads or writes. */
+  private fun propertiesUsed(function: IrSimpleFunction): Set<IrPropertySymbol> {
+    val used = mutableSetOf<IrPropertySymbol>()
+    function.body?.acceptVoid(
+        object : IrVisitorVoid() {
+          override fun visitElement(element: IrElement) {
+            when (element) {
+              is IrGetField -> element.symbol.owner.correspondingPropertySymbol?.let { used += it }
+              is IrSetField -> element.symbol.owner.correspondingPropertySymbol?.let { used += it }
+              is IrCall -> element.symbol.owner.correspondingPropertySymbol?.let { used += it }
+            }
+            element.acceptChildrenVoid(this)
+          }
+        }
+    )
+    return used
+  }
+
+  /**
+   * Fails on a cycle of calls the program can't make: one through an `inline` function, which would
+   * be inlined into itself, or through a function passing its arguments in registers, which a call
+   * to it again would overwrite. Functions called on the stack may call themselves.
+   */
+  private fun checkRecursion() {
+    for (group in graph.cycles) {
+      group
+          .firstOrNull { it.isInline }
+          ?.let {
+            fail(
+                it,
+                "${it.name} is in a cycle of calls, so it can't be inline: ${cycleText(it)}",
+            )
+          }
+      val inRegisters =
+          if (stackCalls) group.firstOrNull { it.hasAnnotation(IN_REGISTERS) } else group.first()
+      if (inRegisters != null) {
+        val why =
+            if (stackCalls) "${inRegisters.name} is marked @InRegisters"
+            else "stack calls are turned off"
+        fail(
+            graph.cycleThrough(inRegisters).last(),
+            "Recursive calls through a function passing arguments in registers are not " +
+                "supported: ${cycleText(inRegisters)} ($why)",
+        )
+      }
+    }
+  }
+
+  /** A cycle of calls from [function] back to it, as `a -> b -> a`. */
+  private fun cycleText(function: IrSimpleFunction): String =
+      (listOf(function) + graph.cycleThrough(function).map { it.symbol.owner }).joinToString(
+          " -> "
+      ) {
+        it.name.asString()
+      }
 
   /** The variables and properties the program assigns anywhere after declaring them. */
   private val assigned = mutableSetOf<IrSymbol>()
@@ -335,7 +447,10 @@ internal class Translator(private val symbols: DeclarationFinder) {
             aliases = parameters.map { it.value.type.isViewOrKey() },
             texts = parameters.map { it.value.type.isString() },
         )
-    return if (function.isInline || graph.callCount(function) == 1) {
+    // A function that calls itself is never inlined, even if the program calls it once.
+    return if (
+        function.isInline || (graph.callCount(function) == 1 && function !in graph.recursive)
+    ) {
       inlineCall(function, parameters.map { it.value }, values)
     } else {
       jalCall(call, function, parameters.map { it.value }, arguments, values)
@@ -402,6 +517,14 @@ internal class Translator(private val symbols: DeclarationFinder) {
       values: List<Value>,
   ): Value {
     if (parameters.any { it.type.isDevice() || it.type.isViewOrKey() }) {
+      if (function in graph.recursive) {
+        fail(
+            call,
+            "${function.name} takes a device, view, substance or set and is in a cycle of calls " +
+                "(${cycleText(function)}): a function taking one must be inlined, which a " +
+                "function in a cycle of calls can't be",
+        )
+      }
       fail(
           call,
           "A function with a device, view, substance or set parameter must be inline, or called only once",
@@ -413,27 +536,42 @@ internal class Translator(private val symbols: DeclarationFinder) {
               functionLabels.getValue(function),
               parameters.map { newVReg(it.name.asString()) },
               resultRegister(function),
+              stack = stackCalls && !function.hasAnnotation(IN_REGISTERS),
           )
         }
-    for ((index, value) in values.withIndex()) {
-      // A String arrives packed by STR, so a constant one is checked against STR's limits here.
-      val passed =
-          when (value) {
-            is Text -> packed(arguments[index], value.text, "a String argument")
-            is PackedText -> Reg(value.reg)
-            else -> value
-          }
-      move(target.parameters[index], passed)
+    // A String arrives packed by STR, so a constant one is checked against STR's limits here.
+    val passed = values.mapIndexed { index, value ->
+      when (value) {
+        is Text -> packed(arguments[index], value.text, "a String argument")
+        is PackedText -> Reg(value.reg)
+        else -> value
+      }
     }
+    if (target.stack) {
+      // The arguments are all evaluated before the call pushes any (see Lowering for the rest).
+      val result = resultRegister(function)
+      lines +=
+          TirInstruction(
+              TirInstruction.CALL,
+              passed.map { operand(it) } + Fixed(LabelRef(target.label)),
+              result = result,
+          )
+      return result?.let { Reg(it) } ?: NoValue
+    }
+    for ((index, value) in passed.withIndex()) move(target.parameters[index], value)
     emit("jal", Fixed(LabelRef(target.label)))
     // A copy, as the next call to the function overwrites its result register.
     return target.result?.let { snapshot(Reg(it)) } ?: NoValue
   }
 
-  /** A called function: its label, its body, and `j ra`, saving `ra` if it calls others. */
+  /**
+   * A called function: its label, its body, and `j ra`, saving `ra` if it calls others. A function
+   * called on the stack first pops its arguments, last first, and pushes its result before `j ra`.
+   */
   private fun functionBody(function: IrSimpleFunction) {
     val target = called.getValue(function)
     label(target.label)
+    if (target.stack) target.parameters.asReversed().forEach { emit("pop", it) }
     val start = lines.size
     function.parameters
         .filter { it.kind == IrParameterKind.Regular }
@@ -444,12 +582,22 @@ internal class Translator(private val symbols: DeclarationFinder) {
               else Reg(register)
         }
     body(function, FunctionExit(newLabel("return"), target.result))
-    val callsOthers = lines.subList(start, lines.size).any { (it as? TirInstruction)?.op == "jal" }
+    val callsOthers =
+        lines.subList(start, lines.size).any {
+          (it as? TirInstruction)?.op in setOf("jal", TirInstruction.CALL)
+        }
     if (callsOthers) {
       lines.add(start, TirInstruction("push", Fixed(Register.RA)))
       emit("pop", Fixed(Register.RA))
     }
-    lines += TirInstruction("j", listOf(Fixed(Register.RA)), returnFrom = target.label)
+    if (target.stack) {
+      target.result?.let { emit("push", it) }
+      // Later functions' bodies only follow this one, so the index stays.
+      returns += lines.size
+      emit("j", Fixed(Register.RA))
+    } else {
+      lines += TirInstruction("j", listOf(Fixed(Register.RA)), returnFrom = target.label)
+    }
   }
 
   private fun body(function: IrSimpleFunction, exit: FunctionExit) {
@@ -2557,6 +2705,8 @@ internal class Translator(private val symbols: DeclarationFinder) {
     val INT_RANGE = Int.MIN_VALUE.toDouble()..Int.MAX_VALUE.toDouble()
     val NEGATIVE_ZERO_BITS = (-0.0).toRawBits()
     const val END_LABEL = "end"
+    /** The SDK annotation that keeps a function's arguments and result in registers. */
+    val IN_REGISTERS = FqName("ktrapic.InRegisters")
     /**
      * Register and pin names, which a function label never takes. Nor does it take a constant's
      * name in any case, which [Constants.lookup] checks.

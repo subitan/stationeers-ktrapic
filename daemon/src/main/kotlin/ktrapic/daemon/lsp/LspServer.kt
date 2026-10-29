@@ -36,9 +36,10 @@ internal class ResponseError(val code: Int, message: String) : Exception(message
  *
  * It keeps the text of the documents the client opens (`textDocument/didOpen`, `didChange` with
  * full or incremental changes, `didClose`) and compiles one on the custom request
- * `ktrapic/compile`, whose params are `{"textDocument": {"uri"}, "options": {"compact"}}` and whose
- * result is the JSON a line-protocol compile request answers with ([Daemon.compile]). Besides those
- * it implements the lifecycle: `initialize`, `initialized`, `shutdown` and `exit`.
+ * `ktrapic/compile`, whose params are `{"textDocument": {"uri"}, "options": {"compact",
+ * "stack_calls"}}` and whose result is the JSON a line-protocol compile request answers with
+ * ([Daemon.compile]). Besides those it implements the lifecycle: `initialize`, `initialized`,
+ * `shutdown` and `exit`.
  *
  * **Diagnostics.** [debounceMillis] after a `didOpen` or `didChange`, the server compiles the
  * document and sends `textDocument/publishDiagnostics` with its URI and version: each error of a

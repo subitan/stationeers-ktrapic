@@ -7,6 +7,8 @@ import org.junit.jupiter.api.Test
 
 /**
  * Compiles each `test/cases/X.ic10.kts` and compares the result with `X.ic10` and `X.compact.ic10`.
+ * A case whose code calls functions with `jal` is also compiled with `stackCalls = false`, to
+ * `X.registers.ic10`, so the convention passing arguments in registers stays covered.
  *
  * To write the expected files from the current compiler, run with the workspace's `test/cases`
  * directory in KTRAPIC_UPDATE_GOLDENS: `bazel test //compiler/api:GoldenTest
@@ -23,13 +25,16 @@ class GoldenTest {
     assertThat(sources).isNotEmpty()
     for (source in sources) {
       val name = source.name.removeSuffix(".ic10.kts")
-      for ((suffix, compact) in listOf(".ic10" to false, ".compact.ic10" to true)) {
-        val result = Compiler.compile(source.readText(), CompileOptions(compact = compact))
-        val actual =
-            when (result) {
-              is CompileResult.Success -> result.code + "\n"
-              is CompileResult.Failure -> result.errors.joinToString("\n") { "error: $it" } + "\n"
-            }
+      val variants =
+          listOf(".ic10" to CompileOptions(), ".compact.ic10" to CompileOptions(compact = true))
+      val outputs = variants.map { (suffix, options) -> suffix to compile(source, options) }
+      val registers =
+          if (outputs[0].second.lines().any { it.startsWith("jal ") }) {
+            listOf(".registers.ic10" to compile(source, CompileOptions(stackCalls = false)))
+          } else {
+            emptyList()
+          }
+      for ((suffix, actual) in outputs + registers) {
         if (update != null) {
           update.resolve(name + suffix).writeText(actual)
           continue
@@ -40,6 +45,17 @@ class GoldenTest {
             .that(actual)
             .isEqualTo(expected.readText().replace("\r\n", "\n"))
       }
+      if (update == null && registers.isEmpty()) {
+        assertWithMessage("%s.registers.ic10 is stale: the case calls nothing with jal", name)
+            .that(cases.resolve("$name.registers.ic10").exists())
+            .isFalse()
+      }
     }
   }
+
+  private fun compile(source: File, options: CompileOptions): String =
+      when (val result = Compiler.compile(source.readText(), options)) {
+        is CompileResult.Success -> result.code + "\n"
+        is CompileResult.Failure -> result.errors.joinToString("\n") { "error: $it" } + "\n"
+      }
 }
