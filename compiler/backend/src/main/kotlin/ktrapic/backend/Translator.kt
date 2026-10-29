@@ -124,10 +124,11 @@ internal data object NoValue : Value
 internal data class Text(val text: String) : Value
 
 /**
- * A `String` parameter of a function called with `jal`: its text arrives packed by `STR` in [reg],
- * so it can only be stored with `Text` or used as `str(...)`, or passed on as a `String` argument.
+ * A `String` parameter of [function], a function called with `jal`: its text arrives packed by
+ * `STR` in [reg], so it can only be stored with `Text` or used as `str(...)`, or passed on as a
+ * `String` argument.
  */
-internal data class PackedText(val reg: VReg) : Value
+internal data class PackedText(val reg: VReg, val function: String) : Value
 
 /**
  * A view of a device's logic types (`Ports`, `Ratios`, `Position`, `Import` and their parts),
@@ -437,7 +438,8 @@ internal class Translator(private val symbols: DeclarationFinder) {
         .zip(target.parameters)
         .forEach { (parameter, register) ->
           variables[parameter] =
-              if (parameter.type.isString()) PackedText(register) else Reg(register)
+              if (parameter.type.isString()) PackedText(register, function.name.asString())
+              else Reg(register)
         }
     body(function, FunctionExit(newLabel("return"), target.result))
     val callsOthers = lines.subList(start, lines.size).any { (it as? TirInstruction)?.op == "jal" }
@@ -499,6 +501,8 @@ internal class Translator(private val symbols: DeclarationFinder) {
           value is Mapped -> fail(initializer, MAPPED_HELD)
           value.isAlias() && !property.isVar -> value
           value.isAlias() -> fail(property, VAL_ONLY)
+          value.isText() && !property.isVar -> value
+          value.isText() -> fail(property, STRING_VAL_ONLY)
           value is Const && !property.isReassigned() -> value
           else -> Reg(newVReg(property.name.asString())).also { move(it.reg, value) }
         }
@@ -563,6 +567,9 @@ internal class Translator(private val symbols: DeclarationFinder) {
           value is Mapped -> fail(initializer, MAPPED_HELD)
           value.isAlias() && !variable.isVar -> value
           value.isAlias() -> fail(variable, VAL_ONLY)
+          // A String has no value of its own either: a val stands for its parameter's text.
+          value.isText() && !variable.isVar -> value
+          value.isText() -> fail(variable, STRING_VAL_ONLY)
           value is Const && !variable.isReassigned() -> value
           else -> Reg(newVReg(variable.name.asString())).also { move(it.reg, value) }
         }
@@ -594,7 +601,7 @@ internal class Translator(private val symbols: DeclarationFinder) {
         if (it is RatioEntry) {
           fail(expression, "a Ratios entry is used through its key or value, as entry.value")
         }
-        if (it is Text || it is PackedText) {
+        if (it.isText()) {
           fail(
               expression,
               "a String can only be used in Text = ..., str(...), hash(...), named(...) " +
@@ -1506,6 +1513,9 @@ internal class Translator(private val symbols: DeclarationFinder) {
           this is StaticSet ||
           this is RatioEntry
 
+  /** A `String` parameter's text, or a val holding it ([Text] or [PackedText]). */
+  private fun Value.isText() = this is Text || this is PackedText
+
   private fun logicType(call: IrCall, argument: IrExpression?): Fixed {
     if (argument !is IrGetEnumValue) {
       fail(argument ?: call, "the logic type must be written out, as LogicType.X")
@@ -1520,8 +1530,7 @@ internal class Translator(private val symbols: DeclarationFinder) {
   private fun textOf(expression: IrExpression?): Value? =
       when (expression) {
         is IrConst -> (expression.value as? String)?.let(::Text)
-        is IrGetValue ->
-            variables[expression.symbol.owner]?.takeIf { it is Text || it is PackedText }
+        is IrGetValue -> variables[expression.symbol.owner]?.takeIf { it.isText() }
         else -> null
       }
 
@@ -1551,8 +1560,8 @@ internal class Translator(private val symbols: DeclarationFinder) {
           is PackedText ->
               fail(
                   call,
-                  "$what needs the text itself, but this String arrives packed, as its function " +
-                      "is called with jal: mark the function inline",
+                  "$what needs the text itself, but this String arrives packed, as " +
+                      "${value.function} is called with jal: mark ${value.function} inline",
               )
           else -> fail(call, "$what needs a constant string")
         }
@@ -2422,6 +2431,8 @@ internal class Translator(private val symbols: DeclarationFinder) {
         "a map can't be held, only ended where it is made, as all.map { it.X }.sum()"
     const val VAL_ONLY =
         "a device, batch, slot, view, static set, substance or Ratios entry has no value on the chip, so it can only be held in a val, not a var"
+    const val STRING_VAL_ONLY =
+        "a String has no value on the chip, so it can only be held in a val, not a var"
     const val HELD_WHERE_DECLARED =
         "a device, batch, slot, view, static set, substance or Ratios entry has no value on the chip, so a val of one must be given it where it is declared"
     const val SLOTS_CLASS = "ktrapic.Slots"

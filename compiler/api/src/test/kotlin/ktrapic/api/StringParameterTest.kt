@@ -176,9 +176,117 @@ class StringParameterTest {
             """
         )
 
-    assertThat(hashed.message).contains("mark the function inline")
+    assertThat(hashed.message).contains("as f is called with jal: mark f inline")
     assertThat(hashed.line).isEqualTo(1)
-    assertThat(named.message).contains("mark the function inline")
+    assertThat(named.message).contains("as f is called with jal: mark f inline")
+  }
+
+  @Test
+  fun `a packed String in an inlined function names the function called with jal`() {
+    val hashed =
+        error(
+            """
+            inline fun h(m: String) { d0.Setting = hash(m) }
+            fun g(m: String) { h(m) }
+            g("a")
+            g("b")
+            """
+        )
+    val named =
+        error(
+            """
+            inline fun h(m: String) { GrowLights.named(m).forEach { it.On = true } }
+            fun g(m: String) { h(m) }
+            g("a")
+            g("b")
+            """
+        )
+
+    assertThat(hashed.message).contains("as g is called with jal: mark g inline")
+    assertThat(hashed.line).isEqualTo(1)
+    assertThat(named.message).contains("as g is called with jal: mark g inline")
+    assertThat(named.line).isEqualTo(1)
+  }
+
+  @Test
+  fun `a val holds a String parameter in an inlined function`() {
+    val source =
+        """
+        inline fun f(msg: String) {
+          val s = msg
+          d0.Setting = str(s)
+          d1.Setting = hash(s)
+        }
+        f("abc")
+        """
+
+    assertThat(settings(source))
+        .containsExactly(Hashes.str("abc"), Hashes.hash("abc").toDouble())
+        .inOrder()
+  }
+
+  @Test
+  fun `a val holds a packed String parameter in a function called with jal`() {
+    val source =
+        """
+        fun f(msg: String) {
+          val s = msg
+          d0.Setting = str(s)
+          LedDisplays.Large.at(d1).Text = s
+        }
+        f("one")
+        f("two")
+        """
+
+    assertThat(compiled(source).code).contains("jal")
+    assertThat(settings(source)).containsExactly(Hashes.str("two"), Hashes.str("two")).inOrder()
+  }
+
+  @Test
+  fun `a var can't hold a String parameter`() {
+    val inlined =
+        error(
+            """
+            inline fun f(msg: String) {
+              var s = msg
+              d0.Setting = 1.0
+            }
+            f("a")
+            """
+        )
+    val jal =
+        error(
+            """
+            fun f(msg: String) {
+              var s = msg
+              d0.Setting = 1.0
+            }
+            f("a")
+            f("b")
+            """
+        )
+
+    for (error in listOf(inlined, jal)) {
+      assertThat(error.message).contains("a String has no value on the chip")
+      assertThat(error.message).contains("only be held in a val, not a var")
+      assertThat(error.line).isEqualTo(2)
+    }
+  }
+
+  @Test
+  fun `a String parameter can't be a when subject`() {
+    val error =
+        error(
+            """
+            inline fun f(msg: String) {
+              d0.Setting = when (msg) { "a" -> 1.0; else -> 0.0 }
+            }
+            f("a")
+            """
+        )
+
+    assertThat(error.message).contains("Comparing String values is not supported")
+    assertThat(error.line).isEqualTo(2)
   }
 
   @Test

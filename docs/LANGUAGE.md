@@ -107,7 +107,9 @@ properties.
   `str(msg)`, `hash(msg)`, `msg.hash()`, `named(msg)`, or another call's `String` argument. A
   function called with `jal` gets the text packed by `STR` in a register, so there it can only be
   written with `Text = msg`, read as `str(msg)`, or passed on; `hash` and `named` need the function
-  marked `inline`. Each call to such a function checks its text against `STR`'s limits.
+  marked `inline`. Each call to such a function checks its text against `STR`'s limits. A `val`
+  can hold a `String` parameter and is used as the parameter is; a `var` can't, and a `String`
+  can't be compared, so it can't be a `when` subject.
 - Not supported: recursion, default arguments, `vararg`, and extension, generic and local
   functions.
 
