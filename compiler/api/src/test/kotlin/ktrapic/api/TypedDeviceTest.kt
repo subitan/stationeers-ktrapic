@@ -103,7 +103,7 @@ class TypedDeviceTest {
             "val x = GrowLight.at(d0).PrefabHash\ndb.On = |x == GrowLight" to "Prefab<*>",
             "val x = BatteryCharger.Standard\n" +
                 "db.Setting = |x.all.slots[0].map { it.Charge }.average()" to
-                "BatteryCharger.Standard.Companion",
+                "SlottedPrefab<BatteryCharger.Standard, BatteryCharger.Standard.Batch>",
         )
     for ((source, expected) in sources) {
       val offset = source.indexOf('|')
@@ -115,6 +115,43 @@ class TypedDeviceTest {
       assertWithMessage(written)
           .that(compile(written))
           .isInstanceOf(CompileResult.Success::class.java)
+      // Calls through the written type, such as `SlottedPrefab`'s `all`, compile as before.
+      assertWithMessage(written).that(compiled(written).code).isEqualTo(compiled(program).code)
+    }
+  }
+
+  @Test
+  fun `a compile error writes a prefab's type as a hover shows it, never as Companion`() {
+    val errors =
+        mapOf(
+            "val p: Prefab<GrowLight> = BatteryCharger.Standard" to
+                "'SlottedPrefab<BatteryCharger.Standard, BatteryCharger.Standard.Batch>'",
+            "val n: Int = GrowLight" to "'Prefab<GrowLight>'",
+        )
+    for ((source, type) in errors) {
+      val message = error(source).message
+      assertWithMessage(source).that(message).contains("actual $type")
+      assertWithMessage(source).that(message).doesNotContain("Companion")
+    }
+  }
+
+  @Test
+  fun `a back end error writes a prefab's type as a hover shows it, never as Companion`() {
+    val errors =
+        mapOf(
+            "fun f() = GrowLight\nval p = f()\np.all.forEach { it.On = true }" to
+                "Functions returning Prefab<GrowLight> are not supported",
+            "fun f() = BatteryCharger.Standard\ndb.Setting = f().all.count().toDouble()" to
+                "Functions returning " +
+                    "SlottedPrefab<BatteryCharger.Standard, BatteryCharger.Standard.Batch> " +
+                    "are not supported",
+            "fun f(p: GrowLight.Companion) = 1\ndb.Setting = f(GrowLight).toDouble()" to
+                "Parameters of type Prefab<GrowLight> are not supported",
+        )
+    for ((source, expected) in errors) {
+      val message = error(source).message
+      assertWithMessage(source).that(message).isEqualTo(expected)
+      assertWithMessage(source).that(message).doesNotContain("Companion")
     }
   }
 

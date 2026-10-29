@@ -1,6 +1,7 @@
 package ktrapic.frontend
 
 import com.google.common.truth.Truth.assertThat
+import com.google.common.truth.Truth.assertWithMessage
 import java.io.File
 import ktrapic.Device
 import org.junit.jupiter.api.Test
@@ -124,10 +125,69 @@ class K2HoverTest {
   }
 
   @Test
-  fun `a prefab with slots is its companion, whose entry points give its own batch`() {
+  fun `a prefab with slots is the SlottedPrefab it is, whose entry points give its own batch`() {
     val hover = hover("val p = BatteryCharger.Standard\nval q = |p\n")!!
+    val help = signatures("val p = BatteryCharger.Standard\nval b = p.named(|\"A\")\n")!!
 
-    assertThat(hover.declaration).isEqualTo("val p: BatteryCharger.Standard.Companion")
+    assertThat(hover.declaration)
+        .isEqualTo("val p: SlottedPrefab<BatteryCharger.Standard, BatteryCharger.Standard.Batch>")
+    assertThat(help.signatures.single().label)
+        .isEqualTo("fun named(name: String): BatteryCharger.Standard.Batch")
+  }
+
+  @Test
+  fun `a program's companion is its superclass, else its class's name`() {
+    val source =
+        "open class Base\nclass P {\n  companion object : Base()\n}\nclass Q {\n" +
+            "  companion object\n}\nval p = P\nval q = Q\nval r = |"
+
+    assertThat(hover(source.replace("|", "|p\n"))!!.declaration).isEqualTo("val p: Base")
+    assertThat(hover(source.replace("|", "|q\n"))!!.declaration).isEqualTo("val q: Q")
+  }
+
+  @Test
+  fun `nothing shown for a prefab says Companion`() {
+    // A flat prefab and a family member, each with and without slots, and one whose
+    // SlottedPrefab ktfmt breaks over lines.
+    val prefabs =
+        listOf(
+            "GrowLight",
+            "LedDisplay.Small",
+            "ActiveVent",
+            "BatteryCharger.Standard",
+            "Fabricator.AdvancedPackagingMachine",
+        )
+    for (prefab in prefabs) {
+      val shown = mutableListOf<String>()
+      for (source in
+          listOf(
+              "val x = $prefab|\n",
+              "val p = $prefab\nval x = |p\n",
+              "val x = $prefab.a|ll\n",
+              "val x = $prefab.na|med(\"A\")\n",
+              "val x = $prefab.a|t(d0)\n",
+              "val p = $prefab\nval x = p.a|ll\n",
+              "fun f() = $prefab\nval x = |f()\n",
+          )) {
+        hover(source)?.let { shown += it.text() }
+      }
+      for (source in
+          listOf(
+              "val x = $prefab.named(|\"A\")\n",
+              "val x = $prefab.at(|d0)\n",
+              "val p = $prefab\nval x = p.named(|\"A\")\n",
+              "fun f(n: Int) = $prefab\nval x = f(|1)\n",
+          )) {
+        for (signature in signatures(source)?.signatures.orEmpty()) {
+          shown += signature.label
+          shown += signature.parameters
+          signature.documentation?.let { shown += it }
+        }
+      }
+
+      assertWithMessage(prefab).that(shown).isNotEmpty()
+      for (text in shown) assertWithMessage(prefab).that(text).doesNotContain("Companion")
+    }
   }
 
   @Test

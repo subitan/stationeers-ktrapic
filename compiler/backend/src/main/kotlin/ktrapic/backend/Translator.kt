@@ -60,7 +60,9 @@ import org.jetbrains.kotlin.ir.expressions.IrWhen
 import org.jetbrains.kotlin.ir.expressions.IrWhileLoop
 import org.jetbrains.kotlin.ir.symbols.IrPropertySymbol
 import org.jetbrains.kotlin.ir.symbols.IrSymbol
+import org.jetbrains.kotlin.ir.types.IrSimpleType
 import org.jetbrains.kotlin.ir.types.IrType
+import org.jetbrains.kotlin.ir.types.IrTypeProjection
 import org.jetbrains.kotlin.ir.types.classFqName
 import org.jetbrains.kotlin.ir.types.classOrNull
 import org.jetbrains.kotlin.ir.types.isBoolean
@@ -1476,14 +1478,13 @@ internal class Translator(private val symbols: DeclarationFinder) {
   /** A prefab used as a value (a typed device's companion object): its hash. */
   private fun prefab(expression: IrGetObjectValue): Value {
     val cls = expression.symbol.owner
-    if (!cls.isCompanion || !cls.isSubclassOf(PREFAB))
-        fail(expression, "This expression is not supported")
+    if (!cls.isCompanion || !cls.isPrefab()) fail(expression, "This expression is not supported")
     return Const(prefabHash(cls.parentAsClass))
   }
 
   /**
-   * The prefab, `Prefab` or a typed device's companion object, whose `at`, `all` or `named` is
-   * called on [receiver]: the hash of the prefab, which must be known when compiling.
+   * The prefab, `Prefab`, `SlottedPrefab` or a typed device's companion object, whose `at`, `all`
+   * or `named` is called on [receiver]: the hash of the prefab, which must be known when compiling.
    */
   private fun prefabOf(call: IrCall, receiver: IrExpression?): Double =
       (receiver?.let { value(it) } as? Const)?.number
@@ -1493,9 +1494,13 @@ internal class Translator(private val symbols: DeclarationFinder) {
                   "or a val holding one",
           )
 
-  /** `Prefab`, or a typed device's companion object, which is its prefab. */
-  private fun IrClass.isPrefab() =
-      kotlinFqName.asString() == PREFAB || (isCompanion && isSubclassOf(PREFAB))
+  /**
+   * `Prefab`, or a class extending it, directly or not: `SlottedPrefab`, and a typed device's
+   * companion object, which is its prefab. Only the SDK can extend `Prefab`.
+   */
+  private fun IrClass.isPrefab(): Boolean =
+      kotlinFqName.asString() == PREFAB ||
+          superTypes.any { it.classOrNull?.owner?.isPrefab() == true }
 
   private fun prefabHash(cls: IrClass): Double =
       Hashes.hash(cls.prefabName() ?: error("${cls.name} has no prefab name")).toDouble()
@@ -2424,11 +2429,43 @@ internal class Translator(private val symbols: DeclarationFinder) {
         cls?.isSubclassOf(DEVICE_SLOT) == true
   }
 
-  private fun IrType.isPrefab() =
-      classOrNull?.owner?.let { it.kotlinFqName.asString() == PREFAB || it.isSubclassOf(PREFAB) } ==
-          true
+  private fun IrType.isPrefab() = classOrNull?.owner?.isPrefab() == true
 
-  private fun IrType.render() = classFqName?.shortName()?.asString() ?: "these"
+  /**
+   * [this] as an error message names it: a class by its short name (`Prefab`, `String`), and a
+   * typed device's companion object, which a program never writes, as the prefab it is, as a hover
+   * shows it: `Prefab<GrowLight>`, or a prefab with slots's `SlottedPrefab<BatteryCharger.Standard,
+   * BatteryCharger.Standard.Batch>`.
+   */
+  private fun IrType.render(): String {
+    val cls = classOrNull?.owner
+    if (cls != null && cls.isCompanion && cls.isPrefab()) {
+      cls.superTypes
+          .firstOrNull { it.classOrNull?.owner?.isPrefab() == true }
+          ?.let {
+            return it.written()
+          }
+    }
+    return classFqName?.shortName()?.asString() ?: "these"
+  }
+
+  /**
+   * [this] as a program writes it, a class by its names within its package and with its type
+   * arguments: `BatteryCharger.Standard.Batch`, `Prefab<GrowLight>`, `Prefab<*>`.
+   */
+  private fun IrType.written(): String {
+    val cls = classOrNull?.owner ?: return render()
+    val name =
+        generateSequence(cls) { it.parentClassOrNull }
+            .toList()
+            .asReversed()
+            .joinToString(".") { it.name.asString() }
+    val arguments =
+        (this as? IrSimpleType)?.arguments.orEmpty().map {
+          (it as? IrTypeProjection)?.type?.written() ?: "*"
+        }
+    return name + if (arguments.isEmpty()) "" else arguments.joinToString(", ", "<", ">")
+  }
 
   private fun fail(element: IrElement, message: String): Nothing =
       throw CompileException(element, message)

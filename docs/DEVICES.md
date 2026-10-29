@@ -28,7 +28,15 @@ abstract class Prefab<T : TypedDevice> {
 }
 ```
 
-For a device with slots, the batch from `all` or `named` also has `slots`, a slot of every one in the batch: `BatteryCharger.Standard.all.slots[0]`.
+A device with slots has a `SlottedPrefab`, whose batch from `all` or `named` is the device's own `Batch` type, which also has `slots`, a slot of every one in the batch: `BatteryCharger.Standard.all.slots[0]`.
+
+```kotlin
+abstract class SlottedPrefab<T : TypedDevice, B : DeviceBatch<T>> : Prefab<T> {
+  val all: B
+
+  fun named(name: String): B
+}
+```
 
 A device's logic types are its properties: a `var` can be written, a `val` only read. Every typed device also has `val PrefabHash: Prefab<*>`, `val NameHash: Double` and `val ReferenceId: Double`. Any device can also be used untyped, as `d0` to `d5` or `db`, with every logic type.
 

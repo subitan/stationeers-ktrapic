@@ -22,18 +22,23 @@ import org.jetbrains.kotlin.cli.jvm.K2JVMCompiler
 import org.jetbrains.kotlin.cli.jvm.compiler.EnvironmentConfigFiles
 import org.jetbrains.kotlin.cli.jvm.compiler.KotlinCoreEnvironment
 import org.jetbrains.kotlin.cli.pipeline.AbstractCliPipeline
+import org.jetbrains.kotlin.cli.pipeline.CheckCompilationErrors
+import org.jetbrains.kotlin.cli.pipeline.ConfigurationPipelineArtifact
+import org.jetbrains.kotlin.cli.pipeline.PerformanceNotifications
 import org.jetbrains.kotlin.cli.pipeline.PipelineArtifact
 import org.jetbrains.kotlin.cli.pipeline.PipelineArtifactWithExitCode
 import org.jetbrains.kotlin.cli.pipeline.PipelinePhase
 import org.jetbrains.kotlin.cli.pipeline.jvm.JvmConfigurationPipelinePhase
 import org.jetbrains.kotlin.cli.pipeline.jvm.JvmFir2IrPipelineArtifact
 import org.jetbrains.kotlin.cli.pipeline.jvm.JvmFir2IrPipelinePhase
+import org.jetbrains.kotlin.cli.pipeline.jvm.JvmFrontendPipelineArtifact
 import org.jetbrains.kotlin.cli.pipeline.jvm.JvmFrontendPipelinePhase
 import org.jetbrains.kotlin.com.intellij.openapi.util.Disposer
 import org.jetbrains.kotlin.compiler.plugin.CompilerPluginRegistrar
 import org.jetbrains.kotlin.config.CommonConfigurationKeys
 import org.jetbrains.kotlin.config.CompilerConfiguration
 import org.jetbrains.kotlin.config.Services
+import org.jetbrains.kotlin.fir.FirSession
 import org.jetbrains.kotlin.ir.declarations.IrModuleFragment
 import org.jetbrains.kotlin.psi.KtPsiFactory
 
@@ -86,15 +91,19 @@ object K2Frontend {
       val wrapped = ScriptWrapper.wrap(script, defaultImports)
       val sourceFile = File(workDir, "$PROGRAM_OBJECT.kt").apply { writeText(wrapped.text) }
       val messages = CollectingMessageCollector()
+      var session: FirSession? = null
       val captured =
-          IrCapturePipeline(K2JVMCompiler().defaultPerformanceManager)
+          IrCapturePipeline(
+                  K2JVMCompiler().defaultPerformanceManager,
+                  FrontendPhase { session = it },
+              )
               .executeAndReturnPipeLineArtifact(
                   arguments(sourceFile, classpath, workDir),
                   Services.EMPTY,
                   messages,
                   disposable,
               )
-      val diagnostics = messages.diagnostics(wrapped)
+      val diagnostics = messages.diagnostics(wrapped, session)
       if (captured !is CapturedIr || diagnostics.any { it.severity == Diagnostic.Severity.ERROR }) {
         return FrontendResult.Failure(diagnostics)
       }
@@ -201,15 +210,36 @@ private object CaptureIrPhase :
   override fun executePhase(input: JvmFir2IrPipelineArtifact): CapturedIr = CapturedIr(input)
 }
 
-/** The stock K2 JVM pipeline up to fir2ir, ending in [CaptureIrPhase] instead of the backend. */
+/**
+ * The stock JVM front end, with the same actions after it, which also hands its session to [keep],
+ * whatever errors it found: the session is what the program's diagnostics are rendered with.
+ */
+private class FrontendPhase(private val keep: (FirSession) -> Unit) :
+    PipelinePhase<ConfigurationPipelineArtifact, JvmFrontendPipelineArtifact>(
+        name = "KtrapicFrontend",
+        preActions = emptySet(),
+        postActions =
+            setOf(
+                PerformanceNotifications.AnalysisFinished,
+                CheckCompilationErrors.CheckDiagnosticCollector,
+            ),
+    ) {
+  override fun executePhase(input: ConfigurationPipelineArtifact): JvmFrontendPipelineArtifact? =
+      JvmFrontendPipelinePhase.executePhase(input)?.also { frontend ->
+        frontend.frontendOutput.outputs.singleOrNull()?.let { keep(it.session) }
+      }
+}
+
+/**
+ * The stock K2 JVM pipeline up to fir2ir, with [frontend] for its front end, ending in
+ * [CaptureIrPhase] instead of the backend.
+ */
 private class IrCapturePipeline(
-    override val defaultPerformanceManager: org.jetbrains.kotlin.util.PerformanceManager
+    override val defaultPerformanceManager: org.jetbrains.kotlin.util.PerformanceManager,
+    private val frontend: FrontendPhase,
 ) : AbstractCliPipeline<K2JVMCompilerArguments>() {
   override fun createCompoundPhase(arguments: K2JVMCompilerArguments) =
-      JvmConfigurationPipelinePhase then
-          JvmFrontendPipelinePhase then
-          JvmFir2IrPipelinePhase then
-          CaptureIrPhase
+      JvmConfigurationPipelinePhase then frontend then JvmFir2IrPipelinePhase then CaptureIrPhase
 }
 
 private class CollectingMessageCollector : MessageCollector {
@@ -233,20 +263,26 @@ private class CollectingMessageCollector : MessageCollector {
     messages += Message(severity, message, location)
   }
 
-  /** Errors and warnings, positioned in the user's source; compiler chatter is dropped. */
-  fun diagnostics(wrapped: WrappedSource): List<Diagnostic> = messages.mapNotNull { message ->
-    val severity =
-        when {
-          message.severity.isError -> Diagnostic.Severity.ERROR
-          message.severity.isWarning -> Diagnostic.Severity.WARNING
-          else -> return@mapNotNull null
-        }
-    val location = message.location
-    val (line, column) =
-        if (location == null || location.line <= 0) 0 to 0
-        else wrapped.originalPosition(location.line, location.column)
-    Diagnostic(severity, message.text, line, column)
-  }
+  /**
+   * Errors and warnings, positioned in the user's source, with the SDK's prefab types written as a
+   * program writes them (see [withCompanionsRendered]) when there is a front end [session];
+   * compiler chatter is dropped.
+   */
+  fun diagnostics(wrapped: WrappedSource, session: FirSession?): List<Diagnostic> =
+      messages.mapNotNull { message ->
+        val severity =
+            when {
+              message.severity.isError -> Diagnostic.Severity.ERROR
+              message.severity.isWarning -> Diagnostic.Severity.WARNING
+              else -> return@mapNotNull null
+            }
+        val location = message.location
+        val (line, column) =
+            if (location == null || location.line <= 0) 0 to 0
+            else wrapped.originalPosition(location.line, location.column)
+        val text = session?.let { withCompanionsRendered(message.text, it) } ?: message.text
+        Diagnostic(severity, text, line, column)
+      }
 }
 
 /**

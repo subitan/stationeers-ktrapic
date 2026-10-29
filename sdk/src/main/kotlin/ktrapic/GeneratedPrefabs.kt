@@ -1795,12 +1795,7 @@ interface Fridge {
     }
 
     /** The StructureFridgeSmall prefab. */
-    companion object : Prefab<Fridge.Small>() {
-      override val all: Fridge.Small.Batch
-        get() = intrinsic()
-
-      override fun named(name: String): Fridge.Small.Batch = intrinsic()
-    }
+    companion object : SlottedPrefab<Fridge.Small, Fridge.Small.Batch>()
   }
 
   /** A StructureFridgeBig. */
@@ -1873,12 +1868,7 @@ interface Fridge {
     }
 
     /** The StructureFridgeBig prefab. */
-    companion object : Prefab<Fridge.Large>() {
-      override val all: Fridge.Large.Batch
-        get() = intrinsic()
-
-      override fun named(name: String): Fridge.Large.Batch = intrinsic()
-    }
+    companion object : SlottedPrefab<Fridge.Large, Fridge.Large.Batch>()
   }
 }
 
@@ -1954,12 +1944,7 @@ interface ItemStorage {
     }
 
     /** The StructureCargoStorageSmall prefab. */
-    companion object : Prefab<ItemStorage.CargoSmall>() {
-      override val all: ItemStorage.CargoSmall.Batch
-        get() = intrinsic()
-
-      override fun named(name: String): ItemStorage.CargoSmall.Batch = intrinsic()
-    }
+    companion object : SlottedPrefab<ItemStorage.CargoSmall, ItemStorage.CargoSmall.Batch>()
   }
 
   /** A StructureCargoStorageMedium. */
@@ -2016,12 +2001,7 @@ interface ItemStorage {
     }
 
     /** The StructureCargoStorageMedium prefab. */
-    companion object : Prefab<ItemStorage.CargoMedium>() {
-      override val all: ItemStorage.CargoMedium.Batch
-        get() = intrinsic()
-
-      override fun named(name: String): ItemStorage.CargoMedium.Batch = intrinsic()
-    }
+    companion object : SlottedPrefab<ItemStorage.CargoMedium, ItemStorage.CargoMedium.Batch>()
   }
 
   /** A StructureSDBSilo. */
@@ -2083,12 +2063,7 @@ interface ItemStorage {
     }
 
     /** The StructureSDBSilo prefab. */
-    companion object : Prefab<ItemStorage.SdbSilo>() {
-      override val all: ItemStorage.SdbSilo.Batch
-        get() = intrinsic()
-
-      override fun named(name: String): ItemStorage.SdbSilo.Batch = intrinsic()
-    }
+    companion object : SlottedPrefab<ItemStorage.SdbSilo, ItemStorage.SdbSilo.Batch>()
   }
 }
 
@@ -2293,12 +2268,7 @@ interface VendingMachine {
     }
 
     /** The StructureVendingMachine prefab. */
-    companion object : Prefab<VendingMachine.Standard>() {
-      override val all: VendingMachine.Standard.Batch
-        get() = intrinsic()
-
-      override fun named(name: String): VendingMachine.Standard.Batch = intrinsic()
-    }
+    companion object : SlottedPrefab<VendingMachine.Standard, VendingMachine.Standard.Batch>()
   }
 
   /** A StructureVendingMachineSmall. */
@@ -2365,12 +2335,7 @@ interface VendingMachine {
     }
 
     /** The StructureVendingMachineSmall prefab. */
-    companion object : Prefab<VendingMachine.Small>() {
-      override val all: VendingMachine.Small.Batch
-        get() = intrinsic()
-
-      override fun named(name: String): VendingMachine.Small.Batch = intrinsic()
-    }
+    companion object : SlottedPrefab<VendingMachine.Small, VendingMachine.Small.Batch>()
   }
 
   /** A StructureRefrigeratedVendingMachine. */
@@ -2461,12 +2426,8 @@ interface VendingMachine {
     }
 
     /** The StructureRefrigeratedVendingMachine prefab. */
-    companion object : Prefab<VendingMachine.Refrigerated>() {
-      override val all: VendingMachine.Refrigerated.Batch
-        get() = intrinsic()
-
-      override fun named(name: String): VendingMachine.Refrigerated.Batch = intrinsic()
-    }
+    companion object :
+        SlottedPrefab<VendingMachine.Refrigerated, VendingMachine.Refrigerated.Batch>()
   }
 }
 
@@ -2639,12 +2600,7 @@ interface BatteryCharger {
     }
 
     /** The StructureBatteryCharger prefab. */
-    companion object : Prefab<BatteryCharger.Standard>() {
-      override val all: BatteryCharger.Standard.Batch
-        get() = intrinsic()
-
-      override fun named(name: String): BatteryCharger.Standard.Batch = intrinsic()
-    }
+    companion object : SlottedPrefab<BatteryCharger.Standard, BatteryCharger.Standard.Batch>()
   }
 
   /** A StructureBatteryChargerSmall. */
@@ -2679,12 +2635,7 @@ interface BatteryCharger {
     }
 
     /** The StructureBatteryChargerSmall prefab. */
-    companion object : Prefab<BatteryCharger.Small>() {
-      override val all: BatteryCharger.Small.Batch
-        get() = intrinsic()
-
-      override fun named(name: String): BatteryCharger.Small.Batch = intrinsic()
-    }
+    companion object : SlottedPrefab<BatteryCharger.Small, BatteryCharger.Small.Batch>()
   }
 }
 
@@ -3435,12 +3386,7 @@ interface TankStorage {
     }
 
     /** The StructureGasTankStorage prefab. */
-    companion object : Prefab<TankStorage.Gas>() {
-      override val all: TankStorage.Gas.Batch
-        get() = intrinsic()
-
-      override fun named(name: String): TankStorage.Gas.Batch = intrinsic()
-    }
+    companion object : SlottedPrefab<TankStorage.Gas, TankStorage.Gas.Batch>()
   }
 
   /** A StructureLiquidTankStorage. */
@@ -3480,12 +3426,7 @@ interface TankStorage {
     }
 
     /** The StructureLiquidTankStorage prefab. */
-    companion object : Prefab<TankStorage.Liquid>() {
-      override val all: TankStorage.Liquid.Batch
-        get() = intrinsic()
-
-      override fun named(name: String): TankStorage.Liquid.Batch = intrinsic()
-    }
+    companion object : SlottedPrefab<TankStorage.Liquid, TankStorage.Liquid.Batch>()
   }
 }
 
@@ -3899,12 +3840,7 @@ interface Filtration {
     }
 
     /** The StructureFiltration prefab. */
-    companion object : Prefab<Filtration.Gas>() {
-      override val all: Filtration.Gas.Batch
-        get() = intrinsic()
-
-      override fun named(name: String): Filtration.Gas.Batch = intrinsic()
-    }
+    companion object : SlottedPrefab<Filtration.Gas, Filtration.Gas.Batch>()
   }
 
   /** A StructureFiltrationLiquid. */
@@ -3970,12 +3906,7 @@ interface Filtration {
     }
 
     /** The StructureFiltrationLiquid prefab. */
-    companion object : Prefab<Filtration.Liquid>() {
-      override val all: Filtration.Liquid.Batch
-        get() = intrinsic()
-
-      override fun named(name: String): Filtration.Liquid.Batch = intrinsic()
-    }
+    companion object : SlottedPrefab<Filtration.Liquid, Filtration.Liquid.Batch>()
   }
 
   /** A StructureRocketFiltrationGas. */
@@ -4037,12 +3968,7 @@ interface Filtration {
     }
 
     /** The StructureRocketFiltrationGas prefab. */
-    companion object : Prefab<Filtration.RocketGas>() {
-      override val all: Filtration.RocketGas.Batch
-        get() = intrinsic()
-
-      override fun named(name: String): Filtration.RocketGas.Batch = intrinsic()
-    }
+    companion object : SlottedPrefab<Filtration.RocketGas, Filtration.RocketGas.Batch>()
   }
 }
 
@@ -5002,12 +4928,8 @@ interface LandingPadTankConnector {
     }
 
     /** The Landingpad_GasTankConnectorPiece prefab. */
-    companion object : Prefab<LandingPadTankConnector.Gas>() {
-      override val all: LandingPadTankConnector.Gas.Batch
-        get() = intrinsic()
-
-      override fun named(name: String): LandingPadTankConnector.Gas.Batch = intrinsic()
-    }
+    companion object :
+        SlottedPrefab<LandingPadTankConnector.Gas, LandingPadTankConnector.Gas.Batch>()
   }
 
   /** A Landingpad_LiquidTankConnectorPiece. */
@@ -5047,12 +4969,8 @@ interface LandingPadTankConnector {
     }
 
     /** The Landingpad_LiquidTankConnectorPiece prefab. */
-    companion object : Prefab<LandingPadTankConnector.Liquid>() {
-      override val all: LandingPadTankConnector.Liquid.Batch
-        get() = intrinsic()
-
-      override fun named(name: String): LandingPadTankConnector.Liquid.Batch = intrinsic()
-    }
+    companion object :
+        SlottedPrefab<LandingPadTankConnector.Liquid, LandingPadTankConnector.Liquid.Batch>()
   }
 }
 
@@ -5544,12 +5462,7 @@ interface Reprocessor {
     }
 
     /** The StructureCentrifuge prefab. */
-    companion object : Prefab<Reprocessor.Centrifuge>() {
-      override val all: Reprocessor.Centrifuge.Batch
-        get() = intrinsic()
-
-      override fun named(name: String): Reprocessor.Centrifuge.Batch = intrinsic()
-    }
+    companion object : SlottedPrefab<Reprocessor.Centrifuge, Reprocessor.Centrifuge.Batch>()
   }
 
   /** A StructureCombustionCentrifuge. */
@@ -5650,12 +5563,8 @@ interface Reprocessor {
     }
 
     /** The StructureCombustionCentrifuge prefab. */
-    companion object : Prefab<Reprocessor.CombustionCentrifuge>() {
-      override val all: Reprocessor.CombustionCentrifuge.Batch
-        get() = intrinsic()
-
-      override fun named(name: String): Reprocessor.CombustionCentrifuge.Batch = intrinsic()
-    }
+    companion object :
+        SlottedPrefab<Reprocessor.CombustionCentrifuge, Reprocessor.CombustionCentrifuge.Batch>()
   }
 
   /** A StructureRecycler. */
@@ -5705,12 +5614,7 @@ interface Reprocessor {
     }
 
     /** The StructureRecycler prefab. */
-    companion object : Prefab<Reprocessor.Recycler>() {
-      override val all: Reprocessor.Recycler.Batch
-        get() = intrinsic()
-
-      override fun named(name: String): Reprocessor.Recycler.Batch = intrinsic()
-    }
+    companion object : SlottedPrefab<Reprocessor.Recycler, Reprocessor.Recycler.Batch>()
   }
 }
 
@@ -5823,12 +5727,7 @@ interface Furnace {
     }
 
     /** The StructureFurnace prefab. */
-    companion object : Prefab<Furnace.Standard>() {
-      override val all: Furnace.Standard.Batch
-        get() = intrinsic()
-
-      override fun named(name: String): Furnace.Standard.Batch = intrinsic()
-    }
+    companion object : SlottedPrefab<Furnace.Standard, Furnace.Standard.Batch>()
   }
 
   /** A StructureAdvancedFurnace. */
@@ -5927,12 +5826,7 @@ interface Furnace {
     }
 
     /** The StructureAdvancedFurnace prefab. */
-    companion object : Prefab<Furnace.Advanced>() {
-      override val all: Furnace.Advanced.Batch
-        get() = intrinsic()
-
-      override fun named(name: String): Furnace.Advanced.Batch = intrinsic()
-    }
+    companion object : SlottedPrefab<Furnace.Advanced, Furnace.Advanced.Batch>()
   }
 }
 
@@ -5979,12 +5873,7 @@ interface Tablet {
     }
 
     /** The ItemTablet prefab. */
-    companion object : Prefab<Tablet.Standard>() {
-      override val all: Tablet.Standard.Batch
-        get() = intrinsic()
-
-      override fun named(name: String): Tablet.Standard.Batch = intrinsic()
-    }
+    companion object : SlottedPrefab<Tablet.Standard, Tablet.Standard.Batch>()
   }
 
   /** A ItemAdvancedTablet. */
@@ -6048,12 +5937,7 @@ interface Tablet {
     }
 
     /** The ItemAdvancedTablet prefab. */
-    companion object : Prefab<Tablet.Advanced>() {
-      override val all: Tablet.Advanced.Batch
-        get() = intrinsic()
-
-      override fun named(name: String): Tablet.Advanced.Batch = intrinsic()
-    }
+    companion object : SlottedPrefab<Tablet.Advanced, Tablet.Advanced.Batch>()
   }
 }
 
@@ -6090,12 +5974,7 @@ interface SDBHopper {
     }
 
     /** The StructureSDBHopper prefab. */
-    companion object : Prefab<SDBHopper.Standard>() {
-      override val all: SDBHopper.Standard.Batch
-        get() = intrinsic()
-
-      override fun named(name: String): SDBHopper.Standard.Batch = intrinsic()
-    }
+    companion object : SlottedPrefab<SDBHopper.Standard, SDBHopper.Standard.Batch>()
   }
 
   /** A StructureSDBHopperAdvanced. */
@@ -6129,12 +6008,7 @@ interface SDBHopper {
     }
 
     /** The StructureSDBHopperAdvanced prefab. */
-    companion object : Prefab<SDBHopper.Advanced>() {
-      override val all: SDBHopper.Advanced.Batch
-        get() = intrinsic()
-
-      override fun named(name: String): SDBHopper.Advanced.Batch = intrinsic()
-    }
+    companion object : SlottedPrefab<SDBHopper.Advanced, SDBHopper.Advanced.Batch>()
   }
 }
 
@@ -6186,12 +6060,7 @@ interface Bench {
     }
 
     /** The StructureBench prefab. */
-    companion object : Prefab<Bench.Powered>() {
-      override val all: Bench.Powered.Batch
-        get() = intrinsic()
-
-      override fun named(name: String): Bench.Powered.Batch = intrinsic()
-    }
+    companion object : SlottedPrefab<Bench.Powered, Bench.Powered.Batch>()
   }
 
   /** A StructureBench1. */
@@ -6232,12 +6101,7 @@ interface Bench {
     }
 
     /** The StructureBench1 prefab. */
-    companion object : Prefab<Bench.CounterStyle>() {
-      override val all: Bench.CounterStyle.Batch
-        get() = intrinsic()
-
-      override fun named(name: String): Bench.CounterStyle.Batch = intrinsic()
-    }
+    companion object : SlottedPrefab<Bench.CounterStyle, Bench.CounterStyle.Batch>()
   }
 
   /** A StructureBench2. */
@@ -6278,12 +6142,7 @@ interface Bench {
     }
 
     /** The StructureBench2 prefab. */
-    companion object : Prefab<Bench.HighTechStyle>() {
-      override val all: Bench.HighTechStyle.Batch
-        get() = intrinsic()
-
-      override fun named(name: String): Bench.HighTechStyle.Batch = intrinsic()
-    }
+    companion object : SlottedPrefab<Bench.HighTechStyle, Bench.HighTechStyle.Batch>()
   }
 
   /** A StructureBench3. */
@@ -6324,12 +6183,7 @@ interface Bench {
     }
 
     /** The StructureBench3 prefab. */
-    companion object : Prefab<Bench.FrameStyle>() {
-      override val all: Bench.FrameStyle.Batch
-        get() = intrinsic()
-
-      override fun named(name: String): Bench.FrameStyle.Batch = intrinsic()
-    }
+    companion object : SlottedPrefab<Bench.FrameStyle, Bench.FrameStyle.Batch>()
   }
 
   /** A StructureBench4. */
@@ -6370,12 +6224,7 @@ interface Bench {
     }
 
     /** The StructureBench4 prefab. */
-    companion object : Prefab<Bench.WorkbenchStyle>() {
-      override val all: Bench.WorkbenchStyle.Batch
-        get() = intrinsic()
-
-      override fun named(name: String): Bench.WorkbenchStyle.Batch = intrinsic()
-    }
+    companion object : SlottedPrefab<Bench.WorkbenchStyle, Bench.WorkbenchStyle.Batch>()
   }
 }
 
@@ -6408,12 +6257,7 @@ interface Locker {
     }
 
     /** The StructureStorageLocker prefab. */
-    companion object : Prefab<Locker.Standard>() {
-      override val all: Locker.Standard.Batch
-        get() = intrinsic()
-
-      override fun named(name: String): Locker.Standard.Batch = intrinsic()
-    }
+    companion object : SlottedPrefab<Locker.Standard, Locker.Standard.Batch>()
   }
 
   /** A StructureLockerSmall. */
@@ -6439,12 +6283,7 @@ interface Locker {
     }
 
     /** The StructureLockerSmall prefab. */
-    companion object : Prefab<Locker.Small>() {
-      override val all: Locker.Small.Batch
-        get() = intrinsic()
-
-      override fun named(name: String): Locker.Small.Batch = intrinsic()
-    }
+    companion object : SlottedPrefab<Locker.Small, Locker.Small.Batch>()
   }
 
   /** A StructureCornerLocker. */
@@ -6470,12 +6309,7 @@ interface Locker {
     }
 
     /** The StructureCornerLocker prefab. */
-    companion object : Prefab<Locker.Corner>() {
-      override val all: Locker.Corner.Batch
-        get() = intrinsic()
-
-      override fun named(name: String): Locker.Corner.Batch = intrinsic()
-    }
+    companion object : SlottedPrefab<Locker.Corner, Locker.Corner.Batch>()
   }
 
   /** A StructureShortLocker. */
@@ -6501,12 +6335,7 @@ interface Locker {
     }
 
     /** The StructureShortLocker prefab. */
-    companion object : Prefab<Locker.Short>() {
-      override val all: Locker.Short.Batch
-        get() = intrinsic()
-
-      override fun named(name: String): Locker.Short.Batch = intrinsic()
-    }
+    companion object : SlottedPrefab<Locker.Short, Locker.Short.Batch>()
   }
 
   /** A StructureShortCornerLocker. */
@@ -6532,12 +6361,7 @@ interface Locker {
     }
 
     /** The StructureShortCornerLocker prefab. */
-    companion object : Prefab<Locker.ShortCorner>() {
-      override val all: Locker.ShortCorner.Batch
-        get() = intrinsic()
-
-      override fun named(name: String): Locker.ShortCorner.Batch = intrinsic()
-    }
+    companion object : SlottedPrefab<Locker.ShortCorner, Locker.ShortCorner.Batch>()
   }
 
   /** A StructureOverheadShortLocker. */
@@ -6563,12 +6387,7 @@ interface Locker {
     }
 
     /** The StructureOverheadShortLocker prefab. */
-    companion object : Prefab<Locker.Overhead>() {
-      override val all: Locker.Overhead.Batch
-        get() = intrinsic()
-
-      override fun named(name: String): Locker.Overhead.Batch = intrinsic()
-    }
+    companion object : SlottedPrefab<Locker.Overhead, Locker.Overhead.Batch>()
   }
 
   /** A StructureOverheadShortCornerLocker. */
@@ -6594,12 +6413,7 @@ interface Locker {
     }
 
     /** The StructureOverheadShortCornerLocker prefab. */
-    companion object : Prefab<Locker.OverheadCorner>() {
-      override val all: Locker.OverheadCorner.Batch
-        get() = intrinsic()
-
-      override fun named(name: String): Locker.OverheadCorner.Batch = intrinsic()
-    }
+    companion object : SlottedPrefab<Locker.OverheadCorner, Locker.OverheadCorner.Batch>()
   }
 }
 
@@ -6694,12 +6508,7 @@ interface AreaPowerControl {
     }
 
     /** The StructureAreaPowerControl prefab. */
-    companion object : Prefab<AreaPowerControl.Standard>() {
-      override val all: AreaPowerControl.Standard.Batch
-        get() = intrinsic()
-
-      override fun named(name: String): AreaPowerControl.Standard.Batch = intrinsic()
-    }
+    companion object : SlottedPrefab<AreaPowerControl.Standard, AreaPowerControl.Standard.Batch>()
   }
 
   /** A StructureAreaPowerControlReversed. */
@@ -6767,12 +6576,7 @@ interface AreaPowerControl {
     }
 
     /** The StructureAreaPowerControlReversed prefab. */
-    companion object : Prefab<AreaPowerControl.Reversed>() {
-      override val all: AreaPowerControl.Reversed.Batch
-        get() = intrinsic()
-
-      override fun named(name: String): AreaPowerControl.Reversed.Batch = intrinsic()
-    }
+    companion object : SlottedPrefab<AreaPowerControl.Reversed, AreaPowerControl.Reversed.Batch>()
   }
 }
 
@@ -6836,12 +6640,7 @@ interface Console {
     }
 
     /** The StructureConsole prefab. */
-    companion object : Prefab<Console.Standard>() {
-      override val all: Console.Standard.Batch
-        get() = intrinsic()
-
-      override fun named(name: String): Console.Standard.Batch = intrinsic()
-    }
+    companion object : SlottedPrefab<Console.Standard, Console.Standard.Batch>()
   }
 
   /** A StructureConsoleDual. */
@@ -6888,12 +6687,7 @@ interface Console {
     }
 
     /** The StructureConsoleDual prefab. */
-    companion object : Prefab<Console.Dual>() {
-      override val all: Console.Dual.Batch
-        get() = intrinsic()
-
-      override fun named(name: String): Console.Dual.Batch = intrinsic()
-    }
+    companion object : SlottedPrefab<Console.Dual, Console.Dual.Batch>()
   }
 
   /** A StructureConsoleMonitor. */
@@ -6940,12 +6734,7 @@ interface Console {
     }
 
     /** The StructureConsoleMonitor prefab. */
-    companion object : Prefab<Console.Monitor>() {
-      override val all: Console.Monitor.Batch
-        get() = intrinsic()
-
-      override fun named(name: String): Console.Monitor.Batch = intrinsic()
-    }
+    companion object : SlottedPrefab<Console.Monitor, Console.Monitor.Batch>()
   }
 }
 
@@ -7077,12 +6866,7 @@ interface WallLight {
     }
 
     /** The StructureWallLightBattery prefab. */
-    companion object : Prefab<WallLight.Battery>() {
-      override val all: WallLight.Battery.Batch
-        get() = intrinsic()
-
-      override fun named(name: String): WallLight.Battery.Batch = intrinsic()
-    }
+    companion object : SlottedPrefab<WallLight.Battery, WallLight.Battery.Batch>()
   }
 }
 
@@ -7146,12 +6930,7 @@ interface Miner {
     }
 
     /** The StructureAutoMinerSmall prefab. */
-    companion object : Prefab<Miner.AutominerSmall>() {
-      override val all: Miner.AutominerSmall.Batch
-        get() = intrinsic()
-
-      override fun named(name: String): Miner.AutominerSmall.Batch = intrinsic()
-    }
+    companion object : SlottedPrefab<Miner.AutominerSmall, Miner.AutominerSmall.Batch>()
   }
 
   /** A StructureDeepMiner. */
@@ -7204,12 +6983,7 @@ interface Miner {
     }
 
     /** The StructureDeepMiner prefab. */
-    companion object : Prefab<Miner.Deep>() {
-      override val all: Miner.Deep.Batch
-        get() = intrinsic()
-
-      override fun named(name: String): Miner.Deep.Batch = intrinsic()
-    }
+    companion object : SlottedPrefab<Miner.Deep, Miner.Deep.Batch>()
   }
 
   /** A StructureCombustionDeepMiner. */
@@ -7307,12 +7081,7 @@ interface Miner {
     }
 
     /** The StructureCombustionDeepMiner prefab. */
-    companion object : Prefab<Miner.CombustionDeep>() {
-      override val all: Miner.CombustionDeep.Batch
-        get() = intrinsic()
-
-      override fun named(name: String): Miner.CombustionDeep.Batch = intrinsic()
-    }
+    companion object : SlottedPrefab<Miner.CombustionDeep, Miner.CombustionDeep.Batch>()
   }
 
   /** A StructureHorizontalAutoMiner. */
@@ -7367,12 +7136,7 @@ interface Miner {
     }
 
     /** The StructureHorizontalAutoMiner prefab. */
-    companion object : Prefab<Miner.Ogre>() {
-      override val all: Miner.Ogre.Batch
-        get() = intrinsic()
-
-      override fun named(name: String): Miner.Ogre.Batch = intrinsic()
-    }
+    companion object : SlottedPrefab<Miner.Ogre, Miner.Ogre.Batch>()
   }
 
   /** A StructureRocketMiner. */
@@ -7430,12 +7194,7 @@ interface Miner {
     }
 
     /** The StructureRocketMiner prefab. */
-    companion object : Prefab<Miner.Rocket>() {
-      override val all: Miner.Rocket.Batch
-        get() = intrinsic()
-
-      override fun named(name: String): Miner.Rocket.Batch = intrinsic()
-    }
+    companion object : SlottedPrefab<Miner.Rocket, Miner.Rocket.Batch>()
   }
 }
 
@@ -7489,12 +7248,7 @@ interface MiningDrill {
     }
 
     /** The ItemMiningDrill prefab. */
-    companion object : Prefab<MiningDrill.Standard>() {
-      override val all: MiningDrill.Standard.Batch
-        get() = intrinsic()
-
-      override fun named(name: String): MiningDrill.Standard.Batch = intrinsic()
-    }
+    companion object : SlottedPrefab<MiningDrill.Standard, MiningDrill.Standard.Batch>()
   }
 
   /** A ItemMiningDrillHeavy. */
@@ -7535,12 +7289,7 @@ interface MiningDrill {
     }
 
     /** The ItemMiningDrillHeavy prefab. */
-    companion object : Prefab<MiningDrill.Heavy>() {
-      override val all: MiningDrill.Heavy.Batch
-        get() = intrinsic()
-
-      override fun named(name: String): MiningDrill.Heavy.Batch = intrinsic()
-    }
+    companion object : SlottedPrefab<MiningDrill.Heavy, MiningDrill.Heavy.Batch>()
   }
 
   /** A ItemMKIIMiningDrill. */
@@ -7581,12 +7330,7 @@ interface MiningDrill {
     }
 
     /** The ItemMKIIMiningDrill prefab. */
-    companion object : Prefab<MiningDrill.MkII>() {
-      override val all: MiningDrill.MkII.Batch
-        get() = intrinsic()
-
-      override fun named(name: String): MiningDrill.MkII.Batch = intrinsic()
-    }
+    companion object : SlottedPrefab<MiningDrill.MkII, MiningDrill.MkII.Batch>()
   }
 }
 
@@ -7623,12 +7367,7 @@ interface HandDrill {
     }
 
     /** The ItemDrill prefab. */
-    companion object : Prefab<HandDrill.Standard>() {
-      override val all: HandDrill.Standard.Batch
-        get() = intrinsic()
-
-      override fun named(name: String): HandDrill.Standard.Batch = intrinsic()
-    }
+    companion object : SlottedPrefab<HandDrill.Standard, HandDrill.Standard.Batch>()
   }
 
   /** A ItemEmergencyDrill. */
@@ -7658,12 +7397,7 @@ interface HandDrill {
     }
 
     /** The ItemEmergencyDrill prefab. */
-    companion object : Prefab<HandDrill.Emergency>() {
-      override val all: HandDrill.Emergency.Batch
-        get() = intrinsic()
-
-      override fun named(name: String): HandDrill.Emergency.Batch = intrinsic()
-    }
+    companion object : SlottedPrefab<HandDrill.Emergency, HandDrill.Emergency.Batch>()
   }
 
   /** A ItemMKIIDrill. */
@@ -7693,12 +7427,7 @@ interface HandDrill {
     }
 
     /** The ItemMKIIDrill prefab. */
-    companion object : Prefab<HandDrill.MkII>() {
-      override val all: HandDrill.MkII.Batch
-        get() = intrinsic()
-
-      override fun named(name: String): HandDrill.MkII.Batch = intrinsic()
-    }
+    companion object : SlottedPrefab<HandDrill.MkII, HandDrill.MkII.Batch>()
   }
 }
 
@@ -7735,12 +7464,7 @@ interface AngleGrinder {
     }
 
     /** The ItemAngleGrinder prefab. */
-    companion object : Prefab<AngleGrinder.Standard>() {
-      override val all: AngleGrinder.Standard.Batch
-        get() = intrinsic()
-
-      override fun named(name: String): AngleGrinder.Standard.Batch = intrinsic()
-    }
+    companion object : SlottedPrefab<AngleGrinder.Standard, AngleGrinder.Standard.Batch>()
   }
 
   /** A ItemEmergencyAngleGrinder. */
@@ -7770,12 +7494,7 @@ interface AngleGrinder {
     }
 
     /** The ItemEmergencyAngleGrinder prefab. */
-    companion object : Prefab<AngleGrinder.Emergency>() {
-      override val all: AngleGrinder.Emergency.Batch
-        get() = intrinsic()
-
-      override fun named(name: String): AngleGrinder.Emergency.Batch = intrinsic()
-    }
+    companion object : SlottedPrefab<AngleGrinder.Emergency, AngleGrinder.Emergency.Batch>()
   }
 
   /** A ItemMKIIAngleGrinder. */
@@ -7805,12 +7524,7 @@ interface AngleGrinder {
     }
 
     /** The ItemMKIIAngleGrinder prefab. */
-    companion object : Prefab<AngleGrinder.MkII>() {
-      override val all: AngleGrinder.MkII.Batch
-        get() = intrinsic()
-
-      override fun named(name: String): AngleGrinder.MkII.Batch = intrinsic()
-    }
+    companion object : SlottedPrefab<AngleGrinder.MkII, AngleGrinder.MkII.Batch>()
   }
 }
 
@@ -7847,12 +7561,7 @@ interface ArcWelder {
     }
 
     /** The ItemArcWelder prefab. */
-    companion object : Prefab<ArcWelder.Standard>() {
-      override val all: ArcWelder.Standard.Batch
-        get() = intrinsic()
-
-      override fun named(name: String): ArcWelder.Standard.Batch = intrinsic()
-    }
+    companion object : SlottedPrefab<ArcWelder.Standard, ArcWelder.Standard.Batch>()
   }
 
   /** A ItemEmergencyArcWelder. */
@@ -7882,12 +7591,7 @@ interface ArcWelder {
     }
 
     /** The ItemEmergencyArcWelder prefab. */
-    companion object : Prefab<ArcWelder.Emergency>() {
-      override val all: ArcWelder.Emergency.Batch
-        get() = intrinsic()
-
-      override fun named(name: String): ArcWelder.Emergency.Batch = intrinsic()
-    }
+    companion object : SlottedPrefab<ArcWelder.Emergency, ArcWelder.Emergency.Batch>()
   }
 
   /** A ItemMKIIArcWelder. */
@@ -7917,12 +7621,7 @@ interface ArcWelder {
     }
 
     /** The ItemMKIIArcWelder prefab. */
-    companion object : Prefab<ArcWelder.MkII>() {
-      override val all: ArcWelder.MkII.Batch
-        get() = intrinsic()
-
-      override fun named(name: String): ArcWelder.MkII.Batch = intrinsic()
-    }
+    companion object : SlottedPrefab<ArcWelder.MkII, ArcWelder.MkII.Batch>()
   }
 }
 
@@ -8398,12 +8097,7 @@ interface Suit {
     }
 
     /** The ItemHardSuit prefab. */
-    companion object : Prefab<Suit.Hardsuit>() {
-      override val all: Suit.Hardsuit.Batch
-        get() = intrinsic()
-
-      override fun named(name: String): Suit.Hardsuit.Batch = intrinsic()
-    }
+    companion object : SlottedPrefab<Suit.Hardsuit, Suit.Hardsuit.Batch>()
   }
 
   /** A ItemSuitHARM. */
@@ -8569,12 +8263,7 @@ interface Suit {
     }
 
     /** The ItemSuitHARM prefab. */
-    companion object : Prefab<Suit.Harm>() {
-      override val all: Suit.Harm.Batch
-        get() = intrinsic()
-
-      override fun named(name: String): Suit.Harm.Batch = intrinsic()
-    }
+    companion object : SlottedPrefab<Suit.Harm, Suit.Harm.Batch>()
   }
 }
 
@@ -8804,12 +8493,7 @@ interface Sleeper {
     }
 
     /** The StructureSleeper prefab. */
-    companion object : Prefab<Sleeper.Standard>() {
-      override val all: Sleeper.Standard.Batch
-        get() = intrinsic()
-
-      override fun named(name: String): Sleeper.Standard.Batch = intrinsic()
-    }
+    companion object : SlottedPrefab<Sleeper.Standard, Sleeper.Standard.Batch>()
   }
 
   /** A StructureSleeperLeft. */
@@ -8874,12 +8558,7 @@ interface Sleeper {
     }
 
     /** The StructureSleeperLeft prefab. */
-    companion object : Prefab<Sleeper.Left>() {
-      override val all: Sleeper.Left.Batch
-        get() = intrinsic()
-
-      override fun named(name: String): Sleeper.Left.Batch = intrinsic()
-    }
+    companion object : SlottedPrefab<Sleeper.Left, Sleeper.Left.Batch>()
   }
 
   /** A StructureSleeperRight. */
@@ -8944,12 +8623,7 @@ interface Sleeper {
     }
 
     /** The StructureSleeperRight prefab. */
-    companion object : Prefab<Sleeper.Right>() {
-      override val all: Sleeper.Right.Batch
-        get() = intrinsic()
-
-      override fun named(name: String): Sleeper.Right.Batch = intrinsic()
-    }
+    companion object : SlottedPrefab<Sleeper.Right, Sleeper.Right.Batch>()
   }
 
   /** A StructureSleeperVertical. */
@@ -9014,12 +8688,7 @@ interface Sleeper {
     }
 
     /** The StructureSleeperVertical prefab. */
-    companion object : Prefab<Sleeper.Vertical>() {
-      override val all: Sleeper.Vertical.Batch
-        get() = intrinsic()
-
-      override fun named(name: String): Sleeper.Vertical.Batch = intrinsic()
-    }
+    companion object : SlottedPrefab<Sleeper.Vertical, Sleeper.Vertical.Batch>()
   }
 }
 
@@ -9104,12 +8773,7 @@ interface CryoTube : Sleeper {
     }
 
     /** The StructureCryoTubeHorizontal prefab. */
-    companion object : Prefab<CryoTube.Horizontal>() {
-      override val all: CryoTube.Horizontal.Batch
-        get() = intrinsic()
-
-      override fun named(name: String): CryoTube.Horizontal.Batch = intrinsic()
-    }
+    companion object : SlottedPrefab<CryoTube.Horizontal, CryoTube.Horizontal.Batch>()
   }
 
   /** A StructureCryoTubeVertical. */
@@ -9185,12 +8849,7 @@ interface CryoTube : Sleeper {
     }
 
     /** The StructureCryoTubeVertical prefab. */
-    companion object : Prefab<CryoTube.Vertical>() {
-      override val all: CryoTube.Vertical.Batch
-        get() = intrinsic()
-
-      override fun named(name: String): CryoTube.Vertical.Batch = intrinsic()
-    }
+    companion object : SlottedPrefab<CryoTube.Vertical, CryoTube.Vertical.Batch>()
   }
 }
 
@@ -9263,12 +8922,7 @@ interface LarreDock {
     }
 
     /** The StructureRoboticArmDock prefab. */
-    companion object : Prefab<LarreDock.Standard>() {
-      override val all: LarreDock.Standard.Batch
-        get() = intrinsic()
-
-      override fun named(name: String): LarreDock.Standard.Batch = intrinsic()
-    }
+    companion object : SlottedPrefab<LarreDock.Standard, LarreDock.Standard.Batch>()
   }
 
   /** A StructureLarreDockAtmos. */
@@ -9366,12 +9020,7 @@ interface LarreDock {
     }
 
     /** The StructureLarreDockAtmos prefab. */
-    companion object : Prefab<LarreDock.Atmos>() {
-      override val all: LarreDock.Atmos.Batch
-        get() = intrinsic()
-
-      override fun named(name: String): LarreDock.Atmos.Batch = intrinsic()
-    }
+    companion object : SlottedPrefab<LarreDock.Atmos, LarreDock.Atmos.Batch>()
   }
 
   /** A StructureLarreDockCargo. */
@@ -9441,12 +9090,7 @@ interface LarreDock {
     }
 
     /** The StructureLarreDockCargo prefab. */
-    companion object : Prefab<LarreDock.Cargo>() {
-      override val all: LarreDock.Cargo.Batch
-        get() = intrinsic()
-
-      override fun named(name: String): LarreDock.Cargo.Batch = intrinsic()
-    }
+    companion object : SlottedPrefab<LarreDock.Cargo, LarreDock.Cargo.Batch>()
   }
 
   /** A StructureLarreDockCollector. */
@@ -9509,12 +9153,7 @@ interface LarreDock {
     }
 
     /** The StructureLarreDockCollector prefab. */
-    companion object : Prefab<LarreDock.Collector>() {
-      override val all: LarreDock.Collector.Batch
-        get() = intrinsic()
-
-      override fun named(name: String): LarreDock.Collector.Batch = intrinsic()
-    }
+    companion object : SlottedPrefab<LarreDock.Collector, LarreDock.Collector.Batch>()
   }
 
   /** A StructureLarreDockHydroponics. */
@@ -9588,12 +9227,7 @@ interface LarreDock {
     }
 
     /** The StructureLarreDockHydroponics prefab. */
-    companion object : Prefab<LarreDock.Hydroponics>() {
-      override val all: LarreDock.Hydroponics.Batch
-        get() = intrinsic()
-
-      override fun named(name: String): LarreDock.Hydroponics.Batch = intrinsic()
-    }
+    companion object : SlottedPrefab<LarreDock.Hydroponics, LarreDock.Hydroponics.Batch>()
   }
 }
 
@@ -9700,12 +9334,7 @@ interface Sequencer {
     }
 
     /** The LogicStepSequencer8 prefab. */
-    companion object : Prefab<Sequencer.LogicStep>() {
-      override val all: Sequencer.LogicStep.Batch
-        get() = intrinsic()
-
-      override fun named(name: String): Sequencer.LogicStep.Batch = intrinsic()
-    }
+    companion object : SlottedPrefab<Sequencer.LogicStep, Sequencer.LogicStep.Batch>()
   }
 }
 
@@ -10265,12 +9894,7 @@ interface ChuteBin {
     }
 
     /** The StructureChuteBin prefab. */
-    companion object : Prefab<ChuteBin.Import>() {
-      override val all: ChuteBin.Import.Batch
-        get() = intrinsic()
-
-      override fun named(name: String): ChuteBin.Import.Batch = intrinsic()
-    }
+    companion object : SlottedPrefab<ChuteBin.Import, ChuteBin.Import.Batch>()
   }
 
   /** A StructureChuteExportBin. */
@@ -10314,12 +9938,7 @@ interface ChuteBin {
     }
 
     /** The StructureChuteExportBin prefab. */
-    companion object : Prefab<ChuteBin.Export>() {
-      override val all: ChuteBin.Export.Batch
-        get() = intrinsic()
-
-      override fun named(name: String): ChuteBin.Export.Batch = intrinsic()
-    }
+    companion object : SlottedPrefab<ChuteBin.Export, ChuteBin.Export.Batch>()
   }
 }
 
@@ -10525,12 +10144,7 @@ interface Fabricator {
     }
 
     /** The StructureAutolathe prefab. */
-    companion object : Prefab<Fabricator.Autolathe>() {
-      override val all: Fabricator.Autolathe.Batch
-        get() = intrinsic()
-
-      override fun named(name: String): Fabricator.Autolathe.Batch = intrinsic()
-    }
+    companion object : SlottedPrefab<Fabricator.Autolathe, Fabricator.Autolathe.Batch>()
   }
 
   /** A StructureElectronicsPrinter. */
@@ -10598,12 +10212,8 @@ interface Fabricator {
     }
 
     /** The StructureElectronicsPrinter prefab. */
-    companion object : Prefab<Fabricator.ElectronicsPrinter>() {
-      override val all: Fabricator.ElectronicsPrinter.Batch
-        get() = intrinsic()
-
-      override fun named(name: String): Fabricator.ElectronicsPrinter.Batch = intrinsic()
-    }
+    companion object :
+        SlottedPrefab<Fabricator.ElectronicsPrinter, Fabricator.ElectronicsPrinter.Batch>()
   }
 
   /** A StructureSecurityPrinter. */
@@ -10671,12 +10281,7 @@ interface Fabricator {
     }
 
     /** The StructureSecurityPrinter prefab. */
-    companion object : Prefab<Fabricator.SecurityPrinter>() {
-      override val all: Fabricator.SecurityPrinter.Batch
-        get() = intrinsic()
-
-      override fun named(name: String): Fabricator.SecurityPrinter.Batch = intrinsic()
-    }
+    companion object : SlottedPrefab<Fabricator.SecurityPrinter, Fabricator.SecurityPrinter.Batch>()
   }
 
   /** A StructureToolManufactory. */
@@ -10744,12 +10349,7 @@ interface Fabricator {
     }
 
     /** The StructureToolManufactory prefab. */
-    companion object : Prefab<Fabricator.ToolManufactory>() {
-      override val all: Fabricator.ToolManufactory.Batch
-        get() = intrinsic()
-
-      override fun named(name: String): Fabricator.ToolManufactory.Batch = intrinsic()
-    }
+    companion object : SlottedPrefab<Fabricator.ToolManufactory, Fabricator.ToolManufactory.Batch>()
   }
 
   /** A StructureRocketManufactory. */
@@ -10817,12 +10417,8 @@ interface Fabricator {
     }
 
     /** The StructureRocketManufactory prefab. */
-    companion object : Prefab<Fabricator.RocketManufactory>() {
-      override val all: Fabricator.RocketManufactory.Batch
-        get() = intrinsic()
-
-      override fun named(name: String): Fabricator.RocketManufactory.Batch = intrinsic()
-    }
+    companion object :
+        SlottedPrefab<Fabricator.RocketManufactory, Fabricator.RocketManufactory.Batch>()
   }
 
   /** A StructureHydraulicPipeBender. */
@@ -10890,12 +10486,8 @@ interface Fabricator {
     }
 
     /** The StructureHydraulicPipeBender prefab. */
-    companion object : Prefab<Fabricator.HydraulicPipeBender>() {
-      override val all: Fabricator.HydraulicPipeBender.Batch
-        get() = intrinsic()
-
-      override fun named(name: String): Fabricator.HydraulicPipeBender.Batch = intrinsic()
-    }
+    companion object :
+        SlottedPrefab<Fabricator.HydraulicPipeBender, Fabricator.HydraulicPipeBender.Batch>()
   }
 
   /** A StructureAutomatedOven. */
@@ -10963,12 +10555,7 @@ interface Fabricator {
     }
 
     /** The StructureAutomatedOven prefab. */
-    companion object : Prefab<Fabricator.AutomatedOven>() {
-      override val all: Fabricator.AutomatedOven.Batch
-        get() = intrinsic()
-
-      override fun named(name: String): Fabricator.AutomatedOven.Batch = intrinsic()
-    }
+    companion object : SlottedPrefab<Fabricator.AutomatedOven, Fabricator.AutomatedOven.Batch>()
   }
 
   /** A StructureAdvancedPackagingMachine. */
@@ -11036,12 +10623,11 @@ interface Fabricator {
     }
 
     /** The StructureAdvancedPackagingMachine prefab. */
-    companion object : Prefab<Fabricator.AdvancedPackagingMachine>() {
-      override val all: Fabricator.AdvancedPackagingMachine.Batch
-        get() = intrinsic()
-
-      override fun named(name: String): Fabricator.AdvancedPackagingMachine.Batch = intrinsic()
-    }
+    companion object :
+        SlottedPrefab<
+            Fabricator.AdvancedPackagingMachine,
+            Fabricator.AdvancedPackagingMachine.Batch,
+        >()
   }
 }
 
@@ -11103,12 +10689,7 @@ interface DigitalChute {
     }
 
     /** The StructureChuteDigitalValveLeft prefab. */
-    companion object : Prefab<DigitalChute.ValveLeft>() {
-      override val all: DigitalChute.ValveLeft.Batch
-        get() = intrinsic()
-
-      override fun named(name: String): DigitalChute.ValveLeft.Batch = intrinsic()
-    }
+    companion object : SlottedPrefab<DigitalChute.ValveLeft, DigitalChute.ValveLeft.Batch>()
   }
 
   /** A StructureChuteDigitalValveRight. */
@@ -11157,12 +10738,7 @@ interface DigitalChute {
     }
 
     /** The StructureChuteDigitalValveRight prefab. */
-    companion object : Prefab<DigitalChute.ValveRight>() {
-      override val all: DigitalChute.ValveRight.Batch
-        get() = intrinsic()
-
-      override fun named(name: String): DigitalChute.ValveRight.Batch = intrinsic()
-    }
+    companion object : SlottedPrefab<DigitalChute.ValveRight, DigitalChute.ValveRight.Batch>()
   }
 
   /** A StructureChuteDigitalFlipFlopSplitterLeft. */
@@ -11211,12 +10787,8 @@ interface DigitalChute {
     }
 
     /** The StructureChuteDigitalFlipFlopSplitterLeft prefab. */
-    companion object : Prefab<DigitalChute.FlipFlopSplitterLeft>() {
-      override val all: DigitalChute.FlipFlopSplitterLeft.Batch
-        get() = intrinsic()
-
-      override fun named(name: String): DigitalChute.FlipFlopSplitterLeft.Batch = intrinsic()
-    }
+    companion object :
+        SlottedPrefab<DigitalChute.FlipFlopSplitterLeft, DigitalChute.FlipFlopSplitterLeft.Batch>()
   }
 
   /** A StructureChuteDigitalFlipFlopSplitterRight. */
@@ -11265,12 +10837,11 @@ interface DigitalChute {
     }
 
     /** The StructureChuteDigitalFlipFlopSplitterRight prefab. */
-    companion object : Prefab<DigitalChute.FlipFlopSplitterRight>() {
-      override val all: DigitalChute.FlipFlopSplitterRight.Batch
-        get() = intrinsic()
-
-      override fun named(name: String): DigitalChute.FlipFlopSplitterRight.Batch = intrinsic()
-    }
+    companion object :
+        SlottedPrefab<
+            DigitalChute.FlipFlopSplitterRight,
+            DigitalChute.FlipFlopSplitterRight.Batch,
+        >()
   }
 }
 
@@ -11603,12 +11174,7 @@ interface Computer {
     }
 
     /** The StructureComputer prefab. */
-    companion object : Prefab<Computer.Modern>() {
-      override val all: Computer.Modern.Batch
-        get() = intrinsic()
-
-      override fun named(name: String): Computer.Modern.Batch = intrinsic()
-    }
+    companion object : SlottedPrefab<Computer.Modern, Computer.Modern.Batch>()
   }
 
   /** A StructureComputerUpright. */
@@ -11652,12 +11218,7 @@ interface Computer {
     }
 
     /** The StructureComputerUpright prefab. */
-    companion object : Prefab<Computer.Retro>() {
-      override val all: Computer.Retro.Batch
-        get() = intrinsic()
-
-      override fun named(name: String): Computer.Retro.Batch = intrinsic()
-    }
+    companion object : SlottedPrefab<Computer.Retro, Computer.Retro.Batch>()
   }
 
   /** A StructureComputerBigScreen. */
@@ -11701,12 +11262,7 @@ interface Computer {
     }
 
     /** The StructureComputerBigScreen prefab. */
-    companion object : Prefab<Computer.BigScreen>() {
-      override val all: Computer.BigScreen.Batch
-        get() = intrinsic()
-
-      override fun named(name: String): Computer.BigScreen.Batch = intrinsic()
-    }
+    companion object : SlottedPrefab<Computer.BigScreen, Computer.BigScreen.Batch>()
   }
 
   /** A StructureComputerBigScreenWallMounted. */
@@ -11750,12 +11306,8 @@ interface Computer {
     }
 
     /** The StructureComputerBigScreenWallMounted prefab. */
-    companion object : Prefab<Computer.BigScreenWallMounted>() {
-      override val all: Computer.BigScreenWallMounted.Batch
-        get() = intrinsic()
-
-      override fun named(name: String): Computer.BigScreenWallMounted.Batch = intrinsic()
-    }
+    companion object :
+        SlottedPrefab<Computer.BigScreenWallMounted, Computer.BigScreenWallMounted.Batch>()
   }
 }
 
@@ -11911,12 +11463,7 @@ interface WallCooler {
     }
 
     /** The StructureWallCooler prefab. */
-    companion object : Prefab<WallCooler.Gas>() {
-      override val all: WallCooler.Gas.Batch
-        get() = intrinsic()
-
-      override fun named(name: String): WallCooler.Gas.Batch = intrinsic()
-    }
+    companion object : SlottedPrefab<WallCooler.Gas, WallCooler.Gas.Batch>()
   }
 
   /** A StructureWaterWallCooler. */
@@ -11974,12 +11521,7 @@ interface WallCooler {
     }
 
     /** The StructureWaterWallCooler prefab. */
-    companion object : Prefab<WallCooler.Liquid>() {
-      override val all: WallCooler.Liquid.Batch
-        get() = intrinsic()
-
-      override fun named(name: String): WallCooler.Liquid.Batch = intrinsic()
-    }
+    companion object : SlottedPrefab<WallCooler.Liquid, WallCooler.Liquid.Batch>()
   }
 }
 
@@ -12058,12 +11600,7 @@ interface ItemRouter {
     }
 
     /** The StructureSorter prefab. */
-    companion object : Prefab<ItemRouter.Sorter>() {
-      override val all: ItemRouter.Sorter.Batch
-        get() = intrinsic()
-
-      override fun named(name: String): ItemRouter.Sorter.Batch = intrinsic()
-    }
+    companion object : SlottedPrefab<ItemRouter.Sorter, ItemRouter.Sorter.Batch>()
   }
 
   /** A StructureUnloader. */
@@ -12118,12 +11655,7 @@ interface ItemRouter {
     }
 
     /** The StructureUnloader prefab. */
-    companion object : Prefab<ItemRouter.Unloader>() {
-      override val all: ItemRouter.Unloader.Batch
-        get() = intrinsic()
-
-      override fun named(name: String): ItemRouter.Unloader.Batch = intrinsic()
-    }
+    companion object : SlottedPrefab<ItemRouter.Unloader, ItemRouter.Unloader.Batch>()
   }
 
   /** A StructureStacker. */
@@ -12191,12 +11723,7 @@ interface ItemRouter {
     }
 
     /** The StructureStacker prefab. */
-    companion object : Prefab<ItemRouter.Stacker>() {
-      override val all: ItemRouter.Stacker.Batch
-        get() = intrinsic()
-
-      override fun named(name: String): ItemRouter.Stacker.Batch = intrinsic()
-    }
+    companion object : SlottedPrefab<ItemRouter.Stacker, ItemRouter.Stacker.Batch>()
   }
 
   /** A StructureStackerReverse. */
@@ -12264,12 +11791,7 @@ interface ItemRouter {
     }
 
     /** The StructureStackerReverse prefab. */
-    companion object : Prefab<ItemRouter.StackerReversed>() {
-      override val all: ItemRouter.StackerReversed.Batch
-        get() = intrinsic()
-
-      override fun named(name: String): ItemRouter.StackerReversed.Batch = intrinsic()
-    }
+    companion object : SlottedPrefab<ItemRouter.StackerReversed, ItemRouter.StackerReversed.Batch>()
   }
 }
 
@@ -12342,12 +11864,7 @@ interface SuitStorage {
     }
 
     /** The StructureSuitStorage prefab. */
-    companion object : Prefab<SuitStorage.Standard>() {
-      override val all: SuitStorage.Standard.Batch
-        get() = intrinsic()
-
-      override fun named(name: String): SuitStorage.Standard.Batch = intrinsic()
-    }
+    companion object : SlottedPrefab<SuitStorage.Standard, SuitStorage.Standard.Batch>()
   }
 
   /** A StructureSuitStorageFrame. */
@@ -12403,12 +11920,7 @@ interface SuitStorage {
     }
 
     /** The StructureSuitStorageFrame prefab. */
-    companion object : Prefab<SuitStorage.Frame>() {
-      override val all: SuitStorage.Frame.Batch
-        get() = intrinsic()
-
-      override fun named(name: String): SuitStorage.Frame.Batch = intrinsic()
-    }
+    companion object : SlottedPrefab<SuitStorage.Frame, SuitStorage.Frame.Batch>()
   }
 
   /** A StructureSuitStorageLocker. */
@@ -12464,12 +11976,7 @@ interface SuitStorage {
     }
 
     /** The StructureSuitStorageLocker prefab. */
-    companion object : Prefab<SuitStorage.Locker>() {
-      override val all: SuitStorage.Locker.Batch
-        get() = intrinsic()
-
-      override fun named(name: String): SuitStorage.Locker.Batch = intrinsic()
-    }
+    companion object : SlottedPrefab<SuitStorage.Locker, SuitStorage.Locker.Batch>()
   }
 }
 
@@ -12569,12 +12076,7 @@ interface Generator {
     }
 
     /** The StructureSolidFuelGenerator prefab. */
-    companion object : Prefab<Generator.SolidFuel>() {
-      override val all: Generator.SolidFuel.Batch
-        get() = intrinsic()
-
-      override fun named(name: String): Generator.SolidFuel.Batch = intrinsic()
-    }
+    companion object : SlottedPrefab<Generator.SolidFuel, Generator.SolidFuel.Batch>()
   }
 
   /** A StructureStirlingEngine. */
@@ -12655,12 +12157,7 @@ interface Generator {
     }
 
     /** The StructureStirlingEngine prefab. */
-    companion object : Prefab<Generator.StirlingEngine>() {
-      override val all: Generator.StirlingEngine.Batch
-        get() = intrinsic()
-
-      override fun named(name: String): Generator.StirlingEngine.Batch = intrinsic()
-    }
+    companion object : SlottedPrefab<Generator.StirlingEngine, Generator.StirlingEngine.Batch>()
   }
 
   /** A StructureWindTurbine. */
@@ -12728,12 +12225,7 @@ interface WaterBottleFiller {
     }
 
     /** The StructureWaterBottleFillerPowered prefab. */
-    companion object : Prefab<WaterBottleFiller.Powered>() {
-      override val all: WaterBottleFiller.Powered.Batch
-        get() = intrinsic()
-
-      override fun named(name: String): WaterBottleFiller.Powered.Batch = intrinsic()
-    }
+    companion object : SlottedPrefab<WaterBottleFiller.Powered, WaterBottleFiller.Powered.Batch>()
   }
 
   /** A StructureWaterBottleFillerPoweredBottom. */
@@ -12768,12 +12260,8 @@ interface WaterBottleFiller {
     }
 
     /** The StructureWaterBottleFillerPoweredBottom prefab. */
-    companion object : Prefab<WaterBottleFiller.PoweredBottom>() {
-      override val all: WaterBottleFiller.PoweredBottom.Batch
-        get() = intrinsic()
-
-      override fun named(name: String): WaterBottleFiller.PoweredBottom.Batch = intrinsic()
-    }
+    companion object :
+        SlottedPrefab<WaterBottleFiller.PoweredBottom, WaterBottleFiller.PoweredBottom.Batch>()
   }
 }
 
@@ -12976,12 +12464,7 @@ interface CircuitHousing {
     }
 
     /** The StructureCircuitHousing prefab. */
-    companion object : Prefab<CircuitHousing.Standard>() {
-      override val all: CircuitHousing.Standard.Batch
-        get() = intrinsic()
-
-      override fun named(name: String): CircuitHousing.Standard.Batch = intrinsic()
-    }
+    companion object : SlottedPrefab<CircuitHousing.Standard, CircuitHousing.Standard.Batch>()
   }
 
   /** A StructureCircuitHousingCompact. */
@@ -13032,12 +12515,7 @@ interface CircuitHousing {
     }
 
     /** The StructureCircuitHousingCompact prefab. */
-    companion object : Prefab<CircuitHousing.Compact>() {
-      override val all: CircuitHousing.Compact.Batch
-        get() = intrinsic()
-
-      override fun named(name: String): CircuitHousing.Compact.Batch = intrinsic()
-    }
+    companion object : SlottedPrefab<CircuitHousing.Compact, CircuitHousing.Compact.Batch>()
   }
 
   /** A StructureRocketCircuitHousing. */
@@ -13088,12 +12566,7 @@ interface CircuitHousing {
     }
 
     /** The StructureRocketCircuitHousing prefab. */
-    companion object : Prefab<CircuitHousing.Rocket>() {
-      override val all: CircuitHousing.Rocket.Batch
-        get() = intrinsic()
-
-      override fun named(name: String): CircuitHousing.Rocket.Batch = intrinsic()
-    }
+    companion object : SlottedPrefab<CircuitHousing.Rocket, CircuitHousing.Rocket.Batch>()
   }
 }
 
@@ -13334,12 +12807,7 @@ class DynamicGPR internal constructor() : TypedDevice() {
   }
 
   /** The DynamicGPR prefab. */
-  companion object : Prefab<DynamicGPR>() {
-    override val all: DynamicGPR.Batch
-      get() = intrinsic()
-
-    override fun named(name: String): DynamicGPR.Batch = intrinsic()
-  }
+  companion object : SlottedPrefab<DynamicGPR, DynamicGPR.Batch>()
 }
 
 /** A DynamicLight. */
@@ -13377,12 +12845,7 @@ class DynamicLight internal constructor() : TypedDevice() {
   }
 
   /** The DynamicLight prefab. */
-  companion object : Prefab<DynamicLight>() {
-    override val all: DynamicLight.Batch
-      get() = intrinsic()
-
-    override fun named(name: String): DynamicLight.Batch = intrinsic()
-  }
+  companion object : SlottedPrefab<DynamicLight, DynamicLight.Batch>()
 }
 
 /** A H2Combustor. */
@@ -13472,12 +12935,7 @@ class H2Combustor internal constructor() : TypedDevice() {
   }
 
   /** The H2Combustor prefab. */
-  companion object : Prefab<H2Combustor>() {
-    override val all: H2Combustor.Batch
-      get() = intrinsic()
-
-    override fun named(name: String): H2Combustor.Batch = intrinsic()
-  }
+  companion object : SlottedPrefab<H2Combustor, H2Combustor.Batch>()
 }
 
 /** A ItemBeacon. */
@@ -13510,12 +12968,7 @@ class ItemBeacon internal constructor() : TypedDevice() {
   }
 
   /** The ItemBeacon prefab. */
-  companion object : Prefab<ItemBeacon>() {
-    override val all: ItemBeacon.Batch
-      get() = intrinsic()
-
-    override fun named(name: String): ItemBeacon.Batch = intrinsic()
-  }
+  companion object : SlottedPrefab<ItemBeacon, ItemBeacon.Batch>()
 }
 
 /** A ItemFlashlight. */
@@ -13549,12 +13002,7 @@ class Flashlight internal constructor() : TypedDevice() {
   }
 
   /** The ItemFlashlight prefab. */
-  companion object : Prefab<Flashlight>() {
-    override val all: Flashlight.Batch
-      get() = intrinsic()
-
-    override fun named(name: String): Flashlight.Batch = intrinsic()
-  }
+  companion object : SlottedPrefab<Flashlight, Flashlight.Batch>()
 }
 
 /** A ItemGasMask. */
@@ -13604,12 +13052,7 @@ class GasMask internal constructor() : TypedDevice() {
   }
 
   /** The ItemGasMask prefab. */
-  companion object : Prefab<GasMask>() {
-    override val all: GasMask.Batch
-      get() = intrinsic()
-
-    override fun named(name: String): GasMask.Batch = intrinsic()
-  }
+  companion object : SlottedPrefab<GasMask, GasMask.Batch>()
 }
 
 /** A ItemHardHat. */
@@ -13639,12 +13082,7 @@ class HardHat internal constructor() : TypedDevice() {
   }
 
   /** The ItemHardHat prefab. */
-  companion object : Prefab<HardHat>() {
-    override val all: HardHat.Batch
-      get() = intrinsic()
-
-    override fun named(name: String): HardHat.Batch = intrinsic()
-  }
+  companion object : SlottedPrefab<HardHat, HardHat.Batch>()
 }
 
 /** A ItemHardJetpack. */
@@ -13675,12 +13113,7 @@ class HardJetpack internal constructor() : TypedDevice() {
   }
 
   /** The ItemHardJetpack prefab. */
-  companion object : Prefab<HardJetpack>() {
-    override val all: HardJetpack.Batch
-      get() = intrinsic()
-
-    override fun named(name: String): HardJetpack.Batch = intrinsic()
-  }
+  companion object : SlottedPrefab<HardJetpack, HardJetpack.Batch>()
 }
 
 /** A ItemIntegratedCircuit10. */
@@ -13721,12 +13154,7 @@ class JetpackBasic internal constructor() : TypedDevice() {
   }
 
   /** The ItemJetpackBasic prefab. */
-  companion object : Prefab<JetpackBasic>() {
-    override val all: JetpackBasic.Batch
-      get() = intrinsic()
-
-    override fun named(name: String): JetpackBasic.Batch = intrinsic()
-  }
+  companion object : SlottedPrefab<JetpackBasic, JetpackBasic.Batch>()
 }
 
 /** A ItemLabeller. */
@@ -13759,12 +13187,7 @@ class Labeller internal constructor() : TypedDevice() {
   }
 
   /** The ItemLabeller prefab. */
-  companion object : Prefab<Labeller>() {
-    override val all: Labeller.Batch
-      get() = intrinsic()
-
-    override fun named(name: String): Labeller.Batch = intrinsic()
-  }
+  companion object : SlottedPrefab<Labeller, Labeller.Batch>()
 }
 
 /** A ItemLaptop. */
@@ -13817,12 +13240,7 @@ class Laptop internal constructor() : TypedDevice() {
   }
 
   /** The ItemLaptop prefab. */
-  companion object : Prefab<Laptop>() {
-    override val all: Laptop.Batch
-      get() = intrinsic()
-
-    override fun named(name: String): Laptop.Batch = intrinsic()
-  }
+  companion object : SlottedPrefab<Laptop, Laptop.Batch>()
 }
 
 /** A ItemLiquidVacuum. */
@@ -13863,12 +13281,7 @@ class LiquidVacuum internal constructor() : TypedDevice() {
   }
 
   /** The ItemLiquidVacuum prefab. */
-  companion object : Prefab<LiquidVacuum>() {
-    override val all: LiquidVacuum.Batch
-      get() = intrinsic()
-
-    override fun named(name: String): LiquidVacuum.Batch = intrinsic()
-  }
+  companion object : SlottedPrefab<LiquidVacuum, LiquidVacuum.Batch>()
 }
 
 /** A ItemNVG. */
@@ -13902,12 +13315,7 @@ class NVG internal constructor() : TypedDevice() {
   }
 
   /** The ItemNVG prefab. */
-  companion object : Prefab<NVG>() {
-    override val all: NVG.Batch
-      get() = intrinsic()
-
-    override fun named(name: String): NVG.Batch = intrinsic()
-  }
+  companion object : SlottedPrefab<NVG, NVG.Batch>()
 }
 
 /** A ItemOreDetector. */
@@ -13944,12 +13352,7 @@ class OreDetector internal constructor() : TypedDevice() {
   }
 
   /** The ItemOreDetector prefab. */
-  companion object : Prefab<OreDetector>() {
-    override val all: OreDetector.Batch
-      get() = intrinsic()
-
-    override fun named(name: String): OreDetector.Batch = intrinsic()
-  }
+  companion object : SlottedPrefab<OreDetector, OreDetector.Batch>()
 }
 
 /** A ItemPlantSampler. */
@@ -13987,12 +13390,7 @@ class PlantSampler internal constructor() : TypedDevice() {
   }
 
   /** The ItemPlantSampler prefab. */
-  companion object : Prefab<PlantSampler>() {
-    override val all: PlantSampler.Batch
-      get() = intrinsic()
-
-    override fun named(name: String): PlantSampler.Batch = intrinsic()
-  }
+  companion object : SlottedPrefab<PlantSampler, PlantSampler.Batch>()
 }
 
 /** A ItemRemoteDetonator. */
@@ -14037,12 +13435,7 @@ class RemoteDetonator internal constructor() : TypedDevice() {
   }
 
   /** The ItemRemoteDetonator prefab. */
-  companion object : Prefab<RemoteDetonator>() {
-    override val all: RemoteDetonator.Batch
-      get() = intrinsic()
-
-    override fun named(name: String): RemoteDetonator.Batch = intrinsic()
-  }
+  companion object : SlottedPrefab<RemoteDetonator, RemoteDetonator.Batch>()
 }
 
 /** A ItemSensorLenses. */
@@ -14077,12 +13470,7 @@ class SensorLenses internal constructor() : TypedDevice() {
   }
 
   /** The ItemSensorLenses prefab. */
-  companion object : Prefab<SensorLenses>() {
-    override val all: SensorLenses.Batch
-      get() = intrinsic()
-
-    override fun named(name: String): SensorLenses.Batch = intrinsic()
-  }
+  companion object : SlottedPrefab<SensorLenses, SensorLenses.Batch>()
 }
 
 /** A ItemSpacepack. */
@@ -14113,12 +13501,7 @@ class Spacepack internal constructor() : TypedDevice() {
   }
 
   /** The ItemSpacepack prefab. */
-  companion object : Prefab<Spacepack>() {
-    override val all: Spacepack.Batch
-      get() = intrinsic()
-
-    override fun named(name: String): Spacepack.Batch = intrinsic()
-  }
+  companion object : SlottedPrefab<Spacepack, Spacepack.Batch>()
 }
 
 /** A ItemTerrainManipulator. */
@@ -14164,12 +13547,7 @@ class TerrainManipulator internal constructor() : TypedDevice() {
   }
 
   /** The ItemTerrainManipulator prefab. */
-  companion object : Prefab<TerrainManipulator>() {
-    override val all: TerrainManipulator.Batch
-      get() = intrinsic()
-
-    override fun named(name: String): TerrainManipulator.Batch = intrinsic()
-  }
+  companion object : SlottedPrefab<TerrainManipulator, TerrainManipulator.Batch>()
 }
 
 /** A ItemWearLamp. */
@@ -14199,12 +13577,7 @@ class WearLamp internal constructor() : TypedDevice() {
   }
 
   /** The ItemWearLamp prefab. */
-  companion object : Prefab<WearLamp>() {
-    override val all: WearLamp.Batch
-      get() = intrinsic()
-
-    override fun named(name: String): WearLamp.Batch = intrinsic()
-  }
+  companion object : SlottedPrefab<WearLamp, WearLamp.Batch>()
 }
 
 /** A Landingpad_DataConnectionPiece. */
@@ -14302,12 +13675,7 @@ class PortableSolarPanel internal constructor() : TypedDevice() {
   }
 
   /** The PortableSolarPanel prefab. */
-  companion object : Prefab<PortableSolarPanel>() {
-    override val all: PortableSolarPanel.Batch
-      get() = intrinsic()
-
-    override fun named(name: String): PortableSolarPanel.Batch = intrinsic()
-  }
+  companion object : SlottedPrefab<PortableSolarPanel, PortableSolarPanel.Batch>()
 }
 
 /** A Robot. */
@@ -14387,12 +13755,7 @@ class Robot internal constructor() : TypedDevice() {
   }
 
   /** The Robot prefab. */
-  companion object : Prefab<Robot>() {
-    override val all: Robot.Batch
-      get() = intrinsic()
-
-    override fun named(name: String): Robot.Batch = intrinsic()
-  }
+  companion object : SlottedPrefab<Robot, Robot.Batch>()
 }
 
 /** A Rover_MkI. */
@@ -14417,12 +13780,7 @@ class Rover_MkI internal constructor() : TypedDevice() {
   }
 
   /** The Rover_MkI prefab. */
-  companion object : Prefab<Rover_MkI>() {
-    override val all: Rover_MkI.Batch
-      get() = intrinsic()
-
-    override fun named(name: String): Rover_MkI.Batch = intrinsic()
-  }
+  companion object : SlottedPrefab<Rover_MkI, Rover_MkI.Batch>()
 }
 
 /** A StopWatch. */
@@ -14552,12 +13910,7 @@ class ActiveVent internal constructor() : TypedDevice() {
   }
 
   /** The StructureActiveVent prefab. */
-  companion object : Prefab<ActiveVent>() {
-    override val all: ActiveVent.Batch
-      get() = intrinsic()
-
-    override fun named(name: String): ActiveVent.Batch = intrinsic()
-  }
+  companion object : SlottedPrefab<ActiveVent, ActiveVent.Batch>()
 }
 
 /** A StructureAdvancedComposter. */
@@ -14629,12 +13982,7 @@ class AdvancedComposter internal constructor() : TypedDevice() {
   }
 
   /** The StructureAdvancedComposter prefab. */
-  companion object : Prefab<AdvancedComposter>() {
-    override val all: AdvancedComposter.Batch
-      get() = intrinsic()
-
-    override fun named(name: String): AdvancedComposter.Batch = intrinsic()
-  }
+  companion object : SlottedPrefab<AdvancedComposter, AdvancedComposter.Batch>()
 }
 
 /** A StructureAirConditioner. */
@@ -14709,12 +14057,7 @@ class AirConditioner internal constructor() : TypedDevice() {
   }
 
   /** The StructureAirConditioner prefab. */
-  companion object : Prefab<AirConditioner>() {
-    override val all: AirConditioner.Batch
-      get() = intrinsic()
-
-    override fun named(name: String): AirConditioner.Batch = intrinsic()
-  }
+  companion object : SlottedPrefab<AirConditioner, AirConditioner.Batch>()
 }
 
 /** A StructureArcFurnace. */
@@ -14774,12 +14117,7 @@ class ArcFurnace internal constructor() : TypedDevice() {
   }
 
   /** The StructureArcFurnace prefab. */
-  companion object : Prefab<ArcFurnace>() {
-    override val all: ArcFurnace.Batch
-      get() = intrinsic()
-
-    override fun named(name: String): ArcFurnace.Batch = intrinsic()
-  }
+  companion object : SlottedPrefab<ArcFurnace, ArcFurnace.Batch>()
 }
 
 /** A StructureBasketHoop. */
@@ -14876,12 +14214,7 @@ class BlockBed internal constructor() : TypedDevice() {
   }
 
   /** The StructureBlockBed prefab. */
-  companion object : Prefab<BlockBed>() {
-    override val all: BlockBed.Batch
-      get() = intrinsic()
-
-    override fun named(name: String): BlockBed.Batch = intrinsic()
-  }
+  companion object : SlottedPrefab<BlockBed, BlockBed.Batch>()
 }
 
 /** A StructureCableAnalysizer. */
@@ -14942,12 +14275,7 @@ class ChuteInlet internal constructor() : TypedDevice() {
   }
 
   /** The StructureChuteInlet prefab. */
-  companion object : Prefab<ChuteInlet>() {
-    override val all: ChuteInlet.Batch
-      get() = intrinsic()
-
-    override fun named(name: String): ChuteInlet.Batch = intrinsic()
-  }
+  companion object : SlottedPrefab<ChuteInlet, ChuteInlet.Batch>()
 }
 
 /** A StructureChuteOutlet. */
@@ -14981,12 +14309,7 @@ class ChuteOutlet internal constructor() : TypedDevice() {
   }
 
   /** The StructureChuteOutlet prefab. */
-  companion object : Prefab<ChuteOutlet>() {
-    override val all: ChuteOutlet.Batch
-      get() = intrinsic()
-
-    override fun named(name: String): ChuteOutlet.Batch = intrinsic()
-  }
+  companion object : SlottedPrefab<ChuteOutlet, ChuteOutlet.Batch>()
 }
 
 /** A StructureChuteUmbilicalMale. */
@@ -15033,12 +14356,7 @@ class ChuteUmbilicalMale internal constructor() : TypedDevice() {
   }
 
   /** The StructureChuteUmbilicalMale prefab. */
-  companion object : Prefab<ChuteUmbilicalMale>() {
-    override val all: ChuteUmbilicalMale.Batch
-      get() = intrinsic()
-
-    override fun named(name: String): ChuteUmbilicalMale.Batch = intrinsic()
-  }
+  companion object : SlottedPrefab<ChuteUmbilicalMale, ChuteUmbilicalMale.Batch>()
 }
 
 /** A StructureCompositeWindowShutterController. */
@@ -15327,12 +14645,7 @@ class Electrolyzer internal constructor() : TypedDevice() {
   }
 
   /** The StructureElectrolyzer prefab. */
-  companion object : Prefab<Electrolyzer>() {
-    override val all: Electrolyzer.Batch
-      get() = intrinsic()
-
-    override fun named(name: String): Electrolyzer.Batch = intrinsic()
-  }
+  companion object : SlottedPrefab<Electrolyzer, Electrolyzer.Batch>()
 }
 
 /** A StructureEvaporationChamber. */
@@ -15467,12 +14780,7 @@ class Fermenter internal constructor() : TypedDevice() {
   }
 
   /** The StructureFermenter prefab. */
-  companion object : Prefab<Fermenter>() {
-    override val all: Fermenter.Batch
-      get() = intrinsic()
-
-    override fun named(name: String): Fermenter.Batch = intrinsic()
-  }
+  companion object : SlottedPrefab<Fermenter, Fermenter.Batch>()
 }
 
 /** A StructureFlashingLight. */
@@ -15724,12 +15032,7 @@ class Harvie internal constructor() : TypedDevice() {
   }
 
   /** The StructureHarvie prefab. */
-  companion object : Prefab<Harvie>() {
-    override val all: Harvie.Batch
-      get() = intrinsic()
-
-    override fun named(name: String): Harvie.Batch = intrinsic()
-  }
+  companion object : SlottedPrefab<Harvie, Harvie.Batch>()
 }
 
 /** A StructureHydroponicsStation. */
@@ -15798,12 +15101,7 @@ class HydroponicsStation internal constructor() : TypedDevice() {
   }
 
   /** The StructureHydroponicsStation prefab. */
-  companion object : Prefab<HydroponicsStation>() {
-    override val all: HydroponicsStation.Batch
-      get() = intrinsic()
-
-    override fun named(name: String): HydroponicsStation.Batch = intrinsic()
-  }
+  companion object : SlottedPrefab<HydroponicsStation, HydroponicsStation.Batch>()
 }
 
 /** A StructureHydroponicsTrayData. */
@@ -15851,12 +15149,7 @@ class HydroponicsTrayData internal constructor() : TypedDevice() {
   }
 
   /** The StructureHydroponicsTrayData prefab. */
-  companion object : Prefab<HydroponicsTrayData>() {
-    override val all: HydroponicsTrayData.Batch
-      get() = intrinsic()
-
-    override fun named(name: String): HydroponicsTrayData.Batch = intrinsic()
-  }
+  companion object : SlottedPrefab<HydroponicsTrayData, HydroponicsTrayData.Batch>()
 }
 
 /** A StructureIceCrusher. */
@@ -15913,12 +15206,7 @@ class IceCrusher internal constructor() : TypedDevice() {
   }
 
   /** The StructureIceCrusher prefab. */
-  companion object : Prefab<IceCrusher>() {
-    override val all: IceCrusher.Batch
-      get() = intrinsic()
-
-    override fun named(name: String): IceCrusher.Batch = intrinsic()
-  }
+  companion object : SlottedPrefab<IceCrusher, IceCrusher.Batch>()
 }
 
 /** A StructureIgniter. */
@@ -16174,12 +15462,7 @@ class LogicSorter internal constructor() : TypedDevice() {
   }
 
   /** The StructureLogicSorter prefab. */
-  companion object : Prefab<LogicSorter>() {
-    override val all: LogicSorter.Batch
-      get() = intrinsic()
-
-    override fun named(name: String): LogicSorter.Batch = intrinsic()
-  }
+  companion object : SlottedPrefab<LogicSorter, LogicSorter.Batch>()
 }
 
 /** A StructureNitrolyzer. */
@@ -16265,12 +15548,7 @@ class Nitrolyzer internal constructor() : TypedDevice() {
   }
 
   /** The StructureNitrolyzer prefab. */
-  companion object : Prefab<Nitrolyzer>() {
-    override val all: Nitrolyzer.Batch
-      get() = intrinsic()
-
-    override fun named(name: String): Nitrolyzer.Batch = intrinsic()
-  }
+  companion object : SlottedPrefab<Nitrolyzer, Nitrolyzer.Batch>()
 }
 
 /** A StructurePacker. */
@@ -16328,12 +15606,7 @@ class Packer internal constructor() : TypedDevice() {
   }
 
   /** The StructurePacker prefab. */
-  companion object : Prefab<Packer>() {
-    override val all: Packer.Batch
-      get() = intrinsic()
-
-    override fun named(name: String): Packer.Batch = intrinsic()
-  }
+  companion object : SlottedPrefab<Packer, Packer.Batch>()
 }
 
 /** A StructurePipeIgniter. */
@@ -16390,12 +15663,7 @@ class PortablesConnector internal constructor() : TypedDevice() {
   }
 
   /** The StructurePortablesConnector prefab. */
-  companion object : Prefab<PortablesConnector>() {
-    override val all: PortablesConnector.Batch
-      get() = intrinsic()
-
-    override fun named(name: String): PortablesConnector.Batch = intrinsic()
-  }
+  companion object : SlottedPrefab<PortablesConnector, PortablesConnector.Batch>()
 }
 
 /** A StructurePowerConnector. */
@@ -16422,12 +15690,7 @@ class PowerConnector internal constructor() : TypedDevice() {
   }
 
   /** The StructurePowerConnector prefab. */
-  companion object : Prefab<PowerConnector>() {
-    override val all: PowerConnector.Batch
-      get() = intrinsic()
-
-    override fun named(name: String): PowerConnector.Batch = intrinsic()
-  }
+  companion object : SlottedPrefab<PowerConnector, PowerConnector.Batch>()
 }
 
 /** A StructurePowerTransmitterOmni. */
@@ -16792,12 +16055,7 @@ class RocketScanner internal constructor() : TypedDevice() {
   }
 
   /** The StructureRocketScanner prefab. */
-  companion object : Prefab<RocketScanner>() {
-    override val all: RocketScanner.Batch
-      get() = intrinsic()
-
-    override fun named(name: String): RocketScanner.Batch = intrinsic()
-  }
+  companion object : SlottedPrefab<RocketScanner, RocketScanner.Batch>()
 }
 
 /** A StructureShelfMedium. */
@@ -16819,12 +16077,7 @@ class ShelfMedium internal constructor() : TypedDevice() {
   }
 
   /** The StructureShelfMedium prefab. */
-  companion object : Prefab<ShelfMedium>() {
-    override val all: ShelfMedium.Batch
-      get() = intrinsic()
-
-    override fun named(name: String): ShelfMedium.Batch = intrinsic()
-  }
+  companion object : SlottedPrefab<ShelfMedium, ShelfMedium.Batch>()
 }
 
 /** A StructureShower. */
@@ -16921,12 +16174,7 @@ class SleeperVerticalDroid internal constructor() : TypedDevice() {
   }
 
   /** The StructureSleeperVerticalDroid prefab. */
-  companion object : Prefab<SleeperVerticalDroid>() {
-    override val all: SleeperVerticalDroid.Batch
-      get() = intrinsic()
-
-    override fun named(name: String): SleeperVerticalDroid.Batch = intrinsic()
-  }
+  companion object : SlottedPrefab<SleeperVerticalDroid, SleeperVerticalDroid.Batch>()
 }
 
 /** A StructureTraderWaypoint. */
@@ -16986,12 +16234,7 @@ class WallHeater internal constructor() : TypedDevice() {
   }
 
   /** The StructureWallHeater prefab. */
-  companion object : Prefab<WallHeater>() {
-    override val all: WallHeater.Batch
-      get() = intrinsic()
-
-    override fun named(name: String): WallHeater.Batch = intrinsic()
-  }
+  companion object : SlottedPrefab<WallHeater, WallHeater.Batch>()
 }
 
 /** A StructureWaterPurifier. */
@@ -17034,12 +16277,7 @@ class WaterPurifier internal constructor() : TypedDevice() {
   }
 
   /** The StructureWaterPurifier prefab. */
-  companion object : Prefab<WaterPurifier>() {
-    override val all: WaterPurifier.Batch
-      get() = intrinsic()
-
-    override fun named(name: String): WaterPurifier.Batch = intrinsic()
-  }
+  companion object : SlottedPrefab<WaterPurifier, WaterPurifier.Batch>()
 }
 
 /** A StructureWeatherStation. */
