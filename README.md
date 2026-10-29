@@ -48,7 +48,7 @@ functions, devices, the maths and numeric rules, and the chip's size limits. The
 | 6 | IC10 Editor plugin: compiling and highlighting in game ([#41](https://github.com/subitan/stationeers-ktrapic/issues/41)) | Done |
 | 7 | The typed API: views, static sets, families of related devices | Done |
 | 8 | Completion, hovers and diagnostics in the IC10 Editor ([#45](https://github.com/subitan/stationeers-ktrapic/issues/45)) | In progress |
-| 9 | A test harness in the playground: run a program against fake devices ([#66](https://github.com/subitan/stationeers-ktrapic/issues/66)) | In progress |
+| 9 | A test harness in the playground: run a program against fake devices ([#66](https://github.com/subitan/stationeers-ktrapic/issues/66)) | Done |
 | 10 | An IntelliJ plugin: KTrapIC's own errors and the compiled IC10 in the IDE ([#23](https://github.com/subitan/stationeers-ktrapic/issues/23)) | Planned |
 
 ## Credits
@@ -86,6 +86,14 @@ then open http://127.0.0.1:8765/. The Open menu lists the programs in `test/case
 the compile daemon (`daemon/`) and sends it each compile; the daemon speaks PyTrapIC's protocol
 (one base64 JSON line per request and per response).
 The first compile after starting takes a few seconds while the compiler warms up.
+
+The Test button opens a test of the program against fake devices (see
+[docs/TESTING.md](docs/TESTING.md)), edited as JSON. Run (or Ctrl+Enter) compiles the program
+and runs the test; the pane shows each expectation's result, and the registers, stack and device
+values after any tick, with the IC10 line that runs next and its Kotlin line marked in the
+gutters. Lines steps through the next tick a line at a time, marking the line each step ran.
+Opening a program opens its `X.test.json` too, if it has one, and Save test writes that file;
+for a program not opened from a source directory, Save test downloads the test instead.
 
 Started with `--lsp`, the daemon speaks the Language Server Protocol on stdin and stdout instead
 (JSON-RPC with `Content-Length` framing). It keeps the documents a client opens and changes, and
