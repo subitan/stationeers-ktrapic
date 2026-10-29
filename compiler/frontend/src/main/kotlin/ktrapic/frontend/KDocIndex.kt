@@ -4,22 +4,33 @@ import java.io.File
 import java.util.concurrent.ConcurrentHashMap
 import java.util.jar.JarFile
 import org.jetbrains.kotlin.com.intellij.openapi.util.Disposer
+import org.jetbrains.kotlin.psi.KtCallableDeclaration
 import org.jetbrains.kotlin.psi.KtDeclaration
 import org.jetbrains.kotlin.psi.KtNamedDeclaration
 import org.jetbrains.kotlin.psi.KtTreeVisitorVoid
 
 /**
  * The KDoc of the declarations whose Kotlin sources the classpath carries (the SDK's jar holds its
- * own, as Kotlin files under `ktrapic/`), by fully qualified name: `ktrapic.LedDisplay.Text`.
- * Overloads share a name, and the first one's KDoc is kept.
+ * own, as Kotlin files under `ktrapic/`), by fully qualified name (`ktrapic.LedDisplay.Text`) and,
+ * for an extension, the class of its receiver: `String.hash()` is kept apart from `hash(text)`.
+ * Overloads otherwise share a name, and the first one's KDoc is kept.
  *
  * Each KDoc is kept as text: without the comment's opening and closing marks and leading stars, a
  * paragraph's lines joined into one, and a link (`[Device]`) as the name it links to.
  */
 internal class KDocIndex private constructor(private val docs: Map<String, String>) {
-  operator fun get(fqName: String): String? = docs[fqName]
+  /** The KDoc of [fqName], an extension of [receiver] (a type as written) if that is not null. */
+  operator fun get(fqName: String, receiver: String? = null): String? = docs[key(fqName, receiver)]
 
   companion object {
+    /**
+     * The key of a declaration: its name, and for an extension its receiver's class as written,
+     * without type arguments or package (`List` for `kotlin.collections.List<T>?`).
+     */
+    private fun key(fqName: String, receiver: String?): String =
+        if (receiver == null) fqName
+        else "$fqName@" + receiver.substringBefore('<').removeSuffix("?").substringAfterLast('.')
+
     private val indexes = ConcurrentHashMap<List<File>, KDocIndex>()
 
     /** The index of [classpath]'s sources, read the first time it is asked for. */
@@ -39,7 +50,8 @@ internal class KDocIndex private constructor(private val docs: Map<String, Strin
                       val doc = dcl.docComment
                       val fqName = (dcl as? KtNamedDeclaration)?.fqName
                       if (doc != null && fqName != null) {
-                        docs.putIfAbsent(fqName.asString(), clean(doc.text))
+                        val receiver = (dcl as? KtCallableDeclaration)?.receiverTypeReference?.text
+                        docs.putIfAbsent(key(fqName.asString(), receiver), clean(doc.text))
                       }
                       super.visitDeclaration(dcl)
                     }

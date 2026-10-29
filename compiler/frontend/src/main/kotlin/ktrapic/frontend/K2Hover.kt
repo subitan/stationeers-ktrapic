@@ -11,6 +11,7 @@ import org.jetbrains.kotlin.fir.FirSession
 import org.jetbrains.kotlin.fir.containingClassLookupTag
 import org.jetbrains.kotlin.fir.declarations.FirCallableDeclaration
 import org.jetbrains.kotlin.fir.declarations.FirRegularClass
+import org.jetbrains.kotlin.fir.declarations.FirResolvePhase
 import org.jetbrains.kotlin.fir.expressions.FirFunctionCall
 import org.jetbrains.kotlin.fir.expressions.FirQualifiedAccessExpression
 import org.jetbrains.kotlin.fir.expressions.FirResolvedQualifier
@@ -18,13 +19,17 @@ import org.jetbrains.kotlin.fir.pipeline.SingleModuleFrontendOutput
 import org.jetbrains.kotlin.fir.references.FirErrorNamedReference
 import org.jetbrains.kotlin.fir.references.FirNamedReference
 import org.jetbrains.kotlin.fir.references.FirResolvedNamedReference
+import org.jetbrains.kotlin.fir.resolve.ScopeSession
 import org.jetbrains.kotlin.fir.resolve.diagnostics.ConeDiagnosticWithCandidates
 import org.jetbrains.kotlin.fir.resolve.providers.symbolProvider
+import org.jetbrains.kotlin.fir.resolve.scope
+import org.jetbrains.kotlin.fir.scopes.CallableCopyTypeCalculator
 import org.jetbrains.kotlin.fir.symbols.FirBasedSymbol
 import org.jetbrains.kotlin.fir.symbols.impl.FirCallableSymbol
 import org.jetbrains.kotlin.fir.symbols.impl.FirClassLikeSymbol
 import org.jetbrains.kotlin.fir.symbols.impl.FirConstructorSymbol
 import org.jetbrains.kotlin.fir.symbols.impl.FirFunctionSymbol
+import org.jetbrains.kotlin.fir.symbols.impl.FirNamedFunctionSymbol
 import org.jetbrains.kotlin.fir.symbols.impl.FirPropertySymbol
 import org.jetbrains.kotlin.fir.symbols.impl.FirRegularClassSymbol
 import org.jetbrains.kotlin.fir.types.ConeClassLikeType
@@ -113,7 +118,9 @@ object K2Hover {
         val caret = K2Frontend.parsedOffset(source, offset)
         if (inCommentOrString(parsed.script.findElementAt(caret - 1))) return@withScript null
         val wrapped = parsed.wrapped.text
-        val at = parsed.wrapped.wrappedOffset(caret)
+        // The caret stays right after the character before it: text the wrapper inserts at the
+        // caret (the ` }` closing a top-level statement's `init {`) comes after it.
+        val at = if (caret == 0) 0 else parsed.wrapped.wrappedOffset(caret - 1) + 1
         val open = openParenthesis(wrapped, at) ?: return@withScript null
         var calleeEnd = open.index
         while (calleeEnd > 0 && wrapped[calleeEnd - 1].isWhitespace()) calleeEnd--
@@ -125,8 +132,12 @@ object K2Hover {
   /**
    * The `(` before [at] that is not yet closed, and how many commas lie between them outside
    * brackets: the index of the argument [at] is in. Null if a block (`{`) or a statement's end
-   * (`;`) comes first, or no such `(` does. A string's text is skipped, and a `"` in it ends it, so
-   * one with an escaped quote (`"\""`) may fool this.
+   * (`;`) comes first, or no such `(` does. A string's text is skipped, and a `"` in it ends it.
+   *
+   * This reads the text, not the syntax tree, so some valid calls give null: a string with an
+   * escaped quote (`"\""`), a char literal holding a bracket or a quote (`')'`, `'"'`), a comment
+   * among the arguments holding a bracket, and a call with explicit type arguments
+   * (`listOf<Int>(`), whose callee ends before the `<`.
    */
   private fun openParenthesis(text: String, at: Int): Open? {
     var depth = 0
@@ -152,6 +163,7 @@ object K2Hover {
 
   private class Lookup(output: SingleModuleFrontendOutput, private val classpath: List<File>) {
     private val session: FirSession = output.session
+    private val scopeSession: ScopeSession = output.scopeSession
     private val elements = mutableListOf<FirElement>()
 
     init {
@@ -189,7 +201,8 @@ object K2Hover {
             val reference = access.calleeReference as? FirNamedReference ?: return@mapNotNull null
             val source = reference.source
             if (!source.covers()) return@mapNotNull null
-            val symbol = symbolsOf(reference).firstOrNull() ?: return@mapNotNull null
+            // A call that resolved to none of several overloads is to no one of them yet.
+            val symbol = symbolsOf(reference).singleOrNull() ?: return@mapNotNull null
             receiverClass(access)?.let { receivers[symbol] = it }
             source!! to symbol
           }
@@ -242,16 +255,49 @@ object K2Hover {
                 source.kind is KtRealSourceElementKind &&
                 source.endOffset == calleeEnd
           } ?: return null
+      val symbols = symbolsOf(call.calleeReference)
       val signatures =
-          symbolsOf(call.calleeReference).filterIsInstance<FirFunctionSymbol<*>>().map { function ->
-            val parameters = parametersOf(function)
-            val label =
-                if (function is FirConstructorSymbol) {
-                  "${function.resolvedReturnType.let(::render)}(${parameters.joinToString(", ")})"
-                } else declarationOf(function)
-            Signature(label, parameters, documentationOf(function))
-          }
+          (symbols + symbols.singleOrNull()?.let { overloadsOf(call, it) }.orEmpty())
+              .filterIsInstance<FirFunctionSymbol<*>>()
+              .map { Signature(declarationOf(it), parametersOf(it), documentationOf(it)) }
+              .distinctBy { it.label }
       return if (signatures.isEmpty()) null else SignatureHelp(signatures, activeParameter)
+    }
+
+    /**
+     * The other functions a call that resolved to [resolved] could be to as its arguments are
+     * written: those of the same name that its receiver's type has, explicit (`all.count(`) or
+     * implicit (a member of the program or of a class, called from within it), or, for a top-level
+     * function, those of the same name in its package. Only those completion offers are listed
+     * ([K2Completion.shown]): of the standard library's, only those KTrapIC compiles. A call with
+     * no arguments yet resolves to an overload that takes none, though the user may mean another.
+     */
+    private fun overloadsOf(
+        call: FirFunctionCall,
+        resolved: FirBasedSymbol<*>,
+    ): List<FirBasedSymbol<*>> {
+      val function = resolved as? FirNamedFunctionSymbol ?: return emptyList()
+      if (function.resolvedReceiverType != null) return emptyList()
+      val receiver = (call.explicitReceiver ?: call.dispatchReceiver)?.resolvedType
+      val found = mutableListOf<FirNamedFunctionSymbol>()
+      if (receiver != null) {
+        receiver
+            .scope(
+                session,
+                scopeSession,
+                CallableCopyTypeCalculator.DoNothing,
+                FirResolvePhase.STATUS,
+            )
+            ?.processFunctionsByName(function.name) { found += it }
+      } else if (function.callableId.classId == null) {
+        found +=
+            session.symbolProvider
+                .getTopLevelFunctionSymbols(function.callableId.packageName, function.name)
+                .filter { it.resolvedReceiverType == null }
+      }
+      val shownOn =
+          receiver?.takeIf { call.explicitReceiver != null }?.let(K2Completion::declarable)
+      return found.filter { K2Completion.shown(it, shownOn) }
     }
 
     /**
@@ -280,10 +326,12 @@ object K2Hover {
 
     /**
      * The hover of a callable, as a member of [receiver]'s class if it was referred to on one, else
-     * of the class that declares it.
+     * of the class that declares it. A constructor's declaration names its class, so it has none.
      */
     private fun hoverOf(symbol: FirCallableSymbol<*>, receiver: ClassId?): Hover {
-      val owner = (receiver ?: symbol.containingClassLookupTag()?.classId)?.takeUnless(::isProgram)
+      val owner =
+          if (symbol is FirConstructorSymbol) null
+          else (receiver ?: symbol.containingClassLookupTag()?.classId)?.takeUnless(::isProgram)
       val access =
           when {
             owner == null || symbol !is FirPropertySymbol -> null
@@ -295,7 +343,7 @@ object K2Hover {
           }
       return Hover(
           declarationOf(symbol),
-          owner?.relativeClassName?.asString(),
+          owner?.let(::nameOf),
           access,
           documentationOf(symbol),
       )
@@ -308,12 +356,15 @@ object K2Hover {
     private fun documentationOf(symbol: FirCallableSymbol<*>): String? {
       val declared = symbol.fir.unwrapFakeOverrides().symbol
       val callableId = declared.callableId ?: return null
-      docs[callableId.asSingleFqName().asString()]?.let {
+      val receiver = declared.resolvedReceiverType?.let(::render)
+      docs[callableId.asSingleFqName().asString(), receiver]?.let {
         return it
       }
       val owner = callableId.classId ?: return null
       val name = callableId.callableName.asString()
-      return supertypesOf(owner).firstNotNullOfOrNull { docs["${it.asFqNameString()}.$name"] }
+      return supertypesOf(owner).firstNotNullOfOrNull {
+        docs["${it.asFqNameString()}.$name", receiver]
+      }
     }
 
     /** [classId]'s supertypes, nearest first. */

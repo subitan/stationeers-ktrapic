@@ -2,11 +2,13 @@
 
 package ktrapic.frontend
 
+import org.jetbrains.kotlin.builtins.StandardNames
 import org.jetbrains.kotlin.com.intellij.psi.PsiComment
 import org.jetbrains.kotlin.com.intellij.psi.PsiElement
 import org.jetbrains.kotlin.descriptors.ClassKind
 import org.jetbrains.kotlin.fir.symbols.impl.FirCallableSymbol
 import org.jetbrains.kotlin.fir.symbols.impl.FirClassLikeSymbol
+import org.jetbrains.kotlin.fir.symbols.impl.FirConstructorSymbol
 import org.jetbrains.kotlin.fir.symbols.impl.FirEnumEntrySymbol
 import org.jetbrains.kotlin.fir.symbols.impl.FirFunctionSymbol
 import org.jetbrains.kotlin.fir.symbols.impl.FirPropertySymbol
@@ -17,38 +19,84 @@ import org.jetbrains.kotlin.fir.types.ConeKotlinType
 import org.jetbrains.kotlin.fir.types.ConeTypeParameterType
 import org.jetbrains.kotlin.fir.types.isMarkedNullable
 import org.jetbrains.kotlin.fir.types.type
+import org.jetbrains.kotlin.name.ClassId
 import org.jetbrains.kotlin.psi.KtFile
 import org.jetbrains.kotlin.psi.KtLiteralStringTemplateEntry
 import org.jetbrains.kotlin.psi.KtStringTemplateEntryWithExpression
 
-/** [type] as a program would write it: classes by their name within the package, `Device?`. */
+/**
+ * [classId]'s name within its package, as a program writes it: `LedDisplay.Small`, and a class the
+ * program declares without the object the program is wrapped in (`P`, not `Program.P`).
+ */
+internal fun nameOf(classId: ClassId): String {
+  val segments = classId.relativeClassName.pathSegments().map { it.asString() }
+  val written =
+      if (segments.size > 1 && segments.first() == PROGRAM_OBJECT) segments.drop(1) else segments
+  return written.joinToString(".")
+}
+
+/** [classId]'s package and [nameOf]: `ktrapic.LedDisplay.Small`, or `P` in no package. */
+internal fun qualifiedNameOf(classId: ClassId): String =
+    if (classId.packageFqName.isRoot) nameOf(classId)
+    else "${classId.packageFqName.asString()}.${nameOf(classId)}"
+
+private val FUNCTION_TYPE = Regex("""Function\d+""")
+
+/**
+ * [type] as a program would write it: classes by [nameOf], `Device?`, and a function type as
+ * `(Device) -> Double`.
+ *
+ * An extension function type renders as a plain one (`Int.() -> Int` as `(Int) -> Int`), and a
+ * `suspend` function type as its class (`SuspendFunction1<Int, Int>`): the SDK declares neither and
+ * KTrapIC compiles neither, so only the standard library's scope functions and a program's own
+ * declarations would show them.
+ */
 internal fun render(type: ConeKotlinType): String {
-  val text =
-      when (type) {
-        is ConeClassLikeType -> {
-          val arguments = type.typeArguments.mapNotNull { it.type }
-          type.lookupTag.classId.relativeClassName.asString() +
-              if (arguments.isEmpty()) "" else arguments.joinToString(", ", "<", ">") { render(it) }
-        }
-        is ConeTypeParameterType -> type.lookupTag.name.asString()
-        else -> type.toString()
-      }
+  if (type is ConeClassLikeType) {
+    val classId = type.lookupTag.classId
+    val arguments = type.typeArguments.mapNotNull { it.type }
+    // A function type is the class `kotlin.FunctionN`, whose last type argument is its result.
+    if (
+        classId.packageFqName == StandardNames.BUILT_INS_PACKAGE_FQ_NAME &&
+            FUNCTION_TYPE.matches(classId.relativeClassName.asString()) &&
+            arguments.isNotEmpty() &&
+            arguments.size == type.typeArguments.size
+    ) {
+      val text =
+          arguments.dropLast(1).joinToString(", ", "(", ")") { render(it) } +
+              " -> " +
+              render(arguments.last())
+      return if (type.isMarkedNullable) "($text)?" else text
+    }
+    val text =
+        nameOf(classId) +
+            if (arguments.isEmpty()) "" else arguments.joinToString(", ", "<", ">") { render(it) }
+    return if (type.isMarkedNullable) "$text?" else text
+  }
+  val text = if (type is ConeTypeParameterType) type.lookupTag.name.asString() else type.toString()
   return if (type.isMarkedNullable) "$text?" else text
 }
 
-/** A function's parameters as declared: `pin: Device`, one per parameter. */
+/**
+ * A function's parameters as declared: `pin: Device`, one per parameter.
+ *
+ * A `vararg` parameter renders as its array type (`xs: IntArray`), and a default value is not
+ * shown: KTrapIC programs and the SDK use no varargs, and the SDK no defaults.
+ */
 internal fun parametersOf(symbol: FirFunctionSymbol<*>): List<String> =
     symbol.valueParameterSymbols.map { "${it.name}: ${render(it.resolvedReturnType)}" }
 
 /**
  * A callable's declaration, as written in Kotlin without its body: `var Setting: Double`, `fun
- * at(pin: Device): LedDisplay.Small`, or an enum entry's name. A local variable or a parameter
- * reads as a `val`.
+ * at(pin: Device): LedDisplay.Small`, a constructor as its class and parameters (`P(a: Int)`), or
+ * an enum entry's name. A local variable or a parameter reads as a `val`.
  */
 internal fun declarationOf(symbol: FirCallableSymbol<*>): String {
   val name = symbol.name.asString()
   return when (symbol) {
     is FirEnumEntrySymbol -> name
+    is FirConstructorSymbol ->
+        "${render(symbol.resolvedReturnType)}(${parametersOf(symbol).joinToString(", ")})"
     is FirFunctionSymbol<*> ->
         "fun $name(${parametersOf(symbol).joinToString(", ")}): ${render(symbol.resolvedReturnType)}"
     is FirVariableSymbol<*> -> {
@@ -61,7 +109,7 @@ internal fun declarationOf(symbol: FirCallableSymbol<*>): String {
 
 /** A class's declaration: `interface LedDisplay`, `class LedDisplay.Small`, `enum class Color`. */
 internal fun declarationOf(symbol: FirClassLikeSymbol<*>): String {
-  val name = symbol.classId.relativeClassName.asString()
+  val name = nameOf(symbol.classId)
   val keyword =
       when ((symbol as? FirRegularClassSymbol)?.classKind) {
         ClassKind.INTERFACE -> "interface"

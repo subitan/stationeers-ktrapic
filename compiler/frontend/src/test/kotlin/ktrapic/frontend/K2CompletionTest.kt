@@ -272,6 +272,14 @@ class K2CompletionTest {
   }
 
   @Test
+  fun `the program's own classes are described without the object it is wrapped in`() {
+    val items = complete("class P(val a: Int)\nfun mk(): P = P(1)\nval z = |\n")
+
+    assertThat(items.single { it.label == "P" }.detail).isEqualTo("P")
+    assertThat(items.single { it.label == "mk" }.detail).isEqualTo("fun mk(): P")
+  }
+
+  @Test
   fun `internal SDK declarations are not offered`() {
     assertThat(labels("|")).doesNotContain("intrinsic")
   }
