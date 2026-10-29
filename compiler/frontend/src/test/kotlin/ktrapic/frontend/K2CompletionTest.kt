@@ -48,6 +48,11 @@ class K2CompletionTest {
   }
 
   @Test
+  fun `after an LED display, its write-only Text`() {
+    assertThat(labels("val sign = LedDisplays.Small.at(d5)\nsign.|\n")).contains("Text")
+  }
+
+  @Test
   fun `after a dot in the middle of a line, what goes there`() {
     assertThat(labels("val s = PresenceSensors.|.at(d0)\n"))
         .containsAtLeast("Motion", "Proximity", "Occupancy")
