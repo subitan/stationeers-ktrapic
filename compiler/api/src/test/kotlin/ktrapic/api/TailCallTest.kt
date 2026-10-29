@@ -375,8 +375,9 @@ class TailCallTest {
     assertThat(withLoops.tailCallWarnings().map { it.message })
         .containsExactly(
             "The program needs 17 registers with tail calls compiled as loops, over the chip's 16; " +
-                "its tail calls are made as ordinary stack calls instead (turn tail calls off to " +
-                "skip this)"
+                "all its tail calls are made as ordinary stack calls instead, so deep recursion " +
+                "can overflow the stack (turn tail calls off to compile them as calls without " +
+                "this warning)"
         )
     assertThat(withCalls.tailCallWarnings()).isEmpty()
   }
@@ -391,10 +392,12 @@ class TailCallTest {
   }
 
   @Test
-  fun `a program out of registers either way reports the error with tail calls as loops`() {
-    val errors = failure(crowded(14), CompileOptions()).errors
+  fun `a program out of registers either way reports what it needs with tail calls as calls`() {
+    val expected = listOf("The program needs 17 registers at once; the chip has 16 (r0–r15)")
 
-    assertThat(errors.map { it.message })
-        .containsExactly("The program needs 18 registers at once; the chip has 16 (r0–r15)")
+    for (tailCalls in listOf(true, false)) {
+      val errors = failure(crowded(14), CompileOptions(tailCalls = tailCalls)).errors
+      assertThat(errors.map { it.message }).isEqualTo(expected)
+    }
   }
 }

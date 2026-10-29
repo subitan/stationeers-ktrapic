@@ -131,8 +131,10 @@ properties.
   jumps. Arguments that swap cost a move more than they would push, and the loop's label a line
   in labelled output; an argument computed from parameters may need one more register while the
   others are moved. A program that would need more than the chip's 16 registers with its tail
-  calls as loops, but fits with them as calls, makes them as calls, with a warning that says so.
-  With stack calls turned off nothing recurses, so the option does nothing.
+  calls as loops, but fits with them as calls, makes every one of them a call, with a warning that
+  says so; its tail recursion then uses the stack, and a deep one overflows it as above. One that
+  does not fit either way reports the registers it needs with its tail calls as calls. With stack
+  calls turned off nothing recurses, so the option does nothing.
 - Only an inlined function can take a `Device`, a view, a `Substance` or a static set parameter.
 - A `String` parameter takes a constant string, or another `String` parameter, as its argument.
   In an inlined function it stands for that text wherever a constant string can go: `Text = msg`,

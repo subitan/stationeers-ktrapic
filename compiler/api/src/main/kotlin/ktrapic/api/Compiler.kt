@@ -37,7 +37,8 @@ data class CompileOptions(
      * no stack and can recurse without limit. Only functions called on the stack can call
      * themselves, so without [stackCalls] this has no effect. A program that would need more
      * registers than the chip has with its tail calls as loops, but not with them as calls, makes
-     * them as calls, with a warning.
+     * every one of them a call, with a warning: then a deep tail recursion can overflow the stack
+     * again.
      */
     val tailCalls: Boolean = true,
 )
@@ -77,13 +78,13 @@ object Compiler {
                 } catch (e: TooManyRegistersException) {
                   if (!options.tailCalls) throw e
                   // Tail calls are only an optimisation, so the program may make them as calls
-                  // instead. One with no tail call compiled as a loop compiles the same without
-                  // them, fails the same way, and so reports its own error.
+                  // instead. If it is still out of registers then, the error reports what it
+                  // needs that way: no option makes it need fewer.
                   try {
                     Backend.compile(ir.module, ir.symbols, options.stackCalls, tailCalls = false) to
                         CompileError(tailCallHint(e.needed), 0, 0)
-                  } catch (_: TooManyRegistersException) {
-                    throw e
+                  } catch (retry: TooManyRegistersException) {
+                    throw retry
                   } catch (_: CompileException) {
                     throw e
                   }
@@ -158,12 +159,15 @@ object Compiler {
 
   /**
    * Why a program compiled with tail calls on makes them as calls: as loops it needs [needed]
-   * registers, more than the chip has, and as calls few enough.
+   * registers, more than the chip has, and as calls few enough. Every tail call in the program
+   * becomes a call, so a recursion that relied on the loop for its depth can overflow the stack.
+   * Turning tail calls off compiles the same code, only without trying loops first or this warning.
    */
   private fun tailCallHint(needed: Int): String =
       "The program needs $needed registers with tail calls compiled as loops, over the chip's " +
-          "${Ic10Limits.REGISTERS}; its tail calls are made as ordinary stack calls instead " +
-          "(turn tail calls off to skip this)"
+          "${Ic10Limits.REGISTERS}; all its tail calls are made as ordinary stack calls instead, " +
+          "so deep recursion can overflow the stack (turn tail calls off to compile them as calls " +
+          "without this warning)"
 
   /**
    * Why a program of [lines] over the chip's limit could be shorter: each call on the stack pushes

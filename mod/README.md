@@ -52,7 +52,8 @@ moment after typing stops:
   functions may be recursive; off passes them in registers (see `docs/LANGUAGE.md`'s Functions).
 - "Tail calls" (on by default) compiles a function's call to itself in tail position as a jump
   back to its start, so it takes no stack and may recurse without limit. It has no effect with
-  stack calls off.
+  stack calls off. A program that would run out of registers with these loops compiles them all
+  as calls instead, and then a deep recursion can overflow the stack.
 - Typing a name lists what could go there, from the compiler's reading of the program: a
   device's logic types, a family's prefabs, an enum's values, the members of a local's type, the
   locals, parameters and functions in scope, and the SDK's names. A dot typed after a name
