@@ -26,8 +26,8 @@ namespace KTrapIC
         internal static readonly HashSet<string> Types = new HashSet<string>(
             SdkNames.Types.Concat(new[]
             {
-                "Device", "Prefab", "TypedDevice", "GenericDevice", "Slot", "DeviceSlot", "Slots", "Batch",
-                "DeviceBatch", "SlotBatch", "Mapped",
+                "Device", "Prefab", "SlottedPrefab", "TypedDevice", "GenericDevice", "Slot", "DeviceSlot", "Slots",
+                "Batch", "DeviceBatch", "SlotBatch", "Mapped",
             }));
 
         /// <summary>Each enum's values, by the enum.</summary>

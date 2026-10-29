@@ -103,7 +103,7 @@ class TypedDeviceTest {
             "val x = GrowLight.at(d0).PrefabHash\ndb.On = |x == GrowLight" to "Prefab<*>",
             "val x = BatteryCharger.Standard\n" +
                 "db.Setting = |x.all.slots[0].map { it.Charge }.average()" to
-                "BatteryCharger.Standard.Companion",
+                "SlottedPrefab<BatteryCharger.Standard, BatteryCharger.Standard.Batch>",
         )
     for ((source, expected) in sources) {
       val offset = source.indexOf('|')
@@ -115,6 +115,8 @@ class TypedDeviceTest {
       assertWithMessage(written)
           .that(compile(written))
           .isInstanceOf(CompileResult.Success::class.java)
+      // Calls through the written type, such as `SlottedPrefab`'s `all`, compile as before.
+      assertWithMessage(written).that(compiled(written).code).isEqualTo(compiled(program).code)
     }
   }
 

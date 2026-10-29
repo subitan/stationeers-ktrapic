@@ -7,7 +7,6 @@ import org.jetbrains.kotlin.com.intellij.psi.PsiComment
 import org.jetbrains.kotlin.com.intellij.psi.PsiElement
 import org.jetbrains.kotlin.descriptors.ClassKind
 import org.jetbrains.kotlin.fir.FirSession
-import org.jetbrains.kotlin.fir.declarations.processAllDeclaredCallables
 import org.jetbrains.kotlin.fir.resolve.providers.symbolProvider
 import org.jetbrains.kotlin.fir.symbols.impl.FirCallableSymbol
 import org.jetbrains.kotlin.fir.symbols.impl.FirClassLikeSymbol
@@ -29,6 +28,7 @@ import org.jetbrains.kotlin.fir.types.typeApproximator
 import org.jetbrains.kotlin.name.ClassId
 import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.name.SpecialNames
+import org.jetbrains.kotlin.name.StandardClassIds
 import org.jetbrains.kotlin.psi.KtFile
 import org.jetbrains.kotlin.psi.KtLiteralStringTemplateEntry
 import org.jetbrains.kotlin.psi.KtStringTemplateEntryWithExpression
@@ -58,25 +58,26 @@ private val COMPANION = SpecialNames.DEFAULT_NAME_FOR_COMPANION_OBJECT.asString(
 /** The SDK's `Prefab<T>`, which each typed device's companion object is. */
 internal val PREFAB = ClassId.topLevel(FqName("ktrapic.Prefab"))
 
+/** The SDK's `SlottedPrefab<T, B>`, which a prefab with slots's companion object is. */
+internal val SLOTTED_PREFAB = ClassId.topLevel(FqName("ktrapic.SlottedPrefab"))
+
 /**
- * The `Prefab<T>` a typed device's companion object ([classId]) is, which a program writes as its
- * type (`Prefab<GrowLight>`); null for any other class. Also null for a companion that declares
- * members of its own, such as a prefab with slots, whose `all` and `named` give its own batch (with
- * `slots`): `Prefab<T>` would lose them, so that companion is written as itself
- * (`BatteryCharger.Standard.Companion`).
+ * The superclass a companion object ([classId]) is written as, as a program never writes the
+ * companion itself: a typed device's prefab is the `Prefab<GrowLight>` or `SlottedPrefab<...>` it
+ * is. Null for a companion whose only superclass is `Any`, which is written as its class's name
+ * instead ([render]).
  */
-private fun prefabOf(classId: ClassId, session: FirSession): ConeClassLikeType? {
-  if (classId.shortClassName != SpecialNames.DEFAULT_NAME_FOR_COMPANION_OBJECT) return null
+private fun companionSuperclass(classId: ClassId, session: FirSession): ConeClassLikeType? {
   val symbol =
       session.symbolProvider.getClassLikeSymbolByClassId(classId) as? FirRegularClassSymbol
           ?: return null
-  var ownMembers = false
-  symbol.processAllDeclaredCallables(session) {
-    if (it !is FirConstructorSymbol) ownMembers = true
-  }
-  if (ownMembers) return null
   return symbol.resolvedSuperTypes.firstNotNullOfOrNull { supertype ->
-    (supertype as? ConeClassLikeType)?.takeIf { it.lookupTag.classId == PREFAB }
+    (supertype as? ConeClassLikeType)?.takeIf {
+      val superclass =
+          session.symbolProvider.getClassLikeSymbolByClassId(it.lookupTag.classId)
+              as? FirRegularClassSymbol
+      superclass?.classKind == ClassKind.CLASS && it.lookupTag.classId != StandardClassIds.Any
+    }
   }
 }
 
@@ -89,11 +90,13 @@ private val FUNCTION_TYPE = Regex("""Function\d+""")
 
 /**
  * [type] as a program would write it: classes by their names (`LedDisplay.Small`), `Device?`, a
- * star projection as `Prefab<*>`, and a function type as `(Device) -> Double`. A typed device's
- * companion object, its prefab, is the `Prefab` it is (`Prefab<GrowLight>`), as the companion's own
- * type can't be told from the device's by name; a prefab with slots, and another companion, is
- * `BatteryCharger.Standard.Companion`. A captured type (what a star projection stands for in one
- * expression, as `at` on a `Prefab<*>` gives) is its approximation (`TypedDevice`).
+ * star projection as `Prefab<*>`, and a function type as `(Device) -> Double`. A companion object
+ * is never written as `Companion`, which a program never writes: it is its superclass, so a typed
+ * device's prefab is the `Prefab` it is (`Prefab<GrowLight>`), and a prefab with slots's the
+ * `SlottedPrefab` (`SlottedPrefab<BatteryCharger.Standard, BatteryCharger.Standard.Batch>`). A
+ * program's companion with no superclass but `Any` is its class's name (`P`), as the program refers
+ * to it, though as a type that name is the class's. A captured type (what a star projection stands
+ * for in one expression, as `at` on a `Prefab<*>` gives) is its approximation (`TypedDevice`).
  *
  * An extension function type renders as a plain one (`Int.() -> Int` as `(Int) -> Int`), and a
  * `suspend` function type as its class (`SuspendFunction1<Int, Int>`): the SDK declares neither and
@@ -114,8 +117,9 @@ internal fun render(type: ConeKotlinType, session: FirSession): String {
   }
   if (type is ConeClassLikeType) {
     val classId = type.lookupTag.classId
-    prefabOf(classId, session)?.let { prefab ->
-      val text = render(prefab, session)
+    if (classId.shortClassName == SpecialNames.DEFAULT_NAME_FOR_COMPANION_OBJECT) {
+      val text =
+          companionSuperclass(classId, session)?.let { render(it, session) } ?: nameOf(classId)
       return if (type.isMarkedNullable) "$text?" else text
     }
     val arguments = type.typeArguments.mapNotNull { it.type }

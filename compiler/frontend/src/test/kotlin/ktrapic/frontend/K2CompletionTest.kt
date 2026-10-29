@@ -1,6 +1,7 @@
 package ktrapic.frontend
 
 import com.google.common.truth.Truth.assertThat
+import com.google.common.truth.Truth.assertWithMessage
 import java.io.File
 import ktrapic.Device
 import org.junit.jupiter.api.Test
@@ -123,6 +124,37 @@ class K2CompletionTest {
     assertThat(labels("val p = d0.PrefabHash\np.|\n")).containsNoneOf("at", "all", "named")
     assertThat(labels("val p = GrowLight.at(d0).PrefabHash\np.|\n"))
         .containsNoneOf("at", "all", "named")
+    assertThat(labels("val p: SlottedPrefab<*, *> = BatteryCharger.Standard\np.|\n"))
+        .containsNoneOf("at", "all", "named")
+  }
+
+  @Test
+  fun `a val holding a prefab with slots is described by the SlottedPrefab it is`() {
+    val items = complete("val p = BatteryCharger.Standard\nval q = |\n")
+
+    assertThat(items.single { it.label == "p" }.detail)
+        .isEqualTo("val p: SlottedPrefab<BatteryCharger.Standard, BatteryCharger.Standard.Batch>")
+    assertThat(labels("val p = BatteryCharger.Standard\np.|\n"))
+        .containsAtLeast("at", "all", "named")
+  }
+
+  @Test
+  fun `nothing completion shows for a prefab says Companion`() {
+    // A flat prefab and a family member, each with and without slots.
+    for (prefab in
+        listOf("GrowLight", "LedDisplay.Small", "ActiveVent", "BatteryCharger.Standard")) {
+      val items =
+          complete("$prefab.|\n") +
+              complete("val p = $prefab\nval x = |\n") +
+              complete("val p = $prefab\np.|\n") +
+              complete("fun f() = $prefab\nval x = f().|\n")
+
+      assertWithMessage(prefab).that(items).isNotEmpty()
+      for (item in items) {
+        assertWithMessage(prefab).that(item.label).doesNotContain("Companion")
+        assertWithMessage(prefab).that(item.detail).doesNotContain("Companion")
+      }
+    }
   }
 
   @Test

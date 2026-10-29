@@ -3,7 +3,9 @@ package ktrapic.datagen
 /**
  * Generates the typed device API: per prefab, a device class whose companion object is the prefab,
  * a `Prefab` with the entry points `at(pin)`, `all` and `named(name)`, whose batches (`Batch` in
- * `Batches.kt`) hold the prefab's typed devices.
+ * `Batches.kt`) hold the prefab's typed devices. A prefab with slots's companion is a
+ * `SlottedPrefab`, whose `all` and `named` give the batch class nested in its device class, which
+ * has `slots`.
  *
  * A prefab in one of the [Grouping.families] is generated inside it: `Battery.Small` is the device
  * class, nested in the `Battery` interface that holds the logic types every member can read, and
@@ -26,6 +28,7 @@ object PrefabGenerator {
           "GenericDevice",
           "TypedDevice",
           "Prefab",
+          "SlottedPrefab",
           "DeviceBatch",
           "Batch",
           "Mapped",
@@ -445,22 +448,41 @@ object PrefabGenerator {
 
     /**
      * A device class's companion object: its prefab, with the entry points `at`, `all` and `named`
-     * it inherits from `Prefab`. A prefab with slots overrides `all` and `named` to return its own
-     * batch type ([batchClass]).
+     * it inherits from `Prefab`, or for a prefab with slots from `SlottedPrefab`, whose `all` and
+     * `named` give the prefab's own batch type ([batchClass]). It declares nothing of its own, so
+     * the editor shows it as the `Prefab` or `SlottedPrefab` it is, never as a companion.
      */
     fun prefabCompanion(type: String, prefab: Prefab) {
       line("/** The ${prefab.name} prefab. */")
-      if (prefab.slots.isEmpty()) {
-        line("companion object : Prefab<$type>()")
-        return
-      }
-      block("companion object : Prefab<$type>()") {
-        line("override val all: $type.$BATCH")
-        line("  get() = intrinsic()")
-        line()
-        line("override fun named(name: String): $type.$BATCH = intrinsic()")
+      val header = "companion object :"
+      val supertype =
+          if (prefab.slots.isEmpty()) "Prefab<$type>()" else "SlottedPrefab<$type, $type.$BATCH>()"
+      // Broken over lines as ktfmt breaks one too long for its line.
+      when {
+        fits("$header $supertype") -> line("$header $supertype")
+        fits(supertype, continuation = true) -> {
+          line(header)
+          indent += 2
+          line(supertype)
+          indent -= 2
+        }
+        else -> {
+          line(header)
+          indent += 2
+          line("SlottedPrefab<")
+          indent += 2
+          line("$type,")
+          line("$type.$BATCH,")
+          indent -= 2
+          line(">()")
+          indent -= 2
+        }
       }
     }
+
+    /** Whether [code] fits on its line at this indentation, or on a continuation line. */
+    fun fits(code: String, continuation: Boolean = false) =
+        code.length + (indent + if (continuation) 2 else 0) * 2 <= 100
 
     /** The logic types all of [members] can read, writable where all of them can write it. */
     fun common(members: List<Prefab>): Map<String, Access> {

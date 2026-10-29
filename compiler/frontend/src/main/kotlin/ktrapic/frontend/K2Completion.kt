@@ -486,11 +486,14 @@ object K2Completion {
               FirResolvePhase.STATUS,
           )
       // A prefab whose device isn't known when compiling, such as a device's `PrefabHash`
-      // (`Prefab<*>`), only compares: `at`, `all` and `named` need a typed device's prefab.
+      // (`Prefab<*>`, or `SlottedPrefab<*, *>`), only compares: `at`, `all` and `named` need a
+      // typed device's prefab.
+      val prefabClasses = setOf(PREFAB, SLOTTED_PREFAB)
       val unknownPrefab =
-          classId == PREFAB && !isTypedDevice((type as ConeClassLikeType).typeArguments.first())
+          classId in prefabClasses &&
+              !isTypedDevice((type as ConeClassLikeType).typeArguments.first())
       scope?.processAllCallables {
-        val onPrefab = it.fir.unwrapFakeOverrides().symbol.callableId?.classId == PREFAB
+        val onPrefab = it.fir.unwrapFakeOverrides().symbol.callableId?.classId in prefabClasses
         if (shown(it, type, session) && !(unknownPrefab && onPrefab)) found += it
       }
       found += extensions(type)

@@ -21,6 +21,20 @@ abstract class Prefab<T : TypedDevice> internal constructor() {
 }
 
 /**
+ * A prefab with slots, whose devices' batch is its own type [B]: `BatteryCharger.Standard.all` is a
+ * `BatteryCharger.Standard.Batch`, which reaches the slots of every device in it, as
+ * `BatteryCharger.Standard.all.slots[0]`. Its companion object is one, so a val holding the prefab
+ * is a `SlottedPrefab<BatteryCharger.Standard, BatteryCharger.Standard.Batch>`.
+ */
+abstract class SlottedPrefab<T : TypedDevice, B : DeviceBatch<T>> internal constructor() :
+    Prefab<T>() {
+  override val all: B
+    get() = intrinsic()
+
+  override fun named(name: String): B = intrinsic()
+}
+
+/**
  * A device whose prefab is known, such as `GrowLight.at(d0)`. It has only the logic types its
  * prefab has, `val` where they can only be read.
  */

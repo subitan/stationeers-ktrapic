@@ -1476,14 +1476,13 @@ internal class Translator(private val symbols: DeclarationFinder) {
   /** A prefab used as a value (a typed device's companion object): its hash. */
   private fun prefab(expression: IrGetObjectValue): Value {
     val cls = expression.symbol.owner
-    if (!cls.isCompanion || !cls.isSubclassOf(PREFAB))
-        fail(expression, "This expression is not supported")
+    if (!cls.isCompanion || !cls.isPrefab()) fail(expression, "This expression is not supported")
     return Const(prefabHash(cls.parentAsClass))
   }
 
   /**
-   * The prefab, `Prefab` or a typed device's companion object, whose `at`, `all` or `named` is
-   * called on [receiver]: the hash of the prefab, which must be known when compiling.
+   * The prefab, `Prefab`, `SlottedPrefab` or a typed device's companion object, whose `at`, `all`
+   * or `named` is called on [receiver]: the hash of the prefab, which must be known when compiling.
    */
   private fun prefabOf(call: IrCall, receiver: IrExpression?): Double =
       (receiver?.let { value(it) } as? Const)?.number
@@ -1493,9 +1492,13 @@ internal class Translator(private val symbols: DeclarationFinder) {
                   "or a val holding one",
           )
 
-  /** `Prefab`, or a typed device's companion object, which is its prefab. */
-  private fun IrClass.isPrefab() =
-      kotlinFqName.asString() == PREFAB || (isCompanion && isSubclassOf(PREFAB))
+  /**
+   * `Prefab`, or a class extending it, directly or not: `SlottedPrefab`, and a typed device's
+   * companion object, which is its prefab. Only the SDK can extend `Prefab`.
+   */
+  private fun IrClass.isPrefab(): Boolean =
+      kotlinFqName.asString() == PREFAB ||
+          superTypes.any { it.classOrNull?.owner?.isPrefab() == true }
 
   private fun prefabHash(cls: IrClass): Double =
       Hashes.hash(cls.prefabName() ?: error("${cls.name} has no prefab name")).toDouble()
@@ -2424,9 +2427,7 @@ internal class Translator(private val symbols: DeclarationFinder) {
         cls?.isSubclassOf(DEVICE_SLOT) == true
   }
 
-  private fun IrType.isPrefab() =
-      classOrNull?.owner?.let { it.kotlinFqName.asString() == PREFAB || it.isSubclassOf(PREFAB) } ==
-          true
+  private fun IrType.isPrefab() = classOrNull?.owner?.isPrefab() == true
 
   private fun IrType.render() = classFqName?.shortName()?.asString() ?: "these"
 

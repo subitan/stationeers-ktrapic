@@ -159,7 +159,7 @@ class PrefabGeneratorTest {
     assertThat(code).contains("  val slots: Slots<CommonSlot>\n")
     assertThat(code).contains("  @SlotNumber(0)\n  val Tray: PlantSlot\n")
     // A batch of grow lights has its own type, nested in the device class, to give it slots; the
-    // prefab's all and named return it.
+    // prefab is a SlottedPrefab, whose all and named return it, and declares nothing of its own.
     assertThat(code)
         .contains(
             "  /** A batch of StructureGrowLight devices. */\n" +
@@ -169,10 +169,38 @@ class PrefabGeneratorTest {
                 "      get() = intrinsic()\n" +
                 "  }\n\n" +
                 "  /** The StructureGrowLight prefab. */\n" +
-                "  companion object : Prefab<GrowLight>() {\n" +
-                "    override val all: GrowLight.Batch\n      get() = intrinsic()\n\n" +
-                "    override fun named(name: String): GrowLight.Batch = intrinsic()\n" +
-                "  }\n"
+                "  companion object : SlottedPrefab<GrowLight, GrowLight.Batch>()\n" +
+                "}\n"
+        )
+  }
+
+  @Test
+  fun `a prefab with slots's companion is broken over lines as ktfmt breaks it`() {
+    fun companion(member: String): String {
+      val grouping =
+          Grouping(
+              mapOf("Lights" to Grouping.Family(mapOf(member to "StructureGrowLight"))),
+              emptyList(),
+          )
+      val code = generate(grouping)
+      return code.substring(code.indexOf("    companion object"), code.indexOf("\n  }\n"))
+    }
+
+    // Too long for its line, but not for a continuation line.
+    assertThat(companion("LongGrowLightMemberName"))
+        .isEqualTo(
+            "    companion object :\n" +
+                "        SlottedPrefab<Lights.LongGrowLightMemberName, " +
+                "Lights.LongGrowLightMemberName.Batch>()"
+        )
+    // Too long for either: a type argument a line.
+    assertThat(companion("AVeryLongGrowLightMemberName"))
+        .isEqualTo(
+            "    companion object :\n" +
+                "        SlottedPrefab<\n" +
+                "            Lights.AVeryLongGrowLightMemberName,\n" +
+                "            Lights.AVeryLongGrowLightMemberName.Batch,\n" +
+                "        >()"
         )
   }
 
@@ -256,7 +284,7 @@ class PrefabGeneratorTest {
     assertThat(code)
         .contains(
             "  /** The StructureGrowLight prefab. */\n" +
-                "  companion object : Prefab<GrowLight>() {\n"
+                "  companion object : SlottedPrefab<GrowLight, GrowLight.Batch>()\n"
         )
     // No plural entry points, nor any other object.
     assertThat(code).doesNotContain("object GrowLights")

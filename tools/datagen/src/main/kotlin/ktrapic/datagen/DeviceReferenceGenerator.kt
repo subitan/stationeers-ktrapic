@@ -15,7 +15,15 @@ object DeviceReferenceGenerator {
       Regex("""^(\s*)(?:abstract |sealed |open |data |enum )*(class|object|interface) (\w+)(.*)$""")
   private val PROPERTY = Regex("""^\s*(override )?(var|val) (\w+): (.+)$""")
   private val PREFAB_NAME = Regex("""@PrefabName\("([^"]+)"\)""")
-  private val COMPANION = Regex("""^\s*companion object : Prefab<([\w.]+)>\(\)""")
+  /**
+   * A prefab companion, `Prefab<T>`, or `SlottedPrefab<T, T.Batch>` for a prefab with slots, which
+   * ktfmt may break over lines.
+   */
+  private val COMPANION =
+      Regex(
+          """companion object :\s*""" +
+              """(?:Prefab<([\w.]+)>|SlottedPrefab<\s*([\w.]+),\s*\2\.Batch,?\s*>)\(\)"""
+      )
   private val SLOT_NUMBER = Regex("""^\s*@SlotNumber\((\d+)\)$""")
   private val LOGIC_TYPES = Regex("""^\s*@LogicTypes\(read = "([^"]*)", written = "([^"]*)"\)$""")
 
@@ -105,7 +113,10 @@ object DeviceReferenceGenerator {
           "recognized @PrefabName"
     }
     // Each typed device's companion object is its prefab, the way to its devices.
-    val companions = lines.mapNotNull { COMPANION.find(it)?.groupValues?.get(1) }.toSet()
+    val companions =
+        COMPANION.findAll(prefabsSource)
+            .map { it.groupValues[1].ifEmpty { it.groupValues[2] } }
+            .toSet()
     val missing = devices.map { it.name }.filter { it !in companions }
     require(missing.isEmpty()) { "typed devices without a prefab companion object: $missing" }
 
@@ -158,8 +169,17 @@ object DeviceReferenceGenerator {
       append("}\n")
       append("```\n")
       append("\n")
-      append("For a device with slots, the batch from `all` or `named` also has `slots`, a slot ")
-      append("of every one in the batch: `BatteryCharger.Standard.all.slots[0]`.\n")
+      append("A device with slots has a `SlottedPrefab`, whose batch from `all` or `named` is ")
+      append("the device's own `Batch` type, which also has `slots`, a slot of every one in ")
+      append("the batch: `BatteryCharger.Standard.all.slots[0]`.\n")
+      append("\n")
+      append("```kotlin\n")
+      append("abstract class SlottedPrefab<T : TypedDevice, B : DeviceBatch<T>> : Prefab<T> {\n")
+      append("  val all: B\n")
+      append("\n")
+      append("  fun named(name: String): B\n")
+      append("}\n")
+      append("```\n")
       append("\n")
       append("A device's logic types are its properties: a `var` can be written, a `val` only ")
       append(

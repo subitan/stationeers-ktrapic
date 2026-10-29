@@ -173,4 +173,22 @@ class DeviceReferenceGeneratorTest {
         }
     assertThat(error).hasMessageThat().contains("without a prefab companion object: [Vent]")
   }
+
+  @Test
+  fun `takes a prefab with slots's companion, a SlottedPrefab of its own batch`() {
+    val slotted =
+        device("StructureVent", "Vent")
+            .replace(
+                "  companion object : Prefab<Vent>()\n",
+                "  companion object : SlottedPrefab<Vent, Vent.Batch>()\n",
+            )
+    val otherBatch = slotted.replace("Vent.Batch", "Other.Batch")
+
+    assertThat(DeviceReferenceGenerator.generate(slotted, enums, typing)).contains("class Vent ")
+    val error =
+        assertThrows<IllegalArgumentException> {
+          DeviceReferenceGenerator.generate(otherBatch, enums, typing)
+        }
+    assertThat(error).hasMessageThat().contains("without a prefab companion object: [Vent]")
+  }
 }
