@@ -1052,13 +1052,8 @@ class CompilerTest {
 
   @Test
   fun `unsupported function forms are reported where they are`() {
-    // Source line N is reported as N + 2, after the two imports compile() adds.
-    assertError(
-        "fun f(n: Int): Int = if (n < 1) 0 else f(n - 1)\ndb.Setting = f(3).toDouble()",
-        "Recursive",
-        3,
-        40,
-    )
+    // Source line N is reported as N + 2, after the two imports compile() adds. Recursion is
+    // covered by StackCallTest.
     assertError("fun f(n: Int = 2) = n\ndb.Setting = f().toDouble()", "Default", 4, 14)
     assertError("fun f(d: Device) { d.On = true }\nf(d0)\nf(d1)", "device", 4, 1)
     assertError("fun Int.twice() = this * 2\ndb.Setting = 3.twice().toDouble()", "Extension", 3, 1)

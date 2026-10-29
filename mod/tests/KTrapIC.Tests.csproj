@@ -10,6 +10,7 @@
     <Nullable>disable</Nullable>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="../src/CompileOptions.cs" Link="CompileOptions.cs" />
     <Compile Include="../src/CompileResponse.cs" Link="CompileResponse.cs" />
     <Compile Include="../src/Completions.cs" Link="Completions.cs" />
     <Compile Include="../src/Hovers.cs" Link="Hovers.cs" />

@@ -20,7 +20,14 @@ import ktrapic.ic10.Register
 /** How to compile a program. */
 data class CompileOptions(
     /** Resolve labels to line numbers and drop them, to save lines on the chip. */
-    val compact: Boolean = false
+    val compact: Boolean = false,
+    /**
+     * Pass the arguments and result of functions called with `jal` on the chip's stack, saving the
+     * caller's live registers around each call, so functions may be recursive. A function marked
+     * `@InRegisters` passes them in registers all the same. False passes every function's in
+     * registers.
+     */
+    val stackCalls: Boolean = true,
 )
 
 /** A problem with the program, at a 1-based [line] and [column] of its source (0 if unknown). */
@@ -51,7 +58,7 @@ object Compiler {
     val result =
         K2Frontend.compile(source, listOf(sdkJar()), listOf("ktrapic.*")) { ir ->
           try {
-            val lowered = Backend.compile(ir.module, ir.symbols)
+            val lowered = Backend.compile(ir.module, ir.symbols, options.stackCalls)
             // The 0-based line of the user's source that each line of the program comes from.
             val sourceLines =
                 lowered.offsets.map { offset -> offset?.let { ir.position(it) }?.first?.minus(1) }

@@ -16,6 +16,10 @@ namespace KTrapIC
     public class Plugin : BaseUnityPlugin
     {
         public static ConfigEntry<bool> Compact;
+        public static ConfigEntry<bool> StackCalls;
+
+        /// <summary>The options each compile is sent with, as the settings are now.</summary>
+        public static CompileOptions CompileOptions => new CompileOptions(Compact.Value, StackCalls.Value);
         public static ConfigEntry<string> JavaPath;
         public static ConfigEntry<string> DaemonJarPath;
 
@@ -29,6 +33,11 @@ namespace KTrapIC
                     "Compact",
                     false,
                     "Resolve labels to line numbers and drop them, to save lines on the chip");
+                StackCalls = Config.Bind(
+                    "General",
+                    "StackCalls",
+                    true,
+                    "Pass functions' arguments and results on the chip's stack, so functions may be recursive; off passes them in registers");
                 JavaPath = Config.Bind(
                     "Development",
                     "JavaPath",

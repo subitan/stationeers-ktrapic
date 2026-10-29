@@ -41,6 +41,18 @@ class DaemonTest {
   }
 
   @Test
+  fun `passes functions' arguments on the stack unless stack_calls is false`() {
+    val source =
+        "import ktrapic.*\\nfun f(x: Double) = x + 1.0\\ndb.Setting = f(1.0)\\ndb.Ratio = f(2.0)\\n"
+    val stack = request("""{"action": "compile", "code": "$source"}""")
+    val registers =
+        request("""{"action": "compile", "code": "$source", "options": {"stack_calls": false}}""")
+
+    assertThat(stack["code"].asString).contains("push 1\njal f")
+    assertThat(registers["code"].asString).doesNotContain("push")
+  }
+
+  @Test
   fun `reports errors with their position`() {
     val error =
         request("""{"action": "compile", "code": {"": "import ktrapic.*\nd0.On = 1.0\n"}}""")[

@@ -126,12 +126,12 @@ namespace KTrapIC
         /// Compiles the document as of the last <see cref="Sync"/>. A failed response if it isn't
         /// open, or the daemon stops.
         /// </summary>
-        public Task<CompileResponse> Compile(bool compact)
+        public Task<CompileResponse> Compile(CompileOptions options)
         {
             var connection = _connection;
             if (connection == null || !_isOpen)
                 return Task.FromResult(CompileResponse.Failed(LspConnection.StoppedMessage));
-            return connection.Compile(Uri, compact);
+            return connection.Compile(Uri, options);
         }
 
         /// <summary>
@@ -139,14 +139,14 @@ namespace KTrapIC
         /// <paramref name="timeout"/>, as an export needs. Null if it isn't open on an initialized
         /// connection, so this never waits for the daemon to start.
         /// </summary>
-        public CompileResponse CompileNow(bool compact, TimeSpan timeout)
+        public CompileResponse CompileNow(CompileOptions options, TimeSpan timeout)
         {
             var connection = _connection;
             if (connection == null || !connection.IsInitialized || !_isOpen)
                 return null;
             // Run where no synchronization context would post the continuations back to this
             // thread, which is blocked waiting for them.
-            var compile = Task.Run(() => Compile(compact));
+            var compile = Task.Run(() => Compile(options));
             if (compile.Wait(timeout))
                 return compile.Result;
             return CompileResponse.Failed(

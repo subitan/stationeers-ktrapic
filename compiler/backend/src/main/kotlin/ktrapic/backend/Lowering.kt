@@ -2,6 +2,7 @@ package ktrapic.backend
 
 import ktrapic.ic10.LabelRef
 import ktrapic.ic10.Line
+import ktrapic.ic10.Operand
 import ktrapic.ic10.Program
 
 /**
@@ -10,13 +11,24 @@ import ktrapic.ic10.Program
  */
 data class Lowered(val program: Program, val offsets: List<Int?>)
 
-/** Tidies [TirLine]s, allocates registers and produces the IC10 [Program]. */
+/**
+ * Tidies [TirLine]s, allocates registers and produces the IC10 [Program], expanding each call on
+ * the stack ([TirInstruction.CALL]) as it goes.
+ */
 object Lowering {
   fun lower(lines: List<TirLine>): Lowered {
     val simplified = simplify(lines)
     val registers = RegisterAllocator.allocate(simplified)
+    val liveOut = Liveness.liveOut(simplified)
+    val written = Liveness.maybeWritten(simplified)
+    val byId =
+        simplified
+            .filterIsInstance<TirInstruction>()
+            .flatMap { listOfNotNull(it.def) + it.uses }
+            .associateBy { it.id }
     val program = mutableListOf<Line>()
     val offsets = mutableListOf<Int?>()
+    var index = -1
     for (line in simplified) {
       when (line) {
         is TirLabel -> {
@@ -24,13 +36,41 @@ object Lowering {
           offsets += null
         }
         is TirInstruction -> {
-          val operands =
-              line.operands.map {
-                when (it) {
-                  is VReg -> registers.getValue(it)
-                  is Fixed -> it.operand
-                }
+          index++
+          fun physical(operand: TirOperand): Operand =
+              when (operand) {
+                is VReg -> registers.getValue(operand)
+                is Fixed -> operand.operand
               }
+          if (line.op == TirInstruction.CALL) {
+            // The registers the caller needs after the call, pushed below the arguments and
+            // popped back after the result. A global the call reads and writes stays in its
+            // register, the result is new, and a register no path to the call has written holds
+            // nothing to keep.
+            val saved =
+                liveOut[index]
+                    .stream()
+                    .toArray()
+                    .filter { id -> id != line.result?.id && line.globals.none { it.id == id } }
+                    .filter { written[index].get(it) }
+                    .map { registers.getValue(byId.getValue(it)) }
+                    .distinct()
+                    .sortedBy { it.index }
+            val label = line.operands.last()
+            val expanded = buildList {
+              saved.forEach { add(Line.Instruction("push", listOf(it))) }
+              line.operands.dropLast(1).forEach {
+                add(Line.Instruction("push", listOf(physical(it))))
+              }
+              add(Line.Instruction("jal", listOf(physical(label))))
+              line.result?.let { add(Line.Instruction("pop", listOf(physical(it)))) }
+              saved.asReversed().forEach { add(Line.Instruction("pop", listOf(it))) }
+            }
+            program += expanded
+            repeat(expanded.size) { offsets += line.offset }
+            continue
+          }
+          val operands = line.operands.map(::physical)
           if (line.op == "move" && operands[0] == operands[1]) continue
           program += Line.Instruction(line.op, operands)
           offsets += line.offset
@@ -126,7 +166,7 @@ object Lowering {
   }
 
   /** Ops that write a register but also do something else, so are kept even when unread. */
-  private val IMPURE = setOf("pop")
+  private val IMPURE = setOf("pop", TirInstruction.CALL)
 }
 
 private val NEGATED_BRANCHES: Map<String, String> =

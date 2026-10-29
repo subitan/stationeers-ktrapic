@@ -120,6 +120,7 @@
   <select id="open" aria-label="Open a program"><option value="">Open…</option></select>
   <div class="options" id="options">
     <label title="Resolve labels to line numbers and drop them, saving lines on the chip"><input type="checkbox" data-opt="compact" checked> Compact</label>
+    <label title="Pass functions' arguments and results on the chip's stack, so functions may be recursive; off passes them in registers"><input type="checkbox" data-opt="stack_calls" checked> Stack calls</label>
   </div>
   <span class="spacer"></span>
   <button id="toggle-test" title="Run the program against fake devices">Test</button>
