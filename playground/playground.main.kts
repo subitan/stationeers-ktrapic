@@ -19,6 +19,7 @@ import java.io.BufferedWriter
 import java.io.File
 import java.net.InetSocketAddress
 import java.net.URLDecoder
+import java.nio.file.Files
 import java.util.Base64
 import java.util.concurrent.Executors
 import kotlin.system.exitProcess
@@ -129,9 +130,21 @@ fun source(group: String, name: String): File? {
   }
 }
 
-/** The test file kept beside [program]: `X.test.json` for `X.ic10.kts`. */
-fun testOf(program: File): File =
-    program.resolveSibling(program.name.removeSuffix(".ic10.kts") + ".test.json")
+/**
+ * The test file kept beside [program]: `X.test.json` for `X.ic10.kts`, in the program's own
+ * directory. A link there, which could point anywhere, is refused, so it is neither read nor
+ * written through.
+ */
+fun testOf(program: File): File? {
+  val dir = program.canonicalFile.parentFile
+  val name = program.canonicalFile.name.removeSuffix(".ic10.kts") + ".test.json"
+  val file = dir.resolve(name)
+  return file.takeIf {
+    !Files.isSymbolicLink(it.toPath()) &&
+        it.canonicalFile.parentFile == dir &&
+        it.canonicalFile.name == name
+  }
+}
 
 val MAX_TEST_BYTES = 1 shl 20
 

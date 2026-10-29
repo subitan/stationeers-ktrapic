@@ -105,6 +105,7 @@
   .check.fail::before { content: "✘ "; color: var(--error); }
   .check.fail { color: var(--error); }
   .runerr { color: var(--error); }
+  .unsaved { color: var(--warn); }
   table.vals { border-collapse: collapse; font: 12px/16px ui-monospace, Consolas, monospace; }
   table.vals td { padding: 0 10px 0 0; white-space: nowrap; }
   table.vals td:first-child { color: var(--muted); }
@@ -146,7 +147,7 @@
     </div>
   </section>
   <section class="pane" id="test-pane">
-    <div class="pane-head"><strong>Test</strong><span id="testname">untitled.test.json</span>
+    <div class="pane-head"><strong>Test</strong><span id="testname">untitled.test.json</span><span id="test-state" class="unsaved"></span>
       <a href="https://github.com/subitan/stationeers-ktrapic/blob/main/docs/TESTING.md" target="_blank" rel="noopener">format</a>
       <span class="stats" id="verdict"></span>
       <button id="run" title="Compile and run against the test's devices (Ctrl+Enter)">Run</button>
@@ -290,8 +291,7 @@ async function compile() {
 }
 
 function schedule() {
-  // An edit makes the run's lines stale.
-  if (cursor.ic || cursor.src) { cursor = {}; $("verdict").textContent = "edited since the run"; }
+  markStale();
   gutter($("src-gutter"), src.value.split("\n").length, { err: errorLine });
   clearTimeout(timer);
   timer = setTimeout(compile, 250);
@@ -321,7 +321,7 @@ src.addEventListener("keydown", (e) => {
 });
 document.querySelectorAll("[data-opt]").forEach((cb) => {
   cb.checked = (load("opt-" + cb.dataset.opt) ?? String(cb.checked)) === "true";
-  cb.addEventListener("change", () => { store("opt-" + cb.dataset.opt, cb.checked); compile(); });
+  cb.addEventListener("change", () => { store("opt-" + cb.dataset.opt, cb.checked); markStale(); compile(); });
 });
 
 $("copy").onclick = async () => {
@@ -344,17 +344,22 @@ $("open").onchange = async (e) => {
   e.target.value = "";
   if (!v) return;
   const { group, name } = JSON.parse(v);
-  const r = await fetch(`/api/source?group=${encodeURIComponent(group)}&name=${encodeURIComponent(name)}`);
-  if (!r.ok) { setStatus("Couldn't open " + esc(name), true); return; }
-  src.value = (await r.json()).code;
+  let code;
+  try {
+    const r = await fetch(`/api/source?group=${encodeURIComponent(group)}&name=${encodeURIComponent(name)}`);
+    if (r.ok) code = (await r.json()).code;
+  } catch (e) {}
+  if (code === undefined) { setStatus("Couldn't open " + esc(name), true); return; }
+  src.value = code;
   $("filename").textContent = name;
   store(NAME_KEY, name);
   opened = { group, name };
   store(OPENED_KEY, JSON.stringify(opened));
   src.scrollTop = 0;
-  cursor = {};
+  markStale();
   compile();
-  await openTest();
+  await loadTest();
+  clearRun("Run the program to see what it does.");
 };
 
 // ---- Testing against fake devices (docs/TESTING.md) ----
@@ -380,30 +385,71 @@ const DEFAULT_TEST = `{
 
 // The program the editor opened from the server, whose test the server can save.
 let opened = null;
+// The test file's text on the server for the opened program, or null if it has none (or none was opened).
+let savedTest = null;
 // The last run: the response, the state after each tick, and the traced tick's states.
 let run = null, states = [], lineStates = null, at = 0, lineAt = 0, icToSrc = {};
+// Counts runs asked for and things that outdate them; only the newest run's answer is shown.
+let runSeq = 0;
+// Whether the program or its options changed since the shown run, so its lines no longer match the IC10.
+let stale = false;
+
+function forget(k) { try { localStorage.removeItem(k); } catch (e) {} }
 
 function testName() { return $("filename").textContent.replace(/\.ic10\.kts$/, "") + ".test.json"; }
-function testKey() { return TEST_KEY + $("filename").textContent; }
+// A program opened from the server keeps its draft test under its directory and name; any other
+// program under its file name.
+function testKey() { return TEST_KEY + (opened ? opened.group + "/" + opened.name : $("filename").textContent); }
 
-async function openTest() {
-  let text = null;
-  try {
-    const r = await fetch(`/api/test?group=${encodeURIComponent(opened.group)}&name=${encodeURIComponent(opened.name)}`);
-    if (r.ok) text = (await r.json()).test;
-  } catch (e) {}
-  $("test").value = text ?? load(testKey()) ?? DEFAULT_TEST;
+/** Shows the test for the program: an unsaved draft if there is one, else the saved file. */
+async function loadTest() {
+  savedTest = null;
+  if (opened) {
+    try {
+      const r = await fetch(`/api/test?group=${encodeURIComponent(opened.group)}&name=${encodeURIComponent(opened.name)}`);
+      if (r.ok) savedTest = (await r.json()).test;
+    } catch (e) {}
+  }
+  const draft = load(testKey());
+  $("test").value = draft ?? savedTest ?? DEFAULT_TEST;
   $("testname").textContent = testName();
-  clearRun("Run the program to see what it does.");
+  keepDraft();
+}
+
+/** Keeps the test as a draft until it is saved; a draft that matches the saved file is dropped. */
+function keepDraft() {
+  const text = $("test").value;
+  const unsaved = opened && text !== savedTest;
+  if (opened && !unsaved) forget(testKey()); else store(testKey(), text);
+  $("test-state").textContent = unsaved ? "unsaved" : "";
+}
+
+/** The program or its options changed: the shown run's lines no longer apply, and a run on its way is dropped. */
+function markStale() {
+  runSeq++;
+  cursor = {};
+  if ((run && !stale) || $("verdict").textContent === "running…") {
+    stale = true;
+    $("verdict").textContent = "changed since the run";
+    $("verdict").className = "stats";
+    show();
+  }
 }
 
 function clearRun(message) {
-  run = null; states = []; lineStates = null; cursor = {};
+  runSeq++;
+  run = null; states = []; lineStates = null; cursor = {}; stale = false;
   $("results").innerHTML = message;
   $("verdict").textContent = "";
   $("tick").max = 0;
   $("where").textContent = "";
   $("line-controls").hidden = true;
+}
+
+/** Names a 0-based IC10 line as the gutters number it, with the Kotlin line it came from if known. */
+function lineName(ic) {
+  const s = icToSrc[ic];
+  return `IC10 line ${ic + 1}` + (s === undefined ? "" : ` (Kotlin line ${s + 1})`);
 }
 
 /** The state after a snapshot, from the state before it: snapshots hold only what changed. */
@@ -432,8 +478,10 @@ async function runTest(traceTick) {
   let test;
   try { test = JSON.parse($("test").value); }
   catch (e) { clearRun(`<span class="runerr">The test isn't JSON: ${esc(e.message)}</span>`); return; }
-  store(testKey(), $("test").value);
+  keepDraft();
+  const mine = ++runSeq;
   $("verdict").textContent = "running…";
+  $("verdict").className = "stats";
   let res;
   try {
     const r = await fetch("/api/run", {
@@ -442,18 +490,22 @@ async function runTest(traceTick) {
                              ...(traceTick ? { trace_tick: traceTick } : {}) }),
     });
     res = await r.json();
-  } catch (e) { clearRun(`<span class="runerr">Can't reach the local server.</span>`); return; }
-  if (res.error) { clearRun(`<span class="runerr">The program doesn't compile: ${esc(res.error.description)}</span>`); return; }
-  if (res.run.error && !res.run.ticks) { clearRun(`<span class="runerr">Test: ${esc(res.run.error.description)}</span>`); return; }
-  if (!res.run.ticks.length) {
-    // A define the chip can't read stops it before it starts.
-    clearRun(`<span class="runerr">Runtime error at line ${res.run.error.line}: ${esc(res.run.error.message)}</span>`);
+  } catch (e) {
+    if (mine === runSeq) clearRun(`<span class="runerr">Can't reach the local server.</span>`);
     return;
   }
-  if (!traceTick) $("line-controls").hidden = true;
-  run = res;
+  if (mine !== runSeq) return;
+  if (res.error) { clearRun(`<span class="runerr">The program doesn't compile: ${esc(res.error.description)}</span>`); return; }
+  if (res.run.error && !res.run.ticks) { clearRun(`<span class="runerr">Test: ${esc(res.run.error.description)}</span>`); return; }
   icToSrc = {};
   for (const [line, ics] of Object.entries(res.source_mapping || {})) for (const ic of ics) icToSrc[ic] ??= Number(line);
+  if (!res.run.ticks.length) {
+    // A define the chip can't read stops it before it starts.
+    clearRun(`<span class="runerr">Runtime error at ${lineName(res.run.error.line)}: ${esc(res.run.error.message)}</span>`);
+    return;
+  }
+  run = res;
+  stale = false;
   states = [];
   let st = EMPTY;
   for (const snap of res.run.ticks) states.push((st = apply(st, snap)));
@@ -467,6 +519,7 @@ async function runTest(traceTick) {
   $("verdict").className = "stats " + (res.run.passed ? "" : "bad");
   at = traceTick ? traceTick - 1 : states.length - 1;
   lineAt = 0;
+  $("line-controls").hidden = !lineStates;
   show();
 }
 
@@ -486,19 +539,28 @@ function show() {
   // A traced line points at the line it ran; a tick at the line that runs next.
   const ic = traced ? st.ran : st.line;
   const srcLine = icToSrc[ic];
-  cursor = { ic: ic + 1, src: srcLine === undefined ? undefined : srcLine + 1 };
-  $("where").textContent = traced
-    ? `tick ${st.tick}, ran line ${ic}`
-    : `tick ${st.tick} of ${last}${st.halted ? ", halted" : `, next line ${ic}`}`;
+  if (stale) {
+    // The run's line numbers belong to IC10 that has since changed, so neither gutter is marked.
+    cursor = {};
+    $("where").textContent = `tick ${st.tick} of ${last}, lines out of date`;
+  } else {
+    cursor = { ic: ic + 1, src: srcLine === undefined ? undefined : srcLine + 1 };
+    $("where").textContent = traced
+      ? `tick ${st.tick}, ran ${lineName(ic)}`
+      : `tick ${st.tick} of ${last}${st.halted ? ", halted" : `, next ${lineName(ic)}`}`;
+    out.scrollTop = Math.max(0, (ic - 5) * 20);
+    if (srcLine !== undefined) src.scrollTop = Math.max(0, (srcLine - 5) * 20);
+  }
   if (traced) $("line-at").textContent = ` ${lineAt + 1}/${lineStates.length} `;
   gutter($("out-gutter"), compiled.replace(/\n$/, "").split("\n").length, { limit: MAX_LINES, cur: cursor.ic });
   gutter($("src-gutter"), src.value.split("\n").length, { err: errorLine, cur: cursor.src });
-  out.scrollTop = Math.max(0, (ic - 5) * 20);
-  if (srcLine !== undefined) src.scrollTop = Math.max(0, (srcLine - 5) * 20);
 
   const r = run.run;
   let html = "<h3>Checks</h3>";
-  if (r.error) html += `<div class="runerr">Runtime error at tick ${r.error.tick}, line ${r.error.line}: ${esc(r.error.message)}</div>`;
+  if (r.error) {
+    const line = stale ? "" : `, ${lineName(r.error.line)}`;
+    html += `<div class="runerr">Runtime error at tick ${r.error.tick}${line}: ${esc(r.error.message)}</div>`;
+  }
   html += r.checks.length
     ? r.checks.map((c) => `<div class="check ${c.passed ? "pass" : "fail"}">${esc(c.description)}</div>`).join("")
     : "<div>No expectations.</div>";
@@ -533,16 +595,12 @@ $("prev").onclick = () => step(at - 1);
 $("next").onclick = () => step(at + 1);
 $("last").onclick = () => step(states.length - 1);
 $("tick").oninput = (e) => step(Number(e.target.value));
-$("trace").onclick = async () => {
-  if (!run || at + 1 >= states.length) return;
-  await runTest(at + 1);
-  if (!lineStates) return;
-  $("line-controls").hidden = false;
-  show();
+$("trace").onclick = () => {
+  if (run && at + 1 < states.length) runTest(at + 1);
 };
 $("line-prev").onclick = () => { lineAt = Math.max(0, lineAt - 1); show(); };
 $("line-next").onclick = () => { lineAt = Math.min(lineStates.length - 1, lineAt + 1); show(); };
-$("test").addEventListener("input", () => store(testKey(), $("test").value));
+$("test").addEventListener("input", keepDraft);
 for (const el of [src, $("test")]) {
   el.addEventListener("keydown", (e) => {
     if ((e.ctrlKey || e.metaKey) && e.key === "Enter") { e.preventDefault(); runTest(); }
@@ -553,11 +611,18 @@ $("toggle-test").onclick = () => store(TESTING_KEY, $("main").classList.toggle("
 $("save-test").onclick = async () => {
   try { JSON.parse($("test").value); }
   catch (e) { clearRun(`<span class="runerr">The test isn't JSON: ${esc(e.message)}</span>`); return; }
-  if (opened && opened.name === $("filename").textContent) {
-    const r = await fetch(`/api/test?group=${encodeURIComponent(opened.group)}&name=${encodeURIComponent(opened.name)}`, {
-      method: "POST", headers: { "Content-Type": "application/json" }, body: $("test").value,
-    });
-    $("save-test").textContent = r.ok ? "Saved" : "Save failed";
+  if (opened) {
+    // Saved only beside the program as it was opened: its directory and name.
+    const text = $("test").value;
+    let ok = false;
+    try {
+      const r = await fetch(`/api/test?group=${encodeURIComponent(opened.group)}&name=${encodeURIComponent(opened.name)}`, {
+        method: "POST", headers: { "Content-Type": "application/json" }, body: text,
+      });
+      ok = r.ok;
+    } catch (e) {}
+    if (ok) { savedTest = text; keepDraft(); }
+    $("save-test").textContent = ok ? "Saved" : "Save failed";
   } else {
     // A program that wasn't opened from the server has nowhere to keep its test; download it.
     const a = document.createElement("a");
@@ -593,10 +658,9 @@ $("save-test").onclick = async () => {
   } catch (e) {}
   try { opened = JSON.parse(load(OPENED_KEY)); } catch (e) {}
   if (opened && opened.name !== $("filename").textContent) opened = null;
-  $("test").value = load(testKey()) ?? DEFAULT_TEST;
-  $("testname").textContent = testName();
   if (load(TESTING_KEY) === "true") $("main").classList.add("testing");
   compile();
+  await loadTest();
 })();
 </script>
 </body>
