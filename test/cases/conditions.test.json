@@ -1,0 +1,21 @@
+{
+  "devices": [
+    {"id": "sensor", "pin": "d0", "prefab": "StructureGasSensor", "logic": {"Temperature": 295}},
+    {"id": "heater", "pin": "d1", "prefab": "StructureWallHeater"},
+    {"id": "cooler", "pin": "d2", "prefab": "StructureWallCooler"}
+  ],
+  "ticks": 12,
+  "changes": [
+    {"tick": 3, "device": "sensor", "logic": "Temperature", "value": 280},
+    {"tick": 6, "device": "sensor", "logic": "Temperature", "value": 290,
+     "rampTo": {"tick": 12, "value": 320}}
+  ],
+  "expect": [
+    {"tick": 2, "device": "heater", "logic": "On", "equals": 0},
+    {"tick": 3, "device": "heater", "logic": "On", "equals": 1},
+    {"tick": 3, "device": "db", "logic": "On", "equals": 1},
+    {"tick": 6, "device": "heater", "logic": "On", "equals": 0},
+    {"device": "cooler", "logic": "On", "equals": 1},
+    {"device": "heater", "logic": "On", "equals": 0}
+  ]
+}

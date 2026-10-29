@@ -14,6 +14,11 @@ import ktrapic.api.CompileOptions
 import ktrapic.api.CompileResult
 import ktrapic.api.Compiler
 import ktrapic.daemon.lsp.LspServer
+import ktrapic.harness.Harness
+import ktrapic.harness.RunResult
+import ktrapic.harness.TestSpec
+import ktrapic.harness.TestSpecException
+import ktrapic.ic10.Program
 
 /**
  * The compile daemon's protocol, as PyTrapIC's (`stationeers_pytrapic/mod_daemon.py`): each request
@@ -27,8 +32,12 @@ import ktrapic.daemon.lsp.LspServer
  * Unlike PyTrapIC, `line` and `column` are both 1-based, and `line_end`/`column_end` repeat them
  * because the compiler reports only where a problem starts. All four are 0 when the compiler gives
  * no position, as for a failure inside the compiler that it reports as an error. A request that is
- * not a compile request gets `{"error": {"description"}}`, with an object rather than PyTrapIC's
- * plain string.
+ * neither a compile nor a run request gets `{"error": {"description"}}`, with an object rather than
+ * PyTrapIC's plain string.
+ *
+ * KTrapIC adds `{"action": "run", "code", "options", "test": {...}, "trace_tick": N}`, which
+ * compiles as a compile request does and then runs the program against a test's fake devices (see
+ * [run]).
  *
  * Every request line gets exactly one response line, whatever it holds, so a client can read one
  * line per line it writes.
@@ -85,6 +94,35 @@ object Daemon {
     }
   }
 
+  /**
+   * The response to running [test], a test file's JSON object (see `docs/TESTING.md`), against
+   * [source] compiled with [options]: the compile response, with `run` added if it compiled. `run`
+   * is the harness's result (see [RunResult.toJson]), with a snapshot per line of tick [traceTick]
+   * if given, or `{"error": {"description"}}` if the test can't be run as written or [traceTick]
+   * isn't one of its ticks.
+   */
+  fun run(source: String, options: JsonObject?, test: JsonObject?, traceTick: Int?): JsonObject =
+      guarded {
+        val compiled = compile(source, options)
+        val code = compiled["code"]?.asString
+        if (code != null) {
+          val run =
+              try {
+                val spec = TestSpec.parse(test ?: JsonObject())
+                if (traceTick != null && traceTick !in 1..spec.ticks) {
+                  throw TestSpecException("trace_tick: the test runs ticks 1 to ${spec.ticks}")
+                }
+                Harness.run(Program.parse(code), spec, traceTick).toJson()
+              } catch (e: TestSpecException) {
+                JsonObject().apply {
+                  add("error", JsonObject().apply { addProperty("description", e.message) })
+                }
+              }
+          compiled.add("run", run)
+        }
+        compiled
+      }
+
   /** What [respond] returns, or an error response if the compiler fails. */
   private inline fun guarded(respond: () -> JsonObject): JsonObject =
       try {
@@ -111,12 +149,26 @@ object Daemon {
 
   private fun respond(request: JsonObject): JsonObject {
     val action = request["action"]?.takeIf { it.isJsonPrimitive }?.asString
-    if (action != "compile") return error("Invalid action '$action'")
+    if (action != "compile" && action != "run") return error("Invalid action '$action'")
     val code = request["code"] ?: return error("No code provided")
     val program = if (code.isJsonObject) code.asJsonObject[""] else code
     val source =
         program?.takeIf { it.isJsonPrimitive }?.asString ?: return error("No code provided")
-    return compile(source, request["options"]?.takeIf { it.isJsonObject }?.asJsonObject)
+    val options = request["options"]?.takeIf { it.isJsonObject }?.asJsonObject
+    if (action == "compile") return compile(source, options)
+    val test = request["test"]
+    if (test != null && !test.isJsonObject) return error("A run's test must be a JSON object")
+    val traceTick =
+        request["trace_tick"]?.let { tick ->
+          tick
+              .takeIf { it.isJsonPrimitive && it.asJsonPrimitive.isNumber }
+              ?.asDouble
+              ?.takeIf { it == Math.rint(it) }
+              // A whole number too big for an Int saturates, so it is still outside the test's
+              // ticks.
+              ?.toInt() ?: return error("trace_tick must be a whole number")
+        }
+    return run(source, options, test?.asJsonObject, traceTick)
   }
 
   private fun describe(error: ktrapic.api.CompileError) =

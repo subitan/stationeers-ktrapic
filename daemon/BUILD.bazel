@@ -8,6 +8,8 @@ kt_jvm_library(
     deps = [
         "//compiler/api",
         "//compiler/frontend",
+        "//compiler/ic10",
+        "//harness",
         "@maven//:com_google_code_gson_gson",
     ],
 )

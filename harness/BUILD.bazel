@@ -1,0 +1,47 @@
+load("@bazel_skylib//rules:copy_file.bzl", "copy_file")
+load("@rules_kotlin//kotlin:jvm.bzl", "kt_jvm_library")
+load("//build_defs/kotlin:junit5.bzl", "kt_junit5_tests")
+
+# The SDK's game data, as resources under ktrapic/harness/ in the harness's jar.
+[
+    copy_file(
+        name = "copy_" + name.replace("-", "_"),
+        src = "//sdk:data/%s.json" % name,
+        out = "src/main/resources/ktrapic/harness/%s.json" % name,
+    )
+    for name in [
+        "logic-enums",
+        "prefabs",
+    ]
+]
+
+# Tests of programs against fake devices: a test file's network, the changes made between ticks
+# and the expectations checked, run on the emulator. The daemon's run action and the playground
+# use it.
+kt_jvm_library(
+    name = "harness",
+    srcs = glob(["src/main/kotlin/**/*.kt"]),
+    resources = [
+        "src/main/resources/ktrapic/harness/logic-enums.json",
+        "src/main/resources/ktrapic/harness/prefabs.json",
+    ],
+    visibility = ["//visibility:public"],
+    deps = [
+        "//compiler/ic10",
+        "//emu",
+        "@maven//:com_google_code_gson_gson",
+    ],
+)
+
+kt_junit5_tests(
+    name = "harness_tests",
+    srcs = glob(["src/test/kotlin/**/*.kt"]),
+    associates = [":harness"],
+    deps = [
+        "//compiler/ic10",
+        "//emu",
+        "@maven//:com_google_code_gson_gson",
+        "@maven//:com_google_truth_truth",
+        "@maven//:org_junit_jupiter_junit_jupiter_api",
+    ],
+)

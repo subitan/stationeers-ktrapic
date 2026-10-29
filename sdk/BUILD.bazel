@@ -29,3 +29,12 @@ filegroup(
     ],
     visibility = ["//tools/datagen:__pkg__"],
 )
+
+# The game data the test harness builds its fake devices from.
+exports_files(
+    [
+        "data/logic-enums.json",
+        "data/prefabs.json",
+    ],
+    visibility = ["//harness:__pkg__"],
+)

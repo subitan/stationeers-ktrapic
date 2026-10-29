@@ -36,11 +36,12 @@ class Ic10RuntimeException(val line: Int, message: String) : Exception("line $li
  *
  * Its arithmetic, bitwise operations (see [ktrapic.ic10.Ic10Math]), batch reads, jumps and stack
  * follow the game's IC10 interpreter, with the chip in a circuit housing (so `get`/`put` on `db`
- * reach its own stack). Where it deliberately differs: a runtime error halts and throws (the game
- * retries the failing line every tick), `sleep` resumes after exactly `ceil(seconds / 0.5)` ticks
- * (the game's real tick lengths can make it one tick later at exact multiples of 0.5 s), and a
- * literal jump target, address, slot, device hash or batch mode need only have a whole value (the
- * game also wants it written as an integer, so `j 2.0` is an error there).
+ * reach its own stack, whether or not [pins] has a device on `db` for the housing). Where it
+ * deliberately differs: a runtime error halts and throws (the game retries the failing line every
+ * tick), `sleep` resumes after exactly `ceil(seconds / 0.5)` ticks (the game's real tick lengths
+ * can make it one tick later at exact multiples of 0.5 s), and a literal jump target, address,
+ * slot, device hash or batch mode need only have a whole value (the game also wants it written as
+ * an integer, so `j 2.0` is an error there).
  *
  * Not modelled yet: logic types given as numbers, device reference ids (`ld`, `sd`, `getd`, `d?`
  * from a register), reagents, other hosts (machines, suits, tablets), and indirect registers
@@ -70,6 +71,12 @@ class Emulator(
 
   var halted = false
     private set
+
+  /**
+   * Called after each line the chip runs, with that line's index, so a caller can watch a tick line
+   * by line. A line that fails calls it too, once the chip has halted, before the error is thrown.
+   */
+  var onLine: (line: Int) -> Unit = {}
 
   private var sleepUntilTick = 0
   private val aliases = mutableMapOf<String, Operand>()
@@ -136,19 +143,30 @@ class Emulator(
       return Pause.END_TICK
     }
     val line = program.lines[pc]
+    val ran = pc
     steps++
-    if (line !is Line.Instruction) {
-      pc++
-      return Pause.CONTINUE
-    }
-    return try {
-      execute(line)
-    } catch (e: Ic10RuntimeException) {
-      throw e
-    } catch (e: RuntimeException) {
-      halted = true
-      throw Ic10RuntimeException(pc, "${line.op}: ${e.message}")
-    }
+    val pause =
+        if (line !is Line.Instruction) {
+          pc++
+          Pause.CONTINUE
+        } else {
+          try {
+            execute(line)
+          } catch (e: Ic10RuntimeException) {
+            throw failed(ran, e)
+          } catch (e: RuntimeException) {
+            throw failed(ran, Ic10RuntimeException(ran, "${line.op}: ${e.message}"))
+          }
+        }
+    onLine(ran)
+    return pause
+  }
+
+  /** Halts the chip at line [ran], which threw [error], and tells [onLine]; returns [error]. */
+  private fun failed(ran: Int, error: Ic10RuntimeException): Ic10RuntimeException {
+    halted = true
+    onLine(ran)
+    return error
   }
 
   private fun execute(line: Line.Instruction): Pause {
@@ -301,24 +319,31 @@ class Emulator(
       "s" -> requireDevice(ops[0]).write(logicType(ops[1]), v(2))
       "ls" -> set(requireDevice(ops[1]).readSlot(integer(ops[2]), logicType(ops[3])))
       "ss" -> requireDevice(ops[0]).writeSlot(integer(ops[1]), logicType(ops[2]), v(3))
-      "lb" -> set(batch(matching(ops[1]), ops[3]) { it.read(logicType(ops[2])) })
-      // The game counts by prefab only for `lbn ... Count`, ignoring the name.
+      "lb" ->
+          set(
+              Batch.read(network, integer(ops[1]), null, batchMethod(ops[3])) {
+                it.read(logicType(ops[2]))
+              }
+          )
       "lbn" ->
           set(
-              batch(matching(ops[1], ops[2]), ops[4], count = matching(ops[1]).size) {
+              Batch.read(network, integer(ops[1]), integer(ops[2]), batchMethod(ops[4])) {
                 it.read(logicType(ops[3]))
               }
           )
       "lbs" -> {
-        val devices = matching(ops[1])
+        val prefab = integer(ops[1])
         val slot = integer(ops[2])
-        set(batch(devices, ops[4]) { it.readSlot(slot, logicType(ops[3])) })
+        set(
+            Batch.read(network, prefab, null, batchMethod(ops[4])) {
+              it.readSlot(slot, logicType(ops[3]))
+            }
+        )
       }
-      // As for `lbn`, `Count` counts by prefab only.
       "lbns" -> {
         val slot = integer(ops[3])
         set(
-            batch(matching(ops[1], ops[2]), ops[5], count = matching(ops[1]).size) {
+            Batch.read(network, integer(ops[1]), integer(ops[2]), batchMethod(ops[5])) {
               it.readSlot(slot, logicType(ops[4]))
             }
         )
@@ -442,7 +467,7 @@ class Emulator(
       device(operand) ?: error("no device on ${pinName(operand)}")
 
   private fun memoryOf(operand: Operand): DoubleArray =
-      if (pinName(operand) == "db" && "db" !in pins) stack else requireDevice(operand).memory
+      if (pinName(operand) == "db") stack else requireDevice(operand).memory
 
   private fun logicType(operand: Operand): String =
       (operand as? Name)?.name?.takeIf { it !in aliases && it !in defines }
@@ -452,17 +477,12 @@ class Emulator(
    * The devices on the network with the prefab hash [prefab] and, if given, the name hash [name].
    * The game reads both hashes as integer operands (see [integer]).
    */
-  private fun matching(prefab: Operand, name: Operand? = null): List<FakeDevice> {
-    val prefabHash = integer(prefab)
-    val nameHash = name?.let { integer(it) }
-    return network.filter {
-      it.prefabHash == prefabHash && (nameHash == null || it.nameHash == nameHash)
-    }
-  }
+  private fun matching(prefab: Operand, name: Operand? = null): List<FakeDevice> =
+      Batch.matching(network, integer(prefab), name?.let { integer(it) })
 
   /**
    * A batch mode, read as the game reads it: an alias of a register, then a define, then a mode's
-   * name ([BATCH_METHODS]) or a built-in constant. A register's value, an alias's or a define's is
+   * name ([Batch.METHODS]) or a built-in constant. A register's value, an alias's or a define's is
    * truncated, and a literal must be a whole number.
    */
   private fun batchMethod(mode: Operand): Int =
@@ -474,7 +494,7 @@ class Emulator(
             registers[alias.index].toInt()
           } else {
             defines[mode.name]?.toInt()
-                ?: BATCH_METHODS[mode.name]
+                ?: Batch.METHODS[mode.name]
                 ?: Constants.lookup(mode.name)?.let { literal(it, mode.name).toInt() }
                 ?: if (alias != null) {
                   error("${mode.name} is a device, not a value")
@@ -485,40 +505,6 @@ class Emulator(
         }
         else -> integer(mode)
       }
-
-  /**
-   * A batch read over [devices], as the game computes it: every device must be readable, whatever
-   * the mode (Count, which gives [count], included); devices are visited last to first; an empty
-   * Average is NaN (0/0), an empty Minimum is 0 and an empty Maximum is negative infinity.
-   */
-  private fun batch(
-      devices: List<FakeDevice>,
-      mode: Operand,
-      count: Int = devices.size,
-      read: (FakeDevice) -> Double,
-  ): Double {
-    val method = batchMethod(mode)
-    val values = devices.asReversed().map(read)
-    return when (method) {
-      COUNT -> count.toDouble()
-      0,
-      1 -> {
-        val sum = values.sum()
-        if (method == 0) sum / values.size else sum
-      }
-      2 -> {
-        var minimum = Double.POSITIVE_INFINITY
-        for (value in values) if (!(value >= minimum)) minimum = value
-        if (minimum >= Double.POSITIVE_INFINITY) 0.0 else minimum
-      }
-      3 -> {
-        var maximum = Double.NEGATIVE_INFINITY
-        for (value in values) if (!(value <= maximum)) maximum = value
-        maximum
-      }
-      else -> error("unknown batch method $method")
-    }
-  }
 
   /** The stack index `sp` points at, rounded as the game rounds it. */
   private fun stackPointer() = Math.rint(registers[Register.SP.index]).toInt()
@@ -562,16 +548,5 @@ class Emulator(
 
   companion object {
     const val SECONDS_PER_TICK = 0.5
-
-    private const val COUNT = 4
-
-    val BATCH_METHODS =
-        mapOf(
-            "Average" to 0,
-            "Sum" to 1,
-            "Minimum" to 2,
-            "Maximum" to 3,
-            "Count" to COUNT,
-        )
   }
 }

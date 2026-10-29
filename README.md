@@ -26,6 +26,8 @@ functions, devices, the maths and numeric rules, and the chip's size limits. The
 - `compiler/ic10`: the IC10 program model, parser, and printer (normal, and compact with
   labels resolved to line numbers), plus the chip's size limits.
 - `emu`: an IC10 emulator with fake devices, so tests can check what a program does.
+- `harness`: runs a program against a test file's network of fake devices on the emulator and
+  checks the values it expects (see [docs/TESTING.md](docs/TESTING.md)).
 - `playground`: a Kotlin script serving a local editor page backed by the daemon.
 - `sdk`: the `ktrapic` API that programs compile against (devices, logic types, `sleep`,
   `hash`, ...). Part of it is generated from the game data in `sdk/data` by
@@ -46,7 +48,7 @@ functions, devices, the maths and numeric rules, and the chip's size limits. The
 | 6 | IC10 Editor plugin: compiling and highlighting in game ([#41](https://github.com/subitan/stationeers-ktrapic/issues/41)) | Done |
 | 7 | The typed API: views, static sets, families of related devices | In progress |
 | 8 | Completion, hovers and diagnostics in the IC10 Editor ([#45](https://github.com/subitan/stationeers-ktrapic/issues/45)) | In progress |
-| 9 | A test harness in the playground: run a program against fake devices ([#66](https://github.com/subitan/stationeers-ktrapic/issues/66)) | Planned |
+| 9 | A test harness in the playground: run a program against fake devices ([#66](https://github.com/subitan/stationeers-ktrapic/issues/66)) | In progress |
 | 10 | An IntelliJ plugin: KTrapIC's own errors and the compiled IC10 in the IDE ([#23](https://github.com/subitan/stationeers-ktrapic/issues/23)) | Planned |
 
 ## Credits
@@ -218,6 +220,10 @@ bazel test //compiler/api:GoldenTest --test_env=KTRAPIC_UPDATE_GOLDENS=$PWD/test
 
 In Git Bash with `MSYS_NO_PATHCONV=1`, `$PWD` is a `/d/...` path the JVM can't open: use
 `$(pwd -W)/test/cases` instead.
+
+An `X.test.json` beside a program is a test of it against fake devices (see
+[docs/TESTING.md](docs/TESTING.md)); `//compiler/api:CaseTestsTest` runs each one against
+the program compiled both ways.
 
 Kotlin tests use JUnit 5 + Truth. In a package's `BUILD.bazel`, `kt_junit5_tests` (from
 `//build_defs/kotlin:junit5.bzl`) compiles `src/test/kotlin/**/*.kt` and creates one test
