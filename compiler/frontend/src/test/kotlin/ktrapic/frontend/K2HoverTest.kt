@@ -273,11 +273,71 @@ class K2HoverTest {
   }
 
   @Test
+  fun `signature help offers the program's own overloads whatever their visibility or name`() {
+    assertThat(labels("private fun g() = 1\nprivate fun g(a: Int) = a\nval x = g(|)\n"))
+        .containsExactly("fun g(): Int", "fun g(a: Int): Int")
+    assertThat(labels("fun g() = 1\nprivate fun g(a: Int) = a\nval x = g(|)\n"))
+        .containsExactly("fun g(): Int", "fun g(a: Int): Int")
+    assertThat(labels("fun _g() = 1\nfun _g(a: Int) = a\nval x = _g(|)\n"))
+        .containsExactly("fun _g(): Int", "fun _g(a: Int): Int")
+    assertThat(
+            labels(
+                "class K {\n  private fun m() = 1\n  private fun m(a: Int) = a\n  fun t() = m(|)\n}\n"
+            )
+        )
+        .containsExactly("fun m(): Int", "fun m(a: Int): Int")
+  }
+
+  @Test
   fun `signature help lists only the standard library overloads KTrapIC compiles`() {
+    val max = listOf("fun max(a: Double, b: Double): Double", "fun max(a: Int, b: Int): Int")
     assertThat(labels("import kotlin.math.max\nval m = max(1.0, 2.0|)\n"))
-        .containsExactly("fun max(a: Double, b: Double): Double")
-    assertThat(labels("val n = 1.plus(2|)\n"))
-        .containsExactly("fun plus(other: Int): Int", "fun plus(other: Double): Double")
+        .containsExactlyElementsIn(max)
+        .inOrder()
+    assertThat(labels("import kotlin.math.max\nval m = max(|)\n")).containsExactlyElementsIn(max)
+    assertThat(labels("import kotlin.math.max\nval m = max(1.0, |)\n"))
+        .containsExactlyElementsIn(max)
+    assertThat(labels("import kotlin.math.abs\nval a = abs(|)\n"))
+        .containsExactly("fun abs(x: Double): Double", "fun abs(n: Int): Int")
+    val plus = listOf("fun plus(other: Int): Int", "fun plus(other: Double): Double")
+    assertThat(labels("val n = 1.plus(2|)\n")).containsExactlyElementsIn(plus)
+    assertThat(labels("val n = 1.plus(|)\n")).containsExactlyElementsIn(plus)
+    assertThat(labels("sleep(|"))
+        .containsExactly("fun sleep(seconds: Double): Unit", "fun sleep(seconds: Int): Unit")
+  }
+
+  @Test
+  fun `signature help lists the overload KTrapIC compiles where the call fits only another`() {
+    // With nothing after the comma, the call has one argument, which fits only the range overload.
+    assertThat(labels("db.Setting = d0.Setting.coerceIn(0.0, |)\n"))
+        .containsExactly("fun coerceIn(minimumValue: Double, maximumValue: Double): Double")
+    assertThat(labels("val x = 2\nval y = x.coerceIn(1, |)\n"))
+        .containsExactly("fun coerceIn(minimumValue: Int, maximumValue: Int): Int")
+    assertThat(labels("import kotlin.math.*\nval p = 2.0.pow(2.0|)\n"))
+        .containsExactly("fun pow(x: Double): Double", "fun pow(n: Int): Double")
+  }
+
+  @Test
+  fun `signature help lists nothing of the standard library KTrapIC does not compile`() {
+    assertThat(labels("val m = maxOf(1, |")).isNull()
+    assertThat(labels("import kotlin.math.*\nval h = hypot(|")).isNull()
+    assertThat(labels("println(1|")).isNull()
+  }
+
+  @Test
+  fun `no extension for a call or a name without a receiver for it`() {
+    assertThat(labels("val m = max(1.0, |")).isNull()
+    assertThat(labels("val m = min(|")).isNull()
+    assertThat(labels("import kotlin.math.max\nval m = min(|)\n")).isNull()
+    assertThat(hover("val m = ma|x(1.0, 2.0)\n")).isNull()
+    assertThat(hover("val m = mi|n(1.0)\n")).isNull()
+  }
+
+  @Test
+  fun `an extension called on the receiver of the function around it`() {
+    val source = "fun Int.scaled(by: Int) = this * by\nfun Int.twice() = scaled(|)\n"
+
+    assertThat(labels(source)).containsExactly("fun scaled(by: Int): Int")
   }
 
   @Test

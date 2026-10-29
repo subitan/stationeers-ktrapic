@@ -4,6 +4,7 @@ import com.google.common.truth.Truth.assertThat
 import com.google.common.truth.Truth.assertWithMessage
 import ktrapic.emu.Emulator
 import ktrapic.emu.FakeDevice
+import ktrapic.frontend.K2Completion
 import ktrapic.ic10.Program
 import org.junit.jupiter.api.Test
 
@@ -660,6 +661,28 @@ class CompilerTest {
     assertThat(error("var n = 3\ndb.Setting = when (n) { in 0..5 -> 1.0; else -> 2.0 }").line)
         .isEqualTo(4)
     assertThat(error("var x = 0.5\ndb.Setting = x.coerceIn(0.0..1.0)").line).isEqualTo(4)
+  }
+
+  @Test
+  fun `the standard library's top-level functions the editor offers all compile`() {
+    val argument = mapOf("Int" to "d0.Setting.toInt()", "Double" to "d0.Setting")
+    for (entry in K2Completion.TOP_LEVEL_STDLIB) {
+      val name = entry.substringBefore('(').substringAfterLast('.')
+      val sources =
+          if (entry.startsWith("kotlin.collections.")) {
+            val elements = if (name.startsWith("empty")) listOf("") else listOf("1", "1, 2")
+            elements.map { "for (n in $name<Int>($it)) db.Setting = n.toDouble()" }
+          } else {
+            val parameters = entry.substringAfter('(').removeSuffix(")").split(", ")
+            val arguments = parameters.joinToString { argument.getValue(it) }
+            listOf("val r = $name($arguments)\ndb.Setting = r.toDouble()")
+          }
+      for (source in sources) {
+        assertWithMessage("$entry: $source")
+            .that(compile(source))
+            .isInstanceOf(CompileResult.Success::class.java)
+      }
+    }
   }
 
   @Test
