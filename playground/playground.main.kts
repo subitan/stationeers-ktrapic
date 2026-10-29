@@ -7,8 +7,10 @@
 //   kotlin playground/playground.main.kts [--port 8765] [--daemon-jar path] [--source-dir dir]...
 //
 // The script starts the daemon (a separate JVM, so this script needs no compiler of its own),
-// serves playground/index.html, and forwards each compile request to the daemon unchanged. The
-// Open menu lists the .ic10.kts programs in the source directories (default: test/cases).
+// serves playground/index.html, and forwards each compile or run request to the daemon unchanged.
+// The Open menu lists the .ic10.kts programs in the source directories (default: test/cases); a
+// program's test (X.test.json beside X.ic10.kts, see docs/TESTING.md) opens with it, and saving
+// the test writes that file.
 
 import com.sun.net.httpserver.HttpExchange
 import com.sun.net.httpserver.HttpServer
@@ -127,6 +129,12 @@ fun source(group: String, name: String): File? {
   }
 }
 
+/** The test file kept beside [program]: `X.test.json` for `X.ic10.kts`. */
+fun testOf(program: File): File =
+    program.resolveSibling(program.name.removeSuffix(".ic10.kts") + ".test.json")
+
+val MAX_TEST_BYTES = 1 shl 20
+
 fun query(exchange: HttpExchange): Map<String, String> =
     exchange.requestURI.rawQuery
         .orEmpty()
@@ -197,7 +205,34 @@ server.createContext("/") { exchange ->
         if (file == null) send(exchange, 404, """{"error":"not found"}""")
         else send(exchange, 200, """{"code":${jsonString(file.readText())}}""")
       }
-      exchange.requestMethod == "POST" && path == "/api/compile" -> {
+      exchange.requestMethod == "GET" && path == "/api/test" -> {
+        val params = query(exchange)
+        val file = source(params["group"].orEmpty(), params["name"].orEmpty())?.let(::testOf)
+        when {
+          file == null -> send(exchange, 404, """{"error":"not found"}""")
+          !file.isFile -> send(exchange, 200, """{"test":null}""")
+          else -> send(exchange, 200, """{"test":${jsonString(file.readText())}}""")
+        }
+      }
+      exchange.requestMethod == "POST" && path == "/api/test" -> {
+        // The same JSON-only rule as compiling: the body is the test file's text, as JSON.
+        val type = exchange.requestHeaders.getFirst("Content-Type").orEmpty()
+        val params = query(exchange)
+        val file = source(params["group"].orEmpty(), params["name"].orEmpty())?.let(::testOf)
+        val body = exchange.requestBody.use { it.readNBytes(MAX_TEST_BYTES + 1) }
+        when {
+          !type.startsWith("application/json") ->
+              send(exchange, 415, """{"error":{"description":"Send application/json"}}""")
+          file == null -> send(exchange, 404, """{"error":"not found"}""")
+          body.size > MAX_TEST_BYTES ->
+              send(exchange, 413, """{"error":{"description":"Too large"}}""")
+          else -> {
+            file.writeBytes(body)
+            send(exchange, 200, """{"saved":${jsonString(file.name)}}""")
+          }
+        }
+      }
+      exchange.requestMethod == "POST" && (path == "/api/compile" || path == "/api/run") -> {
         // Requiring JSON makes a cross-site request need a CORS preflight, which this server fails.
         val type = exchange.requestHeaders.getFirst("Content-Type").orEmpty()
         val request = exchange.requestBody.use { it.readBytes().decodeToString() }

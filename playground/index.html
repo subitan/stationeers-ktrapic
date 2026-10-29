@@ -84,6 +84,32 @@
   .t-instr { color: var(--hl-instr); } .t-reg { color: var(--hl-reg); } .t-dev { color: var(--hl-dev); }
   .t-label { color: var(--hl-label); } .t-num { color: var(--hl-num); } .t-comment { color: var(--hl-comment); }
   .t-logic { color: var(--hl-logic); } .t-str { color: var(--hl-str); }
+  .gutter .cur { color: var(--panel); background: var(--accent); border-radius: 3px; padding: 0 3px; }
+  main.testing { grid-template-rows: minmax(0, 1fr) minmax(0, 1fr); }
+  main.testing #test-pane { display: flex; }
+  #test-pane { display: none; grid-column: 1 / -1; }
+  @media (max-width: 800px) { main.testing { grid-template-rows: 1fr 1fr 1.4fr; } }
+  .test-body { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 3fr); }
+  @media (max-width: 800px) { .test-body { grid-template-columns: 1fr; grid-template-rows: 1fr 1fr; } }
+  .test-body > div { display: flex; flex-direction: column; min-height: 0; min-width: 0; }
+  .test-body > div + div { border-left: 1px solid var(--border); }
+  #test { font: 12px/18px ui-monospace, "Cascadia Code", Consolas, monospace; }
+  .controls { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; padding: 6px 10px;
+    border-bottom: 1px solid var(--border); font-size: 12px; color: var(--muted); }
+  .controls button { padding: 2px 8px; }
+  .controls input[type=range] { flex: 1; min-width: 80px; }
+  #results { flex: 1; min-height: 0; overflow: auto; padding: 6px 10px; font-size: 12px; }
+  #results h3 { font-size: 12px; margin: 10px 0 4px; color: var(--muted); font-weight: 600; }
+  #results h3:first-child { margin-top: 0; }
+  .check.pass::before { content: "✔ "; color: var(--ok); }
+  .check.fail::before { content: "✘ "; color: var(--error); }
+  .check.fail { color: var(--error); }
+  .runerr { color: var(--error); }
+  table.vals { border-collapse: collapse; font: 12px/16px ui-monospace, Consolas, monospace; }
+  table.vals td { padding: 0 10px 0 0; white-space: nowrap; }
+  table.vals td:first-child { color: var(--muted); }
+  .vals .changed { color: var(--accent); font-weight: 600; }
+  .grid-vals { display: flex; flex-wrap: wrap; gap: 4px 18px; }
 </style>
 </head>
 <body>
@@ -95,9 +121,10 @@
     <label title="Resolve labels to line numbers and drop them, saving lines on the chip"><input type="checkbox" data-opt="compact" checked> Compact</label>
   </div>
   <span class="spacer"></span>
+  <button id="toggle-test" title="Run the program against fake devices">Test</button>
   <button id="download" title="Save the KTrapIC program to a file">Save .ic10.kts</button>
 </header>
-<main>
+<main id="main">
   <section class="pane">
     <div class="pane-head"><strong>Kotlin</strong><span id="filename">untitled.ic10.kts</span>
       <span class="stats">Ctrl+S saves · Tab indents</span></div>
@@ -116,6 +143,27 @@
     <div class="code">
       <div class="gutter" id="out-gutter"></div>
       <pre id="out"></pre>
+    </div>
+  </section>
+  <section class="pane" id="test-pane">
+    <div class="pane-head"><strong>Test</strong><span id="testname">untitled.test.json</span>
+      <a href="https://github.com/subitan/stationeers-ktrapic/blob/main/docs/TESTING.md" target="_blank" rel="noopener">format</a>
+      <span class="stats" id="verdict"></span>
+      <button id="run" title="Compile and run against the test's devices (Ctrl+Enter)">Run</button>
+      <button id="save-test" title="Save the test beside the program">Save test</button></div>
+    <div class="test-body">
+      <div><textarea id="test" spellcheck="false" autocapitalize="off" autocomplete="off"></textarea></div>
+      <div>
+        <div class="controls">
+          <button id="first" title="Start">⏮</button><button id="prev" title="Previous tick">◀</button>
+          <input type="range" id="tick" min="0" max="0" value="0" aria-label="Tick">
+          <button id="next" title="Next tick">▶</button><button id="last" title="End of the run">⏭</button>
+          <span id="where"></span>
+          <button id="trace" title="Step through the next tick line by line">Lines</button>
+          <span id="line-controls" hidden><button id="line-prev" title="Previous line">‹</button><span id="line-at"></span><button id="line-next" title="Next line">›</button></span>
+        </div>
+        <div id="results">Run the program to see what it does.</div>
+      </div>
     </div>
   </section>
 </main>
@@ -137,6 +185,8 @@ while (true) {
 `;
 
 let compiled = "", errorLine = null, timer = null, seq = 0;
+// The 1-based IC10 and Kotlin lines the test view points at, marked in the gutters.
+let cursor = {};
 
 function store(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
 function load(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
@@ -145,6 +195,7 @@ function gutter(el, n, opts = {}) {
   let s = "";
   for (let i = 1; i <= Math.max(n, 1); i++) {
     if (i === opts.err) s += `<span class="err">${i}</span>\n`;
+    else if (i === opts.cur) s += `<span class="cur">${i}</span>\n`;
     else if (opts.limit && i > opts.limit) s += `<span class="over">${i}</span>\n`;
     else s += i + "\n";
   }
@@ -225,7 +276,7 @@ async function compile() {
     const lines = compiled ? compiled.replace(/\n$/, "").split("\n") : [];
     out.innerHTML = lines.map(highlightLine).join("\n");
     out.style.opacity = 1;
-    gutter($("out-gutter"), lines.length, { limit: MAX_LINES });
+    gutter($("out-gutter"), lines.length, { limit: MAX_LINES, cur: cursor.ic });
     const bytes = res.num_bytes ?? new Blob([compiled]).size;
     setStat("st-lines", "lines", res.num_lines ?? lines.length, MAX_LINES);
     setStat("st-bytes", "bytes", bytes, MAX_BYTES);
@@ -235,10 +286,12 @@ async function compile() {
     }
     else setStatus("Compiled OK.", false);
   }
-  gutter($("src-gutter"), src.value.split("\n").length, { err: errorLine });
+  gutter($("src-gutter"), src.value.split("\n").length, { err: errorLine, cur: cursor.src });
 }
 
 function schedule() {
+  // An edit makes the run's lines stale.
+  if (cursor.ic || cursor.src) { cursor = {}; $("verdict").textContent = "edited since the run"; }
   gutter($("src-gutter"), src.value.split("\n").length, { err: errorLine });
   clearTimeout(timer);
   timer = setTimeout(compile, 250);
@@ -296,8 +349,225 @@ $("open").onchange = async (e) => {
   src.value = (await r.json()).code;
   $("filename").textContent = name;
   store(NAME_KEY, name);
+  opened = { group, name };
+  store(OPENED_KEY, JSON.stringify(opened));
   src.scrollTop = 0;
+  cursor = {};
   compile();
+  await openTest();
+};
+
+// ---- Testing against fake devices (docs/TESTING.md) ----
+
+const TEST_KEY = "ktrapic-playground-test:";
+const OPENED_KEY = "ktrapic-playground-opened";
+const TESTING_KEY = "ktrapic-playground-testing";
+const DEFAULT_TEST = `{
+  "devices": [
+    {"pin": "d0", "prefab": "StructureDaylightSensor", "logic": {"Horizontal": 90, "Vertical": 30}},
+    {"pin": "d1", "prefab": "StructureSolarPanel"}
+  ],
+  "ticks": 4,
+  "changes": [
+    {"tick": 2, "device": "d0", "logic": "Horizontal", "value": 120}
+  ],
+  "expect": [
+    {"device": "d1", "logic": "Horizontal", "equals": 120},
+    {"device": "d1", "logic": "Vertical", "equals": 60}
+  ]
+}
+`;
+
+// The program the editor opened from the server, whose test the server can save.
+let opened = null;
+// The last run: the response, the state after each tick, and the traced tick's states.
+let run = null, states = [], lineStates = null, at = 0, lineAt = 0, icToSrc = {};
+
+function testName() { return $("filename").textContent.replace(/\.ic10\.kts$/, "") + ".test.json"; }
+function testKey() { return TEST_KEY + $("filename").textContent; }
+
+async function openTest() {
+  let text = null;
+  try {
+    const r = await fetch(`/api/test?group=${encodeURIComponent(opened.group)}&name=${encodeURIComponent(opened.name)}`);
+    if (r.ok) text = (await r.json()).test;
+  } catch (e) {}
+  $("test").value = text ?? load(testKey()) ?? DEFAULT_TEST;
+  $("testname").textContent = testName();
+  clearRun("Run the program to see what it does.");
+}
+
+function clearRun(message) {
+  run = null; states = []; lineStates = null; cursor = {};
+  $("results").innerHTML = message;
+  $("verdict").textContent = "";
+  $("tick").max = 0;
+  $("where").textContent = "";
+  $("line-controls").hidden = true;
+}
+
+/** The state after a snapshot, from the state before it: snapshots hold only what changed. */
+function apply(before, snap) {
+  const st = {
+    tick: snap.tick, line: snap.line, halted: snap.halted, ran: snap.ran, changed: snap,
+    registers: { ...before.registers, ...snap.registers }, stack: { ...before.stack },
+    logic: {}, slots: {},
+  };
+  for (const [k, v] of Object.entries(snap.stack)) { if (v === 0) delete st.stack[k]; else st.stack[k] = v; }
+  for (const id of new Set([...Object.keys(before.logic), ...Object.keys(snap.logic)])) {
+    st.logic[id] = { ...before.logic[id], ...snap.logic[id] };
+  }
+  for (const id of new Set([...Object.keys(before.slots), ...Object.keys(snap.slots)])) {
+    st.slots[id] = {};
+    for (const slot of new Set([...Object.keys(before.slots[id] || {}), ...Object.keys(snap.slots[id] || {})])) {
+      st.slots[id][slot] = { ...(before.slots[id] || {})[slot], ...((snap.slots[id] || {})[slot]) };
+    }
+  }
+  return st;
+}
+
+const EMPTY = { registers: {}, stack: {}, logic: {}, slots: {} };
+
+async function runTest(traceTick) {
+  let test;
+  try { test = JSON.parse($("test").value); }
+  catch (e) { clearRun(`<span class="runerr">The test isn't JSON: ${esc(e.message)}</span>`); return; }
+  store(testKey(), $("test").value);
+  $("verdict").textContent = "running…";
+  let res;
+  try {
+    const r = await fetch("/api/run", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ action: "run", code: { "": src.value }, options: options(), test,
+                             ...(traceTick ? { trace_tick: traceTick } : {}) }),
+    });
+    res = await r.json();
+  } catch (e) { clearRun(`<span class="runerr">Can't reach the local server.</span>`); return; }
+  if (res.error) { clearRun(`<span class="runerr">The program doesn't compile: ${esc(res.error.description)}</span>`); return; }
+  if (res.run.error && !res.run.ticks) { clearRun(`<span class="runerr">Test: ${esc(res.run.error.description)}</span>`); return; }
+  if (!res.run.ticks.length) {
+    // A define the chip can't read stops it before it starts.
+    clearRun(`<span class="runerr">Runtime error at line ${res.run.error.line}: ${esc(res.run.error.message)}</span>`);
+    return;
+  }
+  if (!traceTick) $("line-controls").hidden = true;
+  run = res;
+  icToSrc = {};
+  for (const [line, ics] of Object.entries(res.source_mapping || {})) for (const ic of ics) icToSrc[ic] ??= Number(line);
+  states = [];
+  let st = EMPTY;
+  for (const snap of res.run.ticks) states.push((st = apply(st, snap)));
+  lineStates = null;
+  if (traceTick && res.run.lines.length) {
+    st = states[traceTick - 1];
+    lineStates = res.run.lines.map((snap) => (st = apply(st, snap)));
+  }
+  $("tick").max = states.length - 1;
+  $("verdict").textContent = res.run.passed ? "passed" : "failed";
+  $("verdict").className = "stats " + (res.run.passed ? "" : "bad");
+  at = traceTick ? traceTick - 1 : states.length - 1;
+  lineAt = 0;
+  show();
+}
+
+function fmt(v) { return typeof v === "number" ? String(Math.round(v * 1e6) / 1e6) : String(v); }
+
+function vals(entries, changed) {
+  return `<table class="vals">${entries.map(([k, v]) =>
+    `<tr><td>${esc(String(k))}</td><td class="${changed && k in changed ? "changed" : ""}">${esc(fmt(v))}</td></tr>`).join("")}</table>`;
+}
+
+function show() {
+  if (!run) return;
+  const traced = lineStates && $("line-controls").hidden === false;
+  const st = traced ? lineStates[lineAt] : states[at];
+  $("tick").value = at;
+  const last = states.length - 1;
+  // A traced line points at the line it ran; a tick at the line that runs next.
+  const ic = traced ? st.ran : st.line;
+  const srcLine = icToSrc[ic];
+  cursor = { ic: ic + 1, src: srcLine === undefined ? undefined : srcLine + 1 };
+  $("where").textContent = traced
+    ? `tick ${st.tick}, ran line ${ic}`
+    : `tick ${st.tick} of ${last}${st.halted ? ", halted" : `, next line ${ic}`}`;
+  if (traced) $("line-at").textContent = ` ${lineAt + 1}/${lineStates.length} `;
+  gutter($("out-gutter"), compiled.replace(/\n$/, "").split("\n").length, { limit: MAX_LINES, cur: cursor.ic });
+  gutter($("src-gutter"), src.value.split("\n").length, { err: errorLine, cur: cursor.src });
+  out.scrollTop = Math.max(0, (ic - 5) * 20);
+  if (srcLine !== undefined) src.scrollTop = Math.max(0, (srcLine - 5) * 20);
+
+  const r = run.run;
+  let html = "<h3>Checks</h3>";
+  if (r.error) html += `<div class="runerr">Runtime error at tick ${r.error.tick}, line ${r.error.line}: ${esc(r.error.message)}</div>`;
+  html += r.checks.length
+    ? r.checks.map((c) => `<div class="check ${c.passed ? "pass" : "fail"}">${esc(c.description)}</div>`).join("")
+    : "<div>No expectations.</div>";
+  const ch = st.changed;
+  html += `<h3>Registers</h3><div class="grid-vals">${vals(Object.entries(st.registers).slice(0, 9), ch.registers)}${vals(Object.entries(st.registers).slice(9), ch.registers)}</div>`;
+  const stack = Object.entries(st.stack);
+  if (stack.length) html += `<h3>Stack</h3>${vals(stack, ch.stack)}`;
+  html += "<h3>Devices</h3><div class=\"grid-vals\">";
+  for (const [id, logic] of Object.entries(st.logic)) {
+    // Values still at 0 that didn't just change are left out, to keep devices short.
+    const shown = Object.entries(logic).filter(([k, v]) => v !== 0 || (ch.logic[id] && k in ch.logic[id]));
+    let block = `<div><strong>${esc(id)}</strong>${vals(shown, ch.logic[id])}`;
+    for (const [slot, values] of Object.entries(st.slots[id] || {})) {
+      const set = Object.entries(values).filter(([, v]) => v !== 0);
+      if (set.length) block += `<div>slot ${esc(slot)}</div>${vals(set, ((ch.slots[id] || {})[slot]))}`;
+    }
+    html += block + "</div>";
+  }
+  $("results").innerHTML = html + "</div>";
+}
+
+function step(to) {
+  if (!run) return;
+  $("line-controls").hidden = true;
+  at = Math.max(0, Math.min(states.length - 1, to));
+  show();
+}
+
+$("run").onclick = () => runTest();
+$("first").onclick = () => step(0);
+$("prev").onclick = () => step(at - 1);
+$("next").onclick = () => step(at + 1);
+$("last").onclick = () => step(states.length - 1);
+$("tick").oninput = (e) => step(Number(e.target.value));
+$("trace").onclick = async () => {
+  if (!run || at + 1 >= states.length) return;
+  await runTest(at + 1);
+  if (!lineStates) return;
+  $("line-controls").hidden = false;
+  show();
+};
+$("line-prev").onclick = () => { lineAt = Math.max(0, lineAt - 1); show(); };
+$("line-next").onclick = () => { lineAt = Math.min(lineStates.length - 1, lineAt + 1); show(); };
+$("test").addEventListener("input", () => store(testKey(), $("test").value));
+for (const el of [src, $("test")]) {
+  el.addEventListener("keydown", (e) => {
+    if ((e.ctrlKey || e.metaKey) && e.key === "Enter") { e.preventDefault(); runTest(); }
+  });
+}
+$("toggle-test").onclick = () => store(TESTING_KEY, $("main").classList.toggle("testing"));
+
+$("save-test").onclick = async () => {
+  try { JSON.parse($("test").value); }
+  catch (e) { clearRun(`<span class="runerr">The test isn't JSON: ${esc(e.message)}</span>`); return; }
+  if (opened && opened.name === $("filename").textContent) {
+    const r = await fetch(`/api/test?group=${encodeURIComponent(opened.group)}&name=${encodeURIComponent(opened.name)}`, {
+      method: "POST", headers: { "Content-Type": "application/json" }, body: $("test").value,
+    });
+    $("save-test").textContent = r.ok ? "Saved" : "Save failed";
+  } else {
+    // A program that wasn't opened from the server has nowhere to keep its test; download it.
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(new Blob([$("test").value], { type: "application/json" }));
+    a.download = testName();
+    a.click();
+    URL.revokeObjectURL(a.href);
+    $("save-test").textContent = "Downloaded";
+  }
+  setTimeout(() => ($("save-test").textContent = "Save test"), 1200);
 };
 
 (async function init() {
@@ -321,6 +591,11 @@ $("open").onchange = async (e) => {
       $("open").appendChild(og);
     }
   } catch (e) {}
+  try { opened = JSON.parse(load(OPENED_KEY)); } catch (e) {}
+  if (opened && opened.name !== $("filename").textContent) opened = null;
+  $("test").value = load(testKey()) ?? DEFAULT_TEST;
+  $("testname").textContent = testName();
+  if (load(TESTING_KEY) === "true") $("main").classList.add("testing");
   compile();
 })();
 </script>
