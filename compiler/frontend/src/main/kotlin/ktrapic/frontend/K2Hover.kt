@@ -30,14 +30,12 @@ import org.jetbrains.kotlin.fir.symbols.impl.FirCallableSymbol
 import org.jetbrains.kotlin.fir.symbols.impl.FirClassLikeSymbol
 import org.jetbrains.kotlin.fir.symbols.impl.FirConstructorSymbol
 import org.jetbrains.kotlin.fir.symbols.impl.FirFunctionSymbol
-import org.jetbrains.kotlin.fir.symbols.impl.FirNamedFunctionSymbol
 import org.jetbrains.kotlin.fir.symbols.impl.FirPropertySymbol
 import org.jetbrains.kotlin.fir.symbols.impl.FirRegularClassSymbol
 import org.jetbrains.kotlin.fir.types.ConeClassLikeType
 import org.jetbrains.kotlin.fir.types.ConeKotlinType
 import org.jetbrains.kotlin.fir.types.FirResolvedTypeRef
 import org.jetbrains.kotlin.fir.types.coneType
-import org.jetbrains.kotlin.fir.types.isMarkedNullable
 import org.jetbrains.kotlin.fir.types.resolvedType
 import org.jetbrains.kotlin.fir.unwrapFakeOverrides
 import org.jetbrains.kotlin.fir.visitors.FirVisitorVoid
@@ -169,6 +167,7 @@ object K2Hover {
     private val session: FirSession = output.session
     private val scopeSession: ScopeSession = output.scopeSession
     private val elements = mutableListOf<FirElement>()
+    private val imports = output.fir.flatMap { it.imports }
 
     init {
       val visitor =
@@ -251,9 +250,9 @@ object K2Hover {
     }
 
     /**
-     * The functions a call whose callee ends at [calleeEnd] could be to. Of the candidates of a
-     * call that has not resolved (its arguments are not all written yet), only those [shown] are
-     * listed, unless that leaves none.
+     * The functions a call whose callee ends at [calleeEnd] could be to: those it resolved to, or
+     * the candidates the compiler considered while its arguments are not all written, then the
+     * others of its name ([overloadsOf]), of which only those [shown] are listed.
      */
     fun signatures(calleeEnd: Int, activeParameter: Int): SignatureHelp? {
       val call =
@@ -264,59 +263,68 @@ object K2Hover {
                 source.endOffset == calleeEnd
           } ?: return null
       val shownOn = call.explicitReceiver?.resolvedType?.let(K2Completion::declarable)
-      val all = symbolsOf(call.calleeReference)
-      val symbols = all.filter { it !is FirCallableSymbol<*> || shown(it, shownOn) }.ifEmpty { all }
+      val called = symbolsOf(call.calleeReference).filterIsInstance<FirFunctionSymbol<*>>()
       val signatures =
-          (symbols + symbols.singleOrNull()?.let { overloadsOf(call, it, shownOn) }.orEmpty())
-              .filterIsInstance<FirFunctionSymbol<*>>()
+          (called + overloadsOf(call, called))
+              .filter { shown(it, shownOn) }
+              .distinct()
               .map { Signature(declarationOf(it), parametersOf(it), documentationOf(it)) }
               .distinctBy { it.label }
       return if (signatures.isEmpty()) null else SignatureHelp(signatures, activeParameter)
     }
 
     /**
-     * The other functions a call that resolved to [resolved] could be to as its arguments are
-     * written: those of the same name that its receiver's type has, explicit (`all.count(`) or
-     * implicit (a member of the program or of a class, called from within it), or, for a top-level
-     * function, those of the same name in its package. Only those [shown] on [shownOn] are listed.
-     * A call with no arguments yet resolves to an overload that takes none, though the user may
-     * mean another.
+     * The functions of [call]'s name it could be to besides those the compiler settled on
+     * ([called]), which fit only the arguments written so far: a call with none yet resolves to an
+     * overload that takes none, and one ending in a comma to one that takes one fewer. With an
+     * explicit receiver (`all.count(`, `x.coerceIn(`), they are its type's members and the
+     * extensions of it the program sees; without one, the members of the implicit receiver (the
+     * program, or a class, called from within it), and the top-level functions the program sees and
+     * those in [called]'s packages.
      */
     private fun overloadsOf(
         call: FirFunctionCall,
-        resolved: FirBasedSymbol<*>,
-        shownOn: ConeKotlinType?,
-    ): List<FirBasedSymbol<*>> {
-      val function = resolved as? FirNamedFunctionSymbol ?: return emptyList()
-      if (function.resolvedReceiverType != null) return emptyList()
-      val receiver = (call.explicitReceiver ?: call.dispatchReceiver)?.resolvedType
-      val found = mutableListOf<FirNamedFunctionSymbol>()
-      if (receiver != null) {
-        receiver
-            .scope(
-                session,
-                scopeSession,
-                CallableCopyTypeCalculator.DoNothing,
-                FirResolvePhase.STATUS,
-            )
-            ?.processFunctionsByName(function.name) { found += it }
-      } else if (function.callableId.classId == null) {
+        called: List<FirFunctionSymbol<*>>,
+    ): List<FirFunctionSymbol<*>> {
+      val name = call.calleeReference.name
+      val explicit = call.explicitReceiver?.resolvedType?.let(K2Completion::declarable)
+      val found = mutableListOf<FirFunctionSymbol<*>>()
+      (explicit ?: call.dispatchReceiver?.resolvedType)
+          ?.scope(
+              session,
+              scopeSession,
+              CallableCopyTypeCalculator.DoNothing,
+              FirResolvePhase.STATUS,
+          )
+          ?.processFunctionsByName(name) { found += it }
+      val packages = K2Completion.packagesSeen(imports, name)
+      if (explicit != null) {
+        found += packages.flatMap { pkg ->
+          session.symbolProvider.getTopLevelFunctionSymbols(pkg, name).filter {
+            val receiver = it.resolvedReceiverType
+            receiver != null && K2Completion.accepts(session, receiver, explicit)
+          }
+        }
+      } else {
+        val calledPackages = called.mapNotNull {
+          it.callableId.takeIf { id -> id.classId == null }?.packageName
+        }
         found +=
-            session.symbolProvider
-                .getTopLevelFunctionSymbols(function.callableId.packageName, function.name)
-                .filter { it.resolvedReceiverType == null }
+            (packages + calledPackages).distinct().flatMap { pkg ->
+              session.symbolProvider.getTopLevelFunctionSymbols(pkg, name).filter {
+                it.resolvedReceiverType == null
+              }
+            }
       }
-      return found.filter { shown(it, shownOn) }
+      return found
     }
 
     /**
      * Whether signature help lists [symbol], called on [receiver] (the declarable type of the
      * call's explicit receiver, or null): any of the program's own declarations, which the user
-     * wrote whatever their visibility or name; those completion offers ([K2Completion.shown]), of
-     * the standard library's members and extensions only those KTrapIC compiles; and, of a
-     * top-level function of the standard library (`max`), which completion offers none of, the
-     * public overloads whose parameters and result are all of a type a program can have
-     * ([PROGRAM_TYPES]).
+     * wrote whatever their visibility or name; and those completion offers ([K2Completion.shown]),
+     * of the standard library's only those KTrapIC compiles, and the public constructors of classes
+     * outside it.
      */
     private fun shown(symbol: FirCallableSymbol<*>, receiver: ConeKotlinType?): Boolean {
       val declared = symbol.fir.unwrapFakeOverrides().symbol
@@ -325,21 +333,11 @@ object K2Hover {
       if (owner != null && isProgram(generateSequence(owner) { it.outerClassId }.last())) {
         return true
       }
-      if (K2Completion.shown(symbol, receiver)) return true
-      if (
-          owner != null ||
-              declared.resolvedReceiverType != null ||
-              !callableId.packageName.isSubpackageOf(StandardClassIds.BASE_KOTLIN_PACKAGE) ||
-              symbol !is FirFunctionSymbol<*> ||
-              symbol.resolvedStatus.visibility != Visibilities.Public
-      ) {
-        return false
+      if (symbol is FirConstructorSymbol) {
+        return !callableId.packageName.isSubpackageOf(StandardClassIds.BASE_KOTLIN_PACKAGE) &&
+            symbol.resolvedStatus.visibility == Visibilities.Public
       }
-      return (symbol.valueParameterSymbols.map { it.resolvedReturnType } +
-              symbol.resolvedReturnType)
-          .all {
-            it is ConeClassLikeType && !it.isMarkedNullable && it.lookupTag.classId in PROGRAM_TYPES
-          }
+      return K2Completion.shown(symbol, receiver)
     }
 
     /**
@@ -432,8 +430,4 @@ object K2Hover {
     private fun isProgram(classId: ClassId) =
         classId.outerClassId == null && classId.shortClassName.asString() == PROGRAM_OBJECT
   }
-
-  /** The types of value a program can have: see docs/LANGUAGE.md, "Values and variables". */
-  private val PROGRAM_TYPES =
-      setOf(StandardClassIds.Int, StandardClassIds.Double, StandardClassIds.Boolean)
 }

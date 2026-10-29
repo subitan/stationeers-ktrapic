@@ -307,6 +307,24 @@ class K2HoverTest {
   }
 
   @Test
+  fun `signature help lists the overload KTrapIC compiles where the call fits only another`() {
+    // With nothing after the comma, the call has one argument, which fits only the range overload.
+    assertThat(labels("db.Setting = d0.Setting.coerceIn(0.0, |)\n"))
+        .containsExactly("fun coerceIn(minimumValue: Double, maximumValue: Double): Double")
+    assertThat(labels("val x = 2\nval y = x.coerceIn(1, |)\n"))
+        .containsExactly("fun coerceIn(minimumValue: Int, maximumValue: Int): Int")
+    assertThat(labels("import kotlin.math.*\nval p = 2.0.pow(2.0|)\n"))
+        .containsExactly("fun pow(x: Double): Double", "fun pow(n: Int): Double")
+  }
+
+  @Test
+  fun `signature help lists nothing of the standard library KTrapIC does not compile`() {
+    assertThat(labels("val m = maxOf(1, |")).isNull()
+    assertThat(labels("import kotlin.math.*\nval h = hypot(|")).isNull()
+    assertThat(labels("println(1|")).isNull()
+  }
+
+  @Test
   fun `signature help for the innermost call`() {
     val help = signatures("val h = str(hash(|))\n")!!
 

@@ -8,6 +8,7 @@ import org.jetbrains.kotlin.descriptors.Visibilities
 import org.jetbrains.kotlin.fir.FirElement
 import org.jetbrains.kotlin.fir.FirSession
 import org.jetbrains.kotlin.fir.declarations.FirFunction
+import org.jetbrains.kotlin.fir.declarations.FirImport
 import org.jetbrains.kotlin.fir.declarations.FirNamedFunction
 import org.jetbrains.kotlin.fir.declarations.FirProperty
 import org.jetbrains.kotlin.fir.declarations.FirRegularClass
@@ -175,6 +176,43 @@ object K2Completion {
           )
           .mapValues { (_, declarations) -> declarations.toSet() }
 
+  /**
+   * The standard library's top-level functions KTrapIC compiles, written as [SUPPORTED_STDLIB]'s
+   * are: the static sets' builders and the maths functions (docs/LANGUAGE.md, "Static sets" and
+   * "Intrinsics and maths"), which the backend's `Translator` compiles in `staticSetCall` and
+   * `math`. Of the standard library's top-level functions, only these are offered. Completion lists
+   * none of the standard library's top-level functions by name; signature help lists these.
+   */
+  val TOP_LEVEL_STDLIB: Set<String> =
+      (listOf("emptyList", "emptySet", "listOf", "setOf").map { "kotlin.collections.$it" } +
+              listOf(
+                      "acos",
+                      "asin",
+                      "atan",
+                      "ceil",
+                      "cos",
+                      "exp",
+                      "floor",
+                      "ln",
+                      "round",
+                      "sin",
+                      "sqrt",
+                      "tan",
+                      "truncate",
+                  )
+                  .map { "kotlin.math.$it(Double)" } +
+              listOf(
+                      "abs(Double)",
+                      "abs(Int)",
+                      "atan2(Double, Double)",
+                      "max(Double, Double)",
+                      "max(Int, Int)",
+                      "min(Double, Double)",
+                      "min(Int, Int)",
+                  )
+                  .map { "kotlin.math.$it" })
+          .toSet()
+
   /** The extensions named in [SUPPORTED_STDLIB], by package. */
   private val STDLIB_EXTENSIONS: Map<FqName, Set<Name>> =
       SUPPORTED_STDLIB.values
@@ -261,7 +299,8 @@ object K2Completion {
    * Whether a member or a top-level declaration is offered, on [receiver] if it follows one: one a
    * program can use, which is public, not deprecated, not one of the SDK's internals (named with a
    * leading `_`) nor of [ANY_MEMBERS], not an `iterator` operator, and, if the standard library
-   * declares it, in [SUPPORTED_STDLIB] for [receiver]'s class.
+   * declares it, in [TOP_LEVEL_STDLIB] for a top-level function, else in [SUPPORTED_STDLIB] for
+   * [receiver]'s class.
    */
   internal fun shown(symbol: FirCallableSymbol<*>, receiver: ConeKotlinType?): Boolean {
     val name = symbol.name
@@ -272,7 +311,13 @@ object K2Completion {
     if (name.asString() == "iterator" && symbol.resolvedStatus.isOperator) return false
     val declared = symbol.fir.unwrapFakeOverrides().symbol.callableId ?: return false
     if (declared.packageName.isSubpackageOf(KOTLIN)) {
-      val supported = SUPPORTED_STDLIB[receiver?.let(::classOf)] ?: return false
+      val topLevel =
+          symbol is FirFunctionSymbol<*> &&
+              declared.classId == null &&
+              symbol.resolvedReceiverType == null
+      val supported =
+          if (topLevel) TOP_LEVEL_STDLIB
+          else SUPPORTED_STDLIB[receiver?.let(::classOf)] ?: return false
       val fqName = declared.asSingleFqName().asString()
       val parameters =
           (symbol as? FirFunctionSymbol<*>)?.valueParameterSymbols?.joinToString(", ") {
@@ -297,6 +342,45 @@ object K2Completion {
         is ConeDefinitelyNotNullType -> declarable(type.original)
         else -> type
       }
+
+  /**
+   * Whether a program with [imports] sees [pkg]'s [name] unqualified: imported by default or by the
+   * program.
+   */
+  private fun sees(imports: List<FirImport>, pkg: FqName, name: Name): Boolean =
+      pkg in DEFAULT_IMPORTED ||
+          imports.any {
+            it.aliasName == null &&
+                (it.isAllUnder && it.importedFqName == pkg ||
+                    !it.isAllUnder && it.importedFqName == pkg.child(name))
+          }
+
+  /**
+   * The packages, of the SDK's and those in [EXTENSION_PACKAGES], whose top-level functions and
+   * extensions named [name] a program with [imports] calls unqualified.
+   */
+  internal fun packagesSeen(imports: List<FirImport>, name: Name): List<FqName> =
+      IMPORTED_PACKAGES + EXTENSION_PACKAGES.filter { sees(imports, it, name) }
+
+  /** Whether an extension of [receiver] can be called on a value of [type]. */
+  internal fun accepts(
+      session: FirSession,
+      receiver: ConeKotlinType,
+      type: ConeKotlinType,
+  ): Boolean {
+    val context = session.typeContext
+    if (AbstractTypeChecker.isSubtypeOf(context, type, receiver)) return true
+    // A generic receiver, such as `Iterable<T>`: any type of its class, or of a subclass, will
+    // do.
+    if (receiver !is ConeClassLikeType) return false
+    if (receiver.typeArguments.none { it.type is ConeTypeParameterType }) return false
+    val anyArguments =
+        receiver.lookupTag.constructClassType(
+            Array(receiver.typeArguments.size) { ConeStarProjection },
+            receiver.isMarkedNullable,
+        )
+    return AbstractTypeChecker.isSubtypeOf(context, type, anyArguments)
+  }
 
   /** The fully qualified name of [type]'s class, or null for a type that has none. */
   private fun classOf(type: ConeKotlinType): String? =
@@ -450,36 +534,12 @@ object K2Completion {
               }
       return candidates.flatMap { (pkg, name) ->
         session.symbolProvider.getTopLevelCallableSymbols(pkg, name).filter {
-          shown(it, type) && accepts(it.resolvedReceiverType ?: return@filter false, type)
+          shown(it, type) && accepts(session, it.resolvedReceiverType ?: return@filter false, type)
         }
       }
     }
 
-    /**
-     * Whether the program sees [pkg]'s [name] unqualified: imported by default or by the program.
-     */
-    private fun sees(pkg: FqName, name: Name): Boolean =
-        pkg in DEFAULT_IMPORTED ||
-            imports.any {
-              it.aliasName == null &&
-                  (it.isAllUnder && it.importedFqName == pkg ||
-                      !it.isAllUnder && it.importedFqName == pkg.child(name))
-            }
-
-    private fun accepts(receiver: ConeKotlinType, type: ConeKotlinType): Boolean {
-      val context = session.typeContext
-      if (AbstractTypeChecker.isSubtypeOf(context, type, receiver)) return true
-      // A generic receiver, such as `Iterable<T>`: any type of its class, or of a subclass, will
-      // do.
-      if (receiver !is ConeClassLikeType) return false
-      if (receiver.typeArguments.none { it.type is ConeTypeParameterType }) return false
-      val anyArguments =
-          receiver.lookupTag.constructClassType(
-              Array(receiver.typeArguments.size) { ConeStarProjection },
-              receiver.isMarkedNullable,
-          )
-      return AbstractTypeChecker.isSubtypeOf(context, type, anyArguments)
-    }
+    private fun sees(pkg: FqName, name: Name): Boolean = sees(imports, pkg, name)
 
     /** The locals, parameters and members in scope at the caret. */
     private fun inScope(): List<Completion> {
