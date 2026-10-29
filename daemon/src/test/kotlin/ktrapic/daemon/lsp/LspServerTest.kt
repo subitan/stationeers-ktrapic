@@ -51,7 +51,10 @@ class LspServerTest {
     assertThat(response["id"].asInt).isEqualTo(1)
     val result = response["result"].asJsonObject
     assertThat(result["capabilities"].toString())
-        .isEqualTo("""{"textDocumentSync":{"openClose":true,"change":2}}""")
+        .isEqualTo(
+            """{"textDocumentSync":{"openClose":true,"change":2},""" +
+                """"completionProvider":{"triggerCharacters":["."]}}"""
+        )
     assertThat(result["serverInfo"].asJsonObject["name"].asString).isEqualTo("ktrapic-daemon")
   }
 
@@ -326,6 +329,7 @@ internal class ManualScheduler : Scheduler {
 internal class LspTestClient(
     val scheduler: Scheduler = ManualScheduler(),
     debounceMillis: Long = 150,
+    completer: (String, Int) -> List<ktrapic.frontend.Completion> = ktrapic.api.Compiler::complete,
     compiler: (String, JsonObject?) -> JsonObject = Daemon::compile,
 ) : AutoCloseable {
   private val gson = Gson()
@@ -334,7 +338,8 @@ internal class LspTestClient(
   private val serverOutput = PipedOutputStream()
   private val fromServer = PipedInputStream(serverOutput, 1 shl 20)
   private val reader = MessageReader(fromServer) {}
-  val server = LspServer(serverInput, serverOutput, {}, debounceMillis, scheduler, compiler)
+  val server =
+      LspServer(serverInput, serverOutput, {}, debounceMillis, scheduler, compiler, completer)
   @Volatile private var exitCode: Int? = null
   private val serverThread = thread {
     try {

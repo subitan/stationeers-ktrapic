@@ -15,7 +15,8 @@ namespace KTrapIC
     /// <summary>
     /// The IC10 Editor's "Kotlin" language: KTrapIC programs, highlighted, compiled as they're
     /// edited, with the IC10 shown in a read-only editor beside them and the IC10 lines of the
-    /// caret's line highlighted there, and with the compiler's errors marked in the code. Exporting
+    /// caret's line highlighted there, with the compiler's errors marked in the code, and with
+    /// completion of the names that could go at the caret (<see cref="UpdateAutocomplete"/>). Exporting
     /// writes the IC10 to the chip with the Kotlin source appended as encoded comments, which
     /// <see cref="ResetCode"/> reads back, so reopening the chip shows the Kotlin.
     ///
@@ -134,6 +135,9 @@ namespace KTrapIC
         /// <summary>Set once this formatter's editor no longer shows it, after which it sends nothing.</summary>
         private bool _closed;
 
+        /// <summary>The document's completion requests, one at a time; used once there is a document.</summary>
+        private readonly CompletionRequests _completionRequests;
+
         private sealed class Compiled
         {
             public readonly int Version;
@@ -161,6 +165,9 @@ namespace KTrapIC
         public KotlinFormatter()
         {
             Identifier = new VersionedTextDocumentIdentifier { uri = null, version = 0 };
+            _completionRequests = new CompletionRequests(
+                (line, column) => _document.Complete(line, column),
+                (request, completions) => ShowCompletions(request, completions).Forget());
             OnCodeChanged += () =>
             {
                 // The editor signals some changes twice (a reset, then again on its next frame), so
@@ -306,8 +313,10 @@ namespace KTrapIC
             {
                 LspClient = client;
                 _document.Bind(client.Connection);
+                _completionRequests.Forget();
             }
-            if (_document.Sync(Identifier.version, () => RawText, JArray.FromObject(_changes)))
+            string text = RawText;
+            if (_completionRequests.Sync(text, () => _document.Sync(Identifier.version, () => text, JArray.FromObject(_changes))))
             {
                 _changes.Clear();
                 _syncedVersion = _version;
@@ -328,11 +337,103 @@ namespace KTrapIC
             Lines.RemoveAt(index);
         }
 
-        /// <summary>No completion yet: the daemon doesn't offer it.</summary>
+        /// <summary>
+        /// Whether the editor should call <see cref="UpdateAutocomplete"/>: where it would (the
+        /// caret at the end of a word or a line), and also right after a dot in the middle of a
+        /// line (<c>PresenceSensors.|.at(d0)</c>), so what can follow a name shows before its
+        /// first letter is typed.
+        /// </summary>
+        public override bool NeedsUpdateAutocomplete()
+        {
+            if (base.NeedsUpdateAutocomplete())
+                return true;
+            if (!Settings.EnableAutoComplete || Editor.KeyMode != KeyMode.Insert)
+                return false;
+            var caret = Editor.CaretPos;
+            return caret.Line < Lines.Count && Completions.AfterDot(Lines[caret.Line].Text, caret.Col);
+        }
+
+        /// <summary>
+        /// Asks the daemon what could be written at the caret, after a word that has begun or
+        /// right after a dot (<see cref="Completions.Wanted"/>), and shows the answer once it
+        /// comes, if the code and the caret haven't changed since. Requests go one at a time, the
+        /// latest wanted after the one in flight if the code is still what it was made in
+        /// (<see cref="CompletionRequests"/>). The editor calls this when the
+        /// code changes or the caret moves, with the caret at the end of a word or a line, or right
+        /// after a dot (<see cref="NeedsUpdateAutocomplete"/>).
+        /// </summary>
         public override void UpdateAutocomplete()
         {
             _autocomplete = null;
             _autocompleteInsertText = null;
+            var caret = Editor.CaretPos;
+            if (caret.Line >= Lines.Count)
+                return;
+            string line = Lines[caret.Line].Text;
+            if (!Completions.Wanted(line, caret.Col))
+                return;
+            SubmitChanges();
+            if (_document == null || _syncedVersion != _version)
+                return;
+            // Told apart by their text rather than _version: the editor's first call for an edit
+            // comes before the handler that counts the edit in _version has run.
+            _completionRequests.Want(
+                new CompletionRequest(RawText, caret.Line, caret.Col, Completions.WordBefore(line, caret.Col)));
+        }
+
+        private async UniTaskVoid ShowCompletions(CompletionRequest request, IReadOnlyList<Completion> completions)
+        {
+            await UniTask.SwitchToMainThread();
+            var now = Editor.CaretPos;
+            if (_closed || now.Line != request.Line || now.Col != request.Column || request.Text != RawText)
+                return;
+            var choice = Completions.Choose(completions, request.Word);
+            if (choice == null)
+                return;
+            var popup = new StyledText();
+            foreach (var completion in choice.Shown)
+            {
+                var entry = new StyledLine(completion.label);
+                entry.Add(new Token(0, completion.label, CompletionStyle(completion.kind)));
+                popup.Add(entry);
+            }
+            if (choice.Matched > choice.Shown.Count)
+                popup.AddLine($"... and {choice.Matched - choice.Shown.Count} more", DefaultStyle);
+            _autocomplete = popup;
+            _autocompleteInsertText = choice.Insert;
+        }
+
+        /// <summary>The color of a completion of LSP <c>CompletionItemKind</c> <paramref name="kind"/>, as the code colors its names.</summary>
+        private static Style CompletionStyle(int kind)
+        {
+            switch (kind)
+            {
+                case 3: // Function
+                    return FunctionStyle;
+                case 6: // Variable
+                case 10: // Property
+                    return LogicTypeStyle;
+                case 7: // Class
+                case 8: // Interface
+                case 9: // Module: an object
+                    return TypeStyle;
+                case 13: // Enum
+                    return EnumStyle;
+                case 20: // EnumMember
+                    return EnumValueStyle;
+                default:
+                    return DefaultStyle;
+            }
+        }
+
+        /// <summary>
+        /// Inserts the shown completions' shared text, only while they're shown: the editor keeps
+        /// the text to insert after it stops showing them.
+        /// </summary>
+        public override void PerformAutocomplete()
+        {
+            if (_autocomplete != null)
+                base.PerformAutocomplete();
         }
 
         /// <summary>

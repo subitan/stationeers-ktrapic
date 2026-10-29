@@ -23,6 +23,7 @@ kt_junit5_tests(
         "//test/cases",
     ],
     deps = [
+        "//compiler/frontend",
         "//compiler/ic10",
         "//emu",
         "@maven//:com_google_truth_truth",

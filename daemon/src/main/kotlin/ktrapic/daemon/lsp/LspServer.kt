@@ -11,7 +11,9 @@ import java.io.InputStream
 import java.io.OutputStream
 import java.io.StringReader
 import java.util.concurrent.Future
+import ktrapic.api.Compiler
 import ktrapic.daemon.Daemon
+import ktrapic.frontend.Completion
 
 /** JSON-RPC's and LSP's error codes. */
 internal object ErrorCodes {
@@ -47,6 +49,10 @@ internal class ResponseError(val code: Int, message: String) : Exception(message
  * that compile's result, and the other way round; internal compiler errors are not kept, but
  * compiled again.
  *
+ * **`textDocument/completion`** lists what could be written at the position, from the compiler's
+ * analysis of the document's current text (see [completion]); a repeat of the latest request costs
+ * nothing, and an analysis that fails is answered with InternalError.
+ *
  * **`textDocument/semanticTokens/full`** gets `{"data": []}`, although the server doesn't declare
  * the capability: the IC10 Editor asks for semantic tokens after every change whatever the server
  * declares, and an error answer to each would be noise.
@@ -67,6 +73,7 @@ internal class ResponseError(val code: Int, message: String) : Exception(message
  *   keystrokes compiles once; 150 ms, as the plugin's compile-as-you-type waits.
  * @param scheduler runs diagnostics compiles; tests can run them by hand.
  * @param compiler compiles a document's text with a `ktrapic/compile` request's options.
+ * @param completer lists what could be written at an index in a document's text.
  */
 class LspServer
 internal constructor(
@@ -76,6 +83,7 @@ internal constructor(
     private val debounceMillis: Long,
     private val scheduler: Scheduler,
     private val compiler: (String, JsonObject?) -> JsonObject,
+    private val completer: (String, Int) -> List<Completion> = Compiler::complete,
 ) {
   constructor(
       input: InputStream,
@@ -114,12 +122,18 @@ internal constructor(
             size > KEPT_COMPILES
       }
 
+  private class LastCompletion(val text: String, val offset: Int, val completions: List<Completion>)
+
+  /** The latest completion's text, offset and list, for [completion]. Under [compiles]' lock. */
+  private var lastCompletion: LastCompletion? = null
+
   /** Request handlers by method: each returns the result, or throws [ResponseError]. */
   private val requests: Map<String, (JsonElement?) -> JsonElement> =
       mapOf(
           "initialize" to ::initialize,
           "shutdown" to ::shutdown,
           "ktrapic/compile" to ::compile,
+          "textDocument/completion" to ::completion,
           "textDocument/semanticTokens/full" to ::semanticTokens,
       )
 
@@ -267,6 +281,12 @@ internal constructor(
                   addProperty("change", TEXT_DOCUMENT_SYNC_INCREMENTAL)
                 },
             )
+            add(
+                "completionProvider",
+                JsonObject().apply {
+                  add("triggerCharacters", JsonArray().apply { add(".") })
+                },
+            )
           },
       )
       add("serverInfo", JsonObject().apply { addProperty("name", "ktrapic-daemon") })
@@ -308,6 +328,59 @@ internal constructor(
           ?: compiler(text, options).also { if (!it.isInternalError()) compiles[key] = it }
     }
   }
+
+  /**
+   * What could be written at a position in an open document, as a `CompletionList` ([completer]
+   * lists them). Each item's `sortText` keeps [completer]'s order, `detail` is its declaration
+   * (such as `var Setting: Double`), and its `kind` is one the IC10 Editor can show: it colours an
+   * item by indexing a 24-colour table with the kind, so Operator (24) and TypeParameter (25) are
+   * never sent. Runs as compiles do, one at a time. A request at the same text and index as the
+   * latest one gets that one's list again without analysing the text, as the IC10 Editor asks twice
+   * for each keystroke. If the analysis fails, the request is answered with InternalError.
+   */
+  private fun completion(params: JsonElement?): JsonElement {
+    val fields = params.asObject("params")
+    val uri = fields["textDocument"].asObject("textDocument").string("uri")
+    val document =
+        documents[uri] ?: throw ResponseError(ErrorCodes.INVALID_PARAMS, "$uri is not open")
+    val text = document.text
+    val offset = document.offsetAt(fields["position"].asObject("position").toPosition())
+    val completions =
+        synchronized(compiles) {
+          lastCompletion?.takeIf { it.text == text && it.offset == offset }?.completions
+              ?: complete(text, offset).also { lastCompletion = LastCompletion(text, offset, it) }
+        }
+    val items = JsonArray()
+    completions.forEachIndexed { index, completion ->
+      items.add(
+          JsonObject().apply {
+            addProperty("label", completion.label)
+            addProperty("kind", kindOf(completion.kind))
+            if (completion.detail.isNotEmpty()) addProperty("detail", completion.detail)
+            addProperty("sortText", "%05d".format(index))
+          }
+      )
+    }
+    return JsonObject().apply {
+      addProperty("isIncomplete", false)
+      add("items", items)
+    }
+  }
+
+  /**
+   * [completer]'s list, or an InternalError answer if it fails. Like a compile, it can fail with an
+   * Error as well as an Exception: the compiler's parser overflows the stack on deeply nested
+   * source, and its internal checks throw AssertionError. A stack overflow has unwound by the time
+   * it is caught, so the server can answer and carry on; other VirtualMachineErrors mean it cannot.
+   */
+  private fun complete(text: String, offset: Int): List<Completion> =
+      try {
+        completer(text, offset)
+      } catch (e: Throwable) {
+        if (e is VirtualMachineError && e !is StackOverflowError) throw e
+        log("Completion failed: ${e.stackTraceToString()}")
+        throw ResponseError(ErrorCodes.INTERNAL_ERROR, "Completion failed: $e")
+      }
 
   /** Answers semantic tokens with none, so the IC10 Editor's request after each change succeeds. */
   private fun semanticTokens(params: JsonElement?): JsonElement =
@@ -415,6 +488,20 @@ internal constructor(
     const val KEPT_COMPILES = 4
 
     fun invalidParams(message: String) = ResponseError(ErrorCodes.INVALID_PARAMS, message)
+
+    /** LSP's `CompletionItemKind` for [kind]: all below 24, which the IC10 Editor can show. */
+    fun kindOf(kind: Completion.Kind): Int =
+        when (kind) {
+          Completion.Kind.FUNCTION -> 3
+          Completion.Kind.LOCAL -> 6
+          Completion.Kind.CLASS -> 7
+          Completion.Kind.INTERFACE -> 8
+          Completion.Kind.OBJECT -> 9
+          Completion.Kind.PROPERTY -> 10
+          Completion.Kind.ENUM -> 13
+          Completion.Kind.KEYWORD -> 14
+          Completion.Kind.ENUM_ENTRY -> 20
+        }
 
     /** Whether a [Daemon.compile] result is an internal compiler error. */
     fun JsonObject.isInternalError() =

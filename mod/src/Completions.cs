@@ -1,0 +1,285 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace KTrapIC
+{
+    /// <summary>
+    /// One of the daemon's completions (an LSP <c>CompletionItem</c>): a name that could go at the
+    /// caret, what kind of thing it is (an LSP <c>CompletionItemKind</c>), its declaration (such as
+    /// <c>var Setting: Double</c>), and where it sorts.
+    /// </summary>
+    public sealed class Completion
+    {
+        public string label;
+        public int kind;
+        public string detail;
+        public string sortText;
+    }
+
+    /// <summary>
+    /// What the completion popup shows for the word being typed: at most <see cref="Completions.MaxShown"/>
+    /// of the completions that start with it, how many matched in all, and the text that accepting
+    /// inserts, which is what all of them share past the word (the IC10 Editor inserts that, as it
+    /// has no way to pick one). Null when nothing is worth showing.
+    /// </summary>
+    public sealed class CompletionChoice
+    {
+        public IReadOnlyList<Completion> Shown;
+        public int Matched;
+        public string Insert;
+    }
+
+    /// <summary>
+    /// Completions wanted: at a caret (0-based line and column) in the code, whose text the daemon
+    /// has, after a word.
+    /// </summary>
+    public sealed class CompletionRequest
+    {
+        public readonly string Text;
+        public readonly int Line;
+        public readonly int Column;
+        public readonly string Word;
+
+        public CompletionRequest(string text, int line, int column, string word)
+        {
+            Text = text;
+            Line = line;
+            Column = column;
+            Word = word;
+        }
+
+        /// <summary>Whether <paramref name="other"/> is at the same caret in the same text.</summary>
+        public bool IsAt(CompletionRequest other) =>
+            other != null && Line == other.Line && Column == other.Column && string.Equals(Text, other.Text, StringComparison.Ordinal);
+    }
+
+    /// <summary>
+    /// One document's completion requests to the daemon, which answers them one at a time, each
+    /// taking a full analysis of the program; typing outruns it. So at most one request is in
+    /// flight: those wanted meanwhile wait, and when it is answered only the latest of them is
+    /// sent, the others being out of date by then. A request at the caret and text of the one in
+    /// flight is not sent again (the IC10 Editor asks twice for each keystroke), and one at those
+    /// of the last answered gets that answer again. A request the daemon gave no answer to (see
+    /// <see cref="LspDocument.Complete"/>) is answered with none, which is not given again.
+    ///
+    /// <para>The daemon answers a request for the text it has when the request arrives, which
+    /// only <see cref="Sync"/> changes. So a request is sent only while that text is the
+    /// request's own, and one waiting is dropped when the text changes: it is neither sent nor
+    /// answered. Every answer is thus of its request's text, and is given again only in that
+    /// text.</para>
+    ///
+    /// <para>Answers are given on the thread the daemon's answer arrives on, or, for one given
+    /// again, on <see cref="Want"/>'s.</para>
+    /// </summary>
+    public sealed class CompletionRequests
+    {
+        private readonly Func<int, int, Task<IReadOnlyList<Completion>>> _complete;
+        private readonly Action<CompletionRequest, IReadOnlyList<Completion>> _answered;
+        private readonly object _lock = new object();
+        private string _synced;
+        private CompletionRequest _inFlight;
+        private CompletionRequest _next;
+        private CompletionRequest _lastAnswered;
+        private IReadOnlyList<Completion> _lastAnswer;
+
+        /// <param name="complete">
+        /// Asks the daemon for the completions at a line and column of the document as of the
+        /// last <see cref="Sync"/>, sending the request before it returns: null if it gives no answer.
+        /// </param>
+        /// <param name="answered">Given each request sent, or answered again, with its completions.</param>
+        public CompletionRequests(
+            Func<int, int, Task<IReadOnlyList<Completion>>> complete,
+            Action<CompletionRequest, IReadOnlyList<Completion>> answered)
+        {
+            _complete = complete;
+            _answered = answered;
+        }
+
+        /// <summary>Asks for completions at <paramref name="request"/>'s caret, now or once the request in flight is answered.</summary>
+        public void Want(CompletionRequest request)
+        {
+            IReadOnlyList<Completion> answer = null;
+            lock (_lock)
+            {
+                if (request.IsAt(_inFlight))
+                {
+                    _next = null;
+                    return;
+                }
+                if (_inFlight != null)
+                {
+                    _next = request;
+                    return;
+                }
+                if (request.IsAt(_lastAnswered))
+                    answer = _lastAnswer;
+                else
+                    _inFlight = request;
+            }
+            if (answer != null)
+                _answered(request, answer);
+            else
+                _ = Send(request);
+        }
+
+        /// <summary>
+        /// Brings the daemon's copy of the document to <paramref name="text"/> with
+        /// <paramref name="sync"/>, which returns whether it did; no request is sent meanwhile.
+        /// If it did, a request waiting for another text is dropped, as the daemon would answer
+        /// it for this one. Returns what <paramref name="sync"/> returns.
+        /// </summary>
+        public bool Sync(string text, Func<bool> sync)
+        {
+            lock (_lock)
+            {
+                if (!sync())
+                    return false;
+                _synced = text;
+                if (_next != null && !string.Equals(_next.Text, text, StringComparison.Ordinal))
+                    _next = null;
+                return true;
+            }
+        }
+
+        /// <summary>
+        /// Forgets the last answer, so it isn't given again: the document is now on another
+        /// daemon, which may answer differently.
+        /// </summary>
+        public void Forget()
+        {
+            lock (_lock)
+            {
+                _lastAnswered = null;
+                _lastAnswer = null;
+            }
+        }
+
+        private async Task Send(CompletionRequest request)
+        {
+            while (request != null)
+            {
+                Task<IReadOnlyList<Completion>> asked = null;
+                lock (_lock)
+                {
+                    if (string.Equals(request.Text, _synced, StringComparison.Ordinal))
+                    {
+                        try
+                        {
+                            asked = _complete(request.Line, request.Column);
+                        }
+                        catch (Exception exception)
+                        {
+                            asked = Task.FromException<IReadOnlyList<Completion>>(exception);
+                        }
+                    }
+                }
+                IReadOnlyList<Completion> answer = null;
+                if (asked != null)
+                {
+                    try
+                    {
+                        answer = await asked.ConfigureAwait(false);
+                    }
+                    catch (Exception)
+                    {
+                        answer = null;
+                    }
+                }
+                CompletionRequest next;
+                lock (_lock)
+                {
+                    if (answer != null)
+                    {
+                        _lastAnswered = request;
+                        _lastAnswer = answer;
+                    }
+                    next = _next;
+                    _next = null;
+                    _inFlight = next;
+                }
+                if (asked != null)
+                    _answered(request, answer ?? Array.Empty<Completion>());
+                request = next;
+            }
+        }
+    }
+
+    /// <summary>The game-independent part of completion in the Kotlin editor.</summary>
+    public static class Completions
+    {
+        /// <summary>How many completions the popup lists.</summary>
+        public const int MaxShown = 20;
+
+        /// <summary>The identifier that ends at <paramref name="column"/> of <paramref name="line"/>, or "".</summary>
+        public static string WordBefore(string line, int column)
+        {
+            column = Math.Min(column, line.Length);
+            int start = column;
+            while (start > 0 && (char.IsLetterOrDigit(line[start - 1]) || line[start - 1] == '_'))
+                start--;
+            return line.Substring(start, column - start);
+        }
+
+        /// <summary>
+        /// Whether to ask for completions with the caret at <paramref name="column"/>: after a
+        /// word that has begun, or right after a dot (<c>d0.</c>). An empty word elsewhere would
+        /// list every name there is.
+        /// </summary>
+        public static bool Wanted(string line, int column)
+        {
+            column = Math.Min(column, line.Length);
+            string word = WordBefore(line, column);
+            if (word.Length > 0)
+                return !char.IsDigit(word[0]);
+            return AfterDot(line, column);
+        }
+
+        /// <summary>
+        /// Whether the caret at <paramref name="column"/> is right after a dot that follows a name
+        /// or a closing bracket (<c>d0.</c>, <c>f().</c>), not one in a number or a range
+        /// (<c>1.</c>, <c>0..</c>).
+        /// </summary>
+        public static bool AfterDot(string line, int column)
+        {
+            column = Math.Min(column, line.Length);
+            if (column < 2 || line[column - 1] != '.')
+                return false;
+            char before = line[column - 2];
+            if (before == ')' || before == ']')
+                return true;
+            string word = WordBefore(line, column - 1);
+            return word.Length > 0 && !char.IsDigit(word[0]);
+        }
+
+        /// <summary>
+        /// The completions to show for <paramref name="word"/>: those starting with it (as typed,
+        /// case and all), in the daemon's order, and not those starting with <c>_</c>. Null if
+        /// none match, or the only one is the word itself.
+        /// </summary>
+        public static CompletionChoice Choose(IEnumerable<Completion> completions, string word)
+        {
+            var matching = completions
+                .Where(c => !string.IsNullOrEmpty(c.label) && c.label.StartsWith(word, StringComparison.Ordinal) && !c.label.StartsWith("_"))
+                .OrderBy(c => c.sortText ?? "", StringComparer.Ordinal)
+                .ToList();
+            if (matching.Count == 0 || (matching.Count == 1 && matching[0].label == word))
+                return null;
+            string shared = matching[0].label;
+            foreach (var completion in matching)
+            {
+                int length = 0;
+                while (length < shared.Length && length < completion.label.Length && shared[length] == completion.label[length])
+                    length++;
+                shared = shared.Substring(0, length);
+            }
+            return new CompletionChoice
+            {
+                Shown = matching.Take(MaxShown).ToList(),
+                Matched = matching.Count,
+                Insert = shared.Length > word.Length ? shared.Substring(word.Length) : null,
+            };
+        }
+    }
+}
