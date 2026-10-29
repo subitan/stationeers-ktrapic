@@ -11,6 +11,7 @@ import org.jetbrains.kotlin.fir.FirElement
 import org.jetbrains.kotlin.fir.FirSession
 import org.jetbrains.kotlin.fir.containingClassLookupTag
 import org.jetbrains.kotlin.fir.declarations.FirCallableDeclaration
+import org.jetbrains.kotlin.fir.declarations.FirFunction
 import org.jetbrains.kotlin.fir.declarations.FirRegularClass
 import org.jetbrains.kotlin.fir.declarations.FirResolvePhase
 import org.jetbrains.kotlin.fir.expressions.FirFunctionCall
@@ -19,8 +20,10 @@ import org.jetbrains.kotlin.fir.expressions.FirResolvedQualifier
 import org.jetbrains.kotlin.fir.pipeline.SingleModuleFrontendOutput
 import org.jetbrains.kotlin.fir.references.FirErrorNamedReference
 import org.jetbrains.kotlin.fir.references.FirNamedReference
+import org.jetbrains.kotlin.fir.references.FirResolvedErrorReference
 import org.jetbrains.kotlin.fir.references.FirResolvedNamedReference
 import org.jetbrains.kotlin.fir.resolve.ScopeSession
+import org.jetbrains.kotlin.fir.resolve.defaultType
 import org.jetbrains.kotlin.fir.resolve.diagnostics.ConeDiagnosticWithCandidates
 import org.jetbrains.kotlin.fir.resolve.providers.symbolProvider
 import org.jetbrains.kotlin.fir.resolve.scope
@@ -205,7 +208,7 @@ object K2Hover {
             val source = reference.source
             if (!source.covers()) return@mapNotNull null
             // A call that resolved to none of several overloads is to no one of them yet.
-            val symbol = symbolsOf(reference).singleOrNull() ?: return@mapNotNull null
+            val symbol = symbolsOf(access).singleOrNull() ?: return@mapNotNull null
             receiverClass(access)?.let { receivers[symbol] = it }
             source!! to symbol
           }
@@ -263,7 +266,7 @@ object K2Hover {
                 source.endOffset == calleeEnd
           } ?: return null
       val shownOn = call.explicitReceiver?.resolvedType?.let(K2Completion::declarable)
-      val called = symbolsOf(call.calleeReference).filterIsInstance<FirFunctionSymbol<*>>()
+      val called = symbolsOf(call).filterIsInstance<FirFunctionSymbol<*>>()
       val signatures =
           (called + overloadsOf(call, called))
               .filter { shown(it, shownOn) }
@@ -341,19 +344,50 @@ object K2Hover {
     }
 
     /**
-     * What a reference is to: its symbol if it resolved, else the candidates the compiler
-     * considered (the overloads of a call whose arguments are not all written yet).
+     * What [access]'s name is to: its symbol if it resolved, else the candidates the compiler
+     * considered (the overloads of a call whose arguments are not all written yet, or the one
+     * function of its name, whatever its arguments). Without an explicit receiver, an extension is
+     * a candidate only if one of the implicit receivers there can be its receiver: the SDK's
+     * `Mapped<Double>.max()` is no candidate for a bare `max(`.
      */
-    private fun symbolsOf(reference: FirNamedReference): List<FirBasedSymbol<*>> =
-        when (reference) {
-          is FirResolvedNamedReference -> listOf(reference.resolvedSymbol)
-          is FirErrorNamedReference ->
-              (reference.diagnostic as? ConeDiagnosticWithCandidates)
-                  ?.candidateSymbols
-                  ?.toList()
-                  .orEmpty()
-          else -> emptyList()
+    private fun symbolsOf(access: FirQualifiedAccessExpression): List<FirBasedSymbol<*>> {
+      val candidates =
+          when (val reference = access.calleeReference) {
+            is FirResolvedErrorReference -> listOf(reference.resolvedSymbol)
+            is FirResolvedNamedReference -> return listOf(reference.resolvedSymbol)
+            is FirErrorNamedReference ->
+                (reference.diagnostic as? ConeDiagnosticWithCandidates)
+                    ?.candidateSymbols
+                    ?.toList()
+                    .orEmpty()
+            else -> return emptyList()
+          }
+      if (access.explicitReceiver != null) return candidates
+      val implicit by lazy { implicitReceivers(access.source) }
+      return candidates.filter { candidate ->
+        val receiver = (candidate as? FirCallableSymbol<*>)?.resolvedReceiverType
+        receiver == null || implicit.any { K2Completion.accepts(session, receiver, it) }
+      }
+    }
+
+    /**
+     * The types of the implicit receivers at [source]: of the classes around it (the program's
+     * object among them), and the receivers of the extension functions and lambdas around it.
+     */
+    private fun implicitReceivers(source: KtSourceElement?): List<ConeKotlinType> {
+      if (source == null) return emptyList()
+      return elements.mapNotNull { element ->
+        val around = element.source ?: return@mapNotNull null
+        if (around.startOffset > source.startOffset || source.endOffset > around.endOffset) {
+          return@mapNotNull null
         }
+        when (element) {
+          is FirRegularClass -> element.defaultType()
+          is FirFunction -> (element.receiverParameter?.typeRef as? FirResolvedTypeRef)?.coneType
+          else -> null
+        }
+      }
+    }
 
     /**
      * The class of [access]'s explicit receiver: of the object or class it names, or of its type.

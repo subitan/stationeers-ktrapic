@@ -325,6 +325,22 @@ class K2HoverTest {
   }
 
   @Test
+  fun `no extension for a call or a name without a receiver for it`() {
+    assertThat(labels("val m = max(1.0, |")).isNull()
+    assertThat(labels("val m = min(|")).isNull()
+    assertThat(labels("import kotlin.math.max\nval m = min(|)\n")).isNull()
+    assertThat(hover("val m = ma|x(1.0, 2.0)\n")).isNull()
+    assertThat(hover("val m = mi|n(1.0)\n")).isNull()
+  }
+
+  @Test
+  fun `an extension called on the receiver of the function around it`() {
+    val source = "fun Int.scaled(by: Int) = this * by\nfun Int.twice() = scaled(|)\n"
+
+    assertThat(labels(source)).containsExactly("fun scaled(by: Int): Int")
+  }
+
+  @Test
   fun `signature help for the innermost call`() {
     val help = signatures("val h = str(hash(|))\n")!!
 
