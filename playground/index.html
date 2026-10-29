@@ -160,7 +160,7 @@
           <input type="range" id="tick" min="0" max="0" value="0" aria-label="Tick">
           <button id="next" title="Next tick">▶</button><button id="last" title="End of the run">⏭</button>
           <span id="where"></span>
-          <button id="trace" title="Step through the next tick line by line">Lines</button>
+          <button id="trace" disabled title="Step through the next tick line by line">Lines</button>
           <span id="line-controls" hidden><button id="line-prev" title="Previous line">‹</button><span id="line-at"></span><button id="line-next" title="Next line">›</button></span>
         </div>
         <div id="results">Run the program to see what it does.</div>
@@ -356,10 +356,9 @@ $("open").onchange = async (e) => {
   opened = { group, name };
   store(OPENED_KEY, JSON.stringify(opened));
   src.scrollTop = 0;
-  markStale();
+  clearRun("Run the program to see what it does.");
   compile();
   await loadTest();
-  clearRun("Run the program to see what it does.");
 };
 
 // ---- Testing against fake devices (docs/TESTING.md) ----
@@ -401,7 +400,10 @@ function testName() { return $("filename").textContent.replace(/\.ic10\.kts$/, "
 // program under its file name.
 function testKey() { return TEST_KEY + (opened ? opened.group + "/" + opened.name : $("filename").textContent); }
 
-/** Shows the test for the program: an unsaved draft if there is one, else the saved file. */
+/** The test shown when there is no draft: the saved file, or the example for a program without one. */
+function baseTest() { return savedTest ?? DEFAULT_TEST; }
+
+/** Shows the test for the program: a draft if there is one that differs from the saved file, else the saved file. */
 async function loadTest() {
   savedTest = null;
   if (opened) {
@@ -410,18 +412,22 @@ async function loadTest() {
       if (r.ok) savedTest = (await r.json()).test;
     } catch (e) {}
   }
-  const draft = load(testKey());
-  $("test").value = draft ?? savedTest ?? DEFAULT_TEST;
+  let draft = load(testKey());
+  if (draft !== null && draft === savedTest) { forget(testKey()); draft = null; }
+  $("test").value = draft ?? baseTest();
   $("testname").textContent = testName();
-  keepDraft();
+  showTestState();
 }
 
-/** Keeps the test as a draft until it is saved; a draft that matches the saved file is dropped. */
+/** Keeps an edited test as a draft until it is saved; an edit back to the shown-by-default test drops the draft. */
 function keepDraft() {
   const text = $("test").value;
-  const unsaved = opened && text !== savedTest;
-  if (opened && !unsaved) forget(testKey()); else store(testKey(), text);
-  $("test-state").textContent = unsaved ? "unsaved" : "";
+  if (text === baseTest()) forget(testKey()); else store(testKey(), text);
+  showTestState();
+}
+
+function showTestState() {
+  $("test-state").textContent = opened && $("test").value !== baseTest() ? "unsaved" : "";
 }
 
 /** The program or its options changed: the shown run's lines no longer apply, and a run on its way is dropped. */
@@ -444,6 +450,7 @@ function clearRun(message) {
   $("tick").max = 0;
   $("where").textContent = "";
   $("line-controls").hidden = true;
+  $("trace").disabled = true;
 }
 
 /** Names a 0-based IC10 line as the gutters number it, with the Kotlin line it came from if known. */
@@ -478,7 +485,6 @@ async function runTest(traceTick) {
   let test;
   try { test = JSON.parse($("test").value); }
   catch (e) { clearRun(`<span class="runerr">The test isn't JSON: ${esc(e.message)}</span>`); return; }
-  keepDraft();
   const mine = ++runSeq;
   $("verdict").textContent = "running…";
   $("verdict").className = "stats";
@@ -510,14 +516,16 @@ async function runTest(traceTick) {
   let st = EMPTY;
   for (const snap of res.run.ticks) states.push((st = apply(st, snap)));
   lineStates = null;
-  if (traceTick && res.run.lines.length) {
+  // A traced tick the run never reached (it halted or failed earlier) has no lines to step through.
+  const reached = traceTick && traceTick < states.length;
+  if (reached && res.run.lines.length) {
     st = states[traceTick - 1];
     lineStates = res.run.lines.map((snap) => (st = apply(st, snap)));
   }
   $("tick").max = states.length - 1;
   $("verdict").textContent = res.run.passed ? "passed" : "failed";
   $("verdict").className = "stats " + (res.run.passed ? "" : "bad");
-  at = traceTick ? traceTick - 1 : states.length - 1;
+  at = reached ? traceTick - 1 : states.length - 1;
   lineAt = 0;
   $("line-controls").hidden = !lineStates;
   show();
@@ -531,23 +539,32 @@ function vals(entries, changed) {
 }
 
 function show() {
-  if (!run) return;
-  const traced = lineStates && $("line-controls").hidden === false;
+  if (!run || !states.length) return;
+  const last = states.length - 1;
+  at = Math.max(0, Math.min(last, at));
+  const traced = lineStates && lineStates.length && $("line-controls").hidden === false;
+  if (traced) lineAt = Math.max(0, Math.min(lineStates.length - 1, lineAt));
   const st = traced ? lineStates[lineAt] : states[at];
   $("tick").value = at;
-  const last = states.length - 1;
-  // A traced line points at the line it ran; a tick at the line that runs next.
-  const ic = traced ? st.ran : st.line;
+  // Lines trace only the run that is shown, from a tick that has one after it.
+  $("trace").disabled = stale || at >= last;
+  // A traced line points at the line it ran. A tick, and a traced tick's closing snapshot (it has
+  // no `ran`: the chip halted, or no line ran), point at the line that runs next.
+  const ranLine = traced && st.ran !== undefined;
+  const ic = ranLine ? st.ran : st.line;
   const srcLine = icToSrc[ic];
+  const next = st.halted ? ", halted" : `, next ${lineName(ic)}`;
   if (stale) {
     // The run's line numbers belong to IC10 that has since changed, so neither gutter is marked.
     cursor = {};
     $("where").textContent = `tick ${st.tick} of ${last}, lines out of date`;
   } else {
     cursor = { ic: ic + 1, src: srcLine === undefined ? undefined : srcLine + 1 };
-    $("where").textContent = traced
+    $("where").textContent = ranLine
       ? `tick ${st.tick}, ran ${lineName(ic)}`
-      : `tick ${st.tick} of ${last}${st.halted ? ", halted" : `, next ${lineName(ic)}`}`;
+      : traced
+        ? `tick ${st.tick}, ${lineStates.length === 1 ? "no line ran" : "after its last line"}${next}`
+        : `tick ${st.tick} of ${last}${next}`;
     out.scrollTop = Math.max(0, (ic - 5) * 20);
     if (srcLine !== undefined) src.scrollTop = Math.max(0, (srcLine - 5) * 20);
   }

@@ -19,7 +19,9 @@ import java.io.BufferedWriter
 import java.io.File
 import java.net.InetSocketAddress
 import java.net.URLDecoder
+import java.nio.file.AtomicMoveNotSupportedException
 import java.nio.file.Files
+import java.nio.file.StandardCopyOption
 import java.util.Base64
 import java.util.concurrent.Executors
 import kotlin.system.exitProcess
@@ -132,8 +134,9 @@ fun source(group: String, name: String): File? {
 
 /**
  * The test file kept beside [program]: `X.test.json` for `X.ic10.kts`, in the program's own
- * directory. A link there, which could point anywhere, is refused, so it is neither read nor
- * written through.
+ * directory. A symbolic link there, which could point anywhere, is refused, so it is neither read
+ * nor written through. A hard link can't be told from an ordinary file without platform-specific
+ * calls, so one is still read through; [saveTest] replaces it rather than writing through it.
  */
 fun testOf(program: File): File? {
   val dir = program.canonicalFile.parentFile
@@ -143,6 +146,30 @@ fun testOf(program: File): File? {
     !Files.isSymbolicLink(it.toPath()) &&
         it.canonicalFile.parentFile == dir &&
         it.canonicalFile.name == name
+  }
+}
+
+/**
+ * Writes [body] to [file] through a temporary file in the same directory that then takes its place,
+ * so a reader never sees half a file and a hard link at [file] is replaced, not written through.
+ */
+fun saveTest(file: File, body: ByteArray) {
+  val target = file.toPath()
+  val temp = Files.createTempFile(target.parent, ".${file.name}.", ".tmp")
+  try {
+    Files.write(temp, body)
+    try {
+      Files.move(
+          temp,
+          target,
+          StandardCopyOption.REPLACE_EXISTING,
+          StandardCopyOption.ATOMIC_MOVE,
+      )
+    } catch (e: AtomicMoveNotSupportedException) {
+      Files.move(temp, target, StandardCopyOption.REPLACE_EXISTING)
+    }
+  } finally {
+    Files.deleteIfExists(temp)
   }
 }
 
@@ -240,7 +267,7 @@ server.createContext("/") { exchange ->
           body.size > MAX_TEST_BYTES ->
               send(exchange, 413, """{"error":{"description":"Too large"}}""")
           else -> {
-            file.writeBytes(body)
+            saveTest(file, body)
             send(exchange, 200, """{"saved":${jsonString(file.name)}}""")
           }
         }
