@@ -6,6 +6,7 @@ import java.io.File
 import org.jetbrains.kotlin.KtFakeSourceElementKind
 import org.jetbrains.kotlin.KtRealSourceElementKind
 import org.jetbrains.kotlin.KtSourceElement
+import org.jetbrains.kotlin.descriptors.Visibilities
 import org.jetbrains.kotlin.fir.FirElement
 import org.jetbrains.kotlin.fir.FirSession
 import org.jetbrains.kotlin.fir.containingClassLookupTag
@@ -33,13 +34,16 @@ import org.jetbrains.kotlin.fir.symbols.impl.FirNamedFunctionSymbol
 import org.jetbrains.kotlin.fir.symbols.impl.FirPropertySymbol
 import org.jetbrains.kotlin.fir.symbols.impl.FirRegularClassSymbol
 import org.jetbrains.kotlin.fir.types.ConeClassLikeType
+import org.jetbrains.kotlin.fir.types.ConeKotlinType
 import org.jetbrains.kotlin.fir.types.FirResolvedTypeRef
 import org.jetbrains.kotlin.fir.types.coneType
+import org.jetbrains.kotlin.fir.types.isMarkedNullable
 import org.jetbrains.kotlin.fir.types.resolvedType
 import org.jetbrains.kotlin.fir.unwrapFakeOverrides
 import org.jetbrains.kotlin.fir.visitors.FirVisitorVoid
 import org.jetbrains.kotlin.name.ClassId
 import org.jetbrains.kotlin.name.StandardClassIds
+import org.jetbrains.kotlin.name.isSubpackageOf
 
 /**
  * What a name in a program is, for a hover: its [declaration] (`var Text: String`), the class it is
@@ -246,7 +250,11 @@ object K2Hover {
       }
     }
 
-    /** The functions a call whose callee ends at [calleeEnd] could be to. */
+    /**
+     * The functions a call whose callee ends at [calleeEnd] could be to. Of the candidates of a
+     * call that has not resolved (its arguments are not all written yet), only those [shown] are
+     * listed, unless that leaves none.
+     */
     fun signatures(calleeEnd: Int, activeParameter: Int): SignatureHelp? {
       val call =
           elements.filterIsInstance<FirFunctionCall>().firstOrNull {
@@ -255,9 +263,11 @@ object K2Hover {
                 source.kind is KtRealSourceElementKind &&
                 source.endOffset == calleeEnd
           } ?: return null
-      val symbols = symbolsOf(call.calleeReference)
+      val shownOn = call.explicitReceiver?.resolvedType?.let(K2Completion::declarable)
+      val all = symbolsOf(call.calleeReference)
+      val symbols = all.filter { it !is FirCallableSymbol<*> || shown(it, shownOn) }.ifEmpty { all }
       val signatures =
-          (symbols + symbols.singleOrNull()?.let { overloadsOf(call, it) }.orEmpty())
+          (symbols + symbols.singleOrNull()?.let { overloadsOf(call, it, shownOn) }.orEmpty())
               .filterIsInstance<FirFunctionSymbol<*>>()
               .map { Signature(declarationOf(it), parametersOf(it), documentationOf(it)) }
               .distinctBy { it.label }
@@ -268,13 +278,14 @@ object K2Hover {
      * The other functions a call that resolved to [resolved] could be to as its arguments are
      * written: those of the same name that its receiver's type has, explicit (`all.count(`) or
      * implicit (a member of the program or of a class, called from within it), or, for a top-level
-     * function, those of the same name in its package. Only those completion offers are listed
-     * ([K2Completion.shown]): of the standard library's, only those KTrapIC compiles. A call with
-     * no arguments yet resolves to an overload that takes none, though the user may mean another.
+     * function, those of the same name in its package. Only those [shown] on [shownOn] are listed.
+     * A call with no arguments yet resolves to an overload that takes none, though the user may
+     * mean another.
      */
     private fun overloadsOf(
         call: FirFunctionCall,
         resolved: FirBasedSymbol<*>,
+        shownOn: ConeKotlinType?,
     ): List<FirBasedSymbol<*>> {
       val function = resolved as? FirNamedFunctionSymbol ?: return emptyList()
       if (function.resolvedReceiverType != null) return emptyList()
@@ -295,9 +306,40 @@ object K2Hover {
                 .getTopLevelFunctionSymbols(function.callableId.packageName, function.name)
                 .filter { it.resolvedReceiverType == null }
       }
-      val shownOn =
-          receiver?.takeIf { call.explicitReceiver != null }?.let(K2Completion::declarable)
-      return found.filter { K2Completion.shown(it, shownOn) }
+      return found.filter { shown(it, shownOn) }
+    }
+
+    /**
+     * Whether signature help lists [symbol], called on [receiver] (the declarable type of the
+     * call's explicit receiver, or null): any of the program's own declarations, which the user
+     * wrote whatever their visibility or name; those completion offers ([K2Completion.shown]), of
+     * the standard library's members and extensions only those KTrapIC compiles; and, of a
+     * top-level function of the standard library (`max`), which completion offers none of, the
+     * public overloads whose parameters and result are all of a type a program can have
+     * ([PROGRAM_TYPES]).
+     */
+    private fun shown(symbol: FirCallableSymbol<*>, receiver: ConeKotlinType?): Boolean {
+      val declared = symbol.fir.unwrapFakeOverrides().symbol
+      val callableId = declared.callableId ?: return false
+      val owner = callableId.classId
+      if (owner != null && isProgram(generateSequence(owner) { it.outerClassId }.last())) {
+        return true
+      }
+      if (K2Completion.shown(symbol, receiver)) return true
+      if (
+          owner != null ||
+              declared.resolvedReceiverType != null ||
+              !callableId.packageName.isSubpackageOf(StandardClassIds.BASE_KOTLIN_PACKAGE) ||
+              symbol !is FirFunctionSymbol<*> ||
+              symbol.resolvedStatus.visibility != Visibilities.Public
+      ) {
+        return false
+      }
+      return (symbol.valueParameterSymbols.map { it.resolvedReturnType } +
+              symbol.resolvedReturnType)
+          .all {
+            it is ConeClassLikeType && !it.isMarkedNullable && it.lookupTag.classId in PROGRAM_TYPES
+          }
     }
 
     /**
@@ -390,4 +432,8 @@ object K2Hover {
     private fun isProgram(classId: ClassId) =
         classId.outerClassId == null && classId.shortClassName.asString() == PROGRAM_OBJECT
   }
+
+  /** The types of value a program can have: see docs/LANGUAGE.md, "Values and variables". */
+  private val PROGRAM_TYPES =
+      setOf(StandardClassIds.Int, StandardClassIds.Double, StandardClassIds.Boolean)
 }

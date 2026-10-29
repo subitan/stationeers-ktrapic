@@ -273,11 +273,37 @@ class K2HoverTest {
   }
 
   @Test
+  fun `signature help offers the program's own overloads whatever their visibility or name`() {
+    assertThat(labels("private fun g() = 1\nprivate fun g(a: Int) = a\nval x = g(|)\n"))
+        .containsExactly("fun g(): Int", "fun g(a: Int): Int")
+    assertThat(labels("fun g() = 1\nprivate fun g(a: Int) = a\nval x = g(|)\n"))
+        .containsExactly("fun g(): Int", "fun g(a: Int): Int")
+    assertThat(labels("fun _g() = 1\nfun _g(a: Int) = a\nval x = _g(|)\n"))
+        .containsExactly("fun _g(): Int", "fun _g(a: Int): Int")
+    assertThat(
+            labels(
+                "class K {\n  private fun m() = 1\n  private fun m(a: Int) = a\n  fun t() = m(|)\n}\n"
+            )
+        )
+        .containsExactly("fun m(): Int", "fun m(a: Int): Int")
+  }
+
+  @Test
   fun `signature help lists only the standard library overloads KTrapIC compiles`() {
+    val max = listOf("fun max(a: Double, b: Double): Double", "fun max(a: Int, b: Int): Int")
     assertThat(labels("import kotlin.math.max\nval m = max(1.0, 2.0|)\n"))
-        .containsExactly("fun max(a: Double, b: Double): Double")
-    assertThat(labels("val n = 1.plus(2|)\n"))
-        .containsExactly("fun plus(other: Int): Int", "fun plus(other: Double): Double")
+        .containsExactlyElementsIn(max)
+        .inOrder()
+    assertThat(labels("import kotlin.math.max\nval m = max(|)\n")).containsExactlyElementsIn(max)
+    assertThat(labels("import kotlin.math.max\nval m = max(1.0, |)\n"))
+        .containsExactlyElementsIn(max)
+    assertThat(labels("import kotlin.math.abs\nval a = abs(|)\n"))
+        .containsExactly("fun abs(x: Double): Double", "fun abs(n: Int): Int")
+    val plus = listOf("fun plus(other: Int): Int", "fun plus(other: Double): Double")
+    assertThat(labels("val n = 1.plus(2|)\n")).containsExactlyElementsIn(plus)
+    assertThat(labels("val n = 1.plus(|)\n")).containsExactlyElementsIn(plus)
+    assertThat(labels("sleep(|"))
+        .containsExactly("fun sleep(seconds: Double): Unit", "fun sleep(seconds: Int): Unit")
   }
 
   @Test
