@@ -158,18 +158,34 @@ class PrefabGeneratorTest {
     // The grow light's slots are of two kinds, so slots[n] has what every slot reads.
     assertThat(code).contains("  val slots: Slots<CommonSlot>\n")
     assertThat(code).contains("  @SlotNumber(0)\n  val Tray: PlantSlot\n")
-    // A batch of grow lights has its own type, to give it slots, which the prefab's all and
-    // named return.
+    // A batch of grow lights has its own type, nested in the device class, to give it slots; the
+    // prefab's all and named return it.
     assertThat(code)
         .contains(
-            "  companion object : Prefab<GrowLight>() {\n" +
-                "    override val all: Batch\n      get() = intrinsic()\n\n" +
-                "    override fun named(name: String): Batch = intrinsic()\n\n" +
-                "    /** A batch of StructureGrowLight devices. */\n" +
-                "    class Batch internal constructor() : DeviceBatch<GrowLight>() {\n" +
-                "      /** A slot of every one in the batch, by number. */\n" +
-                "      val slots: Slots<SlotBatch<CommonSlot>>\n"
+            "  /** A batch of StructureGrowLight devices. */\n" +
+                "  class Batch internal constructor() : DeviceBatch<GrowLight>() {\n" +
+                "    /** A slot of every one in the batch, by number. */\n" +
+                "    val slots: Slots<SlotBatch<CommonSlot>>\n" +
+                "      get() = intrinsic()\n" +
+                "  }\n\n" +
+                "  /** The StructureGrowLight prefab. */\n" +
+                "  companion object : Prefab<GrowLight>() {\n" +
+                "    override val all: GrowLight.Batch\n      get() = intrinsic()\n\n" +
+                "    override fun named(name: String): GrowLight.Batch = intrinsic()\n" +
+                "  }\n"
         )
+  }
+
+  @Test
+  fun `rejects a prefab with slots whose class would be named Batch`() {
+    val grouping =
+        Grouping(
+            mapOf("Light" to Grouping.Family(mapOf("Batch" to "StructureGrowLight"))),
+            emptyList(),
+        )
+
+    val error = assertThrows<IllegalArgumentException> { generate(grouping) }
+    assertThat(error).hasMessageThat().contains("StructureGrowLight has slots")
   }
 
   @Test

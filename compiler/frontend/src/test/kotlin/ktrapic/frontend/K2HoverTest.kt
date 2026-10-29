@@ -93,7 +93,25 @@ class K2HoverTest {
     assertThat(all.declaration).isEqualTo("val all: DeviceBatch<GrowLight>")
     assertThat(all.container).isEqualTo("GrowLight")
     assertThat(all.documentation).isEqualTo("Every device of this prefab on the chip's network.")
-    assertThat(prefab.declaration).isEqualTo("val p: GrowLight")
+    assertThat(prefab.declaration).isEqualTo("val p: Prefab<GrowLight>")
+  }
+
+  @Test
+  fun `a prefab's type is the Prefab it is, distinct from its device's`() {
+    val member = hover("val p = LedDisplay.Small\nval q = |p\n")!!
+    val device = hover("val d = GrowLight.at(d0)\nval q = |d\n")!!
+    val help = signatures("fun f(n: Int) = GrowLight\nval p = f(|1)\n")!!
+
+    assertThat(member.declaration).isEqualTo("val p: Prefab<LedDisplay.Small>")
+    assertThat(device.declaration).isEqualTo("val d: GrowLight")
+    assertThat(help.signatures.single().label).isEqualTo("fun f(n: Int): Prefab<GrowLight>")
+  }
+
+  @Test
+  fun `a device's prefab, whose device isn't known, as a star projection`() {
+    val hover = hover("val g = GrowLight.at(d0)\nval h = g.Prefab|Hash\n")!!
+
+    assertThat(hover.declaration).isEqualTo("val PrefabHash: Prefab<*>")
   }
 
   @Test

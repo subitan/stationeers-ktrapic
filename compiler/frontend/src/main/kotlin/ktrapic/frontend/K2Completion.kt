@@ -4,6 +4,7 @@ package ktrapic.frontend
 
 import java.io.File
 import org.jetbrains.kotlin.descriptors.ClassKind
+import org.jetbrains.kotlin.descriptors.Modality
 import org.jetbrains.kotlin.descriptors.Visibilities
 import org.jetbrains.kotlin.fir.FirElement
 import org.jetbrains.kotlin.fir.FirSession
@@ -43,6 +44,7 @@ import org.jetbrains.kotlin.fir.types.ConeIntegerLiteralType
 import org.jetbrains.kotlin.fir.types.ConeKotlinType
 import org.jetbrains.kotlin.fir.types.ConeStarProjection
 import org.jetbrains.kotlin.fir.types.ConeTypeParameterType
+import org.jetbrains.kotlin.fir.types.ConeTypeProjection
 import org.jetbrains.kotlin.fir.types.constructClassType
 import org.jetbrains.kotlin.fir.types.isMarkedNullable
 import org.jetbrains.kotlin.fir.types.resolvedType
@@ -302,7 +304,11 @@ object K2Completion {
    * declares it, in [TOP_LEVEL_STDLIB] for a top-level function, else in [SUPPORTED_STDLIB] for
    * [receiver]'s class.
    */
-  internal fun shown(symbol: FirCallableSymbol<*>, receiver: ConeKotlinType?): Boolean {
+  internal fun shown(
+      symbol: FirCallableSymbol<*>,
+      receiver: ConeKotlinType?,
+      session: FirSession,
+  ): Boolean {
     val name = symbol.name
     if (name.isSpecial || name.asString().startsWith("_") || name.asString() in ANY_MEMBERS) {
       return false
@@ -321,7 +327,7 @@ object K2Completion {
       val fqName = declared.asSingleFqName().asString()
       val parameters =
           (symbol as? FirFunctionSymbol<*>)?.valueParameterSymbols?.joinToString(", ") {
-            render(it.resolvedReturnType)
+            render(it.resolvedReturnType, session)
           }
       if (fqName !in supported && "$fqName($parameters)" !in supported) return false
     }
@@ -476,7 +482,14 @@ object K2Completion {
               CallableCopyTypeCalculator.DoNothing,
               FirResolvePhase.STATUS,
           )
-      scope?.processAllCallables { if (shown(it, type)) found += it }
+      // A prefab whose device isn't known when compiling, such as a device's `PrefabHash`
+      // (`Prefab<*>`), only compares: `at`, `all` and `named` need a typed device's prefab.
+      val unknownPrefab =
+          classId == PREFAB && !isTypedDevice((type as ConeClassLikeType).typeArguments.first())
+      scope?.processAllCallables {
+        val onPrefab = it.fir.unwrapFakeOverrides().symbol.callableId?.classId == PREFAB
+        if (shown(it, type, session) && !(unknownPrefab && onPrefab)) found += it
+      }
       found += extensions(type)
       // Overloads share one item, whose detail is the first's: the one that fits [type] best.
       return found
@@ -485,15 +498,24 @@ object K2Completion {
           .sortedBy { it.label.lowercase() }
     }
 
+    /** Whether [argument] is a typed device's class, such as `GrowLight`: a final class. */
+    private fun isTypedDevice(argument: ConeTypeProjection): Boolean {
+      val classId = (argument.type as? ConeClassLikeType)?.lookupTag?.classId ?: return false
+      val klass =
+          session.symbolProvider.getClassLikeSymbolByClassId(classId) as? FirRegularClassSymbol
+      return klass?.classKind == ClassKind.CLASS && klass.resolvedStatus.modality == Modality.FINAL
+    }
+
     /**
      * How well an overload fits a call on [type], lowest best: one taking only [type] itself
      * (`Double.plus(Double)` on a `Double`) before one taking anything else, and an extension of
      * [type]'s own class (`Set.plus` on a `Set`) before one of a supertype (`Iterable.plus`).
      */
     private fun fit(symbol: FirCallableSymbol<*>, type: ConeKotlinType): Int {
-      val own = render(type)
+      val own = render(type, session)
       val parameters = (symbol as? FirFunctionSymbol<*>)?.valueParameterSymbols.orEmpty()
-      val byParameters = if (parameters.all { render(it.resolvedReturnType) == own }) 0 else 2
+      val byParameters =
+          if (parameters.all { render(it.resolvedReturnType, session) == own }) 0 else 2
       val extended = symbol.resolvedReceiverType ?: return byParameters
       return byParameters + if (classOf(extended) == classOf(type)) 0 else 1
     }
@@ -510,7 +532,9 @@ object K2Completion {
       provider.getStaticCallableMemberScope(klass, session, scopeSession)?.processAllCallables {
         val name = it.name.asString()
         val made = enum && name in ENUM_STATICS
-        if (shown(it, null) && (!made || symbol.classId == SUBSTANCE && name == "entries")) {
+        if (
+            shown(it, null, session) && (!made || symbol.classId == SUBSTANCE && name == "entries")
+        ) {
           items += callable(it, local = false)
         }
       }
@@ -518,7 +542,9 @@ object K2Completion {
       val holder = if (klass.classKind == ClassKind.OBJECT) symbol else companion
       holder
           ?.unsubstitutedScope(session, scopeSession, false, FirResolvePhase.STATUS)
-          ?.processAllCallables { if (shown(it, null)) items += callable(it, local = false) }
+          ?.processAllCallables {
+            if (shown(it, null, session)) items += callable(it, local = false)
+          }
       return items
     }
 
@@ -534,7 +560,8 @@ object K2Completion {
               }
       return candidates.flatMap { (pkg, name) ->
         session.symbolProvider.getTopLevelCallableSymbols(pkg, name).filter {
-          shown(it, type) && accepts(session, it.resolvedReceiverType ?: return@filter false, type)
+          shown(it, type, session) &&
+              accepts(session, it.resolvedReceiverType ?: return@filter false, type)
         }
       }
     }
@@ -581,7 +608,7 @@ object K2Completion {
                   // and a function can't call itself. (A function that calls it is still offered,
                   // though calling that one there is recursion too, which doesn't compile.)
                   val around = it.fir in path
-                  if (shown(it, null) && !(program && inOrder && later) && !around) {
+                  if (shown(it, null, session) && !(program && inOrder && later) && !around) {
                     items += callable(it, local = false)
                   }
                 }
@@ -613,7 +640,7 @@ object K2Completion {
                   names.callables.flatMap { name ->
                     session.symbolProvider
                         .getTopLevelCallableSymbols(pkg, name)
-                        .filter { shown(it, null) && it.resolvedReceiverType == null }
+                        .filter { shown(it, null, session) && it.resolvedReceiverType == null }
                         .map { callable(it, local = false) }
                   }
             }
@@ -650,7 +677,7 @@ object K2Completion {
                 if (local) Completion.Kind.LOCAL else Completion.Kind.PROPERTY
             else -> Completion.Kind.PROPERTY
           }
-      return Completion(symbol.name.asString(), kind, declarationOf(symbol))
+      return Completion(symbol.name.asString(), kind, declarationOf(symbol, session))
     }
 
     private fun classifier(symbol: FirClassifierSymbol<*>): Completion? {

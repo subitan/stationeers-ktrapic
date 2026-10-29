@@ -1787,19 +1787,19 @@ interface Fridge {
     val slots: Slots<DataDiskSlot>
       get() = intrinsic()
 
+    /** A batch of StructureFridgeSmall devices. */
+    class Batch internal constructor() : DeviceBatch<Fridge.Small>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureFridgeSmall prefab. */
     companion object : Prefab<Fridge.Small>() {
-      override val all: Batch
+      override val all: Fridge.Small.Batch
         get() = intrinsic()
 
-      override fun named(name: String): Batch = intrinsic()
-
-      /** A batch of StructureFridgeSmall devices. */
-      class Batch internal constructor() : DeviceBatch<Fridge.Small>() {
-        /** A slot of every one in the batch, by number. */
-        val slots: Slots<SlotBatch<DataDiskSlot>>
-          get() = intrinsic()
-      }
+      override fun named(name: String): Fridge.Small.Batch = intrinsic()
     }
   }
 
@@ -1865,19 +1865,19 @@ interface Fridge {
     val slots: Slots<DataDiskSlot>
       get() = intrinsic()
 
+    /** A batch of StructureFridgeBig devices. */
+    class Batch internal constructor() : DeviceBatch<Fridge.Large>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureFridgeBig prefab. */
     companion object : Prefab<Fridge.Large>() {
-      override val all: Batch
+      override val all: Fridge.Large.Batch
         get() = intrinsic()
 
-      override fun named(name: String): Batch = intrinsic()
-
-      /** A batch of StructureFridgeBig devices. */
-      class Batch internal constructor() : DeviceBatch<Fridge.Large>() {
-        /** A slot of every one in the batch, by number. */
-        val slots: Slots<SlotBatch<DataDiskSlot>>
-          get() = intrinsic()
-      }
+      override fun named(name: String): Fridge.Large.Batch = intrinsic()
     }
   }
 }
@@ -1946,19 +1946,19 @@ interface ItemStorage {
     val slots: Slots<DataDiskSlot>
       get() = intrinsic()
 
+    /** A batch of StructureCargoStorageSmall devices. */
+    class Batch internal constructor() : DeviceBatch<ItemStorage.CargoSmall>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureCargoStorageSmall prefab. */
     companion object : Prefab<ItemStorage.CargoSmall>() {
-      override val all: Batch
+      override val all: ItemStorage.CargoSmall.Batch
         get() = intrinsic()
 
-      override fun named(name: String): Batch = intrinsic()
-
-      /** A batch of StructureCargoStorageSmall devices. */
-      class Batch internal constructor() : DeviceBatch<ItemStorage.CargoSmall>() {
-        /** A slot of every one in the batch, by number. */
-        val slots: Slots<SlotBatch<DataDiskSlot>>
-          get() = intrinsic()
-      }
+      override fun named(name: String): ItemStorage.CargoSmall.Batch = intrinsic()
     }
   }
 
@@ -2008,19 +2008,19 @@ interface ItemStorage {
     val slots: Slots<DataDiskSlot>
       get() = intrinsic()
 
+    /** A batch of StructureCargoStorageMedium devices. */
+    class Batch internal constructor() : DeviceBatch<ItemStorage.CargoMedium>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureCargoStorageMedium prefab. */
     companion object : Prefab<ItemStorage.CargoMedium>() {
-      override val all: Batch
+      override val all: ItemStorage.CargoMedium.Batch
         get() = intrinsic()
 
-      override fun named(name: String): Batch = intrinsic()
-
-      /** A batch of StructureCargoStorageMedium devices. */
-      class Batch internal constructor() : DeviceBatch<ItemStorage.CargoMedium>() {
-        /** A slot of every one in the batch, by number. */
-        val slots: Slots<SlotBatch<DataDiskSlot>>
-          get() = intrinsic()
-      }
+      override fun named(name: String): ItemStorage.CargoMedium.Batch = intrinsic()
     }
   }
 
@@ -2075,19 +2075,19 @@ interface ItemStorage {
     val slots: Slots<DataDiskSlot>
       get() = intrinsic()
 
+    /** A batch of StructureSDBSilo devices. */
+    class Batch internal constructor() : DeviceBatch<ItemStorage.SdbSilo>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureSDBSilo prefab. */
     companion object : Prefab<ItemStorage.SdbSilo>() {
-      override val all: Batch
+      override val all: ItemStorage.SdbSilo.Batch
         get() = intrinsic()
 
-      override fun named(name: String): Batch = intrinsic()
-
-      /** A batch of StructureSDBSilo devices. */
-      class Batch internal constructor() : DeviceBatch<ItemStorage.SdbSilo>() {
-        /** A slot of every one in the batch, by number. */
-        val slots: Slots<SlotBatch<DataDiskSlot>>
-          get() = intrinsic()
-      }
+      override fun named(name: String): ItemStorage.SdbSilo.Batch = intrinsic()
     }
   }
 }
@@ -2285,19 +2285,19 @@ interface VendingMachine {
     val slots: Slots<DataDiskSlot>
       get() = intrinsic()
 
+    /** A batch of StructureVendingMachine devices. */
+    class Batch internal constructor() : DeviceBatch<VendingMachine.Standard>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureVendingMachine prefab. */
     companion object : Prefab<VendingMachine.Standard>() {
-      override val all: Batch
+      override val all: VendingMachine.Standard.Batch
         get() = intrinsic()
 
-      override fun named(name: String): Batch = intrinsic()
-
-      /** A batch of StructureVendingMachine devices. */
-      class Batch internal constructor() : DeviceBatch<VendingMachine.Standard>() {
-        /** A slot of every one in the batch, by number. */
-        val slots: Slots<SlotBatch<DataDiskSlot>>
-          get() = intrinsic()
-      }
+      override fun named(name: String): VendingMachine.Standard.Batch = intrinsic()
     }
   }
 
@@ -2357,19 +2357,19 @@ interface VendingMachine {
     val slots: Slots<DataDiskSlot>
       get() = intrinsic()
 
+    /** A batch of StructureVendingMachineSmall devices. */
+    class Batch internal constructor() : DeviceBatch<VendingMachine.Small>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureVendingMachineSmall prefab. */
     companion object : Prefab<VendingMachine.Small>() {
-      override val all: Batch
+      override val all: VendingMachine.Small.Batch
         get() = intrinsic()
 
-      override fun named(name: String): Batch = intrinsic()
-
-      /** A batch of StructureVendingMachineSmall devices. */
-      class Batch internal constructor() : DeviceBatch<VendingMachine.Small>() {
-        /** A slot of every one in the batch, by number. */
-        val slots: Slots<SlotBatch<DataDiskSlot>>
-          get() = intrinsic()
-      }
+      override fun named(name: String): VendingMachine.Small.Batch = intrinsic()
     }
   }
 
@@ -2453,19 +2453,19 @@ interface VendingMachine {
     val slots: Slots<DataDiskSlot>
       get() = intrinsic()
 
+    /** A batch of StructureRefrigeratedVendingMachine devices. */
+    class Batch internal constructor() : DeviceBatch<VendingMachine.Refrigerated>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureRefrigeratedVendingMachine prefab. */
     companion object : Prefab<VendingMachine.Refrigerated>() {
-      override val all: Batch
+      override val all: VendingMachine.Refrigerated.Batch
         get() = intrinsic()
 
-      override fun named(name: String): Batch = intrinsic()
-
-      /** A batch of StructureRefrigeratedVendingMachine devices. */
-      class Batch internal constructor() : DeviceBatch<VendingMachine.Refrigerated>() {
-        /** A slot of every one in the batch, by number. */
-        val slots: Slots<SlotBatch<DataDiskSlot>>
-          get() = intrinsic()
-      }
+      override fun named(name: String): VendingMachine.Refrigerated.Batch = intrinsic()
     }
   }
 }
@@ -2631,19 +2631,19 @@ interface BatteryCharger {
     val slots: Slots<BatterySlot>
       get() = intrinsic()
 
+    /** A batch of StructureBatteryCharger devices. */
+    class Batch internal constructor() : DeviceBatch<BatteryCharger.Standard>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<BatterySlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureBatteryCharger prefab. */
     companion object : Prefab<BatteryCharger.Standard>() {
-      override val all: Batch
+      override val all: BatteryCharger.Standard.Batch
         get() = intrinsic()
 
-      override fun named(name: String): Batch = intrinsic()
-
-      /** A batch of StructureBatteryCharger devices. */
-      class Batch internal constructor() : DeviceBatch<BatteryCharger.Standard>() {
-        /** A slot of every one in the batch, by number. */
-        val slots: Slots<SlotBatch<BatterySlot>>
-          get() = intrinsic()
-      }
+      override fun named(name: String): BatteryCharger.Standard.Batch = intrinsic()
     }
   }
 
@@ -2671,19 +2671,19 @@ interface BatteryCharger {
     val slots: Slots<BatterySlot>
       get() = intrinsic()
 
+    /** A batch of StructureBatteryChargerSmall devices. */
+    class Batch internal constructor() : DeviceBatch<BatteryCharger.Small>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<BatterySlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureBatteryChargerSmall prefab. */
     companion object : Prefab<BatteryCharger.Small>() {
-      override val all: Batch
+      override val all: BatteryCharger.Small.Batch
         get() = intrinsic()
 
-      override fun named(name: String): Batch = intrinsic()
-
-      /** A batch of StructureBatteryChargerSmall devices. */
-      class Batch internal constructor() : DeviceBatch<BatteryCharger.Small>() {
-        /** A slot of every one in the batch, by number. */
-        val slots: Slots<SlotBatch<BatterySlot>>
-          get() = intrinsic()
-      }
+      override fun named(name: String): BatteryCharger.Small.Batch = intrinsic()
     }
   }
 }
@@ -3427,19 +3427,19 @@ interface TankStorage {
     val GasCanister: GasCanisterSlot
       get() = intrinsic()
 
+    /** A batch of StructureGasTankStorage devices. */
+    class Batch internal constructor() : DeviceBatch<TankStorage.Gas>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<GasCanisterSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureGasTankStorage prefab. */
     companion object : Prefab<TankStorage.Gas>() {
-      override val all: Batch
+      override val all: TankStorage.Gas.Batch
         get() = intrinsic()
 
-      override fun named(name: String): Batch = intrinsic()
-
-      /** A batch of StructureGasTankStorage devices. */
-      class Batch internal constructor() : DeviceBatch<TankStorage.Gas>() {
-        /** A slot of every one in the batch, by number. */
-        val slots: Slots<SlotBatch<GasCanisterSlot>>
-          get() = intrinsic()
-      }
+      override fun named(name: String): TankStorage.Gas.Batch = intrinsic()
     }
   }
 
@@ -3472,19 +3472,19 @@ interface TankStorage {
     val LiquidCanister: GasCanisterSlot
       get() = intrinsic()
 
+    /** A batch of StructureLiquidTankStorage devices. */
+    class Batch internal constructor() : DeviceBatch<TankStorage.Liquid>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<GasCanisterSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureLiquidTankStorage prefab. */
     companion object : Prefab<TankStorage.Liquid>() {
-      override val all: Batch
+      override val all: TankStorage.Liquid.Batch
         get() = intrinsic()
 
-      override fun named(name: String): Batch = intrinsic()
-
-      /** A batch of StructureLiquidTankStorage devices. */
-      class Batch internal constructor() : DeviceBatch<TankStorage.Liquid>() {
-        /** A slot of every one in the batch, by number. */
-        val slots: Slots<SlotBatch<GasCanisterSlot>>
-          get() = intrinsic()
-      }
+      override fun named(name: String): TankStorage.Liquid.Batch = intrinsic()
     }
   }
 }
@@ -3891,19 +3891,19 @@ interface Filtration {
     val ProgrammableChip: DataDiskSlot
       get() = intrinsic()
 
+    /** A batch of StructureFiltration devices. */
+    class Batch internal constructor() : DeviceBatch<Filtration.Gas>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<CommonSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureFiltration prefab. */
     companion object : Prefab<Filtration.Gas>() {
-      override val all: Batch
+      override val all: Filtration.Gas.Batch
         get() = intrinsic()
 
-      override fun named(name: String): Batch = intrinsic()
-
-      /** A batch of StructureFiltration devices. */
-      class Batch internal constructor() : DeviceBatch<Filtration.Gas>() {
-        /** A slot of every one in the batch, by number. */
-        val slots: Slots<SlotBatch<CommonSlot>>
-          get() = intrinsic()
-      }
+      override fun named(name: String): Filtration.Gas.Batch = intrinsic()
     }
   }
 
@@ -3962,19 +3962,19 @@ interface Filtration {
     val ProgrammableChip: DataDiskSlot
       get() = intrinsic()
 
+    /** A batch of StructureFiltrationLiquid devices. */
+    class Batch internal constructor() : DeviceBatch<Filtration.Liquid>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<CommonSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureFiltrationLiquid prefab. */
     companion object : Prefab<Filtration.Liquid>() {
-      override val all: Batch
+      override val all: Filtration.Liquid.Batch
         get() = intrinsic()
 
-      override fun named(name: String): Batch = intrinsic()
-
-      /** A batch of StructureFiltrationLiquid devices. */
-      class Batch internal constructor() : DeviceBatch<Filtration.Liquid>() {
-        /** A slot of every one in the batch, by number. */
-        val slots: Slots<SlotBatch<CommonSlot>>
-          get() = intrinsic()
-      }
+      override fun named(name: String): Filtration.Liquid.Batch = intrinsic()
     }
   }
 
@@ -4029,19 +4029,19 @@ interface Filtration {
     val GasFilter: FilterSlot
       get() = intrinsic()
 
+    /** A batch of StructureRocketFiltrationGas devices. */
+    class Batch internal constructor() : DeviceBatch<Filtration.RocketGas>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<FilterSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureRocketFiltrationGas prefab. */
     companion object : Prefab<Filtration.RocketGas>() {
-      override val all: Batch
+      override val all: Filtration.RocketGas.Batch
         get() = intrinsic()
 
-      override fun named(name: String): Batch = intrinsic()
-
-      /** A batch of StructureRocketFiltrationGas devices. */
-      class Batch internal constructor() : DeviceBatch<Filtration.RocketGas>() {
-        /** A slot of every one in the batch, by number. */
-        val slots: Slots<SlotBatch<FilterSlot>>
-          get() = intrinsic()
-      }
+      override fun named(name: String): Filtration.RocketGas.Batch = intrinsic()
     }
   }
 }
@@ -4994,19 +4994,19 @@ interface LandingPadTankConnector {
     val PortableSlot: DataDiskSlot
       get() = intrinsic()
 
+    /** A batch of Landingpad_GasTankConnectorPiece devices. */
+    class Batch internal constructor() : DeviceBatch<LandingPadTankConnector.Gas>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+
     /** The Landingpad_GasTankConnectorPiece prefab. */
     companion object : Prefab<LandingPadTankConnector.Gas>() {
-      override val all: Batch
+      override val all: LandingPadTankConnector.Gas.Batch
         get() = intrinsic()
 
-      override fun named(name: String): Batch = intrinsic()
-
-      /** A batch of Landingpad_GasTankConnectorPiece devices. */
-      class Batch internal constructor() : DeviceBatch<LandingPadTankConnector.Gas>() {
-        /** A slot of every one in the batch, by number. */
-        val slots: Slots<SlotBatch<DataDiskSlot>>
-          get() = intrinsic()
-      }
+      override fun named(name: String): LandingPadTankConnector.Gas.Batch = intrinsic()
     }
   }
 
@@ -5039,19 +5039,19 @@ interface LandingPadTankConnector {
     val PortableSlot: DataDiskSlot
       get() = intrinsic()
 
+    /** A batch of Landingpad_LiquidTankConnectorPiece devices. */
+    class Batch internal constructor() : DeviceBatch<LandingPadTankConnector.Liquid>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+
     /** The Landingpad_LiquidTankConnectorPiece prefab. */
     companion object : Prefab<LandingPadTankConnector.Liquid>() {
-      override val all: Batch
+      override val all: LandingPadTankConnector.Liquid.Batch
         get() = intrinsic()
 
-      override fun named(name: String): Batch = intrinsic()
-
-      /** A batch of Landingpad_LiquidTankConnectorPiece devices. */
-      class Batch internal constructor() : DeviceBatch<LandingPadTankConnector.Liquid>() {
-        /** A slot of every one in the batch, by number. */
-        val slots: Slots<SlotBatch<DataDiskSlot>>
-          get() = intrinsic()
-      }
+      override fun named(name: String): LandingPadTankConnector.Liquid.Batch = intrinsic()
     }
   }
 }
@@ -5536,19 +5536,19 @@ interface Reprocessor {
     val slots: Slots<DataDiskSlot>
       get() = intrinsic()
 
+    /** A batch of StructureCentrifuge devices. */
+    class Batch internal constructor() : DeviceBatch<Reprocessor.Centrifuge>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureCentrifuge prefab. */
     companion object : Prefab<Reprocessor.Centrifuge>() {
-      override val all: Batch
+      override val all: Reprocessor.Centrifuge.Batch
         get() = intrinsic()
 
-      override fun named(name: String): Batch = intrinsic()
-
-      /** A batch of StructureCentrifuge devices. */
-      class Batch internal constructor() : DeviceBatch<Reprocessor.Centrifuge>() {
-        /** A slot of every one in the batch, by number. */
-        val slots: Slots<SlotBatch<DataDiskSlot>>
-          get() = intrinsic()
-      }
+      override fun named(name: String): Reprocessor.Centrifuge.Batch = intrinsic()
     }
   }
 
@@ -5642,19 +5642,19 @@ interface Reprocessor {
     val ProgrammableChip: DataDiskSlot
       get() = intrinsic()
 
+    /** A batch of StructureCombustionCentrifuge devices. */
+    class Batch internal constructor() : DeviceBatch<Reprocessor.CombustionCentrifuge>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureCombustionCentrifuge prefab. */
     companion object : Prefab<Reprocessor.CombustionCentrifuge>() {
-      override val all: Batch
+      override val all: Reprocessor.CombustionCentrifuge.Batch
         get() = intrinsic()
 
-      override fun named(name: String): Batch = intrinsic()
-
-      /** A batch of StructureCombustionCentrifuge devices. */
-      class Batch internal constructor() : DeviceBatch<Reprocessor.CombustionCentrifuge>() {
-        /** A slot of every one in the batch, by number. */
-        val slots: Slots<SlotBatch<DataDiskSlot>>
-          get() = intrinsic()
-      }
+      override fun named(name: String): Reprocessor.CombustionCentrifuge.Batch = intrinsic()
     }
   }
 
@@ -5697,19 +5697,19 @@ interface Reprocessor {
     val slots: Slots<DataDiskSlot>
       get() = intrinsic()
 
+    /** A batch of StructureRecycler devices. */
+    class Batch internal constructor() : DeviceBatch<Reprocessor.Recycler>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureRecycler prefab. */
     companion object : Prefab<Reprocessor.Recycler>() {
-      override val all: Batch
+      override val all: Reprocessor.Recycler.Batch
         get() = intrinsic()
 
-      override fun named(name: String): Batch = intrinsic()
-
-      /** A batch of StructureRecycler devices. */
-      class Batch internal constructor() : DeviceBatch<Reprocessor.Recycler>() {
-        /** A slot of every one in the batch, by number. */
-        val slots: Slots<SlotBatch<DataDiskSlot>>
-          get() = intrinsic()
-      }
+      override fun named(name: String): Reprocessor.Recycler.Batch = intrinsic()
     }
   }
 }
@@ -5815,19 +5815,19 @@ interface Furnace {
     val slots: Slots<DataDiskSlot>
       get() = intrinsic()
 
+    /** A batch of StructureFurnace devices. */
+    class Batch internal constructor() : DeviceBatch<Furnace.Standard>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureFurnace prefab. */
     companion object : Prefab<Furnace.Standard>() {
-      override val all: Batch
+      override val all: Furnace.Standard.Batch
         get() = intrinsic()
 
-      override fun named(name: String): Batch = intrinsic()
-
-      /** A batch of StructureFurnace devices. */
-      class Batch internal constructor() : DeviceBatch<Furnace.Standard>() {
-        /** A slot of every one in the batch, by number. */
-        val slots: Slots<SlotBatch<DataDiskSlot>>
-          get() = intrinsic()
-      }
+      override fun named(name: String): Furnace.Standard.Batch = intrinsic()
     }
   }
 
@@ -5919,19 +5919,19 @@ interface Furnace {
     val slots: Slots<DataDiskSlot>
       get() = intrinsic()
 
+    /** A batch of StructureAdvancedFurnace devices. */
+    class Batch internal constructor() : DeviceBatch<Furnace.Advanced>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureAdvancedFurnace prefab. */
     companion object : Prefab<Furnace.Advanced>() {
-      override val all: Batch
+      override val all: Furnace.Advanced.Batch
         get() = intrinsic()
 
-      override fun named(name: String): Batch = intrinsic()
-
-      /** A batch of StructureAdvancedFurnace devices. */
-      class Batch internal constructor() : DeviceBatch<Furnace.Advanced>() {
-        /** A slot of every one in the batch, by number. */
-        val slots: Slots<SlotBatch<DataDiskSlot>>
-          get() = intrinsic()
-      }
+      override fun named(name: String): Furnace.Advanced.Batch = intrinsic()
     }
   }
 }
@@ -5971,19 +5971,19 @@ interface Tablet {
     val Cartridge: ItemCommonSlot
       get() = intrinsic()
 
+    /** A batch of ItemTablet devices. */
+    class Batch internal constructor() : DeviceBatch<Tablet.Standard>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<ItemCommonSlot>>
+        get() = intrinsic()
+    }
+
     /** The ItemTablet prefab. */
     companion object : Prefab<Tablet.Standard>() {
-      override val all: Batch
+      override val all: Tablet.Standard.Batch
         get() = intrinsic()
 
-      override fun named(name: String): Batch = intrinsic()
-
-      /** A batch of ItemTablet devices. */
-      class Batch internal constructor() : DeviceBatch<Tablet.Standard>() {
-        /** A slot of every one in the batch, by number. */
-        val slots: Slots<SlotBatch<ItemCommonSlot>>
-          get() = intrinsic()
-      }
+      override fun named(name: String): Tablet.Standard.Batch = intrinsic()
     }
   }
 
@@ -6040,19 +6040,19 @@ interface Tablet {
     val ProgrammableChip: ItemCommonSlot
       get() = intrinsic()
 
+    /** A batch of ItemAdvancedTablet devices. */
+    class Batch internal constructor() : DeviceBatch<Tablet.Advanced>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<ItemCommonSlot>>
+        get() = intrinsic()
+    }
+
     /** The ItemAdvancedTablet prefab. */
     companion object : Prefab<Tablet.Advanced>() {
-      override val all: Batch
+      override val all: Tablet.Advanced.Batch
         get() = intrinsic()
 
-      override fun named(name: String): Batch = intrinsic()
-
-      /** A batch of ItemAdvancedTablet devices. */
-      class Batch internal constructor() : DeviceBatch<Tablet.Advanced>() {
-        /** A slot of every one in the batch, by number. */
-        val slots: Slots<SlotBatch<ItemCommonSlot>>
-          get() = intrinsic()
-      }
+      override fun named(name: String): Tablet.Advanced.Batch = intrinsic()
     }
   }
 }
@@ -6082,19 +6082,19 @@ interface SDBHopper {
     val slots: Slots<DataDiskSlot>
       get() = intrinsic()
 
+    /** A batch of StructureSDBHopper devices. */
+    class Batch internal constructor() : DeviceBatch<SDBHopper.Standard>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureSDBHopper prefab. */
     companion object : Prefab<SDBHopper.Standard>() {
-      override val all: Batch
+      override val all: SDBHopper.Standard.Batch
         get() = intrinsic()
 
-      override fun named(name: String): Batch = intrinsic()
-
-      /** A batch of StructureSDBHopper devices. */
-      class Batch internal constructor() : DeviceBatch<SDBHopper.Standard>() {
-        /** A slot of every one in the batch, by number. */
-        val slots: Slots<SlotBatch<DataDiskSlot>>
-          get() = intrinsic()
-      }
+      override fun named(name: String): SDBHopper.Standard.Batch = intrinsic()
     }
   }
 
@@ -6121,19 +6121,19 @@ interface SDBHopper {
     val slots: Slots<DataDiskSlot>
       get() = intrinsic()
 
+    /** A batch of StructureSDBHopperAdvanced devices. */
+    class Batch internal constructor() : DeviceBatch<SDBHopper.Advanced>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureSDBHopperAdvanced prefab. */
     companion object : Prefab<SDBHopper.Advanced>() {
-      override val all: Batch
+      override val all: SDBHopper.Advanced.Batch
         get() = intrinsic()
 
-      override fun named(name: String): Batch = intrinsic()
-
-      /** A batch of StructureSDBHopperAdvanced devices. */
-      class Batch internal constructor() : DeviceBatch<SDBHopper.Advanced>() {
-        /** A slot of every one in the batch, by number. */
-        val slots: Slots<SlotBatch<DataDiskSlot>>
-          get() = intrinsic()
-      }
+      override fun named(name: String): SDBHopper.Advanced.Batch = intrinsic()
     }
   }
 }
@@ -6178,19 +6178,19 @@ interface Bench {
     val Appliance2: ApplianceSlot
       get() = intrinsic()
 
+    /** A batch of StructureBench devices. */
+    class Batch internal constructor() : DeviceBatch<Bench.Powered>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<ApplianceSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureBench prefab. */
     companion object : Prefab<Bench.Powered>() {
-      override val all: Batch
+      override val all: Bench.Powered.Batch
         get() = intrinsic()
 
-      override fun named(name: String): Batch = intrinsic()
-
-      /** A batch of StructureBench devices. */
-      class Batch internal constructor() : DeviceBatch<Bench.Powered>() {
-        /** A slot of every one in the batch, by number. */
-        val slots: Slots<SlotBatch<ApplianceSlot>>
-          get() = intrinsic()
-      }
+      override fun named(name: String): Bench.Powered.Batch = intrinsic()
     }
   }
 
@@ -6224,19 +6224,19 @@ interface Bench {
     val Appliance2: ApplianceSlot
       get() = intrinsic()
 
+    /** A batch of StructureBench1 devices. */
+    class Batch internal constructor() : DeviceBatch<Bench.CounterStyle>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<ApplianceSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureBench1 prefab. */
     companion object : Prefab<Bench.CounterStyle>() {
-      override val all: Batch
+      override val all: Bench.CounterStyle.Batch
         get() = intrinsic()
 
-      override fun named(name: String): Batch = intrinsic()
-
-      /** A batch of StructureBench1 devices. */
-      class Batch internal constructor() : DeviceBatch<Bench.CounterStyle>() {
-        /** A slot of every one in the batch, by number. */
-        val slots: Slots<SlotBatch<ApplianceSlot>>
-          get() = intrinsic()
-      }
+      override fun named(name: String): Bench.CounterStyle.Batch = intrinsic()
     }
   }
 
@@ -6270,19 +6270,19 @@ interface Bench {
     val Appliance2: ApplianceSlot
       get() = intrinsic()
 
+    /** A batch of StructureBench2 devices. */
+    class Batch internal constructor() : DeviceBatch<Bench.HighTechStyle>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<ApplianceSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureBench2 prefab. */
     companion object : Prefab<Bench.HighTechStyle>() {
-      override val all: Batch
+      override val all: Bench.HighTechStyle.Batch
         get() = intrinsic()
 
-      override fun named(name: String): Batch = intrinsic()
-
-      /** A batch of StructureBench2 devices. */
-      class Batch internal constructor() : DeviceBatch<Bench.HighTechStyle>() {
-        /** A slot of every one in the batch, by number. */
-        val slots: Slots<SlotBatch<ApplianceSlot>>
-          get() = intrinsic()
-      }
+      override fun named(name: String): Bench.HighTechStyle.Batch = intrinsic()
     }
   }
 
@@ -6316,19 +6316,19 @@ interface Bench {
     val Appliance2: ApplianceSlot
       get() = intrinsic()
 
+    /** A batch of StructureBench3 devices. */
+    class Batch internal constructor() : DeviceBatch<Bench.FrameStyle>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<ApplianceSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureBench3 prefab. */
     companion object : Prefab<Bench.FrameStyle>() {
-      override val all: Batch
+      override val all: Bench.FrameStyle.Batch
         get() = intrinsic()
 
-      override fun named(name: String): Batch = intrinsic()
-
-      /** A batch of StructureBench3 devices. */
-      class Batch internal constructor() : DeviceBatch<Bench.FrameStyle>() {
-        /** A slot of every one in the batch, by number. */
-        val slots: Slots<SlotBatch<ApplianceSlot>>
-          get() = intrinsic()
-      }
+      override fun named(name: String): Bench.FrameStyle.Batch = intrinsic()
     }
   }
 
@@ -6362,19 +6362,19 @@ interface Bench {
     val Appliance2: ApplianceSlot
       get() = intrinsic()
 
+    /** A batch of StructureBench4 devices. */
+    class Batch internal constructor() : DeviceBatch<Bench.WorkbenchStyle>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<ApplianceSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureBench4 prefab. */
     companion object : Prefab<Bench.WorkbenchStyle>() {
-      override val all: Batch
+      override val all: Bench.WorkbenchStyle.Batch
         get() = intrinsic()
 
-      override fun named(name: String): Batch = intrinsic()
-
-      /** A batch of StructureBench4 devices. */
-      class Batch internal constructor() : DeviceBatch<Bench.WorkbenchStyle>() {
-        /** A slot of every one in the batch, by number. */
-        val slots: Slots<SlotBatch<ApplianceSlot>>
-          get() = intrinsic()
-      }
+      override fun named(name: String): Bench.WorkbenchStyle.Batch = intrinsic()
     }
   }
 }
@@ -6400,19 +6400,19 @@ interface Locker {
     val slots: Slots<DataDiskSlot>
       get() = intrinsic()
 
+    /** A batch of StructureStorageLocker devices. */
+    class Batch internal constructor() : DeviceBatch<Locker.Standard>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureStorageLocker prefab. */
     companion object : Prefab<Locker.Standard>() {
-      override val all: Batch
+      override val all: Locker.Standard.Batch
         get() = intrinsic()
 
-      override fun named(name: String): Batch = intrinsic()
-
-      /** A batch of StructureStorageLocker devices. */
-      class Batch internal constructor() : DeviceBatch<Locker.Standard>() {
-        /** A slot of every one in the batch, by number. */
-        val slots: Slots<SlotBatch<DataDiskSlot>>
-          get() = intrinsic()
-      }
+      override fun named(name: String): Locker.Standard.Batch = intrinsic()
     }
   }
 
@@ -6431,19 +6431,19 @@ interface Locker {
     val slots: Slots<DataDiskSlot>
       get() = intrinsic()
 
+    /** A batch of StructureLockerSmall devices. */
+    class Batch internal constructor() : DeviceBatch<Locker.Small>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureLockerSmall prefab. */
     companion object : Prefab<Locker.Small>() {
-      override val all: Batch
+      override val all: Locker.Small.Batch
         get() = intrinsic()
 
-      override fun named(name: String): Batch = intrinsic()
-
-      /** A batch of StructureLockerSmall devices. */
-      class Batch internal constructor() : DeviceBatch<Locker.Small>() {
-        /** A slot of every one in the batch, by number. */
-        val slots: Slots<SlotBatch<DataDiskSlot>>
-          get() = intrinsic()
-      }
+      override fun named(name: String): Locker.Small.Batch = intrinsic()
     }
   }
 
@@ -6462,19 +6462,19 @@ interface Locker {
     val slots: Slots<DataDiskSlot>
       get() = intrinsic()
 
+    /** A batch of StructureCornerLocker devices. */
+    class Batch internal constructor() : DeviceBatch<Locker.Corner>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureCornerLocker prefab. */
     companion object : Prefab<Locker.Corner>() {
-      override val all: Batch
+      override val all: Locker.Corner.Batch
         get() = intrinsic()
 
-      override fun named(name: String): Batch = intrinsic()
-
-      /** A batch of StructureCornerLocker devices. */
-      class Batch internal constructor() : DeviceBatch<Locker.Corner>() {
-        /** A slot of every one in the batch, by number. */
-        val slots: Slots<SlotBatch<DataDiskSlot>>
-          get() = intrinsic()
-      }
+      override fun named(name: String): Locker.Corner.Batch = intrinsic()
     }
   }
 
@@ -6493,19 +6493,19 @@ interface Locker {
     val slots: Slots<DataDiskSlot>
       get() = intrinsic()
 
+    /** A batch of StructureShortLocker devices. */
+    class Batch internal constructor() : DeviceBatch<Locker.Short>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureShortLocker prefab. */
     companion object : Prefab<Locker.Short>() {
-      override val all: Batch
+      override val all: Locker.Short.Batch
         get() = intrinsic()
 
-      override fun named(name: String): Batch = intrinsic()
-
-      /** A batch of StructureShortLocker devices. */
-      class Batch internal constructor() : DeviceBatch<Locker.Short>() {
-        /** A slot of every one in the batch, by number. */
-        val slots: Slots<SlotBatch<DataDiskSlot>>
-          get() = intrinsic()
-      }
+      override fun named(name: String): Locker.Short.Batch = intrinsic()
     }
   }
 
@@ -6524,19 +6524,19 @@ interface Locker {
     val slots: Slots<DataDiskSlot>
       get() = intrinsic()
 
+    /** A batch of StructureShortCornerLocker devices. */
+    class Batch internal constructor() : DeviceBatch<Locker.ShortCorner>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureShortCornerLocker prefab. */
     companion object : Prefab<Locker.ShortCorner>() {
-      override val all: Batch
+      override val all: Locker.ShortCorner.Batch
         get() = intrinsic()
 
-      override fun named(name: String): Batch = intrinsic()
-
-      /** A batch of StructureShortCornerLocker devices. */
-      class Batch internal constructor() : DeviceBatch<Locker.ShortCorner>() {
-        /** A slot of every one in the batch, by number. */
-        val slots: Slots<SlotBatch<DataDiskSlot>>
-          get() = intrinsic()
-      }
+      override fun named(name: String): Locker.ShortCorner.Batch = intrinsic()
     }
   }
 
@@ -6555,19 +6555,19 @@ interface Locker {
     val slots: Slots<DataDiskSlot>
       get() = intrinsic()
 
+    /** A batch of StructureOverheadShortLocker devices. */
+    class Batch internal constructor() : DeviceBatch<Locker.Overhead>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureOverheadShortLocker prefab. */
     companion object : Prefab<Locker.Overhead>() {
-      override val all: Batch
+      override val all: Locker.Overhead.Batch
         get() = intrinsic()
 
-      override fun named(name: String): Batch = intrinsic()
-
-      /** A batch of StructureOverheadShortLocker devices. */
-      class Batch internal constructor() : DeviceBatch<Locker.Overhead>() {
-        /** A slot of every one in the batch, by number. */
-        val slots: Slots<SlotBatch<DataDiskSlot>>
-          get() = intrinsic()
-      }
+      override fun named(name: String): Locker.Overhead.Batch = intrinsic()
     }
   }
 
@@ -6586,19 +6586,19 @@ interface Locker {
     val slots: Slots<DataDiskSlot>
       get() = intrinsic()
 
+    /** A batch of StructureOverheadShortCornerLocker devices. */
+    class Batch internal constructor() : DeviceBatch<Locker.OverheadCorner>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureOverheadShortCornerLocker prefab. */
     companion object : Prefab<Locker.OverheadCorner>() {
-      override val all: Batch
+      override val all: Locker.OverheadCorner.Batch
         get() = intrinsic()
 
-      override fun named(name: String): Batch = intrinsic()
-
-      /** A batch of StructureOverheadShortCornerLocker devices. */
-      class Batch internal constructor() : DeviceBatch<Locker.OverheadCorner>() {
-        /** A slot of every one in the batch, by number. */
-        val slots: Slots<SlotBatch<DataDiskSlot>>
-          get() = intrinsic()
-      }
+      override fun named(name: String): Locker.OverheadCorner.Batch = intrinsic()
     }
   }
 }
@@ -6686,19 +6686,19 @@ interface AreaPowerControl {
     val DataDisk: DataDiskSlot
       get() = intrinsic()
 
+    /** A batch of StructureAreaPowerControl devices. */
+    class Batch internal constructor() : DeviceBatch<AreaPowerControl.Standard>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<CommonSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureAreaPowerControl prefab. */
     companion object : Prefab<AreaPowerControl.Standard>() {
-      override val all: Batch
+      override val all: AreaPowerControl.Standard.Batch
         get() = intrinsic()
 
-      override fun named(name: String): Batch = intrinsic()
-
-      /** A batch of StructureAreaPowerControl devices. */
-      class Batch internal constructor() : DeviceBatch<AreaPowerControl.Standard>() {
-        /** A slot of every one in the batch, by number. */
-        val slots: Slots<SlotBatch<CommonSlot>>
-          get() = intrinsic()
-      }
+      override fun named(name: String): AreaPowerControl.Standard.Batch = intrinsic()
     }
   }
 
@@ -6759,19 +6759,19 @@ interface AreaPowerControl {
     val DataDisk: DataDiskSlot
       get() = intrinsic()
 
+    /** A batch of StructureAreaPowerControlReversed devices. */
+    class Batch internal constructor() : DeviceBatch<AreaPowerControl.Reversed>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<CommonSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureAreaPowerControlReversed prefab. */
     companion object : Prefab<AreaPowerControl.Reversed>() {
-      override val all: Batch
+      override val all: AreaPowerControl.Reversed.Batch
         get() = intrinsic()
 
-      override fun named(name: String): Batch = intrinsic()
-
-      /** A batch of StructureAreaPowerControlReversed devices. */
-      class Batch internal constructor() : DeviceBatch<AreaPowerControl.Reversed>() {
-        /** A slot of every one in the batch, by number. */
-        val slots: Slots<SlotBatch<CommonSlot>>
-          get() = intrinsic()
-      }
+      override fun named(name: String): AreaPowerControl.Reversed.Batch = intrinsic()
     }
   }
 }
@@ -6828,19 +6828,19 @@ interface Console {
     val Circuitboard: CircuitboardSlot
       get() = intrinsic()
 
+    /** A batch of StructureConsole devices. */
+    class Batch internal constructor() : DeviceBatch<Console.Standard>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<CircuitboardSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureConsole prefab. */
     companion object : Prefab<Console.Standard>() {
-      override val all: Batch
+      override val all: Console.Standard.Batch
         get() = intrinsic()
 
-      override fun named(name: String): Batch = intrinsic()
-
-      /** A batch of StructureConsole devices. */
-      class Batch internal constructor() : DeviceBatch<Console.Standard>() {
-        /** A slot of every one in the batch, by number. */
-        val slots: Slots<SlotBatch<CircuitboardSlot>>
-          get() = intrinsic()
-      }
+      override fun named(name: String): Console.Standard.Batch = intrinsic()
     }
   }
 
@@ -6880,19 +6880,19 @@ interface Console {
     val Circuitboard: CircuitboardSlot
       get() = intrinsic()
 
+    /** A batch of StructureConsoleDual devices. */
+    class Batch internal constructor() : DeviceBatch<Console.Dual>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<CircuitboardSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureConsoleDual prefab. */
     companion object : Prefab<Console.Dual>() {
-      override val all: Batch
+      override val all: Console.Dual.Batch
         get() = intrinsic()
 
-      override fun named(name: String): Batch = intrinsic()
-
-      /** A batch of StructureConsoleDual devices. */
-      class Batch internal constructor() : DeviceBatch<Console.Dual>() {
-        /** A slot of every one in the batch, by number. */
-        val slots: Slots<SlotBatch<CircuitboardSlot>>
-          get() = intrinsic()
-      }
+      override fun named(name: String): Console.Dual.Batch = intrinsic()
     }
   }
 
@@ -6932,19 +6932,19 @@ interface Console {
     val Circuitboard: CircuitboardSlot
       get() = intrinsic()
 
+    /** A batch of StructureConsoleMonitor devices. */
+    class Batch internal constructor() : DeviceBatch<Console.Monitor>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<CircuitboardSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureConsoleMonitor prefab. */
     companion object : Prefab<Console.Monitor>() {
-      override val all: Batch
+      override val all: Console.Monitor.Batch
         get() = intrinsic()
 
-      override fun named(name: String): Batch = intrinsic()
-
-      /** A batch of StructureConsoleMonitor devices. */
-      class Batch internal constructor() : DeviceBatch<Console.Monitor>() {
-        /** A slot of every one in the batch, by number. */
-        val slots: Slots<SlotBatch<CircuitboardSlot>>
-          get() = intrinsic()
-      }
+      override fun named(name: String): Console.Monitor.Batch = intrinsic()
     }
   }
 }
@@ -7069,19 +7069,19 @@ interface WallLight {
     val Battery: BatterySlot
       get() = intrinsic()
 
+    /** A batch of StructureWallLightBattery devices. */
+    class Batch internal constructor() : DeviceBatch<WallLight.Battery>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<BatterySlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureWallLightBattery prefab. */
     companion object : Prefab<WallLight.Battery>() {
-      override val all: Batch
+      override val all: WallLight.Battery.Batch
         get() = intrinsic()
 
-      override fun named(name: String): Batch = intrinsic()
-
-      /** A batch of StructureWallLightBattery devices. */
-      class Batch internal constructor() : DeviceBatch<WallLight.Battery>() {
-        /** A slot of every one in the batch, by number. */
-        val slots: Slots<SlotBatch<BatterySlot>>
-          get() = intrinsic()
-      }
+      override fun named(name: String): WallLight.Battery.Batch = intrinsic()
     }
   }
 }
@@ -7138,19 +7138,19 @@ interface Miner {
     val slots: Slots<DataDiskSlot>
       get() = intrinsic()
 
+    /** A batch of StructureAutoMinerSmall devices. */
+    class Batch internal constructor() : DeviceBatch<Miner.AutominerSmall>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureAutoMinerSmall prefab. */
     companion object : Prefab<Miner.AutominerSmall>() {
-      override val all: Batch
+      override val all: Miner.AutominerSmall.Batch
         get() = intrinsic()
 
-      override fun named(name: String): Batch = intrinsic()
-
-      /** A batch of StructureAutoMinerSmall devices. */
-      class Batch internal constructor() : DeviceBatch<Miner.AutominerSmall>() {
-        /** A slot of every one in the batch, by number. */
-        val slots: Slots<SlotBatch<DataDiskSlot>>
-          get() = intrinsic()
-      }
+      override fun named(name: String): Miner.AutominerSmall.Batch = intrinsic()
     }
   }
 
@@ -7196,19 +7196,19 @@ interface Miner {
     val slots: Slots<DataDiskSlot>
       get() = intrinsic()
 
+    /** A batch of StructureDeepMiner devices. */
+    class Batch internal constructor() : DeviceBatch<Miner.Deep>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureDeepMiner prefab. */
     companion object : Prefab<Miner.Deep>() {
-      override val all: Batch
+      override val all: Miner.Deep.Batch
         get() = intrinsic()
 
-      override fun named(name: String): Batch = intrinsic()
-
-      /** A batch of StructureDeepMiner devices. */
-      class Batch internal constructor() : DeviceBatch<Miner.Deep>() {
-        /** A slot of every one in the batch, by number. */
-        val slots: Slots<SlotBatch<DataDiskSlot>>
-          get() = intrinsic()
-      }
+      override fun named(name: String): Miner.Deep.Batch = intrinsic()
     }
   }
 
@@ -7299,19 +7299,19 @@ interface Miner {
     val ProgrammableChip: DataDiskSlot
       get() = intrinsic()
 
+    /** A batch of StructureCombustionDeepMiner devices. */
+    class Batch internal constructor() : DeviceBatch<Miner.CombustionDeep>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureCombustionDeepMiner prefab. */
     companion object : Prefab<Miner.CombustionDeep>() {
-      override val all: Batch
+      override val all: Miner.CombustionDeep.Batch
         get() = intrinsic()
 
-      override fun named(name: String): Batch = intrinsic()
-
-      /** A batch of StructureCombustionDeepMiner devices. */
-      class Batch internal constructor() : DeviceBatch<Miner.CombustionDeep>() {
-        /** A slot of every one in the batch, by number. */
-        val slots: Slots<SlotBatch<DataDiskSlot>>
-          get() = intrinsic()
-      }
+      override fun named(name: String): Miner.CombustionDeep.Batch = intrinsic()
     }
   }
 
@@ -7359,19 +7359,19 @@ interface Miner {
     val slots: Slots<DataDiskSlot>
       get() = intrinsic()
 
+    /** A batch of StructureHorizontalAutoMiner devices. */
+    class Batch internal constructor() : DeviceBatch<Miner.Ogre>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureHorizontalAutoMiner prefab. */
     companion object : Prefab<Miner.Ogre>() {
-      override val all: Batch
+      override val all: Miner.Ogre.Batch
         get() = intrinsic()
 
-      override fun named(name: String): Batch = intrinsic()
-
-      /** A batch of StructureHorizontalAutoMiner devices. */
-      class Batch internal constructor() : DeviceBatch<Miner.Ogre>() {
-        /** A slot of every one in the batch, by number. */
-        val slots: Slots<SlotBatch<DataDiskSlot>>
-          get() = intrinsic()
-      }
+      override fun named(name: String): Miner.Ogre.Batch = intrinsic()
     }
   }
 
@@ -7422,19 +7422,19 @@ interface Miner {
     val DrillHeadSlot: DataDiskSlot
       get() = intrinsic()
 
+    /** A batch of StructureRocketMiner devices. */
+    class Batch internal constructor() : DeviceBatch<Miner.Rocket>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureRocketMiner prefab. */
     companion object : Prefab<Miner.Rocket>() {
-      override val all: Batch
+      override val all: Miner.Rocket.Batch
         get() = intrinsic()
 
-      override fun named(name: String): Batch = intrinsic()
-
-      /** A batch of StructureRocketMiner devices. */
-      class Batch internal constructor() : DeviceBatch<Miner.Rocket>() {
-        /** A slot of every one in the batch, by number. */
-        val slots: Slots<SlotBatch<DataDiskSlot>>
-          get() = intrinsic()
-      }
+      override fun named(name: String): Miner.Rocket.Batch = intrinsic()
     }
   }
 }
@@ -7481,19 +7481,19 @@ interface MiningDrill {
     val Battery: ItemBatterySlot
       get() = intrinsic()
 
+    /** A batch of ItemMiningDrill devices. */
+    class Batch internal constructor() : DeviceBatch<MiningDrill.Standard>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<ItemBatterySlot>>
+        get() = intrinsic()
+    }
+
     /** The ItemMiningDrill prefab. */
     companion object : Prefab<MiningDrill.Standard>() {
-      override val all: Batch
+      override val all: MiningDrill.Standard.Batch
         get() = intrinsic()
 
-      override fun named(name: String): Batch = intrinsic()
-
-      /** A batch of ItemMiningDrill devices. */
-      class Batch internal constructor() : DeviceBatch<MiningDrill.Standard>() {
-        /** A slot of every one in the batch, by number. */
-        val slots: Slots<SlotBatch<ItemBatterySlot>>
-          get() = intrinsic()
-      }
+      override fun named(name: String): MiningDrill.Standard.Batch = intrinsic()
     }
   }
 
@@ -7527,19 +7527,19 @@ interface MiningDrill {
     val Battery: ItemBatterySlot
       get() = intrinsic()
 
+    /** A batch of ItemMiningDrillHeavy devices. */
+    class Batch internal constructor() : DeviceBatch<MiningDrill.Heavy>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<ItemBatterySlot>>
+        get() = intrinsic()
+    }
+
     /** The ItemMiningDrillHeavy prefab. */
     companion object : Prefab<MiningDrill.Heavy>() {
-      override val all: Batch
+      override val all: MiningDrill.Heavy.Batch
         get() = intrinsic()
 
-      override fun named(name: String): Batch = intrinsic()
-
-      /** A batch of ItemMiningDrillHeavy devices. */
-      class Batch internal constructor() : DeviceBatch<MiningDrill.Heavy>() {
-        /** A slot of every one in the batch, by number. */
-        val slots: Slots<SlotBatch<ItemBatterySlot>>
-          get() = intrinsic()
-      }
+      override fun named(name: String): MiningDrill.Heavy.Batch = intrinsic()
     }
   }
 
@@ -7573,19 +7573,19 @@ interface MiningDrill {
     val Battery: ItemBatterySlot
       get() = intrinsic()
 
+    /** A batch of ItemMKIIMiningDrill devices. */
+    class Batch internal constructor() : DeviceBatch<MiningDrill.MkII>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<ItemBatterySlot>>
+        get() = intrinsic()
+    }
+
     /** The ItemMKIIMiningDrill prefab. */
     companion object : Prefab<MiningDrill.MkII>() {
-      override val all: Batch
+      override val all: MiningDrill.MkII.Batch
         get() = intrinsic()
 
-      override fun named(name: String): Batch = intrinsic()
-
-      /** A batch of ItemMKIIMiningDrill devices. */
-      class Batch internal constructor() : DeviceBatch<MiningDrill.MkII>() {
-        /** A slot of every one in the batch, by number. */
-        val slots: Slots<SlotBatch<ItemBatterySlot>>
-          get() = intrinsic()
-      }
+      override fun named(name: String): MiningDrill.MkII.Batch = intrinsic()
     }
   }
 }
@@ -7615,19 +7615,19 @@ interface HandDrill {
     val Battery: ItemBatterySlot
       get() = intrinsic()
 
+    /** A batch of ItemDrill devices. */
+    class Batch internal constructor() : DeviceBatch<HandDrill.Standard>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<ItemBatterySlot>>
+        get() = intrinsic()
+    }
+
     /** The ItemDrill prefab. */
     companion object : Prefab<HandDrill.Standard>() {
-      override val all: Batch
+      override val all: HandDrill.Standard.Batch
         get() = intrinsic()
 
-      override fun named(name: String): Batch = intrinsic()
-
-      /** A batch of ItemDrill devices. */
-      class Batch internal constructor() : DeviceBatch<HandDrill.Standard>() {
-        /** A slot of every one in the batch, by number. */
-        val slots: Slots<SlotBatch<ItemBatterySlot>>
-          get() = intrinsic()
-      }
+      override fun named(name: String): HandDrill.Standard.Batch = intrinsic()
     }
   }
 
@@ -7650,19 +7650,19 @@ interface HandDrill {
     val Battery: ItemBatterySlot
       get() = intrinsic()
 
+    /** A batch of ItemEmergencyDrill devices. */
+    class Batch internal constructor() : DeviceBatch<HandDrill.Emergency>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<ItemBatterySlot>>
+        get() = intrinsic()
+    }
+
     /** The ItemEmergencyDrill prefab. */
     companion object : Prefab<HandDrill.Emergency>() {
-      override val all: Batch
+      override val all: HandDrill.Emergency.Batch
         get() = intrinsic()
 
-      override fun named(name: String): Batch = intrinsic()
-
-      /** A batch of ItemEmergencyDrill devices. */
-      class Batch internal constructor() : DeviceBatch<HandDrill.Emergency>() {
-        /** A slot of every one in the batch, by number. */
-        val slots: Slots<SlotBatch<ItemBatterySlot>>
-          get() = intrinsic()
-      }
+      override fun named(name: String): HandDrill.Emergency.Batch = intrinsic()
     }
   }
 
@@ -7685,19 +7685,19 @@ interface HandDrill {
     val Battery: ItemBatterySlot
       get() = intrinsic()
 
+    /** A batch of ItemMKIIDrill devices. */
+    class Batch internal constructor() : DeviceBatch<HandDrill.MkII>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<ItemBatterySlot>>
+        get() = intrinsic()
+    }
+
     /** The ItemMKIIDrill prefab. */
     companion object : Prefab<HandDrill.MkII>() {
-      override val all: Batch
+      override val all: HandDrill.MkII.Batch
         get() = intrinsic()
 
-      override fun named(name: String): Batch = intrinsic()
-
-      /** A batch of ItemMKIIDrill devices. */
-      class Batch internal constructor() : DeviceBatch<HandDrill.MkII>() {
-        /** A slot of every one in the batch, by number. */
-        val slots: Slots<SlotBatch<ItemBatterySlot>>
-          get() = intrinsic()
-      }
+      override fun named(name: String): HandDrill.MkII.Batch = intrinsic()
     }
   }
 }
@@ -7727,19 +7727,19 @@ interface AngleGrinder {
     val Battery: ItemBatterySlot
       get() = intrinsic()
 
+    /** A batch of ItemAngleGrinder devices. */
+    class Batch internal constructor() : DeviceBatch<AngleGrinder.Standard>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<ItemBatterySlot>>
+        get() = intrinsic()
+    }
+
     /** The ItemAngleGrinder prefab. */
     companion object : Prefab<AngleGrinder.Standard>() {
-      override val all: Batch
+      override val all: AngleGrinder.Standard.Batch
         get() = intrinsic()
 
-      override fun named(name: String): Batch = intrinsic()
-
-      /** A batch of ItemAngleGrinder devices. */
-      class Batch internal constructor() : DeviceBatch<AngleGrinder.Standard>() {
-        /** A slot of every one in the batch, by number. */
-        val slots: Slots<SlotBatch<ItemBatterySlot>>
-          get() = intrinsic()
-      }
+      override fun named(name: String): AngleGrinder.Standard.Batch = intrinsic()
     }
   }
 
@@ -7762,19 +7762,19 @@ interface AngleGrinder {
     val Battery: ItemBatterySlot
       get() = intrinsic()
 
+    /** A batch of ItemEmergencyAngleGrinder devices. */
+    class Batch internal constructor() : DeviceBatch<AngleGrinder.Emergency>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<ItemBatterySlot>>
+        get() = intrinsic()
+    }
+
     /** The ItemEmergencyAngleGrinder prefab. */
     companion object : Prefab<AngleGrinder.Emergency>() {
-      override val all: Batch
+      override val all: AngleGrinder.Emergency.Batch
         get() = intrinsic()
 
-      override fun named(name: String): Batch = intrinsic()
-
-      /** A batch of ItemEmergencyAngleGrinder devices. */
-      class Batch internal constructor() : DeviceBatch<AngleGrinder.Emergency>() {
-        /** A slot of every one in the batch, by number. */
-        val slots: Slots<SlotBatch<ItemBatterySlot>>
-          get() = intrinsic()
-      }
+      override fun named(name: String): AngleGrinder.Emergency.Batch = intrinsic()
     }
   }
 
@@ -7797,19 +7797,19 @@ interface AngleGrinder {
     val Battery: ItemBatterySlot
       get() = intrinsic()
 
+    /** A batch of ItemMKIIAngleGrinder devices. */
+    class Batch internal constructor() : DeviceBatch<AngleGrinder.MkII>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<ItemBatterySlot>>
+        get() = intrinsic()
+    }
+
     /** The ItemMKIIAngleGrinder prefab. */
     companion object : Prefab<AngleGrinder.MkII>() {
-      override val all: Batch
+      override val all: AngleGrinder.MkII.Batch
         get() = intrinsic()
 
-      override fun named(name: String): Batch = intrinsic()
-
-      /** A batch of ItemMKIIAngleGrinder devices. */
-      class Batch internal constructor() : DeviceBatch<AngleGrinder.MkII>() {
-        /** A slot of every one in the batch, by number. */
-        val slots: Slots<SlotBatch<ItemBatterySlot>>
-          get() = intrinsic()
-      }
+      override fun named(name: String): AngleGrinder.MkII.Batch = intrinsic()
     }
   }
 }
@@ -7839,19 +7839,19 @@ interface ArcWelder {
     val Battery: ItemBatterySlot
       get() = intrinsic()
 
+    /** A batch of ItemArcWelder devices. */
+    class Batch internal constructor() : DeviceBatch<ArcWelder.Standard>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<ItemBatterySlot>>
+        get() = intrinsic()
+    }
+
     /** The ItemArcWelder prefab. */
     companion object : Prefab<ArcWelder.Standard>() {
-      override val all: Batch
+      override val all: ArcWelder.Standard.Batch
         get() = intrinsic()
 
-      override fun named(name: String): Batch = intrinsic()
-
-      /** A batch of ItemArcWelder devices. */
-      class Batch internal constructor() : DeviceBatch<ArcWelder.Standard>() {
-        /** A slot of every one in the batch, by number. */
-        val slots: Slots<SlotBatch<ItemBatterySlot>>
-          get() = intrinsic()
-      }
+      override fun named(name: String): ArcWelder.Standard.Batch = intrinsic()
     }
   }
 
@@ -7874,19 +7874,19 @@ interface ArcWelder {
     val Battery: ItemBatterySlot
       get() = intrinsic()
 
+    /** A batch of ItemEmergencyArcWelder devices. */
+    class Batch internal constructor() : DeviceBatch<ArcWelder.Emergency>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<ItemBatterySlot>>
+        get() = intrinsic()
+    }
+
     /** The ItemEmergencyArcWelder prefab. */
     companion object : Prefab<ArcWelder.Emergency>() {
-      override val all: Batch
+      override val all: ArcWelder.Emergency.Batch
         get() = intrinsic()
 
-      override fun named(name: String): Batch = intrinsic()
-
-      /** A batch of ItemEmergencyArcWelder devices. */
-      class Batch internal constructor() : DeviceBatch<ArcWelder.Emergency>() {
-        /** A slot of every one in the batch, by number. */
-        val slots: Slots<SlotBatch<ItemBatterySlot>>
-          get() = intrinsic()
-      }
+      override fun named(name: String): ArcWelder.Emergency.Batch = intrinsic()
     }
   }
 
@@ -7909,19 +7909,19 @@ interface ArcWelder {
     val Battery: ItemBatterySlot
       get() = intrinsic()
 
+    /** A batch of ItemMKIIArcWelder devices. */
+    class Batch internal constructor() : DeviceBatch<ArcWelder.MkII>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<ItemBatterySlot>>
+        get() = intrinsic()
+    }
+
     /** The ItemMKIIArcWelder prefab. */
     companion object : Prefab<ArcWelder.MkII>() {
-      override val all: Batch
+      override val all: ArcWelder.MkII.Batch
         get() = intrinsic()
 
-      override fun named(name: String): Batch = intrinsic()
-
-      /** A batch of ItemMKIIArcWelder devices. */
-      class Batch internal constructor() : DeviceBatch<ArcWelder.MkII>() {
-        /** A slot of every one in the batch, by number. */
-        val slots: Slots<SlotBatch<ItemBatterySlot>>
-          get() = intrinsic()
-      }
+      override fun named(name: String): ArcWelder.MkII.Batch = intrinsic()
     }
   }
 }
@@ -8390,19 +8390,19 @@ interface Suit {
     val ProgrammableChip: ItemCommonSlot
       get() = intrinsic()
 
+    /** A batch of ItemHardSuit devices. */
+    class Batch internal constructor() : DeviceBatch<Suit.Hardsuit>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<ItemCommonSlot>>
+        get() = intrinsic()
+    }
+
     /** The ItemHardSuit prefab. */
     companion object : Prefab<Suit.Hardsuit>() {
-      override val all: Batch
+      override val all: Suit.Hardsuit.Batch
         get() = intrinsic()
 
-      override fun named(name: String): Batch = intrinsic()
-
-      /** A batch of ItemHardSuit devices. */
-      class Batch internal constructor() : DeviceBatch<Suit.Hardsuit>() {
-        /** A slot of every one in the batch, by number. */
-        val slots: Slots<SlotBatch<ItemCommonSlot>>
-          get() = intrinsic()
-      }
+      override fun named(name: String): Suit.Hardsuit.Batch = intrinsic()
     }
   }
 
@@ -8561,19 +8561,19 @@ interface Suit {
     val Back: ItemCommonSlot
       get() = intrinsic()
 
+    /** A batch of ItemSuitHARM devices. */
+    class Batch internal constructor() : DeviceBatch<Suit.Harm>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<ItemCommonSlot>>
+        get() = intrinsic()
+    }
+
     /** The ItemSuitHARM prefab. */
     companion object : Prefab<Suit.Harm>() {
-      override val all: Batch
+      override val all: Suit.Harm.Batch
         get() = intrinsic()
 
-      override fun named(name: String): Batch = intrinsic()
-
-      /** A batch of ItemSuitHARM devices. */
-      class Batch internal constructor() : DeviceBatch<Suit.Harm>() {
-        /** A slot of every one in the batch, by number. */
-        val slots: Slots<SlotBatch<ItemCommonSlot>>
-          get() = intrinsic()
-      }
+      override fun named(name: String): Suit.Harm.Batch = intrinsic()
     }
   }
 }
@@ -8796,19 +8796,19 @@ interface Sleeper {
     val Bed: DataDiskSlot
       get() = intrinsic()
 
+    /** A batch of StructureSleeper devices. */
+    class Batch internal constructor() : DeviceBatch<Sleeper.Standard>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureSleeper prefab. */
     companion object : Prefab<Sleeper.Standard>() {
-      override val all: Batch
+      override val all: Sleeper.Standard.Batch
         get() = intrinsic()
 
-      override fun named(name: String): Batch = intrinsic()
-
-      /** A batch of StructureSleeper devices. */
-      class Batch internal constructor() : DeviceBatch<Sleeper.Standard>() {
-        /** A slot of every one in the batch, by number. */
-        val slots: Slots<SlotBatch<DataDiskSlot>>
-          get() = intrinsic()
-      }
+      override fun named(name: String): Sleeper.Standard.Batch = intrinsic()
     }
   }
 
@@ -8866,19 +8866,19 @@ interface Sleeper {
     val Player: DataDiskSlot
       get() = intrinsic()
 
+    /** A batch of StructureSleeperLeft devices. */
+    class Batch internal constructor() : DeviceBatch<Sleeper.Left>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureSleeperLeft prefab. */
     companion object : Prefab<Sleeper.Left>() {
-      override val all: Batch
+      override val all: Sleeper.Left.Batch
         get() = intrinsic()
 
-      override fun named(name: String): Batch = intrinsic()
-
-      /** A batch of StructureSleeperLeft devices. */
-      class Batch internal constructor() : DeviceBatch<Sleeper.Left>() {
-        /** A slot of every one in the batch, by number. */
-        val slots: Slots<SlotBatch<DataDiskSlot>>
-          get() = intrinsic()
-      }
+      override fun named(name: String): Sleeper.Left.Batch = intrinsic()
     }
   }
 
@@ -8936,19 +8936,19 @@ interface Sleeper {
     val Player: DataDiskSlot
       get() = intrinsic()
 
+    /** A batch of StructureSleeperRight devices. */
+    class Batch internal constructor() : DeviceBatch<Sleeper.Right>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureSleeperRight prefab. */
     companion object : Prefab<Sleeper.Right>() {
-      override val all: Batch
+      override val all: Sleeper.Right.Batch
         get() = intrinsic()
 
-      override fun named(name: String): Batch = intrinsic()
-
-      /** A batch of StructureSleeperRight devices. */
-      class Batch internal constructor() : DeviceBatch<Sleeper.Right>() {
-        /** A slot of every one in the batch, by number. */
-        val slots: Slots<SlotBatch<DataDiskSlot>>
-          get() = intrinsic()
-      }
+      override fun named(name: String): Sleeper.Right.Batch = intrinsic()
     }
   }
 
@@ -9006,19 +9006,19 @@ interface Sleeper {
     val Player: DataDiskSlot
       get() = intrinsic()
 
+    /** A batch of StructureSleeperVertical devices. */
+    class Batch internal constructor() : DeviceBatch<Sleeper.Vertical>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureSleeperVertical prefab. */
     companion object : Prefab<Sleeper.Vertical>() {
-      override val all: Batch
+      override val all: Sleeper.Vertical.Batch
         get() = intrinsic()
 
-      override fun named(name: String): Batch = intrinsic()
-
-      /** A batch of StructureSleeperVertical devices. */
-      class Batch internal constructor() : DeviceBatch<Sleeper.Vertical>() {
-        /** A slot of every one in the batch, by number. */
-        val slots: Slots<SlotBatch<DataDiskSlot>>
-          get() = intrinsic()
-      }
+      override fun named(name: String): Sleeper.Vertical.Batch = intrinsic()
     }
   }
 }
@@ -9096,19 +9096,19 @@ interface CryoTube : Sleeper {
     val Mask: MaskSlot
       get() = intrinsic()
 
+    /** A batch of StructureCryoTubeHorizontal devices. */
+    class Batch internal constructor() : DeviceBatch<CryoTube.Horizontal>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<CommonSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureCryoTubeHorizontal prefab. */
     companion object : Prefab<CryoTube.Horizontal>() {
-      override val all: Batch
+      override val all: CryoTube.Horizontal.Batch
         get() = intrinsic()
 
-      override fun named(name: String): Batch = intrinsic()
-
-      /** A batch of StructureCryoTubeHorizontal devices. */
-      class Batch internal constructor() : DeviceBatch<CryoTube.Horizontal>() {
-        /** A slot of every one in the batch, by number. */
-        val slots: Slots<SlotBatch<CommonSlot>>
-          get() = intrinsic()
-      }
+      override fun named(name: String): CryoTube.Horizontal.Batch = intrinsic()
     }
   }
 
@@ -9177,19 +9177,19 @@ interface CryoTube : Sleeper {
     val Mask: MaskSlot
       get() = intrinsic()
 
+    /** A batch of StructureCryoTubeVertical devices. */
+    class Batch internal constructor() : DeviceBatch<CryoTube.Vertical>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<CommonSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureCryoTubeVertical prefab. */
     companion object : Prefab<CryoTube.Vertical>() {
-      override val all: Batch
+      override val all: CryoTube.Vertical.Batch
         get() = intrinsic()
 
-      override fun named(name: String): Batch = intrinsic()
-
-      /** A batch of StructureCryoTubeVertical devices. */
-      class Batch internal constructor() : DeviceBatch<CryoTube.Vertical>() {
-        /** A slot of every one in the batch, by number. */
-        val slots: Slots<SlotBatch<CommonSlot>>
-          get() = intrinsic()
-      }
+      override fun named(name: String): CryoTube.Vertical.Batch = intrinsic()
     }
   }
 }
@@ -9255,19 +9255,19 @@ interface LarreDock {
     val ArmSlot: DataDiskSlot
       get() = intrinsic()
 
+    /** A batch of StructureRoboticArmDock devices. */
+    class Batch internal constructor() : DeviceBatch<LarreDock.Standard>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureRoboticArmDock prefab. */
     companion object : Prefab<LarreDock.Standard>() {
-      override val all: Batch
+      override val all: LarreDock.Standard.Batch
         get() = intrinsic()
 
-      override fun named(name: String): Batch = intrinsic()
-
-      /** A batch of StructureRoboticArmDock devices. */
-      class Batch internal constructor() : DeviceBatch<LarreDock.Standard>() {
-        /** A slot of every one in the batch, by number. */
-        val slots: Slots<SlotBatch<DataDiskSlot>>
-          get() = intrinsic()
-      }
+      override fun named(name: String): LarreDock.Standard.Batch = intrinsic()
     }
   }
 
@@ -9358,19 +9358,19 @@ interface LarreDock {
     val Filter: FilterSlot
       get() = intrinsic()
 
+    /** A batch of StructureLarreDockAtmos devices. */
+    class Batch internal constructor() : DeviceBatch<LarreDock.Atmos>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<FilterSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureLarreDockAtmos prefab. */
     companion object : Prefab<LarreDock.Atmos>() {
-      override val all: Batch
+      override val all: LarreDock.Atmos.Batch
         get() = intrinsic()
 
-      override fun named(name: String): Batch = intrinsic()
-
-      /** A batch of StructureLarreDockAtmos devices. */
-      class Batch internal constructor() : DeviceBatch<LarreDock.Atmos>() {
-        /** A slot of every one in the batch, by number. */
-        val slots: Slots<SlotBatch<FilterSlot>>
-          get() = intrinsic()
-      }
+      override fun named(name: String): LarreDock.Atmos.Batch = intrinsic()
     }
   }
 
@@ -9433,19 +9433,19 @@ interface LarreDock {
     val TargetSlot: CommonSlot
       get() = intrinsic()
 
+    /** A batch of StructureLarreDockCargo devices. */
+    class Batch internal constructor() : DeviceBatch<LarreDock.Cargo>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<CommonSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureLarreDockCargo prefab. */
     companion object : Prefab<LarreDock.Cargo>() {
-      override val all: Batch
+      override val all: LarreDock.Cargo.Batch
         get() = intrinsic()
 
-      override fun named(name: String): Batch = intrinsic()
-
-      /** A batch of StructureLarreDockCargo devices. */
-      class Batch internal constructor() : DeviceBatch<LarreDock.Cargo>() {
-        /** A slot of every one in the batch, by number. */
-        val slots: Slots<SlotBatch<CommonSlot>>
-          get() = intrinsic()
-      }
+      override fun named(name: String): LarreDock.Cargo.Batch = intrinsic()
     }
   }
 
@@ -9501,19 +9501,19 @@ interface LarreDock {
     val slots: Slots<DataDiskSlot>
       get() = intrinsic()
 
+    /** A batch of StructureLarreDockCollector devices. */
+    class Batch internal constructor() : DeviceBatch<LarreDock.Collector>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureLarreDockCollector prefab. */
     companion object : Prefab<LarreDock.Collector>() {
-      override val all: Batch
+      override val all: LarreDock.Collector.Batch
         get() = intrinsic()
 
-      override fun named(name: String): Batch = intrinsic()
-
-      /** A batch of StructureLarreDockCollector devices. */
-      class Batch internal constructor() : DeviceBatch<LarreDock.Collector>() {
-        /** A slot of every one in the batch, by number. */
-        val slots: Slots<SlotBatch<DataDiskSlot>>
-          get() = intrinsic()
-      }
+      override fun named(name: String): LarreDock.Collector.Batch = intrinsic()
     }
   }
 
@@ -9580,19 +9580,19 @@ interface LarreDock {
     val TargetSlot: CommonSlot
       get() = intrinsic()
 
+    /** A batch of StructureLarreDockHydroponics devices. */
+    class Batch internal constructor() : DeviceBatch<LarreDock.Hydroponics>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<CommonSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureLarreDockHydroponics prefab. */
     companion object : Prefab<LarreDock.Hydroponics>() {
-      override val all: Batch
+      override val all: LarreDock.Hydroponics.Batch
         get() = intrinsic()
 
-      override fun named(name: String): Batch = intrinsic()
-
-      /** A batch of StructureLarreDockHydroponics devices. */
-      class Batch internal constructor() : DeviceBatch<LarreDock.Hydroponics>() {
-        /** A slot of every one in the batch, by number. */
-        val slots: Slots<SlotBatch<CommonSlot>>
-          get() = intrinsic()
-      }
+      override fun named(name: String): LarreDock.Hydroponics.Batch = intrinsic()
     }
   }
 }
@@ -9692,19 +9692,19 @@ interface Sequencer {
     val SoundCartridge: DataDiskSlot
       get() = intrinsic()
 
+    /** A batch of LogicStepSequencer8 devices. */
+    class Batch internal constructor() : DeviceBatch<Sequencer.LogicStep>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+
     /** The LogicStepSequencer8 prefab. */
     companion object : Prefab<Sequencer.LogicStep>() {
-      override val all: Batch
+      override val all: Sequencer.LogicStep.Batch
         get() = intrinsic()
 
-      override fun named(name: String): Batch = intrinsic()
-
-      /** A batch of LogicStepSequencer8 devices. */
-      class Batch internal constructor() : DeviceBatch<Sequencer.LogicStep>() {
-        /** A slot of every one in the batch, by number. */
-        val slots: Slots<SlotBatch<DataDiskSlot>>
-          get() = intrinsic()
-      }
+      override fun named(name: String): Sequencer.LogicStep.Batch = intrinsic()
     }
   }
 }
@@ -10257,19 +10257,19 @@ interface ChuteBin {
     val Input: DataDiskSlot
       get() = intrinsic()
 
+    /** A batch of StructureChuteBin devices. */
+    class Batch internal constructor() : DeviceBatch<ChuteBin.Import>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureChuteBin prefab. */
     companion object : Prefab<ChuteBin.Import>() {
-      override val all: Batch
+      override val all: ChuteBin.Import.Batch
         get() = intrinsic()
 
-      override fun named(name: String): Batch = intrinsic()
-
-      /** A batch of StructureChuteBin devices. */
-      class Batch internal constructor() : DeviceBatch<ChuteBin.Import>() {
-        /** A slot of every one in the batch, by number. */
-        val slots: Slots<SlotBatch<DataDiskSlot>>
-          get() = intrinsic()
-      }
+      override fun named(name: String): ChuteBin.Import.Batch = intrinsic()
     }
   }
 
@@ -10306,19 +10306,19 @@ interface ChuteBin {
     val Input: DataDiskSlot
       get() = intrinsic()
 
+    /** A batch of StructureChuteExportBin devices. */
+    class Batch internal constructor() : DeviceBatch<ChuteBin.Export>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureChuteExportBin prefab. */
     companion object : Prefab<ChuteBin.Export>() {
-      override val all: Batch
+      override val all: ChuteBin.Export.Batch
         get() = intrinsic()
 
-      override fun named(name: String): Batch = intrinsic()
-
-      /** A batch of StructureChuteExportBin devices. */
-      class Batch internal constructor() : DeviceBatch<ChuteBin.Export>() {
-        /** A slot of every one in the batch, by number. */
-        val slots: Slots<SlotBatch<DataDiskSlot>>
-          get() = intrinsic()
-      }
+      override fun named(name: String): ChuteBin.Export.Batch = intrinsic()
     }
   }
 }
@@ -10517,19 +10517,19 @@ interface Fabricator {
     val slots: Slots<DataDiskSlot>
       get() = intrinsic()
 
+    /** A batch of StructureAutolathe devices. */
+    class Batch internal constructor() : DeviceBatch<Fabricator.Autolathe>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureAutolathe prefab. */
     companion object : Prefab<Fabricator.Autolathe>() {
-      override val all: Batch
+      override val all: Fabricator.Autolathe.Batch
         get() = intrinsic()
 
-      override fun named(name: String): Batch = intrinsic()
-
-      /** A batch of StructureAutolathe devices. */
-      class Batch internal constructor() : DeviceBatch<Fabricator.Autolathe>() {
-        /** A slot of every one in the batch, by number. */
-        val slots: Slots<SlotBatch<DataDiskSlot>>
-          get() = intrinsic()
-      }
+      override fun named(name: String): Fabricator.Autolathe.Batch = intrinsic()
     }
   }
 
@@ -10590,19 +10590,19 @@ interface Fabricator {
     val slots: Slots<DataDiskSlot>
       get() = intrinsic()
 
+    /** A batch of StructureElectronicsPrinter devices. */
+    class Batch internal constructor() : DeviceBatch<Fabricator.ElectronicsPrinter>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureElectronicsPrinter prefab. */
     companion object : Prefab<Fabricator.ElectronicsPrinter>() {
-      override val all: Batch
+      override val all: Fabricator.ElectronicsPrinter.Batch
         get() = intrinsic()
 
-      override fun named(name: String): Batch = intrinsic()
-
-      /** A batch of StructureElectronicsPrinter devices. */
-      class Batch internal constructor() : DeviceBatch<Fabricator.ElectronicsPrinter>() {
-        /** A slot of every one in the batch, by number. */
-        val slots: Slots<SlotBatch<DataDiskSlot>>
-          get() = intrinsic()
-      }
+      override fun named(name: String): Fabricator.ElectronicsPrinter.Batch = intrinsic()
     }
   }
 
@@ -10663,19 +10663,19 @@ interface Fabricator {
     val slots: Slots<DataDiskSlot>
       get() = intrinsic()
 
+    /** A batch of StructureSecurityPrinter devices. */
+    class Batch internal constructor() : DeviceBatch<Fabricator.SecurityPrinter>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureSecurityPrinter prefab. */
     companion object : Prefab<Fabricator.SecurityPrinter>() {
-      override val all: Batch
+      override val all: Fabricator.SecurityPrinter.Batch
         get() = intrinsic()
 
-      override fun named(name: String): Batch = intrinsic()
-
-      /** A batch of StructureSecurityPrinter devices. */
-      class Batch internal constructor() : DeviceBatch<Fabricator.SecurityPrinter>() {
-        /** A slot of every one in the batch, by number. */
-        val slots: Slots<SlotBatch<DataDiskSlot>>
-          get() = intrinsic()
-      }
+      override fun named(name: String): Fabricator.SecurityPrinter.Batch = intrinsic()
     }
   }
 
@@ -10736,19 +10736,19 @@ interface Fabricator {
     val slots: Slots<DataDiskSlot>
       get() = intrinsic()
 
+    /** A batch of StructureToolManufactory devices. */
+    class Batch internal constructor() : DeviceBatch<Fabricator.ToolManufactory>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureToolManufactory prefab. */
     companion object : Prefab<Fabricator.ToolManufactory>() {
-      override val all: Batch
+      override val all: Fabricator.ToolManufactory.Batch
         get() = intrinsic()
 
-      override fun named(name: String): Batch = intrinsic()
-
-      /** A batch of StructureToolManufactory devices. */
-      class Batch internal constructor() : DeviceBatch<Fabricator.ToolManufactory>() {
-        /** A slot of every one in the batch, by number. */
-        val slots: Slots<SlotBatch<DataDiskSlot>>
-          get() = intrinsic()
-      }
+      override fun named(name: String): Fabricator.ToolManufactory.Batch = intrinsic()
     }
   }
 
@@ -10809,19 +10809,19 @@ interface Fabricator {
     val slots: Slots<DataDiskSlot>
       get() = intrinsic()
 
+    /** A batch of StructureRocketManufactory devices. */
+    class Batch internal constructor() : DeviceBatch<Fabricator.RocketManufactory>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureRocketManufactory prefab. */
     companion object : Prefab<Fabricator.RocketManufactory>() {
-      override val all: Batch
+      override val all: Fabricator.RocketManufactory.Batch
         get() = intrinsic()
 
-      override fun named(name: String): Batch = intrinsic()
-
-      /** A batch of StructureRocketManufactory devices. */
-      class Batch internal constructor() : DeviceBatch<Fabricator.RocketManufactory>() {
-        /** A slot of every one in the batch, by number. */
-        val slots: Slots<SlotBatch<DataDiskSlot>>
-          get() = intrinsic()
-      }
+      override fun named(name: String): Fabricator.RocketManufactory.Batch = intrinsic()
     }
   }
 
@@ -10882,19 +10882,19 @@ interface Fabricator {
     val slots: Slots<DataDiskSlot>
       get() = intrinsic()
 
+    /** A batch of StructureHydraulicPipeBender devices. */
+    class Batch internal constructor() : DeviceBatch<Fabricator.HydraulicPipeBender>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureHydraulicPipeBender prefab. */
     companion object : Prefab<Fabricator.HydraulicPipeBender>() {
-      override val all: Batch
+      override val all: Fabricator.HydraulicPipeBender.Batch
         get() = intrinsic()
 
-      override fun named(name: String): Batch = intrinsic()
-
-      /** A batch of StructureHydraulicPipeBender devices. */
-      class Batch internal constructor() : DeviceBatch<Fabricator.HydraulicPipeBender>() {
-        /** A slot of every one in the batch, by number. */
-        val slots: Slots<SlotBatch<DataDiskSlot>>
-          get() = intrinsic()
-      }
+      override fun named(name: String): Fabricator.HydraulicPipeBender.Batch = intrinsic()
     }
   }
 
@@ -10955,19 +10955,19 @@ interface Fabricator {
     val slots: Slots<DataDiskSlot>
       get() = intrinsic()
 
+    /** A batch of StructureAutomatedOven devices. */
+    class Batch internal constructor() : DeviceBatch<Fabricator.AutomatedOven>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureAutomatedOven prefab. */
     companion object : Prefab<Fabricator.AutomatedOven>() {
-      override val all: Batch
+      override val all: Fabricator.AutomatedOven.Batch
         get() = intrinsic()
 
-      override fun named(name: String): Batch = intrinsic()
-
-      /** A batch of StructureAutomatedOven devices. */
-      class Batch internal constructor() : DeviceBatch<Fabricator.AutomatedOven>() {
-        /** A slot of every one in the batch, by number. */
-        val slots: Slots<SlotBatch<DataDiskSlot>>
-          get() = intrinsic()
-      }
+      override fun named(name: String): Fabricator.AutomatedOven.Batch = intrinsic()
     }
   }
 
@@ -11028,19 +11028,19 @@ interface Fabricator {
     val slots: Slots<DataDiskSlot>
       get() = intrinsic()
 
+    /** A batch of StructureAdvancedPackagingMachine devices. */
+    class Batch internal constructor() : DeviceBatch<Fabricator.AdvancedPackagingMachine>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureAdvancedPackagingMachine prefab. */
     companion object : Prefab<Fabricator.AdvancedPackagingMachine>() {
-      override val all: Batch
+      override val all: Fabricator.AdvancedPackagingMachine.Batch
         get() = intrinsic()
 
-      override fun named(name: String): Batch = intrinsic()
-
-      /** A batch of StructureAdvancedPackagingMachine devices. */
-      class Batch internal constructor() : DeviceBatch<Fabricator.AdvancedPackagingMachine>() {
-        /** A slot of every one in the batch, by number. */
-        val slots: Slots<SlotBatch<DataDiskSlot>>
-          get() = intrinsic()
-      }
+      override fun named(name: String): Fabricator.AdvancedPackagingMachine.Batch = intrinsic()
     }
   }
 }
@@ -11095,19 +11095,19 @@ interface DigitalChute {
     val TransportSlot: DataDiskSlot
       get() = intrinsic()
 
+    /** A batch of StructureChuteDigitalValveLeft devices. */
+    class Batch internal constructor() : DeviceBatch<DigitalChute.ValveLeft>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureChuteDigitalValveLeft prefab. */
     companion object : Prefab<DigitalChute.ValveLeft>() {
-      override val all: Batch
+      override val all: DigitalChute.ValveLeft.Batch
         get() = intrinsic()
 
-      override fun named(name: String): Batch = intrinsic()
-
-      /** A batch of StructureChuteDigitalValveLeft devices. */
-      class Batch internal constructor() : DeviceBatch<DigitalChute.ValveLeft>() {
-        /** A slot of every one in the batch, by number. */
-        val slots: Slots<SlotBatch<DataDiskSlot>>
-          get() = intrinsic()
-      }
+      override fun named(name: String): DigitalChute.ValveLeft.Batch = intrinsic()
     }
   }
 
@@ -11149,19 +11149,19 @@ interface DigitalChute {
     val TransportSlot: DataDiskSlot
       get() = intrinsic()
 
+    /** A batch of StructureChuteDigitalValveRight devices. */
+    class Batch internal constructor() : DeviceBatch<DigitalChute.ValveRight>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureChuteDigitalValveRight prefab. */
     companion object : Prefab<DigitalChute.ValveRight>() {
-      override val all: Batch
+      override val all: DigitalChute.ValveRight.Batch
         get() = intrinsic()
 
-      override fun named(name: String): Batch = intrinsic()
-
-      /** A batch of StructureChuteDigitalValveRight devices. */
-      class Batch internal constructor() : DeviceBatch<DigitalChute.ValveRight>() {
-        /** A slot of every one in the batch, by number. */
-        val slots: Slots<SlotBatch<DataDiskSlot>>
-          get() = intrinsic()
-      }
+      override fun named(name: String): DigitalChute.ValveRight.Batch = intrinsic()
     }
   }
 
@@ -11203,19 +11203,19 @@ interface DigitalChute {
     val TransportSlot: DataDiskSlot
       get() = intrinsic()
 
+    /** A batch of StructureChuteDigitalFlipFlopSplitterLeft devices. */
+    class Batch internal constructor() : DeviceBatch<DigitalChute.FlipFlopSplitterLeft>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureChuteDigitalFlipFlopSplitterLeft prefab. */
     companion object : Prefab<DigitalChute.FlipFlopSplitterLeft>() {
-      override val all: Batch
+      override val all: DigitalChute.FlipFlopSplitterLeft.Batch
         get() = intrinsic()
 
-      override fun named(name: String): Batch = intrinsic()
-
-      /** A batch of StructureChuteDigitalFlipFlopSplitterLeft devices. */
-      class Batch internal constructor() : DeviceBatch<DigitalChute.FlipFlopSplitterLeft>() {
-        /** A slot of every one in the batch, by number. */
-        val slots: Slots<SlotBatch<DataDiskSlot>>
-          get() = intrinsic()
-      }
+      override fun named(name: String): DigitalChute.FlipFlopSplitterLeft.Batch = intrinsic()
     }
   }
 
@@ -11257,19 +11257,19 @@ interface DigitalChute {
     val TransportSlot: DataDiskSlot
       get() = intrinsic()
 
+    /** A batch of StructureChuteDigitalFlipFlopSplitterRight devices. */
+    class Batch internal constructor() : DeviceBatch<DigitalChute.FlipFlopSplitterRight>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureChuteDigitalFlipFlopSplitterRight prefab. */
     companion object : Prefab<DigitalChute.FlipFlopSplitterRight>() {
-      override val all: Batch
+      override val all: DigitalChute.FlipFlopSplitterRight.Batch
         get() = intrinsic()
 
-      override fun named(name: String): Batch = intrinsic()
-
-      /** A batch of StructureChuteDigitalFlipFlopSplitterRight devices. */
-      class Batch internal constructor() : DeviceBatch<DigitalChute.FlipFlopSplitterRight>() {
-        /** A slot of every one in the batch, by number. */
-        val slots: Slots<SlotBatch<DataDiskSlot>>
-          get() = intrinsic()
-      }
+      override fun named(name: String): DigitalChute.FlipFlopSplitterRight.Batch = intrinsic()
     }
   }
 }
@@ -11595,19 +11595,19 @@ interface Computer {
     val Motherboard: DataDiskSlot
       get() = intrinsic()
 
+    /** A batch of StructureComputer devices. */
+    class Batch internal constructor() : DeviceBatch<Computer.Modern>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureComputer prefab. */
     companion object : Prefab<Computer.Modern>() {
-      override val all: Batch
+      override val all: Computer.Modern.Batch
         get() = intrinsic()
 
-      override fun named(name: String): Batch = intrinsic()
-
-      /** A batch of StructureComputer devices. */
-      class Batch internal constructor() : DeviceBatch<Computer.Modern>() {
-        /** A slot of every one in the batch, by number. */
-        val slots: Slots<SlotBatch<DataDiskSlot>>
-          get() = intrinsic()
-      }
+      override fun named(name: String): Computer.Modern.Batch = intrinsic()
     }
   }
 
@@ -11644,19 +11644,19 @@ interface Computer {
     val Motherboard: DataDiskSlot
       get() = intrinsic()
 
+    /** A batch of StructureComputerUpright devices. */
+    class Batch internal constructor() : DeviceBatch<Computer.Retro>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureComputerUpright prefab. */
     companion object : Prefab<Computer.Retro>() {
-      override val all: Batch
+      override val all: Computer.Retro.Batch
         get() = intrinsic()
 
-      override fun named(name: String): Batch = intrinsic()
-
-      /** A batch of StructureComputerUpright devices. */
-      class Batch internal constructor() : DeviceBatch<Computer.Retro>() {
-        /** A slot of every one in the batch, by number. */
-        val slots: Slots<SlotBatch<DataDiskSlot>>
-          get() = intrinsic()
-      }
+      override fun named(name: String): Computer.Retro.Batch = intrinsic()
     }
   }
 
@@ -11693,19 +11693,19 @@ interface Computer {
     val Motherboard: DataDiskSlot
       get() = intrinsic()
 
+    /** A batch of StructureComputerBigScreen devices. */
+    class Batch internal constructor() : DeviceBatch<Computer.BigScreen>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureComputerBigScreen prefab. */
     companion object : Prefab<Computer.BigScreen>() {
-      override val all: Batch
+      override val all: Computer.BigScreen.Batch
         get() = intrinsic()
 
-      override fun named(name: String): Batch = intrinsic()
-
-      /** A batch of StructureComputerBigScreen devices. */
-      class Batch internal constructor() : DeviceBatch<Computer.BigScreen>() {
-        /** A slot of every one in the batch, by number. */
-        val slots: Slots<SlotBatch<DataDiskSlot>>
-          get() = intrinsic()
-      }
+      override fun named(name: String): Computer.BigScreen.Batch = intrinsic()
     }
   }
 
@@ -11742,19 +11742,19 @@ interface Computer {
     val Motherboard: DataDiskSlot
       get() = intrinsic()
 
+    /** A batch of StructureComputerBigScreenWallMounted devices. */
+    class Batch internal constructor() : DeviceBatch<Computer.BigScreenWallMounted>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureComputerBigScreenWallMounted prefab. */
     companion object : Prefab<Computer.BigScreenWallMounted>() {
-      override val all: Batch
+      override val all: Computer.BigScreenWallMounted.Batch
         get() = intrinsic()
 
-      override fun named(name: String): Batch = intrinsic()
-
-      /** A batch of StructureComputerBigScreenWallMounted devices. */
-      class Batch internal constructor() : DeviceBatch<Computer.BigScreenWallMounted>() {
-        /** A slot of every one in the batch, by number. */
-        val slots: Slots<SlotBatch<DataDiskSlot>>
-          get() = intrinsic()
-      }
+      override fun named(name: String): Computer.BigScreenWallMounted.Batch = intrinsic()
     }
   }
 }
@@ -11903,19 +11903,19 @@ interface WallCooler {
     val DataDisk: DataDiskSlot
       get() = intrinsic()
 
+    /** A batch of StructureWallCooler devices. */
+    class Batch internal constructor() : DeviceBatch<WallCooler.Gas>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureWallCooler prefab. */
     companion object : Prefab<WallCooler.Gas>() {
-      override val all: Batch
+      override val all: WallCooler.Gas.Batch
         get() = intrinsic()
 
-      override fun named(name: String): Batch = intrinsic()
-
-      /** A batch of StructureWallCooler devices. */
-      class Batch internal constructor() : DeviceBatch<WallCooler.Gas>() {
-        /** A slot of every one in the batch, by number. */
-        val slots: Slots<SlotBatch<DataDiskSlot>>
-          get() = intrinsic()
-      }
+      override fun named(name: String): WallCooler.Gas.Batch = intrinsic()
     }
   }
 
@@ -11966,19 +11966,19 @@ interface WallCooler {
     val DataDisk: DataDiskSlot
       get() = intrinsic()
 
+    /** A batch of StructureWaterWallCooler devices. */
+    class Batch internal constructor() : DeviceBatch<WallCooler.Liquid>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureWaterWallCooler prefab. */
     companion object : Prefab<WallCooler.Liquid>() {
-      override val all: Batch
+      override val all: WallCooler.Liquid.Batch
         get() = intrinsic()
 
-      override fun named(name: String): Batch = intrinsic()
-
-      /** A batch of StructureWaterWallCooler devices. */
-      class Batch internal constructor() : DeviceBatch<WallCooler.Liquid>() {
-        /** A slot of every one in the batch, by number. */
-        val slots: Slots<SlotBatch<DataDiskSlot>>
-          get() = intrinsic()
-      }
+      override fun named(name: String): WallCooler.Liquid.Batch = intrinsic()
     }
   }
 }
@@ -12050,19 +12050,19 @@ interface ItemRouter {
     val Export2: DataDiskSlot
       get() = intrinsic()
 
+    /** A batch of StructureSorter devices. */
+    class Batch internal constructor() : DeviceBatch<ItemRouter.Sorter>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureSorter prefab. */
     companion object : Prefab<ItemRouter.Sorter>() {
-      override val all: Batch
+      override val all: ItemRouter.Sorter.Batch
         get() = intrinsic()
 
-      override fun named(name: String): Batch = intrinsic()
-
-      /** A batch of StructureSorter devices. */
-      class Batch internal constructor() : DeviceBatch<ItemRouter.Sorter>() {
-        /** A slot of every one in the batch, by number. */
-        val slots: Slots<SlotBatch<DataDiskSlot>>
-          get() = intrinsic()
-      }
+      override fun named(name: String): ItemRouter.Sorter.Batch = intrinsic()
     }
   }
 
@@ -12110,19 +12110,19 @@ interface ItemRouter {
     val slots: Slots<DataDiskSlot>
       get() = intrinsic()
 
+    /** A batch of StructureUnloader devices. */
+    class Batch internal constructor() : DeviceBatch<ItemRouter.Unloader>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureUnloader prefab. */
     companion object : Prefab<ItemRouter.Unloader>() {
-      override val all: Batch
+      override val all: ItemRouter.Unloader.Batch
         get() = intrinsic()
 
-      override fun named(name: String): Batch = intrinsic()
-
-      /** A batch of StructureUnloader devices. */
-      class Batch internal constructor() : DeviceBatch<ItemRouter.Unloader>() {
-        /** A slot of every one in the batch, by number. */
-        val slots: Slots<SlotBatch<DataDiskSlot>>
-          get() = intrinsic()
-      }
+      override fun named(name: String): ItemRouter.Unloader.Batch = intrinsic()
     }
   }
 
@@ -12183,19 +12183,19 @@ interface ItemRouter {
     val Processing: DataDiskSlot
       get() = intrinsic()
 
+    /** A batch of StructureStacker devices. */
+    class Batch internal constructor() : DeviceBatch<ItemRouter.Stacker>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureStacker prefab. */
     companion object : Prefab<ItemRouter.Stacker>() {
-      override val all: Batch
+      override val all: ItemRouter.Stacker.Batch
         get() = intrinsic()
 
-      override fun named(name: String): Batch = intrinsic()
-
-      /** A batch of StructureStacker devices. */
-      class Batch internal constructor() : DeviceBatch<ItemRouter.Stacker>() {
-        /** A slot of every one in the batch, by number. */
-        val slots: Slots<SlotBatch<DataDiskSlot>>
-          get() = intrinsic()
-      }
+      override fun named(name: String): ItemRouter.Stacker.Batch = intrinsic()
     }
   }
 
@@ -12256,19 +12256,19 @@ interface ItemRouter {
     val Processing: DataDiskSlot
       get() = intrinsic()
 
+    /** A batch of StructureStackerReverse devices. */
+    class Batch internal constructor() : DeviceBatch<ItemRouter.StackerReversed>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureStackerReverse prefab. */
     companion object : Prefab<ItemRouter.StackerReversed>() {
-      override val all: Batch
+      override val all: ItemRouter.StackerReversed.Batch
         get() = intrinsic()
 
-      override fun named(name: String): Batch = intrinsic()
-
-      /** A batch of StructureStackerReverse devices. */
-      class Batch internal constructor() : DeviceBatch<ItemRouter.StackerReversed>() {
-        /** A slot of every one in the batch, by number. */
-        val slots: Slots<SlotBatch<DataDiskSlot>>
-          get() = intrinsic()
-      }
+      override fun named(name: String): ItemRouter.StackerReversed.Batch = intrinsic()
     }
   }
 }
@@ -12334,19 +12334,19 @@ interface SuitStorage {
     val Back: BackSlot
       get() = intrinsic()
 
+    /** A batch of StructureSuitStorage devices. */
+    class Batch internal constructor() : DeviceBatch<SuitStorage.Standard>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<CommonSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureSuitStorage prefab. */
     companion object : Prefab<SuitStorage.Standard>() {
-      override val all: Batch
+      override val all: SuitStorage.Standard.Batch
         get() = intrinsic()
 
-      override fun named(name: String): Batch = intrinsic()
-
-      /** A batch of StructureSuitStorage devices. */
-      class Batch internal constructor() : DeviceBatch<SuitStorage.Standard>() {
-        /** A slot of every one in the batch, by number. */
-        val slots: Slots<SlotBatch<CommonSlot>>
-          get() = intrinsic()
-      }
+      override fun named(name: String): SuitStorage.Standard.Batch = intrinsic()
     }
   }
 
@@ -12395,19 +12395,19 @@ interface SuitStorage {
     val Back: BackSlot
       get() = intrinsic()
 
+    /** A batch of StructureSuitStorageFrame devices. */
+    class Batch internal constructor() : DeviceBatch<SuitStorage.Frame>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<CommonSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureSuitStorageFrame prefab. */
     companion object : Prefab<SuitStorage.Frame>() {
-      override val all: Batch
+      override val all: SuitStorage.Frame.Batch
         get() = intrinsic()
 
-      override fun named(name: String): Batch = intrinsic()
-
-      /** A batch of StructureSuitStorageFrame devices. */
-      class Batch internal constructor() : DeviceBatch<SuitStorage.Frame>() {
-        /** A slot of every one in the batch, by number. */
-        val slots: Slots<SlotBatch<CommonSlot>>
-          get() = intrinsic()
-      }
+      override fun named(name: String): SuitStorage.Frame.Batch = intrinsic()
     }
   }
 
@@ -12456,19 +12456,19 @@ interface SuitStorage {
     val Back: BackSlot
       get() = intrinsic()
 
+    /** A batch of StructureSuitStorageLocker devices. */
+    class Batch internal constructor() : DeviceBatch<SuitStorage.Locker>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<CommonSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureSuitStorageLocker prefab. */
     companion object : Prefab<SuitStorage.Locker>() {
-      override val all: Batch
+      override val all: SuitStorage.Locker.Batch
         get() = intrinsic()
 
-      override fun named(name: String): Batch = intrinsic()
-
-      /** A batch of StructureSuitStorageLocker devices. */
-      class Batch internal constructor() : DeviceBatch<SuitStorage.Locker>() {
-        /** A slot of every one in the batch, by number. */
-        val slots: Slots<SlotBatch<CommonSlot>>
-          get() = intrinsic()
-      }
+      override fun named(name: String): SuitStorage.Locker.Batch = intrinsic()
     }
   }
 }
@@ -12561,19 +12561,19 @@ interface Generator {
     val Input: DataDiskSlot
       get() = intrinsic()
 
+    /** A batch of StructureSolidFuelGenerator devices. */
+    class Batch internal constructor() : DeviceBatch<Generator.SolidFuel>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<DataDiskSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureSolidFuelGenerator prefab. */
     companion object : Prefab<Generator.SolidFuel>() {
-      override val all: Batch
+      override val all: Generator.SolidFuel.Batch
         get() = intrinsic()
 
-      override fun named(name: String): Batch = intrinsic()
-
-      /** A batch of StructureSolidFuelGenerator devices. */
-      class Batch internal constructor() : DeviceBatch<Generator.SolidFuel>() {
-        /** A slot of every one in the batch, by number. */
-        val slots: Slots<SlotBatch<DataDiskSlot>>
-          get() = intrinsic()
-      }
+      override fun named(name: String): Generator.SolidFuel.Batch = intrinsic()
     }
   }
 
@@ -12647,19 +12647,19 @@ interface Generator {
     val GasCanister: GasCanisterSlot
       get() = intrinsic()
 
+    /** A batch of StructureStirlingEngine devices. */
+    class Batch internal constructor() : DeviceBatch<Generator.StirlingEngine>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<GasCanisterSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureStirlingEngine prefab. */
     companion object : Prefab<Generator.StirlingEngine>() {
-      override val all: Batch
+      override val all: Generator.StirlingEngine.Batch
         get() = intrinsic()
 
-      override fun named(name: String): Batch = intrinsic()
-
-      /** A batch of StructureStirlingEngine devices. */
-      class Batch internal constructor() : DeviceBatch<Generator.StirlingEngine>() {
-        /** A slot of every one in the batch, by number. */
-        val slots: Slots<SlotBatch<GasCanisterSlot>>
-          get() = intrinsic()
-      }
+      override fun named(name: String): Generator.StirlingEngine.Batch = intrinsic()
     }
   }
 
@@ -12720,19 +12720,19 @@ interface WaterBottleFiller {
     val slots: Slots<GasCanisterSlot>
       get() = intrinsic()
 
+    /** A batch of StructureWaterBottleFillerPowered devices. */
+    class Batch internal constructor() : DeviceBatch<WaterBottleFiller.Powered>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<GasCanisterSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureWaterBottleFillerPowered prefab. */
     companion object : Prefab<WaterBottleFiller.Powered>() {
-      override val all: Batch
+      override val all: WaterBottleFiller.Powered.Batch
         get() = intrinsic()
 
-      override fun named(name: String): Batch = intrinsic()
-
-      /** A batch of StructureWaterBottleFillerPowered devices. */
-      class Batch internal constructor() : DeviceBatch<WaterBottleFiller.Powered>() {
-        /** A slot of every one in the batch, by number. */
-        val slots: Slots<SlotBatch<GasCanisterSlot>>
-          get() = intrinsic()
-      }
+      override fun named(name: String): WaterBottleFiller.Powered.Batch = intrinsic()
     }
   }
 
@@ -12760,19 +12760,19 @@ interface WaterBottleFiller {
     val slots: Slots<GasCanisterSlot>
       get() = intrinsic()
 
+    /** A batch of StructureWaterBottleFillerPoweredBottom devices. */
+    class Batch internal constructor() : DeviceBatch<WaterBottleFiller.PoweredBottom>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<GasCanisterSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureWaterBottleFillerPoweredBottom prefab. */
     companion object : Prefab<WaterBottleFiller.PoweredBottom>() {
-      override val all: Batch
+      override val all: WaterBottleFiller.PoweredBottom.Batch
         get() = intrinsic()
 
-      override fun named(name: String): Batch = intrinsic()
-
-      /** A batch of StructureWaterBottleFillerPoweredBottom devices. */
-      class Batch internal constructor() : DeviceBatch<WaterBottleFiller.PoweredBottom>() {
-        /** A slot of every one in the batch, by number. */
-        val slots: Slots<SlotBatch<GasCanisterSlot>>
-          get() = intrinsic()
-      }
+      override fun named(name: String): WaterBottleFiller.PoweredBottom.Batch = intrinsic()
     }
   }
 }
@@ -12968,19 +12968,19 @@ interface CircuitHousing {
     val ProgrammableChip: CommonSlot
       get() = intrinsic()
 
+    /** A batch of StructureCircuitHousing devices. */
+    class Batch internal constructor() : DeviceBatch<CircuitHousing.Standard>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<CommonSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureCircuitHousing prefab. */
     companion object : Prefab<CircuitHousing.Standard>() {
-      override val all: Batch
+      override val all: CircuitHousing.Standard.Batch
         get() = intrinsic()
 
-      override fun named(name: String): Batch = intrinsic()
-
-      /** A batch of StructureCircuitHousing devices. */
-      class Batch internal constructor() : DeviceBatch<CircuitHousing.Standard>() {
-        /** A slot of every one in the batch, by number. */
-        val slots: Slots<SlotBatch<CommonSlot>>
-          get() = intrinsic()
-      }
+      override fun named(name: String): CircuitHousing.Standard.Batch = intrinsic()
     }
   }
 
@@ -13024,19 +13024,19 @@ interface CircuitHousing {
     val ProgrammableChip: ProgrammableChipSlot
       get() = intrinsic()
 
+    /** A batch of StructureCircuitHousingCompact devices. */
+    class Batch internal constructor() : DeviceBatch<CircuitHousing.Compact>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<ProgrammableChipSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureCircuitHousingCompact prefab. */
     companion object : Prefab<CircuitHousing.Compact>() {
-      override val all: Batch
+      override val all: CircuitHousing.Compact.Batch
         get() = intrinsic()
 
-      override fun named(name: String): Batch = intrinsic()
-
-      /** A batch of StructureCircuitHousingCompact devices. */
-      class Batch internal constructor() : DeviceBatch<CircuitHousing.Compact>() {
-        /** A slot of every one in the batch, by number. */
-        val slots: Slots<SlotBatch<ProgrammableChipSlot>>
-          get() = intrinsic()
-      }
+      override fun named(name: String): CircuitHousing.Compact.Batch = intrinsic()
     }
   }
 
@@ -13080,19 +13080,19 @@ interface CircuitHousing {
     val ProgrammableChip: ProgrammableChipSlot
       get() = intrinsic()
 
+    /** A batch of StructureRocketCircuitHousing devices. */
+    class Batch internal constructor() : DeviceBatch<CircuitHousing.Rocket>() {
+      /** A slot of every one in the batch, by number. */
+      val slots: Slots<SlotBatch<ProgrammableChipSlot>>
+        get() = intrinsic()
+    }
+
     /** The StructureRocketCircuitHousing prefab. */
     companion object : Prefab<CircuitHousing.Rocket>() {
-      override val all: Batch
+      override val all: CircuitHousing.Rocket.Batch
         get() = intrinsic()
 
-      override fun named(name: String): Batch = intrinsic()
-
-      /** A batch of StructureRocketCircuitHousing devices. */
-      class Batch internal constructor() : DeviceBatch<CircuitHousing.Rocket>() {
-        /** A slot of every one in the batch, by number. */
-        val slots: Slots<SlotBatch<ProgrammableChipSlot>>
-          get() = intrinsic()
-      }
+      override fun named(name: String): CircuitHousing.Rocket.Batch = intrinsic()
     }
   }
 }
@@ -13326,19 +13326,19 @@ class DynamicGPR internal constructor() : TypedDevice() {
   val Battery: ItemBatterySlot
     get() = intrinsic()
 
+  /** A batch of DynamicGPR devices. */
+  class Batch internal constructor() : DeviceBatch<DynamicGPR>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<ItemBatterySlot>>
+      get() = intrinsic()
+  }
+
   /** The DynamicGPR prefab. */
   companion object : Prefab<DynamicGPR>() {
-    override val all: Batch
+    override val all: DynamicGPR.Batch
       get() = intrinsic()
 
-    override fun named(name: String): Batch = intrinsic()
-
-    /** A batch of DynamicGPR devices. */
-    class Batch internal constructor() : DeviceBatch<DynamicGPR>() {
-      /** A slot of every one in the batch, by number. */
-      val slots: Slots<SlotBatch<ItemBatterySlot>>
-        get() = intrinsic()
-    }
+    override fun named(name: String): DynamicGPR.Batch = intrinsic()
   }
 }
 
@@ -13369,19 +13369,19 @@ class DynamicLight internal constructor() : TypedDevice() {
   val Battery: ItemBatterySlot
     get() = intrinsic()
 
+  /** A batch of DynamicLight devices. */
+  class Batch internal constructor() : DeviceBatch<DynamicLight>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<ItemBatterySlot>>
+      get() = intrinsic()
+  }
+
   /** The DynamicLight prefab. */
   companion object : Prefab<DynamicLight>() {
-    override val all: Batch
+    override val all: DynamicLight.Batch
       get() = intrinsic()
 
-    override fun named(name: String): Batch = intrinsic()
-
-    /** A batch of DynamicLight devices. */
-    class Batch internal constructor() : DeviceBatch<DynamicLight>() {
-      /** A slot of every one in the batch, by number. */
-      val slots: Slots<SlotBatch<ItemBatterySlot>>
-        get() = intrinsic()
-    }
+    override fun named(name: String): DynamicLight.Batch = intrinsic()
   }
 }
 
@@ -13464,19 +13464,19 @@ class H2Combustor internal constructor() : TypedDevice() {
   val ProgrammableChip: DataDiskSlot
     get() = intrinsic()
 
+  /** A batch of H2Combustor devices. */
+  class Batch internal constructor() : DeviceBatch<H2Combustor>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<DataDiskSlot>>
+      get() = intrinsic()
+  }
+
   /** The H2Combustor prefab. */
   companion object : Prefab<H2Combustor>() {
-    override val all: Batch
+    override val all: H2Combustor.Batch
       get() = intrinsic()
 
-    override fun named(name: String): Batch = intrinsic()
-
-    /** A batch of H2Combustor devices. */
-    class Batch internal constructor() : DeviceBatch<H2Combustor>() {
-      /** A slot of every one in the batch, by number. */
-      val slots: Slots<SlotBatch<DataDiskSlot>>
-        get() = intrinsic()
-    }
+    override fun named(name: String): H2Combustor.Batch = intrinsic()
   }
 }
 
@@ -13502,19 +13502,19 @@ class ItemBeacon internal constructor() : TypedDevice() {
   val Battery: ItemBatterySlot
     get() = intrinsic()
 
+  /** A batch of ItemBeacon devices. */
+  class Batch internal constructor() : DeviceBatch<ItemBeacon>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<ItemBatterySlot>>
+      get() = intrinsic()
+  }
+
   /** The ItemBeacon prefab. */
   companion object : Prefab<ItemBeacon>() {
-    override val all: Batch
+    override val all: ItemBeacon.Batch
       get() = intrinsic()
 
-    override fun named(name: String): Batch = intrinsic()
-
-    /** A batch of ItemBeacon devices. */
-    class Batch internal constructor() : DeviceBatch<ItemBeacon>() {
-      /** A slot of every one in the batch, by number. */
-      val slots: Slots<SlotBatch<ItemBatterySlot>>
-        get() = intrinsic()
-    }
+    override fun named(name: String): ItemBeacon.Batch = intrinsic()
   }
 }
 
@@ -13541,19 +13541,19 @@ class Flashlight internal constructor() : TypedDevice() {
   val Battery: ItemBatterySlot
     get() = intrinsic()
 
+  /** A batch of ItemFlashlight devices. */
+  class Batch internal constructor() : DeviceBatch<Flashlight>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<ItemBatterySlot>>
+      get() = intrinsic()
+  }
+
   /** The ItemFlashlight prefab. */
   companion object : Prefab<Flashlight>() {
-    override val all: Batch
+    override val all: Flashlight.Batch
       get() = intrinsic()
 
-    override fun named(name: String): Batch = intrinsic()
-
-    /** A batch of ItemFlashlight devices. */
-    class Batch internal constructor() : DeviceBatch<Flashlight>() {
-      /** A slot of every one in the batch, by number. */
-      val slots: Slots<SlotBatch<ItemBatterySlot>>
-        get() = intrinsic()
-    }
+    override fun named(name: String): Flashlight.Batch = intrinsic()
   }
 }
 
@@ -13596,19 +13596,19 @@ class GasMask internal constructor() : TypedDevice() {
   val slots: Slots<ItemFilteredSlot>
     get() = intrinsic()
 
+  /** A batch of ItemGasMask devices. */
+  class Batch internal constructor() : DeviceBatch<GasMask>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<ItemFilteredSlot>>
+      get() = intrinsic()
+  }
+
   /** The ItemGasMask prefab. */
   companion object : Prefab<GasMask>() {
-    override val all: Batch
+    override val all: GasMask.Batch
       get() = intrinsic()
 
-    override fun named(name: String): Batch = intrinsic()
-
-    /** A batch of ItemGasMask devices. */
-    class Batch internal constructor() : DeviceBatch<GasMask>() {
-      /** A slot of every one in the batch, by number. */
-      val slots: Slots<SlotBatch<ItemFilteredSlot>>
-        get() = intrinsic()
-    }
+    override fun named(name: String): GasMask.Batch = intrinsic()
   }
 }
 
@@ -13631,19 +13631,19 @@ class HardHat internal constructor() : TypedDevice() {
   val Battery: ItemBatterySlot
     get() = intrinsic()
 
+  /** A batch of ItemHardHat devices. */
+  class Batch internal constructor() : DeviceBatch<HardHat>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<ItemBatterySlot>>
+      get() = intrinsic()
+  }
+
   /** The ItemHardHat prefab. */
   companion object : Prefab<HardHat>() {
-    override val all: Batch
+    override val all: HardHat.Batch
       get() = intrinsic()
 
-    override fun named(name: String): Batch = intrinsic()
-
-    /** A batch of ItemHardHat devices. */
-    class Batch internal constructor() : DeviceBatch<HardHat>() {
-      /** A slot of every one in the batch, by number. */
-      val slots: Slots<SlotBatch<ItemBatterySlot>>
-        get() = intrinsic()
-    }
+    override fun named(name: String): HardHat.Batch = intrinsic()
   }
 }
 
@@ -13667,19 +13667,19 @@ class HardJetpack internal constructor() : TypedDevice() {
   val Propellant: ItemAirTankSlot
     get() = intrinsic()
 
+  /** A batch of ItemHardJetpack devices. */
+  class Batch internal constructor() : DeviceBatch<HardJetpack>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<ItemCommonSlot>>
+      get() = intrinsic()
+  }
+
   /** The ItemHardJetpack prefab. */
   companion object : Prefab<HardJetpack>() {
-    override val all: Batch
+    override val all: HardJetpack.Batch
       get() = intrinsic()
 
-    override fun named(name: String): Batch = intrinsic()
-
-    /** A batch of ItemHardJetpack devices. */
-    class Batch internal constructor() : DeviceBatch<HardJetpack>() {
-      /** A slot of every one in the batch, by number. */
-      val slots: Slots<SlotBatch<ItemCommonSlot>>
-        get() = intrinsic()
-    }
+    override fun named(name: String): HardJetpack.Batch = intrinsic()
   }
 }
 
@@ -13713,19 +13713,19 @@ class JetpackBasic internal constructor() : TypedDevice() {
   val Propellant: ItemAirTankSlot
     get() = intrinsic()
 
+  /** A batch of ItemJetpackBasic devices. */
+  class Batch internal constructor() : DeviceBatch<JetpackBasic>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<ItemCommonSlot>>
+      get() = intrinsic()
+  }
+
   /** The ItemJetpackBasic prefab. */
   companion object : Prefab<JetpackBasic>() {
-    override val all: Batch
+    override val all: JetpackBasic.Batch
       get() = intrinsic()
 
-    override fun named(name: String): Batch = intrinsic()
-
-    /** A batch of ItemJetpackBasic devices. */
-    class Batch internal constructor() : DeviceBatch<JetpackBasic>() {
-      /** A slot of every one in the batch, by number. */
-      val slots: Slots<SlotBatch<ItemCommonSlot>>
-        get() = intrinsic()
-    }
+    override fun named(name: String): JetpackBasic.Batch = intrinsic()
   }
 }
 
@@ -13751,19 +13751,19 @@ class Labeller internal constructor() : TypedDevice() {
   val Battery: ItemBatterySlot
     get() = intrinsic()
 
+  /** A batch of ItemLabeller devices. */
+  class Batch internal constructor() : DeviceBatch<Labeller>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<ItemBatterySlot>>
+      get() = intrinsic()
+  }
+
   /** The ItemLabeller prefab. */
   companion object : Prefab<Labeller>() {
-    override val all: Batch
+    override val all: Labeller.Batch
       get() = intrinsic()
 
-    override fun named(name: String): Batch = intrinsic()
-
-    /** A batch of ItemLabeller devices. */
-    class Batch internal constructor() : DeviceBatch<Labeller>() {
-      /** A slot of every one in the batch, by number. */
-      val slots: Slots<SlotBatch<ItemBatterySlot>>
-        get() = intrinsic()
-    }
+    override fun named(name: String): Labeller.Batch = intrinsic()
   }
 }
 
@@ -13809,19 +13809,19 @@ class Laptop internal constructor() : TypedDevice() {
   val Motherboard: ItemCommonSlot
     get() = intrinsic()
 
+  /** A batch of ItemLaptop devices. */
+  class Batch internal constructor() : DeviceBatch<Laptop>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<ItemCommonSlot>>
+      get() = intrinsic()
+  }
+
   /** The ItemLaptop prefab. */
   companion object : Prefab<Laptop>() {
-    override val all: Batch
+    override val all: Laptop.Batch
       get() = intrinsic()
 
-    override fun named(name: String): Batch = intrinsic()
-
-    /** A batch of ItemLaptop devices. */
-    class Batch internal constructor() : DeviceBatch<Laptop>() {
-      /** A slot of every one in the batch, by number. */
-      val slots: Slots<SlotBatch<ItemCommonSlot>>
-        get() = intrinsic()
-    }
+    override fun named(name: String): Laptop.Batch = intrinsic()
   }
 }
 
@@ -13855,19 +13855,19 @@ class LiquidVacuum internal constructor() : TypedDevice() {
   val Battery: ItemBatterySlot
     get() = intrinsic()
 
+  /** A batch of ItemLiquidVacuum devices. */
+  class Batch internal constructor() : DeviceBatch<LiquidVacuum>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<ItemBatterySlot>>
+      get() = intrinsic()
+  }
+
   /** The ItemLiquidVacuum prefab. */
   companion object : Prefab<LiquidVacuum>() {
-    override val all: Batch
+    override val all: LiquidVacuum.Batch
       get() = intrinsic()
 
-    override fun named(name: String): Batch = intrinsic()
-
-    /** A batch of ItemLiquidVacuum devices. */
-    class Batch internal constructor() : DeviceBatch<LiquidVacuum>() {
-      /** A slot of every one in the batch, by number. */
-      val slots: Slots<SlotBatch<ItemBatterySlot>>
-        get() = intrinsic()
-    }
+    override fun named(name: String): LiquidVacuum.Batch = intrinsic()
   }
 }
 
@@ -13894,19 +13894,19 @@ class NVG internal constructor() : TypedDevice() {
   val Battery: ItemBatterySlot
     get() = intrinsic()
 
+  /** A batch of ItemNVG devices. */
+  class Batch internal constructor() : DeviceBatch<NVG>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<ItemBatterySlot>>
+      get() = intrinsic()
+  }
+
   /** The ItemNVG prefab. */
   companion object : Prefab<NVG>() {
-    override val all: Batch
+    override val all: NVG.Batch
       get() = intrinsic()
 
-    override fun named(name: String): Batch = intrinsic()
-
-    /** A batch of ItemNVG devices. */
-    class Batch internal constructor() : DeviceBatch<NVG>() {
-      /** A slot of every one in the batch, by number. */
-      val slots: Slots<SlotBatch<ItemBatterySlot>>
-        get() = intrinsic()
-    }
+    override fun named(name: String): NVG.Batch = intrinsic()
   }
 }
 
@@ -13936,19 +13936,19 @@ class OreDetector internal constructor() : TypedDevice() {
   val Battery: ItemBatterySlot
     get() = intrinsic()
 
+  /** A batch of ItemOreDetector devices. */
+  class Batch internal constructor() : DeviceBatch<OreDetector>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<ItemBatterySlot>>
+      get() = intrinsic()
+  }
+
   /** The ItemOreDetector prefab. */
   companion object : Prefab<OreDetector>() {
-    override val all: Batch
+    override val all: OreDetector.Batch
       get() = intrinsic()
 
-    override fun named(name: String): Batch = intrinsic()
-
-    /** A batch of ItemOreDetector devices. */
-    class Batch internal constructor() : DeviceBatch<OreDetector>() {
-      /** A slot of every one in the batch, by number. */
-      val slots: Slots<SlotBatch<ItemBatterySlot>>
-        get() = intrinsic()
-    }
+    override fun named(name: String): OreDetector.Batch = intrinsic()
   }
 }
 
@@ -13979,19 +13979,19 @@ class PlantSampler internal constructor() : TypedDevice() {
   val Battery: ItemBatterySlot
     get() = intrinsic()
 
+  /** A batch of ItemPlantSampler devices. */
+  class Batch internal constructor() : DeviceBatch<PlantSampler>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<ItemBatterySlot>>
+      get() = intrinsic()
+  }
+
   /** The ItemPlantSampler prefab. */
   companion object : Prefab<PlantSampler>() {
-    override val all: Batch
+    override val all: PlantSampler.Batch
       get() = intrinsic()
 
-    override fun named(name: String): Batch = intrinsic()
-
-    /** A batch of ItemPlantSampler devices. */
-    class Batch internal constructor() : DeviceBatch<PlantSampler>() {
-      /** A slot of every one in the batch, by number. */
-      val slots: Slots<SlotBatch<ItemBatterySlot>>
-        get() = intrinsic()
-    }
+    override fun named(name: String): PlantSampler.Batch = intrinsic()
   }
 }
 
@@ -14029,19 +14029,19 @@ class RemoteDetonator internal constructor() : TypedDevice() {
   val Battery: ItemBatterySlot
     get() = intrinsic()
 
+  /** A batch of ItemRemoteDetonator devices. */
+  class Batch internal constructor() : DeviceBatch<RemoteDetonator>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<ItemBatterySlot>>
+      get() = intrinsic()
+  }
+
   /** The ItemRemoteDetonator prefab. */
   companion object : Prefab<RemoteDetonator>() {
-    override val all: Batch
+    override val all: RemoteDetonator.Batch
       get() = intrinsic()
 
-    override fun named(name: String): Batch = intrinsic()
-
-    /** A batch of ItemRemoteDetonator devices. */
-    class Batch internal constructor() : DeviceBatch<RemoteDetonator>() {
-      /** A slot of every one in the batch, by number. */
-      val slots: Slots<SlotBatch<ItemBatterySlot>>
-        get() = intrinsic()
-    }
+    override fun named(name: String): RemoteDetonator.Batch = intrinsic()
   }
 }
 
@@ -14069,19 +14069,19 @@ class SensorLenses internal constructor() : TypedDevice() {
   val SensorProcessingUnit: ItemCommonSlot
     get() = intrinsic()
 
+  /** A batch of ItemSensorLenses devices. */
+  class Batch internal constructor() : DeviceBatch<SensorLenses>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<ItemCommonSlot>>
+      get() = intrinsic()
+  }
+
   /** The ItemSensorLenses prefab. */
   companion object : Prefab<SensorLenses>() {
-    override val all: Batch
+    override val all: SensorLenses.Batch
       get() = intrinsic()
 
-    override fun named(name: String): Batch = intrinsic()
-
-    /** A batch of ItemSensorLenses devices. */
-    class Batch internal constructor() : DeviceBatch<SensorLenses>() {
-      /** A slot of every one in the batch, by number. */
-      val slots: Slots<SlotBatch<ItemCommonSlot>>
-        get() = intrinsic()
-    }
+    override fun named(name: String): SensorLenses.Batch = intrinsic()
   }
 }
 
@@ -14105,19 +14105,19 @@ class Spacepack internal constructor() : TypedDevice() {
   val Propellant: ItemAirTankSlot
     get() = intrinsic()
 
+  /** A batch of ItemSpacepack devices. */
+  class Batch internal constructor() : DeviceBatch<Spacepack>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<ItemCommonSlot>>
+      get() = intrinsic()
+  }
+
   /** The ItemSpacepack prefab. */
   companion object : Prefab<Spacepack>() {
-    override val all: Batch
+    override val all: Spacepack.Batch
       get() = intrinsic()
 
-    override fun named(name: String): Batch = intrinsic()
-
-    /** A batch of ItemSpacepack devices. */
-    class Batch internal constructor() : DeviceBatch<Spacepack>() {
-      /** A slot of every one in the batch, by number. */
-      val slots: Slots<SlotBatch<ItemCommonSlot>>
-        get() = intrinsic()
-    }
+    override fun named(name: String): Spacepack.Batch = intrinsic()
   }
 }
 
@@ -14156,19 +14156,19 @@ class TerrainManipulator internal constructor() : TypedDevice() {
   val DirtCanister: ItemCommonSlot
     get() = intrinsic()
 
+  /** A batch of ItemTerrainManipulator devices. */
+  class Batch internal constructor() : DeviceBatch<TerrainManipulator>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<ItemCommonSlot>>
+      get() = intrinsic()
+  }
+
   /** The ItemTerrainManipulator prefab. */
   companion object : Prefab<TerrainManipulator>() {
-    override val all: Batch
+    override val all: TerrainManipulator.Batch
       get() = intrinsic()
 
-    override fun named(name: String): Batch = intrinsic()
-
-    /** A batch of ItemTerrainManipulator devices. */
-    class Batch internal constructor() : DeviceBatch<TerrainManipulator>() {
-      /** A slot of every one in the batch, by number. */
-      val slots: Slots<SlotBatch<ItemCommonSlot>>
-        get() = intrinsic()
-    }
+    override fun named(name: String): TerrainManipulator.Batch = intrinsic()
   }
 }
 
@@ -14191,19 +14191,19 @@ class WearLamp internal constructor() : TypedDevice() {
   val Battery: ItemBatterySlot
     get() = intrinsic()
 
+  /** A batch of ItemWearLamp devices. */
+  class Batch internal constructor() : DeviceBatch<WearLamp>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<ItemBatterySlot>>
+      get() = intrinsic()
+  }
+
   /** The ItemWearLamp prefab. */
   companion object : Prefab<WearLamp>() {
-    override val all: Batch
+    override val all: WearLamp.Batch
       get() = intrinsic()
 
-    override fun named(name: String): Batch = intrinsic()
-
-    /** A batch of ItemWearLamp devices. */
-    class Batch internal constructor() : DeviceBatch<WearLamp>() {
-      /** A slot of every one in the batch, by number. */
-      val slots: Slots<SlotBatch<ItemBatterySlot>>
-        get() = intrinsic()
-    }
+    override fun named(name: String): WearLamp.Batch = intrinsic()
   }
 }
 
@@ -14294,19 +14294,19 @@ class PortableSolarPanel internal constructor() : TypedDevice() {
   val Battery: ItemBatterySlot
     get() = intrinsic()
 
+  /** A batch of PortableSolarPanel devices. */
+  class Batch internal constructor() : DeviceBatch<PortableSolarPanel>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<ItemBatterySlot>>
+      get() = intrinsic()
+  }
+
   /** The PortableSolarPanel prefab. */
   companion object : Prefab<PortableSolarPanel>() {
-    override val all: Batch
+    override val all: PortableSolarPanel.Batch
       get() = intrinsic()
 
-    override fun named(name: String): Batch = intrinsic()
-
-    /** A batch of PortableSolarPanel devices. */
-    class Batch internal constructor() : DeviceBatch<PortableSolarPanel>() {
-      /** A slot of every one in the batch, by number. */
-      val slots: Slots<SlotBatch<ItemBatterySlot>>
-        get() = intrinsic()
-    }
+    override fun named(name: String): PortableSolarPanel.Batch = intrinsic()
   }
 }
 
@@ -14379,19 +14379,19 @@ class Robot internal constructor() : TypedDevice() {
   val ProgrammableChip: ItemCommonSlot
     get() = intrinsic()
 
+  /** A batch of Robot devices. */
+  class Batch internal constructor() : DeviceBatch<Robot>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<ItemCommonSlot>>
+      get() = intrinsic()
+  }
+
   /** The Robot prefab. */
   companion object : Prefab<Robot>() {
-    override val all: Batch
+    override val all: Robot.Batch
       get() = intrinsic()
 
-    override fun named(name: String): Batch = intrinsic()
-
-    /** A batch of Robot devices. */
-    class Batch internal constructor() : DeviceBatch<Robot>() {
-      /** A slot of every one in the batch, by number. */
-      val slots: Slots<SlotBatch<ItemCommonSlot>>
-        get() = intrinsic()
-    }
+    override fun named(name: String): Robot.Batch = intrinsic()
   }
 }
 
@@ -14409,19 +14409,19 @@ class Rover_MkI internal constructor() : TypedDevice() {
   val slots: Slots<ItemCommonSlot>
     get() = intrinsic()
 
+  /** A batch of Rover_MkI devices. */
+  class Batch internal constructor() : DeviceBatch<Rover_MkI>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<ItemCommonSlot>>
+      get() = intrinsic()
+  }
+
   /** The Rover_MkI prefab. */
   companion object : Prefab<Rover_MkI>() {
-    override val all: Batch
+    override val all: Rover_MkI.Batch
       get() = intrinsic()
 
-    override fun named(name: String): Batch = intrinsic()
-
-    /** A batch of Rover_MkI devices. */
-    class Batch internal constructor() : DeviceBatch<Rover_MkI>() {
-      /** A slot of every one in the batch, by number. */
-      val slots: Slots<SlotBatch<ItemCommonSlot>>
-        get() = intrinsic()
-    }
+    override fun named(name: String): Rover_MkI.Batch = intrinsic()
   }
 }
 
@@ -14544,19 +14544,19 @@ class ActiveVent internal constructor() : TypedDevice() {
   val DataDisk: DataDiskSlot
     get() = intrinsic()
 
+  /** A batch of StructureActiveVent devices. */
+  class Batch internal constructor() : DeviceBatch<ActiveVent>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<DataDiskSlot>>
+      get() = intrinsic()
+  }
+
   /** The StructureActiveVent prefab. */
   companion object : Prefab<ActiveVent>() {
-    override val all: Batch
+    override val all: ActiveVent.Batch
       get() = intrinsic()
 
-    override fun named(name: String): Batch = intrinsic()
-
-    /** A batch of StructureActiveVent devices. */
-    class Batch internal constructor() : DeviceBatch<ActiveVent>() {
-      /** A slot of every one in the batch, by number. */
-      val slots: Slots<SlotBatch<DataDiskSlot>>
-        get() = intrinsic()
-    }
+    override fun named(name: String): ActiveVent.Batch = intrinsic()
   }
 }
 
@@ -14621,19 +14621,19 @@ class AdvancedComposter internal constructor() : TypedDevice() {
   val slots: Slots<DataDiskSlot>
     get() = intrinsic()
 
+  /** A batch of StructureAdvancedComposter devices. */
+  class Batch internal constructor() : DeviceBatch<AdvancedComposter>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<DataDiskSlot>>
+      get() = intrinsic()
+  }
+
   /** The StructureAdvancedComposter prefab. */
   companion object : Prefab<AdvancedComposter>() {
-    override val all: Batch
+    override val all: AdvancedComposter.Batch
       get() = intrinsic()
 
-    override fun named(name: String): Batch = intrinsic()
-
-    /** A batch of StructureAdvancedComposter devices. */
-    class Batch internal constructor() : DeviceBatch<AdvancedComposter>() {
-      /** A slot of every one in the batch, by number. */
-      val slots: Slots<SlotBatch<DataDiskSlot>>
-        get() = intrinsic()
-    }
+    override fun named(name: String): AdvancedComposter.Batch = intrinsic()
   }
 }
 
@@ -14701,19 +14701,19 @@ class AirConditioner internal constructor() : TypedDevice() {
   val ProgrammableChip: DataDiskSlot
     get() = intrinsic()
 
+  /** A batch of StructureAirConditioner devices. */
+  class Batch internal constructor() : DeviceBatch<AirConditioner>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<DataDiskSlot>>
+      get() = intrinsic()
+  }
+
   /** The StructureAirConditioner prefab. */
   companion object : Prefab<AirConditioner>() {
-    override val all: Batch
+    override val all: AirConditioner.Batch
       get() = intrinsic()
 
-    override fun named(name: String): Batch = intrinsic()
-
-    /** A batch of StructureAirConditioner devices. */
-    class Batch internal constructor() : DeviceBatch<AirConditioner>() {
-      /** A slot of every one in the batch, by number. */
-      val slots: Slots<SlotBatch<DataDiskSlot>>
-        get() = intrinsic()
-    }
+    override fun named(name: String): AirConditioner.Batch = intrinsic()
   }
 }
 
@@ -14766,19 +14766,19 @@ class ArcFurnace internal constructor() : TypedDevice() {
   val slots: Slots<DataDiskSlot>
     get() = intrinsic()
 
+  /** A batch of StructureArcFurnace devices. */
+  class Batch internal constructor() : DeviceBatch<ArcFurnace>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<DataDiskSlot>>
+      get() = intrinsic()
+  }
+
   /** The StructureArcFurnace prefab. */
   companion object : Prefab<ArcFurnace>() {
-    override val all: Batch
+    override val all: ArcFurnace.Batch
       get() = intrinsic()
 
-    override fun named(name: String): Batch = intrinsic()
-
-    /** A batch of StructureArcFurnace devices. */
-    class Batch internal constructor() : DeviceBatch<ArcFurnace>() {
-      /** A slot of every one in the batch, by number. */
-      val slots: Slots<SlotBatch<DataDiskSlot>>
-        get() = intrinsic()
-    }
+    override fun named(name: String): ArcFurnace.Batch = intrinsic()
   }
 }
 
@@ -14868,19 +14868,19 @@ class BlockBed internal constructor() : TypedDevice() {
   val Bed: DataDiskSlot
     get() = intrinsic()
 
+  /** A batch of StructureBlockBed devices. */
+  class Batch internal constructor() : DeviceBatch<BlockBed>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<DataDiskSlot>>
+      get() = intrinsic()
+  }
+
   /** The StructureBlockBed prefab. */
   companion object : Prefab<BlockBed>() {
-    override val all: Batch
+    override val all: BlockBed.Batch
       get() = intrinsic()
 
-    override fun named(name: String): Batch = intrinsic()
-
-    /** A batch of StructureBlockBed devices. */
-    class Batch internal constructor() : DeviceBatch<BlockBed>() {
-      /** A slot of every one in the batch, by number. */
-      val slots: Slots<SlotBatch<DataDiskSlot>>
-        get() = intrinsic()
-    }
+    override fun named(name: String): BlockBed.Batch = intrinsic()
   }
 }
 
@@ -14934,19 +14934,19 @@ class ChuteInlet internal constructor() : TypedDevice() {
   val slots: Slots<DataDiskSlot>
     get() = intrinsic()
 
+  /** A batch of StructureChuteInlet devices. */
+  class Batch internal constructor() : DeviceBatch<ChuteInlet>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<DataDiskSlot>>
+      get() = intrinsic()
+  }
+
   /** The StructureChuteInlet prefab. */
   companion object : Prefab<ChuteInlet>() {
-    override val all: Batch
+    override val all: ChuteInlet.Batch
       get() = intrinsic()
 
-    override fun named(name: String): Batch = intrinsic()
-
-    /** A batch of StructureChuteInlet devices. */
-    class Batch internal constructor() : DeviceBatch<ChuteInlet>() {
-      /** A slot of every one in the batch, by number. */
-      val slots: Slots<SlotBatch<DataDiskSlot>>
-        get() = intrinsic()
-    }
+    override fun named(name: String): ChuteInlet.Batch = intrinsic()
   }
 }
 
@@ -14973,19 +14973,19 @@ class ChuteOutlet internal constructor() : TypedDevice() {
   val slots: Slots<DataDiskSlot>
     get() = intrinsic()
 
+  /** A batch of StructureChuteOutlet devices. */
+  class Batch internal constructor() : DeviceBatch<ChuteOutlet>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<DataDiskSlot>>
+      get() = intrinsic()
+  }
+
   /** The StructureChuteOutlet prefab. */
   companion object : Prefab<ChuteOutlet>() {
-    override val all: Batch
+    override val all: ChuteOutlet.Batch
       get() = intrinsic()
 
-    override fun named(name: String): Batch = intrinsic()
-
-    /** A batch of StructureChuteOutlet devices. */
-    class Batch internal constructor() : DeviceBatch<ChuteOutlet>() {
-      /** A slot of every one in the batch, by number. */
-      val slots: Slots<SlotBatch<DataDiskSlot>>
-        get() = intrinsic()
-    }
+    override fun named(name: String): ChuteOutlet.Batch = intrinsic()
   }
 }
 
@@ -15025,19 +15025,19 @@ class ChuteUmbilicalMale internal constructor() : TypedDevice() {
   val TransportSlot: DataDiskSlot
     get() = intrinsic()
 
+  /** A batch of StructureChuteUmbilicalMale devices. */
+  class Batch internal constructor() : DeviceBatch<ChuteUmbilicalMale>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<DataDiskSlot>>
+      get() = intrinsic()
+  }
+
   /** The StructureChuteUmbilicalMale prefab. */
   companion object : Prefab<ChuteUmbilicalMale>() {
-    override val all: Batch
+    override val all: ChuteUmbilicalMale.Batch
       get() = intrinsic()
 
-    override fun named(name: String): Batch = intrinsic()
-
-    /** A batch of StructureChuteUmbilicalMale devices. */
-    class Batch internal constructor() : DeviceBatch<ChuteUmbilicalMale>() {
-      /** A slot of every one in the batch, by number. */
-      val slots: Slots<SlotBatch<DataDiskSlot>>
-        get() = intrinsic()
-    }
+    override fun named(name: String): ChuteUmbilicalMale.Batch = intrinsic()
   }
 }
 
@@ -15319,19 +15319,19 @@ class Electrolyzer internal constructor() : TypedDevice() {
   val ProgrammableChip: DataDiskSlot
     get() = intrinsic()
 
+  /** A batch of StructureElectrolyzer devices. */
+  class Batch internal constructor() : DeviceBatch<Electrolyzer>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<DataDiskSlot>>
+      get() = intrinsic()
+  }
+
   /** The StructureElectrolyzer prefab. */
   companion object : Prefab<Electrolyzer>() {
-    override val all: Batch
+    override val all: Electrolyzer.Batch
       get() = intrinsic()
 
-    override fun named(name: String): Batch = intrinsic()
-
-    /** A batch of StructureElectrolyzer devices. */
-    class Batch internal constructor() : DeviceBatch<Electrolyzer>() {
-      /** A slot of every one in the batch, by number. */
-      val slots: Slots<SlotBatch<DataDiskSlot>>
-        get() = intrinsic()
-    }
+    override fun named(name: String): Electrolyzer.Batch = intrinsic()
   }
 }
 
@@ -15459,19 +15459,19 @@ class Fermenter internal constructor() : TypedDevice() {
   val ProgrammableChip: DataDiskSlot
     get() = intrinsic()
 
+  /** A batch of StructureFermenter devices. */
+  class Batch internal constructor() : DeviceBatch<Fermenter>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<DataDiskSlot>>
+      get() = intrinsic()
+  }
+
   /** The StructureFermenter prefab. */
   companion object : Prefab<Fermenter>() {
-    override val all: Batch
+    override val all: Fermenter.Batch
       get() = intrinsic()
 
-    override fun named(name: String): Batch = intrinsic()
-
-    /** A batch of StructureFermenter devices. */
-    class Batch internal constructor() : DeviceBatch<Fermenter>() {
-      /** A slot of every one in the batch, by number. */
-      val slots: Slots<SlotBatch<DataDiskSlot>>
-        get() = intrinsic()
-    }
+    override fun named(name: String): Fermenter.Batch = intrinsic()
   }
 }
 
@@ -15716,19 +15716,19 @@ class Harvie internal constructor() : TypedDevice() {
   val Hand: DataDiskSlot
     get() = intrinsic()
 
+  /** A batch of StructureHarvie devices. */
+  class Batch internal constructor() : DeviceBatch<Harvie>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<DataDiskSlot>>
+      get() = intrinsic()
+  }
+
   /** The StructureHarvie prefab. */
   companion object : Prefab<Harvie>() {
-    override val all: Batch
+    override val all: Harvie.Batch
       get() = intrinsic()
 
-    override fun named(name: String): Batch = intrinsic()
-
-    /** A batch of StructureHarvie devices. */
-    class Batch internal constructor() : DeviceBatch<Harvie>() {
-      /** A slot of every one in the batch, by number. */
-      val slots: Slots<SlotBatch<DataDiskSlot>>
-        get() = intrinsic()
-    }
+    override fun named(name: String): Harvie.Batch = intrinsic()
   }
 }
 
@@ -15790,19 +15790,19 @@ class HydroponicsStation internal constructor() : TypedDevice() {
   val slots: Slots<PlantSlot>
     get() = intrinsic()
 
+  /** A batch of StructureHydroponicsStation devices. */
+  class Batch internal constructor() : DeviceBatch<HydroponicsStation>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<PlantSlot>>
+      get() = intrinsic()
+  }
+
   /** The StructureHydroponicsStation prefab. */
   companion object : Prefab<HydroponicsStation>() {
-    override val all: Batch
+    override val all: HydroponicsStation.Batch
       get() = intrinsic()
 
-    override fun named(name: String): Batch = intrinsic()
-
-    /** A batch of StructureHydroponicsStation devices. */
-    class Batch internal constructor() : DeviceBatch<HydroponicsStation>() {
-      /** A slot of every one in the batch, by number. */
-      val slots: Slots<SlotBatch<PlantSlot>>
-        get() = intrinsic()
-    }
+    override fun named(name: String): HydroponicsStation.Batch = intrinsic()
   }
 }
 
@@ -15843,19 +15843,19 @@ class HydroponicsTrayData internal constructor() : TypedDevice() {
   val Fertiliser: DataDiskSlot
     get() = intrinsic()
 
+  /** A batch of StructureHydroponicsTrayData devices. */
+  class Batch internal constructor() : DeviceBatch<HydroponicsTrayData>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<CommonSlot>>
+      get() = intrinsic()
+  }
+
   /** The StructureHydroponicsTrayData prefab. */
   companion object : Prefab<HydroponicsTrayData>() {
-    override val all: Batch
+    override val all: HydroponicsTrayData.Batch
       get() = intrinsic()
 
-    override fun named(name: String): Batch = intrinsic()
-
-    /** A batch of StructureHydroponicsTrayData devices. */
-    class Batch internal constructor() : DeviceBatch<HydroponicsTrayData>() {
-      /** A slot of every one in the batch, by number. */
-      val slots: Slots<SlotBatch<CommonSlot>>
-        get() = intrinsic()
-    }
+    override fun named(name: String): HydroponicsTrayData.Batch = intrinsic()
   }
 }
 
@@ -15905,19 +15905,19 @@ class IceCrusher internal constructor() : TypedDevice() {
   val slots: Slots<DataDiskSlot>
     get() = intrinsic()
 
+  /** A batch of StructureIceCrusher devices. */
+  class Batch internal constructor() : DeviceBatch<IceCrusher>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<DataDiskSlot>>
+      get() = intrinsic()
+  }
+
   /** The StructureIceCrusher prefab. */
   companion object : Prefab<IceCrusher>() {
-    override val all: Batch
+    override val all: IceCrusher.Batch
       get() = intrinsic()
 
-    override fun named(name: String): Batch = intrinsic()
-
-    /** A batch of StructureIceCrusher devices. */
-    class Batch internal constructor() : DeviceBatch<IceCrusher>() {
-      /** A slot of every one in the batch, by number. */
-      val slots: Slots<SlotBatch<DataDiskSlot>>
-        get() = intrinsic()
-    }
+    override fun named(name: String): IceCrusher.Batch = intrinsic()
   }
 }
 
@@ -16166,19 +16166,19 @@ class LogicSorter internal constructor() : TypedDevice() {
   val Export2: DataDiskSlot
     get() = intrinsic()
 
+  /** A batch of StructureLogicSorter devices. */
+  class Batch internal constructor() : DeviceBatch<LogicSorter>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<DataDiskSlot>>
+      get() = intrinsic()
+  }
+
   /** The StructureLogicSorter prefab. */
   companion object : Prefab<LogicSorter>() {
-    override val all: Batch
+    override val all: LogicSorter.Batch
       get() = intrinsic()
 
-    override fun named(name: String): Batch = intrinsic()
-
-    /** A batch of StructureLogicSorter devices. */
-    class Batch internal constructor() : DeviceBatch<LogicSorter>() {
-      /** A slot of every one in the batch, by number. */
-      val slots: Slots<SlotBatch<DataDiskSlot>>
-        get() = intrinsic()
-    }
+    override fun named(name: String): LogicSorter.Batch = intrinsic()
   }
 }
 
@@ -16257,19 +16257,19 @@ class Nitrolyzer internal constructor() : TypedDevice() {
   val ProgrammableChip: DataDiskSlot
     get() = intrinsic()
 
+  /** A batch of StructureNitrolyzer devices. */
+  class Batch internal constructor() : DeviceBatch<Nitrolyzer>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<DataDiskSlot>>
+      get() = intrinsic()
+  }
+
   /** The StructureNitrolyzer prefab. */
   companion object : Prefab<Nitrolyzer>() {
-    override val all: Batch
+    override val all: Nitrolyzer.Batch
       get() = intrinsic()
 
-    override fun named(name: String): Batch = intrinsic()
-
-    /** A batch of StructureNitrolyzer devices. */
-    class Batch internal constructor() : DeviceBatch<Nitrolyzer>() {
-      /** A slot of every one in the batch, by number. */
-      val slots: Slots<SlotBatch<DataDiskSlot>>
-        get() = intrinsic()
-    }
+    override fun named(name: String): Nitrolyzer.Batch = intrinsic()
   }
 }
 
@@ -16320,19 +16320,19 @@ class Packer internal constructor() : TypedDevice() {
   val Export: DataDiskSlot
     get() = intrinsic()
 
+  /** A batch of StructurePacker devices. */
+  class Batch internal constructor() : DeviceBatch<Packer>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<DataDiskSlot>>
+      get() = intrinsic()
+  }
+
   /** The StructurePacker prefab. */
   companion object : Prefab<Packer>() {
-    override val all: Batch
+    override val all: Packer.Batch
       get() = intrinsic()
 
-    override fun named(name: String): Batch = intrinsic()
-
-    /** A batch of StructurePacker devices. */
-    class Batch internal constructor() : DeviceBatch<Packer>() {
-      /** A slot of every one in the batch, by number. */
-      val slots: Slots<SlotBatch<DataDiskSlot>>
-        get() = intrinsic()
-    }
+    override fun named(name: String): Packer.Batch = intrinsic()
   }
 }
 
@@ -16382,19 +16382,19 @@ class PortablesConnector internal constructor() : TypedDevice() {
   val PortableSlot: DataDiskSlot
     get() = intrinsic()
 
+  /** A batch of StructurePortablesConnector devices. */
+  class Batch internal constructor() : DeviceBatch<PortablesConnector>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<DataDiskSlot>>
+      get() = intrinsic()
+  }
+
   /** The StructurePortablesConnector prefab. */
   companion object : Prefab<PortablesConnector>() {
-    override val all: Batch
+    override val all: PortablesConnector.Batch
       get() = intrinsic()
 
-    override fun named(name: String): Batch = intrinsic()
-
-    /** A batch of StructurePortablesConnector devices. */
-    class Batch internal constructor() : DeviceBatch<PortablesConnector>() {
-      /** A slot of every one in the batch, by number. */
-      val slots: Slots<SlotBatch<DataDiskSlot>>
-        get() = intrinsic()
-    }
+    override fun named(name: String): PortablesConnector.Batch = intrinsic()
   }
 }
 
@@ -16414,19 +16414,19 @@ class PowerConnector internal constructor() : TypedDevice() {
   val Portableslot: DataDiskSlot
     get() = intrinsic()
 
+  /** A batch of StructurePowerConnector devices. */
+  class Batch internal constructor() : DeviceBatch<PowerConnector>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<DataDiskSlot>>
+      get() = intrinsic()
+  }
+
   /** The StructurePowerConnector prefab. */
   companion object : Prefab<PowerConnector>() {
-    override val all: Batch
+    override val all: PowerConnector.Batch
       get() = intrinsic()
 
-    override fun named(name: String): Batch = intrinsic()
-
-    /** A batch of StructurePowerConnector devices. */
-    class Batch internal constructor() : DeviceBatch<PowerConnector>() {
-      /** A slot of every one in the batch, by number. */
-      val slots: Slots<SlotBatch<DataDiskSlot>>
-        get() = intrinsic()
-    }
+    override fun named(name: String): PowerConnector.Batch = intrinsic()
   }
 }
 
@@ -16784,19 +16784,19 @@ class RocketScanner internal constructor() : TypedDevice() {
   val ScannerHeadSlot: DataDiskSlot
     get() = intrinsic()
 
+  /** A batch of StructureRocketScanner devices. */
+  class Batch internal constructor() : DeviceBatch<RocketScanner>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<DataDiskSlot>>
+      get() = intrinsic()
+  }
+
   /** The StructureRocketScanner prefab. */
   companion object : Prefab<RocketScanner>() {
-    override val all: Batch
+    override val all: RocketScanner.Batch
       get() = intrinsic()
 
-    override fun named(name: String): Batch = intrinsic()
-
-    /** A batch of StructureRocketScanner devices. */
-    class Batch internal constructor() : DeviceBatch<RocketScanner>() {
-      /** A slot of every one in the batch, by number. */
-      val slots: Slots<SlotBatch<DataDiskSlot>>
-        get() = intrinsic()
-    }
+    override fun named(name: String): RocketScanner.Batch = intrinsic()
   }
 }
 
@@ -16811,19 +16811,19 @@ class ShelfMedium internal constructor() : TypedDevice() {
   val slots: Slots<DataDiskSlot>
     get() = intrinsic()
 
+  /** A batch of StructureShelfMedium devices. */
+  class Batch internal constructor() : DeviceBatch<ShelfMedium>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<DataDiskSlot>>
+      get() = intrinsic()
+  }
+
   /** The StructureShelfMedium prefab. */
   companion object : Prefab<ShelfMedium>() {
-    override val all: Batch
+    override val all: ShelfMedium.Batch
       get() = intrinsic()
 
-    override fun named(name: String): Batch = intrinsic()
-
-    /** A batch of StructureShelfMedium devices. */
-    class Batch internal constructor() : DeviceBatch<ShelfMedium>() {
-      /** A slot of every one in the batch, by number. */
-      val slots: Slots<SlotBatch<DataDiskSlot>>
-        get() = intrinsic()
-    }
+    override fun named(name: String): ShelfMedium.Batch = intrinsic()
   }
 }
 
@@ -16913,19 +16913,19 @@ class SleeperVerticalDroid internal constructor() : TypedDevice() {
   val Player: DataDiskSlot
     get() = intrinsic()
 
+  /** A batch of StructureSleeperVerticalDroid devices. */
+  class Batch internal constructor() : DeviceBatch<SleeperVerticalDroid>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<DataDiskSlot>>
+      get() = intrinsic()
+  }
+
   /** The StructureSleeperVerticalDroid prefab. */
   companion object : Prefab<SleeperVerticalDroid>() {
-    override val all: Batch
+    override val all: SleeperVerticalDroid.Batch
       get() = intrinsic()
 
-    override fun named(name: String): Batch = intrinsic()
-
-    /** A batch of StructureSleeperVerticalDroid devices. */
-    class Batch internal constructor() : DeviceBatch<SleeperVerticalDroid>() {
-      /** A slot of every one in the batch, by number. */
-      val slots: Slots<SlotBatch<DataDiskSlot>>
-        get() = intrinsic()
-    }
+    override fun named(name: String): SleeperVerticalDroid.Batch = intrinsic()
   }
 }
 
@@ -16978,19 +16978,19 @@ class WallHeater internal constructor() : TypedDevice() {
   val DataDisk: DataDiskSlot
     get() = intrinsic()
 
+  /** A batch of StructureWallHeater devices. */
+  class Batch internal constructor() : DeviceBatch<WallHeater>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<DataDiskSlot>>
+      get() = intrinsic()
+  }
+
   /** The StructureWallHeater prefab. */
   companion object : Prefab<WallHeater>() {
-    override val all: Batch
+    override val all: WallHeater.Batch
       get() = intrinsic()
 
-    override fun named(name: String): Batch = intrinsic()
-
-    /** A batch of StructureWallHeater devices. */
-    class Batch internal constructor() : DeviceBatch<WallHeater>() {
-      /** A slot of every one in the batch, by number. */
-      val slots: Slots<SlotBatch<DataDiskSlot>>
-        get() = intrinsic()
-    }
+    override fun named(name: String): WallHeater.Batch = intrinsic()
   }
 }
 
@@ -17026,19 +17026,19 @@ class WaterPurifier internal constructor() : TypedDevice() {
   val slots: Slots<DataDiskSlot>
     get() = intrinsic()
 
+  /** A batch of StructureWaterPurifier devices. */
+  class Batch internal constructor() : DeviceBatch<WaterPurifier>() {
+    /** A slot of every one in the batch, by number. */
+    val slots: Slots<SlotBatch<DataDiskSlot>>
+      get() = intrinsic()
+  }
+
   /** The StructureWaterPurifier prefab. */
   companion object : Prefab<WaterPurifier>() {
-    override val all: Batch
+    override val all: WaterPurifier.Batch
       get() = intrinsic()
 
-    override fun named(name: String): Batch = intrinsic()
-
-    /** A batch of StructureWaterPurifier devices. */
-    class Batch internal constructor() : DeviceBatch<WaterPurifier>() {
-      /** A slot of every one in the batch, by number. */
-      val slots: Slots<SlotBatch<DataDiskSlot>>
-        get() = intrinsic()
-    }
+    override fun named(name: String): WaterPurifier.Batch = intrinsic()
   }
 }
 

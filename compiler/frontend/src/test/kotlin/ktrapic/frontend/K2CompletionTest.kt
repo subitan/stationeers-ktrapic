@@ -90,12 +90,34 @@ class K2CompletionTest {
   }
 
   @Test
-  fun `after a prefab with slots, entry points whose batches have slots`() {
+  fun `after a prefab with slots, entry points whose batches have slots, and the batch type`() {
     val items = complete("BatteryCharger.Standard.|\n")
 
-    assertThat(items.map { it.label }).containsExactly("at", "all", "named")
+    assertThat(items.map { it.label }).containsExactly("at", "all", "named", "Batch")
     assertThat(items.single { it.label == "all" }.detail)
         .isEqualTo("val all: BatteryCharger.Standard.Batch")
+    assertThat(items.single { it.label == "Batch" }.detail)
+        .isEqualTo("ktrapic.BatteryCharger.Standard.Batch")
+  }
+
+  @Test
+  fun `a val holding a prefab is described by the Prefab it is`() {
+    val items = complete("val p = GrowLight\nval q = |\n")
+
+    assertThat(items.single { it.label == "p" }.detail).isEqualTo("val p: Prefab<GrowLight>")
+  }
+
+  @Test
+  fun `after a val holding a prefab, its entry points`() {
+    assertThat(labels("val p = GrowLight\np.|\n")).containsAtLeast("at", "all", "named")
+  }
+
+  @Test
+  fun `after a device's prefab, whose device isn't known, no entry points`() {
+    assertThat(labels("d0.PrefabHash.|\n")).containsNoneOf("at", "all", "named")
+    assertThat(labels("val p = d0.PrefabHash\np.|\n")).containsNoneOf("at", "all", "named")
+    assertThat(labels("val p = GrowLight.at(d0).PrefabHash\np.|\n"))
+        .containsNoneOf("at", "all", "named")
   }
 
   @Test

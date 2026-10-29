@@ -92,6 +92,30 @@ class TypedDeviceTest {
   }
 
   @Test
+  fun `the type a hover shows for a prefab or a batch compiles written out`() {
+    // Each declares `x`, whose hover is taken on its use (at the `|`), and uses it.
+    val sources =
+        mapOf(
+            "val x = GrowLight\n|x.all.forEach { it.On = true }" to "Prefab<GrowLight>",
+            "val x = LedDisplay.Small\n|x.at(d0).Setting = 1.0" to "Prefab<LedDisplay.Small>",
+            "val x = BatteryCharger.Standard.all\ndb.Setting = |x.count().toDouble()" to
+                "BatteryCharger.Standard.Batch",
+            "val x = GrowLight.at(d0).PrefabHash\ndb.On = |x == GrowLight" to "Prefab<*>",
+        )
+    for ((source, expected) in sources) {
+      val offset = source.indexOf('|')
+      val program = source.removeRange(offset, offset + 1)
+      val hover = Compiler.hover(program, offset)!!
+      assertWithMessage(source).that(hover.declaration).isEqualTo("val x: $expected")
+      val written =
+          program.replaceFirst("val x =", "val x: ${hover.declaration.removePrefix("val x: ")} =")
+      assertWithMessage(written)
+          .that(compile(written))
+          .isInstanceOf(CompileResult.Success::class.java)
+    }
+  }
+
+  @Test
   fun `a typed device reads its NameHash`() {
     val db =
         run("db.Setting = GrowLight.at(d0).NameHash") {

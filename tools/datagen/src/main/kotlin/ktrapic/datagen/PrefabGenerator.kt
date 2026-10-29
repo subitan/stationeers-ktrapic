@@ -16,6 +16,9 @@ object PrefabGenerator {
   private val PREFIXES = listOf("Structure", "Item")
   private const val CONSOLE_SLOT_KIND = "Circuitboard"
 
+  /** The name of a prefab with slots's batch type, nested in its device class. */
+  private const val BATCH = "Batch"
+
   /** Names declared elsewhere in the `ktrapic` package, which no prefab may take. */
   private val HAND_WRITTEN =
       setOf(
@@ -417,14 +420,33 @@ object PrefabGenerator {
           textProperty(override = "Text" in overrides)
           line()
         }
+        if (prefab.slots.isNotEmpty()) {
+          // A nested class can't take its enclosing class's name.
+          require(name != BATCH) { "${prefab.name} has slots, so its class can't be named $BATCH" }
+          batchClass(type, prefab)
+          line()
+        }
         prefabCompanion(type, prefab)
       }
     }
 
     /**
+     * A prefab with slots's own batch type, `BatteryCharger.Standard.Batch`, which gives a batch of
+     * its devices `slots`.
+     */
+    fun batchClass(type: String, prefab: Prefab) {
+      line("/** A batch of ${prefab.name} devices. */")
+      block("class $BATCH internal constructor() : DeviceBatch<$type>()") {
+        line("/** A slot of every one in the batch, by number. */")
+        line("val slots: Slots<SlotBatch<${slotClassOf(prefab, slotsKind(prefab))}>>")
+        line("  get() = intrinsic()")
+      }
+    }
+
+    /**
      * A device class's companion object: its prefab, with the entry points `at`, `all` and `named`
-     * it inherits from `Prefab`. A prefab with slots has its own batch type, to give a batch of its
-     * devices `slots`, which its `all` and `named` return.
+     * it inherits from `Prefab`. A prefab with slots overrides `all` and `named` to return its own
+     * batch type ([batchClass]).
      */
     fun prefabCompanion(type: String, prefab: Prefab) {
       line("/** The ${prefab.name} prefab. */")
@@ -433,17 +455,10 @@ object PrefabGenerator {
         return
       }
       block("companion object : Prefab<$type>()") {
-        line("override val all: Batch")
+        line("override val all: $type.$BATCH")
         line("  get() = intrinsic()")
         line()
-        line("override fun named(name: String): Batch = intrinsic()")
-        line()
-        line("/** A batch of ${prefab.name} devices. */")
-        block("class Batch internal constructor() : DeviceBatch<$type>()") {
-          line("/** A slot of every one in the batch, by number. */")
-          line("val slots: Slots<SlotBatch<${slotClassOf(prefab, slotsKind(prefab))}>>")
-          line("  get() = intrinsic()")
-        }
+        line("override fun named(name: String): $type.$BATCH = intrinsic()")
       }
     }
 
