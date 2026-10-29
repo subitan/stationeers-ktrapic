@@ -80,6 +80,23 @@ class LspDiagnosticsTest {
   }
 
   @Test
+  fun `publishes a prefab's type as a hover shows it, never as Companion`() {
+    client.initialize()
+    client.open(
+        "file:///a.kt",
+        "val p: Prefab<GrowLight> = BatteryCharger.Standard\nval n: Int = GrowLight\n",
+    )
+
+    val messages = published().single().diagnostics().map { it["message"].asString }
+
+    assertThat(messages).hasSize(2)
+    assertThat(messages[0])
+        .contains("actual 'SlottedPrefab<BatteryCharger.Standard, BatteryCharger.Standard.Batch>'")
+    assertThat(messages[1]).contains("actual 'Prefab<GrowLight>'")
+    for (message in messages) assertThat(message).doesNotContain("Companion")
+  }
+
+  @Test
   fun `publishes every error of a failed compile`() {
     client.initialize()
     client.open("file:///a.kt", "db.Setting = nope\nd0.On = foo\n")

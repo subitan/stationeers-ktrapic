@@ -42,6 +42,7 @@ public class SdkNameKindsTest
     [InlineData("Color", NameKind.Enum)]
     [InlineData("Battery", NameKind.Type)]
     [InlineData("DeviceBatch", NameKind.Type)]
+    [InlineData("SlottedPrefab", NameKind.Type)]
     [InlineData("db", NameKind.Device)]
     [InlineData("sleep", NameKind.Function)]
     [InlineData("unknown", NameKind.None)]

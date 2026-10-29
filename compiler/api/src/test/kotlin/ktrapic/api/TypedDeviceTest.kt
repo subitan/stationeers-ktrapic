@@ -121,6 +121,21 @@ class TypedDeviceTest {
   }
 
   @Test
+  fun `a compile error writes a prefab's type as a hover shows it, never as Companion`() {
+    val errors =
+        mapOf(
+            "val p: Prefab<GrowLight> = BatteryCharger.Standard" to
+                "'SlottedPrefab<BatteryCharger.Standard, BatteryCharger.Standard.Batch>'",
+            "val n: Int = GrowLight" to "'Prefab<GrowLight>'",
+        )
+    for ((source, type) in errors) {
+      val message = error(source).message
+      assertWithMessage(source).that(message).contains("actual $type")
+      assertWithMessage(source).that(message).doesNotContain("Companion")
+    }
+  }
+
+  @Test
   fun `a typed device reads its NameHash`() {
     val db =
         run("db.Setting = GrowLight.at(d0).NameHash") {

@@ -205,6 +205,34 @@ class PrefabGeneratorTest {
   }
 
   @Test
+  fun `a prefab without slots's companion is broken over lines as ktfmt breaks it`() {
+    fun companion(member: String): String {
+      val grouping =
+          Grouping(
+              mapOf("Batteries" to Grouping.Family(mapOf(member to "StructureBatterySmall"))),
+              emptyList(),
+          )
+      val code = generate(grouping)
+      val start = code.indexOf("    companion object")
+      return code.substring(start, code.indexOf("\n  }\n", start))
+    }
+
+    // Too long for its line, but not for a continuation line.
+    val long = "A" + "Very".repeat(14) + "LongBatteryName"
+    assertThat(companion(long))
+        .isEqualTo("    companion object :\n        Prefab<Batteries.$long>()")
+    // Too long for either: its one type argument on a line of its own, with no comma after it.
+    val longer = "A" + "Very".repeat(16) + "LongBatteryName"
+    assertThat(companion(longer))
+        .isEqualTo(
+            "    companion object :\n" +
+                "        Prefab<\n" +
+                "            Batteries.$longer\n" +
+                "        >()"
+        )
+  }
+
+  @Test
   fun `rejects a prefab with slots whose class would be named Batch`() {
     val grouping =
         Grouping(

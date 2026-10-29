@@ -455,8 +455,9 @@ object PrefabGenerator {
     fun prefabCompanion(type: String, prefab: Prefab) {
       line("/** The ${prefab.name} prefab. */")
       val header = "companion object :"
-      val supertype =
-          if (prefab.slots.isEmpty()) "Prefab<$type>()" else "SlottedPrefab<$type, $type.$BATCH>()"
+      val superclass = if (prefab.slots.isEmpty()) "Prefab" else "SlottedPrefab"
+      val arguments = if (prefab.slots.isEmpty()) listOf(type) else listOf(type, "$type.$BATCH")
+      val supertype = "$superclass<${arguments.joinToString(", ")}>()"
       // Broken over lines as ktfmt breaks one too long for its line.
       when {
         fits("$header $supertype") -> line("$header $supertype")
@@ -469,10 +470,10 @@ object PrefabGenerator {
         else -> {
           line(header)
           indent += 2
-          line("SlottedPrefab<")
+          line("$superclass<")
           indent += 2
-          line("$type,")
-          line("$type.$BATCH,")
+          // ktfmt ends a list of more than one with a comma.
+          for (argument in arguments) line(if (arguments.size > 1) "$argument," else argument)
           indent -= 2
           line(">()")
           indent -= 2

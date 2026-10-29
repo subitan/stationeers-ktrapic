@@ -81,6 +81,33 @@ private fun companionSuperclass(classId: ClassId, session: FirSession): ConeClas
   }
 }
 
+/**
+ * [message], a diagnostic's text from the Kotlin compiler, with each SDK companion object it names
+ * (`GrowLight.Companion`, quoted or not, or `ktrapic.GrowLight.Companion`) written as [render]
+ * writes that type: `Prefab<GrowLight>`, or a prefab with slots's `SlottedPrefab<...>`. Kotlin
+ * names the companion itself, which a program never writes. Any other `Companion` is left as it is.
+ */
+internal fun withCompanionsRendered(message: String, session: FirSession): String =
+    COMPANION_TYPE.replace(message) { match ->
+      val names = match.value.split('.').dropLast(1)
+      // The longest run of names that ends the match and is an SDK class: the match can begin with
+      // the package or with text before the type.
+      names.indices.firstNotNullOfOrNull { start ->
+        val relative = FqName((names.drop(start) + COMPANION).joinToString("."))
+        companionSuperclass(ClassId(SDK_PACKAGE, relative, false), session)?.let { superclass ->
+          val before = names.take(start)
+          val kept = if (before == SDK_PACKAGE_NAMES) "" else before.joinToString("") { "$it." }
+          kept + render(superclass, session)
+        }
+      } ?: match.value
+    }
+
+private val COMPANION_TYPE = Regex("""\b(?:[A-Za-z_]\w*\.)+Companion\b""")
+
+private val SDK_PACKAGE = FqName("ktrapic")
+
+private val SDK_PACKAGE_NAMES = SDK_PACKAGE.pathSegments().map { it.asString() }
+
 /** [classId]'s package and [nameOf]: `ktrapic.LedDisplay.Small`, or `P` in no package. */
 internal fun qualifiedNameOf(classId: ClassId): String =
     if (classId.packageFqName.isRoot) nameOf(classId)
