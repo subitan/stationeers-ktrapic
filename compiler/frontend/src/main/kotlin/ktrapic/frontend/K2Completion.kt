@@ -1,29 +1,8 @@
-@file:OptIn(
-    org.jetbrains.kotlin.cli.pipeline.PipelineArtifact.CliPipelineInternals::class,
-    org.jetbrains.kotlin.fir.symbols.SymbolInternals::class,
-)
+@file:OptIn(org.jetbrains.kotlin.fir.symbols.SymbolInternals::class)
 
 package ktrapic.frontend
 
 import java.io.File
-import java.nio.file.Files
-import org.jetbrains.kotlin.backend.common.phaser.then
-import org.jetbrains.kotlin.cli.common.ExitCode
-import org.jetbrains.kotlin.cli.common.arguments.K2JVMCompilerArguments
-import org.jetbrains.kotlin.cli.common.messages.MessageCollector
-import org.jetbrains.kotlin.cli.jvm.K2JVMCompiler
-import org.jetbrains.kotlin.cli.pipeline.AbstractCliPipeline
-import org.jetbrains.kotlin.cli.pipeline.ConfigurationPipelineArtifact
-import org.jetbrains.kotlin.cli.pipeline.PipelineArtifact
-import org.jetbrains.kotlin.cli.pipeline.PipelineArtifactWithExitCode
-import org.jetbrains.kotlin.cli.pipeline.PipelinePhase
-import org.jetbrains.kotlin.cli.pipeline.jvm.JvmConfigurationPipelinePhase
-import org.jetbrains.kotlin.cli.pipeline.jvm.JvmFrontendPipelinePhase
-import org.jetbrains.kotlin.com.intellij.openapi.util.Disposer
-import org.jetbrains.kotlin.com.intellij.psi.PsiComment
-import org.jetbrains.kotlin.com.intellij.psi.PsiElement
-import org.jetbrains.kotlin.config.CompilerConfiguration
-import org.jetbrains.kotlin.config.Services
 import org.jetbrains.kotlin.descriptors.ClassKind
 import org.jetbrains.kotlin.descriptors.Visibilities
 import org.jetbrains.kotlin.fir.FirElement
@@ -75,9 +54,6 @@ import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.name.Name
 import org.jetbrains.kotlin.name.StandardClassIds
 import org.jetbrains.kotlin.name.isSubpackageOf
-import org.jetbrains.kotlin.psi.KtFile
-import org.jetbrains.kotlin.psi.KtLiteralStringTemplateEntry
-import org.jetbrains.kotlin.psi.KtStringTemplateEntryWithExpression
 import org.jetbrains.kotlin.types.AbstractTypeChecker
 
 /** A name that could go at the caret, with what kind of thing it names. */
@@ -300,44 +276,15 @@ object K2Completion {
     if (start < source.length && start < end && Character.isDigit(source[start])) return emptyList()
     val edited = source.substring(0, start) + PLACEHOLDER + source.substring(end)
 
-    val workDir = Files.createTempDirectory("ktrapic-completion").toFile()
-    val disposable = Disposer.newDisposable("ktrapic-completion")
-    try {
-      val script = K2Frontend.parseScript(edited, disposable)
+    return withScript(edited, classpath, defaultImports) { parsed ->
+      val script = parsed.script
       if (inCommentOrString(script.findElementAt(script.text.indexOf(PLACEHOLDER)))) {
-        return emptyList()
+        return@withScript emptyList()
       }
-      val wrapped = ScriptWrapper.wrap(script, defaultImports)
-      val at = wrapped.text.indexOf(PLACEHOLDER)
-      if (at < 0) return emptyList()
-      val sourceFile = File(workDir, "$PROGRAM_OBJECT.kt").apply { writeText(wrapped.text) }
-      var completions = emptyList<Completion>()
-      AnalysePipeline(
-              K2JVMCompiler().defaultPerformanceManager,
-              AnalysePhase { completions = Analysis(it, at).completions() },
-          )
-          .executeAndReturnPipeLineArtifact(
-              K2Frontend.arguments(sourceFile, classpath, workDir),
-              Services.EMPTY,
-              MessageCollector.NONE,
-              disposable,
-          )
-      return completions
-    } finally {
-      Disposer.dispose(disposable)
-      workDir.deleteRecursively()
+      val at = parsed.wrapped.text.indexOf(PLACEHOLDER)
+      if (at < 0) return@withScript emptyList()
+      parsed.analyse { Analysis(it, at).completions() }.orEmpty()
     }
-  }
-
-  /** Whether [leaf] is in a comment or in a string's text (not in a `${...}` inside it). */
-  private fun inCommentOrString(leaf: PsiElement?): Boolean {
-    var element = leaf
-    while (element != null && element !is KtFile) {
-      if (element is PsiComment || element is KtLiteralStringTemplateEntry) return true
-      if (element is KtStringTemplateEntryWithExpression) return false
-      element = element.parent
-    }
-    return false
   }
 
   private class Analysis(output: SingleModuleFrontendOutput, private val at: Int) {
@@ -637,29 +584,15 @@ object K2Completion {
     }
 
     private fun callable(symbol: FirCallableSymbol<*>, local: Boolean): Completion {
-      val name = symbol.name.asString()
-      val returns = render(symbol.resolvedReturnType)
-      return when (symbol) {
-        is FirEnumEntrySymbol -> Completion(name, Completion.Kind.ENUM_ENTRY, name)
-        is FirFunctionSymbol<*> -> {
-          val parameters =
-              symbol.valueParameterSymbols.joinToString(", ") {
-                "${it.name}: ${render(it.resolvedReturnType)}"
-              }
-          Completion(name, Completion.Kind.FUNCTION, "fun $name($parameters): $returns")
-        }
-        is FirVariableSymbol<*> -> {
-          val keyword =
-              if (symbol is FirPropertySymbol && symbol.isVal || symbol !is FirPropertySymbol) "val"
-              else "var"
-          Completion(
-              name,
-              if (local) Completion.Kind.LOCAL else Completion.Kind.PROPERTY,
-              "$keyword $name: $returns",
-          )
-        }
-        else -> Completion(name, Completion.Kind.PROPERTY, name)
-      }
+      val kind =
+          when (symbol) {
+            is FirEnumEntrySymbol -> Completion.Kind.ENUM_ENTRY
+            is FirFunctionSymbol<*> -> Completion.Kind.FUNCTION
+            is FirVariableSymbol<*> ->
+                if (local) Completion.Kind.LOCAL else Completion.Kind.PROPERTY
+            else -> Completion.Kind.PROPERTY
+          }
+      return Completion(symbol.name.asString(), kind, declarationOf(symbol))
     }
 
     private fun classifier(symbol: FirClassifierSymbol<*>): Completion? {
@@ -680,60 +613,5 @@ object K2Completion {
           }
       return Completion(label, kind, classLike.classId.asFqNameString())
     }
-
-    private fun render(type: ConeKotlinType): String {
-      val text =
-          when (type) {
-            is ConeClassLikeType -> {
-              val arguments = type.typeArguments.mapNotNull { it.type }
-              type.lookupTag.classId.relativeClassName.asString() +
-                  if (arguments.isEmpty()) ""
-                  else arguments.joinToString(", ", "<", ">") { render(it) }
-            }
-            is ConeTypeParameterType -> type.lookupTag.name.asString()
-            else -> type.toString()
-          }
-      return if (type.isMarkedNullable) "$text?" else text
-    }
   }
-}
-
-/**
- * The pipeline's final artifact here, which carries nothing: [AnalysePhase] hands its output on.
- */
-private class Analysed(override val configuration: CompilerConfiguration) :
-    PipelineArtifactWithExitCode() {
-  override val exitCode: ExitCode
-    get() = ExitCode.OK
-
-  override fun withCompilerConfiguration(
-      newConfiguration: CompilerConfiguration
-  ): PipelineArtifact = Analysed(newConfiguration)
-}
-
-/**
- * Runs the stock JVM front end and hands its output to [use], whatever errors it found: the program
- * being completed always has one, at the caret. The pipeline reports those errors afterwards and
- * drops the artifact, so the output is used here, inside the phase.
- */
-private class AnalysePhase(private val use: (SingleModuleFrontendOutput) -> Unit) :
-    PipelinePhase<ConfigurationPipelineArtifact, Analysed>(
-        name = "KtrapicAnalyse",
-        preActions = emptySet(),
-        postActions = emptySet(),
-    ) {
-  override fun executePhase(input: ConfigurationPipelineArtifact): Analysed? {
-    val frontend = JvmFrontendPipelinePhase.executePhase(input) ?: return null
-    frontend.frontendOutput.outputs.singleOrNull()?.let(use)
-    return Analysed(frontend.configuration)
-  }
-}
-
-/** The stock K2 JVM pipeline's configuration and front end, ending in [analyse]. */
-private class AnalysePipeline(
-    override val defaultPerformanceManager: org.jetbrains.kotlin.util.PerformanceManager,
-    private val analyse: AnalysePhase,
-) : AbstractCliPipeline<K2JVMCompilerArguments>() {
-  override fun createCompoundPhase(arguments: K2JVMCompilerArguments) =
-      JvmConfigurationPipelinePhase then analyse
 }

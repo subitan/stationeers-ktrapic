@@ -32,6 +32,17 @@ class WrappedSourceTest {
   }
 
   @Test
+  fun `an offset in the source moves past the text inserted before or at it`() {
+    assertThat(wrapped.wrappedOffset(0)).isEqualTo(0)
+    // The "x", after "init { ".
+    assertThat(wrapped.wrappedOffset(2)).isEqualTo(9)
+    assertThat(wrapped.text[9]).isEqualTo('x')
+    // The newline after "x()", after " }" too.
+    assertThat(wrapped.wrappedOffset(5)).isEqualTo(14)
+    assertThat(wrapped.text[14]).isEqualTo('\n')
+  }
+
+  @Test
   fun `a position in the closing text maps to the end of the source`() {
     // The source's last line is the empty line 3, after the final newline.
     assertThat(wrapped.originalPosition(3, 1)).isEqualTo(3 to 1)

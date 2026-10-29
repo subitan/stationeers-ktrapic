@@ -1,0 +1,219 @@
+package ktrapic.frontend
+
+import com.google.common.truth.Truth.assertThat
+import java.io.File
+import ktrapic.Device
+import org.junit.jupiter.api.Test
+
+class K2HoverTest {
+  private val sdkJar = File(Device::class.java.protectionDomain.codeSource.location.toURI())
+
+  /** Hovers at the `|` in [source]. */
+  private fun hover(source: String): Hover? {
+    val offset = source.indexOf('|')
+    return K2Hover.hover(
+        source.removeRange(offset, offset + 1),
+        offset,
+        listOf(sdkJar),
+        listOf("ktrapic.*"),
+    )
+  }
+
+  /** Signature help at the `|` in [source]. */
+  private fun signatures(source: String): SignatureHelp? {
+    val offset = source.indexOf('|')
+    return K2Hover.signatureHelp(
+        source.removeRange(offset, offset + 1),
+        offset,
+        listOf(sdkJar),
+        listOf("ktrapic.*"),
+    )
+  }
+
+  @Test
+  fun `a device's logic type, with its class`() {
+    val hover = hover("d0.Sett|ing = 1.0\n")!!
+
+    assertThat(hover.declaration).isEqualTo("var Setting: Double")
+    assertThat(hover.container).isEqualTo("Device")
+    assertThat(hover.access).isNull()
+  }
+
+  @Test
+  fun `a write-only logic type, with its interface's KDoc`() {
+    val hover = hover("val sign = LedDisplays.Small.at(d5)\nsign.Text| = \"HOT\"\n")!!
+
+    assertThat(hover.declaration).isEqualTo("var Text: String")
+    assertThat(hover.container).isEqualTo("LedDisplay.Small")
+    assertThat(hover.access).isEqualTo(Hover.Access.WRITE_ONLY)
+    assertThat(hover.documentation).contains("one to six ASCII characters")
+    assertThat(hover.text())
+        .startsWith("LedDisplay.Small\nvar Text: String (write-only)\n\nText of one to six")
+  }
+
+  @Test
+  fun `a read-only logic type`() {
+    val hover = hover("fun f(display: LedDisplay) = display.|Power\n")!!
+
+    assertThat(hover.declaration).isEqualTo("val Power: Boolean")
+    assertThat(hover.container).isEqualTo("LedDisplay")
+    assertThat(hover.access).isEqualTo(Hover.Access.READ_ONLY)
+  }
+
+  @Test
+  fun `each name of a qualified object`() {
+    val source = "val sign = LedDisplays.Small.at(d5)\n"
+    val outer = hover(source.replace("LedDisplays", "LedDis|plays"))!!
+    val inner = hover(source.replace("Small", "Sm|all"))!!
+
+    assertThat(outer.declaration).isEqualTo("object LedDisplays")
+    assertThat(outer.documentation)
+        .isEqualTo("The LedDisplay devices on the chip's network, by prefab.")
+    assertThat(inner.declaration).isEqualTo("object LedDisplays.Small")
+    assertThat(inner.documentation)
+        .isEqualTo("The StructureConsoleLED5 devices on the chip's network.")
+  }
+
+  @Test
+  fun `a function, with its KDoc's links as names`() {
+    val hover = hover("val sign = LedDisplays.Small.a|t(d5)\n")!!
+
+    assertThat(hover.declaration).isEqualTo("fun at(pin: Device): LedDisplay.Small")
+    assertThat(hover.container).isEqualTo("LedDisplays.Small")
+    assertThat(hover.documentation).isEqualTo("The device on pin, as a StructureConsoleLED5.")
+  }
+
+  @Test
+  fun `the overload a call is to`() {
+    val hover = hover("slee|p(2)\n")!!
+
+    assertThat(hover.declaration).isEqualTo("fun sleep(seconds: Int): Unit")
+    assertThat(hover.container).isNull()
+    assertThat(hover.documentation).isEqualTo("Pauses the chip for seconds (IC10 `sleep`).")
+  }
+
+  @Test
+  fun `a type in a parameter`() {
+    val hover = hover("fun show(display: LedDisp|lay) {}\n")!!
+
+    assertThat(hover.declaration).isEqualTo("interface LedDisplay")
+    assertThat(hover.documentation).startsWith("Devices of one kind")
+  }
+
+  @Test
+  fun `the program's own declarations, where they are declared and where they are used`() {
+    val source = "fun twice(x: Int) = x * 2\nval y = twice(3)\n"
+
+    assertThat(hover(source.replaceFirst("twice", "tw|ice"))!!.declaration)
+        .isEqualTo("fun twice(x: Int): Int")
+    assertThat(hover(source.replace("twice(3)", "twice|(3)"))!!.declaration)
+        .isEqualTo("fun twice(x: Int): Int")
+    val local = hover(source.replace("x * 2", "|x * 2"))!!
+    assertThat(local.declaration).isEqualTo("val x: Int")
+    assertThat(local.container).isNull()
+    assertThat(hover(source.replace("val y", "val |y"))!!.declaration).isEqualTo("val y: Int")
+  }
+
+  @Test
+  fun `an enum entry`() {
+    val hover = hover("db[LogicType.Sett|ing] = 1.0\n")!!
+
+    assertThat(hover.declaration).isEqualTo("Setting")
+    assertThat(hover.container).isEqualTo("LogicType")
+  }
+
+  @Test
+  fun `an object's constant`() {
+    val hover = hover("db.Mode = DisplayMode.Str|ing\n")!!
+
+    assertThat(hover.declaration).isEqualTo("val String: Double")
+    assertThat(hover.container).isEqualTo("DisplayMode")
+  }
+
+  @Test
+  fun `nothing on a keyword, a number, a comment or a string, or between names`() {
+    assertThat(hover("va|l x = 1\n")).isNull()
+    assertThat(hover("val x = 1|2\n")).isNull()
+    assertThat(hover("// d0.Sett|ing\n")).isNull()
+    assertThat(hover("val s = \"d0.Sett|ing\"\n")).isNull()
+    assertThat(hover("d0.Setting = |  1.0\n")).isNull()
+  }
+
+  @Test
+  fun `positions count Windows line endings and a byte-order mark`() {
+    val hover = hover("﻿val a = 1\r\nd0.Sett|ing = 2.0\r\n")
+
+    assertThat(hover?.declaration).isEqualTo("var Setting: Double")
+  }
+
+  @Test
+  fun `hover works on code with errors elsewhere`() {
+    assertThat(hover("val broken: Int = \"x\"\nd0.Sett|ing = 1.0\nwhile (\n")?.declaration)
+        .isEqualTo("var Setting: Double")
+  }
+
+  @Test
+  fun `signature help in a call not yet closed`() {
+    val help = signatures("val s = LedDisplays.Small.at(|\n")!!
+
+    assertThat(help.signatures.map { it.label })
+        .containsExactly("fun at(pin: Device): LedDisplay.Small")
+    assertThat(help.signatures.single().parameters).containsExactly("pin: Device")
+    assertThat(help.signatures.single().documentation)
+        .isEqualTo("The device on pin, as a StructureConsoleLED5.")
+    assertThat(help.activeParameter).isEqualTo(0)
+  }
+
+  @Test
+  fun `signature help names the argument the caret is in`() {
+    val source = "fun mix(a: Double, b: Double, c: Double) = a + b + c\nval m = mix(1.0, f(2), |)\n"
+    val help = signatures(source)!!
+
+    assertThat(help.signatures.single().label)
+        .isEqualTo("fun mix(a: Double, b: Double, c: Double): Double")
+    assertThat(help.activeParameter).isEqualTo(2)
+  }
+
+  @Test
+  fun `signature help offers each overload a call could be to`() {
+    val help = signatures("sleep(|)\n")!!
+
+    assertThat(help.signatures.map { it.label })
+        .containsExactly("fun sleep(seconds: Double): Unit", "fun sleep(seconds: Int): Unit")
+  }
+
+  @Test
+  fun `signature help for the innermost call`() {
+    val help = signatures("val h = str(hash(|))\n")!!
+
+    assertThat(help.signatures.single().label).isEqualTo("fun hash(text: String): Double")
+  }
+
+  @Test
+  fun `no signature help outside a call's parentheses`() {
+    assertThat(signatures("val x = |1\n")).isNull()
+    assertThat(signatures("sleep(1)|\n")).isNull()
+    assertThat(signatures("PresenceSensors.Motion.all.forEach { | }\n")).isNull()
+    assertThat(signatures("// sleep(|\n")).isNull()
+  }
+
+  @Test
+  fun `KDoc as text`() {
+    assertThat(
+            KDocIndex.clean(
+                """
+                /**
+                 * The device on [pin], as
+                 * a [LedDisplay.Small].
+                 *
+                 * - one
+                 * - two
+                 * @param pin a pin
+                 */
+                """
+                    .trimIndent()
+            )
+        )
+        .isEqualTo("The device on pin, as a LedDisplay.Small.\n\n- one\n- two\n@param pin a pin")
+  }
+}

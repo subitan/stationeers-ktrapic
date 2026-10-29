@@ -1,13 +1,15 @@
 load("@rules_kotlin//kotlin:jvm.bzl", "kt_jvm_library")
 
 # The API programs compile against. Its declarations are recognized by the compiler, which
-# translates calls to them; their bodies only throw.
+# translates calls to them; their bodies only throw. The jar carries the sources too, as
+# ktrapic/*.kt, for the KDoc that hovers in the editor show.
 kt_jvm_library(
     name = "sdk",
     srcs = glob(["src/main/kotlin/**/*.kt"]),
+    resource_strip_prefix = "sdk/src/main/kotlin",
+    resources = glob(["src/main/kotlin/**/*.kt"]),
     visibility = ["//visibility:public"],
 )
-
 # The game data the generated sources come from, and the generated sources themselves, for
 # //tools/datagen's check that they are up to date.
 filegroup(
