@@ -142,15 +142,15 @@ writing a logic type a device doesn't have is an error on the chip.
 
 ### Typed devices and batches
 
-Each prefab with logic types has an entry point named after it in the plural, without the
-game's `Structure` or `Item` prefix: `StructureGrowLight` is `GrowLights`. Where two prefabs
-would get the same name that way, both keep their full names, as `ItemBeacons` and
-`StructureBeacons` do. The [device reference](DEVICES.md) lists every prefab with its entry
-point, type and logic types, and the game's value enums. Through an entry point:
+Each prefab with logic types has a device type named after it, without the game's `Structure`
+or `Item` prefix: `StructureGrowLight` is `GrowLight`. Where two prefabs would get the same name
+that way, both keep their full names, as `ItemBeacon` and `StructureBeacon` do. The
+[device reference](DEVICES.md) lists every prefab with its type and logic types, and the game's
+value enums. The type's name on its own is the prefab, which reaches its devices:
 
-- `GrowLights.at(d0)` is the device on `d0` as a `GrowLight`, which has only the logic types a
+- `GrowLight.at(d0)` is the device on `d0` as a `GrowLight`, which has only the logic types a
   grow light has, as `val` where they can only be read. Using one it lacks is a compile error.
-- `GrowLights.all` is every grow light on the chip's network, and `GrowLights.named("Potatoes")`
+- `GrowLight.all` is every grow light on the chip's network, and `GrowLight.named("Potatoes")`
   every one with that name: a batch, which is used like a Kotlin collection of `GrowLight`s.
 
 A batch is read with collection operations, each of which compiles to one batch instruction
@@ -162,13 +162,13 @@ name, so `count()` on a `named(...)` batch is a compile error. A batch is writte
 each of whose assignments writes every device (`sb`, `sbn`):
 
 ```kotlin
-GrowLights.all.forEach { it.On = true }
-GrowLights.named("Potatoes").forEach { it.On = false }
-val lit = GrowLights.all.count { it.On }
-if (GrowLights.named("Potatoes").any { it.On }) db.On = true
-val charge = Batteries.Small.all.map { it.Charge }.average()
-val most = Batteries.Small.all.maxOf(Battery.Small::Charge)
-val sensor = GasSensors.at(d0)
+GrowLight.all.forEach { it.On = true }
+GrowLight.named("Potatoes").forEach { it.On = false }
+val lit = GrowLight.all.count { it.On }
+if (GrowLight.named("Potatoes").any { it.On }) db.On = true
+val charge = Battery.Small.all.map { it.Charge }.average()
+val most = Battery.Small.all.maxOf(Battery.Small::Charge)
+val sensor = GasSensor.at(d0)
 db.Setting = if (sensor.Temperature > 300.0) charge else most
 ```
 
@@ -192,27 +192,27 @@ in a `val`; a `map` can't.
 greatest or least value with 0, so all four take an on-or-off logic type to be 0 or 1. The game
 reports them so, and clamps a value written to one to that range.
 
-Prefabs that do one kind of job are grouped into families: `Batteries.Small.at(d0)` is a
-`Battery.Small`, and `Batteries.Large.all` every large one. On its own, `Battery` is no prefab: it
+Prefabs that do one kind of job are grouped into families: `Battery.Small.at(d0)` is a
+`Battery.Small`, and `Battery.Large.all` every large one. On its own, `Battery` is no prefab: it
 is the interface its members share, with the logic types all of them can read, so an inlined
 function can take any battery. It has only those logic types: `PrefabHash`, `NameHash` and
-`ReferenceId` are read from a member (`Batteries.Small.at(d0)`) or its pin. Prefabs are grouped
+`ReferenceId` are read from a member (`Battery.Small.at(d0)`) or its pin. Prefabs are grouped
 this way when they do one kind of job and share their logic types. That covers one device in
-several sizes, fluids or styles (`Valves.Gas` and `Valves.Liquid`, `Transformers.Small`,
-`SolarPanels.HeavyAngled`, `DirectHeatExchangers.LargeGasToLiquid`). It also covers different
+several sizes, fluids or styles (`Valve.Gas` and `Valve.Liquid`, `Transformer.Small`,
+`SolarPanel.HeavyAngled`, `DirectHeatExchanger.LargeGasToLiquid`). It also covers different
 devices that a program uses the same way, even when they work in opposite directions:
-`Switches.Lever` and `Switches.Standard` both give an on/off signal, a back pressure regulator is
-`PressureRegulators.BackGas`, and the microwave power transmitter and receiver are
-`PowerTransmissions.MicrowaveTransmitter` and `.MicrowaveReceiver`. A member keeps the logic types
-only it has: `DigitalChutes.ValveLeft` adds `Lock` and `Open` to the `DigitalChute` interface.
+`Switch.Lever` and `Switch.Standard` both give an on/off signal, a back pressure regulator is
+`PressureRegulator.BackGas`, and the microwave power transmitter and receiver are
+`PowerTransmission.MicrowaveTransmitter` and `.MicrowaveReceiver`. A member keeps the logic types
+only it has: `DigitalChute.ValveLeft` adds `Lock` and `Open` to the `DigitalChute` interface.
 Devices that merely look alike from a chip, with nothing a program would do to both, are not
 grouped. A family that is a special case of another extends its
 interface: an elevator level is a shaft with doors and power, so `ElevatorLevel` extends
-`ElevatorShaft`, and a function taking an `ElevatorShaft` takes an `ElevatorLevels.Standard` too.
+`ElevatorShaft`, and a function taking an `ElevatorShaft` takes an `ElevatorLevel.Standard` too.
 Likewise interior doors, hangar doors and airlocks extend `Door`, the family of the glass, blast
 and composite doors, so `inline fun close(door: Door)` closes any of them.
 The [device reference](DEVICES.md#families) lists every family and its members; every other prefab
-has its own entry point.
+is a type of its own.
 
 ### Views
 
@@ -227,11 +227,11 @@ Some logic types come in families, which a device groups as views rather than on
 - `Import` and `Export`: `Count`, `Quantity`, `SlotHash` and `SlotOccupant` (`ImportCount`).
 
 ```kotlin
-val filtration = Filtrations.Gas.at(d0)
+val filtration = Filtration.Gas.at(d0)
 val outlet = filtration.Ports.Output
 val oxygen = outlet.Ratios[Substance.Oxygen]
 if (outlet.Pressure > 5000.0) filtration.On = false
-val sensors = GasSensors.all.map { it.Ratios[Substance.Nitrogen] }.average()
+val sensors = GasSensor.all.map { it.Ratios[Substance.Nitrogen] }.average()
 db.Setting = oxygen + sensors
 ```
 
@@ -242,7 +242,7 @@ such as `Substance.Oxygen`, must be written out, held in a `val` or passed to an
 Only a view's logic types can be used: `equals`, `hashCode` and `toString` are errors.
 
 A typed device has only the views its prefab has, so naming another is a type error, and the
-compiler checks the rest against the prefab: `SatelliteDishes.Medium.at(d0).Dimensions.Y` is an
+compiler checks the rest against the prefab: `SatelliteDish.Medium.at(d0).Dimensions.Y` is an
 error, "SatelliteDish.Medium has no SizeY", as the dish reports only `SizeX` and `SizeZ`. The
 [device reference](DEVICES.md#views) says what each device's views reach. A pin used untyped
 (`d0`) has every view, as it has every logic type, and the compiler checks only that each name
@@ -252,7 +252,7 @@ it makes is one the game has: `d0.Ports.Output2.Setting` is an error, as the gam
 
 ```kotlin
 inline fun charge(battery: Battery): Double = battery.Ratio
-db.Setting = charge(Batteries.Small.at(d0)) + Batteries.Large.all.map { it.Ratio }.average()
+db.Setting = charge(Battery.Small.at(d0)) + Battery.Large.all.map { it.Ratio }.average()
 ```
 
 A prefab's name is also its value: `GrowLight` and `Battery.Small` are the game's hashes of
@@ -267,16 +267,16 @@ text, or anything but printable ASCII, is a compile error. `Text` is on the `Led
 interface too, so an inlined function taking any LED display can write it.
 
 ```kotlin
-val sign = LedDisplays.Small.at(d5)
+val sign = LedDisplay.Small.at(d5)
 sign.Mode = DisplayMode.String
 sign.Text = "HOT"
-LedDisplays.Large.all.forEach { it.Text = "OK" }
+LedDisplay.Large.all.forEach { it.Text = "OK" }
 ```
 
 A function can take the text as a `String` parameter (see [Functions](#functions)):
 
 ```kotlin
-val panel = LedDisplays.Small.at(d4)
+val panel = LedDisplay.Small.at(d4)
 fun debug(msg: String) {
     panel.Mode = DisplayMode.String
     panel.Text = msg
@@ -296,7 +296,7 @@ copy, so it can key a view, and only the elements given cost lines. A loop over 
 `Substance.entries` is one copy per substance, up to 28, so its body should be short:
 
 ```kotlin
-val sensor = GasSensors.at(d0)
+val sensor = GasSensor.at(d0)
 val breathable = setOf(Substance.Oxygen, Substance.Nitrogen, Substance.CarbonDioxide)
 var other = 1.0
 for (gas in breathable) other -= sensor.Ratios[gas]
@@ -321,7 +321,7 @@ nothing:
 
 ```kotlin
 var other = 0.0
-for ((gas, ratio) in GasSensors.at(d0).Ratios) {
+for ((gas, ratio) in GasSensor.at(d0).Ratios) {
   if (gas == Substance.Oxygen || gas == Substance.Nitrogen) continue
   other += ratio
 }
@@ -355,9 +355,9 @@ a battery charger's battery slots, `slots[n]` is of that kind; otherwise it has 
 every slot can read. Slots the game names are also properties, of their own kind:
 
 ```kotlin
-val tanks = TankStorages.Gas.at(d2)
+val tanks = TankStorage.Gas.at(d2)
 tanks.GasCanister.Open = true
-db.Ratio = BatteryChargers.Standard.at(d3).slots[0].Charge
+db.Ratio = BatteryCharger.Standard.at(d3).slots[0].Charge
 ```
 
 A batch's `slots[n]` is that slot of every device in it, read and written like a batch (`lbs`,
@@ -365,10 +365,10 @@ A batch's `slots[n]` is that slot of every device in it, read and written like a
 slots of a named batch.
 
 ```kotlin
-val charge = BatteryChargers.Standard.all.slots[0].map { it.Charge }.average()
-val north = BatteryChargers.Standard.named("North").slots[1].maxOf { it.Charge }
-TankStorages.Gas.all.slots[0].forEach { it.Open = false }
-TankStorages.Gas.all.forEach { it.GasCanister.Open = true }
+val charge = BatteryCharger.Standard.all.slots[0].map { it.Charge }.average()
+val north = BatteryCharger.Standard.named("North").slots[1].maxOf { it.Charge }
+TankStorage.Gas.all.slots[0].forEach { it.Open = false }
+TankStorage.Gas.all.forEach { it.GasCanister.Open = true }
 ```
 
 A slot, or a device's or batch's `slots`, can be held in a `val`.
@@ -376,7 +376,7 @@ A slot, or a device's or batch's `slots`, can be held in a `val`.
 A thing that isn't a structure, such as a tablet, a suit, a tool, the AIMeE bot or a rover, has
 other rules: none of its slots can be written, and they read fewer logic types (not
 `SortingClass`, `FreeSlots` or `TotalSlots`). Its typed slots (`ItemBatterySlot`,
-`ItemCommonSlot`, ...) follow those rules, so `Tablets.Advanced.at(db).Battery.Charge` compiles and
+`ItemCommonSlot`, ...) follow those rules, so `Tablet.Advanced.at(db).Battery.Charge` compiles and
 anything a thing's slot can't do is a compile error. A pin's untyped slots don't know which kind
 of device they're on, so they offer a structure's.
 

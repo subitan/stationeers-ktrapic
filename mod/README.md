@@ -36,7 +36,7 @@ to `main` replaces. No version has been tagged yet, so for now install from the
 ## Using it
 
 In the IC10 Editor, pick "Kotlin" as the language. Kotlin keywords and the SDK's names are highlighted:
-types and prefabs (`GrowLights`, `Batteries.Small`), enums and their values (`Color.Red`), logic
+types and prefabs (`GrowLight`, `Battery.Small`), enums and their values (`Color.Red`), logic
 types (`d0.Temperature`), devices and functions. A program is compiled as it is edited, about a
 moment after typing stops:
 
@@ -51,7 +51,7 @@ moment after typing stops:
 - Typing a name lists what could go there, from the compiler's reading of the program: a
   device's logic types, a family's prefabs, an enum's values, the members of a local's type, the
   locals, parameters and functions in scope, and the SDK's names. A dot typed after a name
-  lists them too (`d0.`, `PresenceSensors.`), at the end of a line or in the middle of one. Of
+  lists them too (`d0.`, `PresenceSensor.`), at the end of a line or in the middle of one. Of
   Kotlin's own functions, only those KTrapIC compiles are listed. The list shows at most 20 of
   the names that start with what's typed, and accepting it (the editor's autocomplete key) types
   the part that all of them share. Until the compiler has started, nothing is listed.

@@ -141,8 +141,8 @@ class FamilyCandidatesTest {
     val others = ('A'..'R').map { prefab("StructureThing$it", "On") }
     val shaft = prefab("StructureElevatorShaft", "ElevatorSpeed")
     val level = prefab("StructureElevatorLevelFront", "ElevatorSpeed")
-    val shafts = Grouping.Family("ElevatorShafts", mapOf("Cabled" to "StructureElevatorShaft"))
-    val levels = Grouping.Family("ElevatorLevels", mapOf("Cabled" to "StructureElevatorLevelFront"))
+    val shafts = Grouping.Family(mapOf("Cabled" to "StructureElevatorShaft"))
+    val levels = Grouping.Family(mapOf("Cabled" to "StructureElevatorLevelFront"))
     val extending =
         Grouping(
             mapOf(
@@ -173,17 +173,14 @@ class FamilyCandidatesTest {
     val grouping =
         Grouping(
             mapOf(
-                "ElevatorShaft" to
-                    Grouping.Family("ElevatorShafts", mapOf("Cabled" to "StructureElevatorShaft")),
+                "ElevatorShaft" to Grouping.Family(mapOf("Cabled" to "StructureElevatorShaft")),
                 "ElevatorLevel" to
                     Grouping.Family(
-                        "ElevatorLevels",
                         mapOf("Cabled" to "StructureElevatorLevelFront"),
                         extends = listOf("ElevatorShaft"),
                     ),
                 "IndustrialElevatorLevel" to
                     Grouping.Family(
-                        "IndustrialElevatorLevels",
                         mapOf("Cabled" to "StructureElevatorLevelIndustrial"),
                         extends = listOf("ElevatorLevel"),
                     ),
@@ -214,7 +211,7 @@ class FamilyCandidatesTest {
   }
 
   private val valves = listOf(prefab("StructureValve"), prefab("StructureLiquidValve"))
-  private val gasValves = Grouping.Family("Valves", mapOf("Gas" to "StructureValve"))
+  private val gasValves = Grouping.Family(mapOf("Gas" to "StructureValve"))
 
   @Test
   fun `a group split across families is still a candidate`() {
@@ -222,8 +219,7 @@ class FamilyCandidatesTest {
         Grouping(
             mapOf(
                 "Valve" to gasValves,
-                "LiquidValve" to
-                    Grouping.Family("LiquidValves", mapOf("Liquid" to "StructureLiquidValve")),
+                "LiquidValve" to Grouping.Family(mapOf("Liquid" to "StructureLiquidValve")),
             ),
             emptyList(),
         )
@@ -287,10 +283,9 @@ class FamilyCandidatesTest {
     val grouping =
         Grouping(
             mapOf(
-                "Door" to Grouping.Family("Doors", mapOf("Glass" to "StructureGlassDoor")),
+                "Door" to Grouping.Family(mapOf("Glass" to "StructureGlassDoor")),
                 "InteriorDoor" to
                     Grouping.Family(
-                        "InteriorDoors",
                         mapOf("Padded" to "StructureInteriorDoorPadded"),
                         extends = listOf("Door"),
                     ),
@@ -320,7 +315,6 @@ class FamilyCandidatesTest {
   fun `a not-family entry can't put one family's members in different groups`() {
     val valveFamily =
         Grouping.Family(
-            "Valves",
             mapOf("Gas" to "StructureValve", "Liquid" to "StructureLiquidValve"),
         )
     fun grouping(vararg groups: List<String>) =
@@ -364,7 +358,6 @@ class FamilyCandidatesTest {
             mapOf(
                 "Door" to
                     Grouping.Family(
-                        "Doors",
                         mapOf("Glass" to "StructureGlassDoor", "Blast" to "StructureBlastDoor"),
                     )
             ),

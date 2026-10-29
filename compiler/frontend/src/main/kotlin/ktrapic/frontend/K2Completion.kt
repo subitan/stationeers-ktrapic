@@ -658,6 +658,8 @@ object K2Completion {
       val name = classLike.classId.shortClassName
       if (name.isSpecial || name.asString().startsWith("_")) return null
       if (classLike.resolvedStatus.visibility != Visibilities.Public) return null
+      // A companion is used through its class's name (`GrowLight.all`), never named itself.
+      if (classLike.resolvedStatus.isCompanion) return null
       val label = name.asString()
       val kind =
           when ((classLike as? FirRegularClassSymbol)?.classKind) {

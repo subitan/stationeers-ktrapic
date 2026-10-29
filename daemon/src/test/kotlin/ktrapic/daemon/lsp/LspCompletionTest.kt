@@ -39,7 +39,7 @@ class LspCompletionTest {
           "textDocument/didChange",
           """{"textDocument": {"uri": "$uri", "version": 2}, "contentChanges": [
             {"range": {"start": {"line": 1, "character": 0}, "end": {"line": 1, "character": 0}},
-             "text": "PresenceSensors."}]}""",
+             "text": "PresenceSensor."}]}""",
       )
 
       assertThat(client.complete(1, 16).items().map { it["label"].asString })

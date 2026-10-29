@@ -57,7 +57,7 @@ namespace KTrapIC
         /// A name after a dot. After an enum, the name is that enum's value or nothing of the
         /// SDK's: a logic type after an operand enum (<c>LogicType.Pressure</c>), and an enum
         /// value after any other (<c>PowerMode.Idle</c>), as each enum's own values are looked up.
-        /// After a family it is a nested prefab (<c>Batteries.Small</c>). After anything else it is
+        /// After a family it is a nested prefab (<c>Battery.Small</c>). After anything else it is
         /// a logic type (<c>d0.Temperature</c>), a type or a function, but never an enum value, as
         /// only an enum has values. With no qualifier (a member starting a continuation line) any
         /// enum's value is possible too.

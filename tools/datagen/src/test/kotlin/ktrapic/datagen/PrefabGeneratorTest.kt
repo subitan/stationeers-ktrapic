@@ -108,7 +108,6 @@ class PrefabGeneratorTest {
           mapOf(
               "Battery" to
                   Grouping.Family(
-                      "Batteries",
                       mapOf("Small" to "StructureBatterySmall", "Large" to "StructureBatteryLarge"),
                   )
           ),
@@ -159,13 +158,17 @@ class PrefabGeneratorTest {
     // The grow light's slots are of two kinds, so slots[n] has what every slot reads.
     assertThat(code).contains("  val slots: Slots<CommonSlot>\n")
     assertThat(code).contains("  @SlotNumber(0)\n  val Tray: PlantSlot\n")
-    // A batch of grow lights has its own type, to give it slots.
-    assertThat(code).contains("  val all: Batch\n")
+    // A batch of grow lights has its own type, to give it slots, which the prefab's all and
+    // named return.
     assertThat(code)
         .contains(
-            "  class Batch internal constructor() : DeviceBatch<GrowLight>() {\n" +
-                "    /** A slot of every one in the batch, by number. */\n" +
-                "    val slots: Slots<SlotBatch<CommonSlot>>\n"
+            "  companion object : Prefab<GrowLight>() {\n" +
+                "    override val all: Batch\n      get() = intrinsic()\n\n" +
+                "    override fun named(name: String): Batch = intrinsic()\n\n" +
+                "    /** A batch of StructureGrowLight devices. */\n" +
+                "    class Batch internal constructor() : DeviceBatch<GrowLight>() {\n" +
+                "      /** A slot of every one in the batch, by number. */\n" +
+                "      val slots: Slots<SlotBatch<CommonSlot>>\n"
         )
   }
 
@@ -228,16 +231,20 @@ class PrefabGeneratorTest {
   }
 
   @Test
-  fun `a flat prefab gets a device class and an entry point`() {
+  fun `a flat prefab gets a device class whose companion is the prefab`() {
     val code = generate()
 
     assertThat(code).contains("@PrefabName(\"StructureGrowLight\")\nclass GrowLight internal")
     assertThat(code).contains("  var On: Boolean\n    get() = intrinsic()\n")
-    assertThat(code).contains("  companion object : Prefab()\n")
-    assertThat(code).contains("@PrefabName(\"StructureGrowLight\")\nobject GrowLights {")
-    // A batch is a collection of the prefab's typed devices; a prefab without slots needs no
-    // batch type of its own.
-    assertThat(code).contains("    val all: DeviceBatch<Battery.Small>\n")
+    // The companion is the prefab, which has the entry points.
+    assertThat(code)
+        .contains(
+            "  /** The StructureGrowLight prefab. */\n" +
+                "  companion object : Prefab<GrowLight>() {\n"
+        )
+    // No plural entry points, nor any other object.
+    assertThat(code).doesNotContain("object GrowLights")
+    assertThat(code).doesNotContain("\nobject ")
     assertThat(code).doesNotContain("Reading")
   }
 
@@ -248,10 +255,10 @@ class PrefabGeneratorTest {
     assertThat(code).contains("interface Battery {\n  val Charge: Double\n\n  /**")
     assertThat(code).contains("  class Small internal constructor() : TypedDevice(), Battery {")
     assertThat(code).contains("    override val Charge: Double\n")
-    assertThat(code).contains("object Batteries {")
-    assertThat(code)
-        .contains("  object Small {\n    /** The device on [pin], as a StructureBatterySmall. */")
-    assertThat(code).contains("    fun at(pin: Device): Battery.Small = intrinsic()")
+    // A member's companion is its prefab, typed by its nested class; a prefab without slots needs
+    // no batch type of its own, so its companion adds nothing to what it inherits.
+    assertThat(code).contains("    companion object : Prefab<Battery.Small>()\n  }\n")
+    assertThat(code).doesNotContain("Batteries")
     assertThat(code).doesNotContain("class BatterySmall")
   }
 
@@ -259,8 +266,8 @@ class PrefabGeneratorTest {
   fun `rejects groupings that name missing prefabs or clash`() {
     for (bad in
         listOf(
-            Grouping(mapOf("X" to Grouping.Family("Xs", mapOf("A" to "Missing"))), emptyList()),
-            Grouping(mapOf("LogicType" to Grouping.Family("Ls", emptyMap())), emptyList()),
+            Grouping(mapOf("X" to Grouping.Family(mapOf("A" to "Missing"))), emptyList()),
+            Grouping(mapOf("LogicType" to Grouping.Family(emptyMap())), emptyList()),
             Grouping(emptyMap(), listOf("StructureGrowLight")),
         )) {
       assertThrows<IllegalArgumentException>(bad.toString()) { generate(bad) }
@@ -294,11 +301,9 @@ class PrefabGeneratorTest {
                 typing,
             )
             .second
-    val shaft =
-        Grouping.Family("Shafts", mapOf("A" to "StructureShaft", "B" to "StructureShaftCabled"))
+    val shaft = Grouping.Family(mapOf("A" to "StructureShaft", "B" to "StructureShaftCabled"))
     val floor =
         Grouping.Family(
-            "Floors",
             mapOf("A" to "StructureFloor", "B" to "StructureFloorCabled"),
             extends = listOf("Shaft"),
         )
@@ -331,7 +336,7 @@ class PrefabGeneratorTest {
     }
 
     // A family whose members can all read what the parent declares a var, but not all write it.
-    val lift = Grouping.Family("Lifts", mapOf("A" to "StructureLift", "B" to "StructureLiftCabled"))
+    val lift = Grouping.Family(mapOf("A" to "StructureLift", "B" to "StructureLiftCabled"))
     val error =
         assertThrows<IllegalArgumentException> {
           generate("Lift" to lift, "Shaft" to shaft.copy(extends = listOf("Lift")))
@@ -358,12 +363,10 @@ class PrefabGeneratorTest {
         mapOf(
             "Shaft" to
                 Grouping.Family(
-                    "Shafts",
                     mapOf("A" to "StructureShaft", "B" to "StructureShaftCabled"),
                 ),
             "Floor" to
                 Grouping.Family(
-                    "Floors",
                     mapOf("A" to "StructureFloor", "B" to "StructureFloorCabled"),
                     extends = listOf("Shaft"),
                 ),
@@ -383,7 +386,7 @@ class PrefabGeneratorTest {
     // Text is declared once, on the parent, and every member of the child overrides it.
     assertThat(code).contains("interface Shaft {\n  var Setting: Double\n\n  /** Text")
     assertThat(code).contains("interface Floor : Shaft {\n  /**")
-    val floor = code.substringAfter("interface Floor").substringBefore("object Floors")
+    val floor = code.substringAfter("interface Floor")
     assertThat(floor).doesNotContain("\n  var Text: String")
     assertThat(floor.split("    override var Text: String")).hasSize(3)
 
@@ -507,13 +510,5 @@ class PrefabGeneratorTest {
         )) {
       assertThrows<IllegalArgumentException> { bad() }
     }
-  }
-
-  @Test
-  fun `plurals`() {
-    assertThat(PrefabGenerator.plural("Battery")).isEqualTo("Batteries")
-    assertThat(PrefabGenerator.plural("Relay")).isEqualTo("Relays")
-    assertThat(PrefabGenerator.plural("Glass")).isEqualTo("Glasses")
-    assertThat(PrefabGenerator.plural("GrowLight")).isEqualTo("GrowLights")
   }
 }

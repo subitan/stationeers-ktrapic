@@ -200,7 +200,7 @@ object K2Hover {
       fun smallest(candidates: List<Pair<KtSourceElement, FirBasedSymbol<*>>>) =
           candidates.minByOrNull { (source, _) -> source.endOffset - source.startOffset }?.second
 
-      // The class of what a member was referred to on (`d0.`, `LedDisplays.Small.`), by member.
+      // The class of what a member was referred to on (`d0.`, `LedDisplay.Small.`), by member.
       val receivers = mutableMapOf<FirBasedSymbol<*>, ClassId>()
       val referenced =
           elements.filterIsInstance<FirQualifiedAccessExpression>().mapNotNull { access ->
@@ -220,7 +220,7 @@ object K2Hover {
               else -> null
             }
         if (classId == null || !element.source.covers()) return@mapNotNull null
-        // A qualifier or a type names its outer classes too: `LedDisplays.Small`.
+        // A qualifier or a type names its outer classes too: `LedDisplay.Small`.
         generateSequence(classId) { it.outerClassId }
             .firstOrNull { it.shortClassName.asString() == word }
             ?.let { session.symbolProvider.getClassLikeSymbolByClassId(it) }

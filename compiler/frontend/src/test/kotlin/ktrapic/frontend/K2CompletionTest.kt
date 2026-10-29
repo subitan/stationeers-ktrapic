@@ -37,30 +37,65 @@ class K2CompletionTest {
 
   @Test
   fun `after a local holding a typed device`() {
-    val items = labels("val sensor = PresenceSensors.Motion.at(d0)\nif (sensor.|) yield()\n")
+    val items = labels("val sensor = PresenceSensor.Motion.at(d0)\nif (sensor.|) yield()\n")
 
     assertThat(items).containsAtLeast("Activate", "Quantity", "On")
   }
 
   @Test
-  fun `after an object, its nested objects`() {
-    assertThat(labels("PresenceSensors.|")).containsAtLeast("Motion", "Proximity", "Occupancy")
+  fun `after a family, its members`() {
+    assertThat(labels("PresenceSensor.|")).containsAtLeast("Motion", "Proximity", "Occupancy")
   }
 
   @Test
   fun `after an LED display, its write-only Text`() {
-    assertThat(labels("val sign = LedDisplays.Small.at(d5)\nsign.|\n")).contains("Text")
+    assertThat(labels("val sign = LedDisplay.Small.at(d5)\nsign.|\n")).contains("Text")
   }
 
   @Test
   fun `after a dot in the middle of a line, what goes there`() {
-    assertThat(labels("val s = PresenceSensors.|.at(d0)\n"))
+    assertThat(labels("val s = PresenceSensor.|.at(d0)\n"))
         .containsAtLeast("Motion", "Proximity", "Occupancy")
   }
 
   @Test
-  fun `after a family's object, its entry points`() {
-    assertThat(labels("PresenceSensors.Motion.|")).containsAtLeast("at", "all", "named")
+  fun `after a family's member, its entry points`() {
+    assertThat(labels("PresenceSensor.Motion.|")).containsAtLeast("at", "all", "named")
+  }
+
+  @Test
+  fun `after a typed device, its prefab's entry points and nothing else`() {
+    val items = complete("GrowLight.|\n")
+
+    assertThat(items.map { it.label }).containsExactly("at", "all", "named")
+    assertThat(items.single { it.label == "at" }.detail).isEqualTo("fun at(pin: Device): GrowLight")
+    assertThat(items.single { it.label == "all" }.detail)
+        .isEqualTo("val all: DeviceBatch<GrowLight>")
+  }
+
+  @Test
+  fun `after a family with an LED display's sizes, its members`() {
+    val items = labels("LedDisplay.|\n")
+
+    assertThat(items).containsExactly("Small", "Medium", "Large")
+  }
+
+  @Test
+  fun `after a family's member, its entry points typed by it`() {
+    val items = complete("LedDisplay.Small.|\n")
+
+    assertThat(items.map { it.label }).containsExactly("at", "all", "named")
+    assertThat(items.single { it.label == "named" }.detail)
+        .isEqualTo("fun named(name: String): DeviceBatch<LedDisplay.Small>")
+  }
+
+  @Test
+  fun `after a prefab with slots, entry points whose batches have slots`() {
+    val items = complete("BatteryCharger.Standard.|\n")
+
+    assertThat(items.map { it.label }).containsExactly("at", "all", "named")
+    assertThat(items.single { it.label == "all" }.detail)
+        .isEqualTo("val all: BatteryCharger.Standard.Batch")
   }
 
   @Test
@@ -81,7 +116,7 @@ class K2CompletionTest {
 
   @Test
   fun `after a Ratios loop's entry, its key and value`() {
-    assertThat(labels("for (e in GasSensors.at(d0).Ratios) {\n  db.Setting = e.|\n}\n"))
+    assertThat(labels("for (e in GasSensor.at(d0).Ratios) {\n  db.Setting = e.|\n}\n"))
         .containsExactly("key", "value")
   }
 
@@ -121,13 +156,13 @@ class K2CompletionTest {
 
   @Test
   fun `inside a lambda over a batch`() {
-    assertThat(labels("PresenceSensors.Motion.all.forEach { it.| }"))
+    assertThat(labels("PresenceSensor.Motion.all.forEach { it.| }"))
         .containsAtLeast("Activate", "Quantity")
   }
 
   @Test
   fun `SDK extensions on a mapped batch`() {
-    assertThat(labels("val q = PresenceSensors.Motion.all.map { it.Quantity }.|\n"))
+    assertThat(labels("val q = PresenceSensor.Motion.all.map { it.Quantity }.|\n"))
         .containsAtLeast("sum", "average", "min", "max")
   }
 
@@ -144,7 +179,7 @@ class K2CompletionTest {
             .trimIndent()
     val items = labels(source)
 
-    assertThat(items).containsAtLeast("x", "y", "limit", "d0", "sleep", "PresenceSensors")
+    assertThat(items).containsAtLeast("x", "y", "limit", "d0", "sleep", "PresenceSensor")
     assertThat(items).contains("if")
   }
 
@@ -160,7 +195,7 @@ class K2CompletionTest {
   fun `the variables a destructuring declaration makes, and not the compiler's`() {
     assertThat(locals("fun f() {\n  val (a, b) = Pair(1, 2)\n  val c = |\n}\n"))
         .containsExactly("a", "b")
-    assertThat(locals("for ((gas, ratio) in GasSensors.at(d0).Ratios) {\n  d0.Setting = |\n}\n"))
+    assertThat(locals("for ((gas, ratio) in GasSensor.at(d0).Ratios) {\n  d0.Setting = |\n}\n"))
         .containsExactly("gas", "ratio")
   }
 
@@ -258,7 +293,7 @@ class K2CompletionTest {
   fun `in a function's body, a property declared after it is offered`() {
     assertThat(labels("fun f() {\n  db.Setting = |\n}\nval late = 1.0\nf()\n")).contains("late")
     assertThat(labels("db.Setting = |\nval late = 1.0\n")).doesNotContain("late")
-    assertThat(labels("PresenceSensors.Motion.all.forEach { db.Setting = | }\nval late = 1.0\n"))
+    assertThat(labels("PresenceSensor.Motion.all.forEach { db.Setting = | }\nval late = 1.0\n"))
         .doesNotContain("late")
   }
 

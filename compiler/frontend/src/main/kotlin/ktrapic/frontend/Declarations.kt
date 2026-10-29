@@ -20,20 +20,26 @@ import org.jetbrains.kotlin.fir.types.ConeTypeParameterType
 import org.jetbrains.kotlin.fir.types.isMarkedNullable
 import org.jetbrains.kotlin.fir.types.type
 import org.jetbrains.kotlin.name.ClassId
+import org.jetbrains.kotlin.name.SpecialNames
 import org.jetbrains.kotlin.psi.KtFile
 import org.jetbrains.kotlin.psi.KtLiteralStringTemplateEntry
 import org.jetbrains.kotlin.psi.KtStringTemplateEntryWithExpression
 
 /**
  * [classId]'s name within its package, as a program writes it: `LedDisplay.Small`, and a class the
- * program declares without the object the program is wrapped in (`P`, not `Program.P`).
+ * program declares without the object the program is wrapped in (`P`, not `Program.P`). A companion
+ * object goes unnamed, as a program refers to it by its class: a typed device's prefab is
+ * `GrowLight`, not `GrowLight.Companion`, and the batch type of a prefab with slots is
+ * `BatteryCharger.Standard.Batch`.
  */
 internal fun nameOf(classId: ClassId): String {
-  val segments = classId.relativeClassName.pathSegments().map { it.asString() }
-  val written =
-      if (segments.size > 1 && segments.first() == PROGRAM_OBJECT) segments.drop(1) else segments
-  return written.joinToString(".")
+  var segments = classId.relativeClassName.pathSegments().map { it.asString() }
+  if (segments.size > 1 && segments.first() == PROGRAM_OBJECT) segments = segments.drop(1)
+  segments = listOf(segments.first()) + segments.drop(1).filter { it != COMPANION }
+  return segments.joinToString(".")
 }
+
+private val COMPANION = SpecialNames.DEFAULT_NAME_FOR_COMPANION_OBJECT.asString()
 
 /** [classId]'s package and [nameOf]: `ktrapic.LedDisplay.Small`, or `P` in no package. */
 internal fun qualifiedNameOf(classId: ClassId): String =

@@ -19,7 +19,7 @@ class LspHoverTest {
   fun `hover describes a logic type with its KDoc, as plain text`() {
     LspTestClient().use { client ->
       client.initialize()
-      client.open(uri, "val sign = LedDisplays.Small.at(d5)\nsign.Text = \"HOT\"\n")
+      client.open(uri, "val sign = LedDisplay.Small.at(d5)\nsign.Text = \"HOT\"\n")
 
       val contents = client.at("textDocument/hover", 1, 6)["result"].asJsonObject["contents"]
       assertThat(contents.asJsonObject["kind"].asString).isEqualTo("plaintext")
@@ -42,14 +42,14 @@ class LspHoverTest {
   fun `signature help lists the call's functions, with documentation as MarkupContent`() {
     LspTestClient().use { client ->
       client.initialize()
-      client.open(uri, "val s = LedDisplays.Small.at(\n")
+      client.open(uri, "val s = LedDisplay.Small.at(\n")
 
       val result = client.at("textDocument/signatureHelp", 0, 29)["result"].asJsonObject
       val signature = result["signatures"].asJsonArray.single().asJsonObject
       assertThat(signature["label"].asString).isEqualTo("fun at(pin: Device): LedDisplay.Small")
       assertThat(signature["documentation"].asJsonObject["kind"].asString).isEqualTo("plaintext")
       assertThat(signature["documentation"].asJsonObject["value"].asString)
-          .isEqualTo("The device on pin, as a StructureConsoleLED5.")
+          .isEqualTo("The device on pin, as one of this prefab.")
       assertThat(signature["parameters"].asJsonArray.map { it.asJsonObject["label"].asString })
           .containsExactly("pin: Device")
       assertThat(result["activeSignature"].asInt).isEqualTo(0)

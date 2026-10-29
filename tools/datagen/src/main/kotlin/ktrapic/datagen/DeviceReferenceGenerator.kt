@@ -3,9 +3,9 @@ package ktrapic.datagen
 /**
  * Generates `docs/DEVICES.md`, the API reference of what programs can name, written as Kotlin
  * declarations: every typed device (its logic types as `var` or `val`, its slots, and in a comment
- * its prefab and entry point), the device families, the slot types, and the game's enums. It reads
- * the generated SDK sources, so it lists what the compiler accepts, and fails if a typed device
- * there goes unlisted.
+ * its prefab), the device families, the slot types, and the game's enums. It reads the generated
+ * SDK sources, so it lists what the compiler accepts, and fails if a typed device there goes
+ * unlisted.
  */
 object DeviceReferenceGenerator {
   /** Where the file goes, relative to the workspace root. */
@@ -15,6 +15,7 @@ object DeviceReferenceGenerator {
       Regex("""^(\s*)(?:abstract |sealed |open |data |enum )*(class|object|interface) (\w+)(.*)$""")
   private val PROPERTY = Regex("""^\s*(override )?(var|val) (\w+): (.+)$""")
   private val PREFAB_NAME = Regex("""@PrefabName\("([^"]+)"\)""")
+  private val COMPANION = Regex("""^\s*companion object : Prefab<([\w.]+)>\(\)""")
   private val SLOT_NUMBER = Regex("""^\s*@SlotNumber\((\d+)\)$""")
   private val LOGIC_TYPES = Regex("""^\s*@LogicTypes\(read = "([^"]*)", written = "([^"]*)"\)$""")
 
@@ -67,7 +68,6 @@ object DeviceReferenceGenerator {
             .lines()
     val substances = LogicViews.substances(enums.enums["LogicType"].orEmpty().keys)
     val devices = mutableListOf<Declaration>()
-    val entryPoints = mutableMapOf<String, String>()
     val families = mutableListOf<Declaration>()
     val slots = mutableListOf<Declaration>()
     // The declarations enclosing the current line, by indentation.
@@ -95,7 +95,6 @@ object DeviceReferenceGenerator {
         kind == "class" && named != null -> devices += Declaration(name, properties, named)
         kind == "class" && "DeviceSlot()" in match.groupValues[4] ->
             slots += Declaration(name, properties)
-        kind == "object" && named != null -> entryPoints[named] = name
       }
     }
     // Counted from the raw source, not from the declarations parsed above, so a typed device whose
@@ -105,9 +104,10 @@ object DeviceReferenceGenerator {
       "the source has $typedDevices typed device(s) but ${devices.size} were read with a " +
           "recognized @PrefabName"
     }
-    val missing = devices.mapNotNull { it.prefab } - entryPoints.keys
-    require(missing.isEmpty()) { "prefabs without an entry point: $missing" }
-    fun entryPoint(device: Declaration) = entryPoints.getValue(device.prefab!!)
+    // Each typed device's companion object is its prefab, the way to its devices.
+    val companions = lines.mapNotNull { COMPANION.find(it)?.groupValues?.get(1) }.toSet()
+    val missing = devices.map { it.name }.filter { it !in companions }
+    require(missing.isEmpty()) { "typed devices without a prefab companion object: $missing" }
 
     val topLevel = devices.filter { '.' !in it.name }.sortedBy { it.name.lowercase() }
     val byLetter = topLevel.groupBy { it.name.first().uppercaseChar() }.toSortedMap()
@@ -137,28 +137,34 @@ object DeviceReferenceGenerator {
       append("\n")
       append("## Using a device\n")
       append("\n")
-      append("Each prefab has a device type, such as `GrowLight`, and an entry point named after ")
-      append("it in the plural, such as `GrowLights`, which every device below names in its ")
-      append("comment. Every entry point has the same three members:\n")
+      append("Each prefab has a device type, such as `GrowLight`, whose companion object is the ")
+      append("prefab: `GrowLight` is the grow light's prefab, compared with a device's ")
+      append("(`d0.PrefabHash == GrowLight`), and the way to its devices. A family member's is ")
+      append("its nested class, such as `LedDisplay.Small`. Every prefab has the same three ")
+      append("members:\n")
       append("\n")
       append("```kotlin\n")
-      append("object GrowLights {\n")
-      append("  /** The device on [pin], as a GrowLight. */\n")
-      append("  fun at(pin: Device): GrowLight\n")
+      append("abstract class Prefab<T : TypedDevice> {\n")
+      append("  /** The device on [pin], as one of this prefab: `GrowLight.at(d0)`. */\n")
+      append("  fun at(pin: Device): T\n")
       append("\n")
-      append("  /** Every one on the chip's network. */\n")
-      append("  val all: DeviceBatch<GrowLight>\n")
+      append("  /** Every device of this prefab on the chip's network: `GrowLight.all`. */\n")
+      append("  val all: DeviceBatch<T>\n")
       append("\n")
-      append("  /** Every one on the network named [name], which must be a constant. */\n")
-      append("  fun named(name: String): DeviceBatch<GrowLight>\n")
+      append(
+          "  /** Every one named [name], which must be a constant: `GrowLight.named(\"A\")`. */\n"
+      )
+      append("  fun named(name: String): DeviceBatch<T>\n")
       append("}\n")
       append("```\n")
       append("\n")
       append("For a device with slots, the batch from `all` or `named` also has `slots`, a slot ")
-      append("of every one in the batch: `BatteryChargers.Standard.all.slots[0]`.\n")
+      append("of every one in the batch: `BatteryCharger.Standard.all.slots[0]`.\n")
       append("\n")
       append("A device's logic types are its properties: a `var` can be written, a `val` only ")
-      append("read. Every typed device also has `val PrefabHash: Prefab`, `val NameHash: Double` ")
+      append(
+          "read. Every typed device also has `val PrefabHash: Prefab<*>`, `val NameHash: Double` "
+      )
       append("and `val ReferenceId: Double`. Any device can also be used untyped, as `d0` to ")
       append("`d5` or `db`, with every logic type.\n")
       append("\n")
@@ -179,7 +185,7 @@ object DeviceReferenceGenerator {
         append("what it reaches there; naming anything else is an error saying what the device ")
         append("lacks. An untyped pin (`d0`) has every view, checked only against the logic ")
         append("types the game has. A batch reads and writes ")
-        append("views too: `GasSensors.all.map { it.Ratios[Substance.Oxygen] }.average()`.\n")
+        append("views too: `GasSensor.all.map { it.Ratios[Substance.Oxygen] }.average()`.\n")
         append("\n")
         append("```kotlin\n")
         append(viewDeclarations(viewsSource))
@@ -189,13 +195,13 @@ object DeviceReferenceGenerator {
       append("## Families\n")
       append("\n")
       append("A family is a set of prefabs that do one kind of job and share their logic types: ")
-      append("one device in several sizes or fluids (`Batteries.Small`), or different devices ")
-      append("used the same way, such as a lever and a switch (`Switches.Lever`), or a ")
-      append("transmitter and a receiver (`PowerTransmissions.MicrowaveReceiver`). Its interface ")
+      append("one device in several sizes or fluids (`Battery.Small`), or different devices ")
+      append("used the same way, such as a lever and a switch (`Switch.Lever`), or a ")
+      append("transmitter and a receiver (`PowerTransmission.MicrowaveReceiver`). Its interface ")
       append("holds the logic types every member has, so a function can take any of them; each ")
-      append("member is a nested class, with an entry point nested the same way, and can have ")
-      append("logic types of its own (`DigitalChutes.ValveLeft` adds `Lock` and `Open`), or write ")
-      append("one its family only reads, listed as an `override var`. A family ")
+      append("member is a nested class, the way to its devices (`LedDisplay.Small.all`), and ")
+      append("can have logic types of its own (`DigitalChute.ValveLeft` adds `Lock` and ")
+      append("`Open`), or write one its family only reads, listed as an `override var`. A family ")
       append("that is a special case of another extends its interface, so a function taking the ")
       append("other takes it too: an `ElevatorLevel` is an `ElevatorShaft`.\n")
       val familiesByName = families.associateBy { it.name }
@@ -231,7 +237,7 @@ object DeviceReferenceGenerator {
               }
           // A blank line between declarations, but not at the top of an interface that adds none.
           if (i > 0 || family.properties.isNotEmpty()) append("\n")
-          append("  /** ${member.prefab}. Entry point: ${entryPoint(member)}. */\n")
+          append("  /** ${member.prefab}. */\n")
           if (extra.isEmpty()) {
             append("  class $simple : TypedDevice, ${family.name}\n")
           } else {
@@ -254,7 +260,7 @@ object DeviceReferenceGenerator {
         append("```kotlin\n")
         for ((i, device) in group.withIndex()) {
           if (i > 0) append("\n")
-          append("/** ${device.prefab}. Entry point: ${entryPoint(device)}. */\n")
+          append("/** ${device.prefab}. */\n")
           declaration("class ${device.name} : TypedDevice", device.properties, substances)
         }
         append("```\n")

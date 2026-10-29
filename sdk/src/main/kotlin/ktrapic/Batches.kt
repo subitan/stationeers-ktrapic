@@ -1,9 +1,9 @@
 package ktrapic
 
 /**
- * Every device of one prefab on the chip's network (`GrowLights.all`), every one with a name
- * (`GrowLights.named("Potatoes")`), or one slot of each of them
- * (`BatteryChargers.Standard.all.slots[0]`).
+ * Every device of one prefab on the chip's network (`GrowLight.all`), every one with a name
+ * (`GrowLight.named("Potatoes")`), or one slot of each of them
+ * (`BatteryCharger.Standard.all.slots[0]`).
  *
  * A batch is read through Kotlin's collection operations, each of which compiles to one batch
  * instruction (`lb`, `lbn`, `lbs`, `lbns`): `all.map { it.Charge }.average()` is the average
@@ -68,7 +68,7 @@ open class DeviceBatch<out T> internal constructor() : Batch<T>() {
   fun count(): Int = intrinsic()
 }
 
-/** One slot of every device in a batch: `BatteryChargers.Standard.all.slots[0]`. */
+/** One slot of every device in a batch: `BatteryCharger.Standard.all.slots[0]`. */
 class SlotBatch<out S> internal constructor() : Batch<S>()
 
 /**

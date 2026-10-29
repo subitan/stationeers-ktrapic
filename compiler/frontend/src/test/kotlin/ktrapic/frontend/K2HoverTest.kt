@@ -44,7 +44,7 @@ class K2HoverTest {
 
   @Test
   fun `a write-only logic type, with its interface's KDoc`() {
-    val hover = hover("val sign = LedDisplays.Small.at(d5)\nsign.Text| = \"HOT\"\n")!!
+    val hover = hover("val sign = LedDisplay.Small.at(d5)\nsign.Text| = \"HOT\"\n")!!
 
     assertThat(hover.declaration).isEqualTo("var Text: String")
     assertThat(hover.container).isEqualTo("LedDisplay.Small")
@@ -64,26 +64,45 @@ class K2HoverTest {
   }
 
   @Test
-  fun `each name of a qualified object`() {
-    val source = "val sign = LedDisplays.Small.at(d5)\n"
-    val outer = hover(source.replace("LedDisplays", "LedDis|plays"))!!
+  fun `each name of a qualified prefab`() {
+    val source = "val sign = LedDisplay.Small.at(d5)\n"
+    val outer = hover(source.replace("LedDisplay", "LedDis|play"))!!
     val inner = hover(source.replace("Small", "Sm|all"))!!
 
-    assertThat(outer.declaration).isEqualTo("object LedDisplays")
+    assertThat(outer.declaration).isEqualTo("interface LedDisplay")
     assertThat(outer.documentation)
-        .isEqualTo("The LedDisplay devices on the chip's network, by prefab.")
-    assertThat(inner.declaration).isEqualTo("object LedDisplays.Small")
-    assertThat(inner.documentation)
-        .isEqualTo("The StructureConsoleLED5 devices on the chip's network.")
+        .isEqualTo("Devices of one kind that share these logic types, each a nested class.")
+    assertThat(inner.declaration).isEqualTo("class LedDisplay.Small")
+    assertThat(inner.documentation).isEqualTo("A StructureConsoleLED5.")
   }
 
   @Test
   fun `a function, with its KDoc's links as names`() {
-    val hover = hover("val sign = LedDisplays.Small.a|t(d5)\n")!!
+    val hover = hover("val sign = LedDisplay.Small.a|t(d5)\n")!!
 
     assertThat(hover.declaration).isEqualTo("fun at(pin: Device): LedDisplay.Small")
-    assertThat(hover.container).isEqualTo("LedDisplays.Small")
-    assertThat(hover.documentation).isEqualTo("The device on pin, as a StructureConsoleLED5.")
+    assertThat(hover.container).isEqualTo("LedDisplay.Small")
+    assertThat(hover.documentation).isEqualTo("The device on pin, as one of this prefab.")
+  }
+
+  @Test
+  fun `a prefab's entry point on a typed device, never as its companion`() {
+    val all = hover("val lights = GrowLight.a|ll\n")!!
+    val prefab = hover("val p = GrowLight\nval q = |p\n")!!
+
+    assertThat(all.declaration).isEqualTo("val all: DeviceBatch<GrowLight>")
+    assertThat(all.container).isEqualTo("GrowLight")
+    assertThat(all.documentation).isEqualTo("Every device of this prefab on the chip's network.")
+    assertThat(prefab.declaration).isEqualTo("val p: GrowLight")
+  }
+
+  @Test
+  fun `an entry point a prefab with slots overrides, with Prefab's KDoc`() {
+    val hover = hover("val chargers = BatteryCharger.Standard.a|ll\n")!!
+
+    assertThat(hover.declaration).isEqualTo("val all: BatteryCharger.Standard.Batch")
+    assertThat(hover.container).isEqualTo("BatteryCharger.Standard")
+    assertThat(hover.documentation).isEqualTo("Every device of this prefab on the chip's network.")
   }
 
   @Test
@@ -159,7 +178,7 @@ class K2HoverTest {
 
   @Test
   fun `a function type as Kotlin writes it`() {
-    val hover = hover("val n = PresenceSensors.Motion.all.cou|nt { it.Activate }\n")!!
+    val hover = hover("val n = PresenceSensor.Motion.all.cou|nt { it.Activate }\n")!!
 
     assertThat(hover.declaration)
         .isEqualTo("fun count(predicate: (PresenceSensor.Motion) -> Boolean): Int")
@@ -205,13 +224,13 @@ class K2HoverTest {
 
   @Test
   fun `signature help in a call not yet closed`() {
-    val help = signatures("val s = LedDisplays.Small.at(|\n")!!
+    val help = signatures("val s = LedDisplay.Small.at(|\n")!!
 
     assertThat(help.signatures.map { it.label })
         .containsExactly("fun at(pin: Device): LedDisplay.Small")
     assertThat(help.signatures.single().parameters).containsExactly("pin: Device")
     assertThat(help.signatures.single().documentation)
-        .isEqualTo("The device on pin, as a StructureConsoleLED5.")
+        .isEqualTo("The device on pin, as one of this prefab.")
     assertThat(help.activeParameter).isEqualTo(0)
   }
 
@@ -249,7 +268,7 @@ class K2HoverTest {
 
   @Test
   fun `signature help offers the receiver's other overloads of a call that resolved`() {
-    val help = signatures("val n = PresenceSensors.Motion.all.count(|)\n")!!
+    val help = signatures("val n = PresenceSensor.Motion.all.count(|)\n")!!
 
     assertThat(help.signatures.map { it.label })
         .containsExactly(
@@ -351,7 +370,7 @@ class K2HoverTest {
   fun `no signature help outside a call's parentheses`() {
     assertThat(signatures("val x = |1\n")).isNull()
     assertThat(signatures("sleep(1)|\n")).isNull()
-    assertThat(signatures("PresenceSensors.Motion.all.forEach { | }\n")).isNull()
+    assertThat(signatures("PresenceSensor.Motion.all.forEach { | }\n")).isNull()
     assertThat(signatures("// sleep(|\n")).isNull()
   }
 
