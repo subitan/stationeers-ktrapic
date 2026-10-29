@@ -502,7 +502,39 @@ says the program must be shortened if they are all it calls that way.
 
 Values live in the registers `r0` to `r15`; the compiler reuses a register once its value is no
 longer needed. A program that needs more than 16 values at once is rejected, with an error that
-has no line or column.
+has no line or column, unless it is annotated `@file:CircuitHousingOnly`.
+
+### Memory in a circuit housing
+
+`get` and `put` on `db` reach the chip's own stack in an IC housing, a rocket circuit housing or a
+suit; in a machine with a chip slot, `db` is the machine, and they fail. A program that will only
+run in a housing or a suit can say so on its first line:
+
+```kotlin
+@file:CircuitHousingOnly
+
+val x = db.Setting
+db.Ratio = x * 2.0
+```
+
+The program then compiles exactly as it would without the annotation, unless it needs more than
+16 registers. Then, rather than failing, the compiler keeps some values in memory at the top of
+the stack, at addresses 511, 510 and down: the values read and written least often, over the
+longest stretch of code, live at the most crowded places, go first. Each read of such a value is
+a `get` into a register just before it is used, and each write a `put` just after, so each costs
+a line where it is used or set; a `move` to or from it is the `get` or `put` itself. A value in
+memory isn't pushed around calls on the stack, since it isn't in a register. A function's value
+that is live across a call into a cycle of calls stays in a register, as the recursion would
+reuse its address. Tail calls stay loops: memory is tried before making them calls.
+
+A program that uses memory reads address 511 on its first line, so on any other host the chip
+stops there with an error, before doing anything. The stack grows up from 0 as calls push, so a
+deep recursion could reach the addresses in use, where `push` would overwrite them without
+error; in a program that uses memory, each function in a cycle of calls checks `sp` as it is
+called, with room for what it and the functions it calls outside a cycle push, and stops the
+chip (`hcf`) before its calls could reach them. A program without recursion has no such check.
+
+Without the annotation, the error for a program out of registers suggests adding it.
 
 ## Not supported yet
 

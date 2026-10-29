@@ -279,6 +279,17 @@ class K2HoverTest {
   }
 
   @Test
+  fun `the file annotation that allows memory, with its KDoc`() {
+    val hover = hover("@file:CircuitHousing|Only\nval x = db.Setting\n")!!
+
+    assertThat(hover.declaration).contains("CircuitHousingOnly")
+    assertThat(hover.documentation)
+        .contains("an IC housing, a rocket circuit housing or a suit, and not in a machine")
+    assertThat(hover.documentation).contains("at the top of its stack, at addresses 511, 510")
+    assertThat(hover.documentation).contains("the chip stops there with an error")
+  }
+
+  @Test
   fun `an enum entry`() {
     val hover = hover("db[LogicType.Sett|ing] = 1.0\n")!!
 

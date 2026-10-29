@@ -38,7 +38,8 @@ data class CompileOptions(
      * themselves, so without [stackCalls] this has no effect. A program that would need more
      * registers than the chip has with its tail calls as loops, but not with them as calls, makes
      * every one of them a call, with a warning: then a deep tail recursion can overflow the stack
-     * again.
+     * again. A program annotated `@file:CircuitHousingOnly` keeps values in memory to fit with its
+     * tail calls as loops first, and makes them calls only if that is not enough.
      */
     val tailCalls: Boolean = true,
 )
@@ -79,7 +80,9 @@ object Compiler {
                   if (!options.tailCalls) throw e
                   // Tail calls are only an optimisation, so the program may make them as calls
                   // instead. If it is still out of registers then, the error reports what it
-                  // needs that way: no option makes it need fewer.
+                  // needs that way: no option makes it need fewer. A program annotated
+                  // @file:CircuitHousingOnly gets here only when even keeping values in memory
+                  // left it out of registers with its tail calls as loops.
                   try {
                     Backend.compile(ir.module, ir.symbols, options.stackCalls, tailCalls = false) to
                         CompileError(tailCallHint(e.needed), 0, 0)
