@@ -55,6 +55,11 @@ moment after typing stops:
   Kotlin's own functions, only those KTrapIC compiles are listed. The list shows at most 20 of
   the names that start with what's typed, and accepting it (the editor's autocomplete key) types
   the part that all of them share. Until the compiler has started, nothing is listed.
+- Resting the mouse on a name shows what it is: the class it was used on, its declaration
+  (`var Text: String`), whether a logic type is read-only or write-only, and the SDK's
+  description of it, where the SDK has one. An error's message, if the name has one, comes first.
+- Typing `(` or `,` in a call shows, in place of the list, the functions the call could be to,
+  with the parameter being typed highlighted and each one's description.
 
 Exporting writes the IC10 to the chip, followed by the Kotlin source, compressed and encoded in
 comment lines that the chip skips. Opening the chip again shows the Kotlin. A program that doesn't
@@ -101,8 +106,17 @@ process's standard input and output (JSON-RPC with `Content-Length` framing, UTF
   30 seconds, but never for the compiler to start: until it has, an export writes a comment
   saying so.
 - Completion is the daemon's `textDocument/completion`, at the caret, after the edits before it.
-  Each analyses the whole program, so an editor has one request in flight at a time; when it is
-  answered, only the latest one wanted meanwhile is sent.
+  Each analyses the whole program, so an editor has one completion request in flight at a time;
+  when it is answered, only the latest one wanted meanwhile is sent.
+- Hovers and signatures are the daemon's `textDocument/hover` and `textDocument/signatureHelp`,
+  queued the same way, each kind on its own: an editor has at most one request of each kind in
+  flight, and the daemon answers them, and compiles, one at a time. A hover is asked for once per
+  name, at its start, once the mouse has rested on it for 400 ms; it is shown if the mouse is still
+  on the name when the answer comes. No hover is asked for on what the editor's line-by-line
+  highlighting marks as a `//` comment, a one-line string or a keyword. That highlighting sees one
+  line at a time, so names in a `/* */` comment or on a raw string's later lines are still asked
+  about (the daemon answers nothing for them), names inside `${}` in a string are not hovered, and
+  a `//` inside a string stops hovers for the rest of that line.
 - When the daemon starts again (`ktrapic restart`, or after it stopped), each editor opens its
   document on it again, with its whole text, and compiles it.
 
@@ -128,7 +142,6 @@ it in game. The daemon's JVM options keep it small beside the game:
 ## Not yet
 
 - Library imports from the IC10 Editor's Library window.
-- Hover information and signature help.
 - Device data for prefabs added by other mods.
 
 ## Building
@@ -169,10 +182,12 @@ set `DaemonJarPath` to it, and `JavaPath` to a JDK 21's `bin/java.exe`.
 `mod/tests` tests the plugin's game-independent code: its client of the compile daemon
 (`LspConnection`, `LspDocument`) against a real daemon, started with the plugin's JVM options
 (`LspDocumentTest.cs`: compiles for the preview and the export, edits and compiles in order, each
-document's diagnostics reaching only it, documents opened again on a daemon started again), the
-daemon's LSP mode message by message through that client (`DaemonLspTest.cs`), and the
-highlighting's name lookup. What needs the game, the editor's formatter itself, isn't tested
-here.
+document's diagnostics reaching only it, documents opened again on a daemon started again,
+completions, hovers and signatures), the daemon's LSP mode message by message through that client
+(`DaemonLspTest.cs`), the request queues and which completions are shown (`CompletionsTest.cs`),
+where hovers and signatures are asked for and where a signature's active parameter is
+(`HoversTest.cs`), and the highlighting's name lookup.
+What needs the game, the editor's formatter itself, isn't tested here.
 
 ```
 bazel build //daemon:ktrapic-daemon_deploy.jar

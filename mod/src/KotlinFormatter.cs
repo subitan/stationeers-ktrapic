@@ -45,6 +45,9 @@ namespace KTrapIC
 
         private const int DebounceMs = 150;
 
+        /// <summary>How long the mouse rests on a name before its hover is asked for.</summary>
+        private const int HoverDelayMs = 400;
+
         /// <summary>
         /// How long an export waits for a compile, on the main thread. A warm compile takes well
         /// under a second, the first after the daemon starts about ten.
@@ -138,6 +141,20 @@ namespace KTrapIC
         /// <summary>The document's completion requests, one at a time; used once there is a document.</summary>
         private readonly CompletionRequests _completionRequests;
 
+        /// <summary>The document's hover requests, one at a time, each at the start of a name.</summary>
+        private readonly Requests<string> _hoverRequests;
+
+        /// <summary>The document's signature help requests, one at a time.</summary>
+        private readonly Requests<Signatures> _signatureRequests;
+
+        /// <summary>
+        /// The hover wanted last, at the start of the name under the mouse, and the latest answer
+        /// and the request it answered. Used on the main thread.
+        /// </summary>
+        private CaretRequest _hoverWanted;
+        private CaretRequest _hovered;
+        private StyledText _hoverText;
+
         private sealed class Compiled
         {
             public readonly int Version;
@@ -168,6 +185,14 @@ namespace KTrapIC
             _completionRequests = new CompletionRequests(
                 (line, column) => _document.Complete(line, column),
                 (request, completions) => ShowCompletions(request, completions).Forget());
+            _hoverRequests = new Requests<string>(
+                (line, column) => _document.Hover(line, column),
+                (request, text) => ShowHover(request, text).Forget(),
+                "");
+            _signatureRequests = new Requests<Signatures>(
+                (line, column) => _document.SignatureHelp(line, column),
+                (request, signatures) => ShowSignatures(request, signatures).Forget(),
+                Signatures.None);
             OnCodeChanged += () =>
             {
                 // The editor signals some changes twice (a reset, then again on its next frame), so
@@ -314,9 +339,16 @@ namespace KTrapIC
                 LspClient = client;
                 _document.Bind(client.Connection);
                 _completionRequests.Forget();
+                _hoverRequests.Forget();
+                _signatureRequests.Forget();
+                _hovered = null;
+                _hoverText = null;
             }
             string text = RawText;
-            if (_completionRequests.Sync(text, () => _document.Sync(Identifier.version, () => text, JArray.FromObject(_changes))))
+            // Each kind of request is sent only for the text the daemon has, so all three see it
+            // change at once.
+            if (_completionRequests.Sync(text, () => _hoverRequests.Sync(text, () => _signatureRequests.Sync(text,
+                () => _document.Sync(Identifier.version, () => text, JArray.FromObject(_changes))))))
             {
                 _changes.Clear();
                 _syncedVersion = _version;
@@ -341,7 +373,8 @@ namespace KTrapIC
         /// Whether the editor should call <see cref="UpdateAutocomplete"/>: where it would (the
         /// caret at the end of a word or a line), and also right after a dot in the middle of a
         /// line (<c>PresenceSensors.|.at(d0)</c>), so what can follow a name shows before its
-        /// first letter is typed.
+        /// first letter is typed, and right after a <c>(</c> or a <c>,</c>, for the call's
+        /// signatures.
         /// </summary>
         public override bool NeedsUpdateAutocomplete()
         {
@@ -350,7 +383,10 @@ namespace KTrapIC
             if (!Settings.EnableAutoComplete || Editor.KeyMode != KeyMode.Insert)
                 return false;
             var caret = Editor.CaretPos;
-            return caret.Line < Lines.Count && Completions.AfterDot(Lines[caret.Line].Text, caret.Col);
+            if (caret.Line >= Lines.Count)
+                return false;
+            string line = Lines[caret.Line].Text;
+            return Completions.AfterDot(line, caret.Col) || Hovers.InArguments(line, caret.Col);
         }
 
         /// <summary>
@@ -358,9 +394,11 @@ namespace KTrapIC
         /// right after a dot (<see cref="Completions.Wanted"/>), and shows the answer once it
         /// comes, if the code and the caret haven't changed since. Requests go one at a time, the
         /// latest wanted after the one in flight if the code is still what it was made in
-        /// (<see cref="CompletionRequests"/>). The editor calls this when the
-        /// code changes or the caret moves, with the caret at the end of a word or a line, or right
-        /// after a dot (<see cref="NeedsUpdateAutocomplete"/>).
+        /// (<see cref="CompletionRequests"/>). Right after a <c>(</c> or a <c>,</c> it asks for the
+        /// signatures of the call there instead, shown the same way (<see cref="ShowSignatures"/>).
+        /// The editor calls this when the code changes or the caret moves, with the caret at the
+        /// end of a word or a line, or right after a dot, a <c>(</c> or a <c>,</c>
+        /// (<see cref="NeedsUpdateAutocomplete"/>).
         /// </summary>
         public override void UpdateAutocomplete()
         {
@@ -370,18 +408,163 @@ namespace KTrapIC
             if (caret.Line >= Lines.Count)
                 return;
             string line = Lines[caret.Line].Text;
-            if (!Completions.Wanted(line, caret.Col))
+            bool complete = Completions.Wanted(line, caret.Col);
+            if (!complete && !Hovers.InArguments(line, caret.Col))
                 return;
             SubmitChanges();
             if (_document == null || _syncedVersion != _version)
                 return;
             // Told apart by their text rather than _version: the editor's first call for an edit
             // comes before the handler that counts the edit in _version has run.
-            _completionRequests.Want(
-                new CompletionRequest(RawText, caret.Line, caret.Col, Completions.WordBefore(line, caret.Col)));
+            if (complete)
+                _completionRequests.Want(
+                    new CaretRequest(RawText, caret.Line, caret.Col, Completions.WordBefore(line, caret.Col)));
+            else
+                _signatureRequests.Want(new CaretRequest(RawText, caret.Line, caret.Col));
         }
 
-        private async UniTaskVoid ShowCompletions(CompletionRequest request, IReadOnlyList<Completion> completions)
+        /// <summary>
+        /// Shows the functions the call at the caret could be to, in place of completions, if the
+        /// code and the caret haven't changed since they were asked for: each one's declaration,
+        /// with the parameter the caret is at in the function color, then its KDoc, wrapped. Nothing
+        /// is inserted on accepting it.
+        /// </summary>
+        private async UniTaskVoid ShowSignatures(CaretRequest request, Signatures signatures)
+        {
+            await UniTask.SwitchToMainThread();
+            var now = Editor.CaretPos;
+            if (_closed || now.Line != request.Line || now.Col != request.Column || request.Text != RawText)
+                return;
+            if (signatures.All.Count == 0)
+                return;
+            var popup = new StyledText();
+            foreach (var signature in signatures.All)
+            {
+                string label = signature.Label;
+                var entry = new StyledLine(label);
+                var active = Hovers.ParameterSpan(label, signature.Parameters, signatures.ActiveParameter);
+                if (active is (int at, int length))
+                {
+                    entry.Add(new Token(0, label.Substring(0, at), DefaultStyle));
+                    entry.Add(new Token(at, label.Substring(at, length), FunctionStyle));
+                    entry.Add(new Token(at + length, label.Substring(at + length), DefaultStyle));
+                }
+                else
+                    entry.Add(new Token(0, label, DefaultStyle));
+                popup.Add(entry);
+                if (!string.IsNullOrEmpty(signature.Documentation))
+                    AddParagraphs(popup, signature.Documentation);
+            }
+            _autocomplete = popup;
+            _autocompleteInsertText = null;
+        }
+
+        /// <summary>
+        /// Adds <paramref name="text"/>'s lines to <paramref name="styled"/>, each wrapped, and an
+        /// empty one as an empty line: <see cref="StyledText.AddWrapped"/> adds nothing for it, and
+        /// empty lines part a declaration from its KDoc and the KDoc's paragraphs.
+        /// </summary>
+        private static void AddParagraphs(StyledText styled, string text)
+        {
+            foreach (var paragraph in text.Split('\n'))
+            {
+                if (paragraph.Length == 0)
+                    styled.AddLine("", DefaultStyle);
+                else
+                    styled.AddWrapped(paragraph, Hovers.Width, DefaultStyle);
+            }
+        }
+
+        /// <summary>
+        /// The tooltip at <paramref name="mouseTextPos"/>: the editor's (an error's message, if
+        /// the mouse is on one), followed by what the daemon says of the name there
+        /// (<c>textDocument/hover</c>). That is asked for once per name, at its start, once the
+        /// mouse has been on it for <see cref="HoverDelayMs"/> (<see cref="AskHoverSoon"/>), and
+        /// shown once it comes if the mouse is still on that name and the code hasn't changed
+        /// (<see cref="ShowHover"/>). The editor calls this when the mouse moves.
+        /// </summary>
+        public override void UpdateTooltip(TextPosition mouseTextPos)
+        {
+            base.UpdateTooltip(mouseTextPos);
+            var previous = _hoverWanted;
+            var wanted = HoverAt(mouseTextPos);
+            _hoverWanted = wanted;
+            if (wanted == null)
+                return;
+            if (wanted.IsAt(_hovered))
+            {
+                if (_hoverText != null && _hoverText.Count > 0)
+                {
+                    var tooltip = new StyledText();
+                    if (_tooltip != null)
+                        tooltip.AddRange(_tooltip);
+                    tooltip.AddRange(_hoverText);
+                    _tooltip = tooltip;
+                }
+                return;
+            }
+            if (!wanted.IsAt(previous))
+                AskHoverSoon(wanted).Forget();
+        }
+
+        /// <summary>
+        /// Asks for the hover <paramref name="wanted"/> once the mouse has been on its name for
+        /// <see cref="HoverDelayMs"/>, if it still is and the code hasn't changed: each hover is an
+        /// analysis of the whole program, which the daemon runs one at a time with the compiles
+        /// and completions, so the names the mouse only passes over aren't asked about.
+        /// </summary>
+        private async UniTaskVoid AskHoverSoon(CaretRequest wanted)
+        {
+            // Waited out on the thread pool, as UniTask's own delays count game time.
+            await UniTask.SwitchToThreadPool();
+            await Task.Delay(HoverDelayMs);
+            await UniTask.SwitchToMainThread();
+            if (_closed || !wanted.IsAt(_hoverWanted) || wanted.IsAt(_hovered) || wanted.Text != RawText)
+                return;
+            SubmitChanges();
+            if (_document != null && _syncedVersion == _version)
+                _hoverRequests.Want(wanted);
+        }
+
+        /// <summary>
+        /// The hover request for the name at <paramref name="position"/>, at its start; null where
+        /// there is none, or the name is in a comment or a string, or is a keyword.
+        /// </summary>
+        private CaretRequest HoverAt(TextPosition position)
+        {
+            if (!(bool)position || position.Line >= Lines.Count)
+                return null;
+            var line = Lines[position.Line];
+            var token = line.GetTokenAt(position.Col);
+            if (token != null && !MayBeHovered(token.Text))
+                return null;
+            int? start = Hovers.NameStart(line.Text, position.Col);
+            return start == null ? null : new CaretRequest(RawText, position.Line, start.Value);
+        }
+
+        /// <summary>
+        /// Whether a token of <see cref="Tokenizer"/>'s may be a name the daemon can say something
+        /// of: not a comment (the rest of the line), a string, or a keyword other than a type's name.
+        /// </summary>
+        private static bool MayBeHovered(string token) =>
+            !token.StartsWith(CommentPrefix, StringComparison.Ordinal)
+            && !(token.Length > 0 && (token[0] == '"' || token[0] == '\''))
+            && !(KotlinKeywords.TryGetValue(token, out uint kind) && kind != Type);
+
+        private async UniTaskVoid ShowHover(CaretRequest request, string text)
+        {
+            await UniTask.SwitchToMainThread();
+            if (_closed || request.Text != RawText)
+                return;
+            var hover = new StyledText();
+            AddParagraphs(hover, text);
+            _hovered = request;
+            _hoverText = string.IsNullOrEmpty(text) ? null : hover;
+            if (request.IsAt(_hoverWanted))
+                UpdateTooltip(new TextPosition(request.Line, request.Column));
+        }
+
+        private async UniTaskVoid ShowCompletions(CaretRequest request, IReadOnlyList<Completion> completions)
         {
             await UniTask.SwitchToMainThread();
             var now = Editor.CaretPos;

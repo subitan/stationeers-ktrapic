@@ -161,17 +161,59 @@ namespace KTrapIC
         /// </summary>
         public async Task<IReadOnlyList<Completion>> Complete(int line, int character)
         {
+            var result = await Ask("textDocument/completion", line, character).ConfigureAwait(false);
+            if (result == null)
+                return null;
+            return (result as JObject)?["items"]?.ToObject<List<Completion>>() ?? new List<Completion>();
+        }
+
+        /// <summary>
+        /// What the name at <paramref name="line"/> and <paramref name="character"/> of the
+        /// document as of the last <see cref="Sync"/> is: the text of the daemon's
+        /// <c>textDocument/hover</c>, "" where it has nothing to say, or null if there is no
+        /// answer, as for <see cref="Complete"/>.
+        /// </summary>
+        public async Task<string> Hover(int line, int character)
+        {
+            var result = await Ask("textDocument/hover", line, character).ConfigureAwait(false);
+            if (result == null)
+                return null;
+            var contents = (result as JObject)?["contents"];
+            return (contents as JObject)?["value"]?.ToString() ?? (contents as JValue)?.ToString() ?? "";
+        }
+
+        /// <summary>
+        /// The functions the call around <paramref name="line"/> and <paramref name="character"/>
+        /// of the document as of the last <see cref="Sync"/> could be to: the daemon's
+        /// <c>textDocument/signatureHelp</c>, with none outside a call, or null if there is no
+        /// answer, as for <see cref="Complete"/>.
+        /// </summary>
+        public async Task<Signatures> SignatureHelp(int line, int character)
+        {
+            var result = await Ask("textDocument/signatureHelp", line, character).ConfigureAwait(false);
+            if (result == null)
+                return null;
+            return Signatures.FromLsp(result as JObject);
+        }
+
+        /// <summary>
+        /// The daemon's result for a request about a position in the document as of the last
+        /// <see cref="Sync"/>, a JSON null where it has none, or null if there is no answer: the
+        /// document isn't open, or the daemon stops or answers with an error.
+        /// </summary>
+        internal async Task<JToken> Ask(string method, int line, int character)
+        {
             var connection = _connection;
             if (connection == null || !connection.IsInitialized || !_isOpen)
                 return null;
             try
             {
-                var result = await connection.Request("textDocument/completion", new JObject
+                var result = await connection.Request(method, new JObject
                 {
                     ["textDocument"] = new JObject { ["uri"] = Uri },
                     ["position"] = Position(line, character),
                 }).ConfigureAwait(false);
-                return result?["items"]?.ToObject<List<Completion>>() ?? new List<Completion>();
+                return result ?? JValue.CreateNull();
             }
             catch (LspConnection.StoppedException)
             {
