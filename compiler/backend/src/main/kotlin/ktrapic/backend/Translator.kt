@@ -67,6 +67,7 @@ import org.jetbrains.kotlin.ir.types.isBoolean
 import org.jetbrains.kotlin.ir.types.isDouble
 import org.jetbrains.kotlin.ir.types.isInt
 import org.jetbrains.kotlin.ir.types.isNothing
+import org.jetbrains.kotlin.ir.types.isString
 import org.jetbrains.kotlin.ir.types.isUnit
 import org.jetbrains.kotlin.ir.util.kotlinFqName
 import org.jetbrains.kotlin.ir.util.parentAsClass
@@ -115,6 +116,19 @@ internal data class SlotsOf(val owner: Value) : Value
 internal data class SlotOf(val owner: Value, val number: TirOperand) : Value
 
 internal data object NoValue : Value
+
+/**
+ * A `String` parameter of an inlined function, bound to its argument's constant [text]: it goes
+ * wherever a constant string can (`Text`, `str`, `hash`, `named`, another `String` argument).
+ */
+internal data class Text(val text: String) : Value
+
+/**
+ * A `String` parameter of [function], a function called with `jal`: its text arrives packed by
+ * `STR` in [reg], so it can only be stored with `Text` or used as `str(...)`, or passed on as a
+ * `String` argument.
+ */
+internal data class PackedText(val reg: VReg, val function: String) : Value
 
 /**
  * A view of a device's logic types (`Ports`, `Ratios`, `Position`, `Import` and their parts),
@@ -313,11 +327,16 @@ internal class Translator(private val symbols: DeclarationFinder) {
     val arguments = parameters.map { (index, _) ->
       call.arguments[index] ?: fail(call, "Default arguments are not supported")
     }
-    val values = operands(arguments, aliases = parameters.map { it.value.type.isViewOrKey() })
+    val values =
+        operands(
+            arguments,
+            aliases = parameters.map { it.value.type.isViewOrKey() },
+            texts = parameters.map { it.value.type.isString() },
+        )
     return if (function.isInline || graph.callCount(function) == 1) {
       inlineCall(function, parameters.map { it.value }, values)
     } else {
-      jalCall(call, function, parameters.map { it.value }, values)
+      jalCall(call, function, parameters.map { it.value }, arguments, values)
     }
   }
 
@@ -337,7 +356,8 @@ internal class Translator(private val symbols: DeclarationFinder) {
               !type.isDouble() &&
               !type.isBoolean() &&
               !type.isDevice() &&
-              !type.isViewOrKey()
+              !type.isViewOrKey() &&
+              !type.isString()
       ) {
         fail(parameter, "Parameters of type ${type.render()} are not supported")
       }
@@ -376,6 +396,7 @@ internal class Translator(private val symbols: DeclarationFinder) {
       call: IrCall,
       function: IrSimpleFunction,
       parameters: List<IrValueParameter>,
+      arguments: List<IrExpression>,
       values: List<Value>,
   ): Value {
     if (parameters.any { it.type.isDevice() || it.type.isViewOrKey() }) {
@@ -392,7 +413,16 @@ internal class Translator(private val symbols: DeclarationFinder) {
               resultRegister(function),
           )
         }
-    for ((parameter, value) in target.parameters.zip(values)) move(parameter, value)
+    for ((index, value) in values.withIndex()) {
+      // A String arrives packed by STR, so a constant one is checked against STR's limits here.
+      val passed =
+          when (value) {
+            is Text -> packed(arguments[index], value.text, "a String argument")
+            is PackedText -> Reg(value.reg)
+            else -> value
+          }
+      move(target.parameters[index], passed)
+    }
     emit("jal", Fixed(LabelRef(target.label)))
     // A copy, as the next call to the function overwrites its result register.
     return target.result?.let { snapshot(Reg(it)) } ?: NoValue
@@ -406,7 +436,11 @@ internal class Translator(private val symbols: DeclarationFinder) {
     function.parameters
         .filter { it.kind == IrParameterKind.Regular }
         .zip(target.parameters)
-        .forEach { (parameter, register) -> variables[parameter] = Reg(register) }
+        .forEach { (parameter, register) ->
+          variables[parameter] =
+              if (parameter.type.isString()) PackedText(register, function.name.asString())
+              else Reg(register)
+        }
     body(function, FunctionExit(newLabel("return"), target.result))
     val callsOthers = lines.subList(start, lines.size).any { (it as? TirInstruction)?.op == "jal" }
     if (callsOthers) {
@@ -467,6 +501,8 @@ internal class Translator(private val symbols: DeclarationFinder) {
           value is Mapped -> fail(initializer, MAPPED_HELD)
           value.isAlias() && !property.isVar -> value
           value.isAlias() -> fail(property, VAL_ONLY)
+          value.isText() && !property.isVar -> value
+          value.isText() -> fail(property, STRING_VAL_ONLY)
           value is Const && !property.isReassigned() -> value
           else -> Reg(newVReg(property.name.asString())).also { move(it.reg, value) }
         }
@@ -531,6 +567,9 @@ internal class Translator(private val symbols: DeclarationFinder) {
           value is Mapped -> fail(initializer, MAPPED_HELD)
           value.isAlias() && !variable.isVar -> value
           value.isAlias() -> fail(variable, VAL_ONLY)
+          // A String has no value of its own either: a val stands for its parameter's text.
+          value.isText() && !variable.isVar -> value
+          value.isText() -> fail(variable, STRING_VAL_ONLY)
           value is Const && !variable.isReassigned() -> value
           else -> Reg(newVReg(variable.name.asString())).also { move(it.reg, value) }
         }
@@ -561,6 +600,13 @@ internal class Translator(private val symbols: DeclarationFinder) {
         }
         if (it is RatioEntry) {
           fail(expression, "a Ratios entry is used through its key or value, as entry.value")
+        }
+        if (it.isText()) {
+          fail(
+              expression,
+              "a String can only be used in Text = ..., str(...), hash(...), named(...) " +
+                  "or as a String argument",
+          )
         }
         if (it.isAlias() && it !is Dev) fail(expression, batchError)
       }
@@ -732,7 +778,7 @@ internal class Translator(private val symbols: DeclarationFinder) {
         batchRead(mapped.source, mapped.logicType, MAPPED_TERMINALS.getValue(fqName))
       }
       "ktrapic.hash" -> stringConstant(call, StringConstant.Kind.HASH)
-      "ktrapic.str" -> stringConstant(call, StringConstant.Kind.STR)
+      "ktrapic.str" -> packedText(call, call.arguments[0], "str(...)")
       else ->
           when {
             owner in setOf("kotlin.Int", "kotlin.Double", "kotlin.Boolean") -> operator(call, name)
@@ -1093,7 +1139,7 @@ internal class Translator(private val symbols: DeclarationFinder) {
 
   private fun storedValue(call: IrCall, name: String, argument: IrExpression): TirOperand =
       if (name == TEXT) {
-        Fixed(stringConstant(call, StringConstant.Kind.STR, argument, TEXT).operand)
+        operand(packedText(call, argument, TEXT))
       } else {
         operand(value(argument))
       }
@@ -1467,6 +1513,9 @@ internal class Translator(private val symbols: DeclarationFinder) {
           this is StaticSet ||
           this is RatioEntry
 
+  /** A `String` parameter's text, or a val holding it ([Text] or [PackedText]). */
+  private fun Value.isText() = this is Text || this is PackedText
+
   private fun logicType(call: IrCall, argument: IrExpression?): Fixed {
     if (argument !is IrGetEnumValue) {
       fail(argument ?: call, "the logic type must be written out, as LogicType.X")
@@ -1474,19 +1523,63 @@ internal class Translator(private val symbols: DeclarationFinder) {
     return Fixed(Name(argument.symbol.owner.name.asString()))
   }
 
+  /**
+   * The text [expression] stands for: a constant string or a `String` parameter's ([Text] or
+   * [PackedText]), or null if it is neither.
+   */
+  private fun textOf(expression: IrExpression?): Value? =
+      when (expression) {
+        is IrConst -> (expression.value as? String)?.let(::Text)
+        is IrGetValue -> variables[expression.symbol.owner]?.takeIf { it.isText() }
+        else -> null
+      }
+
+  /**
+   * [argument]'s text packed by `STR`, as `str(...)` and `Text` take it: a constant, or the
+   * register a `String` parameter of a function called with `jal` arrives in.
+   */
+  private fun packedText(call: IrCall, argument: IrExpression?, what: String): Value =
+      when (val text = textOf(argument)) {
+        is Text -> packed(call, text.text, what)
+        is PackedText -> Reg(text.reg)
+        else -> fail(call, "$what needs a constant string")
+      }
+
+  private fun packed(element: IrElement, text: String, what: String): Const =
+      checkedConstant(element, StringConstant.Kind.STR, text, what)
+
   private fun stringConstant(
       call: IrCall,
       kind: StringConstant.Kind,
       argument: IrExpression? = call.arguments[0],
       what: String = "${kind.name.lowercase()}(...)",
   ): Const {
-    val text = (argument as? IrConst)?.value as? String
-    if (text == null) fail(call, "$what needs a constant string")
+    val text =
+        when (val value = textOf(argument)) {
+          is Text -> value.text
+          is PackedText ->
+              fail(
+                  call,
+                  "$what needs the text itself, but this String arrives packed, as " +
+                      "${value.function} is called with jal: mark ${value.function} inline",
+              )
+          else -> fail(call, "$what needs a constant string")
+        }
+    return checkedConstant(call, kind, text, what)
+  }
+
+  /** [text] as a [kind] constant, failing at [element] if the game can't take it. */
+  private fun checkedConstant(
+      element: IrElement,
+      kind: StringConstant.Kind,
+      text: String,
+      what: String,
+  ): Const {
     // The game would take a tab or another control character other than a line break, but in
     // source text one is almost certainly a mistake.
     if (text.any { it.isISOControl() }) {
       fail(
-          call,
+          element,
           "$what text can't contain a line break or another control character",
       )
     }
@@ -1496,7 +1589,7 @@ internal class Translator(private val symbols: DeclarationFinder) {
       val constant = StringConstant(kind, text)
       Const(constant.numericValue, constant)
     } catch (e: IllegalArgumentException) {
-      fail(call, e.message ?: "bad $what text")
+      fail(element, e.message ?: "bad $what text")
     }
   }
 
@@ -1606,9 +1699,16 @@ internal class Translator(private val symbols: DeclarationFinder) {
   private fun operands(
       expressions: List<IrExpression>,
       aliases: List<Boolean> = emptyList(),
+      texts: List<Boolean> = emptyList(),
   ): List<Value> = expressions.mapIndexed { index, expression ->
     val value =
-        if (aliases.getOrElse(index) { false }) {
+        if (texts.getOrElse(index) { false }) {
+          textOf(expression)
+              ?: fail(
+                  expression,
+                  "a String argument must be a constant string or a String parameter",
+              )
+        } else if (aliases.getOrElse(index) { false }) {
           aliasOrValue(expression).takeIf { it is View || it is Key || it is StaticSet }
               ?: fail(
                   expression,
@@ -2279,6 +2379,8 @@ internal class Translator(private val symbols: DeclarationFinder) {
         is RatioEntry,
         Element,
         is Named -> error("a batch, slot or view has no value")
+        is Text,
+        is PackedText -> error("a String has no value of its own")
         NoValue -> error("no value")
       }
 
@@ -2329,6 +2431,8 @@ internal class Translator(private val symbols: DeclarationFinder) {
         "a map can't be held, only ended where it is made, as all.map { it.X }.sum()"
     const val VAL_ONLY =
         "a device, batch, slot, view, static set, substance or Ratios entry has no value on the chip, so it can only be held in a val, not a var"
+    const val STRING_VAL_ONLY =
+        "a String has no value on the chip, so it can only be held in a val, not a var"
     const val HELD_WHERE_DECLARED =
         "a device, batch, slot, view, static set, substance or Ratios entry has no value on the chip, so a val of one must be given it where it is declared"
     const val SLOTS_CLASS = "ktrapic.Slots"

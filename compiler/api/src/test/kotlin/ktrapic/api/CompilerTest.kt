@@ -1071,8 +1071,8 @@ class CompilerTest {
     assertError("fun <T> f(x: T): Int = 1\ndb.Setting = f(1).toDouble()", "Generic", 3, 1)
     assertError("fun f(vararg x: Int): Int = 1\ndb.Setting = f(1).toDouble()", "vararg", 3, 7)
     assertError(
-        "fun f(x: String): Int = 1\ndb.Setting = f(\"a\").toDouble()",
-        "Parameters of type String",
+        "fun f(x: Long): Int = 1\ndb.Setting = f(1L).toDouble()",
+        "Parameters of type Long",
         3,
         7,
     )

@@ -102,6 +102,14 @@ properties.
 - Any other function gets one body, called with `jal`. Its arguments and result travel in
   registers set aside for it, and it saves `ra` on the stack only if it calls another function.
 - Only an inlined function can take a `Device`, a view, a `Substance` or a static set parameter.
+- A `String` parameter takes a constant string, or another `String` parameter, as its argument.
+  In an inlined function it stands for that text wherever a constant string can go: `Text = msg`,
+  `str(msg)`, `hash(msg)`, `msg.hash()`, `named(msg)`, or another call's `String` argument. A
+  function called with `jal` gets the text packed by `STR` in a register, so there it can only be
+  written with `Text = msg`, read as `str(msg)`, or passed on; `hash` and `named` need the function
+  marked `inline`. Each call to such a function checks its text against `STR`'s limits. A `val`
+  can hold a `String` parameter and is used as the parameter is; a `var` can't, and a `String`
+  can't be compared, so it can't be a `when` subject.
 - Not supported: recursion, default arguments, `vararg`, and extension, generic and local
   functions.
 
@@ -263,6 +271,18 @@ val sign = LedDisplays.Small.at(d5)
 sign.Mode = DisplayMode.String
 sign.Text = "HOT"
 LedDisplays.Large.all.forEach { it.Text = "OK" }
+```
+
+A function can take the text as a `String` parameter (see [Functions](#functions)):
+
+```kotlin
+val panel = LedDisplays.Small.at(d4)
+fun debug(msg: String) {
+    panel.Mode = DisplayMode.String
+    panel.Text = msg
+}
+debug("START")
+debug("DONE")
 ```
 
 ### Static sets
