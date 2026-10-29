@@ -1,0 +1,60 @@
+l r0 db Setting
+snan r1 r0
+trunc r0 r0
+max r0 r0 -2147483648
+min r0 r0 2147483647
+select r0 r1 0 r0
+add r0 r0 0
+push r0
+push 0
+jal 23
+pop r0
+s db Ratio r0
+push 1071
+push 462
+jal 32
+pop r0
+s db Mode r0
+push 10
+jal 45
+pop r0
+seq r0 r0 55
+s db On r0
+j 60
+pop r0
+pop r1
+bnez r1 27
+j 30
+sub r1 r1 1
+add r0 r0 1
+j 25
+push r0
+j ra
+pop r0
+pop r1
+bnez r0 36
+j 43
+div r2 r1 r0
+trunc r2 r2
+mul r2 r2 r0
+sub r2 r1 r2
+move r1 r0
+move r0 r2
+j 34
+push r1
+j ra
+pop r0
+push ra
+bnez r0 50
+move r0 0
+j 57
+sub r1 r0 1
+push r0
+push r1
+jal 45
+pop r1
+pop r0
+add r0 r0 r1
+pop ra
+push r0
+j ra

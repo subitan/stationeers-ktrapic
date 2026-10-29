@@ -1,0 +1,11 @@
+{
+  "devices": [
+    {"pin": "db", "prefab": "StructureCircuitHousing", "logic": {"Setting": 2000}}
+  ],
+  "ticks": 200,
+  "expect": [
+    {"device": "db", "logic": "Ratio", "equals": 2000},
+    {"device": "db", "logic": "Mode", "equals": 21},
+    {"device": "db", "logic": "On", "equals": 1}
+  ]
+}

@@ -61,14 +61,18 @@ object Daemon {
   /**
    * The response to compiling [source] with [options], a compile request's `options` object: the
    * JSON object that a compile request's response line encodes. Failures inside the compiler are
-   * answered as errors too, as [handle] answers them. The options are `compact` (default false) and
-   * `stack_calls` (default true; see [CompileOptions]).
+   * answered as errors too, as [handle] answers them. The options are `compact` (default false),
+   * `stack_calls` and `tail_calls` (each default true; see [CompileOptions]).
    */
   fun compile(source: String, options: JsonObject?): JsonObject = guarded {
     fun flag(name: String, default: Boolean) =
         options?.get(name)?.takeIf { it.isJsonPrimitive }?.asBoolean ?: default
     val compileOptions =
-        CompileOptions(compact = flag("compact", false), stackCalls = flag("stack_calls", true))
+        CompileOptions(
+            compact = flag("compact", false),
+            stackCalls = flag("stack_calls", true),
+            tailCalls = flag("tail_calls", true),
+        )
     when (val result = Compiler.compile(source, compileOptions)) {
       is CompileResult.Success ->
           JsonObject().apply {

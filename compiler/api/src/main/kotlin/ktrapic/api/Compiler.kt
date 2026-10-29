@@ -3,6 +3,7 @@ package ktrapic.api
 import java.io.File
 import ktrapic.backend.Backend
 import ktrapic.backend.CompileException
+import ktrapic.backend.Lowered
 import ktrapic.backend.StackCalled
 import ktrapic.backend.TooManyRegistersException
 import ktrapic.frontend.Completion
@@ -30,6 +31,16 @@ data class CompileOptions(
      * registers.
      */
     val stackCalls: Boolean = true,
+    /**
+     * Compile a function's call to itself in tail position (its value the function's result, or in
+     * a `Unit` function its last statement) as a jump back to the top of the function, so it takes
+     * no stack and can recurse without limit. Only functions called on the stack can call
+     * themselves, so without [stackCalls] this has no effect. A program that would need more
+     * registers than the chip has with its tail calls as loops, but not with them as calls, makes
+     * every one of them a call, with a warning: then a deep tail recursion can overflow the stack
+     * again.
+     */
+    val tailCalls: Boolean = true,
 )
 
 /** A problem with the program, at a 1-based [line] and [column] of its source (0 if unknown). */
@@ -60,11 +71,28 @@ object Compiler {
     val result =
         K2Frontend.compile(source, listOf(sdkJar()), listOf("ktrapic.*")) { ir ->
           try {
-            val lowered = Backend.compile(ir.module, ir.symbols, options.stackCalls)
+            val (lowered, fallback) =
+                try {
+                  Backend.compile(ir.module, ir.symbols, options.stackCalls, options.tailCalls) to
+                      null
+                } catch (e: TooManyRegistersException) {
+                  if (!options.tailCalls) throw e
+                  // Tail calls are only an optimisation, so the program may make them as calls
+                  // instead. If it is still out of registers then, the error reports what it
+                  // needs that way: no option makes it need fewer.
+                  try {
+                    Backend.compile(ir.module, ir.symbols, options.stackCalls, tailCalls = false) to
+                        CompileError(tailCallHint(e.needed), 0, 0)
+                  } catch (retry: TooManyRegistersException) {
+                    throw retry
+                  } catch (_: CompileException) {
+                    throw e
+                  }
+                }
             // The 0-based line of the user's source that each line of the program comes from.
             val sourceLines =
                 lowered.offsets.map { offset -> offset?.let { ir.position(it) }?.first?.minus(1) }
-            Result.success(lowered to sourceLines)
+            Result.success(Compiled(lowered, sourceLines, listOfNotNull(fallback)))
           } catch (e: CompileException) {
             val (line, column) = ir.position(e.offset) ?: (0 to 0)
             Result.failure(CompileFailure(CompileError(e.message ?: "error", line, column)))
@@ -85,7 +113,7 @@ object Compiler {
         result.value.getOrElse {
           return CompileResult.Failure(listOf((it as CompileFailure).error))
         }
-    val (lowered, sourceLines) = compiled
+    val (lowered, sourceLines, fallbacks) = compiled
     val labelled = lowered.program
     val program = if (options.compact) labelled.compacted() else labelled
     // Compacting keeps exactly the instructions, in order, so their source lines go with them.
@@ -114,10 +142,32 @@ object Compiler {
         size.lines,
         size.bytes,
         registersUsed(program),
-        warnings + sizeHints,
+        warnings + fallbacks + sizeHints,
         sourceMap,
     )
   }
+
+  /**
+   * The lowered program, the 0-based source line each of its lines comes from, and the warnings
+   * about how it was compiled.
+   */
+  private data class Compiled(
+      val lowered: Lowered,
+      val sourceLines: List<Int?>,
+      val warnings: List<CompileError>,
+  )
+
+  /**
+   * Why a program compiled with tail calls on makes them as calls: as loops it needs [needed]
+   * registers, more than the chip has, and as calls few enough. Every tail call in the program
+   * becomes a call, so a recursion that relied on the loop for its depth can overflow the stack.
+   * Turning tail calls off compiles the same code, only without trying loops first or this warning.
+   */
+  private fun tailCallHint(needed: Int): String =
+      "The program needs $needed registers with tail calls compiled as loops, over the chip's " +
+          "${Ic10Limits.REGISTERS}; all its tail calls are made as ordinary stack calls instead, " +
+          "so deep recursion can overflow the stack (turn tail calls off to compile them as calls " +
+          "without this warning)"
 
   /**
    * Why a program of [lines] over the chip's limit could be shorter: each call on the stack pushes

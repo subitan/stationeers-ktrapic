@@ -116,6 +116,25 @@ properties.
   called on the stack: none is `inline` or `@InRegisters`, and stack calls are on. Such a function
   is never inlined, even if the program calls it only once. The stack holds 512 values, and a
   recursion deep enough to fill it stops the chip with a stack overflow.
+- A function's call to itself in tail position, whose value is the function's result, is a
+  loop rather than a call: its arguments are moved into the parameters (through a temporary
+  where they swap, as `f(b, a)`), and the function jumps back to just after it popped its
+  arguments and saved `ra`. Nothing is pushed, so it recurses as deep as it likes. A call is in
+  tail position when it is the value of a `return`, of an expression body, or of the branch of
+  an `if` or `when` that is one of those; in a function with no result, also when it is the last
+  statement or comes just before a `return`. A call whose result is used afterwards
+  (`n * fact(n - 1)`) or that is another call's argument still uses the stack, and so do calls
+  between functions (`isEven` and `isOdd` below). Tail calls are on by default; turning them off
+  (`CompileOptions(tailCalls = false)`, the playground's and the plugin's Tail calls option, or
+  the command line's `--no-tail-calls`) compiles these as calls too. They rarely cost lines: a
+  call pushes its arguments, `jal`s and pops its result, where a loop moves its arguments and
+  jumps. Arguments that swap cost a move more than they would push, and the loop's label a line
+  in labelled output; an argument computed from parameters may need one more register while the
+  others are moved. A program that would need more than the chip's 16 registers with its tail
+  calls as loops, but fits with them as calls, makes every one of them a call, with a warning that
+  says so; its tail recursion then uses the stack, and a deep one overflows it as above. One that
+  does not fit either way reports the registers it needs with its tail calls as calls. With stack
+  calls turned off nothing recurses, so the option does nothing.
 - Only an inlined function can take a `Device`, a view, a `Substance` or a static set parameter.
 - A `String` parameter takes a constant string, or another `String` parameter, as its argument.
   In an inlined function it stands for that text wherever a constant string can go: `Text = msg`,
@@ -130,6 +149,9 @@ properties.
 ```kotlin
 fun fact(n: Int): Int = if (n <= 1) 1 else n * fact(n - 1)
 
+// A loop: the call is in tail position.
+fun gcd(a: Int, b: Int): Int = if (b == 0) a else gcd(b, a % b)
+
 fun isEven(n: Int): Boolean = if (n == 0) true else isOdd(n - 1)
 fun isOdd(n: Int): Boolean = if (n == 0) false else isEven(n - 1)
 
@@ -137,6 +159,7 @@ fun isOdd(n: Int): Boolean = if (n == 0) false else isEven(n - 1)
 fun scale(x: Double, by: Double): Double = x * by
 
 db.Setting = fact(5).toDouble()
+db.Mode = gcd(d0.Setting.toInt(), 12).toDouble()
 db.On = isEven(d0.Setting.toInt())
 db.Ratio = scale(d0.Ratio, 2.0) + scale(d1.Ratio, 3.0)
 ```

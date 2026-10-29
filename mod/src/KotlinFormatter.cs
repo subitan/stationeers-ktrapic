@@ -783,6 +783,8 @@ namespace KTrapIC
             ImGui.SameLine();
             OptionCheckbox("Stack calls", Plugin.StackCalls);
             ImGui.SameLine();
+            OptionCheckbox("Tail calls", Plugin.TailCalls);
+            ImGui.SameLine();
             ImGui.TextUnformatted(StatusText());
         }
 

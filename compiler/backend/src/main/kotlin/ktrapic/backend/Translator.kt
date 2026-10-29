@@ -19,6 +19,7 @@ import ktrapic.ic10.StringConstant
 import org.jetbrains.kotlin.backend.common.extensions.DeclarationFinder
 import org.jetbrains.kotlin.descriptors.ClassKind
 import org.jetbrains.kotlin.ir.IrElement
+import org.jetbrains.kotlin.ir.IrStatement
 import org.jetbrains.kotlin.ir.declarations.IrAnonymousInitializer
 import org.jetbrains.kotlin.ir.declarations.IrClass
 import org.jetbrains.kotlin.ir.declarations.IrConstructor
@@ -180,10 +181,13 @@ internal data class RatioEntry(val view: View, val key: Key) : Value
  * property initializers and `init` blocks, in source order. [symbols] finds the SDK's declarations.
  * With [stackCalls], a function called with `jal` takes its arguments and gives its result on the
  * stack unless it is marked `@InRegisters`; without, every such function passes them in registers.
+ * With [tailCalls], a function called on the stack that calls itself in tail position loops back
+ * instead (see [tailCall]).
  */
 internal class Translator(
     private val symbols: DeclarationFinder,
     private val stackCalls: Boolean = true,
+    private val tailCalls: Boolean = true,
 ) {
   val lines = mutableListOf<TirLine>()
   private var vregs = 0
@@ -200,6 +204,8 @@ internal class Translator(
   private val called = linkedMapOf<IrSimpleFunction, CalledFunction>()
   /** Where in [lines] the functions called on the stack have their `j ra`. */
   private val returns = mutableListOf<Int>()
+  /** The function called on the stack whose body is being translated, if it has tail calls. */
+  private var loop: TailLoop? = null
 
   /** The functions called on the stack, by their labels. */
   val stackFunctions: Map<String, StackCalled>
@@ -255,6 +261,14 @@ internal class Translator(
   }
 
   private class FunctionExit(val label: String, val result: VReg?)
+
+  /**
+   * The calls [function] makes to itself in tail position ([calls]), each translated as a jump to
+   * [head], just after its prologue, named once the first is translated.
+   */
+  private class TailLoop(val function: IrSimpleFunction, val calls: Set<IrCall>) {
+    var head: String? = null
+  }
 
   /**
    * A function called with `jal`: its label, and the registers its parameters and result are in
@@ -547,6 +561,10 @@ internal class Translator(
         else -> value
       }
     }
+    val loop = loop
+    if (loop != null && loop.function == function && call in loop.calls) {
+      return tailCall(loop, target.parameters, passed)
+    }
     if (target.stack) {
       // The arguments are all evaluated before the call pushes any (see Lowering for the rest).
       val result = resultRegister(function)
@@ -565,14 +583,114 @@ internal class Translator(
   }
 
   /**
+   * A call of the function being translated to itself, in tail position: the [arguments], all
+   * evaluated already, are moved into its [parameters], and control jumps back to just after its
+   * prologue, so the call takes no stack. The moves are ordered so that none overwrites a parameter
+   * that a later one still reads; only a cycle of them (`f(b, a)`) goes through a temporary.
+   */
+  private fun tailCall(loop: TailLoop, parameters: List<VReg>, arguments: List<Value>): Value {
+    val pending =
+        parameters
+            .zip(arguments)
+            .filter { (parameter, value) -> value != Reg(parameter) }
+            .toMutableList()
+    while (pending.isNotEmpty()) {
+      val free = pending.indexOfFirst { (parameter, _) ->
+        pending.none { it.second == Reg(parameter) }
+      }
+      if (free >= 0) {
+        val (parameter, value) = pending.removeAt(free)
+        move(parameter, value)
+        continue
+      }
+      // Every pending move overwrites a parameter another reads: free one by copying it.
+      val parameter = pending.first().first
+      val copy = snapshot(Reg(parameter))
+      pending.replaceAll { (to, value) -> to to (if (value == Reg(parameter)) copy else value) }
+    }
+    val head =
+        loop.head
+            ?: newLabel("${functionLabels.getValue(loop.function)}_loop").also { loop.head = it }
+    emit("j", Fixed(LabelRef(head)))
+    return NoValue
+  }
+
+  /**
+   * The calls [function] makes to itself in tail position, whose value, if any, is its own: the
+   * value of a `return` from it, or of its expression body or last statement, where that is the
+   * call, or an `if` or `when` (or a block) whose branch (or last statement) is. In a function
+   * returning `Unit`, a call followed by `return` counts too. A call inside another's arguments
+   * does not, nor does one whose value is used otherwise.
+   */
+  private fun tailCallsOf(function: IrSimpleFunction): Set<IrCall> {
+    val found = mutableSetOf<IrCall>()
+    fun tail(expression: IrExpression?) {
+      when (expression) {
+        is IrCall -> if (expression.symbol.owner == function) found += expression
+        is IrReturn -> if (expression.returnTargetSymbol.owner == function) tail(expression.value)
+        is IrWhen -> expression.branches.forEach { tail(it.result) }
+        is IrContainerExpression ->
+            if (expression.origin != IrStatementOrigin.FOR_LOOP) {
+              tail(expression.statements.lastOrNull() as? IrExpression)
+            }
+        // A value thrown away where the function, returning Unit, ends.
+        is IrTypeOperatorCall ->
+            if (expression.operator == IrTypeOperator.IMPLICIT_COERCION_TO_UNIT) {
+              tail(expression.argument)
+            }
+        else -> {}
+      }
+    }
+    fun IrStatement.isUnitReturn() =
+        this is IrReturn &&
+            returnTargetSymbol.owner == function &&
+            value.let { it is IrGetObjectValue && it.type.isUnit() }
+    fun followedByReturn(statements: List<IrStatement>) {
+      statements.zipWithNext().forEach { (statement, next) ->
+        if (next.isUnitReturn()) tail(statement as? IrExpression)
+      }
+    }
+    when (val body = function.body) {
+      is IrExpressionBody -> tail(body.expression)
+      is IrBlockBody -> {
+        tail(body.statements.lastOrNull() as? IrExpression)
+        followedByReturn(body.statements)
+      }
+      else -> {}
+    }
+    function.body?.acceptVoid(
+        object : IrVisitorVoid() {
+          override fun visitElement(element: IrElement) = element.acceptChildrenVoid(this)
+
+          override fun visitReturn(expression: IrReturn) {
+            tail(expression)
+            super.visitReturn(expression)
+          }
+
+          override fun visitContainerExpression(expression: IrContainerExpression) {
+            followedByReturn(expression.statements)
+            super.visitContainerExpression(expression)
+          }
+        }
+    )
+    return found
+  }
+
+  /**
    * A called function: its label, its body, and `j ra`, saving `ra` if it calls others. A function
-   * called on the stack first pops its arguments, last first, and pushes its result before `j ra`.
+   * called on the stack first pops its arguments, last first, and pushes its result before `j ra`;
+   * with [tailCalls], its calls to itself in tail position jump back to just after that prologue.
    */
   private fun functionBody(function: IrSimpleFunction) {
     val target = called.getValue(function)
     label(target.label)
     if (target.stack) target.parameters.asReversed().forEach { emit("pop", it) }
     val start = lines.size
+    val tail =
+        if (target.stack && tailCalls) {
+          tailCallsOf(function).takeIf { it.isNotEmpty() }?.let { TailLoop(function, it) }
+        } else null
+    loop = tail
     function.parameters
         .filter { it.kind == IrParameterKind.Regular }
         .zip(target.parameters)
@@ -582,10 +700,26 @@ internal class Translator(
               else Reg(register)
         }
     body(function, FunctionExit(newLabel("return"), target.result))
+    loop = null
     val callsOthers =
         lines.subList(start, lines.size).any {
           (it as? TirInstruction)?.op in setOf("jal", TirInstruction.CALL)
         }
+    // The loop's head follows the prologue: after the pops, and after `push ra`, inserted below.
+    tail?.head?.let { head ->
+      if (target.parameters.isEmpty() && !callsOthers) {
+        // Nothing comes before it, so the function's own label serves.
+        for (index in start until lines.size) {
+          val line = lines[index]
+          if (line is TirInstruction && line.target == head) {
+            lines[index] =
+                line.copy(operands = line.operands.dropLast(1) + Fixed(LabelRef(target.label)))
+          }
+        }
+      } else {
+        lines.add(start, TirLabel(head))
+      }
+    }
     if (callsOthers) {
       lines.add(start, TirInstruction("push", Fixed(Register.RA)))
       emit("pop", Fixed(Register.RA))

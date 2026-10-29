@@ -174,6 +174,11 @@ class LspServerTest {
     val calls = "import ktrapic.*\nfun f(x: Double) = x + 1.0\ndb.Setting = f(1.0) + f(2.0)\n"
     client.open("file:///calls.kt", calls)
     val registers = compile("file:///calls.kt", """{"stack_calls": false}""")
+    val recursive =
+        "import ktrapic.*\nfun down(n: Int): Int = if (n == 0) 0 else down(n - 1)\n" +
+            "db.Setting = down(3).toDouble()\n"
+    client.open("file:///recursive.kt", recursive)
+    val noTailCalls = compile("file:///recursive.kt", """{"tail_calls": false}""")
     val failed = compile("file:///broken.kt")
     // Nested deeply enough to overflow the compiler's stack, which is answered as an error.
     val overflowing =
@@ -188,6 +193,9 @@ class LspServerTest {
     assertThat(registers["result"])
         .isEqualTo(lineProtocolCompile(calls, """{"stack_calls": false}"""))
     assertThat(registers["result"].asJsonObject["code"].asString).doesNotContain("push")
+    assertThat(noTailCalls["result"])
+        .isEqualTo(lineProtocolCompile(recursive, """{"tail_calls": false}"""))
+    assertThat(noTailCalls["result"].asJsonObject["code"].asString).doesNotContain("_loop")
     assertThat(failed["result"]).isEqualTo(lineProtocolCompile(broken))
     assertThat(failed["result"].asJsonObject["error"].asJsonObject["line"].asInt).isEqualTo(2)
     // The stack traces differ, as the two compiles ran on different threads.

@@ -1,0 +1,72 @@
+l r0 db Setting
+snan r1 r0
+trunc r0 r0
+max r0 r0 -2147483648
+min r0 r0 2147483647
+select r0 r1 0 r0
+add r0 r0 0
+push r0
+push 0
+jal countdown
+pop r0
+s db Ratio r0
+push 1071
+push 462
+jal gcd
+pop r0
+s db Mode r0
+push 10
+jal sum
+pop r0
+seq r0 r0 55
+s db On r0
+j end
+countdown:
+pop r0
+pop r1
+countdown_loop1:
+bnez r1 else1
+j endif1
+else1:
+sub r1 r1 1
+add r0 r0 1
+j countdown_loop1
+endif1:
+push r0
+j ra
+gcd:
+pop r0
+pop r1
+gcd_loop1:
+bnez r0 else2
+j endif2
+else2:
+div r2 r1 r0
+trunc r2 r2
+mul r2 r2 r0
+sub r2 r1 r2
+move r1 r0
+move r0 r2
+j gcd_loop1
+endif2:
+push r1
+j ra
+sum:
+pop r0
+push ra
+bnez r0 else3
+move r0 0
+j endif3
+else3:
+sub r1 r0 1
+push r0
+push r1
+jal sum
+pop r1
+pop r0
+add r0 r0 r1
+endif3:
+pop ra
+push r0
+j ra
+end:

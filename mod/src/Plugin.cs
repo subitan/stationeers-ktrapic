@@ -17,9 +17,11 @@ namespace KTrapIC
     {
         public static ConfigEntry<bool> Compact;
         public static ConfigEntry<bool> StackCalls;
+        public static ConfigEntry<bool> TailCalls;
 
         /// <summary>The options each compile is sent with, as the settings are now.</summary>
-        public static CompileOptions CompileOptions => new CompileOptions(Compact.Value, StackCalls.Value);
+        public static CompileOptions CompileOptions => 
+            new CompileOptions(Compact.Value, StackCalls.Value, TailCalls.Value);
         public static ConfigEntry<string> JavaPath;
         public static ConfigEntry<string> DaemonJarPath;
 
@@ -38,6 +40,11 @@ namespace KTrapIC
                     "StackCalls",
                     true,
                     "Pass functions' arguments and results on the chip's stack, so functions may be recursive; off passes them in registers");
+                TailCalls = Config.Bind(
+                    "General",
+                    "TailCalls",
+                    true,
+                    "Compile a function's call to itself in tail position as a jump back to its start, so it takes no stack; has no effect without stack calls");
                 JavaPath = Config.Bind(
                     "Development",
                     "JavaPath",

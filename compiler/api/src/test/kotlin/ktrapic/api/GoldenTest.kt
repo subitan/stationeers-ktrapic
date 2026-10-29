@@ -8,7 +8,8 @@ import org.junit.jupiter.api.Test
 /**
  * Compiles each `test/cases/X.ic10.kts` and compares the result with `X.ic10` and `X.compact.ic10`.
  * A case whose code calls functions with `jal` is also compiled with `stackCalls = false`, to
- * `X.registers.ic10`, so the convention passing arguments in registers stays covered.
+ * `X.registers.ic10`, so the convention passing arguments in registers stays covered, unless it is
+ * recursive, which that convention rejects.
  *
  * To write the expected files from the current compiler, run with the workspace's `test/cases`
  * directory in KTRAPIC_UPDATE_GOLDENS: `bazel test //compiler/api:GoldenTest
@@ -31,6 +32,7 @@ class GoldenTest {
       val registers =
           if (outputs[0].second.lines().any { it.startsWith("jal ") }) {
             listOf(".registers.ic10" to compile(source, CompileOptions(stackCalls = false)))
+                .filterNot { (_, code) -> code.startsWith("error: ") && "Recursive calls" in code }
           } else {
             emptyList()
           }
@@ -46,7 +48,10 @@ class GoldenTest {
             .isEqualTo(expected.readText().replace("\r\n", "\n"))
       }
       if (update == null && registers.isEmpty()) {
-        assertWithMessage("%s.registers.ic10 is stale: the case calls nothing with jal", name)
+        assertWithMessage(
+                "%s.registers.ic10 is stale: the case calls nothing with jal, or is recursive",
+                name,
+            )
             .that(cases.resolve("$name.registers.ic10").exists())
             .isFalse()
       }
