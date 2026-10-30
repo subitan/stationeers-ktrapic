@@ -347,6 +347,30 @@ class CircuitHousingTest {
   }
 
   @Test
+  fun `too many values kept across a recursive call get an error saying memory can't hold them`() {
+    val source =
+        """
+        |fun r(n: Int, y: Double): Double {
+        |  if (n == 0) return 0.0
+        |${(1..17).joinToString("\n") { "  val c$it = y + $it.0" }}
+        |  val d = r(n - 1, y)
+        |  return d + ${(1..17).joinToString(" + ") { "c$it" }}
+        |}
+        |db.Ratio = r(db.Mode.toInt(), db.Setting)
+        """
+            .trimMargin()
+    val message =
+        "The program needs \\d+ registers at once; the chip has 16 \\(r0–r15\\); the values a " +
+            "recursive function keeps across a call back into its cycle of calls must stay in " +
+            "registers, even with @file:CircuitHousingOnly, as the recursion would reuse their " +
+            "memory"
+
+    for (program in listOf(source, annotated + source)) {
+      assertWithMessage(program).that(failure(program).errors.single().message).matches(message)
+    }
+  }
+
+  @Test
   fun `a recursion deep enough to reach the memory in use stops the chip before it does`() {
     // `main` pushes 12 values and an argument, and `g` its `ra` and an argument, so `sum` is first
     // entered with sp 14, and each level deeper adds 2: at depth 247, the innermost call pops its

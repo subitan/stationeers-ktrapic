@@ -29,6 +29,12 @@ internal object Spilling {
   /** The highest address of the chip's stack, the first slot used. */
   const val TOP_SLOT = 511
 
+  /** Why memory can't make room when values kept across a call into a cycle of calls don't fit. */
+  const val RECURSION_HINT =
+      "the values a recursive function keeps across a call back into its cycle of calls must " +
+          "stay in registers, even with @file:CircuitHousingOnly, as the recursion would reuse " +
+          "their memory"
+
   private val DB = Fixed(Device("db"))
 
   /**
@@ -42,7 +48,8 @@ internal object Spilling {
    * where `db` is not the chip's stack. [stackFunctions] tells which calls go to a recursive
    * function: a value live across one stays in its register, as the recursion would reuse its slot.
    *
-   * Throws the first [TooManyRegistersException] when no value is left to move.
+   * Throws the first [TooManyRegistersException] when no value is left to move, with
+   * [RECURSION_HINT] if values kept across a call into a cycle of calls are among those that stay.
    */
   fun allocate(
       lines: List<TirLine>,
@@ -68,7 +75,10 @@ internal object Spilling {
     var current = lines
     var slots = 0
     while (true) {
-      val spilled = choose(current, scratch, recursive, limit) ?: throw failure
+      val spilled =
+          choose(current, scratch, recursive, limit)
+              ?: if (pinned(current, Liveness.liveOut(current), recursive).isEmpty) throw failure
+              else throw TooManyRegistersException(failure.needed, RECURSION_HINT)
       current = rewrite(current, spilled, TOP_SLOT - slots, ::fresh)
       slots++
       val program = listOf(check) + current
@@ -92,23 +102,9 @@ internal object Spilling {
   ): VReg? {
     val instructions = lines.filterIsInstance<TirInstruction>()
     val liveOut = Liveness.liveOut(lines)
-    val functions =
-        instructions
-            .filter { it.op == "jal" || it.op == TirInstruction.CALL }
-            .mapNotNullTo(mutableSetOf()) { it.calls() }
     val byId = mutableMapOf<Int, VReg>()
     val occurrences = mutableMapOf<Int, Int>()
-    val pinned = BitSet()
-    // The function whose body each instruction is in; null before the functions.
-    var function: String? = null
-    var index = -1
-    for (line in lines) {
-      if (line is TirLabel) {
-        if (line.name in functions) function = line.name
-        continue
-      }
-      val instruction = line as TirInstruction
-      index++
+    for (instruction in instructions) {
       val named =
           (instruction.operands.filterIsInstance<VReg>() + listOfNotNull(instruction.result))
               .distinctBy { it.id }
@@ -117,17 +113,8 @@ internal object Spilling {
         occurrences.merge(vreg.id, 1, Int::plus)
       }
       instruction.globals.forEach { byId[it.id] = it }
-      if (
-          instruction.op == TirInstruction.CALL &&
-              function in recursive &&
-              instruction.calls() in recursive
-      ) {
-        val across = liveOut[index].clone() as BitSet
-        instruction.result?.let { across.clear(it.id) }
-        instruction.globals.forEach { across.clear(it.id) }
-        pinned.or(across)
-      }
     }
+    val pinned = pinned(lines, liveOut, recursive)
     val candidates = byId.keys.filter { it !in scratch && !pinned.get(it) && it in occurrences }
     if (candidates.isEmpty()) return null
     val span = mutableMapOf<Int, Int>()
@@ -149,6 +136,42 @@ internal object Spilling {
                 .thenBy { it }
         )
         ?.let { byId.getValue(it) }
+  }
+
+  /**
+   * The values that a function in [recursive] keeps across a call into a cycle of calls, which
+   * could come back to it and reuse their addresses: they must stay in registers. [liveOut] is
+   * [Liveness.liveOut] of [lines].
+   */
+  private fun pinned(lines: List<TirLine>, liveOut: List<BitSet>, recursive: Set<String>): BitSet {
+    val functions =
+        lines
+            .filterIsInstance<TirInstruction>()
+            .filter { it.op == "jal" || it.op == TirInstruction.CALL }
+            .mapNotNullTo(mutableSetOf()) { it.calls() }
+    val pinned = BitSet()
+    // The function whose body each instruction is in; null before the functions.
+    var function: String? = null
+    var index = -1
+    for (line in lines) {
+      if (line is TirLabel) {
+        if (line.name in functions) function = line.name
+        continue
+      }
+      val instruction = line as TirInstruction
+      index++
+      if (
+          instruction.op == TirInstruction.CALL &&
+              function in recursive &&
+              instruction.calls() in recursive
+      ) {
+        val across = liveOut[index].clone() as BitSet
+        instruction.result?.let { across.clear(it.id) }
+        instruction.globals.forEach { across.clear(it.id) }
+        pinned.or(across)
+      }
+    }
+    return pinned
   }
 
   /** The label a [TirInstruction.CALL] or `jal` calls. */

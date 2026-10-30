@@ -523,9 +523,11 @@ the stack, at addresses 511, 510 and down: the values read and written least oft
 longest stretch of code, live at the most crowded places, go first. Each read of such a value is
 a `get` into a register just before it is used, and each write a `put` just after, so each costs
 a line where it is used or set; a `move` to or from it is the `get` or `put` itself. A value in
-memory isn't pushed around calls on the stack, since it isn't in a register. A function's value
-that is live across a call into a cycle of calls stays in a register, as the recursion would
-reuse its address. Tail calls stay loops: memory is tried before making them calls.
+memory isn't pushed around calls on the stack, since it isn't in a register. A value that a
+function in a cycle of calls keeps across a call back into the cycle stays in a register, as the
+recursion would reuse its address; a value outside the cycle kept across a call into it can be in
+memory, since the recursion never comes back to it. Tail calls stay loops: memory is tried before
+making them calls.
 
 A program that uses memory reads address 511 on its first line, so on any other host the chip
 stops there with an error, before doing anything. The stack grows up from 0 as calls push, so a
@@ -534,7 +536,10 @@ error; in a program that uses memory, each function in a cycle of calls checks `
 called, with room for what it and the functions it calls outside a cycle push, and stops the
 chip (`hcf`) before its calls could reach them. A program without recursion has no such check.
 
-Without the annotation, the error for a program out of registers suggests adding it.
+Without the annotation, the error for a program out of registers suggests adding it when keeping
+values in memory would make the program fit. When the values that don't fit are ones a recursive
+function keeps across a call back into its cycle, memory can't hold them, and the error says so
+instead, with or without the annotation.
 
 ## Not supported yet
 

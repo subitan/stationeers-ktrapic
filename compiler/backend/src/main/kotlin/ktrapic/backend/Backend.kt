@@ -16,7 +16,8 @@ object Backend {
    * tail position loop back rather than call.
    *
    * A program annotated `@file:CircuitHousingOnly` keeps the values that don't fit in registers in
-   * the chip's stack memory (see [Spilling]); for any other, the exception suggests that.
+   * the chip's stack memory (see [Spilling]); for any other, the exception suggests that when it
+   * would make the program fit.
    */
   fun compile(
       module: IrModuleFragment,
@@ -32,6 +33,12 @@ object Backend {
           Lowering.lower(translator.lines, translator.stackFunctions, spill = housingOnly)
         } catch (e: TooManyRegistersException) {
           if (housingOnly) throw e
+          // Suggest the annotation only if keeping values in memory would make the program fit.
+          try {
+            Lowering.lower(translator.lines, translator.stackFunctions, spill = true)
+          } catch (spilled: TooManyRegistersException) {
+            throw TooManyRegistersException(e.needed, spilled.hint)
+          }
           throw TooManyRegistersException(e.needed, HOUSING_HINT)
         }
     return lowered.copy(hasCycle = translator.hasCycle)
