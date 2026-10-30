@@ -43,7 +43,7 @@ fun interface CompileListener {
  *
  * The daemon runs while the project is open, with the Java the settings name, from a copy of the
  * jar they name (see [DaemonJarCopies]), and is replaced when they or the jar change. When a daemon
- * starts, the other copies that can be deleted are.
+ * starts, older copies are cleaned up (see [DaemonJarCopies.removeAllBut]).
  */
 @Service(Service.Level.PROJECT)
 class KtrapicCompileService(private val project: Project) : Disposable {
@@ -142,9 +142,10 @@ class KtrapicCompileService(private val project: Project) : Disposable {
 
   /**
    * The daemon to compile with: the one running, from a copy of the jar the settings name, or else
-   * a new one from a copy of that jar as it is now. While the jar is missing (Bazel deletes it
-   * before writing it again, and `bazel clean` deletes it) the daemon running from a copy of it
-   * goes on being used.
+   * a new one from a copy of that jar as it is now. While the jar can't be copied (Bazel deletes it
+   * and then writes it in place, and `bazel clean` deletes it) the daemon running from a copy of it
+   * goes on being used, and copying is tried again on the next compile; a daemon is replaced only
+   * once a complete copy of the new jar has been made.
    */
   private fun compiler(): Ic10Compiler {
     compilerForTests?.let {
@@ -153,26 +154,26 @@ class KtrapicCompileService(private val project: Project) : Disposable {
     val settings = KtrapicSettings.getInstance().state
     val java = KtrapicPaths.java(settings.javaPath)
     val jarSetting = settings.daemonJar.orEmpty().trim()
-    val jar = KtrapicPaths.daemonJar(jarSetting, project.basePath)
-    if (jar == null || !File(jar).isFile) {
-      synchronized(this) {
-        if (disposed) return failing("The project is closed")
-        daemon?.let {
-          if (it.java == java && it.jarSetting == jarSetting && it.copy.isFile) return it.client
-        }
-      }
-      return failing(
-          if (jar == null)
-              "No KTrapIC compile daemon: set its jar under Settings > Tools > KTrapIC, or " +
-                  "build it in this project with bazel build //daemon:ktrapic-daemon_deploy.jar"
-          else "The compile daemon's jar $jar doesn't exist"
-      )
+    val jar =
+        KtrapicPaths.daemonJar(jarSetting, project.basePath)
+            ?: return runningOr(
+                java,
+                jarSetting,
+                "No KTrapIC compile daemon: set its jar under Settings > Tools > KTrapIC, or " +
+                    "build it in this project with bazel build //daemon:ktrapic-daemon_deploy.jar",
+            )
+    if (!File(jar).isFile) {
+      return runningOr(java, jarSetting, "The compile daemon's jar $jar doesn't exist")
     }
     val copy =
         try {
           jarCopies.copyOf(File(jar))
         } catch (e: IOException) {
-          return failing("The compile daemon's jar couldn't be copied to run: ${e.message}")
+          return runningOr(
+              java,
+              jarSetting,
+              "The compile daemon's jar couldn't be copied to run: ${e.message}",
+          )
         }
     synchronized(this) {
       if (disposed) return failing("The project is closed")
@@ -195,6 +196,20 @@ class KtrapicCompileService(private val project: Project) : Disposable {
       val copy: File,
       val client: DaemonClient,
   )
+
+  /**
+   * The daemon started by [java] from a copy of the jar [jarSetting] names, if there is one, or
+   * else a compiler that fails, unanswered, with [problem]. The daemon's copy may have been deleted
+   * since (see [DaemonJarCopies.removeAllBut]); a running daemon still compiles, and one that has
+   * stopped fails to restart, unanswered.
+   */
+  private fun runningOr(java: String, jarSetting: String, problem: String): Ic10Compiler {
+    synchronized(this) {
+      if (disposed) return failing("The project is closed")
+      daemon?.let { if (it.java == java && it.jarSetting == jarSetting) return it.client }
+    }
+    return failing(problem)
+  }
 
   private fun failing(description: String) = Ic10Compiler { _, _ ->
     CompileResponse.Failure(description, answered = false)

@@ -32,11 +32,13 @@ IDE's log (Help > Show Log).
 The daemon runs from a copy of its jar in the IDE's system directory (`ktrapic/daemon-jars/`), so
 the jar can be rebuilt while it runs (Windows keeps a running jar locked). Copies are named by the
 jar's name, size and modification time, and projects running the same jar share one. A rebuilt jar
-is copied and run on the next compile. When a daemon starts, every other copy is deleted, for every
-project: on Windows a copy another project's daemon still runs from can't be, and goes when a later
-daemon starts; elsewhere that daemon goes on running from the deleted file, and its project copies
-the jar again when it next needs it. While the jar is missing (as Bazel rebuilds it, or after
-`bazel clean`), the daemon already running from a copy of it goes on compiling.
+is copied and run on the next compile, once the copy is a complete jar. When a daemon starts, every
+other copy not made or used in the last ten minutes is deleted, for every project (a newer one may
+be one another project is starting a daemon from): on Windows a copy another project's daemon still
+runs from can't be, and goes when a later daemon starts; elsewhere that daemon goes on running from
+the deleted file, and its project copies the jar again when it next needs it. While the jar can't be
+copied (Bazel deletes it and then writes it in place; `bazel clean` deletes it), the daemon already
+running from a copy of it goes on compiling, and the jar is copied again on the next compile.
 
 A compile the daemon gave no answer for (it isn't set up, it couldn't start, it exited or it timed
 out) isn't kept: asking again for the same text compiles it again.

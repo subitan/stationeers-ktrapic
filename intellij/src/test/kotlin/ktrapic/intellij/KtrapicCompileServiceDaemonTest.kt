@@ -60,6 +60,12 @@ class KtrapicCompileServiceDaemonTest : BasePlatformTestCase() {
   fun `test a rebuilt jar gets a new daemon from a new copy`() {
     val firstPid = pidOf("a")
     val firstCopy = runningCopy()
+    // Old enough for a daemon's start to clean it up.
+    assertTrue(
+        firstCopy.setLastModified(
+            System.currentTimeMillis() - DaemonJarCopies.MIN_AGE_MILLIS - 60_000
+        )
+    )
 
     jar.setLastModified(jar.lastModified() + 10_000)
     val secondPid = pidOf("b")
@@ -79,6 +85,24 @@ class KtrapicCompileServiceDaemonTest : BasePlatformTestCase() {
     assertTrue(jar.delete())
 
     assertEquals(pid, pidOf("b"))
+  }
+
+  fun `test a jar cut short, as while Bazel writes it, keeps the running daemon`() {
+    val pid = pidOf("a")
+    val built = jar.lastModified()
+    val whole = jar.readBytes()
+
+    jar.writeBytes(whole.copyOf(whole.size / 2))
+    jar.setLastModified(built + 10_000)
+
+    assertEquals(pid, pidOf("b"))
+    assertTrue(service.daemonForTests!!.processForTests!!.isAlive)
+
+    jar.writeBytes(whole)
+    jar.setLastModified(built + 20_000)
+
+    assertFalse(pid == pidOf("c"))
+    assertEquals(KtrapicCompileService.jarCopies.copyPathOf(jar), runningCopy())
   }
 
   fun `test with neither the jar nor a daemon the compile fails unanswered`() {
