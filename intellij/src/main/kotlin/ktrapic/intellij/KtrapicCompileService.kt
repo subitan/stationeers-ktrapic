@@ -16,8 +16,8 @@ import java.util.concurrent.ExecutionException
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeoutException
 
-/** A program to compile: the text of the file at [path], compiled with [options]. */
-data class CompileRequest(val path: String, val text: String, val options: CompileOptions)
+/** A program to compile: the text of the file at [path], which says itself how it compiles. */
+data class CompileRequest(val path: String, val text: String)
 
 /** [request]'s compile, answered with [response]. */
 data class Compiled(val request: CompileRequest, val response: CompileResponse)
@@ -79,7 +79,7 @@ class KtrapicCompileService(private val project: Project) : Disposable {
       }
       val response =
           try {
-            compiler().compile(request.text, request.options)
+            compiler().compile(request.text)
           } catch (e: Exception) {
             LOG.warn("KTrapIC compile failed", e)
             CompileResponse.Failure("Compiling failed: $e", answered = false)
@@ -218,7 +218,7 @@ class KtrapicCompileService(private val project: Project) : Disposable {
     return failing(problem)
   }
 
-  private fun failing(description: String) = Ic10Compiler { _, _ ->
+  private fun failing(description: String) = Ic10Compiler { _ ->
     CompileResponse.Failure(description, answered = false)
   }
 

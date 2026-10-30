@@ -9,9 +9,10 @@
       <li>Kotlin completion and type checking against the <code>ktrapic</code> API, through KTrapIC's
         script definition, which the plugin hands to the Kotlin plugin.</li>
       <li>The KTrapIC compiler's errors and warnings, marked in the editor as you type.</li>
-      <li>An IC10 tool window with the compiled program, normal or compact, its lines, bytes and
+      <li>An IC10 tool window with the compiled program, its lines, bytes and
         registers against the chip's limits, and the compiler's warnings.</li>
-      <li>Settings for the compile daemon and the compile options (Settings &gt; Tools &gt; KTrapIC).</li>
+      <li>Settings for the compile daemon (Settings &gt; Tools &gt; KTrapIC). Programs choose how they
+        compile themselves, with file annotations such as <code>@file:Compact</code>.</li>
     </ul>
     The plugin bundles KTrapIC's compile daemon, run as a separate process on the IDE's own Java,
     and the SDK, so it needs nothing else installed.

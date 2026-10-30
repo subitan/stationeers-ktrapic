@@ -25,10 +25,10 @@ class LspDiagnosticsTest {
 
   private val scheduler = ManualScheduler()
   private val client =
-      LspTestClient(scheduler) { source, options ->
+      LspTestClient(scheduler) { source ->
         compiled += source
         beforeCompile(source)
-        Daemon.compile(source, options)
+        Daemon.compile(source)
       }
 
   @AfterEach fun stop() = client.close()
@@ -39,9 +39,9 @@ class LspDiagnosticsTest {
           """{"textDocument": {"uri": "$uri"}, "options": $options}""",
       )
 
-  /** What the line protocol answers for compiling [source] with [options]. */
-  private fun lineProtocolCompile(source: String, options: String = "{}"): JsonObject {
-    val request = """{"action": "compile", "code": ${gson.toJson(source)}, "options": $options}"""
+  /** What the line protocol answers for compiling [source]. */
+  private fun lineProtocolCompile(source: String): JsonObject {
+    val request = """{"action": "compile", "code": ${gson.toJson(source)}}"""
     val line = Daemon.handle(Base64.getEncoder().encodeToString(request.toByteArray()))
     return JsonParser.parseString(String(Base64.getDecoder().decode(line))).asJsonObject
   }
@@ -221,24 +221,23 @@ class LspDiagnosticsTest {
   }
 
   @Test
-  fun `ktrapic-compile and diagnostics share a compile of the same text and options`() {
+  fun `ktrapic-compile and diagnostics share a compile of the same text, whatever its options`() {
     val program = "var i = 0\nwhile (i < 3) i++\ndb.Setting = i.toDouble()\n"
     client.initialize()
     client.open("file:///a.kt", program)
     published()
 
     val labelled = compile("file:///a.kt")
-    val compact = compile("file:///a.kt", """{"compact": true}""")
-    // Diagnostics now compile with the latest options, so this compile serves the request after.
+    // Options, which older clients send, are ignored, so this is the same compile.
+    val withOptions = compile("file:///a.kt", """{"compact": true}""")
     client.change("file:///a.kt", 2, program + "db.Setting = 1.0\n")
     published()
     val changed = compile("file:///a.kt", """{"compact": true}""")
 
     assertThat(labelled["result"]).isEqualTo(lineProtocolCompile(program))
-    assertThat(compact["result"]).isEqualTo(lineProtocolCompile(program, """{"compact": true}"""))
-    assertThat(changed["result"])
-        .isEqualTo(lineProtocolCompile(program + "db.Setting = 1.0\n", """{"compact": true}"""))
-    assertThat(compiled).containsExactly(program, program, program + "db.Setting = 1.0\n")
+    assertThat(withOptions["result"]).isEqualTo(labelled["result"])
+    assertThat(changed["result"]).isEqualTo(lineProtocolCompile(program + "db.Setting = 1.0\n"))
+    assertThat(compiled).containsExactly(program, program + "db.Setting = 1.0\n")
   }
 
   @Test
@@ -260,14 +259,14 @@ class LspDiagnosticsTest {
     val program = "db.Setting = 1.0\n"
     // The answer to a compile that overflowed the stack, which another compile of the same text,
     // with more stack or after the JIT has compiled the compiler, might not.
-    val crash = Daemon.compile("db.Setting = ${"(".repeat(20_000)}1.0${")".repeat(20_000)}\n", null)
+    val crash = Daemon.compile("db.Setting = ${"(".repeat(20_000)}1.0${")".repeat(20_000)}\n")
     assertThat(crash["error"].asJsonObject["description"].asString)
         .startsWith("Internal compiler error: java.lang.StackOverflowError")
     val crashes = AtomicInteger(1)
     val scheduler = ManualScheduler()
-    LspTestClient(scheduler) { source, options ->
+    LspTestClient(scheduler) { source ->
           compiled += source
-          if (crashes.getAndDecrement() > 0) crash else Daemon.compile(source, options)
+          if (crashes.getAndDecrement() > 0) crash else Daemon.compile(source)
         }
         .use { client ->
           client.initialize()

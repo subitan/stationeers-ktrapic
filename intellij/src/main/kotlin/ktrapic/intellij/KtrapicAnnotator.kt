@@ -31,7 +31,7 @@ class KtrapicAnnotator :
     val path = file.viewProvider.virtualFile.path
     return Info(
         file.project,
-        CompileRequest(path, text, KtrapicSettings.getInstance().options),
+        CompileRequest(path, text),
     )
   }
 

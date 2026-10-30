@@ -8,7 +8,6 @@ import com.intellij.openapi.actionSystem.ActionUpdateThread
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.DefaultActionGroup
-import com.intellij.openapi.actionSystem.ToggleAction
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.editor.Document
 import com.intellij.openapi.editor.EditorFactory
@@ -23,7 +22,6 @@ import com.intellij.openapi.fileEditor.FileEditorManagerListener
 import com.intellij.openapi.ide.CopyPasteManager
 import com.intellij.openapi.project.DumbAware
 import com.intellij.openapi.project.Project
-import com.intellij.openapi.project.ProjectManager
 import com.intellij.openapi.ui.SimpleToolWindowPanel
 import com.intellij.openapi.util.Disposer
 import com.intellij.openapi.vfs.VirtualFile
@@ -103,7 +101,7 @@ class Ic10Panel(private val project: Project) : Disposable {
         ActionManager.getInstance()
             .createActionToolbar(
                 "KTrapIC.IC10",
-                DefaultActionGroup(CompactAction(), CopyAction(), RecompileAction()),
+                DefaultActionGroup(CopyAction(), RecompileAction()),
                 true,
             )
     toolbar.targetComponent = content
@@ -180,7 +178,7 @@ class Ic10Panel(private val project: Project) : Disposable {
   private fun request(): CompileRequest? {
     val file = programFile() ?: return null
     val text = FileDocumentManager.getInstance().getDocument(file)?.text ?: return null
-    return CompileRequest(file.path, text, KtrapicSettings.getInstance().options)
+    return CompileRequest(file.path, text)
   }
 
   private fun show(response: CompileResponse) {
@@ -214,27 +212,6 @@ class Ic10Panel(private val project: Project) : Disposable {
   }
 
   override fun dispose() {}
-
-  private inner class CompactAction :
-      ToggleAction(
-          "Compact",
-          "Resolve labels to line numbers, to save lines",
-          AllIcons.Actions.Collapseall,
-      ),
-      DumbAware {
-    override fun getActionUpdateThread() = ActionUpdateThread.EDT
-
-    override fun isSelected(e: AnActionEvent): Boolean = KtrapicSettings.getInstance().state.compact
-
-    override fun setSelected(e: AnActionEvent, state: Boolean) {
-      KtrapicSettings.getInstance().state.compact = state
-      // The editors' marks depend on the options too (a program over the chip's lines may fit
-      // compact), so they are compiled again.
-      for (open in ProjectManager.getInstance().openProjects) DaemonCodeAnalyzer.getInstance(open)
-          .restart()
-      refresh()
-    }
-  }
 
   private inner class CopyAction :
       AnAction("Copy IC10", "Copy the IC10 to the clipboard", AllIcons.Actions.Copy), DumbAware {

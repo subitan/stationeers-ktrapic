@@ -58,13 +58,12 @@ moment after typing stops:
   more there are. The editor's size limits (128 lines, 4096 bytes) apply to the IC10, not to the
   Kotlin.
 - The IC10 lines that the caret's line compiled to are highlighted.
-- "Compact" resolves labels to line numbers and drops them, to save lines.
-- "Stack calls" (on by default) passes functions' arguments and results on the chip's stack, so
-  functions may be recursive; off passes them in registers (see `docs/LANGUAGE.md`'s Functions).
-- "Tail calls" (on by default) compiles a function's call to itself in tail position as a jump
-  back to its start, so it takes no stack and may recurse without limit. It has no effect with
-  stack calls off. A program that would run out of registers with these loops compiles them all
-  as calls instead, and then a deep recursion can overflow the stack.
+- The program itself says how it compiles, with file annotations at its top (see
+  `docs/LANGUAGE.md`'s "How a program compiles"): `@file:Compact` resolves labels to
+  line numbers and drops them, to save lines; `@file:InRegisters` passes every function's
+  arguments and results in registers rather than on the chip's stack; `@file:NoTailCalls`
+  compiles a function's call to itself in tail position as a call rather than a loop. The plugin
+  has no settings for these, so a program compiles the same here, in the playground and in an IDE.
 - Typing a name lists what could go there, from the compiler's reading of the program: a
   device's logic types, a family's prefabs, an enum's values, the members of a local's type, the
   locals, parameters and functions in scope, and the SDK's names. A dot typed after a name
@@ -96,9 +95,6 @@ The console command `ktrapic` shows the compiler's status (`ktrapic status`), re
 In `BepInEx/config/com.github.subitan.stationeers-ktrapic.cfg` (or StationeersLaunchPad's
 settings):
 
-- `General.Compact`: the Compact toggle, remembered.
-- `General.StackCalls`: the Stack calls toggle, remembered.
-- `General.TailCalls`: the Tail calls toggle, remembered.
 - `Development.JavaPath`: a java executable (21 or later) to use instead of the downloaded
   runtime.
 - `Development.DaemonJarPath`: a compiler jar to use instead of the downloaded one, such as a

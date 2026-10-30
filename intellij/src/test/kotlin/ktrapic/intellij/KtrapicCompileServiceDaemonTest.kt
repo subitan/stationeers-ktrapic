@@ -37,7 +37,7 @@ class KtrapicCompileServiceDaemonTest : BasePlatformTestCase() {
     }
   }
 
-  private fun request(text: String) = CompileRequest("/program.ic10.kts", text, CompileOptions())
+  private fun request(text: String) = CompileRequest("/program.ic10.kts", text)
 
   private fun compile(text: String): CompileResponse =
       service.compile(request(text)).get(60, TimeUnit.SECONDS)

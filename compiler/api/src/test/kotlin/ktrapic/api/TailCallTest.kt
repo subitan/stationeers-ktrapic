@@ -376,7 +376,7 @@ class TailCallTest {
         .containsExactly(
             "The program needs 17 registers with tail calls compiled as loops, over the chip's 16; " +
                 "all its tail calls are made as ordinary stack calls instead, so deep recursion " +
-                "can overflow the stack (turn tail calls off to compile them as calls without " +
+                "can overflow the stack (add @file:NoTailCalls to compile them as calls without " +
                 "this warning)"
         )
     assertThat(withCalls.tailCallWarnings()).isEmpty()

@@ -391,7 +391,7 @@ internal class Translator(
       if (inRegisters != null) {
         val why =
             if (stackCalls) "${inRegisters.name} is marked @InRegisters"
-            else "stack calls are turned off"
+            else "every function passes them in registers, as with @file:InRegisters"
         fail(
             graph.cycleThrough(inRegisters).last(),
             "Recursive calls through a function passing arguments in registers are not " +

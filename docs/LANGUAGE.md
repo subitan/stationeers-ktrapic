@@ -114,14 +114,14 @@ properties.
   too. The function saves `ra` on the stack only if it calls another function.
 - A function marked `@InRegisters` instead takes its arguments and gives its result in registers
   set aside for it, with no pushes or pops: smaller calls, but every value its callers need after
-  the call keeps its register throughout the function. Compiling with stack calls turned off
-  (`CompileOptions(stackCalls = false)`, the playground's and the plugin's Stack calls option, or
-  the command line's `--register-calls`) does this for every function.
+  the call keeps its register throughout the function. A program annotated `@file:InRegisters`
+  does this for every function (see [How a program compiles](#how-a-program-compiles)).
 - Top-level properties a function called on the stack reads or writes, itself or through the
   functions it calls, keep their registers for the whole program rather than being saved around
   calls.
 - A function may call itself, directly or through others, when every function in the cycle is
-  called on the stack: none is `inline` or `@InRegisters`, and stack calls are on. Such a function
+  called on the stack: none is `inline` or `@InRegisters`, and the program isn't annotated
+  `@file:InRegisters`. Such a function
   is never inlined, even if the program calls it only once. The stack holds 512 values, and a
   recursion deep enough to fill it stops the chip with a stack overflow.
 - A function's call to itself in tail position, whose value is the function's result, is a
@@ -132,17 +132,16 @@ properties.
   an `if` or `when` that is one of those; in a function with no result, also when it is the last
   statement or comes just before a `return`. A call whose result is used afterwards
   (`n * fact(n - 1)`) or that is another call's argument still uses the stack, and so do calls
-  between functions (`isEven` and `isOdd` below). Tail calls are on by default; turning them off
-  (`CompileOptions(tailCalls = false)`, the playground's and the plugin's Tail calls option, or
-  the command line's `--no-tail-calls`) compiles these as calls too. They rarely cost lines: a
-  call pushes its arguments, `jal`s and pops its result, where a loop moves its arguments and
-  jumps. Arguments that swap cost a move more than they would push, and the loop's label a line
-  in labelled output; an argument computed from parameters may need one more register while the
-  others are moved. A program that would need more than the chip's 16 registers with its tail
-  calls as loops, but fits with them as calls, makes every one of them a call, with a warning that
-  says so; its tail recursion then uses the stack, and a deep one overflows it as above. One that
-  does not fit either way reports the registers it needs with its tail calls as calls. With stack
-  calls turned off nothing recurses, so the option does nothing.
+  between functions (`isEven` and `isOdd` below). A program annotated `@file:NoTailCalls`
+  compiles these as calls too. Loops rarely save or cost lines: a call pushes its arguments,
+  `jal`s and pops its result, where a loop moves its arguments and jumps. Arguments that swap
+  cost a move more than they would push, and the loop's label a line in labelled output; an
+  argument computed from parameters may need one more register while the others are moved. A
+  program that would need more than the chip's 16 registers with its tail calls as loops, but
+  fits with them as calls, makes every one of them a call, with a warning that says so; its tail
+  recursion then uses the stack, and a deep one overflows it as above. One that does not fit
+  either way reports the registers it needs with its tail calls as calls. In a program annotated
+  `@file:InRegisters` nothing recurses, so `@file:NoTailCalls` does nothing.
 - Only an inlined function can take a `Device`, a view, a `Substance` or a static set parameter.
 - A `String` parameter takes a constant string, or another `String` parameter, as its argument.
   In an inlined function it stands for that text wherever a constant string can go: `Text = msg`,
@@ -503,21 +502,52 @@ negative zero is compared as 0.
 A chip holds at most 128 lines of at most 90 characters, and 4096 characters in all. The
 compiler measures programs as the game's code editor does: every line counts, and each line
 break counts as two characters, so a 128-line program has 3842 characters for its text.
-Compact output (resolving labels to line numbers and dropping them) saves lines. The compiler
-reports these counts but does not reject a program over the limits; it warns of a program over
-128 lines. The warning counts the lines in the output asked for; when that output isn't compact
-and has labels to drop, it says how many lines compact output would save. When the program calls
-functions with their arguments on the stack, the warning says that passing them in registers
-would save lines, naming what to change: turning stack calls off, or marking functions
-`@InRegisters`. Functions in a cycle of calls need the stack, so the warning leaves them out, and
-says the program must be shortened (or compiled compact, when that would save lines) if they are
-all it calls that way. When
-the program keeps values in memory (see below), the warning says that each read and write of them
-takes a line of its own.
+Compact output (resolving labels to line numbers and dropping them, `@file:Compact`) saves lines.
+The compiler reports these counts but does not reject a program over the limits; it warns of a
+program over 128 lines. The warning counts the lines of the program as it compiles; when that
+output isn't compact and has labels to drop, it says how many lines `@file:Compact` would save.
+When the program calls functions with their arguments on the stack, the warning says that passing
+them in registers would save lines, naming what to change: adding `@file:InRegisters`, or marking
+functions `@InRegisters`. Functions in a cycle of calls need the stack, so the warning leaves them
+out, and says the program must be shortened (or compiled compact, when that would save lines) if
+they are all it calls that way. When the program keeps values in memory (see below), the warning
+says that each read and write of them takes a line of its own.
 
 Values live in the registers `r0` to `r15`; the compiler reuses a register once its value is no
 longer needed. A program that needs more than 16 values at once is rejected, with an error that
 has no line or column, unless it is annotated `@file:CircuitHousingOnly`.
+
+### How a program compiles
+
+A program says how it compiles with file annotations at its top, before its imports. Each one
+turns a choice away from its default, and without any the program compiles with labels, its
+functions' arguments on the stack, and its tail calls as loops. The program compiles the same
+wherever it is compiled: the IC10 Editor plugin, the IntelliJ plugin, the playground and the
+command line have no options of their own. (The playground's checkboxes only add and remove these
+lines.)
+
+- `@file:Compact` resolves labels to line numbers and drops them: a line saved for each label,
+  often 5 to 20 in a program with loops and functions, at the cost of jumps that name line
+  numbers rather than labels.
+- `@file:InRegisters` passes every function's arguments and result in registers, as
+  `@InRegisters` does for one (see [Functions](#functions)): a line saved for each push and pop
+  of a call, but no function may be in a cycle of calls, and the values a caller keeps across a
+  call keep their registers through it.
+- `@file:NoTailCalls` compiles a function's calls to itself in tail position as calls rather than
+  loops (see [Functions](#functions)). It rarely changes the program's length, and a deep tail
+  recursion can then overflow the stack.
+
+```kotlin
+@file:Compact
+@file:InRegisters
+
+fun scale(x: Double, by: Double): Double = x * by
+
+db.Setting = scale(d0.Setting, 2.0) + scale(d1.Setting, 3.0)
+```
+
+A warning that a choice would help, such as the one for a program over 128 lines, names the
+annotation to add. Hovering over one in an editor shows what it does and what it costs.
 
 ### Memory in a circuit housing
 
@@ -574,4 +604,4 @@ nullable types, exceptions, casts and type checks, and coroutines.
 a chip from the game: it points a dish at a satellite, scanning the horizon until it hears a
 signal and then nudging the dish while the signal improves. It uses functions (some inlined, some
 called with `jal`), device properties, `str` for status text, and `sleep`, and compiles to 99
-lines in compact form, or 87 with stack calls turned off.
+lines in compact form (`@file:Compact`), or 87 with `@file:InRegisters` as well.

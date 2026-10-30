@@ -18,12 +18,15 @@ definition. It gives:
   Kotlin plugin doesn't see in the script. A problem with no position in the source (a program
   that needs too many registers, say) is shown at the top of the editor too.
 - **The IC10 tool window** (View > Tool Windows > IC10): the selected program compiled to IC10,
-  normal or compact, with its lines, bytes and registers against the chip's 128 lines, 4096 bytes
+  with its lines, bytes and registers against the chip's 128 lines, 4096 bytes
   and 16 registers, those over the limit marked, and the compiler's warnings (or, when it doesn't
-  compile, its errors). Its toolbar switches compact output, copies the IC10, and restarts the
+  compile, its errors). Its toolbar copies the IC10, and restarts the
   compile daemon (after rebuilding its jar, say).
 - **Settings** under Settings > Tools > KTrapIC: the compile daemon's jar, the Java that runs it,
-  and the compile options (compact, stack calls and tail calls), which default as the daemon's do.
+  and whether to show the Kotlin compiler's own problems too. There are no compile options: a
+  program says how it compiles with file annotations (`@file:Compact`, `@file:InRegisters`,
+  `@file:NoTailCalls`; see docs/LANGUAGE.md), so it compiles the same in the IDE, the playground and
+  the game.
 
 ## How it compiles
 
@@ -57,7 +60,7 @@ out) isn't kept: asking again for the same text compiles it again.
 
 The editor's annotator compiles a program in the background after each change; the IC10 tool window
 shows that compile, or compiles the program itself a moment after a change when the annotator hasn't
-(in power save mode, say). Both share one compile of the same text and options.
+(in power save mode, say). Both share one compile of the same text.
 
 The daemon tells the Kotlin compiler's own problems from KTrapIC's by marking them
 `"kotlin": true`.
@@ -102,6 +105,6 @@ real daemon when `KTRAPIC_DAEMON_JAR` is the absolute path of a built
 
 ## Not yet
 
-Options are per IDE, not per file or project. The tests check that programs get the bundled
+Settings are per IDE, not per project. The tests check that programs get the bundled
 script definition, compiling against the bundled SDK, but not the Kotlin plugin's highlighting of
 a program with it, which loads in the background in a way the test framework doesn't run.

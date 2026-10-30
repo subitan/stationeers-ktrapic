@@ -290,6 +290,24 @@ class K2HoverTest {
   }
 
   @Test
+  fun `the file annotations that choose how a program compiles, with their KDoc`() {
+    val compact = hover("@file:Comp|act\nval x = db.Setting\n")!!
+    assertThat(compact.declaration).contains("Compact")
+    assertThat(compact.documentation).contains("labels are resolved to line numbers and dropped")
+    assertThat(compact.documentation).contains("saves a line for every label")
+
+    val inRegisters = hover("@file:InRegis|ters\nval x = db.Setting\n")!!
+    assertThat(inRegisters.declaration).contains("InRegisters")
+    assertThat(inRegisters.documentation).contains("Written as `@file:InRegisters`")
+    assertThat(inRegisters.documentation).contains("a line for each argument")
+
+    val noTailCalls = hover("@file:NoTail|Calls\nval x = db.Setting\n")!!
+    assertThat(noTailCalls.declaration).contains("NoTailCalls")
+    assertThat(noTailCalls.documentation).contains("as ordinary calls, rather than as loops")
+    assertThat(noTailCalls.documentation).contains("rarely changes the program's length")
+  }
+
+  @Test
   fun `an enum entry`() {
     val hover = hover("db[LogicType.Sett|ing] = 1.0\n")!!
 

@@ -23,7 +23,7 @@ class DiagnosticsTest {
   fun `counts columns in UTF-16 code units, as the compiler does`() {
     val text = "val s = \"😀\"; d0.Foo = 1.0\n"
     // The compiler's own position for Foo, which is past the emoji's two code units.
-    val error = Daemon.compile(text, null)["error"].asJsonObject
+    val error = Daemon.compile(text)["error"].asJsonObject
 
     assertThat(error["column"].asInt).isEqualTo(18)
     assertThat(rangeOf(text, 1, 18)).isEqualTo(range(0, 17, 0, 20))
@@ -50,7 +50,7 @@ class DiagnosticsTest {
   @Test
   fun `counts a leading byte-order mark, which the compiler skips, on the first line only`() {
     val text = "${0xFEFF.toChar()}db.Setting = nope\nd0.On = foo\n"
-    val error = Daemon.compile(text, null)["error"].asJsonObject
+    val error = Daemon.compile(text)["error"].asJsonObject
     val (first, second) = error["errors"].asJsonArray.map { it.asJsonObject }
 
     assertThat(first["column"].asInt).isEqualTo(14)
@@ -115,7 +115,7 @@ class DiagnosticsTest {
             ),
             "val x = 1\n",
         )
-    val clean = diagnosticsOf(Daemon.compile("db.Setting = 1.0\n", null), "db.Setting = 1.0\n")
+    val clean = diagnosticsOf(Daemon.compile("db.Setting = 1.0\n"), "db.Setting = 1.0\n")
 
     assertThat(warned.single().asJsonObject["severity"].asInt).isEqualTo(2)
     assertThat(warned.single().asJsonObject["range"]).isEqualTo(range(0, 4, 0, 5))
