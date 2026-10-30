@@ -78,6 +78,28 @@ class DaemonTest {
   }
 
   @Test
+  fun `marks the Kotlin compiler's own problems`() {
+    val kotlinError =
+        request("""{"action": "compile", "code": "val x: Int = \"s\"\n"}""")["error"]
+            .asJsonObject["errors"]
+            .asJsonArray[0]
+            .asJsonObject
+    val ownError =
+        request("""{"action": "compile", "code": "val (a, b) = Pair(1, 2)\n"}""")["error"]
+            .asJsonObject["errors"]
+            .asJsonArray[0]
+            .asJsonObject
+    val ownWarning =
+        request("""{"action": "compile", "code": "val unused = 2\n"}""")["warnings"]
+            .asJsonArray[0]
+            .asJsonObject
+
+    assertThat(kotlinError["kotlin"].asBoolean).isTrue()
+    assertThat(ownError.has("kotlin")).isFalse()
+    assertThat(ownWarning.has("kotlin")).isFalse()
+  }
+
+  @Test
   fun `runs a program against a test`() {
     val source = "import ktrapic.*\\nd1.On = d0.Temperature < 290.0\\n"
     val test =

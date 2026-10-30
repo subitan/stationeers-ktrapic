@@ -81,3 +81,30 @@ jobs:
           JAVA_HOME="$RUNNER_TEMP/runtime" \
           KTRAPIC_DAEMON_JAR="$PWD/$(bazel cquery --config=ci --output=files //daemon:ktrapic-daemon_deploy.jar 2>/dev/null)" \
           dotnet test mod/tests/KTrapIC.Tests.csproj
+
+  intellij:
+    name: IntelliJ plugin (build, and test against the daemon)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: bazel-contrib/setup-bazel@0.19.1
+        with:
+          bazelisk-cache: true
+          disk-cache: ${{ github.workflow }}-intellij
+          repository-cache: true
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: "21"
+      - uses: gradle/actions/setup-gradle@v4
+      - name: Build the daemon jar
+        run: |
+          bazel build --config=ci //daemon:ktrapic-daemon_deploy.jar
+          echo "KTRAPIC_DAEMON_JAR=$PWD/$(bazel cquery --config=ci --output=files //daemon:ktrapic-daemon_deploy.jar 2>/dev/null)" >> "$GITHUB_ENV"
+      - name: Build and test the plugin
+        working-directory: intellij
+        run: bash ./gradlew --no-daemon buildPlugin test
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ktrapic-intellij
+          path: intellij/build/distributions/*.zip

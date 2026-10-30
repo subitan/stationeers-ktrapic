@@ -7,3 +7,9 @@
 .ijwb/
 *.iml
 out/
+
+# The IntelliJ plugin's Gradle build (intellij/)
+/intellij/.gradle/
+/intellij/.intellijPlatform/
+/intellij/.kotlin/
+/intellij/build/
