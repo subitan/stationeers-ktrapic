@@ -113,6 +113,16 @@
   table.vals td:first-child { color: var(--muted); }
   .vals .changed { color: var(--accent); font-weight: 600; }
   .grid-vals { display: flex; flex-wrap: wrap; gap: 4px 18px; }
+  /* The source editor is Monaco once it loads from its CDN; until then, or if it can't, the
+     textarea and its gutter. */
+  #src-editor { display: none; flex: 1; min-width: 0; min-height: 0; }
+  .code.monaco #src-editor { display: block; }
+  .code.monaco > .gutter, .code.monaco > textarea { display: none; }
+  #src-editor .cur-line { background: color-mix(in srgb, var(--accent) 22%, transparent); }
+  #src-editor .cur-gutter { background: var(--accent); width: 4px !important; margin-left: 3px; }
+  .status details { margin-top: 4px; }
+  .status summary { cursor: pointer; }
+  .status .trace { white-space: pre; overflow: auto; font: 11px/15px ui-monospace, Consolas, monospace; }
 </style>
 </head>
 <body>
@@ -132,10 +142,11 @@
 <main id="main">
   <section class="pane">
     <div class="pane-head"><strong>Kotlin</strong><span id="filename">untitled.ic10.kts</span>
-      <span class="stats">Ctrl+S saves · Tab indents</span></div>
-    <div class="code">
+      <span class="stats" id="keys">Ctrl+S saves · Tab indents</span></div>
+    <div class="code" id="src-code">
       <div class="gutter" id="src-gutter"></div>
       <textarea id="src" spellcheck="false" autocapitalize="off" autocomplete="off"></textarea>
+      <div id="src-editor"></div>
     </div>
     <div class="status" id="status">Ready.</div>
   </section>
@@ -173,6 +184,7 @@
   </section>
 </main>
 <script src="annotations.js"></script>
+<script src="editing.js"></script>
 <script>
 const $ = (id) => document.getElementById(id);
 const src = $("src"), out = $("out");
@@ -232,6 +244,57 @@ function highlightLine(line) {
   return html + (comment ? `<span class="t-comment">${esc(comment)}</span>` : "");
 }
 
+// ---- The source editor: Monaco once it loads from its CDN, else the textarea ----
+
+// Monaco's editor, once it has loaded; null while the textarea edits the program.
+let editor = null;
+// The test's line mark in Monaco, and whether the program is being replaced rather than edited.
+let lineMark = null, replacing = false;
+// The latest compile's response and the text it compiled, to mark its problems in Monaco.
+let lastCompile = null;
+
+function code() { return editor ? editor.getValue() : src.value; }
+
+/** Replaces the whole program, as opening one does: a fresh undo history, at the top. */
+function setCode(text) {
+  if (editor) {
+    replacing = true;
+    try { editor.setValue(text); } finally { replacing = false; }
+    editor.setScrollTop(0);
+  } else {
+    src.value = text;
+    src.scrollTop = 0;
+  }
+}
+
+/** Marks the compile's errors and warnings in Monaco, where they start, with the message on hover. */
+function markProblems() {
+  if (!editor || !lastCompile) return;
+  const severity = { error: monaco.MarkerSeverity.Error, warning: monaco.MarkerSeverity.Warning };
+  monaco.editor.setModelMarkers(editor.getModel(), "ktrapic",
+    problemsOf(lastCompile.res, lastCompile.text).map((p) => ({
+      severity: severity[p.severity], message: p.message, source: "ktrapic",
+      startLineNumber: p.startLine, startColumn: p.startColumn, endLineNumber: p.endLine, endColumn: p.endColumn,
+    })));
+}
+
+/** Marks the source line the test points at (cursor.src), and the compile's error in the textarea's gutter. */
+function markSource() {
+  if (editor) {
+    const n = cursor.src;
+    lineMark.set(n ? [{ range: new monaco.Range(n, 1, n, 1),
+      options: { isWholeLine: true, className: "cur-line", linesDecorationsClassName: "cur-gutter" } }] : []);
+  } else {
+    gutter($("src-gutter"), src.value.split("\n").length, { err: errorLine, cur: cursor.src });
+  }
+}
+
+/** Scrolls the source so its 1-based line n is in view. */
+function revealSource(n) {
+  if (editor) editor.revealLineInCenterIfOutsideViewport(n);
+  else src.scrollTop = Math.max(0, (n - 5) * 20);
+}
+
 // ---- File annotations: the program says how it compiles (annotations.js reads the header) ----
 
 /**
@@ -239,6 +302,15 @@ function highlightLine(line) {
  * keeps the caret and selection where they were in the text around it.
  */
 function editSource({ start, end, text }) {
+  if (editor) {
+    // An edit of its own in Monaco's undo history; Monaco moves the selections around it.
+    const model = editor.getModel();
+    const a = model.getPositionAt(start), b = model.getPositionAt(end);
+    editor.pushUndoStop();
+    editor.executeEdits("annotations", [{ range: new monaco.Range(a.lineNumber, a.column, b.lineNumber, b.column), text }]);
+    editor.pushUndoStop();
+    return;
+  }
   const { selectionStart: s, selectionEnd: e, scrollTop } = src;
   const shift = (p) => (p <= start ? p : p >= end ? p + text.length - (end - start) : start);
   src.focus();
@@ -252,19 +324,19 @@ function editSource({ start, end, text }) {
 
 /** Adds `@file:name` to the program, unless it has it. */
 function addAnnotation(name) {
-  const edit = additionEdit(src.value, name);
+  const edit = additionEdit(code(), name);
   if (edit) editSource(edit);
 }
 
 /** Removes `@file:name` from the program's header, if it has it. */
 function removeAnnotation(name) {
-  const edit = removalEdit(src.value, name);
+  const edit = removalEdit(code(), name);
   if (edit) editSource(edit);
 }
 
 /** Ticks each checkbox whose annotation the program has. */
 function syncAnnotations() {
-  const header = scanHeader(src.value);
+  const header = scanHeader(code());
   document.querySelectorAll("[data-annotation]").forEach((cb) => {
     cb.checked = findAnnotation(header, cb.dataset.annotation) !== null;
   });
@@ -284,13 +356,13 @@ function setStatus(msg, kind) {
 
 async function compile() {
   const mine = ++seq;
-  const code = src.value;
-  store(DRAFT_KEY, code);
+  const text = code();
+  store(DRAFT_KEY, text);
   let res;
   try {
     const r = await fetch("/api/compile", {
       method: "POST", headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ action: "compile", code: { "": code } }),
+      body: JSON.stringify({ action: "compile", code: { "": text } }),
     });
     res = await r.json();
   } catch (e) {
@@ -298,13 +370,18 @@ async function compile() {
     return;
   }
   if (mine !== seq) return;
+  lastCompile = { res, text };
+  markProblems();
 
   if (res.error) {
     const e = res.error;
     errorLine = e.line || null;
     const where = errorLine ? ` <a href="#" id="goto">line ${errorLine}${e.column ? ":" + e.column : ""}</a>` : "";
     const more = (e.errors || []).slice(1).map((x) => `\n${esc(x.description)} (line ${x.line}:${x.column})`).join("");
-    setStatus(esc(e.description) + where + more + (e.stack_trace ? "\n\n" + esc(e.stack_trace) : ""), true);
+    // An internal error's trace is long: it stays folded until asked for.
+    const trace = e.stack_trace
+      ? `<details><summary>Stack trace</summary><div class="trace">${esc(e.stack_trace)}</div></details>` : "";
+    setStatus(esc(e.description) + where + more + trace, true);
     const g = $("goto");
     if (g) g.onclick = (ev) => { ev.preventDefault(); gotoLine(errorLine); };
     out.style.opacity = 0.45;
@@ -324,17 +401,23 @@ async function compile() {
     }
     else setStatus("Compiled OK.", false);
   }
-  gutter($("src-gutter"), src.value.split("\n").length, { err: errorLine, cur: cursor.src });
+  markSource();
 }
 
 function schedule() {
   markStale();
-  gutter($("src-gutter"), src.value.split("\n").length, { err: errorLine });
+  markSource();
   clearTimeout(timer);
   timer = setTimeout(compile, 250);
 }
 
 function gotoLine(n) {
+  if (editor) {
+    editor.setSelection(new monaco.Range(n, 1, n, editor.getModel().getLineMaxColumn(n)));
+    editor.revealLineInCenter(n);
+    editor.focus();
+    return;
+  }
   const lines = src.value.split("\n");
   const pos = lines.slice(0, n - 1).reduce((a, l) => a + l.length + 1, 0);
   src.focus();
@@ -375,7 +458,7 @@ $("copy").onclick = async () => {
 
 function download() {
   const a = document.createElement("a");
-  a.href = URL.createObjectURL(new Blob([src.value], { type: "text/plain" }));
+  a.href = URL.createObjectURL(new Blob([code()], { type: "text/plain" }));
   a.download = $("filename").textContent;
   a.click();
   URL.revokeObjectURL(a.href);
@@ -387,19 +470,18 @@ $("open").onchange = async (e) => {
   e.target.value = "";
   if (!v) return;
   const { group, name } = JSON.parse(v);
-  let code;
+  let text;
   try {
     const r = await fetch(`/api/source?group=${encodeURIComponent(group)}&name=${encodeURIComponent(name)}`);
-    if (r.ok) code = (await r.json()).code;
+    if (r.ok) text = (await r.json()).code;
   } catch (e) {}
-  if (code === undefined) { setStatus("Couldn't open " + esc(name), true); return; }
-  src.value = code;
+  if (text === undefined) { setStatus("Couldn't open " + esc(name), true); return; }
+  setCode(text);
   syncAnnotations();
   $("filename").textContent = name;
   store(NAME_KEY, name);
   opened = { group, name };
   store(OPENED_KEY, JSON.stringify(opened));
-  src.scrollTop = 0;
   clearRun("Run the program to see what it does.");
   compile();
   await loadTest();
@@ -536,7 +618,7 @@ async function runTest(traceTick) {
   try {
     const r = await fetch("/api/run", {
       method: "POST", headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ action: "run", code: { "": src.value }, test,
+      body: JSON.stringify({ action: "run", code: { "": code() }, test,
                              ...(traceTick ? { trace_tick: traceTick } : {}) }),
     });
     res = await r.json();
@@ -610,11 +692,11 @@ function show() {
         ? `tick ${st.tick}, ${lineStates.length === 1 ? "no line ran" : "after its last line"}${next}`
         : `tick ${st.tick} of ${last}${next}`;
     out.scrollTop = Math.max(0, (ic - 5) * 20);
-    if (srcLine !== undefined) src.scrollTop = Math.max(0, (srcLine - 5) * 20);
+    if (srcLine !== undefined) revealSource(srcLine + 1);
   }
   if (traced) $("line-at").textContent = ` ${lineAt + 1}/${lineStates.length} `;
   gutter($("out-gutter"), compiled.replace(/\n$/, "").split("\n").length, { limit: MAX_LINES, cur: cursor.ic });
-  gutter($("src-gutter"), src.value.split("\n").length, { err: errorLine, cur: cursor.src });
+  markSource();
 
   const r = run.run;
   let html = "<h3>Checks</h3>";
@@ -662,13 +744,16 @@ $("trace").onclick = () => {
 $("line-prev").onclick = () => { lineAt = Math.max(0, lineAt - 1); show(); };
 $("line-next").onclick = () => { lineAt = Math.min(lineStates.length - 1, lineAt + 1); show(); };
 $("test").addEventListener("input", keepDraft);
+/** Ctrl+Enter: runs the test, opening the Test pane so the results it shows can be seen. */
+function runFromKeyboard() {
+  if (!$("main").classList.contains("testing")) $("toggle-test").click();
+  runTest();
+}
 for (const el of [src, $("test")]) {
   el.addEventListener("keydown", (e) => {
     if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
       e.preventDefault();
-      // Running opens the Test pane, so the results it shows can be seen.
-      if (!$("main").classList.contains("testing")) $("toggle-test").click();
-      runTest();
+      runFromKeyboard();
     }
   });
 }
@@ -701,7 +786,164 @@ $("save-test").onclick = async () => {
   setTimeout(() => ($("save-test").textContent = "Save test"), 1200);
 };
 
+// ---- Monaco, and the daemon's LSP mode for completion, hovers and signature help ----
+
+// Monaco from a CDN, at an exact version. Without it the page keeps its textarea.
+const MONACO = "https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.52.2/min";
+
+/** Loads Monaco with its AMD loader; rejects if the CDN can't be reached in time. */
+function loadMonaco() {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => reject(new Error("timed out")), 15000);
+    const loader = document.createElement("script");
+    loader.src = MONACO + "/vs/loader.min.js";
+    loader.onerror = () => reject(new Error("couldn't load " + loader.src));
+    loader.onload = () => {
+      // Monaco's worker comes from the CDN too: a worker must be same-origin, so a data: URL
+      // starts it and imports the CDN's script.
+      window.MonacoEnvironment = {
+        getWorkerUrl: () => "data:text/javascript;charset=utf-8," + encodeURIComponent(
+          `self.MonacoEnvironment = { baseUrl: "${MONACO}/" }; importScripts("${MONACO}/vs/base/worker/workerMain.js");`),
+      };
+      require.config({ paths: { vs: MONACO + "/vs" } });
+      require(["vs/editor/editor.main"], () => resolve(window.monaco), reject);
+    };
+    document.head.appendChild(loader);
+  });
+}
+
+// The page's document in the language server: a URI of its own, so two tabs don't share one.
+const DOC_URI = `file:///playground/${Math.random().toString(36).slice(2)}/program.ic10.kts`;
+// The version last sent to the server, the text it has, and whether it has the document open.
+let lspVersion = 0, lspText = null, lspOpen = false;
+// LSP messages go one at a time, in order, so a request always follows the text it is about.
+let lspQueue = Promise.resolve();
+
+async function lspPost(method, params) {
+  const r = await fetch(`/api/lsp?method=${encodeURIComponent(method)}`, {
+    method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(params),
+  });
+  return r.json();
+}
+
+/** Brings the server's copy of the document to text: opened, or changed as a whole. */
+async function lspSync(text) {
+  if (lspOpen && lspText === text) return;
+  const version = ++lspVersion;
+  if (lspOpen) {
+    await lspPost("textDocument/didChange", { textDocument: { uri: DOC_URI, version }, contentChanges: [{ text }] });
+  } else {
+    await lspPost("textDocument/didOpen", { textDocument: { uri: DOC_URI, languageId: "kotlin", version, text } });
+    lspOpen = true;
+  }
+  lspText = text;
+}
+
+/**
+ * Asks the server `method` at a position in the model's current text, after sending it that text,
+ * and returns the result (null if it has none or fails). A server that restarted no longer has the
+ * document, so it is opened again and the request repeated.
+ */
+function lspAt(method, model, position) {
+  const text = model.getValue();
+  const params = { textDocument: { uri: DOC_URI }, position: { line: position.lineNumber - 1, character: position.column - 1 } };
+  const job = lspQueue.then(async () => {
+    await lspSync(text);
+    let res = await lspPost(method, params);
+    if (res.error && /is not open/.test(res.error.message)) {
+      lspOpen = false;
+      await lspSync(text);
+      res = await lspPost(method, params);
+    }
+    if (res.error) console.warn(method, res.error.message);
+    return res.result ?? null;
+  });
+  lspQueue = job.catch(() => {});
+  return job.catch(() => null);
+}
+
+function registerProviders() {
+  monaco.languages.registerCompletionItemProvider("kotlin", {
+    triggerCharacters: ["."],
+    async provideCompletionItems(model, position) {
+      const result = await lspAt("textDocument/completion", model, position);
+      const items = Array.isArray(result) ? result : (result?.items ?? []);
+      const word = model.getWordUntilPosition(position);
+      const range = new monaco.Range(position.lineNumber, word.startColumn, position.lineNumber, word.endColumn);
+      return {
+        suggestions: items.map((item) => ({
+          label: item.label, insertText: item.label, detail: item.detail, sortText: item.sortText, range,
+          kind: monaco.languages.CompletionItemKind[completionKind(item.kind)],
+        })),
+      };
+    },
+  });
+  monaco.languages.registerHoverProvider("kotlin", {
+    async provideHover(model, position) {
+      const result = await lspAt("textDocument/hover", model, position);
+      const contents = hoverContents(plainOf(result?.contents));
+      if (!contents.length) return null;
+      const word = model.getWordAtPosition(position);
+      return {
+        contents,
+        range: word && new monaco.Range(position.lineNumber, word.startColumn, position.lineNumber, word.endColumn),
+      };
+    },
+  });
+  monaco.languages.registerSignatureHelpProvider("kotlin", {
+    signatureHelpTriggerCharacters: ["(", ","],
+    signatureHelpRetriggerCharacters: [","],
+    async provideSignatureHelp(model, position) {
+      const help = await lspAt("textDocument/signatureHelp", model, position);
+      if (!help || !help.signatures || !help.signatures.length) return null;
+      return {
+        value: {
+          signatures: help.signatures.map((s) => ({
+            label: s.label,
+            documentation: plainOf(s.documentation) || undefined,
+            parameters: (s.parameters || []).map((p) => ({ label: p.label })),
+          })),
+          activeSignature: help.activeSignature ?? 0,
+          activeParameter: help.activeParameter ?? 0,
+        },
+        dispose() {},
+      };
+    },
+  });
+}
+
+/** Puts Monaco in the textarea's place, with the textarea's text, once it has loaded. */
+async function startEditor(loading) {
+  try { await loading; } catch (e) {
+    console.warn("Monaco didn't load, so the plain editor stays:", e);
+    $("keys").textContent = "Ctrl+S saves · Tab indents · plain editor (Monaco didn't load)";
+    return;
+  }
+  const dark = matchMedia("(prefers-color-scheme: dark)");
+  editor = monaco.editor.create($("src-editor"), {
+    value: src.value, language: "kotlin", theme: dark.matches ? "vs-dark" : "vs",
+    automaticLayout: true, minimap: { enabled: false }, fontSize: 13, lineHeight: 20,
+    fontFamily: 'ui-monospace, "Cascadia Code", Consolas, monospace',
+    tabSize: 4, insertSpaces: true, scrollBeyondLastLine: false, wordBasedSuggestions: "off",
+    fixedOverflowWidgets: true,
+  });
+  dark.addEventListener("change", () => monaco.editor.setTheme(dark.matches ? "vs-dark" : "vs"));
+  lineMark = editor.createDecorationsCollection();
+  $("src-code").classList.add("monaco");
+  editor.onDidChangeModelContent(() => {
+    syncAnnotations();
+    if (!replacing) schedule();
+  });
+  editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyS, download);
+  editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter, runFromKeyboard);
+  registerProviders();
+  $("keys").textContent = "Ctrl+S saves · Ctrl+Space completes · Ctrl+Enter runs the test";
+  markProblems();
+  markSource();
+}
+
 (async function init() {
+  const loading = loadMonaco();
   src.value = load(DRAFT_KEY) ?? DEFAULT_CODE;
   syncAnnotations();
   // Programs are named *.ic10.kts; a stored name without that suffix gets it.
@@ -727,7 +969,7 @@ $("save-test").onclick = async () => {
   if (opened && opened.name !== $("filename").textContent) opened = null;
   if (load(TESTING_KEY) === "true") $("main").classList.add("testing");
   compile();
-  await loadTest();
+  await Promise.all([loadTest(), startEditor(loading)]);
 })();
 </script>
 </body>

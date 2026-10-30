@@ -92,6 +92,12 @@ the compile daemon (`daemon/`) and sends it each compile; the daemon speaks PyTr
 (one base64 JSON line per request and per response).
 The first compile after starting takes a few seconds while the compiler warms up.
 
+The editor is [Monaco](https://microsoft.github.io/monaco-editor/), loaded from cdnjs (the one
+thing the page fetches from outside; without it the page keeps a plain text box). It marks the
+compile's errors and warnings where they start, and completes, hovers and shows signature help
+from the daemon's LSP mode, the one the IC10 Editor uses in game: the script runs the same jar
+with `--lsp` as a second process and relays the page's requests to it (`/api/lsp`).
+
 The Test button opens a test of the program against fake devices (see
 [docs/TESTING.md](docs/TESTING.md)), edited as JSON. Run (or Ctrl+Enter) compiles the program
 and runs the test; the pane shows each expectation's result, and the registers, stack and device
