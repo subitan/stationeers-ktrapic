@@ -25,9 +25,9 @@ import org.junit.jupiter.api.Test
  *   turn rate. Idle reads 1 once it has stopped, and 0 from a write that moves it until then.
  * - Setting is the dish's power in whole watts, kept within the dish's range.
  * - SignalStrength is the angle, in degrees, between where the dish points and the satellite. It
- *   reads -1 while the satellite is too far off to find, and after any move or change of Setting
- *   until the dish has resolved it again. Resolving starts once the dish stops and takes longer the
- *   further off it points and the less power it has, by the game's formula (see [resolveTicks]).
+ *   reads -1 after any move or change of Setting until the dish has resolved the satellite again.
+ *   Resolving starts once the dish stops and takes longer the further off it points and the less
+ *   power it has, by the game's formula (see [resolveTicks]).
  * - The contact can be lost, after which SignalStrength reads -1 until it comes back.
  */
 class SatelliteTrackerTest {
@@ -56,6 +56,9 @@ class SatelliteTrackerTest {
     var moves = 0
       private set
 
+    /** Each heading and tilt the dish has been turned to, in order. */
+    val targets = mutableListOf<Pair<Double, Double>>()
+
     /** While true, the dish has no contact to resolve. */
     var lost = false
       set(value) {
@@ -82,6 +85,7 @@ class SatelliteTrackerTest {
         }
         if (targetH != oldH || targetV != oldV) {
           moves++
+          targets += targetH to targetV
           resolving = TURNING
         }
         // A write sets the target; reads still give where the dish points.
@@ -133,8 +137,7 @@ class SatelliteTrackerTest {
       device["Horizontal"] = h
       device["Vertical"] = v
       device["Idle"] = if (h == targetH && v == targetV) 1.0 else 0.0
-      device["SignalStrength"] =
-          if (lost || resolving != 0 || offset() > FIND_WITHIN) -1.0 else offset()
+      device["SignalStrength"] = if (lost || resolving != 0) -1.0 else offset()
     }
 
     companion object {
@@ -151,8 +154,6 @@ class SatelliteTrackerTest {
       const val WATTS_TO_RESOLVE = 100.0
       const val BASE_SECONDS = 10.0
       const val TURNING = -1
-      /** How close the dish must point to find the satellite at all. */
-      const val FIND_WITHIN = 45.0
 
       /**
        * The share of its power the dish brings to bear on a contact [offset] degrees off: all of it
@@ -296,6 +297,54 @@ class SatelliteTrackerTest {
       dish.lost = false
       run.runUntil(100_000) { run.console["Setting"] == DONE }
       run.assertDone()
+    }
+  }
+
+  @Test
+  fun `a nudge that resolves where the dish had yet to is kept`() {
+    for (options in allOptions()) {
+      // The sweep finds the satellite 9 degrees below 140, 12, so the first nudges are 4 degrees.
+      // Losing the contact over the first nudge and its undo leaves the dish reading -1 where the
+      // second nudge starts; that nudge, down, resolves closer and should stay.
+      val run = Run(options, Dish(satelliteH = 140.0, satelliteV = 3.0, h = 0.0, v = 45.0))
+      val dish = run.dish
+
+      run.runUntil(100_000) { dish.targets.lastOrNull() == (140.0 to 16.0) }
+      dish.lost = true
+      run.runUntil(1_000) { dish.targets.lastOrNull() == (140.0 to 8.0) }
+      dish.lost = false
+      assertWithMessage("nudge, undo, nudge ($options)")
+          .that(dish.targets.takeLast(3))
+          .containsExactly(140.0 to 16.0, 140.0 to 12.0, 140.0 to 8.0)
+          .inOrder()
+      val moves = dish.moves
+      run.runUntil(1_000) { dish.moves > moves }
+      assertWithMessage("kept ($options)").that(dish.targets.last()).isEqualTo(144.0 to 8.0)
+
+      run.runUntil(100_000) { run.console["Setting"] == DONE }
+      run.assertDone()
+    }
+  }
+
+  @Test
+  fun `a nudge clamped at the zenith is undone to where the dish was`() {
+    for (options in allOptions()) {
+      // The contact appears 14 degrees below the dish as the sweep reaches 0, 84, so the first
+      // nudge, up 7, stops at 90, where the dish can't resolve it in time.
+      val run = Run(options, Dish(satelliteH = 0.0, satelliteV = 70.0, h = 0.0, v = 45.0))
+      val dish = run.dish
+      dish.lost = true
+
+      run.runUntil(100_000) { dish.targets.lastOrNull() == (0.0 to 84.0) }
+      dish.lost = false
+      run.runUntil(100_000) { run.console["Setting"] == DONE }
+      run.assertDone()
+      val clamped = dish.targets.indexOf(0.0 to 90.0)
+      assertWithMessage("clamped nudge ($options)").that(clamped).isGreaterThan(0)
+      assertWithMessage("from ($options)").that(dish.targets[clamped - 1]).isEqualTo(0.0 to 84.0)
+      assertWithMessage("undone to ($options)")
+          .that(dish.targets[clamped + 1])
+          .isEqualTo(0.0 to 84.0)
     }
   }
 

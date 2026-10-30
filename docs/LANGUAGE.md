@@ -574,7 +574,9 @@ nullable types, exceptions, casts and type checks, and coroutines.
 a chip from the game: it points a medium satellite dish at a satellite, sweeping the sky at four
 tilts until the dish resolves a contact, then nudging it, in steps that shrink as it closes in,
 while that brings its offset down, sweeping again if the contact goes away, and waiting on a lever
-to start again. It uses typed devices (`SatelliteDish.Medium.at(d0)`, `Switch.Lever.at(d1)`,
+to start again. At the game's turn rate a full pass of the sky takes roughly 40 minutes, by
+estimate rather than timing; a smaller `WAIT` shortens it, at the cost of missing contacts further
+off each position. It uses typed devices (`SatelliteDish.Medium.at(d0)`, `Switch.Lever.at(d1)`,
 `LedDisplay.Small.at(...)`), top-level `var`s, functions (inlined, called on the stack, and one
 `@InRegisters`), `continue`, text on a display, `kotlin.math`, `sleep` and `yield`. It compiles to
 120 lines, or 98 in compact form. `SatelliteTrackerTest` runs it against a simulated dish that

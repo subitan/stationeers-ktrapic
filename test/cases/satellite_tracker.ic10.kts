@@ -10,10 +10,12 @@ import kotlin.math.*
 // up as far as the dish allows, and waits up to WAIT seconds at each position.
 //
 // The program sweeps the sky in 20 degree steps of heading at each of four tilts until the dish
-// resolves a contact. Then it nudges the dish, in steps that shrink as it gets closer, keeping each
-// nudge that brings the offset down, until the dish is within a degree. Status text goes to a
-// console on d5; the offset, heading and elevation go to displays on d2, d3 and d4. Flip the lever
-// on d1 to start again.
+// resolves a contact. At the game's turn rate, a full pass of the sky takes roughly 40 minutes, by
+// estimate rather than timing; a smaller WAIT shortens it, at the cost of missing contacts further
+// off each position. Once the dish has a contact, the program nudges it, in steps that shrink as
+// it gets closer, keeping each nudge that brings the offset down, until the dish is within a
+// degree. Status text goes to a console on d5; the offset, heading and elevation go to displays on
+// d2, d3 and d4. Flip the lever on d1 to start again.
 
 val dish = SatelliteDish.Medium.at(d0)
 val reset = Switch.Lever.at(d1)
