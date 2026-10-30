@@ -228,9 +228,13 @@ namespace KTrapIC
                 if (edited)
                     CompileSoon().Forget();
                 else
+                {
                     // A reset to the same text makes new tokens, without the warnings' marks; the
                     // errors' come back with the daemon's diagnostics, but no compile follows.
                     _warnings.Remark(_version, WarningToken);
+                    // ICodeFormatter's own handler drew the status before the tokens were marked.
+                    UpdateStatus();
+                }
             };
             OnCaretMoved += HighlightPreview;
         }
