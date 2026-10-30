@@ -108,6 +108,22 @@ class ScriptWrapperTest {
   }
 
   @Test
+  fun `a file annotation stays ahead of everything the wrapper inserts`() {
+    fun wrapped(source: String) =
+        withScript(source) { ScriptWrapper.wrap(it, listOf("ktrapic.*")).text }
+
+    assertThat(wrapped("@file:CircuitHousingOnly\nval x = db.Setting\n"))
+        .isEqualTo(
+            "@file:CircuitHousingOnly import ktrapic.*; \nobject Program { val x = db.Setting\n\n}\n"
+        )
+    assertThat(wrapped("// A housing.\n@file:CircuitHousingOnly\nimport a.b\ndb.On = 1\n"))
+        .isEqualTo(
+            "// A housing.\n@file:CircuitHousingOnly\nimport ktrapic.*; import a.b\n" +
+                "object Program { init { db.On = 1 }\n\n}\n"
+        )
+  }
+
+  @Test
   fun `a script with only declarations is still wrapped`() {
     val wrapped = withScript("val a = 1\n") { ScriptWrapper.wrap(it) }
 

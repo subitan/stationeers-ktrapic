@@ -494,15 +494,58 @@ A chip holds at most 128 lines of at most 90 characters, and 4096 characters in 
 compiler measures programs as the game's code editor does: every line counts, and each line
 break counts as two characters, so a 128-line program has 3842 characters for its text.
 Compact output (resolving labels to line numbers and dropping them) saves lines. The compiler
-reports these counts but does not reject a program over the limits. When a program over 128
-lines calls functions with their arguments on the stack, it warns that passing them in registers
+reports these counts but does not reject a program over the limits; it warns of a program over
+128 lines. The warning counts the lines in the output asked for; when that output isn't compact
+and has labels to drop, it says how many lines compact output would save. When the program calls
+functions with their arguments on the stack, the warning says that passing them in registers
 would save lines, naming what to change: turning stack calls off, or marking functions
 `@InRegisters`. Functions in a cycle of calls need the stack, so the warning leaves them out, and
-says the program must be shortened if they are all it calls that way.
+says the program must be shortened (or compiled compact, when that would save lines) if they are
+all it calls that way. When
+the program keeps values in memory (see below), the warning says that each read and write of them
+takes a line of its own.
 
 Values live in the registers `r0` to `r15`; the compiler reuses a register once its value is no
 longer needed. A program that needs more than 16 values at once is rejected, with an error that
-has no line or column.
+has no line or column, unless it is annotated `@file:CircuitHousingOnly`.
+
+### Memory in a circuit housing
+
+`get` and `put` on `db` reach the chip's own stack in an IC housing, a rocket circuit housing or a
+suit; in a machine with a chip slot, `db` is the machine, and they fail. A program that will only
+run in a housing or a suit can say so on its first line:
+
+```kotlin
+@file:CircuitHousingOnly
+
+val x = db.Setting
+db.Ratio = x * 2.0
+```
+
+The program then compiles exactly as it would without the annotation, unless it needs more than
+16 registers. Then, rather than failing, the compiler keeps some values in memory at the top of
+the stack, at addresses 511, 510 and down: the values read and written least often, over the
+longest stretch of code, live at the most crowded places, go first. Each read of such a value is
+a `get` into a register just before it is used, and each write a `put` just after, so each costs
+a line where it is used or set; a `move` to or from it is the `get` or `put` itself. A value in
+memory isn't pushed around calls on the stack, since it isn't in a register. A value that a
+function in a cycle of calls keeps across a call back into the cycle stays in a register, as the
+recursion would reuse its address; a value outside the cycle kept across a call into it can be in
+memory, since the recursion never comes back to it. Tail calls stay loops: memory is tried before
+making them calls.
+
+A program that uses memory reads address 511 on its first line, so on any other host the chip
+stops there with an error, before doing anything. The stack grows up from 0 as calls push, so a
+deep recursion could reach the addresses in use, where `push` would overwrite them without
+error; in a program that uses memory, each function in a cycle of calls checks `sp` as it is
+called, with room for what it and the functions it calls outside a cycle push, and stops the
+chip (`hcf`) before its calls could reach them. A program without recursion has no such check.
+
+Without the annotation, the error for a program out of registers suggests adding it when keeping
+values in memory would make the program fit in registers; the reads and writes add lines, so the
+program may then be over the chip's 128, which the warning above reports. When the values that
+don't fit are ones a recursive function keeps across a call back into its cycle, memory can't
+hold them, and the error says so instead, with or without the annotation.
 
 ## Not supported yet
 

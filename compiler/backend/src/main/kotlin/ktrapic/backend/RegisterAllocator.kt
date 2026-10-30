@@ -3,9 +3,12 @@ package ktrapic.backend
 import java.util.BitSet
 import ktrapic.ic10.Register
 
-/** The program needs more registers than the chip has. */
-class TooManyRegistersException(val needed: Int) :
-    Exception("The program needs $needed registers at once; the chip has 16 (r0–r15)")
+/** The program needs more registers than the chip has; [hint] says what might help, if anything. */
+class TooManyRegistersException(val needed: Int, val hint: String? = null) :
+    Exception(
+        "The program needs $needed registers at once; the chip has 16 (r0–r15)" +
+            hint.orEmpty().let { if (it.isEmpty()) "" else "; $it" }
+    )
 
 /**
  * Maps virtual registers onto r0–r15 by colouring the interference graph that liveness analysis

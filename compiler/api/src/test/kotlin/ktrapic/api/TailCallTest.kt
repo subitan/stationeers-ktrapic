@@ -393,7 +393,12 @@ class TailCallTest {
 
   @Test
   fun `a program out of registers either way reports what it needs with tail calls as calls`() {
-    val expected = listOf("The program needs 17 registers at once; the chip has 16 (r0–r15)")
+    val expected =
+        listOf(
+            "The program needs 17 registers at once; the chip has 16 (r0–r15); if the chip will " +
+                "run in an IC housing, a rocket circuit housing or a suit, add " +
+                "@file:CircuitHousingOnly to keep the values that don't fit in its stack memory"
+        )
 
     for (tailCalls in listOf(true, false)) {
       val errors = failure(crowded(14), CompileOptions(tailCalls = tailCalls)).errors

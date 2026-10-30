@@ -2,6 +2,8 @@ package ktrapic.backend
 
 import org.jetbrains.kotlin.backend.common.extensions.DeclarationFinder
 import org.jetbrains.kotlin.ir.declarations.IrModuleFragment
+import org.jetbrains.kotlin.ir.util.hasAnnotation
+import org.jetbrains.kotlin.name.FqName
 
 /** Compiles the IR of a wrapped script-style program to IC10. */
 object Backend {
@@ -12,16 +14,43 @@ object Backend {
    * functions called with `jal` pass their arguments and result on the stack, unless marked
    * `@InRegisters`; without, in registers. With [tailCalls], such a function's calls to itself in
    * tail position loop back rather than call.
+   *
+   * A program annotated `@file:CircuitHousingOnly` keeps the values that don't fit in registers in
+   * the chip's stack memory (see [Spilling]). For any other, with [suggestHousing], the exception
+   * suggests the annotation when keeping values in memory would make the program fit in registers,
+   * which takes a second, trial, allocation; without, it suggests nothing, and saves that trial for
+   * a caller that may not report this failure.
    */
   fun compile(
       module: IrModuleFragment,
       symbols: DeclarationFinder,
       stackCalls: Boolean = true,
       tailCalls: Boolean = true,
+      suggestHousing: Boolean = true,
   ): Lowered {
     val translator = Translator(symbols, stackCalls, tailCalls)
     translator.translate(module)
-    return Lowering.lower(translator.lines, translator.stackFunctions)
-        .copy(hasCycle = translator.hasCycle)
+    val housingOnly = module.files.any { it.hasAnnotation(CIRCUIT_HOUSING_ONLY) }
+    val lowered =
+        try {
+          Lowering.lower(translator.lines, translator.stackFunctions, spill = housingOnly)
+        } catch (e: TooManyRegistersException) {
+          if (housingOnly || !suggestHousing) throw e
+          // Suggest the annotation only if keeping values in memory would make the program fit in
+          // registers.
+          try {
+            Lowering.lower(translator.lines, translator.stackFunctions, spill = true)
+          } catch (spilled: TooManyRegistersException) {
+            throw TooManyRegistersException(e.needed, spilled.hint)
+          }
+          throw TooManyRegistersException(e.needed, HOUSING_HINT)
+        }
+    return lowered.copy(hasCycle = translator.hasCycle)
   }
+
+  private val CIRCUIT_HOUSING_ONLY = FqName("ktrapic.CircuitHousingOnly")
+
+  private const val HOUSING_HINT =
+      "if the chip will run in an IC housing, a rocket circuit housing or a suit, add " +
+          "@file:CircuitHousingOnly to keep the values that don't fit in its stack memory"
 }

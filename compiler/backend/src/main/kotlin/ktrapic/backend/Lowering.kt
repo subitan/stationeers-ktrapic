@@ -1,9 +1,12 @@
 package ktrapic.backend
 
+import ktrapic.ic10.Ic10Limits
 import ktrapic.ic10.LabelRef
 import ktrapic.ic10.Line
+import ktrapic.ic10.Number
 import ktrapic.ic10.Operand
 import ktrapic.ic10.Program
+import ktrapic.ic10.Register
 
 /**
  * A function called with its arguments and result on the stack: its [name], and whether it is in a
@@ -15,13 +18,15 @@ data class StackCalled(val name: String, val recursive: Boolean)
  * A compiled [program] and, for each of its lines, the IR start offset of the source statement it
  * comes from ([TirInstruction.offset]), or null. [stackCalled] is the functions that the program
  * still calls on the stack, in the order their first calls appear in it. [hasCycle] is whether the
- * program declares a cycle of calls, even one it never calls into.
+ * program declares a cycle of calls, even one it never calls into. [memorySlots] is how many values
+ * it keeps in the chip's stack memory (see [Spilling]).
  */
 data class Lowered(
     val program: Program,
     val offsets: List<Int?>,
     val stackCalled: List<StackCalled> = emptyList(),
     val hasCycle: Boolean = false,
+    val memorySlots: Int = 0,
 )
 
 /**
@@ -29,10 +34,22 @@ data class Lowered(
  * the stack ([TirInstruction.CALL]) as it goes.
  */
 object Lowering {
-  /** [stackFunctions] describes the function at each label that calls on the stack go to. */
-  fun lower(lines: List<TirLine>, stackFunctions: Map<String, StackCalled> = emptyMap()): Lowered {
-    val simplified = simplify(lines)
-    val registers = RegisterAllocator.allocate(simplified)
+  /**
+   * [stackFunctions] describes the function at each label that calls on the stack go to. With
+   * [spill], values that don't fit in registers are kept in the chip's stack memory (see
+   * [Spilling]); without, the program must fit.
+   */
+  fun lower(
+      lines: List<TirLine>,
+      stackFunctions: Map<String, StackCalled> = emptyMap(),
+      spill: Boolean = false,
+  ): Lowered {
+    val (simplified, registers, slots) =
+        if (spill) {
+          Spilling.allocate(simplify(lines), stackFunctions)
+        } else {
+          simplify(lines).let { Allocated(it, RegisterAllocator.allocate(it), 0) }
+        }
     val liveOut = Liveness.liveOut(simplified)
     val written = Liveness.maybeWritten(simplified)
     val byId =
@@ -42,6 +59,9 @@ object Lowering {
             .associateBy { it.id }
     val program = mutableListOf<Line>()
     val offsets = mutableListOf<Int?>()
+    // How much each call on the stack leaves `sp` changed by, for each function called: the
+    // function pops its arguments and pushes its result.
+    val stackEffects = mutableMapOf<String, Int>()
     var index = -1
     for (line in simplified) {
       when (line) {
@@ -71,6 +91,9 @@ object Lowering {
                     .distinct()
                     .sortedBy { it.index }
             val label = line.operands.last()
+            ((label as? Fixed)?.operand as? LabelRef)?.let {
+              stackEffects[it.name] = (if (line.result != null) 1 else 0) - (line.operands.size - 1)
+            }
             val expanded = buildList {
               saved.forEach { add(Line.Instruction("push", listOf(it))) }
               line.operands.dropLast(1).forEach {
@@ -91,6 +114,7 @@ object Lowering {
         }
       }
     }
+    if (slots > 0) guardRecursion(program, offsets, stackEffects, Ic10Limits.STACK_SIZE - slots)
     return Lowered(
         Program(program),
         offsets,
@@ -102,7 +126,115 @@ object Lowering {
                   (label as? LabelRef)?.let { stackFunctions[it.name] }
                 }
                 .distinct(),
+        memorySlots = slots,
     )
+  }
+
+  /**
+   * Has each function of [program] in a cycle of calls stop the chip, as it is called, if its calls
+   * could push values at or above [lowest], the lowest address of the stack that holds values kept
+   * in memory. `push` itself only fails at the top of the stack, after overwriting them.
+   *
+   * Between one such check and the next, the stack grows by at most what the function itself pushes
+   * ([stackEffects] says what each call on the stack leaves behind), and what the functions outside
+   * any cycle that it may call, directly or through others outside a cycle, push, each at most
+   * once. So the check, `bgt sp limit overflow`, allows that much room; `overflow:` is an `hcf`,
+   * placed before the first checked function, where only a jump reaches it. A program with no cycle
+   * of calls gets no check: its stack is never deeper than all its functions' pushes together,
+   * fewer than its lines.
+   */
+  private fun guardRecursion(
+      program: MutableList<Line>,
+      offsets: MutableList<Int?>,
+      stackEffects: Map<String, Int>,
+      lowest: Int,
+  ) {
+    fun Line.Instruction.label() = (operands.lastOrNull() as? LabelRef)?.name
+    val functions =
+        program
+            .filterIsInstance<Line.Instruction>()
+            .filter { it.op == "jal" }
+            .mapNotNullTo(mutableSetOf()) { it.label() }
+    // Each function's calls, and how far above its entry it takes the stack; null is the program
+    // before the functions.
+    val calls = mutableMapOf<String?, MutableSet<String>>()
+    val deepest = mutableMapOf<String?, Int>()
+    var function: String? = null
+    var depth = 0
+    for (line in program) {
+      when (line) {
+        is Line.Label ->
+            if (line.name in functions) {
+              function = line.name
+              depth = 0
+            }
+        is Line.Instruction ->
+            when (line.op) {
+              "push" -> depth++
+              "pop" -> depth--
+              "jal" -> {
+                val target = line.label()!!
+                calls.getOrPut(function) { mutableSetOf() } += target
+                depth += stackEffects[target] ?: 0
+              }
+            }
+        else -> {}
+      }
+      deepest.merge(function, depth, ::maxOf)
+    }
+    fun reaches(from: String, to: String): Boolean {
+      val seen = mutableSetOf<String>()
+      val pending = ArrayDeque(calls[from].orEmpty())
+      while (pending.isNotEmpty()) {
+        val next = pending.removeFirst()
+        if (next == to) return true
+        if (seen.add(next)) pending += calls[next].orEmpty()
+      }
+      return false
+    }
+    val cyclic = functions.filterTo(mutableSetOf()) { reaches(it, it) }
+    if (cyclic.isEmpty()) return
+    // The functions outside any cycle that [from] may call before the next check, directly or
+    // through others outside a cycle.
+    fun acyclicCallees(from: String): Set<String> {
+      val found = mutableSetOf<String>()
+      val pending = ArrayDeque(calls[from].orEmpty())
+      while (pending.isNotEmpty()) {
+        val next = pending.removeFirst()
+        if (next !in cyclic && found.add(next)) pending += calls[next].orEmpty()
+      }
+      return found
+    }
+    val labels = program.filterIsInstance<Line.Label>().mapTo(mutableSetOf()) { it.name }
+    val overflow = generateSequence("overflow") { it + "_" }.first { it !in labels }
+    var placed = false
+    var at = 0
+    while (at < program.size) {
+      val line = program[at]
+      if (line is Line.Label && line.name in cyclic) {
+        if (!placed) {
+          placed = true
+          // Function bodies follow the program's `j end`, and each ends in `j ra`.
+          val before = program.subList(0, at).lastOrNull { it is Line.Instruction }
+          check((before as? Line.Instruction)?.op == "j") { "${line.name} can be run into" }
+          program.addAll(at, listOf(Line.Label(overflow), Line.Instruction("hcf", emptyList())))
+          offsets.addAll(at, listOf(null, null))
+          at += 2
+        }
+        val room = (deepest[line.name] ?: 0) + acyclicCallees(line.name).sumOf { deepest[it] ?: 0 }
+        val limit = lowest - room
+        program.add(
+            at + 1,
+            Line.Instruction(
+                "bgt",
+                listOf(Register.SP, Number(limit.toDouble()), LabelRef(overflow)),
+            ),
+        )
+        offsets.add(at + 1, null)
+        at++
+      }
+      at++
+    }
   }
 
   /** Repeats the clean-ups until none changes anything. */
