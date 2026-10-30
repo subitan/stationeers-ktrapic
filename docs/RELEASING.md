@@ -36,10 +36,10 @@ release > Run workflow).
 
 - **Build, test and verify**, with no secrets: it checks that the tag's commit is on `main`, the
   tag against `pluginVersion` in `intellij/gradle.properties`, and that `intellij/CHANGELOG.md`
-  has a section for it. It builds the compile daemon with Bazel, and builds and tests the plugin with it. Then it runs the Plugin
-  Verifier against the IDE releases JetBrains recommends for the plugin's range (2025.1 on), as
-  Marketplace does on upload. The unsigned plugin and the verifier's reports are kept as the run's
-  artifacts. A run by hand stops here, even on a tag.
+  has a section for it. It builds the compile daemon with Bazel, and builds and tests the plugin
+  with it. Then it runs the Plugin Verifier against the IDE releases JetBrains recommends for the
+  plugin's range (2025.1 on), as Marketplace does on upload. The unsigned plugin and the
+  verifier's reports are kept as the run's artifacts. A run by hand stops here, even on a tag.
 - **Sign and publish**, for a pushed tag only, in the `marketplace` environment: it waits for one of that
   environment's reviewers to approve it in the run's page. Then it signs the plugin, attaches the
   signed zip to a GitHub release `intellij-vX.Y.Z` with the version's change notes, and uploads it
@@ -112,19 +112,25 @@ To release version X.Y.Z (or X.Y.Z-beta.N):
 5. Check the GitHub release and, a little later, the plugin's Marketplace page. Marketplace
    checks each upload too, and may take a while to make a new version available.
 
-A release that fails before the publish job can be fixed in a new PR, then tagged again: delete the
-tag first (`git push origin :refs/tags/intellij-vX.Y.Z`, then `git tag -d intellij-vX.Y.Z`).
+A release that fails before anything reaches Marketplace, in the build job or in the publish job
+before its upload, can be fixed in a new PR and tagged again. Delete the tag first, together with
+the GitHub release if the publish job made one:
+```
+gh release delete intellij-vX.Y.Z --cleanup-tag    # if the GitHub release was made
+git push origin :refs/tags/intellij-vX.Y.Z          # if it wasn't
+git tag -d intellij-vX.Y.Z
+```
 
 A publish job that fails for a reason that isn't the plugin's (a network error, a wrong token, a
 Marketplace outage) can be re-run from the run's page (Re-run jobs > Re-run failed jobs), after
 approving it again: it signs the plugin again, replaces the zip on the GitHub release it already
 made, and uploads it again. A re-run uploads the same plugin, so it doesn't help an upload
-Marketplace rejects. A rejected plugin is fixed in a new PR and released as a new version.
-To release the same version again instead, delete its GitHub release and its tag together
-(`gh release delete intellij-vX.Y.Z --cleanup-tag`, then `git tag -d intellij-vX.Y.Z`) before
-tagging again, so that the new run makes the release afresh with the new change notes.
-Marketplace won't take the same version twice, so once a version is uploaded, a fix is a new
-version.
+Marketplace rejects.
+
+Once an upload has reached Marketplace, its version number is never uploaded again, even if
+Marketplace rejected it. The fix is a new PR, with its line under Unreleased in
+`intellij/CHANGELOG.md`, and then a release of the next version: `prepare-release.sh` and a new
+tag, as in "Each release" above.
 
 ### Building a release locally
 
