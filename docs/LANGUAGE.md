@@ -601,7 +601,15 @@ nullable types, exceptions, casts and type checks, and coroutines.
 ## An example
 
 [`test/cases/satellite_tracker.ic10.kts`](../test/cases/satellite_tracker.ic10.kts) is a port of
-a chip from the game: it points a dish at a satellite, scanning the horizon until it hears a
-signal and then nudging the dish while the signal improves. It uses functions (some inlined, some
-called with `jal`), device properties, `str` for status text, and `sleep`, and compiles to 99
-lines in compact form (`@file:Compact`), or 87 with `@file:InRegisters` as well.
+a chip from the game: it points a medium satellite dish at a satellite, sweeping the sky at four
+tilts until the dish resolves a contact, then nudging it, in steps that shrink as it closes in,
+while that brings its offset down, sweeping again if the contact goes away, and waiting on a lever
+to start again. At the game's turn rate a full pass of the sky takes roughly 40 minutes, by
+estimate rather than timing; a smaller `WAIT` shortens it, at the cost of missing contacts further
+off each position. It uses typed devices (`SatelliteDish.Medium.at(d0)`, `Switch.Lever.at(d1)`,
+`LedDisplay.Small.at(...)`), top-level `var`s, functions (inlined, called on the stack, and one
+`@InRegisters`), `continue`, text on a display, `kotlin.math`, `sleep` and `yield`. It compiles to
+120 lines, or 98 in compact form (`@file:Compact`). `SatelliteTrackerTest` runs it against a
+simulated dish that models what the program relies on: how the game's dish turns and reports that
+it has stopped, and that it resolves a contact only once stopped, more slowly the further off it
+points and the less power it has, by the game's own formula and default figures, and can lose it.
