@@ -1,99 +1,106 @@
-s d0 Vertical 45
-s d0 Horizontal 0
-l r0 d0 SignalStrength
-bne r0 -1 11
-push STR("init.")
-jal 42
-sleep 0.25
-push STR("init ")
-jal 42
-jal 47
-j 2
-l r0 d0 SignalStrength
-blt r0 2 14
-j 20
-push STR("Scan")
-jal 42
-push 20
-push 0
-jal 52
-j 11
-l r0 d0 SignalStrength
-blt r0 97 23
-j 39
-push STR("Fine")
-jal 42
-push 0
-push 1
-jal 76
-push 0
-push -1
-jal 76
-push 1
-push 0
-jal 76
-push -1
-push 0
-jal 76
-jal 47
-j 20
-push STR("Done!")
-jal 42
-j 99
-pop r0
 s d5 Mode 10
-s d5 Setting r0
-sleep 2
-j ra
-l r0 d0 SignalStrength
-s d2 Setting r0
-l r0 d0 Horizontal
-s d3 Setting r0
-j ra
-pop r0
-pop r1
-push ra
-l r2 d0 Horizontal
-add r1 r2 r1
-s d0 Horizontal r1
-l r1 d0 Vertical
-add r0 r1 r0
-s d0 Vertical r0
-l r0 d0 SignalStrength
-bne r0 -1 70
-jal 47
-push STR("move.")
+move r0 0
+move r1 45
 jal 42
-sleep 0.25
-push STR("move ")
-jal 42
-j 61
-push STR("stop")
-jal 42
-sleep 1
-jal 47
-pop ra
-j ra
-pop r0
-pop r1
-push ra
 l r2 d0 SignalStrength
-push r0
-push r1
-push r2
-push r1
-push r0
-jal 52
-pop r2
-pop r1
-pop r0
+bne r2 -1 14
+s d5 Setting STR("Scan")
+add r0 r0 20
+div r2 r0 360
+trunc r2 r2
+mul r2 r2 360
+sub r0 r0 r2
+jal 42
+j 4
+l r2 d0 SignalStrength
+bgt r2 1 17
+j 35
+s d5 Setting STR("Tuning")
+l r2 d0 SignalStrength
+div r2 r2 2
+floor r2 r2
+max r2 1 r2
+move r3 0
+move r4 r2
+jal 68
+mul r4 r2 -1
+move r3 0
+jal 68
+move r3 r2
+move r4 0
+jal 68
+mul r3 r2 -1
+move r4 0
+jal 68
+j 14
+s d5 Setting STR("Done!")
+s d1 Open 0
+l r0 d1 Open
+bnez r0 41
+sleep 2
+j 37
+j 1
+s d0 Horizontal r0
+s d0 Vertical r1
+l r2 d0 Horizontal
+sub r2 r2 r0
+abs r2 r2
+bgt r2 0.5 53
+l r2 d0 Vertical
+sub r2 r2 r1
+abs r2 r2
+bgt r2 0.5 53
+j 55
+yield
+j 44
+move r2 0
 l r3 d0 SignalStrength
-blt r3 r2 92
-j 97
-mul r1 r1 -1
-mul r0 r0 -1
-push r1
-push r0
-jal 52
+bne r3 -1 63
+blt r2 5 60
+j 63
+sleep 1
+add r2 r2 1
+j 56
+l r2 d0 SignalStrength
+s d2 Setting r2
+s d3 Setting r0
+s d4 Setting r1
+j ra
+push ra
+l r5 d0 SignalStrength
+add r0 r0 r3
+add r0 r0 360
+div r6 r0 360
+trunc r6 r6
+mul r6 r6 360
+sub r0 r0 r6
+add r1 r1 r4
+max r1 0 r1
+min r1 90 r1
+push r2
+push r3
+push r4
+push r5
+jal 42
+pop r5
+pop r4
+pop r3
+pop r2
+l r6 d0 SignalStrength
+beq r6 -1 92
+bgt r6 r5 92
+j 104
+sub r0 r0 r3
+add r0 r0 360
+div r3 r0 360
+trunc r3 r3
+mul r3 r3 360
+sub r0 r0 r3
+sub r1 r1 r4
+max r1 0 r1
+min r1 90 r1
+push r2
+jal 42
+pop r2
 pop ra
 j ra

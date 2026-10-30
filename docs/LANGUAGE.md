@@ -571,7 +571,10 @@ nullable types, exceptions, casts and type checks, and coroutines.
 ## An example
 
 [`test/cases/satellite_tracker.ic10.kts`](../test/cases/satellite_tracker.ic10.kts) is a port of
-a chip from the game: it points a dish at a satellite, scanning the horizon until it hears a
-signal and then nudging the dish while the signal improves. It uses functions (some inlined, some
-called with `jal`), device properties, `str` for status text, and `sleep`, and compiles to 99
-lines in compact form, or 87 with stack calls turned off.
+a chip from the game: it points a medium satellite dish at a satellite, sweeping the horizon until
+the dish resolves a contact, then nudging it, in steps that shrink as it closes in, while that
+brings its offset down, and waiting on a lever to start again. It uses typed devices
+(`SatelliteDish.Medium.at(d0)`, `Switch.Lever.at(d1)`, `LedDisplay.Small.at(...)`), top-level
+`var`s, functions (inlined, called on the stack, and one `@InRegisters`), text on a display,
+`kotlin.math`, `sleep` and `yield`. It compiles to 126 lines, or 106 in compact form.
+`SatelliteTrackerTest` runs it against a dish that behaves as the game's does.

@@ -1,104 +1,118 @@
-s d0 Vertical 45
-s d0 Horizontal 0
+s d5 Mode 10
 while1:
-l r0 d0 SignalStrength
-bne r0 -1 endwhile1
-move r0 STR("init.")
-jal debug
-sleep 0.25
-move r0 STR("init ")
-jal debug
-jal display
-j while1
-endwhile1:
+move r0 0
+move r1 45
+jal aim
 while2:
-l r0 d0 SignalStrength
-blt r0 2 skip1
-j endwhile2
-skip1:
-move r0 STR("Scan")
-jal debug
-move r0 20
-move r1 0
-jal moveDish
+l r2 d0 SignalStrength
+bne r2 -1 endwhile2
+s d5 Setting STR("Scan")
+add r0 r0 20
+div r2 r0 360
+trunc r2 r2
+mul r2 r2 360
+sub r0 r0 r2
+jal aim
 j while2
 endwhile2:
 while3:
-l r0 d0 SignalStrength
-blt r0 97 skip2
+l r2 d0 SignalStrength
+bgt r2 1 skip1
 j endwhile3
-skip2:
-move r0 STR("Fine")
-jal debug
-move r2 0
-move r3 1
-jal adjust
-move r2 0
-move r3 -1
-jal adjust
-move r2 1
-move r3 0
-jal adjust
-move r2 -1
-move r3 0
-jal adjust
-jal display
+skip1:
+s d5 Setting STR("Tuning")
+l r2 d0 SignalStrength
+div r2 r2 2
+floor r2 r2
+max r2 1 r2
+move r3 r2
+move r4 0
+move r5 r3
+jal fineTune
+mul r5 r3 -1
+move r4 0
+jal fineTune
+move r4 r3
+move r5 0
+jal fineTune
+mul r4 r3 -1
+move r5 0
+jal fineTune
 j while3
 endwhile3:
-move r0 STR("Done!")
-jal debug
-j end
-debug:
-s d5 Mode 10
-s d5 Setting r0
-sleep 2
-j ra
-display:
-l r0 d0 SignalStrength
-s d2 Setting r0
-l r0 d0 Horizontal
-s d3 Setting r0
-j ra
-moveDish:
-push ra
-l r4 d0 Horizontal
-add r0 r4 r0
-s d0 Horizontal r0
-l r0 d0 Vertical
-add r0 r0 r1
-s d0 Vertical r0
+s d5 Setting STR("Done!")
+s d1 Open 0
 while4:
-l r0 d0 SignalStrength
-bne r0 -1 endwhile4
-jal display
-move r0 STR("move.")
-jal debug
-sleep 0.25
-move r0 STR("move ")
-jal debug
+l r0 d1 Open
+bnez r0 endwhile4
+sleep 2
 j while4
 endwhile4:
-move r0 STR("stop")
-jal debug
-sleep 1
-jal display
-pop ra
-j ra
-adjust:
-push ra
-l r0 d0 SignalStrength
-move r5 r0
-move r0 r2
-move r1 r3
-jal moveDish
-l r0 d0 SignalStrength
-blt r0 r5 skip3
-j else1
+j while1
+aim:
+s d0 Horizontal r0
+s d0 Vertical r1
+while5:
+l r2 d0 Horizontal
+sub r2 r2 r0
+abs r2 r2
+bgt r2 0.5 or1
+l r2 d0 Vertical
+sub r2 r2 r1
+abs r2 r2
+bgt r2 0.5 skip2
+j endwhile5
+skip2:
+or1:
+yield
+j while5
+endwhile5:
+move r2 0
+while6:
+l r6 d0 SignalStrength
+bne r6 -1 endwhile6
+blt r2 5 skip3
+j endwhile6
 skip3:
-mul r0 r2 -1
-mul r1 r3 -1
-jal moveDish
+sleep 1
+add r2 r2 1
+j while6
+endwhile6:
+l r2 d0 SignalStrength
+s d2 Setting r2
+s d3 Setting r0
+s d4 Setting r1
+j ra
+fineTune:
+push ra
+l r2 d0 SignalStrength
+move r7 r2
+add r0 r0 r4
+add r0 r0 360
+div r2 r0 360
+trunc r2 r2
+mul r2 r2 360
+sub r0 r0 r2
+add r1 r1 r5
+max r1 0 r1
+min r1 90 r1
+jal aim
+l r2 d0 SignalStrength
+beq r2 -1 or2
+bgt r2 r7 skip4
+j else1
+skip4:
+or2:
+sub r0 r0 r4
+add r0 r0 360
+div r2 r0 360
+trunc r2 r2
+mul r2 r2 360
+sub r0 r0 r2
+sub r1 r1 r5
+max r1 0 r1
+min r1 90 r1
+jal aim
 else1:
 pop ra
 j ra
-end:
