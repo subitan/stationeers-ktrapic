@@ -19,6 +19,7 @@
     <Compile Include="../src/Requests.cs" Link="Requests.cs" />
     <Compile Include="../src/SdkNames.g.cs" Link="SdkNames.g.cs" />
     <Compile Include="../src/SdkNameKinds.cs" Link="SdkNameKinds.cs" />
+    <Compile Include="../src/Warnings.cs" Link="Warnings.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
