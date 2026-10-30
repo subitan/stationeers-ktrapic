@@ -60,6 +60,11 @@ an alias: `val sensor = d0`. What has no value on the chip (a device, a view, a 
 `Substance`, a slot, a batch or a `Ratios` entry) can only be held in a `val`, never a `var`, and
 the `val` must be given it where it is declared.
 
+The compiler warns of a variable nothing uses, a value assigned and never read, an unused lambda
+parameter and the like, as `kotlinc -Wextra` does, top-level properties included. A warning
+doesn't stop the program compiling; `@Suppress("UNUSED_VARIABLE")` (or the name of another
+warning) on the declaration, or `@file:Suppress(...)` for the whole program, turns it off.
+
 ## Operators
 
 - Arithmetic on `Int` and `Double`: `+`, `-`, `*`, `/`, `%`, unary `-`, `++`, `--`, and the
@@ -221,6 +226,7 @@ val charge = Battery.Small.all.map { it.Charge }.average()
 val most = Battery.Small.all.maxOf(Battery.Small::Charge)
 val sensor = GasSensor.at(d0)
 db.Setting = if (sensor.Temperature > 300.0) charge else most
+db.Mode = lit.toDouble()
 ```
 
 The lambdas are narrower than Kotlin's: a reading one may only pick a logic type, as `{ it.X }` or
@@ -420,6 +426,7 @@ val charge = BatteryCharger.Standard.all.slots[0].map { it.Charge }.average()
 val north = BatteryCharger.Standard.named("North").slots[1].maxOf { it.Charge }
 TankStorage.Gas.all.slots[0].forEach { it.Open = false }
 TankStorage.Gas.all.forEach { it.GasCanister.Open = true }
+db.Setting = charge.coerceAtLeast(north)
 ```
 
 A slot, or a device's or batch's `slots`, can be held in a `val`.
