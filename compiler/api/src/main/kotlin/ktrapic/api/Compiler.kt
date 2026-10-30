@@ -72,10 +72,19 @@ object Compiler {
     val result =
         K2Frontend.compile(source, listOf(sdkJar()), listOf("ktrapic.*")) { ir ->
           try {
+            // Suggesting @file:CircuitHousingOnly for a program out of registers takes a trial
+            // allocation, so it is asked for only of the compile whose failure is reported.
+            fun backend(tailCalls: Boolean, suggestHousing: Boolean) =
+                Backend.compile(
+                    ir.module,
+                    ir.symbols,
+                    options.stackCalls,
+                    tailCalls,
+                    suggestHousing,
+                )
             val (lowered, fallback) =
                 try {
-                  Backend.compile(ir.module, ir.symbols, options.stackCalls, options.tailCalls) to
-                      null
+                  backend(options.tailCalls, suggestHousing = !options.tailCalls) to null
                 } catch (e: TooManyRegistersException) {
                   if (!options.tailCalls) throw e
                   // Tail calls are only an optimisation, so the program may make them as calls
@@ -84,11 +93,14 @@ object Compiler {
                   // @file:CircuitHousingOnly gets here only when even keeping values in memory
                   // left it out of registers with its tail calls as loops.
                   try {
-                    Backend.compile(ir.module, ir.symbols, options.stackCalls, tailCalls = false) to
+                    backend(tailCalls = false, suggestHousing = true) to
                         CompileError(tailCallHint(e.needed), 0, 0)
                   } catch (retry: TooManyRegistersException) {
                     throw retry
                   } catch (_: CompileException) {
+                    // The first failure is the one reported: compiling it again throws it with
+                    // the suggestion.
+                    backend(tailCalls = true, suggestHousing = true)
                     throw e
                   }
                 }
@@ -134,8 +146,8 @@ object Compiler {
     val code = program.print()
     val size = ProgramSize.of(code)
     val sizeHints =
-        if (lowered.stackCalled.isNotEmpty() && size.lines > Ic10Limits.MAX_LINES) {
-          listOf(CompileError(sizeHint(size.lines, lowered.stackCalled, lowered.hasCycle), 0, 0))
+        if (size.lines > Ic10Limits.MAX_LINES) {
+          listOf(CompileError(sizeHint(size.lines, lowered), 0, 0))
         } else {
           emptyList()
         }
@@ -173,25 +185,43 @@ object Compiler {
           "without this warning)"
 
   /**
-   * Why a program of [lines] over the chip's limit could be shorter: each call on the stack pushes
-   * and pops what passes in a register otherwise. Only the functions in [stackCalled] that aren't
-   * in a cycle of calls can pass in registers, as a cycle needs the stack. Turning stack calls off
-   * works only when the program declares no cycle at all ([hasCycle]), called or not.
+   * That [lowered], [lines] long, is over the chip's limit, and why it could be shorter, if it can
+   * say. Each call on the stack pushes and pops what passes in a register otherwise; each read and
+   * write of a value kept in memory is a line of its own.
    */
-  private fun sizeHint(lines: Int, stackCalled: List<StackCalled>, hasCycle: Boolean): String {
+  private fun sizeHint(lines: Int, lowered: Lowered): String {
     val over = "The program is $lines lines, over the chip's ${Ic10Limits.MAX_LINES}"
+    val memory =
+        "each read and write of a value kept in memory takes a line (get or put) of its own"
+    val stack = stackHint(lowered.stackCalled, lowered.hasCycle)
+    return when {
+      stack != null && lowered.memorySlots > 0 -> "$over: $stack; $memory"
+      stack != null -> "$over: $stack"
+      lowered.memorySlots > 0 -> "$over: $memory"
+      else -> over
+    }
+  }
+
+  /**
+   * How the functions in [stackCalled] could save lines, or null if none is called on the stack.
+   * Only those that aren't in a cycle of calls can pass in registers, as a cycle needs the stack.
+   * Turning stack calls off works only when the program declares no cycle at all ([hasCycle]),
+   * called or not.
+   */
+  private fun stackHint(stackCalled: List<StackCalled>, hasCycle: Boolean): String? {
+    if (stackCalled.isEmpty()) return null
     val (recursive, plain) = stackCalled.partition { it.recursive }
     val names = plain.joinToString { it.name }
     return when {
       !hasCycle ->
-          "$over: passing functions' arguments in registers saves lines (turn stack calls off, " +
-              "or mark the most-called functions @InRegisters)"
+          "passing functions' arguments in registers saves lines (turn stack calls off, or mark " +
+              "the most-called functions @InRegisters)"
       plain.isEmpty() ->
-          "$over: the functions called on the stack (${recursive.joinToString { it.name }}) " +
-              "are in a cycle of calls, so they can't pass their arguments in registers to save " +
-              "lines, and the program must be shortened"
+          "the functions called on the stack (${recursive.joinToString { it.name }}) are in a " +
+              "cycle of calls, so they can't pass their arguments in registers to save lines, " +
+              "and the program must be shortened"
       else ->
-          "$over: passing functions' arguments in registers saves lines (mark " +
+          "passing functions' arguments in registers saves lines (mark " +
               (if (plain.size == 1) names else "the most-called of $names") +
               " @InRegisters; functions in a cycle of calls must pass theirs on the stack)"
     }

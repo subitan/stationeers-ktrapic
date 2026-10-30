@@ -18,13 +18,15 @@ data class StackCalled(val name: String, val recursive: Boolean)
  * A compiled [program] and, for each of its lines, the IR start offset of the source statement it
  * comes from ([TirInstruction.offset]), or null. [stackCalled] is the functions that the program
  * still calls on the stack, in the order their first calls appear in it. [hasCycle] is whether the
- * program declares a cycle of calls, even one it never calls into.
+ * program declares a cycle of calls, even one it never calls into. [memorySlots] is how many values
+ * it keeps in the chip's stack memory (see [Spilling]).
  */
 data class Lowered(
     val program: Program,
     val offsets: List<Int?>,
     val stackCalled: List<StackCalled> = emptyList(),
     val hasCycle: Boolean = false,
+    val memorySlots: Int = 0,
 )
 
 /**
@@ -124,6 +126,7 @@ object Lowering {
                   (label as? LabelRef)?.let { stackFunctions[it.name] }
                 }
                 .distinct(),
+        memorySlots = slots,
     )
   }
 

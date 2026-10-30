@@ -494,11 +494,13 @@ A chip holds at most 128 lines of at most 90 characters, and 4096 characters in 
 compiler measures programs as the game's code editor does: every line counts, and each line
 break counts as two characters, so a 128-line program has 3842 characters for its text.
 Compact output (resolving labels to line numbers and dropping them) saves lines. The compiler
-reports these counts but does not reject a program over the limits. When a program over 128
-lines calls functions with their arguments on the stack, it warns that passing them in registers
-would save lines, naming what to change: turning stack calls off, or marking functions
-`@InRegisters`. Functions in a cycle of calls need the stack, so the warning leaves them out, and
-says the program must be shortened if they are all it calls that way.
+reports these counts but does not reject a program over the limits; it warns of a program over
+128 lines. When the program calls functions with their arguments on the stack, the warning says
+that passing them in registers would save lines, naming what to change: turning stack calls off,
+or marking functions `@InRegisters`. Functions in a cycle of calls need the stack, so the warning
+leaves them out, and says the program must be shortened if they are all it calls that way. When
+the program keeps values in memory (see below), the warning says that each read and write of them
+takes a line of its own.
 
 Values live in the registers `r0` to `r15`; the compiler reuses a register once its value is no
 longer needed. A program that needs more than 16 values at once is rejected, with an error that
@@ -537,9 +539,10 @@ called, with room for what it and the functions it calls outside a cycle push, a
 chip (`hcf`) before its calls could reach them. A program without recursion has no such check.
 
 Without the annotation, the error for a program out of registers suggests adding it when keeping
-values in memory would make the program fit. When the values that don't fit are ones a recursive
-function keeps across a call back into its cycle, memory can't hold them, and the error says so
-instead, with or without the annotation.
+values in memory would make the program fit in registers; the reads and writes add lines, so the
+program may then be over the chip's 128, which the warning above reports. When the values that
+don't fit are ones a recursive function keeps across a call back into its cycle, memory can't
+hold them, and the error says so instead, with or without the annotation.
 
 ## Not supported yet
 

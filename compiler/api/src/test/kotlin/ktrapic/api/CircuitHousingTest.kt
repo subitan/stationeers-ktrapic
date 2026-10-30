@@ -420,6 +420,48 @@ class CircuitHousingTest {
   }
 
   @Test
+  fun `a program over the chip's 128 lines is warned, and told that memory adds lines`() {
+    val crowdedSource = "val x = db.Setting\n${crowded(40)}\ndb.Ratio = total\n"
+    val memory =
+        "each read and write of a value kept in memory takes a line (get or put) of its own"
+
+    // The values fit in registers in memory, but the program doesn't fit on the chip.
+    val spilled = compiled(annotated + crowdedSource)
+    assertThat(spilled.lines).isGreaterThan(128)
+    assertThat(spilled.warnings.map { it.message })
+        .containsExactly("The program is ${spilled.lines} lines, over the chip's 128: $memory")
+
+    val calling =
+        compiled(
+            annotated +
+                "fun f(y: Double): Double = y * y + 1.0\n" +
+                crowdedSource +
+                "db.Setting = f(db.Mode)\ndb.Mode = f(db.Setting)\n"
+        )
+    assertThat(calling.lines).isGreaterThan(128)
+    assertThat(calling.warnings.map { it.message })
+        .containsExactly(
+            "The program is ${calling.lines} lines, over the chip's 128: passing functions' " +
+                "arguments in registers saves lines (turn stack calls off, or mark the most-called " +
+                "functions @InRegisters); $memory"
+        )
+
+    // Neither memory nor stack calls: only the size.
+    val long = compiled((1..50).joinToString("\n") { "db.Setting = db.Mode + $it.0" })
+    assertThat(long.lines).isGreaterThan(128)
+    assertThat(long.warnings.map { it.message })
+        .containsExactly("The program is ${long.lines} lines, over the chip's 128")
+
+    // A program that fits on the chip isn't warned, in memory or not.
+    val fits = compiled(annotated + "val x = db.Setting\n${crowded(18)}\ndb.Ratio = total\n")
+    assertThat(fits.lines).isAtMost(128)
+    assertThat(memoryUse(fits.code)).isNotEmpty()
+    assertThat(fits.warnings).isEmpty()
+    val short = compiled((1..10).joinToString("\n") { "db.Setting = db.Mode + $it.0" })
+    assertThat(short.warnings).isEmpty()
+  }
+
+  @Test
   fun `the annotation goes only at the top of the file`() {
     val body = "val x = db.Setting\ndb.Ratio = x\n"
     // Before the imports, after a comment, or with no imports at all.

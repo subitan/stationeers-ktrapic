@@ -16,14 +16,17 @@ object Backend {
    * tail position loop back rather than call.
    *
    * A program annotated `@file:CircuitHousingOnly` keeps the values that don't fit in registers in
-   * the chip's stack memory (see [Spilling]); for any other, the exception suggests that when it
-   * would make the program fit.
+   * the chip's stack memory (see [Spilling]). For any other, with [suggestHousing], the exception
+   * suggests the annotation when keeping values in memory would make the program fit in registers,
+   * which takes a second, trial, allocation; without, it suggests nothing, and saves that trial for
+   * a caller that may not report this failure.
    */
   fun compile(
       module: IrModuleFragment,
       symbols: DeclarationFinder,
       stackCalls: Boolean = true,
       tailCalls: Boolean = true,
+      suggestHousing: Boolean = true,
   ): Lowered {
     val translator = Translator(symbols, stackCalls, tailCalls)
     translator.translate(module)
@@ -32,8 +35,9 @@ object Backend {
         try {
           Lowering.lower(translator.lines, translator.stackFunctions, spill = housingOnly)
         } catch (e: TooManyRegistersException) {
-          if (housingOnly) throw e
-          // Suggest the annotation only if keeping values in memory would make the program fit.
+          if (housingOnly || !suggestHousing) throw e
+          // Suggest the annotation only if keeping values in memory would make the program fit in
+          // registers.
           try {
             Lowering.lower(translator.lines, translator.stackFunctions, spill = true)
           } catch (spilled: TooManyRegistersException) {
