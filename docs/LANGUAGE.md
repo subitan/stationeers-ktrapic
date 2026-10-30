@@ -611,5 +611,5 @@ off each position. It uses typed devices (`SatelliteDish.Medium.at(d0)`, `Switch
 `@InRegisters`), `continue`, text on a display, `kotlin.math`, `sleep` and `yield`. It compiles to
 120 lines, or 98 in compact form (`@file:Compact`). `SatelliteTrackerTest` runs it against a
 simulated dish that models what the program relies on: how the game's dish turns and reports that
-it has stopped, and that it resolves a contact only once stopped, more slowly the further off it points and the less
-power it has, by the game's own formula and default figures, and can lose it.
+it has stopped, and that it resolves a contact only once stopped, more slowly the further off it
+points and the less power it has, by the game's own formula and default figures, and can lose it.
