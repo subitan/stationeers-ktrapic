@@ -5,16 +5,15 @@ import kotlin.math.*
 //
 // The dish's SignalStrength is how far off, in degrees, it points from the best-aligned contact
 // it has resolved: lower is better. It reads -1 while the dish has no contact. After every move it
-// reads -1 again until the dish resolves its contacts afresh, which takes a few seconds, longer the
-// further off it points. The dish's power Setting decides how far off and how fast: the more power,
-// the further off it can point and still resolve a contact within the five seconds this program
-// waits, and the sooner it does. The program leaves the Setting as it finds it.
+// reads -1 again until the dish, once stopped, resolves its contacts afresh. That takes longer the
+// further off it points and the less power its Setting gives it, so the program turns the Setting
+// up as far as the dish allows, and waits up to WAIT seconds at each position.
 //
-// The program sweeps the horizon in 20 degree steps until the dish resolves a contact. Then it
-// nudges the dish, in steps that shrink as it gets closer, keeping each nudge that brings the
-// offset down, until the dish is within a degree. Status text goes to a console on d5; the
-// offset, heading and elevation go to displays on d2, d3 and d4. Flip the lever on d1 to start
-// again.
+// The program sweeps the sky in 20 degree steps of heading at each of four tilts until the dish
+// resolves a contact. Then it nudges the dish, in steps that shrink as it gets closer, keeping each
+// nudge that brings the offset down, until the dish is within a degree. Status text goes to a
+// console on d5; the offset, heading and elevation go to displays on d2, d3 and d4. Flip the lever
+// on d1 to start again.
 
 val dish = SatelliteDish.Medium.at(d0)
 val reset = Switch.Lever.at(d1)
@@ -26,32 +25,40 @@ val elevation = LedDisplay.Small.at(d4)
 val console = LedDisplay.Small.at(d5)
 console.Mode = DisplayMode.String
 
-// Where the dish is told to point. Reading the dish's Horizontal and Vertical gives where it points
-// now, which lags behind while it turns, so the program keeps its own target. The game wraps
-// Horizontal into 0 to 360 and keeps Vertical within 0 to 90; these do the same.
+// The dish keeps its Setting within its own range of watts, so this gives it its most.
+dish.Setting = 10000.0
+
+/**
+ * The longest the program waits, in seconds, for the dish to resolve a contact where it points. At
+ * full power, with the game's default figures for a dish and a contact, that is enough to resolve
+ * one about 17 degrees off, which covers the gaps between the sweep's positions.
+ */
+val WAIT = 20
+
+// Where the dish is told to point. The dish wraps Horizontal into 0 to 360 itself.
 var heading = 0.0
-var tilt = 45.0
+var tilt = 0.0
 
 inline fun debug(text: String) {
   console.Text = text
 }
 
-fun display() {
+inline fun display() {
   offset.Setting = dish.SignalStrength
-  azimuth.Setting = heading
-  elevation.Setting = tilt
+  azimuth.Setting = dish.Horizontal
+  elevation.Setting = dish.Vertical
 }
 
 /**
- * Points the dish at [heading] and [tilt], waits until it gets there, then gives it up to five
- * seconds to resolve a contact.
+ * Points the dish at [heading] and [tilt], waits until it stops, then gives it up to [WAIT] seconds
+ * to resolve a contact.
  */
 fun aim() {
   dish.Horizontal = heading
   dish.Vertical = tilt
-  while (abs(dish.Horizontal - heading) > 0.5 || abs(dish.Vertical - tilt) > 0.5) yield()
+  while (!dish.Idle) yield()
   var waited = 0
-  while (dish.SignalStrength == -1.0 && waited < 5) {
+  while (dish.SignalStrength == -1.0 && waited < WAIT) {
     sleep(1)
     waited++
   }
@@ -59,30 +66,39 @@ fun aim() {
 }
 
 /**
- * Moves the dish by [dh] and [dv], and back again if that took it further off the signal. Its
- * arguments go in registers, which saves the lines four stack calls would take.
+ * Moves the dish by [dh] and [dv], and back to where it was if that lost the signal or took it
+ * further off. If the dish had yet to resolve where it was, any position that resolves is better.
+ * Its arguments go in registers, which saves the lines four stack calls would take.
  */
 @InRegisters
 fun fineTune(dh: Double, dv: Double) {
   val before = dish.SignalStrength
-  heading = (heading + dh + 360.0) % 360.0
+  val oldHeading = heading
+  val oldTilt = tilt
+  heading += dh
   tilt = min(90.0, max(0.0, tilt + dv))
   aim()
   val after = dish.SignalStrength
-  if (after == -1.0 || after > before) {
-    heading = (heading - dh + 360.0) % 360.0
-    tilt = min(90.0, max(0.0, tilt - dv))
+  if (after == -1.0 || (before != -1.0 && after > before)) {
+    heading = oldHeading
+    tilt = oldTilt
     aim()
   }
 }
 
+/** Steps the dish around the sky, from low to high, until it resolves a contact. */
 inline fun sweep() {
   heading = 0.0
-  tilt = 45.0
+  tilt = 12.0
   aim()
   while (dish.SignalStrength == -1.0) {
     debug("Scan")
-    heading = (heading + 20.0) % 360.0
+    heading += 20.0
+    if (heading == 360.0) {
+      heading = 0.0
+      // Tilts 12, 36, 60 and 84, then back to 12.
+      tilt = if (tilt > 80.0) 12.0 else tilt + 24.0
+    }
     aim()
   }
 }

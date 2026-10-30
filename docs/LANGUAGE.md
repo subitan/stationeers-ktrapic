@@ -571,12 +571,13 @@ nullable types, exceptions, casts and type checks, and coroutines.
 ## An example
 
 [`test/cases/satellite_tracker.ic10.kts`](../test/cases/satellite_tracker.ic10.kts) is a port of
-a chip from the game: it points a medium satellite dish at a satellite, sweeping the horizon until
-the dish resolves a contact, then nudging it, in steps that shrink as it closes in, while that
-brings its offset down, sweeping again if the contact goes away, and waiting on a lever to start
-again. It uses typed devices (`SatelliteDish.Medium.at(d0)`, `Switch.Lever.at(d1)`,
+a chip from the game: it points a medium satellite dish at a satellite, sweeping the sky at four
+tilts until the dish resolves a contact, then nudging it, in steps that shrink as it closes in,
+while that brings its offset down, sweeping again if the contact goes away, and waiting on a lever
+to start again. It uses typed devices (`SatelliteDish.Medium.at(d0)`, `Switch.Lever.at(d1)`,
 `LedDisplay.Small.at(...)`), top-level `var`s, functions (inlined, called on the stack, and one
 `@InRegisters`), `continue`, text on a display, `kotlin.math`, `sleep` and `yield`. It compiles to
-128 lines, or 108 in compact form. `SatelliteTrackerTest` runs it against a simulated dish that
-models what the program relies on: how the game's dish turns, and that it resolves a contact only
-once stopped, more slowly the further off it points and the less power it has, and can lose it.
+120 lines, or 98 in compact form. `SatelliteTrackerTest` runs it against a simulated dish that
+models what the program relies on: how the game's dish turns and reports that it has stopped, and
+that it resolves a contact only once stopped, more slowly the further off it points and the less
+power it has, by the game's own formula and default figures, and can lose it.
