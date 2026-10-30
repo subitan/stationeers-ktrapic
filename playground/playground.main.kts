@@ -49,6 +49,9 @@ if (sourceDirs.isEmpty()) sourceDirs += File("test/cases")
 
 val page = File("playground/index.html")
 
+/** The page's file-annotation code, which it loads as a script of its own. */
+val annotations = File("playground/annotations.js")
+
 if (!page.isFile) fail("Run this from the repository root (no playground/index.html here).")
 
 if (!daemonJar.isFile) {
@@ -232,6 +235,8 @@ server.createContext("/") { exchange ->
       !isLocal(exchange) -> send(exchange, 403, """{"error":"forbidden"}""")
       exchange.requestMethod == "GET" && (path == "/" || path == "/index.html") ->
           send(exchange, 200, page.readText(), "text/html")
+      exchange.requestMethod == "GET" && path == "/annotations.js" ->
+          send(exchange, 200, annotations.readText(), "text/javascript")
       exchange.requestMethod == "GET" && path == "/api/info" -> {
         val groups =
             sources().entries.joinToString(",") { (group, names) ->
