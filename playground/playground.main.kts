@@ -199,12 +199,14 @@ class LanguageServer(private val jar: File) {
 
   /**
    * Stops [stale] if it is still the running server; the next message starts another. The process
-   * is destroyed outside the lock, since a write blocked on the server's full input holds it; the
-   * destroy breaks that pipe, so the write fails and lets go.
+   * is destroyed before the lock is taken, since a write blocked on the server's full input holds
+   * it; the destroy breaks that pipe, so the write fails and lets go of the lock. A write that
+   * takes the lock in between either finds the process dead and starts a fresh one, or fails
+   * writing to it.
    */
   private fun stop(stale: Run) {
-    synchronized(this) { if (run === stale) run = null }
     stale.process.destroy()
+    synchronized(this) { if (run === stale) run = null }
   }
 
   private fun frame(to: Run, body: String) {
