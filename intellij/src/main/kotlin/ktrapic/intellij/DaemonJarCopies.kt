@@ -21,14 +21,19 @@ import java.util.jar.JarFile
 class DaemonJarCopies(val dir: File) {
   /**
    * The copy of [jar] to run, made if there isn't one yet. Its modification time is when it was
-   * last handed out. Throws if [jar] changes while it is copied or isn't a complete runnable jar
-   * (as while Bazel is writing it), so a copy is never a part of a jar.
+   * last handed out; when that can't be set (the copy has just been deleted, say), the jar is
+   * copied again, so a copy is never handed out looking old enough to clean up. Throws if [jar]
+   * changes while it is copied or isn't a complete runnable jar (as while Bazel is writing it), so
+   * a copy is never a part of a jar.
    */
   fun copyOf(jar: File): File {
     val before = Stamp.of(jar) ?: throw IOException("There is no file $jar")
     val copy = File(dir, nameOf(jar, before))
-    if (copy.isFile && copy.length() == before.size) {
-      copy.setLastModified(System.currentTimeMillis())
+    if (
+        copy.isFile &&
+            copy.length() == before.size &&
+            copy.setLastModified(System.currentTimeMillis())
+    ) {
       return copy
     }
     dir.mkdirs()

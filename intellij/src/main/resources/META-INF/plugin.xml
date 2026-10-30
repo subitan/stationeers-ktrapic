@@ -6,12 +6,15 @@
     Support for <a href="https://github.com/subitan/stationeers-ktrapic">KTrapIC</a> programs
     (<code>*.ic10.kts</code>): Kotlin compiled to IC10 for Stationeers' programmable chips.
     <ul>
+      <li>Kotlin completion and type checking against the <code>ktrapic</code> API, through KTrapIC's
+        script definition, which the plugin hands to the Kotlin plugin.</li>
       <li>The KTrapIC compiler's errors and warnings, marked in the editor as you type.</li>
       <li>An IC10 tool window with the compiled program, normal or compact, its lines, bytes and
         registers against the chip's limits, and the compiler's warnings.</li>
       <li>Settings for the compile daemon and the compile options (Settings &gt; Tools &gt; KTrapIC).</li>
     </ul>
-    Programs are compiled by KTrapIC's compile daemon, run as a separate Java process.
+    The plugin bundles KTrapIC's compile daemon, run as a separate process on the IDE's own Java,
+    and the SDK, so it needs nothing else installed.
   ]]></description>
 
   <depends>com.intellij.modules.platform</depends>
@@ -26,6 +29,7 @@
   </extensions>
 
   <extensions defaultExtensionNs="org.jetbrains.kotlin">
+    <scriptDefinitionsSource implementation="ktrapic.intellij.KtrapicScriptDefinitionsSource"/>
     <supportsKotlinPluginMode supportsK1="true" supportsK2="true"/>
   </extensions>
 </idea-plugin>
