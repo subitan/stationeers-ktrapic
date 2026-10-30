@@ -39,6 +39,8 @@ move r4 0
 jal fineTune
 j while3
 endwhile3:
+l r0 d0 SignalStrength
+beq r0 -1 while1
 s d5 Setting STR("Done!")
 s d1 Open 0
 while4:
@@ -106,7 +108,7 @@ pop r2
 l r6 d0 SignalStrength
 beq r6 -1 or2
 bgt r6 r5 skip4
-j else1
+j else2
 skip4:
 or2:
 sub r0 r0 r3
@@ -121,6 +123,6 @@ min r1 90 r1
 push r2
 jal aim
 pop r2
-else1:
+else2:
 pop ra
 j ra

@@ -1,7 +1,7 @@
 s d5 Mode 10
 move r0 0
 move r1 45
-jal 42
+jal 44
 l r2 d0 SignalStrength
 bne r2 -1 14
 s d5 Setting STR("Scan")
@@ -10,7 +10,7 @@ div r2 r0 360
 trunc r2 r2
 mul r2 r2 360
 sub r0 r0 r2
-jal 42
+jal 44
 j 4
 l r2 d0 SignalStrength
 bgt r2 1 17
@@ -22,45 +22,47 @@ floor r2 r2
 max r2 1 r2
 move r3 0
 move r4 r2
-jal 68
+jal 70
 mul r4 r2 -1
 move r3 0
-jal 68
+jal 70
 move r3 r2
 move r4 0
-jal 68
+jal 70
 mul r3 r2 -1
 move r4 0
-jal 68
+jal 70
 j 14
+l r0 d0 SignalStrength
+beq r0 -1 1
 s d5 Setting STR("Done!")
 s d1 Open 0
 l r0 d1 Open
-bnez r0 41
+bnez r0 43
 sleep 2
-j 37
+j 39
 j 1
 s d0 Horizontal r0
 s d0 Vertical r1
 l r2 d0 Horizontal
 sub r2 r2 r0
 abs r2 r2
-bgt r2 0.5 53
+bgt r2 0.5 55
 l r2 d0 Vertical
 sub r2 r2 r1
 abs r2 r2
-bgt r2 0.5 53
-j 55
+bgt r2 0.5 55
+j 57
 yield
-j 44
+j 46
 move r2 0
 l r3 d0 SignalStrength
-bne r3 -1 63
-blt r2 5 60
-j 63
+bne r3 -1 65
+blt r2 5 62
+j 65
 sleep 1
 add r2 r2 1
-j 56
+j 58
 l r2 d0 SignalStrength
 s d2 Setting r2
 s d3 Setting r0
@@ -81,15 +83,15 @@ push r2
 push r3
 push r4
 push r5
-jal 42
+jal 44
 pop r5
 pop r4
 pop r3
 pop r2
 l r6 d0 SignalStrength
-beq r6 -1 92
-bgt r6 r5 92
-j 104
+beq r6 -1 94
+bgt r6 r5 94
+j 106
 sub r0 r0 r3
 add r0 r0 360
 div r3 r0 360
@@ -100,7 +102,7 @@ sub r1 r1 r4
 max r1 0 r1
 min r1 90 r1
 push r2
-jal 42
+jal 44
 pop r2
 pop ra
 j ra

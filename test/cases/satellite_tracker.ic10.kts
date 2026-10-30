@@ -5,8 +5,10 @@ import kotlin.math.*
 //
 // The dish's SignalStrength is how far off, in degrees, it points from the best-aligned contact
 // it has resolved: lower is better. It reads -1 while the dish has no contact. After every move it
-// reads -1 again until the dish resolves its contacts afresh, which takes a few seconds (fewer,
-// the more power its Setting gives it). It only finds a contact it points close enough to.
+// reads -1 again until the dish resolves its contacts afresh, which takes a few seconds, longer the
+// further off it points. The dish's power Setting decides how far off and how fast: the more power,
+// the further off it can point and still resolve a contact within the five seconds this program
+// waits, and the sooner it does. The program leaves the Setting as it finds it.
 //
 // The program sweeps the horizon in 20 degree steps until the dish resolves a contact. Then it
 // nudges the dish, in steps that shrink as it gets closer, keeping each nudge that brings the
@@ -100,6 +102,8 @@ fun adjust() {
 while (true) {
   sweep()
   adjust()
+  // A contact can go away mid-tune; then sweep for one again rather than stop.
+  if (dish.SignalStrength == -1.0) continue
   debug("Done!")
   reset.Open = false
   while (!reset.Open) sleep(2)
