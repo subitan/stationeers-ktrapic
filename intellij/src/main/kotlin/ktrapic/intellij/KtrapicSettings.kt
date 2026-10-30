@@ -17,7 +17,8 @@ import java.io.File
 class KtrapicSettings : SimplePersistentStateComponent<KtrapicSettings.Options>(Options()) {
   class Options : BaseState() {
     /**
-     * The daemon's deploy jar; blank for the one the project builds (see [KtrapicPaths.daemonJar]).
+     * The daemon's deploy jar; blank for the one the project builds, or else the plugin's own (see
+     * [KtrapicPaths.daemonJar]).
      */
     var daemonJar by string("")
     /** The `java` that runs the daemon; blank for the IDE's own runtime. */
@@ -44,12 +45,14 @@ object KtrapicPaths {
 
   /**
    * The daemon jar: [setting] if it isn't blank, or else the jar Bazel builds under [projectBase]
-   * if it exists, or null.
+   * if it exists (in a checkout of the repository, where it is the daemon being worked on), or else
+   * [bundled], the plugin's own, if there is one.
    */
-  fun daemonJar(setting: String?, projectBase: String?): String? {
+  fun daemonJar(setting: String?, projectBase: String?, bundled: File?): String? {
     if (!setting.isNullOrBlank()) return setting.trim()
-    val built = projectBase?.let { File(it, BUILT_DAEMON_JAR) } ?: return null
-    return built.takeIf { it.isFile }?.path
+    val built = projectBase?.let { File(it, BUILT_DAEMON_JAR) }
+    if (built != null && built.isFile) return built.path
+    return bundled?.takeIf { it.isFile }?.path
   }
 
   /** The `java` to run: [setting] if it isn't blank, or else the one in [javaHome]. */

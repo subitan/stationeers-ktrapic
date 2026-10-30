@@ -125,24 +125,18 @@ for installing, using and building it.
 
 ## Editing in IntelliJ
 
-IntelliJ IDEA's Kotlin plugin understands `*.ic10.kts` files through KTrapIC's script definition:
-it then completes and type-checks programs against the `ktrapic` API, with `import ktrapic.*`
-implied. Build the two jars it needs:
+KTrapIC's plugin for IntelliJ IDEA 2025.1 and later, in `intellij/`, makes the IDE an editor for
+KTrapIC programs (`*.ic10.kts`):
 
-```
-bazel build //sdk //sdk/script:ktrapic-script
-```
+- **Kotlin completion and type checking** against the `ktrapic` API, with `import ktrapic.*`
+  implied, through KTrapIC's script definition, which the plugin hands to the Kotlin plugin.
+- **KTrapIC's own rules** (supported constructs, register and size limits), with the compiler's
+  errors and warnings marked in the editor as you type.
+- **The IC10 tool window**, with the compiled program, normal or compact, and its lines, bytes and
+  registers against the chip's limits.
 
-and add `bazel-bin/sdk/sdk.jar` and `bazel-bin/sdk/script/ktrapic-script.jar` to
-your project as a library (Project Structure > Libraries; keep the file names, since the
-definition finds the SDK by the name `sdk`). IntelliJ discovers the definition from the
-jar; if it asks, allow it under Settings > Languages & Frameworks > Kotlin > Kotlin Scripting.
-
-The Kotlin plugin checks Kotlin only. KTrapIC's own plugin, in `intellij/`, adds KTrapIC's rules
-(supported constructs, register and size limits): it marks the compiler's errors and warnings in
-the editor as you type, and its IC10 tool window shows the compiled program, normal or compact,
-with its lines, bytes and registers against the chip's limits. It runs the compile daemon, so
-build that too, then the plugin (with JDK 21):
+The plugin bundles the compile daemon and the script definition, and runs the daemon on the IDE's
+own Java, so it needs nothing else installed. Build it with JDK 21:
 
 ```
 bazel build //daemon:ktrapic-daemon_deploy.jar
@@ -152,8 +146,22 @@ cd intellij
 
 and install `intellij/build/distributions/ktrapic-intellij-<version>.zip` with Settings >
 Plugins > the gear menu > Install Plugin from Disk. In a checkout of this repository the plugin
-finds the daemon jar in `bazel-bin`; elsewhere, set its path under Settings > Tools > KTrapIC,
-along with the compile options. See [intellij/README.md](intellij/README.md).
+runs the daemon Bazel built in `bazel-bin`, if there is one, rather than its own. The compile
+options are under Settings > Tools > KTrapIC. See [intellij/README.md](intellij/README.md), and
+[docs/RELEASING.md](docs/RELEASING.md) for its releases.
+
+Without the plugin, the Kotlin plugin still finds the script definition in its jar when the jar is
+a library of the project, in an IDE whose Kotlin plugin reads classes compiled for Kotlin 2.4 (the
+plugin's own copy is compiled for 2.1, which IntelliJ 2025.1 reads). Build the two jars:
+
+```
+bazel build //sdk //sdk/script:ktrapic-script
+```
+
+and add `bazel-bin/sdk/sdk.jar` and `bazel-bin/sdk/script/ktrapic-script.jar` to your project as
+a library (Project Structure > Libraries; keep the file names, since the definition finds the SDK
+by the name `sdk`). If the IDE asks, allow the definition under Settings > Languages & Frameworks >
+Kotlin > Kotlin Scripting.
 
 ## Numbers
 

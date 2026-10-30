@@ -10,20 +10,37 @@ import org.junit.Test
 class KtrapicPathsTest {
   @Test
   fun `the daemon jar setting wins`() {
-    assertEquals("/opt/daemon.jar", KtrapicPaths.daemonJar(" /opt/daemon.jar ", "/nowhere"))
+    assertEquals("/opt/daemon.jar", KtrapicPaths.daemonJar(" /opt/daemon.jar ", "/nowhere", null))
   }
 
   @Test
-  fun `a blank setting uses the jar the project builds, if it exists`() {
+  fun `a blank setting uses the jar the project builds, if it exists, or else the bundled one`() {
     val project = Files.createTempDirectory("ktrapic-project").toFile()
     try {
-      assertNull(KtrapicPaths.daemonJar("", project.path))
+      val bundled = File(project, "bundled.jar")
+      assertNull(KtrapicPaths.daemonJar("", project.path, bundled))
+      bundled.writeText("")
+      assertEquals(bundled.path, KtrapicPaths.daemonJar("", project.path, bundled))
       val jar = File(project, KtrapicPaths.BUILT_DAEMON_JAR).apply { parentFile.mkdirs() }
       jar.writeText("")
-      assertEquals(jar.path, KtrapicPaths.daemonJar(null, project.path))
+      assertEquals(jar.path, KtrapicPaths.daemonJar(null, project.path, bundled))
     } finally {
       project.deleteRecursively()
     }
+  }
+
+  @Test
+  fun `daemon jar copies are shared by every IDE version in the usual layout`() {
+    val jetBrains = File("/home/me/.cache/JetBrains").absoluteFile
+
+    assertEquals(
+        File(jetBrains, "ktrapic-daemon-jars"),
+        KtrapicCompileService.copiesDir(File(jetBrains, "IntelliJIdea2025.1")),
+    )
+    assertEquals(
+        File("/idea/system/ktrapic/daemon-jars").absoluteFile,
+        KtrapicCompileService.copiesDir(File("/idea/system")),
+    )
   }
 
   @Test

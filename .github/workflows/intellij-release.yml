@@ -1,0 +1,142 @@
+name: IntelliJ plugin release
+
+# Builds, tests and verifies the IntelliJ plugin and, for a tag intellij-vX.Y.Z (matching
+# intellij/gradle.properties' pluginVersion), signs it, once a reviewer of the "marketplace"
+# environment approves, attaches it to a GitHub release, and publishes it to JetBrains Marketplace.
+# Marketplace takes uploads this way only for a plugin it already lists, so until the repository
+# variable MARKETPLACE_LISTED is true the first one is uploaded by hand. Run by hand, the workflow
+# builds, tests and verifies the plugin without publishing it. See docs/RELEASING.md.
+
+on:
+  push:
+    tags: ["intellij-v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: intellij-release-${{ github.ref }}
+
+jobs:
+  build:
+    name: Build, test and verify
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+    steps:
+      - uses: actions/checkout@v7
+      - name: Check the tag against the plugin's version
+        id: version
+        run: |
+          version=$(sed -n 's/^pluginVersion=//p' intellij/gradle.properties)
+          if [[ "$GITHUB_REF_TYPE" == tag && "$GITHUB_REF_NAME" != "intellij-v$version" ]]; then
+            echo "Tag $GITHUB_REF_NAME doesn't match intellij/gradle.properties' pluginVersion $version" >&2
+            exit 1
+          fi
+          if ! grep -q "^## \[$version\]" intellij/CHANGELOG.md && [[ "$GITHUB_REF_TYPE" == tag ]]; then
+            echo "intellij/CHANGELOG.md has no section for $version: run intellij/prepare-release.sh" >&2
+            exit 1
+          fi
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+      # The Plugin Verifier downloads an IDE for each release it checks against, several GB.
+      - name: Free disk space
+        run: sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /opt/hostedtoolcache/CodeQL
+      - uses: bazel-contrib/setup-bazel@0.19.1
+        with:
+          bazelisk-cache: true
+          repository-cache: true
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: "21"
+      - uses: gradle/actions/setup-gradle@v4
+      - name: Build the daemon jar
+        run: |
+          bazel build --config=ci //daemon:ktrapic-daemon_deploy.jar
+          mkdir daemon-out
+          cp "$(bazel cquery --config=ci --output=files //daemon:ktrapic-daemon_deploy.jar 2>/dev/null)" daemon-out/ktrapic-daemon_deploy.jar
+          echo "KTRAPIC_DAEMON_JAR=$PWD/daemon-out/ktrapic-daemon_deploy.jar" >> "$GITHUB_ENV"
+      - name: Build, test and verify the plugin
+        working-directory: intellij
+        run: bash ./gradlew --no-daemon buildPlugin test verifyPlugin
+      - uses: actions/upload-artifact@v4
+        with:
+          name: daemon
+          path: daemon-out/ktrapic-daemon_deploy.jar
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ktrapic-intellij-unsigned
+          path: intellij/build/distributions/*.zip
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: plugin-verifier-reports
+          path: intellij/build/reports/pluginVerifier
+
+  publish:
+    name: Sign and publish
+    needs: build
+    if: github.ref_type == 'tag'
+    runs-on: ubuntu-latest
+    # Holds the signing and Marketplace secrets, and asks its reviewers to approve each publish.
+    environment: marketplace
+    permissions:
+      contents: write
+    env:
+      CERTIFICATE_CHAIN: ${{ secrets.CERTIFICATE_CHAIN }}
+      PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
+      PRIVATE_KEY_PASSWORD: ${{ secrets.PRIVATE_KEY_PASSWORD }}
+      PUBLISH_TOKEN: ${{ secrets.PUBLISH_TOKEN }}
+      LISTED: ${{ vars.MARKETPLACE_LISTED }}
+      VERSION: ${{ needs.build.outputs.version }}
+    steps:
+      - uses: actions/checkout@v7
+      - name: Check the secrets are set
+        run: |
+          names=(CERTIFICATE_CHAIN PRIVATE_KEY PRIVATE_KEY_PASSWORD)
+          if [[ "$LISTED" == true ]]; then names+=(PUBLISH_TOKEN); fi
+          for name in "${names[@]}"; do
+            if [[ -z "${!name}" ]]; then
+              echo "The marketplace environment has no secret $name (see docs/RELEASING.md)" >&2
+              exit 1
+            fi
+          done
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: "21"
+      - uses: gradle/actions/setup-gradle@v4
+      # The daemon the build job built, tested and verified the plugin with.
+      - uses: actions/download-artifact@v4
+        with:
+          name: daemon
+          path: daemon-out
+      - name: Sign the plugin
+        working-directory: intellij
+        run: |
+          bash ./gradlew --no-daemon signPlugin \
+            "-PktrapicDaemonJar=$GITHUB_WORKSPACE/daemon-out/ktrapic-daemon_deploy.jar"
+      - name: Attach it to a GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          notes=$(awk -v v="$VERSION" 'index($0, "## [" v "]") == 1 {on=1; next} index($0, "## [") == 1 {on=0} on' intellij/CHANGELOG.md)
+          prerelease=()
+          if [[ "$VERSION" == *-* ]]; then prerelease=(--prerelease); fi
+          gh release create "$GITHUB_REF_NAME" "${prerelease[@]}" \
+            --title "KTrapIC for IntelliJ IDEA $VERSION" --notes "$notes" \
+            intellij/build/distributions/*-signed.zip
+      # Marketplace takes uploads through its API only for a plugin it already lists; the first
+      # is uploaded by hand (see docs/RELEASING.md).
+      - name: Publish it to JetBrains Marketplace
+        if: vars.MARKETPLACE_LISTED == 'true'
+        working-directory: intellij
+        run: |
+          bash ./gradlew --no-daemon publishPlugin \
+            "-PktrapicDaemonJar=$GITHUB_WORKSPACE/daemon-out/ktrapic-daemon_deploy.jar"
+      - name: Say to upload it by hand
+        if: vars.MARKETPLACE_LISTED != 'true'
+        run: |
+          echo "::notice::Marketplace doesn't list the plugin yet: upload the signed zip from the $GITHUB_REF_NAME release at https://plugins.jetbrains.com/plugin/add, then set the repository variable MARKETPLACE_LISTED to true (see docs/RELEASING.md)."

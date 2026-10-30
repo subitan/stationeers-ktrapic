@@ -14,7 +14,8 @@ import kotlin.script.experimental.jvm.jvm
  * The Kotlin script definition for KTrapIC programs (`*.ic10.kts`), so an IDE checks them as the
  * compiler does: against the `ktrapic` API, with `import ktrapic.*` implied.
  *
- * IntelliJ's Kotlin plugin finds the definition through the marker file
+ * KTrapIC's IntelliJ plugin bundles the definition and hands it to the Kotlin plugin. Without that
+ * plugin, the Kotlin plugin finds it through the marker file
  * `META-INF/kotlin/script/templates/ktrapic.script.Ic10Script` in this jar, when the jar (and the
  * SDK jar beside it) is a dependency of the project. Only the IDE uses it: the KTrapIC compiler
  * runs these files itself and never through Kotlin scripting.
@@ -26,12 +27,23 @@ import kotlin.script.experimental.jvm.jvm
 )
 abstract class Ic10Script
 
-/** What a KTrapIC program is compiled against: the `ktrapic` API, imported by default. */
+/**
+ * What a KTrapIC program is compiled against: the `ktrapic` API, imported by default, and the
+ * Kotlin standard library, where the definition is loaded with one (as the IntelliJ plugin loads
+ * it).
+ */
 object Ic10ScriptConfiguration :
     ScriptCompilationConfiguration({
       displayName("KTrapIC program")
       defaultImports("ktrapic.*")
-      jvm { dependenciesFromClassContext(Ic10Script::class, "sdk", wholeClasspath = false) }
+      jvm {
+        dependenciesFromClassContext(
+            Ic10Script::class,
+            "sdk",
+            "kotlin-stdlib",
+            wholeClasspath = false,
+        )
+      }
       ide { acceptedLocations(ScriptAcceptedLocation.Everywhere) }
     }) {
   private fun readResolve(): Any = Ic10ScriptConfiguration

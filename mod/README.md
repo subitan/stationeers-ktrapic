@@ -225,7 +225,7 @@ which checks that the runtime has every module the compiler needs.
 
 `.github/workflows/release.yml` builds the plugin, the compiler jar and the Windows runtime, and
 publishes them: to the `dev` prerelease on each push to `main`, and to a release on a tag `vX.Y.Z`,
-which must match `About/About.xml`'s version.
+which must match `About/About.xml`'s version. See [docs/RELEASING.md](../docs/RELEASING.md).
 
 ### Preview image
 

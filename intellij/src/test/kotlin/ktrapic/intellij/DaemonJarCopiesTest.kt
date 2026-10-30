@@ -42,6 +42,18 @@ class DaemonJarCopiesTest {
   }
 
   @Test
+  fun `a copy is made now, whenever the jar was`() {
+    val jar = jar("daemon.jar")
+    val anHourAgo = System.currentTimeMillis() - TimeUnit.HOURS.toMillis(1)
+    jar.setLastModified(anHourAgo)
+
+    val copy = copies.copyOf(jar)
+
+    // A copy dated as the jar would be cleaned up as soon as it was made.
+    assertTrue(copy.lastModified() > anHourAgo + TimeUnit.MINUTES.toMillis(30))
+  }
+
+  @Test
   fun `a rebuilt jar gets a new copy`() {
     val jar = jar("daemon.jar")
     val first = jar.readBytes()
