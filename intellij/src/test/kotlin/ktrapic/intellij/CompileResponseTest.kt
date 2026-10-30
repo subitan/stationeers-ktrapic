@@ -59,12 +59,4 @@ class CompileResponseTest {
     assertEquals(1, (response as CompileResponse.Failure).errors.size)
     assertEquals(false, response.answered)
   }
-
-  @Test
-  fun `options are sent as the daemon names them`() {
-    assertEquals(
-        """{"compact":true,"stack_calls":false,"tail_calls":true}""",
-        CompileOptions(compact = true, stackCalls = false).toJson().toString(),
-    )
-  }
 }

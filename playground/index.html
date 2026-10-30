@@ -121,9 +121,9 @@
   <span class="version" id="version"></span>
   <select id="open" aria-label="Open a program"><option value="">Open…</option></select>
   <div class="options" id="options">
-    <label title="Resolve labels to line numbers and drop them, saving lines on the chip"><input type="checkbox" data-opt="compact" checked> Compact</label>
-    <label title="Pass functions' arguments and results on the chip's stack, so functions may be recursive; off passes them in registers"><input type="checkbox" data-opt="stack_calls" checked> Stack calls</label>
-    <label title="Compile a function's call to itself in tail position as a jump back to its start, so it takes no stack; has no effect without stack calls"><input type="checkbox" data-opt="tail_calls" checked> Tail calls</label>
+    <label title="Adds or removes @file:Compact: labels resolved to line numbers and dropped, saving lines on the chip"><input type="checkbox" data-annotation="Compact"> Compact</label>
+    <label title="Adds or removes @file:InRegisters: every function's arguments and result passed in registers rather than on the chip's stack, so none may be recursive"><input type="checkbox" data-annotation="InRegisters"> In registers</label>
+    <label title="Adds or removes @file:NoTailCalls: a function's call to itself in tail position compiled as a call rather than a loop"><input type="checkbox" data-annotation="NoTailCalls"> No tail calls</label>
   </div>
   <span class="spacer"></span>
   <button id="toggle-test" title="Run the program against fake devices">Test</button>
@@ -231,10 +231,91 @@ function highlightLine(line) {
   return html + (comment ? `<span class="t-comment">${esc(comment)}</span>` : "");
 }
 
-function options() {
-  const o = {};
-  document.querySelectorAll("[data-opt]").forEach((cb) => (o[cb.dataset.opt] = cb.checked));
-  return o;
+// ---- File annotations: the program says how it compiles (docs/LANGUAGE.md) ----
+
+/**
+ * The program's header: its leading lines up to the first that is code, as [start, end) offsets
+ * of each, and whether each holds file annotations. A shebang, blank lines, line comments and
+ * `@file:` lines are header; anything else ends it.
+ */
+function headerLines(text) {
+  const lines = [];
+  let pos = 0;
+  while (pos <= text.length) {
+    const nl = text.indexOf("\n", pos);
+    const end = nl < 0 ? text.length : nl;
+    const line = text.slice(pos, end).trim();
+    const annotations = line.startsWith("@file:");
+    const shebang = pos === 0 && line.startsWith("#!");
+    if (!(annotations || shebang || line === "" || line.startsWith("//"))) break;
+    lines.push({ start: pos, end, annotations, shebang });
+    if (nl < 0) break;
+    pos = nl + 1;
+  }
+  return lines;
+}
+
+/** `@file:name` (or `@file:ktrapic.name`) in one line of the header, with the spaces after it. */
+function annotationPattern(name) { return new RegExp(`@file:\\s*(?:ktrapic\\.)?${name}(?![\\w.])[ \\t]*`); }
+
+/** Where `@file:name` is in the program's header: the line and the match in it, or null. */
+function findAnnotation(text, name) {
+  for (const line of headerLines(text)) {
+    if (!line.annotations) continue;
+    const m = annotationPattern(name).exec(text.slice(line.start, line.end));
+    if (m) return { line, index: line.start + m.index, length: m[0].length };
+  }
+  return null;
+}
+
+/**
+ * Replaces [start, end) of the program with text as typing would, so Ctrl+Z undoes it (#138), and
+ * keeps the caret and selection where they were in the text around it.
+ */
+function editSource(start, end, text) {
+  const { selectionStart: s, selectionEnd: e, scrollTop } = src;
+  const shift = (p) => (p <= start ? p : p >= end ? p + text.length - (end - start) : start);
+  src.focus();
+  src.setSelectionRange(start, end);
+  const typed = text ? document.execCommand("insertText", false, text) : document.execCommand("delete");
+  if (!typed) src.setRangeText(text, start, end, "end");
+  src.setSelectionRange(shift(s), shift(e));
+  src.scrollTop = scrollTop;
+  schedule();
+}
+
+/** Adds `@file:name` after the program's other file annotations at its top, or else as its first line. */
+function addAnnotation(name) {
+  const text = src.value;
+  if (findAnnotation(text, name)) return;
+  const header = headerLines(text);
+  const last = header.filter((l) => l.annotations).pop() ?? header.find((l) => l.shebang);
+  if (!last) editSource(0, 0, `@file:${name}\n`);
+  else if (last.end === text.length) editSource(last.end, last.end, `\n@file:${name}`);
+  else editSource(last.end + 1, last.end + 1, `@file:${name}\n`);
+}
+
+/** Removes `@file:name` from the program's header: its whole line if nothing else is on it. */
+function removeAnnotation(name) {
+  const text = src.value;
+  const found = findAnnotation(text, name);
+  if (!found) return;
+  const { line, index, length } = found;
+  const rest = text.slice(line.start, index) + text.slice(index + length, line.end);
+  if (rest.trim() === "") editSource(line.start, Math.min(line.end + 1, text.length), "");
+  else {
+    // The last on its line takes the spaces before it with it.
+    let start = index;
+    if (index + length === line.end) while (start > line.start && /[ \t]/.test(text[start - 1])) start--;
+    editSource(start, index + length, "");
+  }
+}
+
+/** Ticks each checkbox whose annotation the program has. */
+function syncAnnotations() {
+  document.querySelectorAll("[data-annotation]").forEach((cb) => {
+    cb.checked = findAnnotation(src.value, cb.dataset.annotation) !== null;
+  });
 }
 
 function setStat(id, label, value, max) {
@@ -257,7 +338,7 @@ async function compile() {
   try {
     const r = await fetch("/api/compile", {
       method: "POST", headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ action: "compile", code: { "": code }, options: options() }),
+      body: JSON.stringify({ action: "compile", code: { "": code } }),
     });
     res = await r.json();
   } catch (e) {
@@ -309,7 +390,7 @@ function gotoLine(n) {
   src.scrollTop = Math.max(0, (n - 5) * 20);
 }
 
-src.addEventListener("input", schedule);
+src.addEventListener("input", () => { syncAnnotations(); schedule(); });
 src.addEventListener("scroll", () => ($("src-gutter").scrollTop = src.scrollTop));
 out.addEventListener("scroll", () => ($("out-gutter").scrollTop = out.scrollTop));
 src.addEventListener("keydown", (e) => {
@@ -326,9 +407,12 @@ src.addEventListener("keydown", (e) => {
     download();
   }
 });
-document.querySelectorAll("[data-opt]").forEach((cb) => {
-  cb.checked = (load("opt-" + cb.dataset.opt) ?? String(cb.checked)) === "true";
-  cb.addEventListener("change", () => { store("opt-" + cb.dataset.opt, cb.checked); markStale(); compile(); });
+document.querySelectorAll("[data-annotation]").forEach((cb) => {
+  cb.addEventListener("change", () => {
+    if (cb.checked) addAnnotation(cb.dataset.annotation);
+    else removeAnnotation(cb.dataset.annotation);
+    syncAnnotations();
+  });
 });
 
 $("copy").onclick = async () => {
@@ -358,6 +442,7 @@ $("open").onchange = async (e) => {
   } catch (e) {}
   if (code === undefined) { setStatus("Couldn't open " + esc(name), true); return; }
   src.value = code;
+  syncAnnotations();
   $("filename").textContent = name;
   store(NAME_KEY, name);
   opened = { group, name };
@@ -397,7 +482,7 @@ let savedTest = null;
 let run = null, states = [], lineStates = null, at = 0, lineAt = 0, icToSrc = {};
 // Counts runs asked for and things that outdate them; only the newest run's answer is shown.
 let runSeq = 0;
-// Whether the program or its options changed since the shown run, so its lines no longer match the IC10.
+// Whether the program changed since the shown run, so its lines no longer match the IC10.
 let stale = false;
 
 function forget(k) { try { localStorage.removeItem(k); } catch (e) {} }
@@ -437,7 +522,7 @@ function showTestState() {
   $("test-state").textContent = opened && $("test").value !== baseTest() ? "unsaved" : "";
 }
 
-/** The program or its options changed: the shown run's lines no longer apply, and a run on its way is dropped. */
+/** The program changed: the shown run's lines no longer apply, and a run on its way is dropped. */
 function markStale() {
   runSeq++;
   cursor = {};
@@ -499,7 +584,7 @@ async function runTest(traceTick) {
   try {
     const r = await fetch("/api/run", {
       method: "POST", headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ action: "run", code: { "": src.value }, options: options(), test,
+      body: JSON.stringify({ action: "run", code: { "": src.value }, test,
                              ...(traceTick ? { trace_tick: traceTick } : {}) }),
     });
     res = await r.json();
@@ -666,6 +751,7 @@ $("save-test").onclick = async () => {
 
 (async function init() {
   src.value = load(DRAFT_KEY) ?? DEFAULT_CODE;
+  syncAnnotations();
   // Programs are named *.ic10.kts; a stored name without that suffix gets it.
   const name = load(NAME_KEY) ?? "untitled.ic10.kts";
   $("filename").textContent = name.endsWith(".ic10.kts") ? name : name.replace(/\.kts$/, "") + ".ic10.kts";

@@ -30,40 +30,31 @@ class DaemonTest {
   }
 
   @Test
-  fun `accepts the source as a plain string and passes options`() {
+  fun `accepts the source as a plain string and compiles as its annotations say`() {
     val source = "import ktrapic.*\\nvar i = 0\\nwhile (i < 3) i++\\ndb.Setting = i.toDouble()\\n"
     val labeled = request("""{"action": "compile", "code": "$source"}""")
-    val compact =
-        request("""{"action": "compile", "code": "$source", "options": {"compact": true}}""")
+    val compact = request("""{"action": "compile", "code": "@file:Compact\n$source"}""")
 
     assertThat(labeled["code"].asString).contains(":")
     assertThat(compact["code"].asString).doesNotContain(":")
   }
 
   @Test
-  fun `passes functions' arguments on the stack unless stack_calls is false`() {
-    val source =
-        "import ktrapic.*\\nfun f(x: Double) = x + 1.0\\ndb.Setting = f(1.0)\\ndb.Ratio = f(2.0)\\n"
-    val stack = request("""{"action": "compile", "code": "$source"}""")
-    val registers =
-        request("""{"action": "compile", "code": "$source", "options": {"stack_calls": false}}""")
-
-    assertThat(stack["code"].asString).contains("push 1\njal f")
-    assertThat(registers["code"].asString).doesNotContain("push")
-  }
-
-  @Test
-  fun `loops back for a call in tail position unless tail_calls is false`() {
+  fun `ignores the options older clients send`() {
     val source =
         "import ktrapic.*\\nfun down(n: Int): Int = if (n == 0) 0 else down(n - 1)\\n" +
-            "db.Setting = down(3).toDouble()\\n"
-    val loop = request("""{"action": "compile", "code": "$source"}""")
-    val call =
-        request("""{"action": "compile", "code": "$source", "options": {"tail_calls": false}}""")
+            "fun f(x: Double) = x + 1.0\\ndb.Setting = f(1.0)\\ndb.Ratio = f(2.0)\\n" +
+            "db.Mode = down(3).toDouble()\\n"
+    val plain = request("""{"action": "compile", "code": "$source"}""")
+    val options = """{"compact": true, "stack_calls": false, "tail_calls": false, "other": 1}"""
+    val withOptions = request("""{"action": "compile", "code": "$source", "options": $options}""")
+    val run = request("""{"action": "run", "code": "$source", "options": $options, "test": {}}""")
 
-    assertThat(loop["code"].asString).contains("j down_loop1")
-    assertThat(loop["code"].asString.lines().count { it == "jal down" }).isEqualTo(1)
-    assertThat(call["code"].asString.lines().count { it == "jal down" }).isEqualTo(2)
+    assertThat(plain["code"].asString).contains(":")
+    assertThat(plain["code"].asString).contains("push 1\njal f")
+    assertThat(plain["code"].asString).contains("j down_loop")
+    assertThat(withOptions).isEqualTo(plain)
+    assertThat(run["code"]).isEqualTo(plain["code"])
   }
 
   @Test

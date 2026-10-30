@@ -16,7 +16,7 @@ class DaemonClientFailureTest {
   fun `a daemon that exits without answering gives an error`() {
     // java -version prints to standard error and exits without reading its input.
     DaemonClient(listOf(KtrapicPaths.java(null), "-version")).use { client ->
-      val response = client.compile("db.Setting = 1.0\n", CompileOptions())
+      val response = client.compile("db.Setting = 1.0\n")
 
       val failure = response as CompileResponse.Failure
       val error = failure.errors.single()
@@ -29,7 +29,7 @@ class DaemonClientFailureTest {
   @Test
   fun `a daemon that can't be started gives an error`() {
     DaemonClient(listOf("no-such-java-ktrapic", "-jar", "daemon.jar")).use { client ->
-      val response = client.compile("db.Setting = 1.0\n", CompileOptions())
+      val response = client.compile("db.Setting = 1.0\n")
 
       val failure = response as CompileResponse.Failure
       val error = failure.errors.single()
@@ -50,7 +50,7 @@ class DaemonClientFailureTest {
             log = { line -> line.toLongOrNull()?.let(pids::put) },
         )
         .use { client ->
-          val response = client.compile("db.Setting = 1.0\n", CompileOptions())
+          val response = client.compile("db.Setting = 1.0\n")
 
           val failure = response as CompileResponse.Failure
           val error = failure.errors.single()
@@ -60,7 +60,7 @@ class DaemonClientFailureTest {
           assertNotNull(first)
           assertFalse(ProcessHandle.of(first!!).map { it.isAlive }.orElse(false))
 
-          client.compile("db.Setting = 1.0\n", CompileOptions())
+          client.compile("db.Setting = 1.0\n")
 
           val second = pids.poll(30, TimeUnit.SECONDS)
           assertNotNull(second)

@@ -10,7 +10,8 @@ import java.io.File
 
 /**
  * KTrapIC's settings, for the whole IDE: where the compile daemon is, the Java that runs it, and
- * the compile options, which default as the daemon's do.
+ * whether to show the Kotlin compiler's own problems. How a program compiles is up to the program,
+ * with file annotations such as `@file:Compact`, so there are no compile options here.
  */
 @Service(Service.Level.APP)
 @State(name = "KtrapicSettings", storages = [Storage("ktrapic.xml")])
@@ -23,15 +24,9 @@ class KtrapicSettings : SimplePersistentStateComponent<KtrapicSettings.Options>(
     var daemonJar by string("")
     /** The `java` that runs the daemon; blank for the IDE's own runtime. */
     var javaPath by string("")
-    var compact by property(false)
-    var stackCalls by property(true)
-    var tailCalls by property(true)
     /** Also show the Kotlin compiler's own problems, which the Kotlin plugin normally shows. */
     var showKotlinProblems by property(false)
   }
-
-  val options: CompileOptions
-    get() = CompileOptions(state.compact, state.stackCalls, state.tailCalls)
 
   companion object {
     fun getInstance(): KtrapicSettings = service()
