@@ -5,8 +5,12 @@
 // editing.test.mjs runs them under `node --test`. Positions here are Monaco's: 1-based lines and
 // columns, columns counted in UTF-16 code units, as the compiler counts them too.
 
-/** A byte-order mark, which the compiler skips before counting a program's first columns. */
-const BOM = String.fromCharCode(0xfeff);
+/**
+ * The characters Java's Character.isJavaIdentifierPart accepts, which Diagnostics.kt uses: letters,
+ * digits and letter numbers, combining marks, connectors such as `_`, currency signs such as `$`,
+ * and the characters an identifier ignores (format characters and most control characters).
+ */
+const IDENTIFIER_PART = /[\p{L}\p{Nd}\p{Nl}\p{Mn}\p{Mc}\p{Pc}\p{Sc}\p{Cf}\u0000-\u0008\u000e-\u001b\u007f-\u009f]/u;
 
 /**
  * The problems in a compile response (the daemon's JSON; see daemon/.../Daemon.kt), for `text`,
@@ -15,26 +19,29 @@ const BOM = String.fromCharCode(0xfeff);
  * "warning", message, startLine, startColumn, endLine, endColumn }.
  *
  * The compiler gives only where a problem starts, so the range covers the identifier there, or the
- * one character there if it is not part of one, as the daemon's LSP diagnostics do (Diagnostics.kt).
+ * one character there if it is not part of one, as the daemon's LSP diagnostics do (Diagnostics.kt),
+ * reading by code point, so a character outside the BMP is one character, not two halves.
  * A problem with no position (line 0) is put at the start of the program.
+ *
+ * The ranges are for Monaco's model, which never starts with a byte-order mark; the compiler
+ * doesn't count one either, so a leading mark in `text` is dropped before the columns are read.
  */
 function problemsOf(res, text) {
   const error = res && res.error && typeof res.error === "object" ? res.error : null;
   const list = error ? (Array.isArray(error.errors) && error.errors.length ? error.errors : [error])
     : (res && Array.isArray(res.warnings) ? res.warnings : []);
-  const lines = text.split("\n");
+  const lines = text.replace(/^﻿/, "").split("\n");
   return list.map((p) => {
     const line = p.line > 0 ? Math.min(p.line, lines.length) : 1;
     const lineText = lines[line - 1].replace(/\r$/, "");
-    // The compiler drops a leading byte-order mark before counting columns.
-    const bom = line === 1 && lineText.startsWith(BOM) ? 1 : 0;
-    const start = p.line > 0 ? Math.max(0, Math.min((p.column || 1) - 1 + bom, lineText.length)) : 0;
+    const start = p.line > 0 ? Math.max(0, Math.min((p.column || 1) - 1, lineText.length)) : 0;
+    // The character at index i, a whole code point (a lone surrogate stays one unit).
+    const charAt = (i) => String.fromCodePoint(lineText.codePointAt(i));
     let end = start;
-    const ident = /[\p{L}\p{N}_$]/u;
     if (start < lineText.length) {
-      if (ident.test(lineText[start])) {
-        while (end < lineText.length && ident.test(lineText[end])) end++;
-      } else end = start + 1;
+      if (IDENTIFIER_PART.test(charAt(start))) {
+        while (end < lineText.length && IDENTIFIER_PART.test(charAt(end))) end += charAt(end).length;
+      } else end = start + charAt(start).length;
     }
     return {
       severity: error ? "error" : "warning",

@@ -120,70 +120,106 @@ class Daemon(private val jar: File) {
  * dropped, since the page marks the problems its compiles find.
  *
  * A restarted server has no documents open, and answers a request about one with an error saying
- * so; the page then opens its document again.
+ * so; the page then opens its document again. A server that doesn't answer a request in time, or
+ * says it is shut down, is stopped, so the next message starts a fresh one.
  */
 class LanguageServer(private val jar: File) {
-  private var process: Process? = null
-  private lateinit var input: OutputStream
-  private val ids = AtomicInteger()
-  private val waiting = ConcurrentHashMap<Int, CompletableFuture<String>>()
+  /** One run of the server, and the requests written to it that wait for its answers. */
+  private class Run(val process: Process) {
+    val input: OutputStream = process.outputStream
+    val waiting = ConcurrentHashMap<Int, CompletableFuture<String>>()
+  }
 
-  /** Sends a request with [params], a JSON value, and returns the JSON-RPC response. */
+  private var run: Run? = null
+  private val ids = AtomicInteger()
+
+  init {
+    Runtime.getRuntime().addShutdownHook(Thread { synchronized(this) { run?.process?.destroy() } })
+  }
+
+  /**
+   * Sends a request with [params], one JSON object (see [isJsonObject]), and returns the JSON-RPC
+   * response.
+   */
   fun request(method: String, params: String): String {
     val id = ids.incrementAndGet()
     val answer = CompletableFuture<String>()
-    waiting[id] = answer
+    val sent =
+        write("""{"jsonrpc":"2.0","id":$id,"method":${jsonString(method)},"params":$params}""") {
+          it.waiting[id] = answer
+        }
     try {
-      write("""{"jsonrpc":"2.0","id":$id,"method":${jsonString(method)},"params":$params}""")
-      return answer.get(30, TimeUnit.SECONDS)
+      val response = answer.get(30, TimeUnit.SECONDS)
+      if (SHUT_DOWN.containsMatchIn(response)) stop(sent)
+      return response
     } catch (e: TimeoutException) {
-      return failure(id, "The language server didn't answer $method")
+      stop(sent)
+      return failure(id, "The language server didn't answer $method, so it was stopped")
     } finally {
-      waiting.remove(id)
+      sent.waiting.remove(id)
     }
   }
 
-  /** Sends a notification with [params], a JSON value. */
-  fun notify(method: String, params: String) =
-      write("""{"jsonrpc":"2.0","method":${jsonString(method)},"params":$params}""")
-
-  /** Writes one message, starting the server first if it isn't running. */
-  @Synchronized
-  private fun write(body: String) {
-    if (process?.isAlive != true) start()
-    frame(body)
+  /** Sends a notification with [params], one JSON object (see [isJsonObject]). */
+  fun notify(method: String, params: String) {
+    write("""{"jsonrpc":"2.0","method":${jsonString(method)},"params":$params}""") {}
   }
 
-  private fun frame(body: String) {
+  /**
+   * Writes one message to the running server, starting one first if none is running, and returns
+   * that run. [register] runs before the message is written, so its answer can't come first.
+   */
+  @Synchronized
+  private fun write(body: String, register: (Run) -> Unit): Run {
+    val current = run?.takeIf { it.process.isAlive } ?: start()
+    register(current)
+    frame(current, body)
+    return current
+  }
+
+  /** Stops [stale] if it is still the running server; the next message starts another. */
+  @Synchronized
+  private fun stop(stale: Run) {
+    if (run === stale) run = null
+    stale.process.destroy()
+  }
+
+  private fun frame(to: Run, body: String) {
     val bytes = body.toByteArray(Charsets.UTF_8)
-    input.write("Content-Length: ${bytes.size}\r\n\r\n".toByteArray(Charsets.US_ASCII) + bytes)
-    input.flush()
+    to.input.write("Content-Length: ${bytes.size}\r\n\r\n".toByteArray(Charsets.US_ASCII) + bytes)
+    to.input.flush()
   }
 
   /** Starts the server and initializes it. It handles messages in order, so none wait for that. */
-  private fun start() {
+  private fun start(): Run {
     val java = File(System.getProperty("java.home"), "bin/java").path
     val started =
-        ProcessBuilder(java, "-jar", jar.path, "--lsp")
-            .redirectError(ProcessBuilder.Redirect.INHERIT)
-            .start()
-    Runtime.getRuntime().addShutdownHook(Thread { started.destroy() })
-    input = started.outputStream
-    process = started
-    val output = BufferedInputStream(started.inputStream)
+        Run(
+            ProcessBuilder(java, "-jar", jar.path, "--lsp")
+                .redirectError(ProcessBuilder.Redirect.INHERIT)
+                .start()
+        )
+    run = started
+    val output = BufferedInputStream(started.process.inputStream)
     Thread {
       while (true) {
         val message = read(output) ?: break
         val id = RESPONSE.find(message)?.groupValues?.get(1)?.toIntOrNull() ?: continue
-        waiting[id]?.complete(message)
+        started.waiting[id]?.complete(message)
       }
-      // The server stopped: answer whatever was waiting for it.
-      for ((id, answer) in waiting) answer.complete(failure(id, "The language server stopped"))
+      // This run stopped: answer what was sent to it. Requests sent to a later run wait for that.
+      for ((id, answer) in started.waiting) {
+        answer.complete(failure(id, "The language server stopped"))
+      }
     }
         .apply { isDaemon = true }
         .start()
-    frame("""{"jsonrpc":"2.0","id":0,"method":"initialize","params":{"capabilities":{}}}""")
-    frame("""{"jsonrpc":"2.0","method":"initialized","params":{}}""")
+    frame(
+        started,
+        """{"jsonrpc":"2.0","id":0,"method":"initialize","params":{"capabilities":{}}}""",
+    )
+    frame(started, """{"jsonrpc":"2.0","method":"initialized","params":{}}""")
+    return started
   }
 
   /** The next message's body, or null at the end of the output (as the daemon's MessageReader). */
@@ -219,6 +255,110 @@ class LanguageServer(private val jar: File) {
   private companion object {
     /** A response's id: the daemon writes `jsonrpc` and then `id` first, in that order. */
     val RESPONSE = Regex("""^\{"jsonrpc":"2\.0","id":(\d+),""")
+
+    /** The error a server that has been shut down answers every request with. */
+    val SHUT_DOWN =
+        Regex("""^\{"jsonrpc":"2\.0","id":\d+,"error":\{[^}]*"The server is shut down"""")
+  }
+}
+
+/**
+ * Whether [text] is exactly one JSON object (RFC 8259), nested at most 1000 deep. Such a text,
+ * written into a message as a field's value, is that value and nothing more: it can't add fields of
+ * its own, such as another `method` or `id`.
+ */
+fun isJsonObject(text: String): Boolean {
+  val json = JsonCheck(text)
+  return json.next() == '{' && json.value(0) && json.atEnd()
+}
+
+/** Reads JSON from [text] without keeping it, for [isJsonObject]. */
+class JsonCheck(private val text: String) {
+  private var at = 0
+
+  /** The next character after any white space, or null at the end. */
+  fun next(): Char? {
+    while (at < text.length && text[at] in " \t\r\n") at++
+    return text.getOrNull(at)
+  }
+
+  fun atEnd() = next() == null
+
+  /** Reads one value, inside [depth] arrays and objects, and says whether it is valid. */
+  fun value(depth: Int): Boolean =
+      when (next()) {
+        '{' -> depth < 1000 && members('}', depth) { string() && next() == ':' && skip() }
+        '[' -> depth < 1000 && members(']', depth) { true }
+        '"' -> string()
+        't' -> word("true")
+        'f' -> word("false")
+        'n' -> word("null")
+        else -> number()
+      }
+
+  /** Reads `{`/`[`, then values (each after [key]) separated by commas, then [close]. */
+  private fun members(close: Char, depth: Int, key: () -> Boolean): Boolean {
+    at++
+    if (next() == close) return skip()
+    while (true) {
+      if (!key() || !value(depth + 1)) return false
+      when (next()) {
+        ',' -> skip()
+        close -> return skip()
+        else -> return false
+      }
+    }
+  }
+
+  /** Steps past the current character; true, for use in conditions. */
+  private fun skip(): Boolean {
+    at++
+    return true
+  }
+
+  private fun word(word: String) = text.startsWith(word, at).also { if (it) at += word.length }
+
+  private fun string(): Boolean {
+    if (next() != '"') return false
+    at++
+    while (at < text.length) {
+      val c = text[at++]
+      when {
+        c == '"' -> return true
+        c < ' ' -> return false
+        c == '\\' -> {
+          val escape = text.getOrNull(at++) ?: return false
+          if (escape == 'u') {
+            if (at + 4 > text.length || !text.substring(at, at + 4).all(::isHex)) return false
+            at += 4
+          } else if (escape !in "\"\\/bfnrt") return false
+        }
+      }
+    }
+    return false
+  }
+
+  private fun isHex(c: Char) = c in '0'..'9' || c in 'a'..'f' || c in 'A'..'F'
+
+  private fun number(): Boolean {
+    if (text.getOrNull(at) == '-') at++
+    if (text.getOrNull(at) == '0') at++ else if (!digits()) return false
+    if (text.getOrNull(at) == '.') {
+      at++
+      if (!digits()) return false
+    }
+    if (text.getOrNull(at) == 'e' || text.getOrNull(at) == 'E') {
+      at++
+      if (text.getOrNull(at) == '+' || text.getOrNull(at) == '-') at++
+      if (!digits()) return false
+    }
+    return true
+  }
+
+  private fun digits(): Boolean {
+    val start = at
+    while (at < text.length && text[at] in '0'..'9') at++
+    return at > start
   }
 }
 
@@ -426,14 +566,16 @@ server.createContext("/") { exchange ->
       }
       exchange.requestMethod == "POST" && path == "/api/lsp" -> {
         // One LSP message to the language server: its method in the query, its params as the body.
-        // A request is answered with the JSON-RPC response; a notification with {}.
+        // A request is answered with the JSON-RPC response; a notification with {}. The message's
+        // method and id are the relay's own; the body is only ever the value of its params.
         val type = exchange.requestHeaders.getFirst("Content-Type").orEmpty()
         val method = query(exchange)["method"].orEmpty()
         val params = exchange.requestBody.use { it.readBytes().decodeToString() }
         when {
           !type.startsWith("application/json") ->
               send(exchange, 415, """{"error":{"description":"Send application/json"}}""")
-          params.isBlank() -> send(exchange, 400, """{"error":{"description":"No params"}}""")
+          !isJsonObject(params) ->
+              send(exchange, 400, """{"error":{"description":"Send one JSON object"}}""")
           method in lspRequests -> send(exchange, 200, languageServer.request(method, params))
           method in lspNotifications -> {
             languageServer.notify(method, params)

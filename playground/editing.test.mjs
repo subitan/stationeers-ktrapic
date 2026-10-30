@@ -60,9 +60,22 @@ test("a position past the end of its line, or of the program, is clamped", () =>
   assert.deepEqual(problemsOf(res, "val a\r\nval b").map(range), [[1, 6, 1, 6], [2, 1, 2, 4]]);
 });
 
-test("columns skip a leading byte-order mark, as the compiler's do", () => {
+test("a leading byte-order mark is not counted, as neither Monaco nor the compiler counts it", () => {
   const res = { error: { description: "x", line: 1, column: 1 } };
-  assert.deepEqual(problemsOf(res, String.fromCharCode(0xfeff) + "foo()").map(range), [[1, 2, 1, 5]]);
+  assert.deepEqual(problemsOf(res, String.fromCharCode(0xfeff) + "foo()").map(range), [[1, 1, 1, 4]]);
+});
+
+test("a character outside the BMP is read whole, as Diagnostics.kt reads code points", () => {
+  const at = (line, column, text) => problemsOf({ error: { description: "x", line, column } }, text).map(range);
+  // An identifier of two mathematical letters, two UTF-16 units each.
+  assert.deepEqual(at(1, 5, "val \u{1D465}\u{1D466} = 1"), [[1, 5, 1, 9]]);
+  // A character that isn't part of an identifier.
+  assert.deepEqual(at(1, 9, "val a = \u{1F600}"), [[1, 9, 1, 11]]);
+});
+
+test("an identifier goes on through combining marks, as Java's identifiers do", () => {
+  const res = { error: { description: "x", line: 1, column: 5 } };
+  assert.deepEqual(problemsOf(res, "val éx = 1").map(range), [[1, 5, 1, 8]]);
 });
 
 test("LSP completion kinds name Monaco's", () => {

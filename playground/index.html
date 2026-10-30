@@ -303,9 +303,11 @@ function revealSource(n) {
  */
 function editSource({ start, end, text }) {
   if (editor) {
-    // An edit of its own in Monaco's undo history; Monaco moves the selections around it.
+    // An edit of its own in Monaco's undo history; Monaco moves the selections around it. The
+    // editor takes the focus, as the textarea does below, so the next Ctrl+Z goes to it.
     const model = editor.getModel();
     const a = model.getPositionAt(start), b = model.getPositionAt(end);
+    editor.focus();
     editor.pushUndoStop();
     editor.executeEdits("annotations", [{ range: new monaco.Range(a.lineNumber, a.column, b.lineNumber, b.column), text }]);
     editor.pushUndoStop();
@@ -791,24 +793,52 @@ $("save-test").onclick = async () => {
 // Monaco from a CDN, at an exact version. Without it the page keeps its textarea.
 const MONACO = "https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.52.2/min";
 
-/** Loads Monaco with its AMD loader; rejects if the CDN can't be reached in time. */
+// The files the page loads from the CDN itself, with their Subresource Integrity hashes (as cdnjs
+// publishes them), so the browser refuses a file whose content isn't this version's. The worker's
+// script (importScripts can't check a hash) and the icon font its stylesheet names (a font can't
+// carry one) are fetched without a check.
+const MONACO_FILES = {
+  loader: ["vs/loader.min.js", "sha512-ZG31AN9z/CQD1YDDAK4RUAvogwbJHv6bHrumrnMLzdCrVu4HeAqrUX7Jsal/cbUwXGfaMUNmQU04tQ8XXl5Znw=="],
+  editor: ["vs/editor/editor.main.js", "sha512-Rvm80pldXwjZQPHcW9Dx3U8pygTafC25yXwrxrPC6ZuNVgBsR2BN2pFAU2ImvYYeFcUaKo7bRcf7KxHD+LMp6w=="],
+  kotlin: ["vs/basic-languages/kotlin/kotlin.js", "sha512-j40Isjpun57tGSpf1+6diXbTbWrWsUJqMjr6/bFaoxsSSc3PpJdSO6uzKTgAwbzLbUaIhLJ53vSZAwEDn4lK4g=="],
+  style: ["vs/editor/editor.main.css", "sha512-oeNl3VPOuyPVgyjEo3iau59DtGLZYZQnNZsF1jq1hmMdL4pv/keGxEPCUKnwMHVQioNgwogR/5VvebTlbC4xUA=="],
+};
+
+/** Adds a <script> or stylesheet <link> for one of MONACO_FILES, checked against its hash. */
+function loadChecked(tag, [path, hash]) {
+  return new Promise((resolve, reject) => {
+    const el = document.createElement(tag);
+    if (tag === "link") el.rel = "stylesheet";
+    if (tag === "script") el.async = false;
+    el.integrity = hash;
+    el.crossOrigin = "anonymous";
+    el.onload = resolve;
+    el.onerror = () => reject(new Error("couldn't load " + path));
+    el[tag === "link" ? "href" : "src"] = MONACO + "/" + path;
+    document.head.appendChild(el);
+  });
+}
+
+/**
+ * Loads Monaco; rejects if the CDN can't be reached in time or a file fails its check. The page
+ * adds the AMD loader, the editor and its Kotlin colouring as checked scripts (each defines its
+ * modules by name, so the loader has them without fetching), and the stylesheet as a checked link,
+ * with the loader's own stylesheet loading turned off.
+ */
 function loadMonaco() {
   return new Promise((resolve, reject) => {
     setTimeout(() => reject(new Error("timed out")), 15000);
-    const loader = document.createElement("script");
-    loader.src = MONACO + "/vs/loader.min.js";
-    loader.onerror = () => reject(new Error("couldn't load " + loader.src));
-    loader.onload = () => {
+    const style = loadChecked("link", MONACO_FILES.style);
+    loadChecked("script", MONACO_FILES.loader).then(() => {
       // Monaco's worker comes from the CDN too: a worker must be same-origin, so a data: URL
       // starts it and imports the CDN's script.
       window.MonacoEnvironment = {
         getWorkerUrl: () => "data:text/javascript;charset=utf-8," + encodeURIComponent(
           `self.MonacoEnvironment = { baseUrl: "${MONACO}/" }; importScripts("${MONACO}/vs/base/worker/workerMain.js");`),
       };
-      require.config({ paths: { vs: MONACO + "/vs" } });
-      require(["vs/editor/editor.main"], () => resolve(window.monaco), reject);
-    };
-    document.head.appendChild(loader);
+      require.config({ paths: { vs: MONACO + "/vs" }, "vs/css": { disabled: true } });
+      return Promise.all([style, loadChecked("script", MONACO_FILES.editor), loadChecked("script", MONACO_FILES.kotlin)]);
+    }).then(() => require(["vs/editor/editor.main"], () => resolve(window.monaco), reject), reject);
   });
 }
 
@@ -842,13 +872,17 @@ async function lspSync(text) {
 /**
  * Asks the server `method` at a position in the model's current text, after sending it that text,
  * and returns the result (null if it has none or fails). A server that restarted no longer has the
- * document, so it is opened again and the request repeated.
+ * document, so it is opened again and the request repeated. A request Monaco cancels (`token`)
+ * while it waits its turn isn't sent, and is null: the hover or completion it was for is gone.
  */
-function lspAt(method, model, position) {
+function lspAt(method, model, position, token) {
   const text = model.getValue();
   const params = { textDocument: { uri: DOC_URI }, position: { line: position.lineNumber - 1, character: position.column - 1 } };
+  const cancelled = () => Boolean(token && token.isCancellationRequested);
   const job = lspQueue.then(async () => {
+    if (cancelled()) return null;
     await lspSync(text);
+    if (cancelled()) return null;
     let res = await lspPost(method, params);
     if (res.error && /is not open/.test(res.error.message)) {
       lspOpen = false;
@@ -862,11 +896,22 @@ function lspAt(method, model, position) {
   return job.catch(() => null);
 }
 
+// Leaving the page closes its document, so the server doesn't keep the text of every page ever
+// loaded. A page restored from the back-forward cache opens it again with its next request.
+addEventListener("pagehide", () => {
+  if (!lspOpen) return;
+  lspOpen = false;
+  fetch("/api/lsp?method=textDocument/didClose", {
+    method: "POST", headers: { "Content-Type": "application/json" }, keepalive: true,
+    body: JSON.stringify({ textDocument: { uri: DOC_URI } }),
+  }).catch(() => {});
+});
+
 function registerProviders() {
   monaco.languages.registerCompletionItemProvider("kotlin", {
     triggerCharacters: ["."],
-    async provideCompletionItems(model, position) {
-      const result = await lspAt("textDocument/completion", model, position);
+    async provideCompletionItems(model, position, context, token) {
+      const result = await lspAt("textDocument/completion", model, position, token);
       const items = Array.isArray(result) ? result : (result?.items ?? []);
       const word = model.getWordUntilPosition(position);
       const range = new monaco.Range(position.lineNumber, word.startColumn, position.lineNumber, word.endColumn);
@@ -879,8 +924,8 @@ function registerProviders() {
     },
   });
   monaco.languages.registerHoverProvider("kotlin", {
-    async provideHover(model, position) {
-      const result = await lspAt("textDocument/hover", model, position);
+    async provideHover(model, position, token) {
+      const result = await lspAt("textDocument/hover", model, position, token);
       const contents = hoverContents(plainOf(result?.contents));
       if (!contents.length) return null;
       const word = model.getWordAtPosition(position);
@@ -893,8 +938,8 @@ function registerProviders() {
   monaco.languages.registerSignatureHelpProvider("kotlin", {
     signatureHelpTriggerCharacters: ["(", ","],
     signatureHelpRetriggerCharacters: [","],
-    async provideSignatureHelp(model, position) {
-      const help = await lspAt("textDocument/signatureHelp", model, position);
+    async provideSignatureHelp(model, position, token) {
+      const help = await lspAt("textDocument/signatureHelp", model, position, token);
       if (!help || !help.signatures || !help.signatures.length) return null;
       return {
         value: {
