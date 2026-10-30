@@ -61,7 +61,9 @@
     font: 13px/20px ui-monospace, "Cascadia Code", Consolas, monospace;
   }
   .gutter {
-    flex: none; padding: 8px 8px 8px 10px; text-align: right; color: var(--muted);
+    /* The extra bottom padding lets the gutter scroll as far as the code beside it, which a
+       horizontal scrollbar makes shorter; otherwise the line numbers drift at the bottom. */
+    flex: none; padding: 8px 8px 40px 10px; text-align: right; color: var(--muted);
     background: var(--gutter); user-select: none; overflow: hidden; min-width: 44px; white-space: pre;
   }
   .gutter .err { color: #fff; background: var(--error); border-radius: 3px; padding: 0 3px; }
@@ -313,8 +315,11 @@ out.addEventListener("scroll", () => ($("out-gutter").scrollTop = out.scrollTop)
 src.addEventListener("keydown", (e) => {
   if (e.key === "Tab") {
     e.preventDefault();
-    const { selectionStart: s, selectionEnd: en } = src;
-    src.setRangeText("    ", s, en, "end");
+    // Typed as text, so Ctrl+Z undoes it: setRangeText would clear the browser's undo history.
+    if (!document.execCommand("insertText", false, "    ")) {
+      const { selectionStart: s, selectionEnd: en } = src;
+      src.setRangeText("    ", s, en, "end");
+    }
     schedule();
   } else if ((e.ctrlKey || e.metaKey) && e.key === "s") {
     e.preventDefault();
