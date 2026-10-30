@@ -10,13 +10,15 @@ using ImGuiNET;
 using Newtonsoft.Json.Linq;
 using StationeersIC10Editor;
 using StationeersIC10Editor.IC10;
+using UnityEngine;
 
 namespace KTrapIC
 {
     /// <summary>
     /// The IC10 Editor's "Kotlin" language: KTrapIC programs, highlighted, compiled as they're
     /// edited, with the IC10 shown in a read-only editor beside them and the IC10 lines of the
-    /// caret's line highlighted there, with the compiler's errors marked in the code, and with
+    /// caret's line highlighted there, with the compiler's errors and warnings marked in the code
+    /// (warnings by the plugin itself: <see cref="ApplyWarnings"/>), and with
     /// completion of the names that could go at the caret (<see cref="UpdateAutocomplete"/>). Exporting
     /// writes the IC10 to the chip with the Kotlin source appended as encoded comments, which
     /// <see cref="ResetCode"/> reads back, so reopening the chip shows the Kotlin.
@@ -111,6 +113,12 @@ namespace KTrapIC
         private static readonly Style FunctionStyle = new Style { Color = ColorFromHTML("#DCDCAA") };
 
         /// <summary>
+        /// Warnings' messages, in the editor's own warning color (orange; errors are red), as it
+        /// is now: the editor sets it again when its configuration is reloaded.
+        /// </summary>
+        private static Style WarningStyle => new Style { Color = ColorWarning };
+
+        /// <summary>
         /// The formatters with a document, so that those whose editor no longer shows them can
         /// close theirs (<see cref="CloseOrphans"/>). Used on the main thread.
         /// </summary>
@@ -155,6 +163,15 @@ namespace KTrapIC
         private CaretRequest _hoverWanted;
         private CaretRequest _hovered;
         private StyledText _hoverText;
+
+        /// <summary>
+        /// The latest compile's warnings (<see cref="ApplyWarnings"/>) and the tokens they mark,
+        /// and the toolbar count's list of them. A mark goes when its line is edited, as an
+        /// error's does, and stays when the editor parses the same text again. Used on the main
+        /// thread.
+        /// </summary>
+        private readonly WarningMarks<Token> _warnings = new WarningMarks<Token>();
+        private IReadOnlyList<string> _warningSummary = Array.Empty<string>();
 
         private sealed class Compiled
         {
@@ -210,6 +227,14 @@ namespace KTrapIC
                 SubmitChanges();
                 if (edited)
                     CompileSoon().Forget();
+                else
+                {
+                    // A reset to the same text makes new tokens, without the warnings' marks; the
+                    // errors' come back with the daemon's diagnostics, but no compile follows.
+                    _warnings.Remark(_version, WarningToken);
+                    // ICodeFormatter's own handler drew the status before the tokens were marked.
+                    UpdateStatus();
+                }
             };
             OnCaretMoved += HighlightPreview;
         }
@@ -478,7 +503,8 @@ namespace KTrapIC
 
         /// <summary>
         /// The tooltip at <paramref name="mouseTextPos"/>: the editor's (an error's message, if
-        /// the mouse is on one), followed by what the daemon says of the name there
+        /// the mouse is on one), then the messages of the warnings marked there, if any, prefixed
+        /// "Warning:" in the warning color, followed by what the daemon says of the name there
         /// (<c>textDocument/hover</c>). That is asked for once per name, at its start, once the
         /// mouse has been on it for <see cref="HoverDelayMs"/> (<see cref="AskHoverSoon"/>), and
         /// shown once it comes if the mouse is still on that name and the code hasn't changed
@@ -487,6 +513,18 @@ namespace KTrapIC
         public override void UpdateTooltip(TextPosition mouseTextPos)
         {
             base.UpdateTooltip(mouseTextPos);
+            var marked = (bool)mouseTextPos ? Lines.GetTokenAtPosition(mouseTextPos) : null;
+            var messages = _warnings.At(marked);
+            if (messages != null)
+            {
+                var tooltip = new StyledText();
+                if (_tooltip != null)
+                    tooltip.AddRange(_tooltip);
+                foreach (string message in messages)
+                    foreach (string line in Warnings.HoverLines(message, Hovers.Width))
+                        tooltip.AddLine(line, WarningStyle);
+                _tooltip = tooltip;
+            }
             var previous = _hoverWanted;
             var wanted = HoverAt(mouseTextPos);
             _hoverWanted = wanted;
@@ -703,7 +741,8 @@ namespace KTrapIC
         /// <summary>
         /// Marks the errors of a version of the document, if it is still the current one: an
         /// older version's would mark the wrong places, and the current one's follow. The IC10
-        /// Editor marks errors only, not warnings, and replaces all the marks each time.
+        /// Editor marks errors only, dropping the warnings, and replaces all the marks each time;
+        /// warnings are marked from the compiles instead (<see cref="ApplyWarnings"/>).
         /// </summary>
         private async UniTaskVoid ApplyDiagnostics(JObject parameters)
         {
@@ -715,6 +754,91 @@ namespace KTrapIC
                 diagnostics = parameters["diagnostics"]?.ToObject<Diagnostic[]>() ?? Array.Empty<Diagnostic>(),
             });
             UpdateStatus();
+        }
+
+        /// <summary>
+        /// Shows the warnings of <paramref name="response"/>, a compile of the current code, in
+        /// place of the last compile's. The IC10 Editor marks only errors, and drops the daemon's
+        /// warnings (LSP severity 2) before reading them, so they're taken from the plugin's own
+        /// compile (<c>ktrapic/compile</c>, with the editor's options), whose warnings say when
+        /// they have no place in the code. A warning with a place is marked on the token there, as
+        /// the editor marks an error, or the one before it at the end of a line: underlined in
+        /// orange (<see cref="DrawLine"/>), its message in the hover (<see cref="UpdateTooltip"/>)
+        /// and, with the caret on it, in the status line (<see cref="UpdateStatus"/>). One with no
+        /// place, such as the program being over the chip's 128 lines, or with no token there, is
+        /// shown in the status line, with its place if it has one. The toolbar counts them all
+        /// (<see cref="DrawButtons"/>). <paramref name="version"/> is the code's version compiled.
+        /// </summary>
+        private void ApplyWarnings(CompileResponse response, int version)
+        {
+            _warnings.Apply(response, version, WarningToken);
+            _warningSummary = Warnings.SummaryLines(_warnings.Routed, Hovers.Width);
+            UpdateStatus();
+        }
+
+        /// <summary>The token a warning at 0-based <paramref name="line"/> and <paramref name="column"/> marks, as the editor finds an error's; null if none.</summary>
+        private Token WarningToken(int line, int column)
+        {
+            if (line < 0 || line >= Lines.Count)
+                return null;
+            return Lines[line].GetTokenAt(column) ?? Lines[line].GetTokenAt(column - 1);
+        }
+
+        /// <summary>
+        /// The status line: the editor's (an error's message, with the caret on one), or else the
+        /// warning at the caret, or else the first of the warnings with no place in the code.
+        /// </summary>
+        public override void UpdateStatus()
+        {
+            base.UpdateStatus();
+            if (_status != null)
+                return;
+            var atCaret = (bool)CaretPos ? Lines.GetTokenAtPosition(CaretPos) : null;
+            string status = Warnings.StatusLine(_warnings.At(atCaret), _warnings.Routed.Unplaced);
+            if (status == null)
+                return;
+            _status = new StyledText();
+            _status.AddLine(status, WarningStyle);
+        }
+
+        /// <summary>
+        /// Draws line <paramref name="lineIndex"/> as the editor does, then a wavy orange line under
+        /// each token a warning marks on it. The editor draws each line with ImGui's cursor at its
+        /// start.
+        /// </summary>
+        public override void DrawLine(int lineIndex, TextRange selection)
+        {
+            var origin = ImGui.GetCursorScreenPos();
+            base.DrawLine(lineIndex, selection);
+            if (!_warnings.Any || lineIndex >= Lines.Count)
+                return;
+            foreach (var token in Lines[lineIndex])
+            {
+                if (_warnings.At(token) != null)
+                    DrawSquiggle(origin, token.Column, token.Length);
+            }
+        }
+
+        /// <summary>A wavy line under <paramref name="length"/> characters from <paramref name="column"/>, of the line drawn at <paramref name="origin"/>.</summary>
+        private static void DrawSquiggle(Vector2 origin, int column, int length)
+        {
+            var drawList = ImGui.GetWindowDrawList();
+            float step = Settings.CharWidth / 2;
+            float x = origin.x + Settings.CharWidth * column;
+            float end = origin.x + Settings.CharWidth * (column + Math.Max(1, length));
+            float y = origin.y + Settings.LineHeight - 2;
+            bool up = true;
+            while (x < end)
+            {
+                float next = Math.Min(x + step, end);
+                drawList.AddLine(
+                    new Vector2(x, up ? y : y - 2),
+                    new Vector2(next, up ? y - 2 : y),
+                    ColorWarning,
+                    1.5f);
+                x = next;
+                up = !up;
+            }
         }
 
         /// <summary>
@@ -786,6 +910,30 @@ namespace KTrapIC
             OptionCheckbox("Tail calls", Plugin.TailCalls);
             ImGui.SameLine();
             ImGui.TextUnformatted(StatusText());
+            DrawWarningCount();
+        }
+
+        /// <summary>
+        /// After the toolbar's status, how many warnings the latest compile gave, in orange, if it
+        /// gave any and the status is of a compile; with the mouse on it, all of them.
+        /// </summary>
+        private void DrawWarningCount()
+        {
+            string count = Warnings.CountText(_warnings.Routed.Count);
+            if (count == null || Runtime.Progress != null || _compiled?.Response?.error != null)
+                return;
+            ImGui.SameLine();
+            ImGui.PushStyleColor(ImGuiCol.Text, ColorWarning);
+            ImGui.TextUnformatted(count);
+            ImGui.PopStyleColor();
+            if (!ImGui.IsItemHovered())
+                return;
+            ImGui.BeginTooltip();
+            ImGui.PushStyleColor(ImGuiCol.Text, ColorWarning);
+            foreach (string line in _warningSummary)
+                ImGui.TextUnformatted(line);
+            ImGui.PopStyleColor();
+            ImGui.EndTooltip();
         }
 
         /// <summary>A checkbox for a compile option's <paramref name="setting"/>, which compiles again when changed.</summary>
@@ -888,6 +1036,7 @@ namespace KTrapIC
             {
                 UpdateCodeSize();
                 ShowPreview(response);
+                ApplyWarnings(response, version);
             }
         }
 
