@@ -2,7 +2,6 @@ package ktrapic.cli
 
 import java.io.File
 import kotlin.system.exitProcess
-import ktrapic.api.CompileOptions
 import ktrapic.api.CompileResult
 import ktrapic.api.Compiler
 import ktrapic.ic10.Ic10Limits
@@ -10,11 +9,9 @@ import ktrapic.ic10.Ic10Limits
 const val VERSION = "0.0.0-dev"
 
 /**
- * `ktrapic [--compact] [--register-calls] [--no-tail-calls] <program.ic10.kts>` prints the
- * program's IC10 code, or its errors (as `file:line:column: message`) with exit status 1.
- * `--register-calls` passes every function's arguments and result in registers rather than on the
- * stack; `--no-tail-calls` compiles a function's calls to itself in tail position as calls rather
- * than loops. With no arguments it prints what it is.
+ * `ktrapic <program.ic10.kts>` prints the program's IC10 code, or its errors (as `file:line:column:
+ * message`) with exit status 1. The program says how it compiles, with file annotations such as
+ * `@file:Compact`. With no arguments it prints what it is.
  */
 fun main(args: Array<String>) {
   if (args.isEmpty()) {
@@ -23,26 +20,13 @@ fun main(args: Array<String>) {
         "Target chip: ${Ic10Limits.MAX_LINES} lines, ${Ic10Limits.MAX_BYTES} bytes, " +
             "${Ic10Limits.REGISTERS} registers"
     )
-    println("Usage: ktrapic [--compact] [--register-calls] [--no-tail-calls] <program.ic10.kts>")
+    println(USAGE)
     return
   }
-  val compact = "--compact" in args
-  val registerCalls = "--register-calls" in args
-  val noTailCalls = "--no-tail-calls" in args
-  val path = args.singleOrNull { it !in FLAGS } ?: usage()
+  val path = args.singleOrNull()?.takeUnless { it.startsWith("--") } ?: usage()
   // `bazel run` starts in the runfiles tree; relative paths mean the caller's directory.
   val file = File(System.getenv("BUILD_WORKING_DIRECTORY") ?: ".").resolve(path)
-  when (
-      val result =
-          Compiler.compile(
-              file.readText(),
-              CompileOptions(
-                  compact = compact,
-                  stackCalls = !registerCalls,
-                  tailCalls = !noTailCalls,
-              ),
-          )
-  ) {
+  when (val result = Compiler.compile(file.readText())) {
     is CompileResult.Success -> {
       println(result.code)
       System.err.println(
@@ -58,11 +42,11 @@ fun main(args: Array<String>) {
   }
 }
 
+private const val USAGE =
+    "Usage: ktrapic <program.ic10.kts> (the program chooses compact output, calls in registers " +
+        "and tail calls with @file:Compact, @file:InRegisters and @file:NoTailCalls)"
+
 private fun usage(): Nothing {
-  System.err.println(
-      "Usage: ktrapic [--compact] [--register-calls] [--no-tail-calls] <program.ic10.kts>"
-  )
+  System.err.println(USAGE)
   exitProcess(2)
 }
-
-private val FLAGS = setOf("--compact", "--register-calls", "--no-tail-calls")

@@ -18,7 +18,7 @@ class KtrapicAnnotatorTest : BasePlatformTestCase() {
         emptyList(),
         testRootDisposable,
     )
-    KtrapicCompileService.getInstance(project).compilerForTests = Ic10Compiler { code, _ ->
+    KtrapicCompileService.getInstance(project).compilerForTests = Ic10Compiler { code ->
       synchronized(compiled) { compiled += code }
       CompileResponse.Failure(
           listOf(
@@ -62,7 +62,7 @@ class KtrapicAnnotatorTest : BasePlatformTestCase() {
   }
 
   fun `test a program with only the Kotlin compiler's errors gets one note for the file`() {
-    KtrapicCompileService.getInstance(project).compilerForTests = Ic10Compiler { _, _ ->
+    KtrapicCompileService.getInstance(project).compilerForTests = Ic10Compiler { _ ->
       CompileResponse.Failure(
           listOf(
               Problem(

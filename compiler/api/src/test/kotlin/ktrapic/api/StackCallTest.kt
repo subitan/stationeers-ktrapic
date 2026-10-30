@@ -373,7 +373,11 @@ class StackCallTest {
             """,
             CompileOptions(stackCalls = false),
         )
-    assertThat(off.message).contains("not supported: a -> b -> a (stack calls are turned off)")
+    assertThat(off.message)
+        .contains(
+            "not supported: a -> b -> a (every function passes them in registers, as with " +
+                "@file:InRegisters)"
+        )
 
     val self =
         error(
@@ -405,7 +409,8 @@ class StackCallTest {
   /** The size warning's clause for the lines compact output would save on [labelled]. */
   private fun compactSaves(source: String, labelled: CompileResult.Success): String {
     val saved = labelled.lines - compiled(source, CompileOptions(compact = true)).lines
-    return "compact output, which resolves labels to line numbers, saves $saved lines"
+    return "compact output (@file:Compact), which resolves labels to line numbers, saves " +
+        "$saved lines"
   }
 
   @Test
@@ -421,7 +426,7 @@ class StackCallTest {
         .containsExactly(
             "The program is ${stack.lines} lines, over the chip's 128: " +
                 "${compactSaves(source, stack)}; passing functions' " +
-                "arguments in registers saves lines (turn stack calls off, or mark the most-called " +
+                "arguments in registers saves lines (add @file:InRegisters, or mark the most-called " +
                 "functions @InRegisters)"
         )
     assertThat(stack.warnings.single().line).isEqualTo(0)
@@ -445,7 +450,8 @@ class StackCallTest {
             "The program is ${stack.lines} lines, over the chip's 128: " +
                 "${compactSaves(source, stack)}; the functions called on " +
                 "the stack (fact) are in a cycle of calls, so they can't pass their arguments in " +
-                "registers to save lines, and the program must be shortened or compiled compact"
+                "registers to save lines, and the program must be shortened or compiled compact " +
+                "(@file:Compact)"
         )
     // Compiled compact, shortening is all that is left.
     val compact = compiled(source, CompileOptions(compact = true))
@@ -512,7 +518,7 @@ class StackCallTest {
   }
 
   @Test
-  fun `a program over the line limit that declares a cycle is not told to turn stack calls off`() {
+  fun `a program over the line limit that declares a cycle is not told to pass every call in registers`() {
     val plain = "fun f(x: Double): Double = x + 1.0\n"
     val calls = (1..60).joinToString("\n") { "db.Setting = f($it.0)" }
 
@@ -528,7 +534,7 @@ class StackCallTest {
                   "arguments in registers saves lines (mark f @InRegisters; functions in a cycle " +
                   "of calls must pass theirs on the stack)"
           )
-      // Turning stack calls off would fail on the cycle, called or not; the advice given compiles.
+      // @file:InRegisters would fail on the cycle, called or not; the advice given compiles.
       assertWithMessage(source)
           .that(error(source, CompileOptions(stackCalls = false)).message)
           .contains("Recursive calls through a function passing arguments in registers")

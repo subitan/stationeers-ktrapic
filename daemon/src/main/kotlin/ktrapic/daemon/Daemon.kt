@@ -10,7 +10,6 @@ import java.io.InputStream
 import java.io.OutputStream
 import java.util.Base64
 import kotlin.system.exitProcess
-import ktrapic.api.CompileOptions
 import ktrapic.api.CompileResult
 import ktrapic.api.Compiler
 import ktrapic.daemon.lsp.LspServer
@@ -22,14 +21,16 @@ import ktrapic.ic10.Program
 
 /**
  * The compile daemon's protocol, as PyTrapIC's (`stationeers_pytrapic/mod_daemon.py`): each request
- * is one line of base64-encoded JSON, `{"action": "compile", "code": ..., "options": {...}}`, and
- * gets one line of base64-encoded JSON back. `code` is the source, or a map of module names to
- * sources whose `""` entry is the program. A success is `{"code", "num_lines", "num_bytes",
- * "num_registers", "warnings", "source_mapping"}`; a failure is `{"error": {"description", "line",
- * "column", ...}}`. Each warning, and each of a failure's `errors`, is `{"description", "line",
- * "column"}`, with `"kotlin": true` added for the Kotlin compiler's own diagnostics and syntax
- * errors, which an editor with Kotlin support reports already. `source_mapping` maps each 0-based
- * source line, as a string key, to the 0-based lines of `code` it compiled to, as PyTrapIC's does.
+ * is one line of base64-encoded JSON, `{"action": "compile", "code": ...}`, and gets one line of
+ * base64-encoded JSON back. `code` is the source, or a map of module names to sources whose `""`
+ * entry is the program. A success is `{"code", "num_lines", "num_bytes", "num_registers",
+ * "warnings", "source_mapping"}`; a failure is `{"error": {"description", "line", "column", ...}}`.
+ * Each warning, and each of a failure's `errors`, is `{"description", "line", "column"}`, with
+ * `"kotlin": true` added for the Kotlin compiler's own diagnostics and syntax errors, which an
+ * editor with Kotlin support reports already. `source_mapping` maps each 0-based source line, as a
+ * string key, to the 0-based lines of `code` it compiled to, as PyTrapIC's does. The program says
+ * how it compiles, with file annotations; an `options` object, which older clients send, is
+ * accepted and ignored.
  *
  * Unlike PyTrapIC, `line` and `column` are both 1-based, and `line_end`/`column_end` repeat them
  * because the compiler reports only where a problem starts. All four are 0 when the compiler gives
@@ -37,9 +38,8 @@ import ktrapic.ic10.Program
  * neither a compile nor a run request gets `{"error": {"description"}}`, with an object rather than
  * PyTrapIC's plain string.
  *
- * KTrapIC adds `{"action": "run", "code", "options", "test": {...}, "trace_tick": N}`, which
- * compiles as a compile request does and then runs the program against a test's fake devices (see
- * [run]).
+ * KTrapIC adds `{"action": "run", "code", "test": {...}, "trace_tick": N}`, which compiles as a
+ * compile request does and then runs the program against a test's fake devices (see [run]).
  *
  * Every request line gets exactly one response line, whatever it holds, so a client can read one
  * line per line it writes.
@@ -61,21 +61,13 @@ object Daemon {
   }
 
   /**
-   * The response to compiling [source] with [options], a compile request's `options` object: the
-   * JSON object that a compile request's response line encodes. Failures inside the compiler are
-   * answered as errors too, as [handle] answers them. The options are `compact` (default false),
-   * `stack_calls` and `tail_calls` (each default true; see [CompileOptions]).
+   * The response to compiling [source]: the JSON object that a compile request's response line
+   * encodes. Failures inside the compiler are answered as errors too, as [handle] answers them. The
+   * program chooses how it compiles, with file annotations (`@file:Compact`, `@file:InRegisters`,
+   * `@file:NoTailCalls`); a request's `options`, which older clients send, are ignored.
    */
-  fun compile(source: String, options: JsonObject?): JsonObject = guarded {
-    fun flag(name: String, default: Boolean) =
-        options?.get(name)?.takeIf { it.isJsonPrimitive }?.asBoolean ?: default
-    val compileOptions =
-        CompileOptions(
-            compact = flag("compact", false),
-            stackCalls = flag("stack_calls", true),
-            tailCalls = flag("tail_calls", true),
-        )
-    when (val result = Compiler.compile(source, compileOptions)) {
+  fun compile(source: String): JsonObject = guarded {
+    when (val result = Compiler.compile(source)) {
       is CompileResult.Success ->
           JsonObject().apply {
             addProperty("code", result.code)
@@ -106,32 +98,31 @@ object Daemon {
 
   /**
    * The response to running [test], a test file's JSON object (see `docs/TESTING.md`), against
-   * [source] compiled with [options]: the compile response, with `run` added if it compiled. `run`
-   * is the harness's result (see [RunResult.toJson]), with a snapshot per line of tick [traceTick]
-   * if given, or `{"error": {"description"}}` if the test can't be run as written or [traceTick]
-   * isn't one of its ticks.
+   * [source] compiled: the compile response, with `run` added if it compiled. `run` is the
+   * harness's result (see [RunResult.toJson]), with a snapshot per line of tick [traceTick] if
+   * given, or `{"error": {"description"}}` if the test can't be run as written or [traceTick] isn't
+   * one of its ticks.
    */
-  fun run(source: String, options: JsonObject?, test: JsonObject?, traceTick: Int?): JsonObject =
-      guarded {
-        val compiled = compile(source, options)
-        val code = compiled["code"]?.asString
-        if (code != null) {
-          val run =
-              try {
-                val spec = TestSpec.parse(test ?: JsonObject())
-                if (traceTick != null && traceTick !in 1..spec.ticks) {
-                  throw TestSpecException("trace_tick: the test runs ticks 1 to ${spec.ticks}")
-                }
-                Harness.run(Program.parse(code), spec, traceTick).toJson()
-              } catch (e: TestSpecException) {
-                JsonObject().apply {
-                  add("error", JsonObject().apply { addProperty("description", e.message) })
-                }
-              }
-          compiled.add("run", run)
-        }
-        compiled
-      }
+  fun run(source: String, test: JsonObject?, traceTick: Int?): JsonObject = guarded {
+    val compiled = compile(source)
+    val code = compiled["code"]?.asString
+    if (code != null) {
+      val run =
+          try {
+            val spec = TestSpec.parse(test ?: JsonObject())
+            if (traceTick != null && traceTick !in 1..spec.ticks) {
+              throw TestSpecException("trace_tick: the test runs ticks 1 to ${spec.ticks}")
+            }
+            Harness.run(Program.parse(code), spec, traceTick).toJson()
+          } catch (e: TestSpecException) {
+            JsonObject().apply {
+              add("error", JsonObject().apply { addProperty("description", e.message) })
+            }
+          }
+      compiled.add("run", run)
+    }
+    compiled
+  }
 
   /** What [respond] returns, or an error response if the compiler fails. */
   private inline fun guarded(respond: () -> JsonObject): JsonObject =
@@ -164,8 +155,7 @@ object Daemon {
     val program = if (code.isJsonObject) code.asJsonObject[""] else code
     val source =
         program?.takeIf { it.isJsonPrimitive }?.asString ?: return error("No code provided")
-    val options = request["options"]?.takeIf { it.isJsonObject }?.asJsonObject
-    if (action == "compile") return compile(source, options)
+    if (action == "compile") return compile(source)
     val test = request["test"]
     if (test != null && !test.isJsonObject) return error("A run's test must be a JSON object")
     val traceTick =
@@ -178,7 +168,7 @@ object Daemon {
               // ticks.
               ?.toInt() ?: return error("trace_tick must be a whole number")
         }
-    return run(source, options, test?.asJsonObject, traceTick)
+    return run(source, test?.asJsonObject, traceTick)
   }
 
   private fun describe(error: ktrapic.api.CompileError): Map<String, Any> =

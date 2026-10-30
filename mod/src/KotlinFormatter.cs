@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using BepInEx.Configuration;
 using Cysharp.Threading.Tasks;
 using ImGuiEditor.LSP;
 using ImGuiNET;
@@ -177,8 +176,8 @@ namespace KTrapIC
         {
             public readonly int Version;
 
-            /// <summary>Null for IC10 read back from a chip, compiled with whichever settings it was.</summary>
-            public readonly CompileOptions? Options;
+            /// <summary>Whether this is IC10 read back from a chip, rather than a compile's answer.</summary>
+            public readonly bool FromChip;
 
             public readonly CompileResponse Response;
 
@@ -188,10 +187,10 @@ namespace KTrapIC
             /// </summary>
             public readonly string Unavailable;
 
-            public Compiled(int version, CompileOptions? options, CompileResponse response, string unavailable = null)
+            public Compiled(int version, bool fromChip, CompileResponse response, string unavailable = null)
             {
                 Version = version;
-                Options = options;
+                FromChip = fromChip;
                 Response = response;
                 Unavailable = unavailable;
             }
@@ -340,7 +339,7 @@ namespace KTrapIC
                 // non-empty line count 2, as the game's editor joins lines with CRLF.
                 num_bytes = lines.Sum(line => line.Length) + 2 * Math.Max(0, Array.FindLastIndex(lines, line => line.Length > 0)),
             };
-            _compiled = new Compiled(_version, null, response);
+            _compiled = new Compiled(_version, true, response);
             UpdateCodeSize();
         }
 
@@ -760,7 +759,7 @@ namespace KTrapIC
         /// Shows the warnings of <paramref name="response"/>, a compile of the current code, in
         /// place of the last compile's. The IC10 Editor marks only errors, and drops the daemon's
         /// warnings (LSP severity 2) before reading them, so they're taken from the plugin's own
-        /// compile (<c>ktrapic/compile</c>, with the editor's options), whose warnings say when
+        /// compile (<c>ktrapic/compile</c>), whose warnings say when
         /// they have no place in the code. A warning with a place is marked on the token there, as
         /// the editor marks an error, or the one before it at the end of a line: underlined in
         /// orange (<see cref="DrawLine"/>), its message in the hover (<see cref="UpdateTooltip"/>)
@@ -851,12 +850,11 @@ namespace KTrapIC
         public override string Compile()
         {
             string source = RawText;
-            var options = Plugin.CompileOptions;
             var compiled = _compiled;
             var response =
-                compiled != null && compiled.Version == _version && (compiled.Options ?? options) == options
+                compiled != null && compiled.Version == _version
                     ? compiled.Response
-                    : CompileNow(options);
+                    : CompileNow();
             string code;
             if (response == null)
                 code = ErrorPrefix + "the compiler is still starting; export again in a moment.";
@@ -872,13 +870,13 @@ namespace KTrapIC
         /// daemon isn't running and initialized with the document open, as waiting for it to start
         /// would freeze the game.
         /// </summary>
-        private CompileResponse CompileNow(CompileOptions options)
+        private CompileResponse CompileNow()
         {
             SubmitChanges();
             var client = Daemon.Client;
             if (_document == null || client == null || _document.Connection != client.Connection || _syncedVersion != _version)
                 return null;
-            return _document.CompileNow(options, ExportTimeout);
+            return _document.CompileNow(ExportTimeout);
         }
 
         /// <summary>
@@ -903,12 +901,6 @@ namespace KTrapIC
 
         public override void DrawButtons()
         {
-            OptionCheckbox("Compact", Plugin.Compact);
-            ImGui.SameLine();
-            OptionCheckbox("Stack calls", Plugin.StackCalls);
-            ImGui.SameLine();
-            OptionCheckbox("Tail calls", Plugin.TailCalls);
-            ImGui.SameLine();
             ImGui.TextUnformatted(StatusText());
             DrawWarningCount();
         }
@@ -936,20 +928,6 @@ namespace KTrapIC
             ImGui.EndTooltip();
         }
 
-        /// <summary>A checkbox for a compile option's <paramref name="setting"/>, which compiles again when changed.</summary>
-        private void OptionCheckbox(string label, ConfigEntry<bool> setting)
-        {
-            bool value = setting.Value;
-            if (!ImGuiUtils.Checkbox(label, ref value, setting.Description.Description))
-                return;
-            setting.Value = value;
-            int version = Interlocked.Increment(ref _version);
-            // The text didn't change, so the daemon still has it if it had it before.
-            if (_syncedVersion == version - 1)
-                _syncedVersion = version;
-            CompileSoon().Forget();
-        }
-
         private string StatusText()
         {
             if (Runtime.Progress != null)
@@ -957,7 +935,7 @@ namespace KTrapIC
             var compiled = _compiled;
             var response = compiled?.Response;
             // IC10 read back from a chip doesn't say how many registers it uses.
-            if (response == null || compiled.Options == null)
+            if (response == null || compiled.FromChip)
                 return Daemon.StartError
                     ?? (compiled?.Version == _version ? compiled.Unavailable : null)
                     ?? "Compiling...";
@@ -981,7 +959,6 @@ namespace KTrapIC
             if (Editor == null || Editor.IsReadOnly || _closed)
                 return;
             int version = _version;
-            var options = Plugin.CompileOptions;
             // Waited out on the thread pool, as UniTask's own delays count game time, which can
             // stand still while the editor is open.
             await UniTask.SwitchToThreadPool();
@@ -997,7 +974,7 @@ namespace KTrapIC
                 }
                 catch (Exception e)
                 {
-                    await Show(version, options, CompileResponse.Failed($"The KTrapIC compiler couldn't start: {e.Message}"));
+                    await Show(version, CompileResponse.Failed($"The KTrapIC compiler couldn't start: {e.Message}"));
                     return;
                 }
                 // Started by another editor, and ready before this one had a document: open it now.
@@ -1012,11 +989,11 @@ namespace KTrapIC
             var document = _document;
             if (document == null || document.Connection != client.Connection || _syncedVersion != version)
                 return;
-            await Show(version, options, await document.Compile(options));
+            await Show(version, await document.Compile());
         }
 
         /// <summary>Records <paramref name="response"/>, a compile of <paramref name="version"/>, and shows it if that's still current.</summary>
-        private async UniTask Show(int version, CompileOptions options, CompileResponse response)
+        private async UniTask Show(int version, CompileResponse response)
         {
             // Recorded before returning to the main thread, which Compile() may be blocking.
             if (version != _version)
@@ -1025,12 +1002,12 @@ namespace KTrapIC
             // program, so an unchanged chip still exports as it is while the compiler is down; the
             // toolbar says why it's down.
             var kept = _compiled;
-            if (response.Unavailable && kept != null && kept.Version == version && kept.Options == null)
+            if (response.Unavailable && kept != null && kept.Version == version && kept.FromChip)
             {
-                _compiled = new Compiled(kept.Version, null, kept.Response, response.error?.description);
+                _compiled = new Compiled(kept.Version, true, kept.Response, response.error?.description);
                 return;
             }
-            _compiled = new Compiled(version, options, response);
+            _compiled = new Compiled(version, false, response);
             await UniTask.SwitchToMainThread();
             if (version == _version)
             {

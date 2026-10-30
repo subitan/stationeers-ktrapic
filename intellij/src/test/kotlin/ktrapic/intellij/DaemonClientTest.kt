@@ -34,17 +34,17 @@ class DaemonClientTest {
 
   @Test
   fun `compiles a program`() {
-    val response = client.compile("db.Setting = 1.0\n", CompileOptions())
+    val response = client.compile("db.Setting = 1.0\n")
 
     assertEquals(CompileResponse.Success("s db Setting 1", 1, 14, 0, emptyList()), response)
   }
 
   @Test
-  fun `passes the options`() {
+  fun `compiles as the program's annotations say`() {
     val source = "var i = 0\nwhile (i < 3) i++\ndb.Setting = i.toDouble()\n"
 
-    val labelled = client.compile(source, CompileOptions()) as CompileResponse.Success
-    val compact = client.compile(source, CompileOptions(compact = true)) as CompileResponse.Success
+    val labelled = client.compile(source) as CompileResponse.Success
+    val compact = client.compile("@file:Compact\n$source") as CompileResponse.Success
 
     assertTrue(labelled.code.contains(":"))
     assertFalse(compact.code.contains(":"))
@@ -52,9 +52,8 @@ class DaemonClientTest {
 
   @Test
   fun `tells the Kotlin compiler's errors from KTrapIC's`() {
-    val kotlin = client.compile("val x: Int = \"s\"\n", CompileOptions()) as CompileResponse.Failure
-    val own =
-        client.compile("val (a, b) = Pair(1, 2)\n", CompileOptions()) as CompileResponse.Failure
+    val kotlin = client.compile("val x: Int = \"s\"\n") as CompileResponse.Failure
+    val own = client.compile("val (a, b) = Pair(1, 2)\n") as CompileResponse.Failure
 
     assertTrue(kotlin.errors.all { it.kotlin })
     assertEquals(1, kotlin.errors.first().line)
@@ -63,12 +62,12 @@ class DaemonClientTest {
 
   @Test
   fun `restarts the daemon after it exits`() {
-    client.compile("db.Setting = 1.0\n", CompileOptions())
+    client.compile("db.Setting = 1.0\n")
     val first = client.processForTests!!
     first.destroy()
     assertTrue(first.waitFor(30, TimeUnit.SECONDS))
 
-    val response = client.compile("db.Setting = 2.0\n", CompileOptions())
+    val response = client.compile("db.Setting = 2.0\n")
 
     assertEquals("s db Setting 2", (response as CompileResponse.Success).code)
     assertTrue(client.processForTests!!.isAlive)
@@ -78,6 +77,6 @@ class DaemonClientTest {
   fun `fails once closed`() {
     client.close()
 
-    assertTrue(client.compile("db.Setting = 1.0\n", CompileOptions()) is CompileResponse.Failure)
+    assertTrue(client.compile("db.Setting = 1.0\n") is CompileResponse.Failure)
   }
 }

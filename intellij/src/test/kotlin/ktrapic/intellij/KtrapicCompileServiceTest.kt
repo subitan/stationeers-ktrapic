@@ -13,7 +13,7 @@ class KtrapicCompileServiceTest : BasePlatformTestCase() {
   override fun setUp() {
     super.setUp()
     service = KtrapicCompileService.getInstance(project)
-    service.compilerForTests = Ic10Compiler { code, _ ->
+    service.compilerForTests = Ic10Compiler { code ->
       synchronized(compiled) { compiled += code }
       release.await(30, TimeUnit.SECONDS)
       CompileResponse.Success(code, 1, code.length, 0, emptyList())
@@ -30,7 +30,7 @@ class KtrapicCompileServiceTest : BasePlatformTestCase() {
     }
   }
 
-  private fun request(text: String) = CompileRequest("/program.ic10.kts", text, CompileOptions())
+  private fun request(text: String) = CompileRequest("/program.ic10.kts", text)
 
   fun `test the same request shares one compile`() {
     val first = service.compile(request("a"))
@@ -58,13 +58,13 @@ class KtrapicCompileServiceTest : BasePlatformTestCase() {
   }
 
   fun `test a compile the daemon didn't answer is compiled again`() {
-    service.compilerForTests = Ic10Compiler { _, _ ->
+    service.compilerForTests = Ic10Compiler { _ ->
       CompileResponse.Failure("No KTrapIC compile daemon", answered = false)
     }
     val first = service.compile(request("a")).get(30, TimeUnit.SECONDS)
     assertNull(service.lastCompiled("/program.ic10.kts"))
 
-    service.compilerForTests = Ic10Compiler { code, _ ->
+    service.compilerForTests = Ic10Compiler { code ->
       CompileResponse.Success(code, 1, code.length, 0, emptyList())
     }
     val second = service.compile(request("a")).get(30, TimeUnit.SECONDS)
@@ -76,7 +76,7 @@ class KtrapicCompileServiceTest : BasePlatformTestCase() {
 
   fun `test a compile the daemon answered with errors is shared`() {
     val calls = mutableListOf<String>()
-    service.compilerForTests = Ic10Compiler { code, _ ->
+    service.compilerForTests = Ic10Compiler { code ->
       synchronized(calls) { calls += code }
       CompileResponse.Failure("Unsupported")
     }

@@ -16,8 +16,8 @@ import java.util.concurrent.ExecutionException
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeoutException
 
-/** A program to compile: the text of the file at [path], compiled with [options]. */
-data class CompileRequest(val path: String, val text: String, val options: CompileOptions)
+/** A program to compile: the text of the file at [path], which says itself how it compiles. */
+data class CompileRequest(val path: String, val text: String)
 
 /** [request]'s compile, answered with [response]. */
 data class Compiled(val request: CompileRequest, val response: CompileResponse)
@@ -51,6 +51,8 @@ class KtrapicCompileService(private val project: Project) : Disposable {
   private val latest = HashMap<String, Pair<CompileRequest, CompletableFuture<CompileResponse>>>()
   private var daemon: Daemon? = null
   private var disposed = false
+  /** The problem [runningOr] was last called with, until a daemon is started. */
+  private var lastProblem: String? = null
 
   /** Used in place of the daemon, by tests. */
   @Volatile var compilerForTests: Ic10Compiler? = null
@@ -77,7 +79,7 @@ class KtrapicCompileService(private val project: Project) : Disposable {
       }
       val response =
           try {
-            compiler().compile(request.text, request.options)
+            compiler().compile(request.text)
           } catch (e: Exception) {
             LOG.warn("KTrapIC compile failed", e)
             CompileResponse.Failure("Compiling failed: $e", answered = false)
@@ -155,12 +157,12 @@ class KtrapicCompileService(private val project: Project) : Disposable {
     val java = KtrapicPaths.java(settings.javaPath)
     val jarSetting = settings.daemonJar.orEmpty().trim()
     val jar =
-        KtrapicPaths.daemonJar(jarSetting, project.basePath)
+        KtrapicPaths.daemonJar(jarSetting, project.basePath, KtrapicPlugin.daemonJar)
             ?: return runningOr(
                 java,
                 jarSetting,
-                "No KTrapIC compile daemon: set its jar under Settings > Tools > KTrapIC, or " +
-                    "build it in this project with bazel build //daemon:ktrapic-daemon_deploy.jar",
+                "No KTrapIC compile daemon: the plugin's own is missing, so set its jar under " +
+                    "Settings > Tools > KTrapIC",
             )
     if (!File(jar).isFile) {
       return runningOr(java, jarSetting, "The compile daemon's jar $jar doesn't exist")
@@ -178,6 +180,7 @@ class KtrapicCompileService(private val project: Project) : Disposable {
     synchronized(this) {
       if (disposed) return failing("The project is closed")
       daemon?.let { if (it.java == java && it.copy == copy) return it.client }
+      lastProblem = null
       daemon?.client?.close()
       jarCopies.removeAllBut(copy)
       val client = DaemonClient(listOf(java, "-jar", copy.path), log = { LOG.info("daemon: $it") })
@@ -206,12 +209,16 @@ class KtrapicCompileService(private val project: Project) : Disposable {
   private fun runningOr(java: String, jarSetting: String, problem: String): Ic10Compiler {
     synchronized(this) {
       if (disposed) return failing("The project is closed")
+      // Logged once while it lasts: a lasting problem (a full system drive, say) would otherwise
+      // silently keep an old daemon compiling.
+      if (problem != lastProblem) LOG.warn("KTrapIC: $problem")
+      lastProblem = problem
       daemon?.let { if (it.java == java && it.jarSetting == jarSetting) return it.client }
     }
     return failing(problem)
   }
 
-  private fun failing(description: String) = Ic10Compiler { _, _ ->
+  private fun failing(description: String) = Ic10Compiler { _ ->
     CompileResponse.Failure(description, answered = false)
   }
 
@@ -228,8 +235,18 @@ class KtrapicCompileService(private val project: Project) : Disposable {
     private val LOG = logger<KtrapicCompileService>()
 
     /** The daemon jar's copies, shared by every project (see [DaemonJarCopies]). */
-    val jarCopies by lazy {
-      DaemonJarCopies(File(PathManager.getSystemPath(), "ktrapic/daemon-jars"))
+    val jarCopies by lazy { DaemonJarCopies(copiesDir(File(PathManager.getSystemPath()))) }
+
+    /**
+     * Where the daemon jar's copies go, given the IDE's [systemDir]. In the usual layout, where
+     * each IDE version has a directory of its own in a `JetBrains` directory, every version shares
+     * one beside them, so the copies an older IDE made are cleaned up once a newer one runs. Else,
+     * this IDE's own.
+     */
+    fun copiesDir(systemDir: File): File {
+      val parent = systemDir.absoluteFile.parentFile
+      return if (parent?.name == "JetBrains") File(parent, "ktrapic-daemon-jars")
+      else File(systemDir.absoluteFile, "ktrapic/daemon-jars")
     }
 
     fun getInstance(project: Project): KtrapicCompileService = project.service()

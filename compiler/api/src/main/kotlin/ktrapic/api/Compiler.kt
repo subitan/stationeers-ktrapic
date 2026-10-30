@@ -3,6 +3,7 @@ package ktrapic.api
 import java.io.File
 import ktrapic.backend.Backend
 import ktrapic.backend.CompileException
+import ktrapic.backend.FileOptions
 import ktrapic.backend.Lowered
 import ktrapic.backend.StackCalled
 import ktrapic.backend.TooManyRegistersException
@@ -20,15 +21,19 @@ import ktrapic.ic10.Program
 import ktrapic.ic10.ProgramSize
 import ktrapic.ic10.Register
 
-/** How to compile a program. */
+/**
+ * How to compile a program, before its file annotations change it. Programs choose these
+ * themselves, with `@file:Compact`, `@file:InRegisters` and `@file:NoTailCalls`; tools leave them
+ * at their defaults, and tests set them to compile one program each way.
+ */
 data class CompileOptions(
-    /** Resolve labels to line numbers and drop them, to save lines on the chip. */
+    /** Resolve labels to line numbers and drop them, to save lines on the chip; `@file:Compact`. */
     val compact: Boolean = false,
     /**
      * Pass the arguments and result of functions called with `jal` on the chip's stack, saving the
      * caller's live registers around each call, so functions may be recursive. A function marked
      * `@InRegisters` passes them in registers all the same. False passes every function's in
-     * registers.
+     * registers, as `@file:InRegisters` does.
      */
     val stackCalls: Boolean = true,
     /**
@@ -39,10 +44,19 @@ data class CompileOptions(
      * registers than the chip has with its tail calls as loops, but not with them as calls, makes
      * every one of them a call, with a warning: then a deep tail recursion can overflow the stack
      * again. A program annotated `@file:CircuitHousingOnly` keeps values in memory to fit with its
-     * tail calls as loops first, and makes them calls only if that is not enough.
+     * tail calls as loops first, and makes them calls only if that is not enough. False is
+     * `@file:NoTailCalls`.
      */
     val tailCalls: Boolean = true,
-)
+) {
+  /** These options, with each that [file] annotates turned away from its default. */
+  internal fun annotated(file: FileOptions) =
+      CompileOptions(
+          compact = compact || file.compact,
+          stackCalls = stackCalls && !file.inRegisters,
+          tailCalls = tailCalls && !file.noTailCalls,
+      )
+}
 
 /**
  * A problem with the program, at a 1-based [line] and [column] of its source (0 if unknown).
@@ -77,9 +91,16 @@ sealed interface CompileResult {
 
 /** Compiles KTrapIC programs: script-style Kotlin, written against the `ktrapic` API, to IC10. */
 object Compiler {
-  fun compile(source: String, options: CompileOptions = CompileOptions()): CompileResult {
+  /**
+   * Compiles [source] with [defaults], as changed by the program's own file annotations:
+   * `@file:Compact`, `@file:InRegisters` and `@file:NoTailCalls` each turn one away from its
+   * default, whatever [defaults] says. Tools leave [defaults] at its default, so the program alone
+   * says how it compiles; the tests set it to compile the same program each way.
+   */
+  fun compile(source: String, defaults: CompileOptions = CompileOptions()): CompileResult {
     val result =
         K2Frontend.compile(source, listOf(sdkJar()), listOf("ktrapic.*")) { ir ->
+          val options = defaults.annotated(Backend.fileOptions(ir.module))
           try {
             // Suggesting @file:CircuitHousingOnly for a program out of registers takes a trial
             // allocation, so it is asked for only of the compile whose failure is reported.
@@ -118,7 +139,7 @@ object Compiler {
             // The 0-based line of the user's source that each line of the program comes from.
             val sourceLines =
                 lowered.offsets.map { offset -> offset?.let { ir.position(it) }?.first?.minus(1) }
-            Result.success(Compiled(lowered, sourceLines, listOfNotNull(fallback)))
+            Result.success(Compiled(lowered, sourceLines, listOfNotNull(fallback), options.compact))
           } catch (e: CompileException) {
             val (line, column) = ir.position(e.offset) ?: (0 to 0)
             Result.failure(CompileFailure(CompileError(e.message ?: "error", line, column)))
@@ -139,12 +160,12 @@ object Compiler {
         result.value.getOrElse {
           return CompileResult.Failure(listOf((it as CompileFailure).error))
         }
-    val (lowered, sourceLines, fallbacks) = compiled
+    val (lowered, sourceLines, fallbacks, compact) = compiled
     val labelled = lowered.program
-    val program = if (options.compact) labelled.compacted() else labelled
+    val program = if (compact) labelled.compacted() else labelled
     // Compacting keeps exactly the instructions, in order, so their source lines go with them.
     val printedSourceLines =
-        if (options.compact) {
+        if (compact) {
           sourceLines.filterIndexed { index, _ -> labelled.lines[index] is Line.Instruction }
         } else {
           sourceLines
@@ -159,8 +180,7 @@ object Compiler {
     val sizeHints =
         if (size.lines > Ic10Limits.MAX_LINES) {
           val compactSaves =
-              if (options.compact) 0
-              else size.lines - ProgramSize.of(labelled.compacted().print()).lines
+              if (compact) 0 else size.lines - ProgramSize.of(labelled.compacted().print()).lines
           listOf(CompileError(sizeHint(size.lines, compactSaves, lowered), 0, 0))
         } else {
           emptyList()
@@ -177,26 +197,27 @@ object Compiler {
   }
 
   /**
-   * The lowered program, the 0-based source line each of its lines comes from, and the warnings
-   * about how it was compiled.
+   * The lowered program, the 0-based source line each of its lines comes from, the warnings about
+   * how it was compiled, and whether it is printed [compact].
    */
   private data class Compiled(
       val lowered: Lowered,
       val sourceLines: List<Int?>,
       val warnings: List<CompileError>,
+      val compact: Boolean,
   )
 
   /**
    * Why a program compiled with tail calls on makes them as calls: as loops it needs [needed]
    * registers, more than the chip has, and as calls few enough. Every tail call in the program
    * becomes a call, so a recursion that relied on the loop for its depth can overflow the stack.
-   * Turning tail calls off compiles the same code, only without trying loops first or this warning.
+   * `@file:NoTailCalls` compiles the same code, only without trying loops first or this warning.
    */
   private fun tailCallHint(needed: Int): String =
       "The program needs $needed registers with tail calls compiled as loops, over the chip's " +
           "${Ic10Limits.REGISTERS}; all its tail calls are made as ordinary stack calls instead, " +
-          "so deep recursion can overflow the stack (turn tail calls off to compile them as calls " +
-          "without this warning)"
+          "so deep recursion can overflow the stack (add @file:NoTailCalls to compile them as " +
+          "calls without this warning)"
 
   /**
    * That [lowered], [lines] long, is over the chip's limit, and why it could be shorter, if it can
@@ -208,7 +229,8 @@ object Compiler {
     val over = "The program is $lines lines, over the chip's ${Ic10Limits.MAX_LINES}"
     val compact =
         if (compactSaves > 0) {
-          "compact output, which resolves labels to line numbers, saves $compactSaves lines"
+          "compact output (@file:Compact), which resolves labels to line numbers, saves " +
+              "$compactSaves lines"
         } else {
           null
         }
@@ -226,9 +248,9 @@ object Compiler {
   /**
    * How the functions in [stackCalled] could save lines, or null if none is called on the stack.
    * Only those that aren't in a cycle of calls can pass in registers, as a cycle needs the stack.
-   * Turning stack calls off works only when the program declares no cycle at all ([hasCycle]),
-   * called or not. When compact output would be shorter ([compactShortens]), it is the other way to
-   * fit a program whose stack calls can't move to registers.
+   * `@file:InRegisters` works only when the program declares no cycle at all ([hasCycle]), called
+   * or not. When compact output would be shorter ([compactShortens]), it is the other way to fit a
+   * program whose stack calls can't move to registers.
    */
   private fun stackHint(
       stackCalled: List<StackCalled>,
@@ -240,13 +262,13 @@ object Compiler {
     val names = plain.joinToString { it.name }
     return when {
       !hasCycle ->
-          "passing functions' arguments in registers saves lines (turn stack calls off, or mark " +
-              "the most-called functions @InRegisters)"
+          "passing functions' arguments in registers saves lines (add @file:InRegisters, or " +
+              "mark the most-called functions @InRegisters)"
       plain.isEmpty() ->
           "the functions called on the stack (${recursive.joinToString { it.name }}) are in a " +
               "cycle of calls, so they can't pass their arguments in registers to save lines, " +
               "and the program must be shortened" +
-              (if (compactShortens) " or compiled compact" else "")
+              (if (compactShortens) " or compiled compact (@file:Compact)" else "")
       else ->
           "passing functions' arguments in registers saves lines (mark " +
               (if (plain.size == 1) names else "the most-called of $names") +

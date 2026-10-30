@@ -136,7 +136,7 @@ class LspCompletionTest {
               Thread.sleep(200)
               emptyList()
             },
-            compiler = { _, _ -> JsonObject() },
+            compiler = { _ -> JsonObject() },
         )
         .use { client ->
           client.initialize()

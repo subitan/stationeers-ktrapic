@@ -207,13 +207,13 @@ public class WarningsTest : IDisposable
         Assert.Equal(20, Warnings.SummaryLines(Warnings.Route(Warned(many.Take(20).ToArray()), Anywhere), 72).Count);
     }
 
-    private async Task<CompileResponse> Compile(string text, CompileOptions options)
+    private async Task<CompileResponse> Compile(string text)
     {
         _daemon = new TestConnection();
         var document = new LspDocument(LspDocument.NewUri("chip"));
         document.Bind(_daemon.Connection);
         Assert.True(document.Sync(1, () => text, new JArray()));
-        var response = await TestDaemon.Within(document.Compile(options));
+        var response = await TestDaemon.Within(document.Compile());
         _daemon.AssertCompiled(response);
         return response;
     }
@@ -223,7 +223,7 @@ public class WarningsTest : IDisposable
     {
         // A call to a deprecated function: Kotlin warns of it at the call.
         string text = "@Deprecated(\"old\") fun f() = 1.0\ndb.Setting = f()\n";
-        var response = await Compile(text, new CompileOptions(false));
+        var response = await Compile(text);
 
         // As the editor finds a token for it: something other than space at the column, or just before it.
         var lines = text.Split('\n');
@@ -243,7 +243,7 @@ public class WarningsTest : IDisposable
     public async Task AProgramOverTheChipsLinesIsWarnedAboutInTheStatusLine()
     {
         string text = string.Concat(Enumerable.Range(1, 140).Select(i => $"db.Setting = {i}.0\n"));
-        var response = await Compile(text, new CompileOptions(false));
+        var response = await Compile(text);
 
         var routed = Warnings.Route(response, Anywhere);
 

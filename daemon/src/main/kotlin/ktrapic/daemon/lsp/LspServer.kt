@@ -36,8 +36,8 @@ internal class ResponseError(val code: Int, message: String) : Exception(message
  *
  * It keeps the text of the documents the client opens (`textDocument/didOpen`, `didChange` with
  * full or incremental changes, `didClose`) and compiles one on the custom request
- * `ktrapic/compile`, whose params are `{"textDocument": {"uri"}, "options": {"compact",
- * "stack_calls", "tail_calls"}}` and whose result is the JSON a line-protocol compile request
+ * `ktrapic/compile`, whose params are `{"textDocument": {"uri"}}` (an `"options"` object, which
+ * older clients send, is ignored) and whose result is the JSON a line-protocol compile request
  * answers with ([Daemon.compile]). Besides those it implements the lifecycle: `initialize`,
  * `initialized`, `shutdown` and `exit`.
  *
@@ -46,11 +46,10 @@ internal class ResponseError(val code: Int, message: String) : Exception(message
  * failed compile with severity 1, or each warning of a successful one with severity 2, so a clean
  * compile gives an empty list (see [diagnosticsOf] for the ranges). `didClose` sends an empty list.
  * A newer change to the document cancels a pending compile, and a compile that finishes after one
- * is dropped, so diagnostics are never sent for a version the document no longer has. Diagnostics
- * compiles use the options of the latest `ktrapic/compile`, and the last few compiles are kept, so
- * a `ktrapic/compile` of the text a diagnostics compile has just compiled (or is compiling) gets
- * that compile's result, and the other way round; internal compiler errors are not kept, but
- * compiled again.
+ * is dropped, so diagnostics are never sent for a version the document no longer has. The last few
+ * compiles are kept, so a `ktrapic/compile` of the text a diagnostics compile has just compiled (or
+ * is compiling) gets that compile's result, and the other way round; internal compiler errors are
+ * not kept, but compiled again.
  *
  * **`textDocument/completion`** lists what could be written at the position, from the compiler's
  * analysis of the document's current text (see [completion]); a repeat of the latest request costs
@@ -80,7 +79,7 @@ internal class ResponseError(val code: Int, message: String) : Exception(message
  * @param debounceMillis how long after a change to compile for diagnostics, so that a burst of
  *   keystrokes compiles once; 150 ms, as the plugin's compile-as-you-type waits.
  * @param scheduler runs diagnostics compiles; tests can run them by hand.
- * @param compiler compiles a document's text with a `ktrapic/compile` request's options.
+ * @param compiler compiles a document's text.
  * @param completer lists what could be written at an index in a document's text.
  * @param hoverer describes the name at an index in a document's text.
  * @param signer finds the functions the call around an index in a document's text could be to.
@@ -92,7 +91,7 @@ internal constructor(
     private val log: (String) -> Unit,
     private val debounceMillis: Long,
     private val scheduler: Scheduler,
-    private val compiler: (String, JsonObject?) -> JsonObject,
+    private val compiler: (String) -> JsonObject,
     private val completer: (String, Int) -> List<Completion> = Compiler::complete,
     private val hoverer: (String, Int) -> Hover? = Compiler::hover,
     private val signer: (String, Int) -> SignatureHelp? = Compiler::signatureHelp,
@@ -124,14 +123,10 @@ internal constructor(
   /** Each open document's pending or running diagnostics compile. Used on the reading thread. */
   private val pendingDiagnostics = mutableMapOf<String, Future<*>>()
 
-  /** The options of the latest `ktrapic/compile`, which diagnostics compiles use too. */
-  @Volatile private var latestOptions: JsonObject? = null
-
-  /** The latest compiles' results by text and options, for [compileOnce]. Under its lock. */
+  /** The latest compiles' results by text, for [compileOnce]. Under its lock. */
   private val compiles =
-      object : LinkedHashMap<Pair<String, String>, JsonObject>() {
-        override fun removeEldestEntry(eldest: Map.Entry<Pair<String, String>, JsonObject>) =
-            size > KEPT_COMPILES
+      object : LinkedHashMap<String, JsonObject>() {
+        override fun removeEldestEntry(eldest: Map.Entry<String, JsonObject>) = size > KEPT_COMPILES
       }
 
   private class LastCompletion(val text: String, val offset: Int, val completions: List<Completion>)
@@ -334,25 +329,21 @@ internal constructor(
     val uri = fields["textDocument"].asObject("textDocument").string("uri")
     val document =
         documents[uri] ?: throw ResponseError(ErrorCodes.INVALID_PARAMS, "$uri is not open")
-    val options = fields["options"]?.takeUnless { it.isJsonNull }?.asObject("options")
-    latestOptions = options
-    return compileOnce(document.text, options)
+    return compileOnce(document.text)
   }
 
   /**
-   * [compiler]'s result for [text] and [options], compiled now or kept from a recent compile.
-   * Compiles run one at a time: this waits for one running on another thread, which may well be of
-   * the same text.
+   * [compiler]'s result for [text], compiled now or kept from a recent compile. Compiles run one at
+   * a time: this waits for one running on another thread, which may well be of the same text.
    *
    * An internal compiler error, a result whose error has a `stack_trace`, is not kept: it can
    * depend on more than the text, as a stack overflow does on the thread's stack and on what the
    * JIT has compiled, so the same text may compile next time.
    */
-  private fun compileOnce(text: String, options: JsonObject?): JsonObject {
-    val key = text to (options ?: JsonObject()).toString()
+  private fun compileOnce(text: String): JsonObject {
     synchronized(compiles) {
-      return compiles[key]
-          ?: compiler(text, options).also { if (!it.isInternalError()) compiles[key] = it }
+      return compiles[text]
+          ?: compiler(text).also { if (!it.isInternalError()) compiles[text] = it }
     }
   }
 
@@ -523,7 +514,7 @@ internal constructor(
         scheduler.schedule(debounceMillis) {
           try {
             if (synchronized(documentsLock) { !isCurrent() }) return@schedule
-            val diagnostics = diagnosticsOf(compileOnce(text, latestOptions), text)
+            val diagnostics = diagnosticsOf(compileOnce(text), text)
             synchronized(documentsLock) {
               if (isCurrent() && state == State.RUNNING) {
                 publishDiagnostics(uri, version, diagnostics)

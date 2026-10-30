@@ -11,7 +11,7 @@ import java.util.concurrent.TimeUnit
 
 /** Compiles KTrapIC programs to IC10. */
 fun interface Ic10Compiler {
-  fun compile(code: String, options: CompileOptions): CompileResponse
+  fun compile(code: String): CompileResponse
 }
 
 /**
@@ -36,12 +36,11 @@ class DaemonClient(
     @Synchronized get() = running?.process
 
   @Synchronized
-  override fun compile(code: String, options: CompileOptions): CompileResponse {
+  override fun compile(code: String): CompileResponse {
     val request =
         JsonObject().apply {
           addProperty("action", "compile")
           addProperty("code", code)
-          add("options", options.toJson())
         }
     return when (val answer = request(request.toString())) {
       is Answer.Json -> CompileResponse.parse(answer.json)

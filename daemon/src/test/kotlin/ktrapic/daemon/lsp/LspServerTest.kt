@@ -34,9 +34,9 @@ class LspServerTest {
           """{"textDocument": {"uri": "$uri"}, "options": $options}""",
       )
 
-  /** What the line protocol answers for compiling [source] with [options]. */
-  private fun lineProtocolCompile(source: String, options: String = "{}"): JsonObject {
-    val request = """{"action": "compile", "code": ${gson.toJson(source)}, "options": $options}"""
+  /** What the line protocol answers for compiling [source]. */
+  private fun lineProtocolCompile(source: String): JsonObject {
+    val request = """{"action": "compile", "code": ${gson.toJson(source)}}"""
     val line = Daemon.handle(Base64.getEncoder().encodeToString(request.toByteArray()))
     return JsonParser.parseString(String(Base64.getDecoder().decode(line))).asJsonObject
   }
@@ -170,15 +170,22 @@ class LspServerTest {
     client.open("file:///broken.kt", broken)
 
     val labelled = compile("file:///program.kt")
-    val compact = compile("file:///program.kt", """{"compact": true}""")
-    val calls = "import ktrapic.*\nfun f(x: Double) = x + 1.0\ndb.Setting = f(1.0) + f(2.0)\n"
+    // Options, which older clients send, are ignored: the program's annotations choose.
+    val ignored = compile("file:///program.kt", """{"compact": true}""")
+    val compactProgram = "@file:Compact\n$program"
+    client.open("file:///compact.kt", compactProgram)
+    val compact = compile("file:///compact.kt")
+    val calls =
+        "@file:InRegisters\nimport ktrapic.*\nfun f(x: Double) = x + 1.0\n" +
+            "db.Setting = f(1.0) + f(2.0)\n"
     client.open("file:///calls.kt", calls)
-    val registers = compile("file:///calls.kt", """{"stack_calls": false}""")
+    val registers = compile("file:///calls.kt", """{"stack_calls": true}""")
     val recursive =
-        "import ktrapic.*\nfun down(n: Int): Int = if (n == 0) 0 else down(n - 1)\n" +
+        "@file:NoTailCalls\nimport ktrapic.*\n" +
+            "fun down(n: Int): Int = if (n == 0) 0 else down(n - 1)\n" +
             "db.Setting = down(3).toDouble()\n"
     client.open("file:///recursive.kt", recursive)
-    val noTailCalls = compile("file:///recursive.kt", """{"tail_calls": false}""")
+    val noTailCalls = compile("file:///recursive.kt")
     val failed = compile("file:///broken.kt")
     // Nested deeply enough to overflow the compiler's stack, which is answered as an error.
     val overflowing =
@@ -188,13 +195,12 @@ class LspServerTest {
 
     assertThat(labelled["result"]).isEqualTo(lineProtocolCompile(program))
     assertThat(labelled["result"].asJsonObject["code"].asString).contains(":")
-    assertThat(compact["result"]).isEqualTo(lineProtocolCompile(program, """{"compact": true}"""))
+    assertThat(ignored["result"]).isEqualTo(labelled["result"])
+    assertThat(compact["result"]).isEqualTo(lineProtocolCompile(compactProgram))
     assertThat(compact["result"].asJsonObject["code"].asString).doesNotContain(":")
-    assertThat(registers["result"])
-        .isEqualTo(lineProtocolCompile(calls, """{"stack_calls": false}"""))
+    assertThat(registers["result"]).isEqualTo(lineProtocolCompile(calls))
     assertThat(registers["result"].asJsonObject["code"].asString).doesNotContain("push")
-    assertThat(noTailCalls["result"])
-        .isEqualTo(lineProtocolCompile(recursive, """{"tail_calls": false}"""))
+    assertThat(noTailCalls["result"]).isEqualTo(lineProtocolCompile(recursive))
     assertThat(noTailCalls["result"].asJsonObject["code"].asString).doesNotContain("_loop")
     assertThat(failed["result"]).isEqualTo(lineProtocolCompile(broken))
     assertThat(failed["result"].asJsonObject["error"].asJsonObject["line"].asInt).isEqualTo(2)
@@ -348,7 +354,7 @@ internal class LspTestClient(
     completer: (String, Int) -> List<ktrapic.frontend.Completion> = ktrapic.api.Compiler::complete,
     hoverer: (String, Int) -> ktrapic.frontend.Hover? = ktrapic.api.Compiler::hover,
     signer: (String, Int) -> ktrapic.frontend.SignatureHelp? = ktrapic.api.Compiler::signatureHelp,
-    compiler: (String, JsonObject?) -> JsonObject = Daemon::compile,
+    compiler: (String) -> JsonObject = Daemon::compile,
 ) : AutoCloseable {
   private val gson = Gson()
   private val toServer = PipedOutputStream()

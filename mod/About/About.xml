@@ -9,7 +9,7 @@ Program IC10 chips in Kotlin. KTrapIC adds a "Kotlin" language to the IC10 Edito
 - Save-compatible: chips run plain IC10, so removing the mod leaves them working
 - Highlighting, a live IC10 preview with compile errors, and size and register counts
 - The IC10 lines of the line you're on are highlighted in the preview
-- Compact mode resolves labels to line numbers to save lines
+- A program that starts with @file:Compact compiles with labels resolved to line numbers, to save lines
 
 On first use the mod downloads the compiler and a Java runtime for it (about 110 MB) from the project's GitHub release.
 

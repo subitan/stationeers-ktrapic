@@ -17,7 +17,9 @@ The [language guide](docs/LANGUAGE.md) describes what programs can use: values, 
 functions, devices, the maths and numeric rules, and the chip's size limits. The
 [device reference](docs/DEVICES.md) lists every prefab a program can name, with its logic types.
 
-- `compiler/api`: `Compiler.compile(source, options)`, the whole pipeline from source to IC10.
+- `compiler/api`: `Compiler.compile(source)`, the whole pipeline from source to IC10. A program
+  chooses how it compiles with file annotations (`@file:Compact`, `@file:InRegisters`,
+  `@file:NoTailCalls`; see [How a program compiles](docs/LANGUAGE.md#how-a-program-compiles)).
 - `compiler/frontend`: runs the Kotlin K2 front end on a script and returns its IR.
 - `compiler/backend`: translates that IR to IC10, allocating registers r0–r15.
 - `daemon`: the compile daemon, which reads requests on stdin and writes results on stdout,
@@ -51,7 +53,8 @@ functions, devices, the maths and numeric rules, and the chip's size limits. The
 | 9 | A test harness in the playground: run a program against fake devices ([#66](https://github.com/subitan/stationeers-ktrapic/issues/66)) | Done |
 | 10 | Advanced compiler features: functions called on the stack by default, with per-function and program-wide opt-outs, and recursion ([#120](https://github.com/subitan/stationeers-ktrapic/issues/120)); values kept in a circuit housing's stack memory when registers run out ([#129](https://github.com/subitan/stationeers-ktrapic/issues/129)) | Done |
 | 11 | An IntelliJ plugin: KTrapIC's own errors and the compiled IC10 in the IDE ([#23](https://github.com/subitan/stationeers-ktrapic/issues/23)) | In progress |
-| 12 | **First release.** The IC10 Editor plugin first: install instructions ([#86](https://github.com/subitan/stationeers-ktrapic/issues/86)), then a tagged release, v0.1.0 ([#115](https://github.com/subitan/stationeers-ktrapic/issues/115)). Then the IntelliJ plugin on JetBrains Marketplace | Planned |
+| 12 | **First release.** Before it: compile options as file annotations, not settings ([#141](https://github.com/subitan/stationeers-ktrapic/issues/141)); basic completion and hovers in the playground ([#20](https://github.com/subitan/stationeers-ktrapic/issues/20)); install instructions ([#86](https://github.com/subitan/stationeers-ktrapic/issues/86)). Then the IC10 Editor plugin's tagged release, v0.1.0 ([#115](https://github.com/subitan/stationeers-ktrapic/issues/115)), and after it the IntelliJ plugin on JetBrains Marketplace | Planned |
+| 13 | **After the first release.** Language: `waitUntil` ([#139](https://github.com/subitan/stationeers-ktrapic/issues/139)), your own enums and `when`, classes, lambdas. Editors: the rest of the playground's parity ([#20](https://github.com/subitan/stationeers-ktrapic/issues/20)), richer type hovers ([#118](https://github.com/subitan/stationeers-ktrapic/issues/118)), Test pane ([#116](https://github.com/subitan/stationeers-ktrapic/issues/116)), plugin polish ([#44](https://github.com/subitan/stationeers-ktrapic/issues/44), [#84](https://github.com/subitan/stationeers-ktrapic/issues/84)). Bigger programs: several chips ([#30](https://github.com/subitan/stationeers-ktrapic/issues/30)), slot kinds ([#34](https://github.com/subitan/stationeers-ktrapic/issues/34)). Game data from the game itself ([#81](https://github.com/subitan/stationeers-ktrapic/issues/81), [#83](https://github.com/subitan/stationeers-ktrapic/issues/83), [#68](https://github.com/subitan/stationeers-ktrapic/issues/68)). Fixes ([#39](https://github.com/subitan/stationeers-ktrapic/issues/39), [#5](https://github.com/subitan/stationeers-ktrapic/issues/5)). ktfmt's Google style ([#46](https://github.com/subitan/stationeers-ktrapic/issues/46)), and the emulator given back to PyTrapIC ([#18](https://github.com/subitan/stationeers-ktrapic/issues/18)) | Planned |
 
 ## Credits
 
@@ -100,12 +103,13 @@ for a program not opened from a source directory, Save test downloads the test i
 Started with `--lsp`, the daemon speaks the Language Server Protocol on stdin and stdout instead
 (JSON-RPC with `Content-Length` framing). It keeps the documents a client opens and changes, and
 compiles one on the custom request `ktrapic/compile`, whose params are
-`{"textDocument": {"uri"}, "options": {"compact"}}` and whose result is the same JSON as a
-line-protocol compile. 150 ms after a document is opened or changed it compiles it and sends
-`textDocument/publishDiagnostics` for that version: the compile's errors (severity 1) or warnings
-(severity 2), with ranges in UTF-16 code units, or an empty list once it compiles cleanly or is
-closed. A newer change replaces a compile still pending or running, so diagnostics never arrive
-for an older version, and a `ktrapic/compile` of the same text reuses that compile. From the
+`{"textDocument": {"uri"}}` (an `options` object, which older clients send, is ignored) and whose
+result is the same JSON as a line-protocol compile. 150 ms after a document is opened or changed
+it compiles it and sends `textDocument/publishDiagnostics` for that version: the compile's errors
+(severity 1) or warnings (severity 2), with ranges in UTF-16 code units, or an empty list once it
+compiles cleanly or is closed. A newer change replaces a compile still pending or running, so
+diagnostics never arrive for an older version, and a `ktrapic/compile` of the same text reuses
+that compile. From the
 compiler's analysis of a document's current text, it answers `textDocument/completion` with what
 could be written at a position, `textDocument/hover` with the declaration of the name there, its
 class, whether it is read-only or write-only, and the SDK's KDoc for it, as plain text, and
@@ -126,24 +130,18 @@ for installing, using and building it.
 
 ## Editing in IntelliJ
 
-IntelliJ IDEA's Kotlin plugin understands `*.ic10.kts` files through KTrapIC's script definition:
-it then completes and type-checks programs against the `ktrapic` API, with `import ktrapic.*`
-implied. Build the two jars it needs:
+KTrapIC's plugin for IntelliJ IDEA 2025.1 and later, in `intellij/`, makes the IDE an editor for
+KTrapIC programs (`*.ic10.kts`):
 
-```
-bazel build //sdk //sdk/script:ktrapic-script
-```
+- **Kotlin completion and type checking** against the `ktrapic` API, with `import ktrapic.*`
+  implied, through KTrapIC's script definition, which the plugin hands to the Kotlin plugin.
+- **KTrapIC's own rules** (supported constructs, register and size limits), with the compiler's
+  errors and warnings marked in the editor as you type.
+- **The IC10 tool window**, with the compiled program and its lines, bytes and registers against
+  the chip's limits.
 
-and add `bazel-bin/sdk/sdk.jar` and `bazel-bin/sdk/script/ktrapic-script.jar` to
-your project as a library (Project Structure > Libraries; keep the file names, since the
-definition finds the SDK by the name `sdk`). IntelliJ discovers the definition from the
-jar; if it asks, allow it under Settings > Languages & Frameworks > Kotlin > Kotlin Scripting.
-
-The Kotlin plugin checks Kotlin only. KTrapIC's own plugin, in `intellij/`, adds KTrapIC's rules
-(supported constructs, register and size limits): it marks the compiler's errors and warnings in
-the editor as you type, and its IC10 tool window shows the compiled program, normal or compact,
-with its lines, bytes and registers against the chip's limits. It runs the compile daemon, so
-build that too, then the plugin (with JDK 21):
+The plugin bundles the compile daemon and the script definition, and runs the daemon on the IDE's
+own Java, so it needs nothing else installed. Build it with JDK 21:
 
 ```
 bazel build //daemon:ktrapic-daemon_deploy.jar
@@ -153,8 +151,22 @@ cd intellij
 
 and install `intellij/build/distributions/ktrapic-intellij-<version>.zip` with Settings >
 Plugins > the gear menu > Install Plugin from Disk. In a checkout of this repository the plugin
-finds the daemon jar in `bazel-bin`; elsewhere, set its path under Settings > Tools > KTrapIC,
-along with the compile options. See [intellij/README.md](intellij/README.md).
+runs the daemon Bazel built in `bazel-bin`, if there is one, rather than its own. Its settings
+are under Settings > Tools > KTrapIC. See [intellij/README.md](intellij/README.md), and
+[docs/RELEASING.md](docs/RELEASING.md) for its releases.
+
+Without the plugin, the Kotlin plugin still finds the script definition in its jar when the jar is
+a library of the project, in an IDE whose Kotlin plugin reads classes compiled for Kotlin 2.4 (the
+plugin's own copy is compiled for 2.1, which IntelliJ 2025.1 reads). Build the two jars:
+
+```
+bazel build //sdk //sdk/script:ktrapic-script
+```
+
+and add `bazel-bin/sdk/sdk.jar` and `bazel-bin/sdk/script/ktrapic-script.jar` to your project as
+a library (Project Structure > Libraries; keep the file names, since the definition finds the SDK
+by the name `sdk`). If the IDE asks, allow the definition under Settings > Languages & Frameworks >
+Kotlin > Kotlin Scripting.
 
 ## Numbers
 
@@ -171,7 +183,7 @@ KTrapIC builds with [Bazel](https://bazel.build) (bzlmod), via
 
 ```
 bazel test //...
-bazel run //cli:ktrapic -- [--compact] [--register-calls] [--no-tail-calls] program.ic10.kts
+bazel run //cli:ktrapic -- program.ic10.kts
 ```
 
 ### Dependencies
@@ -236,9 +248,11 @@ java -jar ktfmt-0.64-with-dependencies.jar <files...>
 ## Tests
 
 Golden programs live in `test/cases`: each `X.ic10.kts` must compile to `X.ic10`, and to
-`X.compact.ic10` with compact output; one that calls functions with `jal` must also compile to
-`X.registers.ic10` with stack calls turned off, unless it is recursive, which needs them. After a deliberate change to the output, rewrite
-them (the path must be absolute):
+`X.compact.ic10` with compact output, as `@file:Compact` compiles it; one that calls functions
+with `jal` must also compile to `X.registers.ic10` with every function's arguments in registers,
+as `@file:InRegisters` compiles it, unless it is recursive, which needs the stack.
+`compiler/api`'s `FileAnnotationTest` checks that each annotation compiles every case as the
+option behind those goldens does. After a deliberate change to the output, rewrite them (the path must be absolute):
 
 ```
 bazel test //compiler/api:GoldenTest --test_env=KTRAPIC_UPDATE_GOLDENS=$PWD/test/cases

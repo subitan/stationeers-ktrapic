@@ -24,8 +24,8 @@ class KtrapicConfigurable : BoundConfigurable("KTrapIC") {
             .bindText({ settings.daemonJar.orEmpty() }, { settings.daemonJar = it })
             .align(AlignX.FILL)
             .comment(
-                "Blank: ${KtrapicPaths.BUILT_DAEMON_JAR} in the project, if it exists. " +
-                    "Build it with bazel build //daemon:ktrapic-daemon_deploy.jar"
+                "Blank: ${KtrapicPaths.BUILT_DAEMON_JAR} in the project, if it exists, or else " +
+                    "the daemon the plugin comes with"
             )
       }
       row("Java:") {
@@ -36,26 +36,6 @@ class KtrapicConfigurable : BoundConfigurable("KTrapIC") {
             .bindText({ settings.javaPath.orEmpty() }, { settings.javaPath = it })
             .align(AlignX.FILL)
             .comment("Blank: the IDE's own Java runtime (${KtrapicPaths.java(null)})")
-      }
-    }
-    group("Compile Options") {
-      row {
-        checkBox("Compact output")
-            .bindSelected({ settings.compact }, { settings.compact = it })
-            .comment("Resolve labels to line numbers and drop them, to save lines")
-      }
-      row {
-        checkBox("Stack calls")
-            .bindSelected({ settings.stackCalls }, { settings.stackCalls = it })
-            .comment(
-                "Pass functions' arguments on the stack, so they may be recursive; off passes " +
-                    "them in registers"
-            )
-      }
-      row {
-        checkBox("Tail calls")
-            .bindSelected({ settings.tailCalls }, { settings.tailCalls = it })
-            .comment("Compile a function's call to itself in tail position as a jump")
       }
     }
     group("Editor") {

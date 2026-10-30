@@ -5,20 +5,6 @@ import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 
-/** How the daemon compiles a program: a compile request's `options`. */
-data class CompileOptions(
-    val compact: Boolean = false,
-    val stackCalls: Boolean = true,
-    val tailCalls: Boolean = true,
-) {
-  fun toJson(): JsonObject =
-      JsonObject().apply {
-        addProperty("compact", compact)
-        addProperty("stack_calls", stackCalls)
-        addProperty("tail_calls", tailCalls)
-      }
-}
-
 /**
  * An error or warning at a 1-based [line] and [column] of the source, or with no position when
  * [line] is 0. [kotlin] marks the Kotlin compiler's own problems, which the Kotlin plugin reports

@@ -441,9 +441,10 @@ class CircuitHousingTest {
     assertThat(calling.lines).isGreaterThan(128)
     assertThat(calling.warnings.map { it.message })
         .containsExactly(
-            "The program is ${calling.lines} lines, over the chip's 128: compact output, which " +
-                "resolves labels to line numbers, saves $compactSaves lines; passing functions' " +
-                "arguments in registers saves lines (turn stack calls off, or mark the most-called " +
+            "The program is ${calling.lines} lines, over the chip's 128: compact output " +
+                "(@file:Compact), which resolves labels to line numbers, saves $compactSaves " +
+                "lines; passing functions' " +
+                "arguments in registers saves lines (add @file:InRegisters, or mark the most-called " +
                 "functions @InRegisters); $memory"
         )
 

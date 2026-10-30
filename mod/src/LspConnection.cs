@@ -265,7 +265,7 @@ namespace KTrapIC
         /// daemon that stops, or answers with an error, gives a failed response rather than
         /// throwing.
         /// </summary>
-        public async Task<CompileResponse> Compile(string uri, CompileOptions options)
+        public async Task<CompileResponse> Compile(string uri)
         {
             try
             {
@@ -273,7 +273,6 @@ namespace KTrapIC
                 var result = await Request("ktrapic/compile", new JObject
                 {
                     ["textDocument"] = new JObject { ["uri"] = uri },
-                    ["options"] = options.ToJson(),
                 }).ConfigureAwait(false);
                 return result.ToObject<CompileResponse>();
             }
