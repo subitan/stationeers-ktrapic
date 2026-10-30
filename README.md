@@ -137,8 +137,23 @@ and add `bazel-bin/sdk/sdk.jar` and `bazel-bin/sdk/script/ktrapic-script.jar` to
 your project as a library (Project Structure > Libraries; keep the file names, since the
 definition finds the SDK by the name `sdk`). IntelliJ discovers the definition from the
 jar; if it asks, allow it under Settings > Languages & Frameworks > Kotlin > Kotlin Scripting.
-IntelliJ checks Kotlin only: KTrapIC's own rules (supported constructs, register and size
-limits) come from the compiler, the playground or the CLI.
+
+The Kotlin plugin checks Kotlin only. KTrapIC's own plugin, in `intellij/`, adds KTrapIC's rules
+(supported constructs, register and size limits): it marks the compiler's errors and warnings in
+the editor as you type, and its IC10 tool window shows the compiled program, normal or compact,
+with its lines, bytes and registers against the chip's limits. It runs the compile daemon, so
+build that too, then the plugin (with JDK 21):
+
+```
+bazel build //daemon:ktrapic-daemon_deploy.jar
+cd intellij
+./gradlew buildPlugin
+```
+
+and install `intellij/build/distributions/ktrapic-intellij-<version>.zip` with Settings >
+Plugins > the gear menu > Install Plugin from Disk. In a checkout of this repository the plugin
+finds the daemon jar in `bazel-bin`; elsewhere, set its path under Settings > Tools > KTrapIC,
+along with the compile options. See [intellij/README.md](intellij/README.md).
 
 ## Numbers
 

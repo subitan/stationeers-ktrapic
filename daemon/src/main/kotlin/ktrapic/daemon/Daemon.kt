@@ -26,8 +26,10 @@ import ktrapic.ic10.Program
  * gets one line of base64-encoded JSON back. `code` is the source, or a map of module names to
  * sources whose `""` entry is the program. A success is `{"code", "num_lines", "num_bytes",
  * "num_registers", "warnings", "source_mapping"}`; a failure is `{"error": {"description", "line",
- * "column", ...}}`. `source_mapping` maps each 0-based source line, as a string key, to the 0-based
- * lines of `code` it compiled to, as PyTrapIC's does.
+ * "column", ...}}`. Each warning, and each of a failure's `errors`, is `{"description", "line",
+ * "column"}`, with `"kotlin": true` added for the Kotlin compiler's own diagnostics and syntax
+ * errors, which an editor with Kotlin support reports already. `source_mapping` maps each 0-based
+ * source line, as a string key, to the 0-based lines of `code` it compiled to, as PyTrapIC's does.
  *
  * Unlike PyTrapIC, `line` and `column` are both 1-based, and `line_end`/`column_end` repeat them
  * because the compiler reports only where a problem starts. All four are 0 when the compiler gives
@@ -179,8 +181,9 @@ object Daemon {
     return run(source, options, test?.asJsonObject, traceTick)
   }
 
-  private fun describe(error: ktrapic.api.CompileError) =
-      mapOf("description" to error.message, "line" to error.line, "column" to error.column)
+  private fun describe(error: ktrapic.api.CompileError): Map<String, Any> =
+      mapOf("description" to error.message, "line" to error.line, "column" to error.column) +
+          (if (error.kotlin) mapOf("kotlin" to true) else emptyMap())
 
   private fun error(description: String, stackTrace: String? = null) =
       JsonObject().apply {

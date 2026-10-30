@@ -106,7 +106,13 @@ class K2FrontendTest {
     assertThat(result).isInstanceOf(FrontendResult.Failure::class.java)
     assertThat(result.diagnostics)
         .containsExactly(
-            Diagnostic(Diagnostic.Severity.ERROR, "Syntax error: Expecting '}'", 2, 10)
+            Diagnostic(
+                Diagnostic.Severity.ERROR,
+                "Syntax error: Expecting '}'",
+                2,
+                10,
+                kotlin = true,
+            )
         )
   }
 
@@ -117,7 +123,15 @@ class K2FrontendTest {
 
     assertThat(result).isInstanceOf(FrontendResult.Failure::class.java)
     assertThat(result.diagnostics.first())
-        .isEqualTo(Diagnostic(Diagnostic.Severity.ERROR, "Syntax error: Unexpected symbol", 2, 1))
+        .isEqualTo(
+            Diagnostic(
+                Diagnostic.Severity.ERROR,
+                "Syntax error: Unexpected symbol",
+                2,
+                1,
+                kotlin = true,
+            )
+        )
   }
 
   @Test

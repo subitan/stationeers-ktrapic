@@ -27,7 +27,7 @@ class WarningTest {
   fun `an unused val in a block warns at its name`() {
     val warning = warnings("while (true) {\n  val unused = 2\n  yield()\n}\n").single()
 
-    assertThat(warning).isEqualTo(CompileError("Variable is unused.", 2, 7))
+    assertThat(warning).isEqualTo(CompileError("Variable is unused.", 2, 7, kotlin = true))
   }
 
   @Test
@@ -35,7 +35,7 @@ class WarningTest {
     val source = "while (true) {\n  var x = d0.Setting\n  db.Setting = x\n  x = 2.0\n  yield()\n}\n"
 
     assertThat(warnings(source))
-        .containsExactly(CompileError("Assigned value is never read.", 4, 3))
+        .containsExactly(CompileError("Assigned value is never read.", 4, 3, kotlin = true))
   }
 
   @Test

@@ -114,6 +114,7 @@ object ScriptWrapper {
                 "Syntax error: ${it.errorDescription}",
                 line,
                 column + 1,
+                kotlin = true,
             )
           }
 

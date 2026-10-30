@@ -42,8 +42,18 @@ import org.jetbrains.kotlin.fir.FirSession
 import org.jetbrains.kotlin.ir.declarations.IrModuleFragment
 import org.jetbrains.kotlin.psi.KtPsiFactory
 
-/** A problem the Kotlin compiler reported, at a position in the user's source (1-based). */
-data class Diagnostic(val severity: Severity, val message: String, val line: Int, val column: Int) {
+/**
+ * A problem with the program, at a position in the user's source (1-based). [kotlin] is true for
+ * the Kotlin compiler's own diagnostics and syntax errors, which an editor's Kotlin support reports
+ * too, and false for those KTrapIC adds.
+ */
+data class Diagnostic(
+    val severity: Severity,
+    val message: String,
+    val line: Int,
+    val column: Int,
+    val kotlin: Boolean = false,
+) {
   enum class Severity {
     ERROR,
     WARNING,
@@ -306,7 +316,7 @@ private class CollectingMessageCollector : MessageCollector {
             if (location == null || location.line <= 0) 0 to 0
             else wrapped.originalPosition(location.line, location.column)
         val text = session?.let { withCompanionsRendered(message.text, it) } ?: message.text
-        Diagnostic(severity, text, line, column)
+        Diagnostic(severity, text, line, column, kotlin = true)
       }
 }
 

@@ -1,0 +1,2 @@
+# The IntelliJ plugin builds with Gradle (see intellij/README.md), and its build outputs are large.
+intellij

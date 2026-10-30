@@ -44,8 +44,17 @@ data class CompileOptions(
     val tailCalls: Boolean = true,
 )
 
-/** A problem with the program, at a 1-based [line] and [column] of its source (0 if unknown). */
-data class CompileError(val message: String, val line: Int, val column: Int)
+/**
+ * A problem with the program, at a 1-based [line] and [column] of its source (0 if unknown).
+ * [kotlin] is true for the Kotlin compiler's own diagnostics and syntax errors, which an editor's
+ * Kotlin support reports too, and false for those KTrapIC adds.
+ */
+data class CompileError(
+    val message: String,
+    val line: Int,
+    val column: Int,
+    val kotlin: Boolean = false,
+)
 
 sealed interface CompileResult {
   /**
@@ -254,7 +263,7 @@ object Compiler {
           .distinct()
           .size
 
-  private fun Diagnostic.toError() = CompileError(message, line, column)
+  private fun Diagnostic.toError() = CompileError(message, line, column, kotlin)
 
   private class CompileFailure(val error: CompileError) : Exception(error.message)
 
