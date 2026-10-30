@@ -34,9 +34,9 @@ Publishing to the Steam Workshop isn't automated yet (#115).
 `intellij-release.yml` runs on a tag `intellij-vX.Y.Z`, or by hand (Actions > IntelliJ plugin
 release > Run workflow).
 
-- **Build, test and verify**, with no secrets: it checks the tag against `pluginVersion` in
-  `intellij/gradle.properties` and that `intellij/CHANGELOG.md` has a section for it, builds the
-  compile daemon with Bazel, and builds and tests the plugin with it. Then it runs the Plugin
+- **Build, test and verify**, with no secrets: it checks that the tag's commit is on `main`, the
+  tag against `pluginVersion` in `intellij/gradle.properties`, and that `intellij/CHANGELOG.md`
+  has a section for it. It builds the compile daemon with Bazel, and builds and tests the plugin with it. Then it runs the Plugin
   Verifier against the IDE releases JetBrains recommends for the plugin's range (2025.1 on), as
   Marketplace does on upload. The unsigned plugin and the verifier's reports are kept as the run's
   artifacts. A run by hand stops here, even on a tag.
@@ -53,7 +53,7 @@ The plugin's change notes on Marketplace are its version's section of `intellij/
 These need the maintainer's own accounts, so they are done by hand, once.
 
 1. **A JetBrains Marketplace account.** Sign in at <https://plugins.jetbrains.com> with a JetBrains
-   account, and accept the developer agreement when uploading the first plugin (step 6).
+   account, and accept the developer agreement when uploading the first plugin (step 7).
 2. **A Marketplace token.** At <https://plugins.jetbrains.com/author/me/tokens>, make a token for
    uploads. Store it as `PUBLISH_TOKEN` (step 4).
 3. **A signing key.** Run
@@ -72,15 +72,19 @@ These need the maintainer's own accounts, so they are done by hand, once.
      ```
      gh secret set PUBLISH_TOKEN --env marketplace
      ```
-5. **The first release**, 0.1.0, as below. Marketplace takes uploads through its API only for a
+5. **A run by hand.** Run the workflow on `main` (Actions > IntelliJ plugin release > Run
+   workflow), and check that the build job passes, the Plugin Verifier included. A run by hand
+   publishes nothing, so this tries the workflow, and the hosted runner's disk space for the
+   verifier's IDEs, before the first tag.
+6. **The first release**, 0.1.0, as below. Marketplace takes uploads through its API only for a
    plugin it already lists, so until the repository variable `MARKETPLACE_LISTED` is `true`, the
    workflow signs the plugin and makes its GitHub release but doesn't upload it. The run's summary
    then says to upload it by hand.
-6. **The first upload, by hand.** Download the signed zip from the GitHub release
+7. **The first upload, by hand.** Download the signed zip from the GitHub release
    `intellij-v0.1.0`, and upload it at <https://plugins.jetbrains.com/plugin/add>. Choose the MIT
    license, with the repository as its source code and issue tracker. JetBrains reviews a new
    plugin before listing it, which takes a few working days.
-7. **From then on, automatic.** Once the plugin is listed, set the variable:
+8. **From then on, automatic.** Once the plugin is listed, set the variable:
    ```
    gh variable set MARKETPLACE_LISTED --body true
    ```
@@ -110,9 +114,15 @@ To release version X.Y.Z (or X.Y.Z-beta.N):
 
 A release that fails before the publish job can be fixed in a new PR, then tagged again: delete the
 tag first (`git push origin :refs/tags/intellij-vX.Y.Z`, then `git tag -d intellij-vX.Y.Z`).
-A publish job that fails (an upload to Marketplace that fails or is rejected, say) can be re-run
-from the run's page (Re-run jobs > Re-run failed jobs), after approving it again: it signs the
-plugin again, replaces the zip on the GitHub release it already made, and uploads it again.
+
+A publish job that fails for a reason that isn't the plugin's (a network error, a wrong token, a
+Marketplace outage) can be re-run from the run's page (Re-run jobs > Re-run failed jobs), after
+approving it again: it signs the plugin again, replaces the zip on the GitHub release it already
+made, and uploads it again. A re-run uploads the same plugin, so it doesn't help an upload
+Marketplace rejects. A rejected plugin is fixed in a new PR and released as a new version.
+To release the same version again instead, delete its GitHub release and its tag together
+(`gh release delete intellij-vX.Y.Z --cleanup-tag`, then `git tag -d intellij-vX.Y.Z`) before
+tagging again, so that the new run makes the release afresh with the new change notes.
 Marketplace won't take the same version twice, so once a version is uploaded, a fix is a new
 version.
 

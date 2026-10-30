@@ -27,9 +27,16 @@ jobs:
       version: ${{ steps.version.outputs.version }}
     steps:
       - uses: actions/checkout@v7
-      - name: Check the tag against the plugin's version
+        with:
+          # The whole history, to check that a tag's commit is on main.
+          fetch-depth: 0
+      - name: Check the tag against main and the plugin's version
         id: version
         run: |
+          if [[ "$GITHUB_REF_TYPE" == tag ]] && ! git merge-base --is-ancestor "$GITHUB_SHA" origin/main; then
+            echo "Tag $GITHUB_REF_NAME is on a commit that isn't on main" >&2
+            exit 1
+          fi
           version=$(sed -n 's/^pluginVersion=//p' intellij/gradle.properties)
           if [[ "$GITHUB_REF_TYPE" == tag && "$GITHUB_REF_NAME" != "intellij-v$version" ]]; then
             echo "Tag $GITHUB_REF_NAME doesn't match intellij/gradle.properties' pluginVersion $version" >&2
