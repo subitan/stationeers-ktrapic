@@ -59,7 +59,7 @@ moment after typing stops:
   Kotlin.
 - The IC10 lines that the caret's line compiled to are highlighted.
 - The program itself says how it compiles, with file annotations at its top (see
-  `docs/LANGUAGE.md`'s "Choosing how a program compiles"): `@file:Compact` resolves labels to
+  `docs/LANGUAGE.md`'s "How a program compiles"): `@file:Compact` resolves labels to
   line numbers and drops them, to save lines; `@file:InRegisters` passes every function's
   arguments and results in registers rather than on the chip's stack; `@file:NoTailCalls`
   compiles a function's call to itself in tail position as a call rather than a loop. The plugin

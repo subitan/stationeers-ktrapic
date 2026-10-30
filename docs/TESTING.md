@@ -90,7 +90,7 @@ runtime error.
 
 ## The daemon's run action
 
-`{"action": "run", "code": ..., "options": {...}, "test": {...}, "trace_tick": N}` answers
+`{"action": "run", "code": ..., "test": {...}, "trace_tick": N}` answers
 with what a compile request answers, plus `run` if the program compiled:
 
 - `passed`, and `error`: `{"tick", "line", "message"}` for a runtime error, or null.
