@@ -1,8 +1,8 @@
 // The playground's file-annotation code: what it finds in a program's header, and what ticking or
 // unticking a checkbox does to the program. Run with `node --test playground/*.test.mjs`.
 //
-// Undo (Ctrl+Z after a tick) goes through the browser's editing commands, so it is checked in the
-// page itself, not here.
+// Undo (Ctrl+Z after a tick) goes through the editor's own edits (Monaco's, or the browser's for
+// the plain textarea), so it is checked in the page itself, not here.
 
 import { test } from "node:test";
 import assert from "node:assert/strict";

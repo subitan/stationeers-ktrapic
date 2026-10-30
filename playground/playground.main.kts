@@ -8,22 +8,32 @@
 //
 // The script starts the daemon (a separate JVM, so this script needs no compiler of its own),
 // serves playground/index.html, and forwards each compile or run request to the daemon unchanged.
+// For completion, hovers and signature help it runs the same jar a second time in its LSP mode, as
+// the IC10 Editor does in game, and relays the page's LSP messages to it (see LanguageServer).
 // The Open menu lists the .ic10.kts programs in the source directories (default: test/cases); a
 // program's test (X.test.json beside X.ic10.kts, see docs/TESTING.md) opens with it, and saving
 // the test writes that file.
 
 import com.sun.net.httpserver.HttpExchange
 import com.sun.net.httpserver.HttpServer
+import java.io.BufferedInputStream
 import java.io.BufferedReader
 import java.io.BufferedWriter
+import java.io.ByteArrayOutputStream
 import java.io.File
+import java.io.OutputStream
 import java.net.InetSocketAddress
 import java.net.URLDecoder
 import java.nio.file.AtomicMoveNotSupportedException
 import java.nio.file.Files
 import java.nio.file.StandardCopyOption
 import java.util.Base64
+import java.util.concurrent.CompletableFuture
+import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.Executors
+import java.util.concurrent.TimeUnit
+import java.util.concurrent.TimeoutException
+import java.util.concurrent.atomic.AtomicInteger
 import kotlin.system.exitProcess
 
 val usage =
@@ -49,8 +59,8 @@ if (sourceDirs.isEmpty()) sourceDirs += File("test/cases")
 
 val page = File("playground/index.html")
 
-/** The page's file-annotation code, which it loads as a script of its own. */
-val annotations = File("playground/annotations.js")
+/** The page's own scripts, which it loads beside it: file annotations, and reading the compiler. */
+val scripts = listOf("annotations.js", "editing.js").associateWith { File("playground/$it") }
 
 if (!page.isFile) fail("Run this from the repository root (no playground/index.html here).")
 
@@ -98,6 +108,300 @@ class Daemon(private val jar: File) {
     return started
   }
 }
+
+/**
+ * The compile daemon's LSP mode at [jar] (`--lsp`, see daemon/.../lsp/LspServer.kt), started on
+ * first use and restarted if it exits: the server the IC10 Editor talks to in game, so the page
+ * completes and hovers as the game does.
+ *
+ * It runs as a second JVM beside [Daemon], whose line protocol has no completion or hovers. The
+ * page sends one message per HTTP request (see `/api/lsp`): a request gets its id here, and its
+ * response, with that id, is the HTTP response. The server's notifications (its diagnostics) are
+ * dropped, since the page marks the problems its compiles find.
+ *
+ * A restarted server has no documents open, and answers a request about one with an error saying
+ * so; the page then opens its document again. A server that doesn't answer a request in time, or
+ * says it is shut down, is stopped, so the next message starts a fresh one.
+ */
+class LanguageServer(private val jar: File) {
+  /** One run of the server, and the requests written to it that wait for its answers. */
+  private class Run(val process: Process) {
+    val input: OutputStream = process.outputStream
+    val waiting = ConcurrentHashMap<Int, CompletableFuture<String>>()
+  }
+
+  @Volatile private var run: Run? = null
+  private val ids = AtomicInteger()
+
+  init {
+    Runtime.getRuntime().addShutdownHook(Thread { run?.process?.destroy() })
+  }
+
+  /**
+   * Sends a request with [params], one JSON object (see [isJsonObject]), and returns the JSON-RPC
+   * response.
+   */
+  fun request(method: String, params: String): String {
+    val id = ids.incrementAndGet()
+    val answer = CompletableFuture<String>()
+    val sent =
+        write(
+            """{"jsonrpc":"2.0","id":$id,"method":${jsonString(method)},"params":$params}""",
+            id to answer,
+        )
+    try {
+      val response = answer.get(30, TimeUnit.SECONDS)
+      if (SHUT_DOWN.containsMatchIn(response)) stop(sent)
+      return response
+    } catch (e: TimeoutException) {
+      stop(sent)
+      return failure(id, "The language server didn't answer $method, so it was stopped")
+    } finally {
+      sent.waiting.remove(id)
+    }
+  }
+
+  /**
+   * Sends a notification with [params], one JSON object (see [isJsonObject]). A `didClose` is
+   * dropped when no server is running: a fresh server has no documents open, so there is nothing
+   * for it to close.
+   */
+  fun notify(method: String, params: String) {
+    val body = """{"jsonrpc":"2.0","method":${jsonString(method)},"params":$params}"""
+    if (method == "textDocument/didClose") writeIfRunning(body) else write(body)
+  }
+
+  /**
+   * Writes one message to the running server, starting one first if none is running, and returns
+   * that run. The [answer] it waits for, by id, is registered before the message is written, so the
+   * response can't come first; it is removed again if the message can't be written.
+   */
+  @Synchronized
+  private fun write(body: String, answer: Pair<Int, CompletableFuture<String>>? = null): Run {
+    val current = running() ?: start()
+    if (answer != null) current.waiting[answer.first] = answer.second
+    try {
+      frame(current, body)
+    } catch (e: Exception) {
+      if (answer != null) current.waiting.remove(answer.first)
+      throw e
+    }
+    return current
+  }
+
+  /** Writes one message to the running server, if one is running. */
+  @Synchronized
+  private fun writeIfRunning(body: String) {
+    running()?.let { frame(it, body) }
+  }
+
+  private fun running(): Run? = run?.takeIf { it.process.isAlive }
+
+  /**
+   * Stops [stale] if it is still the running server; the next message starts another. The process
+   * is destroyed before the lock is taken, since a write blocked on the server's full input holds
+   * it; the destroy breaks that pipe, so the write fails and lets go of the lock. A write that
+   * takes the lock in between either finds the process dead and starts a fresh one, or fails
+   * writing to it.
+   */
+  private fun stop(stale: Run) {
+    stale.process.destroy()
+    synchronized(this) { if (run === stale) run = null }
+  }
+
+  private fun frame(to: Run, body: String) {
+    val bytes = body.toByteArray(Charsets.UTF_8)
+    to.input.write("Content-Length: ${bytes.size}\r\n\r\n".toByteArray(Charsets.US_ASCII) + bytes)
+    to.input.flush()
+  }
+
+  /** Starts the server and initializes it. It handles messages in order, so none wait for that. */
+  private fun start(): Run {
+    val java = File(System.getProperty("java.home"), "bin/java").path
+    val started =
+        Run(
+            ProcessBuilder(java, "-jar", jar.path, "--lsp")
+                .redirectError(ProcessBuilder.Redirect.INHERIT)
+                .start()
+        )
+    run = started
+    val output = BufferedInputStream(started.process.inputStream)
+    Thread {
+      while (true) {
+        val message = read(output) ?: break
+        val id = RESPONSE.find(message)?.groupValues?.get(1)?.toIntOrNull() ?: continue
+        started.waiting[id]?.complete(message)
+      }
+      // This run stopped: answer what was sent to it. Requests sent to a later run wait for that.
+      for ((id, answer) in started.waiting) {
+        answer.complete(failure(id, "The language server stopped"))
+      }
+    }
+        .apply { isDaemon = true }
+        .start()
+    frame(
+        started,
+        """{"jsonrpc":"2.0","id":0,"method":"initialize","params":{"capabilities":{}}}""",
+    )
+    frame(started, """{"jsonrpc":"2.0","method":"initialized","params":{}}""")
+    return started
+  }
+
+  /** The next message's body, or null at the end of the output (as the daemon's MessageReader). */
+  private fun read(from: BufferedInputStream): String? {
+    var length = -1
+    while (true) {
+      val line = readLine(from) ?: return null
+      if (line.isEmpty()) {
+        if (length >= 0) break else continue
+      }
+      if (line.substringBefore(':').trim().equals("Content-Length", ignoreCase = true)) {
+        length = line.substringAfter(':').trim().toIntOrNull() ?: return null
+      }
+    }
+    val body = from.readNBytes(length)
+    return if (body.size < length) null else String(body, Charsets.UTF_8)
+  }
+
+  private fun readLine(from: BufferedInputStream): String? {
+    val bytes = ByteArrayOutputStream()
+    while (true) {
+      val b = from.read()
+      if (b < 0) return null
+      if (b == '\n'.code) break
+      bytes.write(b)
+    }
+    return bytes.toString(Charsets.US_ASCII).removeSuffix("\r")
+  }
+
+  private fun failure(id: Int, message: String) =
+      """{"jsonrpc":"2.0","id":$id,"error":{"code":-32603,"message":${jsonString(message)}}}"""
+
+  private companion object {
+    /** A response's id: the daemon writes `jsonrpc` and then `id` first, in that order. */
+    val RESPONSE = Regex("""^\{"jsonrpc":"2\.0","id":(\d+),""")
+
+    /** The error a server that has been shut down answers every request with. */
+    val SHUT_DOWN =
+        Regex("""^\{"jsonrpc":"2\.0","id":\d+,"error":\{[^}]*"The server is shut down"""")
+  }
+}
+
+/**
+ * Whether [text] is exactly one JSON object (RFC 8259), nested at most 1000 deep, with no number
+ * longer than [MAX_NUMBER_LENGTH] characters. Such a text, written into a message as a field's
+ * value, is that value and nothing more: it can't add fields of its own, such as another `method`
+ * or `id`. The language server's parser (Gson) can't read a number over about 1024 characters, and
+ * its answer to a message it can't parse carries no id, so nothing here would ever receive it.
+ */
+fun isJsonObject(text: String): Boolean {
+  val json = JsonCheck(text)
+  return json.next() == '{' && json.value(0) && json.atEnd()
+}
+
+/** Reads JSON from [text] without keeping it, for [isJsonObject]. */
+class JsonCheck(private val text: String) {
+  private var at = 0
+
+  /** The next character after any white space, or null at the end. */
+  fun next(): Char? {
+    while (at < text.length && text[at] in " \t\r\n") at++
+    return text.getOrNull(at)
+  }
+
+  fun atEnd() = next() == null
+
+  /** Reads one value, inside [depth] arrays and objects, and says whether it is valid. */
+  fun value(depth: Int): Boolean =
+      when (next()) {
+        '{' -> depth < 1000 && members('}', depth) { string() && next() == ':' && skip() }
+        '[' -> depth < 1000 && members(']', depth) { true }
+        '"' -> string()
+        't' -> word("true")
+        'f' -> word("false")
+        'n' -> word("null")
+        else -> number()
+      }
+
+  /** Reads `{`/`[`, then values (each after [key]) separated by commas, then [close]. */
+  private fun members(close: Char, depth: Int, key: () -> Boolean): Boolean {
+    at++
+    if (next() == close) return skip()
+    while (true) {
+      if (!key() || !value(depth + 1)) return false
+      when (next()) {
+        ',' -> skip()
+        close -> return skip()
+        else -> return false
+      }
+    }
+  }
+
+  /** Steps past the current character; true, for use in conditions. */
+  private fun skip(): Boolean {
+    at++
+    return true
+  }
+
+  private fun word(word: String) = text.startsWith(word, at).also { if (it) at += word.length }
+
+  private fun string(): Boolean {
+    if (next() != '"') return false
+    at++
+    while (at < text.length) {
+      val c = text[at++]
+      when {
+        c == '"' -> return true
+        c < ' ' -> return false
+        c == '\\' -> {
+          val escape = text.getOrNull(at++) ?: return false
+          if (escape == 'u') {
+            if (at + 4 > text.length || !text.substring(at, at + 4).all(::isHex)) return false
+            at += 4
+          } else if (escape !in "\"\\/bfnrt") return false
+        }
+      }
+    }
+    return false
+  }
+
+  private fun isHex(c: Char) = c in '0'..'9' || c in 'a'..'f' || c in 'A'..'F'
+
+  private fun number(): Boolean {
+    val start = at
+    if (!numberSyntax()) return false
+    return at - start <= MAX_NUMBER_LENGTH
+  }
+
+  private fun numberSyntax(): Boolean {
+    if (text.getOrNull(at) == '-') at++
+    if (text.getOrNull(at) == '0') at++ else if (!digits()) return false
+    if (text.getOrNull(at) == '.') {
+      at++
+      if (!digits()) return false
+    }
+    if (text.getOrNull(at) == 'e' || text.getOrNull(at) == 'E') {
+      at++
+      if (text.getOrNull(at) == '+' || text.getOrNull(at) == '-') at++
+      if (!digits()) return false
+    }
+    return true
+  }
+
+  private fun digits(): Boolean {
+    val start = at
+    while (at < text.length && text[at] in '0'..'9') at++
+    return at > start
+  }
+}
+
+val MAX_NUMBER_LENGTH = 100
+
+/** The LSP requests and notifications the page may send, all about its own document. */
+val lspRequests =
+    setOf("textDocument/completion", "textDocument/hover", "textDocument/signatureHelp")
+val lspNotifications =
+    setOf("textDocument/didOpen", "textDocument/didChange", "textDocument/didClose")
 
 fun jsonString(text: String): String = buildString {
   append('"')
@@ -178,6 +482,9 @@ fun saveTest(file: File, body: ByteArray) {
 
 val MAX_TEST_BYTES = 1 shl 20
 
+/** The largest LSP message body the page may send: a whole program, in a `didOpen`/`didChange`. */
+val MAX_LSP_BYTES = 1 shl 20
+
 fun query(exchange: HttpExchange): Map<String, String> =
     exchange.requestURI.rawQuery
         .orEmpty()
@@ -210,6 +517,8 @@ val version =
 
 val daemon = Daemon(daemonJar)
 
+val languageServer = LanguageServer(daemonJar)
+
 val hosts = setOf("127.0.0.1:$port", "localhost:$port")
 
 /**
@@ -235,8 +544,13 @@ server.createContext("/") { exchange ->
       !isLocal(exchange) -> send(exchange, 403, """{"error":"forbidden"}""")
       exchange.requestMethod == "GET" && (path == "/" || path == "/index.html") ->
           send(exchange, 200, page.readText(), "text/html")
-      exchange.requestMethod == "GET" && path == "/annotations.js" ->
-          send(exchange, 200, annotations.readText(), "text/javascript")
+      exchange.requestMethod == "GET" && path.removePrefix("/") in scripts ->
+          send(
+              exchange,
+              200,
+              scripts.getValue(path.removePrefix("/")).readText(),
+              "text/javascript",
+          )
       exchange.requestMethod == "GET" && path == "/api/info" -> {
         val groups =
             sources().entries.joinToString(",") { (group, names) ->
@@ -286,6 +600,29 @@ server.createContext("/") { exchange ->
               send(exchange, 415, """{"error":{"description":"Send application/json"}}""")
           request.isBlank() -> send(exchange, 400, """{"error":{"description":"No request"}}""")
           else -> send(exchange, 200, daemon.request(request))
+        }
+      }
+      exchange.requestMethod == "POST" && path == "/api/lsp" -> {
+        // One LSP message to the language server: its method in the query, its params as the body.
+        // A request is answered with the JSON-RPC response; a notification with {}. The message's
+        // method and id are the relay's own; the body is only ever the value of its params.
+        val type = exchange.requestHeaders.getFirst("Content-Type").orEmpty()
+        val method = query(exchange)["method"].orEmpty()
+        val body = exchange.requestBody.use { it.readNBytes(MAX_LSP_BYTES + 1) }
+        val params = body.decodeToString()
+        when {
+          !type.startsWith("application/json") ->
+              send(exchange, 415, """{"error":{"description":"Send application/json"}}""")
+          body.size > MAX_LSP_BYTES ->
+              send(exchange, 413, """{"error":{"description":"Too large"}}""")
+          !isJsonObject(params) ->
+              send(exchange, 400, """{"error":{"description":"Send one JSON object"}}""")
+          method in lspRequests -> send(exchange, 200, languageServer.request(method, params))
+          method in lspNotifications -> {
+            languageServer.notify(method, params)
+            send(exchange, 200, "{}")
+          }
+          else -> send(exchange, 404, """{"error":"not found"}""")
         }
       }
       else -> send(exchange, 404, """{"error":"not found"}""")
