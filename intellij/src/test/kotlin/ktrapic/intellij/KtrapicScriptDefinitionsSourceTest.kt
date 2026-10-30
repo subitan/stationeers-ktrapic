@@ -28,6 +28,12 @@ class KtrapicScriptDefinitionsSourceTest : BasePlatformTestCase() {
     )
   }
 
+  fun `test each call makes its own definition`() {
+    val source = KtrapicScriptDefinitionsSource(project)
+
+    assertNotSame(source.definitions.single(), source.definitions.single())
+  }
+
   fun `test programs compile against the bundled SDK and the standard library`() {
     val definition = KtrapicScriptDefinitionsSource(project).definitions.single()
     val configuration = definition.compilationConfiguration

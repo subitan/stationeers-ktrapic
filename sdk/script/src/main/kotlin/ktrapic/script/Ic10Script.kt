@@ -7,8 +7,10 @@ import kotlin.script.experimental.api.acceptedLocations
 import kotlin.script.experimental.api.defaultImports
 import kotlin.script.experimental.api.displayName
 import kotlin.script.experimental.api.ide
-import kotlin.script.experimental.jvm.dependenciesFromClassContext
 import kotlin.script.experimental.jvm.jvm
+import kotlin.script.experimental.jvm.updateClasspath
+import kotlin.script.experimental.jvm.util.scriptCompilationClasspathFromContext
+import kotlin.script.experimental.jvm.util.scriptCompilationClasspathFromContextOrNull
 
 /**
  * The Kotlin script definition for KTrapIC programs (`*.ic10.kts`), so an IDE checks them as the
@@ -37,11 +39,17 @@ object Ic10ScriptConfiguration :
       displayName("KTrapIC program")
       defaultImports("ktrapic.*")
       jvm {
-        dependenciesFromClassContext(
-            Ic10Script::class,
-            "sdk",
-            "kotlin-stdlib",
-            wholeClasspath = false,
+        // Picking jars by name yields nothing unless every name matches, so the SDK and the
+        // standard library are asked for together and, where the definition's class loader shows
+        // no kotlin-stdlib jar (a project with only the SDK and script jars as a library), the SDK
+        // alone.
+        val classLoader = Ic10Script::class.java.classLoader
+        updateClasspath(
+            scriptCompilationClasspathFromContextOrNull(
+                "sdk",
+                "kotlin-stdlib",
+                classLoader = classLoader,
+            ) ?: scriptCompilationClasspathFromContext("sdk", classLoader = classLoader)
         )
       }
       ide { acceptedLocations(ScriptAcceptedLocation.Everywhere) }

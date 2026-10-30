@@ -4,8 +4,9 @@ name: IntelliJ plugin release
 # intellij/gradle.properties' pluginVersion), signs it, once a reviewer of the "marketplace"
 # environment approves, attaches it to a GitHub release, and publishes it to JetBrains Marketplace.
 # Marketplace takes uploads this way only for a plugin it already lists, so until the repository
-# variable MARKETPLACE_LISTED is true the first one is uploaded by hand. Run by hand, the workflow
-# builds, tests and verifies the plugin without publishing it. See docs/RELEASING.md.
+# variable MARKETPLACE_LISTED is true the first one is uploaded by hand. Run by hand, on a branch or
+# a tag, the workflow builds, tests and verifies the plugin without publishing it. See
+# docs/RELEASING.md.
 
 on:
   push:
@@ -74,25 +75,28 @@ jobs:
           name: plugin-verifier-reports
           path: intellij/build/reports/pluginVerifier
 
+  # Each step is given only the secrets it uses. Re-running the job after a failure (a failed upload
+  # to Marketplace, say) signs the plugin again and replaces the GitHub release's zip.
   publish:
     name: Sign and publish
     needs: build
-    if: github.ref_type == 'tag'
+    if: github.event_name == 'push' && github.ref_type == 'tag'
     runs-on: ubuntu-latest
     # Holds the signing and Marketplace secrets, and asks its reviewers to approve each publish.
     environment: marketplace
     permissions:
       contents: write
     env:
-      CERTIFICATE_CHAIN: ${{ secrets.CERTIFICATE_CHAIN }}
-      PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
-      PRIVATE_KEY_PASSWORD: ${{ secrets.PRIVATE_KEY_PASSWORD }}
-      PUBLISH_TOKEN: ${{ secrets.PUBLISH_TOKEN }}
       LISTED: ${{ vars.MARKETPLACE_LISTED }}
       VERSION: ${{ needs.build.outputs.version }}
     steps:
       - uses: actions/checkout@v7
       - name: Check the secrets are set
+        env:
+          CERTIFICATE_CHAIN: ${{ secrets.CERTIFICATE_CHAIN }}
+          PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
+          PRIVATE_KEY_PASSWORD: ${{ secrets.PRIVATE_KEY_PASSWORD }}
+          PUBLISH_TOKEN: ${{ secrets.PUBLISH_TOKEN }}
         run: |
           names=(CERTIFICATE_CHAIN PRIVATE_KEY PRIVATE_KEY_PASSWORD)
           if [[ "$LISTED" == true ]]; then names+=(PUBLISH_TOKEN); fi
@@ -114,25 +118,40 @@ jobs:
           path: daemon-out
       - name: Sign the plugin
         working-directory: intellij
+        env:
+          CERTIFICATE_CHAIN: ${{ secrets.CERTIFICATE_CHAIN }}
+          PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
+          PRIVATE_KEY_PASSWORD: ${{ secrets.PRIVATE_KEY_PASSWORD }}
         run: |
           bash ./gradlew --no-daemon signPlugin \
             "-PktrapicDaemonJar=$GITHUB_WORKSPACE/daemon-out/ktrapic-daemon_deploy.jar"
+      # A re-run finds the release already made, and replaces its zip.
       - name: Attach it to a GitHub release
         env:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
         run: |
+          zip=(intellij/build/distributions/*-signed.zip)
+          if gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1; then
+            gh release upload "$GITHUB_REF_NAME" --clobber "${zip[@]}"
+            exit
+          fi
           notes=$(awk -v v="$VERSION" 'index($0, "## [" v "]") == 1 {on=1; next} index($0, "## [") == 1 {on=0} on' intellij/CHANGELOG.md)
           prerelease=()
           if [[ "$VERSION" == *-* ]]; then prerelease=(--prerelease); fi
           gh release create "$GITHUB_REF_NAME" "${prerelease[@]}" \
-            --title "KTrapIC for IntelliJ IDEA $VERSION" --notes "$notes" \
-            intellij/build/distributions/*-signed.zip
+            --title "KTrapIC for IntelliJ IDEA $VERSION" --notes "$notes" "${zip[@]}"
       # Marketplace takes uploads through its API only for a plugin it already lists; the first
-      # is uploaded by hand (see docs/RELEASING.md).
+      # is uploaded by hand (see docs/RELEASING.md). Publishing runs signPlugin too, so it needs the
+      # signing secrets.
       - name: Publish it to JetBrains Marketplace
         if: vars.MARKETPLACE_LISTED == 'true'
         working-directory: intellij
+        env:
+          CERTIFICATE_CHAIN: ${{ secrets.CERTIFICATE_CHAIN }}
+          PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
+          PRIVATE_KEY_PASSWORD: ${{ secrets.PRIVATE_KEY_PASSWORD }}
+          PUBLISH_TOKEN: ${{ secrets.PUBLISH_TOKEN }}
         run: |
           bash ./gradlew --no-daemon publishPlugin \
             "-PktrapicDaemonJar=$GITHUB_WORKSPACE/daemon-out/ktrapic-daemon_deploy.jar"

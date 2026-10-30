@@ -39,8 +39,8 @@ release > Run workflow).
   compile daemon with Bazel, and builds and tests the plugin with it. Then it runs the Plugin
   Verifier against the IDE releases JetBrains recommends for the plugin's range (2025.1 on), as
   Marketplace does on upload. The unsigned plugin and the verifier's reports are kept as the run's
-  artifacts. A run by hand stops here.
-- **Sign and publish**, for a tag only, in the `marketplace` environment: it waits for one of that
+  artifacts. A run by hand stops here, even on a tag.
+- **Sign and publish**, for a pushed tag only, in the `marketplace` environment: it waits for one of that
   environment's reviewers to approve it in the run's page. Then it signs the plugin, attaches the
   signed zip to a GitHub release `intellij-vX.Y.Z` with the version's change notes, and uploads it
   to JetBrains Marketplace. A version with a suffix, such as `0.2.0-beta.1`, goes to the
@@ -60,8 +60,8 @@ These need the maintainer's own accounts, so they are done by hand, once.
    ```
    intellij/make-signing-key.sh <a new directory outside the repository>
    ```
-   It asks for a password, makes the key and a self-signed certificate (as JetBrains' signing
-   guide does) and prints the commands that store them as secrets. The key never goes in the
+   It asks for a password, makes a key encrypted with it and a self-signed certificate (as
+   JetBrains' signing guide does) and prints the commands that store them as secrets. The key never goes in the
    repository; a new one can be made at any time, and the next release is signed with it.
 4. **The `marketplace` environment.** In the repository's Settings > Environments, make an
    environment named `marketplace`:
@@ -110,6 +110,9 @@ To release version X.Y.Z (or X.Y.Z-beta.N):
 
 A release that fails before the publish job can be fixed in a new PR, then tagged again: delete the
 tag first (`git push origin :refs/tags/intellij-vX.Y.Z`, then `git tag -d intellij-vX.Y.Z`).
+A publish job that fails (an upload to Marketplace that fails or is rejected, say) can be re-run
+from the run's page (Re-run jobs > Re-run failed jobs), after approving it again: it signs the
+plugin again, replaces the zip on the GitHub release it already made, and uploads it again.
 Marketplace won't take the same version twice, so once a version is uploaded, a fix is a new
 version.
 
