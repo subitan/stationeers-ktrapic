@@ -63,7 +63,67 @@ public class WarningsTest : IDisposable
         var routed = Warnings.Route(Warned((3, 1, "Past the end"), (1, 2, "Here")), (line, column) => line < 2);
 
         Assert.Equal(new[] { "Here" }, routed.Placed.Select(w => w.Message));
-        Assert.Equal(new[] { "Past the end" }, routed.Unplaced);
+        Assert.Equal(new[] { "line 3, column 1: Past the end" }, routed.Unplaced);
+        Assert.Equal("Warning: line 3, column 1: Past the end", Warnings.StatusLine(null, routed.Unplaced));
+    }
+
+    private sealed class FakeToken { }
+
+    [Fact]
+    public void WarningsMarkTheTokensAtTheirPlacesAndTwoOnOneTokenBothShow()
+    {
+        var token = new FakeToken();
+        var marks = new WarningMarks<FakeToken>();
+
+        marks.Apply(Warned((2, 5, "Unused"), (2, 6, "Deprecated"), (4, 1, "Nothing here")), 7,
+            (line, column) => line == 1 ? token : null);
+
+        Assert.True(marks.Any);
+        Assert.Equal(new[] { "Unused", "Deprecated" }, marks.At(token));
+        Assert.Null(marks.At(new FakeToken()));
+        Assert.Null(marks.At(null));
+        Assert.Equal(new[] { "line 4, column 1: Nothing here" }, marks.Routed.Unplaced);
+    }
+
+    [Fact]
+    public void NewTokensForTheSameCodeAreMarkedAgain()
+    {
+        var before = new FakeToken();
+        var after = new FakeToken();
+        var marks = new WarningMarks<FakeToken>();
+        marks.Apply(Warned((1, 3, "Unused")), 7, (line, column) => before);
+
+        marks.Remark(7, (line, column) => line == 0 && column == 2 ? after : null);
+
+        Assert.Null(marks.At(before));
+        Assert.Equal(new[] { "Unused" }, marks.At(after));
+        Assert.Equal(1, marks.Routed.Count);
+    }
+
+    [Fact]
+    public void TokensForChangedCodeAreNotMarkedAgain()
+    {
+        var before = new FakeToken();
+        var marks = new WarningMarks<FakeToken>();
+        marks.Apply(Warned((1, 3, "Unused")), 7, (line, column) => before);
+
+        marks.Remark(8, (line, column) => new FakeToken());
+
+        Assert.Equal(new[] { "Unused" }, marks.At(before));
+    }
+
+    [Fact]
+    public void ANewCompilesWarningsReplaceTheMarks()
+    {
+        var token = new FakeToken();
+        var marks = new WarningMarks<FakeToken>();
+        marks.Apply(Warned((1, 1, "Unused")), 7, (line, column) => token);
+
+        marks.Apply(Warned((0, 0, "Too long")), 8, (line, column) => token);
+
+        Assert.False(marks.Any);
+        Assert.Null(marks.At(token));
+        Assert.Equal(new[] { "Too long" }, marks.Routed.Unplaced);
     }
 
     [Fact]
@@ -134,6 +194,19 @@ public class WarningsTest : IDisposable
             Warnings.SummaryLines(routed, 72));
     }
 
+    [Fact]
+    public void TheToolbarCountListsTwentyWarningsThenSaysHowManyMore()
+    {
+        var many = Enumerable.Range(1, 25).Select(i => (i, 1, $"Deprecated {i}")).ToArray();
+
+        var lines = Warnings.SummaryLines(Warnings.Route(Warned(many), Anywhere), 72);
+
+        Assert.Equal(21, lines.Count);
+        Assert.Equal("Warning: line 20, column 1: Deprecated 20", lines[19]);
+        Assert.Equal("... and 5 more", lines[20]);
+        Assert.Equal(20, Warnings.SummaryLines(Warnings.Route(Warned(many.Take(20).ToArray()), Anywhere), 72).Count);
+    }
+
     private async Task<CompileResponse> Compile(string text, CompileOptions options)
     {
         _daemon = new TestConnection();
@@ -149,13 +222,19 @@ public class WarningsTest : IDisposable
     public async Task AKotlinWarningIsMarkedWhereTheCompilerPlacesIt()
     {
         // A call to a deprecated function: Kotlin warns of it at the call.
-        var response = await Compile("@Deprecated(\"old\") fun f() = 1.0\ndb.Setting = f()\n", new CompileOptions(false));
+        string text = "@Deprecated(\"old\") fun f() = 1.0\ndb.Setting = f()\n";
+        var response = await Compile(text, new CompileOptions(false));
 
-        var routed = Warnings.Route(response, Anywhere);
+        // As the editor finds a token for it: something other than space at the column, or just before it.
+        var lines = text.Split('\n');
+        bool Marked(int line, int column) =>
+            column >= 0 && column < lines[line].Length && !char.IsWhiteSpace(lines[line][column]);
+        var routed = Warnings.Route(response, (line, column) => line < lines.Length && (Marked(line, column) || Marked(line, column - 1)));
 
         var warning = Assert.Single(routed.Placed);
         Assert.Empty(routed.Unplaced);
         Assert.Equal((1, 13), (warning.Line, warning.Column));
+        Assert.Equal('f', lines[warning.Line][warning.Column]);
         Assert.Contains("deprecated", warning.Message);
         Assert.Equal("Warning: " + warning.Message, Assert.Single(Warnings.HoverLines(warning.Message, Hovers.Width)));
     }

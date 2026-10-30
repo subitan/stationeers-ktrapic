@@ -49,12 +49,14 @@ moment after typing stops:
   it shows the message in the status line at the bottom. A warning with no place in the code, such
   as the program being over the chip's 128 lines (with what could make it shorter) or tail calls
   compiled as stack calls for want of registers, is shown in that status line whenever the caret
-  isn't on an error or a warning. The IC10 Editor itself shows errors only, so the plugin shows
-  warnings from its own compile, as the code was when compiled; a warning's underline goes when its
-  line is edited, as an error's does, and the rest change with the next compile.
+  isn't on an error or a warning; so is one placed where there's nothing to underline, such as
+  on a blank, starting with its line and column. The IC10 Editor itself shows errors only, so the
+  plugin shows warnings from its own compile, as the code was when compiled; a warning's underline
+  goes when its line is edited, as an error's does, and the rest change with the next compile.
 - The toolbar shows the IC10's lines, bytes and registers, and how many warnings there are, in
-  orange; the mouse on that count lists them all, with where each is. The editor's size limits
-  (128 lines, 4096 bytes) apply to the IC10, not to the Kotlin.
+  orange; the mouse on that count lists them, with where each is: the first 20, then how many
+  more there are. The editor's size limits (128 lines, 4096 bytes) apply to the IC10, not to the
+  Kotlin.
 - The IC10 lines that the caret's line compiled to are highlighted.
 - "Compact" resolves labels to line numbers and drops them, to save lines.
 - "Stack calls" (on by default) passes functions' arguments and results on the chip's stack, so
@@ -203,9 +205,10 @@ document's diagnostics reaching only it, documents opened again on a daemon star
 completions, hovers and signatures), the daemon's LSP mode message by message through that client
 (`DaemonLspTest.cs`), the request queues and which completions are shown (`CompletionsTest.cs`),
 where hovers and signatures are asked for and where a signature's active parameter is
-(`HoversTest.cs`), which warnings are underlined and which go to the status line, and the text of
-the hover, the status line and the toolbar's count (`WarningsTest.cs`, partly against a real
-daemon), and the highlighting's name lookup.
+(`HoversTest.cs`), which warnings are underlined and which go to the status line, the tokens
+marked again when the editor parses the same code anew, and the text of the hover, the status line
+and the toolbar's count (`WarningsTest.cs`, partly against a real daemon), and the highlighting's
+name lookup.
 What needs the game, the editor's formatter itself, isn't tested here.
 
 ```

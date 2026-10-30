@@ -112,8 +112,11 @@ namespace KTrapIC
         private static readonly Style EnumValueStyle = new Style { Color = ColorFromHTML("#B5CEA8") };
         private static readonly Style FunctionStyle = new Style { Color = ColorFromHTML("#DCDCAA") };
 
-        /// <summary>Warnings' marks and messages, in the editor's own warning color (orange; errors are red).</summary>
-        private static readonly Style WarningStyle = new Style { Color = ColorWarning };
+        /// <summary>
+        /// Warnings' messages, in the editor's own warning color (orange; errors are red), as it
+        /// is now: the editor sets it again when its configuration is reloaded.
+        /// </summary>
+        private static Style WarningStyle => new Style { Color = ColorWarning };
 
         /// <summary>
         /// The formatters with a document, so that those whose editor no longer shows them can
@@ -162,12 +165,13 @@ namespace KTrapIC
         private StyledText _hoverText;
 
         /// <summary>
-        /// The latest compile's warnings (<see cref="ApplyWarnings"/>): the messages of those marked
-        /// in the code, by the token they're on, and all of them as they were sorted. A mark goes
-        /// when its line is edited, as an error's does. Used on the main thread.
+        /// The latest compile's warnings (<see cref="ApplyWarnings"/>) and the tokens they mark,
+        /// and the toolbar count's list of them. A mark goes when its line is edited, as an
+        /// error's does, and stays when the editor parses the same text again. Used on the main
+        /// thread.
         /// </summary>
-        private readonly Dictionary<Token, List<string>> _warningMarks = new Dictionary<Token, List<string>>();
-        private RoutedWarnings _warnings = RoutedWarnings.None;
+        private readonly WarningMarks<Token> _warnings = new WarningMarks<Token>();
+        private IReadOnlyList<string> _warningSummary = Array.Empty<string>();
 
         private sealed class Compiled
         {
@@ -223,6 +227,10 @@ namespace KTrapIC
                 SubmitChanges();
                 if (edited)
                     CompileSoon().Forget();
+                else
+                    // A reset to the same text makes new tokens, without the warnings' marks; the
+                    // errors' come back with the daemon's diagnostics, but no compile follows.
+                    _warnings.Remark(_version, WarningToken);
             };
             OnCaretMoved += HighlightPreview;
         }
@@ -502,7 +510,8 @@ namespace KTrapIC
         {
             base.UpdateTooltip(mouseTextPos);
             var marked = (bool)mouseTextPos ? Lines.GetTokenAtPosition(mouseTextPos) : null;
-            if (marked != null && _warningMarks.TryGetValue(marked, out var messages))
+            var messages = _warnings.At(marked);
+            if (messages != null)
             {
                 var tooltip = new StyledText();
                 if (_tooltip != null)
@@ -753,19 +762,13 @@ namespace KTrapIC
         /// orange (<see cref="DrawLine"/>), its message in the hover (<see cref="UpdateTooltip"/>)
         /// and, with the caret on it, in the status line (<see cref="UpdateStatus"/>). One with no
         /// place, such as the program being over the chip's 128 lines, or with no token there, is
-        /// shown in the status line. The toolbar counts them all (<see cref="DrawButtons"/>).
+        /// shown in the status line, with its place if it has one. The toolbar counts them all
+        /// (<see cref="DrawButtons"/>). <paramref name="version"/> is the code's version compiled.
         /// </summary>
-        private void ApplyWarnings(CompileResponse response)
+        private void ApplyWarnings(CompileResponse response, int version)
         {
-            _warningMarks.Clear();
-            _warnings = Warnings.Route(response, (line, column) => WarningToken(line, column) != null);
-            foreach (var warning in _warnings.Placed)
-            {
-                var token = WarningToken(warning.Line, warning.Column);
-                if (!_warningMarks.TryGetValue(token, out var messages))
-                    _warningMarks[token] = messages = new List<string>();
-                messages.Add(warning.Message);
-            }
+            _warnings.Apply(response, version, WarningToken);
+            _warningSummary = Warnings.SummaryLines(_warnings.Routed, Hovers.Width);
             UpdateStatus();
         }
 
@@ -787,10 +790,7 @@ namespace KTrapIC
             if (_status != null)
                 return;
             var atCaret = (bool)CaretPos ? Lines.GetTokenAtPosition(CaretPos) : null;
-            List<string> marked = null;
-            if (atCaret != null)
-                _warningMarks.TryGetValue(atCaret, out marked);
-            string status = Warnings.StatusLine(marked, _warnings.Unplaced);
+            string status = Warnings.StatusLine(_warnings.At(atCaret), _warnings.Routed.Unplaced);
             if (status == null)
                 return;
             _status = new StyledText();
@@ -806,11 +806,11 @@ namespace KTrapIC
         {
             var origin = ImGui.GetCursorScreenPos();
             base.DrawLine(lineIndex, selection);
-            if (_warningMarks.Count == 0 || lineIndex >= Lines.Count)
+            if (!_warnings.Any || lineIndex >= Lines.Count)
                 return;
             foreach (var token in Lines[lineIndex])
             {
-                if (_warningMarks.ContainsKey(token))
+                if (_warnings.At(token) != null)
                     DrawSquiggle(origin, token.Column, token.Length);
             }
         }
@@ -915,7 +915,7 @@ namespace KTrapIC
         /// </summary>
         private void DrawWarningCount()
         {
-            string count = Warnings.CountText(_warnings.Count);
+            string count = Warnings.CountText(_warnings.Routed.Count);
             if (count == null || Runtime.Progress != null || _compiled?.Response?.error != null)
                 return;
             ImGui.SameLine();
@@ -926,7 +926,7 @@ namespace KTrapIC
                 return;
             ImGui.BeginTooltip();
             ImGui.PushStyleColor(ImGuiCol.Text, ColorWarning);
-            foreach (string line in Warnings.SummaryLines(_warnings, Hovers.Width))
+            foreach (string line in _warningSummary)
                 ImGui.TextUnformatted(line);
             ImGui.PopStyleColor();
             ImGui.EndTooltip();
@@ -1032,7 +1032,7 @@ namespace KTrapIC
             {
                 UpdateCodeSize();
                 ShowPreview(response);
-                ApplyWarnings(response);
+                ApplyWarnings(response, version);
             }
         }
 
