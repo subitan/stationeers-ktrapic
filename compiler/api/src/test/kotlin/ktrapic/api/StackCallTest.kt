@@ -402,6 +402,12 @@ class StackCallTest {
     assertThat(error.line).isEqualTo(3)
   }
 
+  /** The size warning's clause for the lines compact output would save on [labelled]. */
+  private fun compactSaves(source: String, labelled: CompileResult.Success): String {
+    val saved = labelled.lines - compiled(source, CompileOptions(compact = true)).lines
+    return "compact output, which resolves labels to line numbers, saves $saved lines"
+  }
+
   @Test
   fun `a program over the line limit with stack calls is warned that registers save lines`() {
     fun calling(times: Int) =
@@ -413,7 +419,8 @@ class StackCallTest {
     assertThat(stack.lines).isGreaterThan(128)
     assertThat(stack.warnings.map { it.message })
         .containsExactly(
-            "The program is ${stack.lines} lines, over the chip's 128: passing functions' " +
+            "The program is ${stack.lines} lines, over the chip's 128: " +
+                "${compactSaves(source, stack)}; passing functions' " +
                 "arguments in registers saves lines (turn stack calls off, or mark the most-called " +
                 "functions @InRegisters)"
         )
@@ -429,15 +436,45 @@ class StackCallTest {
 
   @Test
   fun `a program over the line limit whose stack calls are all recursive is told to shorten`() {
-    val stack = compiled(factorial + (1..60).joinToString("\n") { "db.Setting = fact($it.0)" })
+    val source = factorial + (1..60).joinToString("\n") { "db.Setting = fact($it.0)" }
+    val stack = compiled(source)
 
     assertThat(stack.lines).isGreaterThan(128)
     assertThat(stack.warnings.map { it.message })
         .containsExactly(
-            "The program is ${stack.lines} lines, over the chip's 128: the functions called on " +
+            "The program is ${stack.lines} lines, over the chip's 128: " +
+                "${compactSaves(source, stack)}; the functions called on " +
+                "the stack (fact) are in a cycle of calls, so they can't pass their arguments in " +
+                "registers to save lines, and the program must be shortened or compiled compact"
+        )
+    // Compiled compact, shortening is all that is left.
+    val compact = compiled(source, CompileOptions(compact = true))
+    assertThat(compact.lines).isGreaterThan(128)
+    assertThat(compact.warnings.map { it.message })
+        .containsExactly(
+            "The program is ${compact.lines} lines, over the chip's 128: the functions called on " +
                 "the stack (fact) are in a cycle of calls, so they can't pass their arguments in " +
                 "registers to save lines, and the program must be shortened"
         )
+  }
+
+  @Test
+  fun `a labelled program over the line limit is told what compact output saves`() {
+    val source =
+        "var i = 0\nwhile (i < db.Mode.toInt()) { i++ }\n" +
+            (1..38).joinToString("\n") { "db.Setting = db.Mode + $it.0" }
+
+    val labelled = compiled(source)
+    assertThat(labelled.lines).isGreaterThan(128)
+    assertThat(labelled.warnings.map { it.message })
+        .containsExactly(
+            "The program is ${labelled.lines} lines, over the chip's 128: " +
+                compactSaves(source, labelled)
+        )
+    // Compact output that fits isn't warned.
+    val compact = compiled(source, CompileOptions(compact = true))
+    assertThat(compact.lines).isAtMost(128)
+    assertThat(compact.warnings).isEmpty()
   }
 
   @Test
@@ -448,20 +485,24 @@ class StackCallTest {
           functions.joinToString("\n") { "db.Setting = $it($i.0)" }
         }
 
-    val one = compiled(factorial + plain.lines().first() + "\n" + calls("f", "fact"))
+    val oneSource = factorial + plain.lines().first() + "\n" + calls("f", "fact")
+    val one = compiled(oneSource)
     assertThat(one.lines).isGreaterThan(128)
     assertThat(one.warnings.map { it.message })
         .containsExactly(
-            "The program is ${one.lines} lines, over the chip's 128: passing functions' arguments " +
+            "The program is ${one.lines} lines, over the chip's 128: " +
+                "${compactSaves(oneSource, one)}; passing functions' arguments " +
                 "in registers saves lines (mark f @InRegisters; functions in a cycle of calls must " +
                 "pass theirs on the stack)"
         )
 
-    val two = compiled(factorial + plain + calls("f", "g", "fact"))
+    val twoSource = factorial + plain + calls("f", "g", "fact")
+    val two = compiled(twoSource)
     assertThat(two.lines).isGreaterThan(128)
     assertThat(two.warnings.map { it.message })
         .containsExactly(
-            "The program is ${two.lines} lines, over the chip's 128: passing functions' arguments " +
+            "The program is ${two.lines} lines, over the chip's 128: " +
+                "${compactSaves(twoSource, two)}; passing functions' arguments " +
                 "in registers saves lines (mark the most-called of f, g @InRegisters; functions in " +
                 "a cycle of calls must pass theirs on the stack)"
         )
@@ -482,7 +523,8 @@ class StackCallTest {
       assertWithMessage(source)
           .that(stack.warnings.map { it.message })
           .containsExactly(
-              "The program is ${stack.lines} lines, over the chip's 128: passing functions' " +
+              "The program is ${stack.lines} lines, over the chip's 128: " +
+                  "${compactSaves(source, stack)}; passing functions' " +
                   "arguments in registers saves lines (mark f @InRegisters; functions in a cycle " +
                   "of calls must pass theirs on the stack)"
           )

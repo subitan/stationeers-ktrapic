@@ -431,17 +431,18 @@ class CircuitHousingTest {
     assertThat(spilled.warnings.map { it.message })
         .containsExactly("The program is ${spilled.lines} lines, over the chip's 128: $memory")
 
-    val calling =
-        compiled(
-            annotated +
-                "fun f(y: Double): Double = y * y + 1.0\n" +
-                crowdedSource +
-                "db.Setting = f(db.Mode)\ndb.Mode = f(db.Setting)\n"
-        )
+    val callingSource =
+        annotated +
+            "fun f(y: Double): Double = y * y + 1.0\n" +
+            crowdedSource +
+            "db.Setting = f(db.Mode)\ndb.Mode = f(db.Setting)\n"
+    val calling = compiled(callingSource)
+    val compactSaves = calling.lines - compiled(callingSource, CompileOptions(compact = true)).lines
     assertThat(calling.lines).isGreaterThan(128)
     assertThat(calling.warnings.map { it.message })
         .containsExactly(
-            "The program is ${calling.lines} lines, over the chip's 128: passing functions' " +
+            "The program is ${calling.lines} lines, over the chip's 128: compact output, which " +
+                "resolves labels to line numbers, saves $compactSaves lines; passing functions' " +
                 "arguments in registers saves lines (turn stack calls off, or mark the most-called " +
                 "functions @InRegisters); $memory"
         )

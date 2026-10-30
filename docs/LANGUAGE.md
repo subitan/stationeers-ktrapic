@@ -495,10 +495,13 @@ compiler measures programs as the game's code editor does: every line counts, an
 break counts as two characters, so a 128-line program has 3842 characters for its text.
 Compact output (resolving labels to line numbers and dropping them) saves lines. The compiler
 reports these counts but does not reject a program over the limits; it warns of a program over
-128 lines. When the program calls functions with their arguments on the stack, the warning says
-that passing them in registers would save lines, naming what to change: turning stack calls off,
-or marking functions `@InRegisters`. Functions in a cycle of calls need the stack, so the warning
-leaves them out, and says the program must be shortened if they are all it calls that way. When
+128 lines. The warning counts the lines in the output asked for; when that output isn't compact
+and has labels to drop, it says how many lines compact output would save. When the program calls
+functions with their arguments on the stack, the warning says that passing them in registers
+would save lines, naming what to change: turning stack calls off, or marking functions
+`@InRegisters`. Functions in a cycle of calls need the stack, so the warning leaves them out, and
+says the program must be shortened (or compiled compact, when that would save lines) if they are
+all it calls that way. When
 the program keeps values in memory (see below), the warning says that each read and write of them
 takes a line of its own.
 

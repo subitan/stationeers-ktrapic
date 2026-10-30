@@ -99,7 +99,9 @@ object Compiler {
                     throw retry
                   } catch (_: CompileException) {
                     // The first failure is the one reported: compiling it again throws it with
-                    // the suggestion.
+                    // the suggestion. This is defensive: translation differs only in the tail
+                    // loop, and no CompileException is known to depend on it, so this runs only
+                    // if one ever does, and then just to re-attach the housing suggestion.
                     backend(tailCalls = true, suggestHousing = true)
                     throw e
                   }
@@ -147,7 +149,10 @@ object Compiler {
     val size = ProgramSize.of(code)
     val sizeHints =
         if (size.lines > Ic10Limits.MAX_LINES) {
-          listOf(CompileError(sizeHint(size.lines, lowered), 0, 0))
+          val compactSaves =
+              if (options.compact) 0
+              else size.lines - ProgramSize.of(labelled.compacted().print()).lines
+          listOf(CompileError(sizeHint(size.lines, compactSaves, lowered), 0, 0))
         } else {
           emptyList()
         }
@@ -186,29 +191,41 @@ object Compiler {
 
   /**
    * That [lowered], [lines] long, is over the chip's limit, and why it could be shorter, if it can
-   * say. Each call on the stack pushes and pops what passes in a register otherwise; each read and
-   * write of a value kept in memory is a line of its own.
+   * say. Compact output would be [compactSaves] lines shorter (0 when it already is compact, or has
+   * nothing to drop). Each call on the stack pushes and pops what passes in a register otherwise;
+   * each read and write of a value kept in memory is a line of its own.
    */
-  private fun sizeHint(lines: Int, lowered: Lowered): String {
+  private fun sizeHint(lines: Int, compactSaves: Int, lowered: Lowered): String {
     val over = "The program is $lines lines, over the chip's ${Ic10Limits.MAX_LINES}"
+    val compact =
+        if (compactSaves > 0) {
+          "compact output, which resolves labels to line numbers, saves $compactSaves lines"
+        } else {
+          null
+        }
     val memory =
-        "each read and write of a value kept in memory takes a line (get or put) of its own"
-    val stack = stackHint(lowered.stackCalled, lowered.hasCycle)
-    return when {
-      stack != null && lowered.memorySlots > 0 -> "$over: $stack; $memory"
-      stack != null -> "$over: $stack"
-      lowered.memorySlots > 0 -> "$over: $memory"
-      else -> over
-    }
+        if (lowered.memorySlots > 0) {
+          "each read and write of a value kept in memory takes a line (get or put) of its own"
+        } else {
+          null
+        }
+    val stack = stackHint(lowered.stackCalled, lowered.hasCycle, compactSaves > 0)
+    val reasons = listOfNotNull(compact, stack, memory)
+    return if (reasons.isEmpty()) over else "$over: ${reasons.joinToString("; ")}"
   }
 
   /**
    * How the functions in [stackCalled] could save lines, or null if none is called on the stack.
    * Only those that aren't in a cycle of calls can pass in registers, as a cycle needs the stack.
    * Turning stack calls off works only when the program declares no cycle at all ([hasCycle]),
-   * called or not.
+   * called or not. When compact output would be shorter ([compactShortens]), it is the other way to
+   * fit a program whose stack calls can't move to registers.
    */
-  private fun stackHint(stackCalled: List<StackCalled>, hasCycle: Boolean): String? {
+  private fun stackHint(
+      stackCalled: List<StackCalled>,
+      hasCycle: Boolean,
+      compactShortens: Boolean,
+  ): String? {
     if (stackCalled.isEmpty()) return null
     val (recursive, plain) = stackCalled.partition { it.recursive }
     val names = plain.joinToString { it.name }
@@ -219,7 +236,8 @@ object Compiler {
       plain.isEmpty() ->
           "the functions called on the stack (${recursive.joinToString { it.name }}) are in a " +
               "cycle of calls, so they can't pass their arguments in registers to save lines, " +
-              "and the program must be shortened"
+              "and the program must be shortened" +
+              (if (compactShortens) " or compiled compact" else "")
       else ->
           "passing functions' arguments in registers saves lines (mark " +
               (if (plain.size == 1) names else "the most-called of $names") +
