@@ -56,4 +56,34 @@ class KtrapicCompileServiceTest : BasePlatformTestCase() {
     assertNotNull(running.get(30, TimeUnit.SECONDS))
     assertEquals(listOf("a", "c"), synchronized(compiled) { compiled.toList() })
   }
+
+  fun `test a compile the daemon didn't answer is compiled again`() {
+    service.compilerForTests = Ic10Compiler { _, _ ->
+      CompileResponse.Failure("No KTrapIC compile daemon", answered = false)
+    }
+    val first = service.compile(request("a")).get(30, TimeUnit.SECONDS)
+    assertNull(service.lastCompiled("/program.ic10.kts"))
+
+    service.compilerForTests = Ic10Compiler { code, _ ->
+      CompileResponse.Success(code, 1, code.length, 0, emptyList())
+    }
+    val second = service.compile(request("a")).get(30, TimeUnit.SECONDS)
+
+    assertFalse((first as CompileResponse.Failure).answered)
+    assertEquals("a", (second as CompileResponse.Success).code)
+    assertEquals(second, service.lastCompiled("/program.ic10.kts")?.response)
+  }
+
+  fun `test a compile the daemon answered with errors is shared`() {
+    val calls = mutableListOf<String>()
+    service.compilerForTests = Ic10Compiler { code, _ ->
+      synchronized(calls) { calls += code }
+      CompileResponse.Failure("Unsupported")
+    }
+    val first = service.compile(request("a"))
+    first.get(30, TimeUnit.SECONDS)
+
+    assertSame(first, service.compile(request("a")))
+    assertEquals(listOf("a"), synchronized(calls) { calls.toList() })
+  }
 }

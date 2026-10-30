@@ -57,6 +57,7 @@ class CompileResponseTest {
     val response = CompileResponse.parse("not json {")
 
     assertEquals(1, (response as CompileResponse.Failure).errors.size)
+    assertEquals(false, response.answered)
   }
 
   @Test

@@ -1,12 +1,15 @@
 package ktrapic.intellij
 
 import com.intellij.openapi.Disposable
+import com.intellij.openapi.application.PathManager
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.components.service
 import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.project.Project
 import com.intellij.util.concurrency.AppExecutorUtil
 import com.intellij.util.messages.Topic
+import java.io.File
+import java.io.IOException
 import java.util.concurrent.CancellationException
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.ExecutionException
@@ -35,14 +38,19 @@ fun interface CompileListener {
  * [CompileListener]s of each result. The editor's annotator and the IC10 tool window both ask it,
  * so a text compiled for one is not compiled again for the other: a request for the text a file was
  * last asked to compile with gets that compile, finished or not. A queued compile that a newer
- * request for the same file has replaced is skipped.
+ * request for the same file has replaced is skipped. A compile the daemon gave no answer for (see
+ * [CompileResponse.Failure.answered]) isn't shared: asking again compiles again.
  *
- * The daemon runs while the project is open, from the jar and Java the settings name, and is
- * replaced when they change.
+ * The daemon runs while the project is open, with the Java the settings name, from a copy of the
+ * jar they name (see [DaemonJarCopies]), and is replaced when they or the jar change.
  */
 @Service(Service.Level.PROJECT)
 class KtrapicCompileService(private val project: Project) : Disposable {
   private val executor = AppExecutorUtil.createBoundedApplicationPoolExecutor("KTrapIC compiles", 1)
+  private val jarCopies =
+      DaemonJarCopies(
+          File(PathManager.getSystemPath(), "ktrapic/daemon-jars/${project.locationHash}")
+      )
   private val latest = HashMap<String, Pair<CompileRequest, CompletableFuture<CompileResponse>>>()
   private var daemon: DaemonClient? = null
   private var disposed = false
@@ -55,7 +63,7 @@ class KtrapicCompileService(private val project: Project) : Disposable {
     val future: CompletableFuture<CompileResponse>
     synchronized(latest) {
       latest[request.path]?.let { (asked, compile) ->
-        if (asked == request && !compile.isCancelled) return compile
+        if (asked == request && !compile.isCancelled && !unanswered(compile)) return compile
       }
       future = CompletableFuture()
       latest[request.path] = request to future
@@ -71,7 +79,7 @@ class KtrapicCompileService(private val project: Project) : Disposable {
             compiler().compile(request.text, request.options)
           } catch (e: Exception) {
             LOG.warn("KTrapIC compile failed", e)
-            CompileResponse.Failure("Compiling failed: $e")
+            CompileResponse.Failure("Compiling failed: $e", answered = false)
           }
       future.complete(response)
       if (!project.isDisposed) {
@@ -83,12 +91,24 @@ class KtrapicCompileService(private val project: Project) : Disposable {
     return future
   }
 
-  /** The last finished compile of the file at [path], if it is the one last asked for. */
+  /**
+   * The last finished compile of the file at [path], if it is the one last asked for and the daemon
+   * answered it.
+   */
   fun lastCompiled(path: String): Compiled? {
     val (request, future) = synchronized(latest) { latest[path] } ?: return null
-    if (!future.isDone || future.isCancelled) return null
+    if (!future.isDone || future.isCancelled || unanswered(future)) return null
     return Compiled(request, future.getNow(null) ?: return null)
   }
+
+  /**
+   * Whether [compile] finished without the daemon's answer for the program (see
+   * [CompileResponse.Failure.answered]). Such a compile isn't reused: asking again compiles again.
+   */
+  private fun unanswered(compile: CompletableFuture<CompileResponse>): Boolean =
+      compile.isDone &&
+          !compile.isCancelled &&
+          (compile.getNow(null) as? CompileResponse.Failure)?.answered == false
 
   /** Stops the daemon, which starts again on the next compile, and forgets every compile. */
   fun restart() {
@@ -114,7 +134,7 @@ class KtrapicCompileService(private val project: Project) : Disposable {
       } catch (_: TimeoutException) {} catch (_: CancellationException) {
         return null
       } catch (e: ExecutionException) {
-        return CompileResponse.Failure("Compiling failed: ${e.cause}")
+        return CompileResponse.Failure("Compiling failed: ${e.cause}", answered = false)
       }
     }
   }
@@ -126,20 +146,29 @@ class KtrapicCompileService(private val project: Project) : Disposable {
     val settings = KtrapicSettings.getInstance().state
     val jar =
         KtrapicPaths.daemonJar(settings.daemonJar, project.basePath)
-            ?: return Ic10Compiler { _, _ ->
-              CompileResponse.Failure(
-                  "No KTrapIC compile daemon: set its jar under Settings > Tools > KTrapIC, or " +
-                      "build it in this project with bazel build //daemon:ktrapic-daemon_deploy.jar"
-              )
-            }
-    val command = listOf(KtrapicPaths.java(settings.javaPath), "-jar", jar)
+            ?: return failing(
+                "No KTrapIC compile daemon: set its jar under Settings > Tools > KTrapIC, or " +
+                    "build it in this project with bazel build //daemon:ktrapic-daemon_deploy.jar"
+            )
+    val copy =
+        try {
+          jarCopies.copyOf(File(jar))
+        } catch (e: IOException) {
+          return failing("The compile daemon's jar couldn't be copied to run: ${e.message}")
+        }
+    val command = listOf(KtrapicPaths.java(settings.javaPath), "-jar", copy.path)
     synchronized(this) {
-      if (disposed) return Ic10Compiler { _, _ -> CompileResponse.Failure("The project is closed") }
+      if (disposed) return failing("The project is closed")
       val running = daemon
       if (running != null && running.command == command) return running
       running?.close()
+      jarCopies.removeAllBut(copy)
       return DaemonClient(command, log = { LOG.info("daemon: $it") }).also { daemon = it }
     }
+  }
+
+  private fun failing(description: String) = Ic10Compiler { _, _ ->
+    CompileResponse.Failure(description, answered = false)
   }
 
   override fun dispose() {

@@ -42,9 +42,16 @@ sealed interface CompileResponse {
       val warnings: List<Problem>,
   ) : CompileResponse
 
-  /** The program didn't compile, for [errors], of which there is at least one. */
-  data class Failure(val errors: List<Problem>) : CompileResponse {
-    constructor(description: String) : this(listOf(Problem(description)))
+  /**
+   * The program didn't compile, for [errors], of which there is at least one. [answered] is false
+   * when the daemon gave no answer for the program (it isn't there, it stopped, or its answer
+   * couldn't be read), so compiling the same text again may succeed.
+   */
+  data class Failure(val errors: List<Problem>, val answered: Boolean = true) : CompileResponse {
+    constructor(
+        description: String,
+        answered: Boolean = true,
+    ) : this(listOf(Problem(description)), answered)
   }
 
   companion object {
@@ -53,9 +60,13 @@ sealed interface CompileResponse {
         try {
           val response = JsonParser.parseString(json)
           if (response.isJsonObject) of(response.asJsonObject)
-          else Failure("The compile daemon answered with something other than an object")
+          else
+              Failure(
+                  "The compile daemon answered with something other than an object",
+                  answered = false,
+              )
         } catch (e: RuntimeException) {
-          Failure("The compile daemon's answer couldn't be read: ${e.message}")
+          Failure("The compile daemon's answer couldn't be read: ${e.message}", answered = false)
         }
 
     private fun of(response: JsonObject): CompileResponse {
@@ -66,7 +77,10 @@ sealed interface CompileResponse {
       }
       val code =
           response.stringAt("code")
-              ?: return Failure("The compile daemon answered with neither code nor an error")
+              ?: return Failure(
+                  "The compile daemon answered with neither code nor an error",
+                  answered = false,
+              )
       return Success(
           code = code,
           lines = response.intAt("num_lines"),

@@ -26,6 +26,14 @@ which would clash with the IDE's if loaded into it. The daemon starts on the fir
 on the next compile if it exits, and stops when the project closes. Its standard error goes to the
 IDE's log (Help > Show Log).
 
+The daemon runs from a copy of its jar in the IDE's system directory (`ktrapic/daemon-jars/`), so
+the jar can be rebuilt while it runs (Windows keeps a running jar locked). A rebuilt jar is copied
+and run on the next compile, and copies no daemon runs from any more are deleted when a daemon
+starts.
+
+A compile the daemon gave no answer for (it isn't set up, it couldn't start, it exited or it timed
+out) isn't kept: asking again for the same text compiles it again.
+
 The editor's annotator compiles a program in the background after each change; the IC10 tool window
 shows that compile, or compiles the program itself a moment after a change when the annotator hasn't
 (in power save mode, say). Both share one compile of the same text and options.

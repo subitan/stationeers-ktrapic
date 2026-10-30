@@ -43,26 +43,28 @@ class DaemonClient(
           addProperty("code", code)
           add("options", options.toJson())
         }
-    return CompileResponse.parse(request(request.toString()))
+    return when (val answer = request(request.toString())) {
+      is Answer.Json -> CompileResponse.parse(answer.json)
+      is Answer.None -> CompileResponse.Failure(answer.why, answered = false)
+    }
   }
 
-  /** Sends one JSON request and returns the JSON response, or an error response as JSON. */
-  @Synchronized
-  fun request(json: String): String {
-    if (closed) return errorJson("The compile daemon has been stopped")
+  /** Sends one JSON request and returns the daemon's JSON response, or why there is none. */
+  private fun request(json: String): Answer {
+    if (closed) return Answer.None("The compile daemon has been stopped")
     val daemon =
         running?.takeIf { it.process.isAlive }
             ?: try {
               start()
             } catch (e: IOException) {
-              return errorJson(
+              return Answer.None(
                   "The compile daemon couldn't be started (${command.joinToString(" ")}): ${e.message}"
               )
             }
     if (closed) {
       // Closed while it was starting.
       stop(daemon)
-      return errorJson("The compile daemon has been stopped")
+      return Answer.None("The compile daemon has been stopped")
     }
     try {
       daemon.input.write(Base64.getEncoder().encodeToString(json.toByteArray(Charsets.UTF_8)))
@@ -76,7 +78,7 @@ class DaemonClient(
             ?: return stopped(daemon, "it didn't answer within ${timeoutMillis / 1000} seconds")
     val response = line.value ?: return stopped(daemon, "it exited")
     return try {
-      String(Base64.getDecoder().decode(response.trim()), Charsets.UTF_8)
+      Answer.Json(String(Base64.getDecoder().decode(response.trim()), Charsets.UTF_8))
     } catch (e: IllegalArgumentException) {
       stopped(daemon, "it answered with a line that isn't base64")
     }
@@ -121,14 +123,14 @@ class DaemonClient(
     return daemon
   }
 
-  private fun stopped(daemon: Running, why: String): String {
+  private fun stopped(daemon: Running, why: String): Answer {
     stop(daemon)
     running = null
     // Its last words, once its standard error has been read to the end.
     daemon.errorReader?.join(1000)
     val errors = synchronized(daemon.errors) { daemon.errors.joinToString("\n") }
     val detail = if (errors.isBlank()) "" else "; its last output:\n$errors"
-    return errorJson("The compile daemon stopped: $why. It restarts on the next compile$detail")
+    return Answer.None("The compile daemon stopped: $why. It restarts on the next compile$detail")
   }
 
   private fun stop(daemon: Running) {
@@ -138,11 +140,6 @@ class DaemonClient(
     daemon.process.destroy()
     if (!daemon.process.waitFor(5, TimeUnit.SECONDS)) daemon.process.destroyForcibly()
   }
-
-  private fun errorJson(description: String): String =
-      JsonObject()
-          .apply { add("error", JsonObject().apply { addProperty("description", description) }) }
-          .toString()
 
   /** The next line [reader] reads, or null at the end or once the stream is closed. */
   private fun readLine(reader: BufferedReader): String? =
@@ -157,6 +154,13 @@ class DaemonClient(
         isDaemon = true
         start()
       }
+
+  /** What a request got: the daemon's response, or why there is none. */
+  private sealed interface Answer {
+    class Json(val json: String) : Answer
+
+    class None(val why: String) : Answer
+  }
 
   /** A line the daemon wrote, or null [value] at the end of its output. */
   private class Line(val value: String?)

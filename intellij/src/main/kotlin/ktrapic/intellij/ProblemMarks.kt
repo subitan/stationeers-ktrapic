@@ -20,7 +20,10 @@ object ProblemMarks {
   /**
    * The marks for [response], a compile of [text]: each error as an error and each warning as a
    * warning. The Kotlin compiler's own problems are left out unless [showKotlin], as the Kotlin
-   * plugin shows them already. A problem with no position (line 0) is about the whole file.
+   * plugin shows them already, except a failure's errors when they are all the Kotlin compiler's:
+   * the daemon compiles the program wrapped in an object, so some of those are errors the Kotlin
+   * plugin doesn't see in the script, and a failed compile marks something. A problem with no
+   * position (line 0) is about the whole file.
    *
    * The compiler gives only where a problem starts, so a mark covers the name or number there, or
    * else one character, or the line's end when it is at the end of a line.
@@ -31,8 +34,9 @@ object ProblemMarks {
           is CompileResponse.Failure -> response.errors to emptyList()
           is CompileResponse.Success -> emptyList<Problem>() to response.warnings
         }
+    val showKotlinErrors = showKotlin || errors.all { it.kotlin }
     val lines = LineStarts(text)
-    return errors.filter { showKotlin || !it.kotlin }.map { mark(it, true, text, lines) } +
+    return errors.filter { showKotlinErrors || !it.kotlin }.map { mark(it, true, text, lines) } +
         warnings.filter { showKotlin || !it.kotlin }.map { mark(it, false, text, lines) }
   }
 

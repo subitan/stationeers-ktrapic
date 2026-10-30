@@ -52,6 +52,28 @@ class ProblemMarksTest {
   }
 
   @Test
+  fun `a failure with only the Kotlin compiler's errors marks them`() {
+    val failure =
+        CompileResponse.Failure(
+            listOf(Problem("'return' is prohibited here.", line = 1, column = 1, kotlin = true))
+        )
+    val success =
+        CompileResponse.Success(
+            "s db Setting 1",
+            1,
+            14,
+            0,
+            listOf(Problem("Variable is unused.", line = 1, column = 5, kotlin = true)),
+        )
+
+    assertEquals(
+        listOf("KTrapIC: 'return' is prohibited here."),
+        ProblemMarks.of(failure, text, showKotlin = false).map { it.message },
+    )
+    assertEquals(emptyList<Mark>(), ProblemMarks.of(success, text, showKotlin = false))
+  }
+
+  @Test
   fun `warnings are marked as warnings`() {
     val response =
         CompileResponse.Success(
