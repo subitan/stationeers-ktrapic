@@ -130,11 +130,11 @@ class LanguageServer(private val jar: File) {
     val waiting = ConcurrentHashMap<Int, CompletableFuture<String>>()
   }
 
-  private var run: Run? = null
+  @Volatile private var run: Run? = null
   private val ids = AtomicInteger()
 
   init {
-    Runtime.getRuntime().addShutdownHook(Thread { synchronized(this) { run?.process?.destroy() } })
+    Runtime.getRuntime().addShutdownHook(Thread { run?.process?.destroy() })
   }
 
   /**
@@ -145,9 +145,10 @@ class LanguageServer(private val jar: File) {
     val id = ids.incrementAndGet()
     val answer = CompletableFuture<String>()
     val sent =
-        write("""{"jsonrpc":"2.0","id":$id,"method":${jsonString(method)},"params":$params}""") {
-          it.waiting[id] = answer
-        }
+        write(
+            """{"jsonrpc":"2.0","id":$id,"method":${jsonString(method)},"params":$params}""",
+            id to answer,
+        )
     try {
       val response = answer.get(30, TimeUnit.SECONDS)
       if (SHUT_DOWN.containsMatchIn(response)) stop(sent)
@@ -160,27 +161,49 @@ class LanguageServer(private val jar: File) {
     }
   }
 
-  /** Sends a notification with [params], one JSON object (see [isJsonObject]). */
+  /**
+   * Sends a notification with [params], one JSON object (see [isJsonObject]). A `didClose` is
+   * dropped when no server is running: a fresh server has no documents open, so there is nothing
+   * for it to close.
+   */
   fun notify(method: String, params: String) {
-    write("""{"jsonrpc":"2.0","method":${jsonString(method)},"params":$params}""") {}
+    val body = """{"jsonrpc":"2.0","method":${jsonString(method)},"params":$params}"""
+    if (method == "textDocument/didClose") writeIfRunning(body) else write(body)
   }
 
   /**
    * Writes one message to the running server, starting one first if none is running, and returns
-   * that run. [register] runs before the message is written, so its answer can't come first.
+   * that run. The [answer] it waits for, by id, is registered before the message is written, so the
+   * response can't come first; it is removed again if the message can't be written.
    */
   @Synchronized
-  private fun write(body: String, register: (Run) -> Unit): Run {
-    val current = run?.takeIf { it.process.isAlive } ?: start()
-    register(current)
-    frame(current, body)
+  private fun write(body: String, answer: Pair<Int, CompletableFuture<String>>? = null): Run {
+    val current = running() ?: start()
+    if (answer != null) current.waiting[answer.first] = answer.second
+    try {
+      frame(current, body)
+    } catch (e: Exception) {
+      if (answer != null) current.waiting.remove(answer.first)
+      throw e
+    }
     return current
   }
 
-  /** Stops [stale] if it is still the running server; the next message starts another. */
+  /** Writes one message to the running server, if one is running. */
   @Synchronized
+  private fun writeIfRunning(body: String) {
+    running()?.let { frame(it, body) }
+  }
+
+  private fun running(): Run? = run?.takeIf { it.process.isAlive }
+
+  /**
+   * Stops [stale] if it is still the running server; the next message starts another. The process
+   * is destroyed outside the lock, since a write blocked on the server's full input holds it; the
+   * destroy breaks that pipe, so the write fails and lets go.
+   */
   private fun stop(stale: Run) {
-    if (run === stale) run = null
+    synchronized(this) { if (run === stale) run = null }
     stale.process.destroy()
   }
 
@@ -263,9 +286,11 @@ class LanguageServer(private val jar: File) {
 }
 
 /**
- * Whether [text] is exactly one JSON object (RFC 8259), nested at most 1000 deep. Such a text,
- * written into a message as a field's value, is that value and nothing more: it can't add fields of
- * its own, such as another `method` or `id`.
+ * Whether [text] is exactly one JSON object (RFC 8259), nested at most 1000 deep, with no number
+ * longer than [MAX_NUMBER_LENGTH] characters. Such a text, written into a message as a field's
+ * value, is that value and nothing more: it can't add fields of its own, such as another `method`
+ * or `id`. The language server's parser (Gson) can't read a number over about 1024 characters, and
+ * its answer to a message it can't parse carries no id, so nothing here would ever receive it.
  */
 fun isJsonObject(text: String): Boolean {
   val json = JsonCheck(text)
@@ -341,6 +366,12 @@ class JsonCheck(private val text: String) {
   private fun isHex(c: Char) = c in '0'..'9' || c in 'a'..'f' || c in 'A'..'F'
 
   private fun number(): Boolean {
+    val start = at
+    if (!numberSyntax()) return false
+    return at - start <= MAX_NUMBER_LENGTH
+  }
+
+  private fun numberSyntax(): Boolean {
     if (text.getOrNull(at) == '-') at++
     if (text.getOrNull(at) == '0') at++ else if (!digits()) return false
     if (text.getOrNull(at) == '.') {
@@ -361,6 +392,8 @@ class JsonCheck(private val text: String) {
     return at > start
   }
 }
+
+val MAX_NUMBER_LENGTH = 100
 
 /** The LSP requests and notifications the page may send, all about its own document. */
 val lspRequests =
@@ -446,6 +479,9 @@ fun saveTest(file: File, body: ByteArray) {
 }
 
 val MAX_TEST_BYTES = 1 shl 20
+
+/** The largest LSP message body the page may send: a whole program, in a `didOpen`/`didChange`. */
+val MAX_LSP_BYTES = 1 shl 20
 
 fun query(exchange: HttpExchange): Map<String, String> =
     exchange.requestURI.rawQuery
@@ -570,10 +606,13 @@ server.createContext("/") { exchange ->
         // method and id are the relay's own; the body is only ever the value of its params.
         val type = exchange.requestHeaders.getFirst("Content-Type").orEmpty()
         val method = query(exchange)["method"].orEmpty()
-        val params = exchange.requestBody.use { it.readBytes().decodeToString() }
+        val body = exchange.requestBody.use { it.readNBytes(MAX_LSP_BYTES + 1) }
+        val params = body.decodeToString()
         when {
           !type.startsWith("application/json") ->
               send(exchange, 415, """{"error":{"description":"Send application/json"}}""")
+          body.size > MAX_LSP_BYTES ->
+              send(exchange, 413, """{"error":{"description":"Too large"}}""")
           !isJsonObject(params) ->
               send(exchange, 400, """{"error":{"description":"Send one JSON object"}}""")
           method in lspRequests -> send(exchange, 200, languageServer.request(method, params))

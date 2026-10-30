@@ -30,7 +30,7 @@ function problemsOf(res, text) {
   const error = res && res.error && typeof res.error === "object" ? res.error : null;
   const list = error ? (Array.isArray(error.errors) && error.errors.length ? error.errors : [error])
     : (res && Array.isArray(res.warnings) ? res.warnings : []);
-  const lines = text.replace(/^﻿/, "").split("\n");
+  const lines = text.replace(/^\uFEFF/, "").split("\n");
   return list.map((p) => {
     const line = p.line > 0 ? Math.min(p.line, lines.length) : 1;
     const lineText = lines[line - 1].replace(/\r$/, "");
