@@ -13,7 +13,8 @@ import com.intellij.psi.PsiFile
 /**
  * Marks KTrapIC's errors and warnings in a program's editor. It compiles the program with the
  * compile daemon in the background (through [KtrapicCompileService]) and marks each problem at its
- * position, leaving out the Kotlin compiler's own unless the settings ask for them.
+ * position, leaving out the Kotlin compiler's own unless the settings ask for them (see
+ * [ProblemMarks.of]).
  */
 class KtrapicAnnotator :
     ExternalAnnotator<KtrapicAnnotator.Info, KtrapicAnnotator.Result>(), DumbAware {

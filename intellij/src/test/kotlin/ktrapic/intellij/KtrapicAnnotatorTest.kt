@@ -61,6 +61,37 @@ class KtrapicAnnotatorTest : BasePlatformTestCase() {
     )
   }
 
+  fun `test a program with only the Kotlin compiler's errors gets one note for the file`() {
+    KtrapicCompileService.getInstance(project).compilerForTests = Ic10Compiler { _, _ ->
+      CompileResponse.Failure(
+          listOf(
+              Problem(
+                  "Initializer type mismatch: expected 'Int', actual 'String'.",
+                  1,
+                  14,
+                  kotlin = true,
+              )
+          )
+      )
+    }
+    myFixture.configureByText("program.ic10.kts", "val x: Int = \"s\"\n")
+
+    val ours =
+        myFixture.doHighlighting().filter {
+          it.description?.startsWith(ProblemMarks.PREFIX) == true
+        }
+
+    val note = ours.single()
+    assertEquals(HighlightSeverity.ERROR, note.severity)
+    assertEquals(
+        "KTrapIC: doesn't compile: Initializer type mismatch: expected 'Int', actual 'String'. " +
+            "(line 1)",
+        note.description,
+    )
+    // File-level, not at the error, which the Kotlin plugin marks.
+    assertTrue(note.isFileLevelAnnotation)
+  }
+
   fun `test leaves other Kotlin files alone`() {
     myFixture.configureByText("program.kts", "val a = 1\n")
 

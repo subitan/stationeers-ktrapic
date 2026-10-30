@@ -10,9 +10,10 @@ import java.nio.file.StandardCopyOption
  * open, and on Windows that stops the jar from being replaced, so the daemon runs from a copy and
  * the jar itself can be rebuilt while it runs.
  *
- * A copy is named by its jar's size and modification time, so a rebuilt jar gets a new copy.
+ * A copy is named by its jar's name, size and modification time, so a rebuilt jar gets a new copy,
+ * and every project whose daemon runs the same jar shares one copy of it.
  */
-class DaemonJarCopies(private val dir: File) {
+class DaemonJarCopies(val dir: File) {
   /** The copy of [jar] to run, made if there isn't one yet. */
   fun copyOf(jar: File): File {
     val before = Stamp.of(jar) ?: throw IOException("There is no file $jar")
@@ -30,12 +31,20 @@ class DaemonJarCopies(private val dir: File) {
     return copy
   }
 
+  /** Where [copyOf] puts [jar]'s copy, or null if there is no [jar]. */
+  fun copyPathOf(jar: File): File? = Stamp.of(jar)?.let { File(dir, nameOf(jar, it)) }
+
   /**
-   * Deletes every copy but [keep], and any copy left partly made. A copy a running daemon still has
-   * open may not be deleted (on Windows); a later call deletes it.
+   * Deletes every copy but [keep], and any copy left partly made, that can be deleted. On Windows a
+   * copy a running daemon has open (another project's, say) can't be, and stays until a later call
+   * once that daemon has stopped. Elsewhere it is deleted, and the daemon running from it is
+   * unaffected, as it keeps the file open; its project copies the jar again the next time it needs
+   * the copy.
    */
   fun removeAllBut(keep: File?) {
-    dir.listFiles()?.forEach { if (it != keep && it.name.endsWith(".jar")) it.delete() }
+    dir.listFiles()?.forEach {
+      if (it != keep && it.isFile && it.name.endsWith(".jar")) it.delete()
+    }
   }
 
   private data class Stamp(val size: Long, val modified: Long) {

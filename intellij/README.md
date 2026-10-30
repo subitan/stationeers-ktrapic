@@ -7,8 +7,11 @@ the [main README](../README.md#editing-in-intellij)), it adds:
 - **KTrapIC's errors and warnings in the editor**, as you type: unsupported constructs, register
   and size limits, constant overflow and the like, prefixed `KTrapIC:`. The Kotlin compiler's
   own problems are left to the Kotlin plugin, which shows them already; a setting shows them too.
-  A problem with no position in the source (a program that needs too many registers, say) is
-  shown at the top of the editor.
+  When those are the only reason a program doesn't compile, one `KTrapIC: doesn't compile: ...`
+  error at the top of the editor names the first of them, as the daemon compiles the program
+  wrapped in an object and a few of its errors (`'return' is prohibited here`, say) are ones the
+  Kotlin plugin doesn't see in the script. A problem with no position in the source (a program
+  that needs too many registers, say) is shown at the top of the editor too.
 - **The IC10 tool window** (View > Tool Windows > IC10): the selected program compiled to IC10,
   normal or compact, with its lines, bytes and registers against the chip's 128 lines, 4096 bytes
   and 16 registers, those over the limit marked, and the compiler's warnings (or, when it doesn't
@@ -27,9 +30,13 @@ on the next compile if it exits, and stops when the project closes. Its standard
 IDE's log (Help > Show Log).
 
 The daemon runs from a copy of its jar in the IDE's system directory (`ktrapic/daemon-jars/`), so
-the jar can be rebuilt while it runs (Windows keeps a running jar locked). A rebuilt jar is copied
-and run on the next compile, and copies no daemon runs from any more are deleted when a daemon
-starts.
+the jar can be rebuilt while it runs (Windows keeps a running jar locked). Copies are named by the
+jar's name, size and modification time, and projects running the same jar share one. A rebuilt jar
+is copied and run on the next compile. When a daemon starts, every other copy is deleted, for every
+project: on Windows a copy another project's daemon still runs from can't be, and goes when a later
+daemon starts; elsewhere that daemon goes on running from the deleted file, and its project copies
+the jar again when it next needs it. While the jar is missing (as Bazel rebuilds it, or after
+`bazel clean`), the daemon already running from a copy of it goes on compiling.
 
 A compile the daemon gave no answer for (it isn't set up, it couldn't start, it exited or it timed
 out) isn't kept: asking again for the same text compiles it again.

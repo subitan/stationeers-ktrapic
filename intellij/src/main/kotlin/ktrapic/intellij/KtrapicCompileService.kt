@@ -42,21 +42,22 @@ fun interface CompileListener {
  * [CompileResponse.Failure.answered]) isn't shared: asking again compiles again.
  *
  * The daemon runs while the project is open, with the Java the settings name, from a copy of the
- * jar they name (see [DaemonJarCopies]), and is replaced when they or the jar change.
+ * jar they name (see [DaemonJarCopies]), and is replaced when they or the jar change. When a daemon
+ * starts, the other copies that can be deleted are.
  */
 @Service(Service.Level.PROJECT)
 class KtrapicCompileService(private val project: Project) : Disposable {
   private val executor = AppExecutorUtil.createBoundedApplicationPoolExecutor("KTrapIC compiles", 1)
-  private val jarCopies =
-      DaemonJarCopies(
-          File(PathManager.getSystemPath(), "ktrapic/daemon-jars/${project.locationHash}")
-      )
   private val latest = HashMap<String, Pair<CompileRequest, CompletableFuture<CompileResponse>>>()
-  private var daemon: DaemonClient? = null
+  private var daemon: Daemon? = null
   private var disposed = false
 
   /** Used in place of the daemon, by tests. */
   @Volatile var compilerForTests: Ic10Compiler? = null
+
+  /** The daemon's client, if there is one. */
+  val daemonForTests: DaemonClient?
+    get() = synchronized(this) { daemon?.client }
 
   /** [request]'s compile, which finishes on a pooled thread. */
   fun compile(request: CompileRequest): CompletableFuture<CompileResponse> {
@@ -114,7 +115,7 @@ class KtrapicCompileService(private val project: Project) : Disposable {
   fun restart() {
     synchronized(latest) { latest.clear() }
     synchronized(this) {
-      daemon?.close()
+      daemon?.client?.close()
       daemon = null
     }
   }
@@ -139,33 +140,61 @@ class KtrapicCompileService(private val project: Project) : Disposable {
     }
   }
 
+  /**
+   * The daemon to compile with: the one running, from a copy of the jar the settings name, or else
+   * a new one from a copy of that jar as it is now. While the jar is missing (Bazel deletes it
+   * before writing it again, and `bazel clean` deletes it) the daemon running from a copy of it
+   * goes on being used.
+   */
   private fun compiler(): Ic10Compiler {
     compilerForTests?.let {
       return it
     }
     val settings = KtrapicSettings.getInstance().state
-    val jar =
-        KtrapicPaths.daemonJar(settings.daemonJar, project.basePath)
-            ?: return failing(
-                "No KTrapIC compile daemon: set its jar under Settings > Tools > KTrapIC, or " +
-                    "build it in this project with bazel build //daemon:ktrapic-daemon_deploy.jar"
-            )
+    val java = KtrapicPaths.java(settings.javaPath)
+    val jarSetting = settings.daemonJar.orEmpty().trim()
+    val jar = KtrapicPaths.daemonJar(jarSetting, project.basePath)
+    if (jar == null || !File(jar).isFile) {
+      synchronized(this) {
+        if (disposed) return failing("The project is closed")
+        daemon?.let {
+          if (it.java == java && it.jarSetting == jarSetting && it.copy.isFile) return it.client
+        }
+      }
+      return failing(
+          if (jar == null)
+              "No KTrapIC compile daemon: set its jar under Settings > Tools > KTrapIC, or " +
+                  "build it in this project with bazel build //daemon:ktrapic-daemon_deploy.jar"
+          else "The compile daemon's jar $jar doesn't exist"
+      )
+    }
     val copy =
         try {
           jarCopies.copyOf(File(jar))
         } catch (e: IOException) {
           return failing("The compile daemon's jar couldn't be copied to run: ${e.message}")
         }
-    val command = listOf(KtrapicPaths.java(settings.javaPath), "-jar", copy.path)
     synchronized(this) {
       if (disposed) return failing("The project is closed")
-      val running = daemon
-      if (running != null && running.command == command) return running
-      running?.close()
+      daemon?.let { if (it.java == java && it.copy == copy) return it.client }
+      daemon?.client?.close()
       jarCopies.removeAllBut(copy)
-      return DaemonClient(command, log = { LOG.info("daemon: $it") }).also { daemon = it }
+      val client = DaemonClient(listOf(java, "-jar", copy.path), log = { LOG.info("daemon: $it") })
+      daemon = Daemon(java, jarSetting, copy, client)
+      return client
     }
   }
+
+  /**
+   * A daemon run by [java] from [copy], a copy of the jar that the daemon jar setting [jarSetting]
+   * names.
+   */
+  private class Daemon(
+      val java: String,
+      val jarSetting: String,
+      val copy: File,
+      val client: DaemonClient,
+  )
 
   private fun failing(description: String) = Ic10Compiler { _, _ ->
     CompileResponse.Failure(description, answered = false)
@@ -174,7 +203,7 @@ class KtrapicCompileService(private val project: Project) : Disposable {
   override fun dispose() {
     synchronized(this) {
       disposed = true
-      daemon?.close()
+      daemon?.client?.close()
       daemon = null
     }
     executor.shutdownNow()
@@ -182,6 +211,11 @@ class KtrapicCompileService(private val project: Project) : Disposable {
 
   companion object {
     private val LOG = logger<KtrapicCompileService>()
+
+    /** The daemon jar's copies, shared by every project (see [DaemonJarCopies]). */
+    val jarCopies by lazy {
+      DaemonJarCopies(File(PathManager.getSystemPath(), "ktrapic/daemon-jars"))
+    }
 
     fun getInstance(project: Project): KtrapicCompileService = project.service()
   }

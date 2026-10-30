@@ -52,7 +52,36 @@ class ProblemMarksTest {
   }
 
   @Test
-  fun `a failure with only the Kotlin compiler's errors marks them`() {
+  fun `a failure with only the Kotlin compiler's errors says so once, for the whole file`() {
+    val mismatch =
+        CompileResponse.Failure(
+            listOf(
+                Problem(
+                    "Initializer type mismatch: expected 'Int', actual 'String'.",
+                    line = 1,
+                    column = 12,
+                    kotlin = true,
+                ),
+                Problem("Unresolved reference 'Pair'.", line = 2, column = 14, kotlin = true),
+            )
+        )
+
+    assertEquals(
+        listOf(
+            Mark(
+                true,
+                "KTrapIC: doesn't compile: Initializer type mismatch: expected 'Int', actual " +
+                    "'String'. (line 1)",
+                fileLevel = true,
+            )
+        ),
+        ProblemMarks.of(mismatch, text, showKotlin = false),
+    )
+    assertEquals(2, ProblemMarks.of(mismatch, text, showKotlin = true).count { !it.fileLevel })
+  }
+
+  @Test
+  fun `an error only the wrapped program has says so for the whole file`() {
     val failure =
         CompileResponse.Failure(
             listOf(Problem("'return' is prohibited here.", line = 1, column = 1, kotlin = true))
@@ -67,8 +96,16 @@ class ProblemMarksTest {
         )
 
     assertEquals(
-        listOf("KTrapIC: 'return' is prohibited here."),
-        ProblemMarks.of(failure, text, showKotlin = false).map { it.message },
+        listOf(
+            Mark(
+                true,
+                "KTrapIC: doesn't compile: 'return' is prohibited here. (line 1)",
+                0,
+                0,
+                true,
+            )
+        ),
+        ProblemMarks.of(failure, text, showKotlin = false),
     )
     assertEquals(emptyList<Mark>(), ProblemMarks.of(success, text, showKotlin = false))
   }

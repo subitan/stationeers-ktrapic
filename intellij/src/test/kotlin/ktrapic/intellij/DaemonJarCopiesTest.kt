@@ -1,17 +1,14 @@
 package ktrapic.intellij
 
 import java.io.File
-import java.nio.file.Files
+import java.util.Base64
 import java.util.concurrent.TimeUnit
-import java.util.jar.Attributes
-import java.util.jar.JarEntry
-import java.util.jar.JarOutputStream
-import java.util.jar.Manifest
 import org.junit.Assert.assertArrayEquals
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotEquals
 import org.junit.Assert.assertTrue
+import org.junit.Assume.assumeFalse
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TemporaryFolder
@@ -59,8 +56,19 @@ class DaemonJarCopiesTest {
   }
 
   @Test
+  fun `copies are shared by everything using the same directory`() {
+    val jar = file("daemon.jar", "first")
+    val dir = temp.newFolder("shared")
+
+    val copy = DaemonJarCopies(dir).copyOf(jar)
+
+    assertEquals(copy, DaemonJarCopies(dir).copyPathOf(jar))
+    assertEquals(copy, DaemonJarCopies(dir).copyOf(jar))
+  }
+
+  @Test
   fun `the jar can be replaced while a daemon runs from its copy`() {
-    val jar = silentDaemonJar(temp.newFile("daemon.jar"))
+    val jar = TestJars.daemon(temp.newFile("daemon.jar"), SilentDaemon::class.java)
     val copy = copies.copyOf(jar)
     val process = ProcessBuilder(KtrapicPaths.java(null), "-jar", copy.path).start()
     try {
@@ -70,9 +78,10 @@ class DaemonJarCopiesTest {
       assertEquals(process.pid().toString(), ready)
 
       assertTrue(jar.delete())
-      if (System.getProperty("os.name").startsWith("Windows")) {
-        // What the copy is for: Windows doesn't let a running daemon's jar go.
-        assertFalse(copy.delete())
+      if (TestJars.windows) {
+        // What the copy is for: Windows doesn't let a running daemon's jar go, so its copy is kept.
+        copies.removeAllBut(null)
+        assertTrue(copy.exists())
       }
     } finally {
       process.destroy()
@@ -80,23 +89,31 @@ class DaemonJarCopiesTest {
     }
   }
 
-  private fun file(name: String, text: String): File = temp.newFile(name).apply { writeText(text) }
+  @Test
+  fun `elsewhere than Windows, a running daemon's copy can be deleted and the daemon goes on`() {
+    assumeFalse(TestJars.windows)
+    val copy = copies.copyOf(TestJars.daemon(temp.newFile("daemon.jar"), PidDaemon::class.java))
+    val process = ProcessBuilder(KtrapicPaths.java(null), "-jar", copy.path).start()
+    try {
+      // Running, with its jar open.
+      assertEquals(process.pid().toString(), process.errorStream.bufferedReader().readLine())
 
-  /** A jar at [jar] that runs [SilentDaemon]. */
-  private fun silentDaemonJar(jar: File): File {
-    val manifest =
-        Manifest().apply {
-          mainAttributes[Attributes.Name.MANIFEST_VERSION] = "1.0"
-          mainAttributes[Attributes.Name.MAIN_CLASS] = SilentDaemon::class.java.name
-        }
-    val path = SilentDaemon::class.java.name.replace('.', '/') + ".class"
-    val bytes =
-        SilentDaemon::class.java.classLoader.getResourceAsStream(path)!!.use { it.readBytes() }
-    JarOutputStream(Files.newOutputStream(jar.toPath()), manifest).use {
-      it.putNextEntry(JarEntry(path))
-      it.write(bytes)
-      it.closeEntry()
+      copies.removeAllBut(null)
+      assertFalse(copy.exists())
+
+      // PidDaemon loads the class that answers from its jar only now.
+      process.outputStream.write("request\n".toByteArray())
+      process.outputStream.flush()
+      val answer = process.inputStream.bufferedReader().readLine()
+      assertEquals(
+          """{"code":"${process.pid()}"}""",
+          String(Base64.getDecoder().decode(answer), Charsets.UTF_8),
+      )
+    } finally {
+      process.destroy()
+      process.waitFor(30, TimeUnit.SECONDS)
     }
-    return jar
   }
+
+  private fun file(name: String, text: String): File = temp.newFile(name).apply { writeText(text) }
 }
