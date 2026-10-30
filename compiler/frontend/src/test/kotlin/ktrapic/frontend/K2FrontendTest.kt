@@ -30,6 +30,25 @@ class K2FrontendTest {
   }
 
   @Test
+  fun `the extra checkers warn of an unused lambda parameter, on the user's line`() {
+    val result = K2Frontend.compile("var n = 0\nlistOf(1, 2).forEach { x -> n++ }\nprintln(n)\n") {}
+
+    val warning = result.diagnostics.single()
+    assertThat(warning.severity).isEqualTo(Diagnostic.Severity.WARNING)
+    assertThat(warning.message).contains("Parameter 'x")
+    assertThat(warning.line to warning.column).isEqualTo(2 to 24)
+  }
+
+  @Test
+  fun `warnings are in source order with the top-level properties' among them`() {
+    val result = K2Frontend.compile("val a = 1\nfun f() {\n  val b = 2\n}\nval c = 3\nf()\n") {}
+
+    assertThat(result.diagnostics.map { it.line to it.column })
+        .containsExactly(1 to 5, 3 to 7, 5 to 5)
+        .inOrder()
+  }
+
+  @Test
   fun `a script with Windows line endings compiles`() {
     val result = K2Frontend.compile(script.replace("\n", "\r\n") + "\r\n") { it.module.dump() }
 

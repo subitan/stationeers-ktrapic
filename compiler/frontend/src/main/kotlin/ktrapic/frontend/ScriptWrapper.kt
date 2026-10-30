@@ -2,8 +2,13 @@ package ktrapic.frontend
 
 import org.jetbrains.kotlin.com.intellij.psi.PsiErrorElement
 import org.jetbrains.kotlin.com.intellij.psi.util.PsiTreeUtil
+import org.jetbrains.kotlin.lexer.KtTokens
+import org.jetbrains.kotlin.psi.KtAnnotationEntry
+import org.jetbrains.kotlin.psi.KtBinaryExpression
 import org.jetbrains.kotlin.psi.KtDestructuringDeclaration
 import org.jetbrains.kotlin.psi.KtFile
+import org.jetbrains.kotlin.psi.KtNameReferenceExpression
+import org.jetbrains.kotlin.psi.KtProperty
 import org.jetbrains.kotlin.psi.KtScriptInitializer
 
 /** The name of the object a script-style program is wrapped in. */
@@ -41,6 +46,23 @@ class WrappedSource(
       shifted += insertion.length
     }
     return line to original
+  }
+
+  /**
+   * Whether a 1-based [line]/[column] in [text] is a character of the user's source, rather than
+   * one of the text wrapping added: the default imports, `object Program {`, `init {`, a
+   * statement's closing ` }` or the program's closing brace, on the lines after the source.
+   */
+  fun isInSource(line: Int, column: Int): Boolean {
+    if (line < 1 || line > lastLine || column < 1) return false
+    var shifted = 0
+    for (insertion in insertions[line].orEmpty().sortedBy { it.column }) {
+      val generatedStart = insertion.column + shifted + 1
+      if (column < generatedStart) return true
+      if (column < generatedStart + insertion.length) return false
+      shifted += insertion.length
+    }
+    return true
   }
 
   /**
@@ -106,6 +128,56 @@ object ScriptWrapper {
             column + 1,
         )
       }
+
+  /**
+   * Warnings for the script's top-level properties that nothing reads: "Variable is unused." for
+   * one never named again, and "Variable is never read." for a `var` only ever assigned with `=`.
+   * K2's extra checkers warn of these in a block, but the script's top-level properties are members
+   * of the wrapper's object, which they don't check, though in a script they are its variables. A
+   * name used anywhere else in the script counts as a use, even where a local of the same name
+   * hides the property, so this never warns of a property the program uses. As with K2's own,
+   * `@Suppress` on the property or the file, naming the diagnostic (`UNUSED_VARIABLE` or
+   * `VARIABLE_NEVER_READ`), turns the warning off.
+   */
+  fun unreadProperties(script: KtFile): List<Diagnostic> {
+    val properties = statements(script).filterIsInstance<KtProperty>()
+    if (properties.isEmpty()) return emptyList()
+    val uses =
+        PsiTreeUtil.collectElementsOfType(script, KtNameReferenceExpression::class.java).groupBy {
+          it.getReferencedName()
+        }
+    val fileSuppressed = suppressed(script.fileAnnotationList?.annotationEntries.orEmpty())
+    return properties.mapNotNull { property ->
+      val name = property.nameIdentifier ?: return@mapNotNull null
+      val named = uses[property.name].orEmpty()
+      val (id, message) =
+          when {
+            named.isEmpty() -> "UNUSED_VARIABLE" to "Variable is unused."
+            property.isVar && named.all { it.isAssignedTo() } ->
+                "VARIABLE_NEVER_READ" to "Variable is never read."
+            else -> return@mapNotNull null
+          }
+      if (id in fileSuppressed || id in suppressed(property.annotationEntries)) {
+        return@mapNotNull null
+      }
+      val (line, column) = lineAndColumn(script.text, name.textRange.startOffset)
+      Diagnostic(Diagnostic.Severity.WARNING, message, line, column + 1)
+    }
+  }
+
+  /** Whether this name is the target of a plain `=` assignment, which writes it without reading. */
+  private fun KtNameReferenceExpression.isAssignedTo(): Boolean {
+    val assignment = parent as? KtBinaryExpression ?: return false
+    return assignment.operationToken == KtTokens.EQ && assignment.left == this
+  }
+
+  /** The diagnostics the `@Suppress` annotations among [annotations] name. */
+  private fun suppressed(annotations: List<KtAnnotationEntry>): Set<String> =
+      annotations
+          .filter { it.shortName?.asString() == "Suppress" }
+          .flatMap { it.valueArguments }
+          .mapNotNull { it.getArgumentExpression()?.text?.removeSurrounding("\"") }
+          .toSet()
 
   /**
    * The script as a file. Each of [defaultImports] (such as `ktrapic.*`) is imported as if it were

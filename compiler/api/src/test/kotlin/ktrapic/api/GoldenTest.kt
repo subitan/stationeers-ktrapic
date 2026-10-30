@@ -58,6 +58,17 @@ class GoldenTest {
     }
   }
 
+  @Test
+  fun `each case compiles without warnings`() {
+    val sources = cases.listFiles { file -> file.name.endsWith(".ic10.kts") }.orEmpty().sorted()
+    assertThat(sources).isNotEmpty()
+    for (source in sources) {
+      val result = Compiler.compile(source.readText())
+      assertWithMessage(source.name).that(result).isInstanceOf(CompileResult.Success::class.java)
+      assertWithMessage(source.name).that((result as CompileResult.Success).warnings).isEmpty()
+    }
+  }
+
   private fun compile(source: File, options: CompileOptions): String =
       when (val result = Compiler.compile(source.readText(), options)) {
         is CompileResult.Success -> result.code + "\n"

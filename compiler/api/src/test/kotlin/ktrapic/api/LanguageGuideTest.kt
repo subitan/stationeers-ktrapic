@@ -40,6 +40,11 @@ class LanguageGuideTest {
     for (example in examples) {
       val result = Compiler.compile(example)
       assertWithMessage(example).that(result).isInstanceOf(CompileResult.Success::class.java)
+      // No unused variable or the like: warnings about the program as a whole, such as one over
+      // the chip's 128 lines, have no position and are allowed.
+      assertWithMessage(example)
+          .that((result as CompileResult.Success).warnings.filter { it.line > 0 })
+          .isEmpty()
     }
   }
 }

@@ -32,6 +32,17 @@ class WrappedSourceTest {
   }
 
   @Test
+  fun `a position is in the source unless it is in inserted text or the closing text`() {
+    assertThat(wrapped.isInSource(1, 1)).isTrue()
+    // "init { " is columns 1 to 7, "x()" 8 to 10, " }" 11 and 12.
+    assertThat((1..12).filter { wrapped.isInSource(2, it) }).containsExactly(8, 9, 10)
+    // Just past the end of the line is still the user's: K2 reports some problems there.
+    assertThat(wrapped.isInSource(2, 13)).isTrue()
+    assertThat(wrapped.isInSource(4, 1)).isFalse()
+    assertThat(wrapped.isInSource(0, 1)).isFalse()
+  }
+
+  @Test
   fun `an offset in the source moves past the text inserted before or at it`() {
     assertThat(wrapped.wrappedOffset(0)).isEqualTo(0)
     // The "x", after "init { ".

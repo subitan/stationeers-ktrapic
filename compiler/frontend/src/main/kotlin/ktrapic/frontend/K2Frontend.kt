@@ -98,12 +98,16 @@ object K2Frontend {
                   FrontendPhase { session = it },
               )
               .executeAndReturnPipeLineArtifact(
-                  arguments(sourceFile, classpath, workDir),
+                  arguments(sourceFile, classpath, workDir, extraCheckers = true),
                   Services.EMPTY,
                   messages,
                   disposable,
               )
-      val diagnostics = messages.diagnostics(wrapped, session)
+      // K2's extra checkers don't check the script's top-level properties, which the wrapper
+      // makes members of an object: ScriptWrapper.unreadProperties does.
+      val diagnostics =
+          (messages.diagnostics(wrapped, session) + ScriptWrapper.unreadProperties(script))
+              .sortedWith(compareBy({ it.line }, { it.column }))
       if (captured !is CapturedIr || diagnostics.any { it.severity == Diagnostic.Severity.ERROR }) {
         return FrontendResult.Failure(diagnostics)
       }
@@ -167,9 +171,17 @@ object K2Frontend {
 
   /**
    * The compiler arguments for [sourceFile], compiled against kotlin-stdlib and [classpath], with
-   * any output under [workDir].
+   * any output under [workDir]. [extraCheckers] runs K2's extra checkers, as `kotlinc -Wextra` does
+   * (setting `CommonConfigurationKeys.USE_FIR_EXTRA_CHECKERS`): they warn of unused variables,
+   * values assigned and never read, and the like. Only a compile reports diagnostics, so
+   * completion, hover and signature help leave them off.
    */
-  internal fun arguments(sourceFile: File, classpath: List<File>, workDir: File) =
+  internal fun arguments(
+      sourceFile: File,
+      classpath: List<File>,
+      workDir: File,
+      extraCheckers: Boolean = false,
+  ) =
       K2JVMCompilerArguments().apply {
         freeArgs = listOf(sourceFile.absolutePath)
         this.classpath =
@@ -181,6 +193,11 @@ object K2Frontend {
         jdkHome = System.getProperty("java.home")
         moduleName = "ktrapic"
         destination = File(workDir, "out").absolutePath
+        extraWarnings = extraCheckers
+        // Kotlin warns that inlining a function without function-typed parameters gains little,
+        // but here `inline` compiles a function into each place it is called on the chip, and is
+        // what lets a function take a device, a view, a substance or a static set.
+        warningLevels = arrayOf("NOTHING_TO_INLINE:disabled")
       }
 
   /** The kotlin-stdlib jar this process runs with, which the program is compiled against. */
@@ -277,6 +294,14 @@ private class CollectingMessageCollector : MessageCollector {
               else -> return@mapNotNull null
             }
         val location = message.location
+        // A warning is only worth showing about the user's own text: one about the text wrapping
+        // added, or with no position in the source, is not something the program could change.
+        if (
+            severity == Diagnostic.Severity.WARNING &&
+                (location == null || !wrapped.isInSource(location.line, location.column))
+        ) {
+          return@mapNotNull null
+        }
         val (line, column) =
             if (location == null || location.line <= 0) 0 to 0
             else wrapped.originalPosition(location.line, location.column)

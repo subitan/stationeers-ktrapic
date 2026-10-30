@@ -110,6 +110,18 @@ class LspDiagnosticsTest {
   }
 
   @Test
+  fun `publishes an unused variable as a warning, with severity 2 at its name`() {
+    client.initialize()
+    client.open("file:///a.kt", "val unused = 2\ndb.Setting = 1.0\n")
+
+    val diagnostic = published().single().diagnostics().single()
+
+    assertThat(diagnostic["severity"].asInt).isEqualTo(2)
+    assertThat(diagnostic["range"]).isEqualTo(range(0, 4, 0, 10))
+    assertThat(diagnostic["message"].asString).contains("unused")
+  }
+
+  @Test
   fun `publishes every error of a failed compile`() {
     client.initialize()
     client.open("file:///a.kt", "db.Setting = nope\nd0.On = foo\n")
