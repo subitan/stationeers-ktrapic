@@ -61,7 +61,10 @@ an alias: `val sensor = d0`. What has no value on the chip (a device, a view, a 
 the `val` must be given it where it is declared.
 
 The compiler warns of a variable nothing uses, a value assigned and never read, an unused lambda
-parameter and the like, as `kotlinc -Wextra` does, top-level properties included. A warning
+parameter and the like, as `kotlinc -Wextra` does. A top-level property gets only the warnings about the
+whole variable, "Variable is unused." and "Variable is never read."; the other warnings (an assigned
+value never read, a redundant initializer, a `var` that could be a `val`) apply inside functions
+and blocks. A warning
 doesn't stop the program compiling; `@Suppress("UNUSED_VARIABLE")` (or the name of another
 warning) on the declaration, or `@file:Suppress(...)` for the whole program, turns it off.
 
