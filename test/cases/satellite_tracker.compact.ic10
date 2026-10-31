@@ -1,65 +1,77 @@
 s d5 Mode 10
-s d0 Setting 10000
+s d0 Setting 2000
 move r0 0
 move r1 12
-jal 48
+jal 60
 l r2 d0 SignalStrength
-bne r2 -1 18
-s d5 Setting STR("Scan")
+bne r2 -1 17
+s d5 Setting STR("Sweep")
 add r0 r0 20
-bne r0 360 16
+bne r0 360 15
 move r0 0
-bgt r1 80 13
+add r1 r1 24
+bgt r1 90 14
 j 15
 move r1 12
-j 16
-add r1 r1 24
-jal 48
+jal 60
 j 5
+s d5 Setting STR("Hunt")
+move r3 8
 l r2 d0 SignalStrength
-bgt r2 1 21
-j 39
-s d5 Setting STR("Tuning")
+bgt r2 1 22
+j 51
 l r2 d0 SignalStrength
 div r2 r2 2
 floor r2 r2
 max r2 1 r2
-move r3 0
-move r4 r2
-jal 69
-mul r4 r2 -1
-move r3 0
-jal 69
-move r3 r2
+min r3 r3 r2
 move r4 0
-jal 69
-mul r3 r2 -1
+move r5 r3
+jal 81
+beqz r2 33
+move r2 1
+j 36
+mul r5 r3 -1
 move r4 0
-jal 69
-j 18
+jal 81
+move r6 r2
+move r4 r3
+move r5 0
+jal 81
+bnez r2 50
+mul r4 r3 -1
+move r5 0
+jal 81
+bnez r2 50
+bnez r6 50
+ble r3 1 48
+j 49
+j 51
+div r3 r3 2
+j 19
 l r0 d0 SignalStrength
 beq r0 -1 2
 s d5 Setting STR("Done!")
 s d1 Open 0
 l r0 d1 Open
-bnez r0 47
+bnez r0 59
 sleep 2
-j 43
+j 55
 j 2
 s d0 Horizontal r0
 s d0 Vertical r1
 l r2 d0 Idle
-bnez r2 54
+bnez r2 66
 yield
-j 50
-move r2 0
-l r3 d0 SignalStrength
-bne r3 -1 62
-blt r2 20 59
 j 62
+move r2 0
+l r7 d0 SignalStrength
+bne r7 -1 74
+blt r2 20 71
+j 74
 sleep 1
 add r2 r2 1
-j 55
+j 67
 l r2 d0 SignalStrength
 s d2 Setting r2
 l r2 d0 Horizontal
@@ -68,31 +80,27 @@ l r2 d0 Vertical
 s d4 Setting r2
 j ra
 push ra
-l r5 d0 SignalStrength
-move r6 r0
-move r7 r1
-add r0 r0 r3
-add r1 r1 r4
+move r8 0
+l r2 d0 SignalStrength
+move r9 r2
+move r10 r0
+move r11 r1
+add r0 r0 r4
+add r1 r1 r5
 max r1 0 r1
-min r1 90 r1
-push r2
-push r5
-push r6
-push r7
-jal 48
-pop r7
-pop r6
-pop r5
-pop r2
-l r3 d0 SignalStrength
-beq r3 -1 91
-beq r5 -1 96
-bgt r3 r5 91
-j 96
-move r0 r6
-move r1 r7
-push r2
-jal 48
-pop r2
+min r1 89.5 r1
+jal 60
+l r2 d0 SignalStrength
+beq r2 -1 97
+beq r9 -1 102
+bge r2 r9 97
+j 102
+move r0 r10
+move r1 r11
+jal 60
+move r2 r8
+j 104
+move r8 1
+j 83
 pop ra
 j ra

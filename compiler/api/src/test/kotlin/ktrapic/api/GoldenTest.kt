@@ -9,7 +9,13 @@ import org.junit.jupiter.api.Test
  * Compiles each `test/cases/X.ic10.kts` and compares the result with `X.ic10` and `X.compact.ic10`.
  * A case whose code calls functions with `jal` is also compiled with `stackCalls = false`, to
  * `X.registers.ic10`, so the convention passing arguments in registers stays covered, unless it is
- * recursive, which that convention rejects.
+ * recursive, which that convention rejects. `X.ic10` is compiled with each `@file:Compact` or
+ * `@file:ktrapic.Compact` in the case's header blanked out, so that the labelled form of a compact
+ * case is still checked; the other two keep it. A case naming `Compact` in a `@file:` annotation
+ * any other way, such as `@file:[Compact]`, fails rather than having its labelled form go
+ * unchecked. Only `@file:Compact` is blanked: it is the one annotation a case needs to fit the
+ * chip, and the labelled form is what `X.ic10` exists to show, while a case's other file
+ * annotations are part of how it is meant to compile.
  *
  * To write the expected files from the current compiler, run with the workspace's `test/cases`
  * directory in KTRAPIC_UPDATE_GOLDENS: `bazel test //compiler/api:GoldenTest
@@ -26,12 +32,26 @@ class GoldenTest {
     assertThat(sources).isNotEmpty()
     for (source in sources) {
       val name = source.name.removeSuffix(".ic10.kts")
-      val variants =
-          listOf(".ic10" to CompileOptions(), ".compact.ic10" to CompileOptions(compact = true))
-      val outputs = variants.map { (suffix, options) -> suffix to compile(source, options) }
+      val text = source.readText()
+      val outputs =
+          listOf(
+              ".ic10" to compile(withoutCompact(text), CompileOptions()),
+              ".compact.ic10" to compile(text, CompileOptions(compact = true)),
+          )
+      if (COMPACT_MENTION.containsMatchIn(text)) {
+        assertWithMessage(
+                "%s.ic10 compiles to the same code as %s.compact.ic10 although the case has a " +
+                    "@file: annotation naming Compact: blanking it missed that spelling, so " +
+                    "write it as @file:Compact or @file:ktrapic.Compact on its own",
+                name,
+                name,
+            )
+            .that(outputs[0].second)
+            .isNotEqualTo(outputs[1].second)
+      }
       val registers =
           if (outputs[0].second.lines().any { it.startsWith("jal ") }) {
-            listOf(".registers.ic10" to compile(source, CompileOptions(stackCalls = false)))
+            listOf(".registers.ic10" to compile(text, CompileOptions(stackCalls = false)))
                 .filterNot { (_, code) -> code.startsWith("error: ") && "Recursive calls" in code }
           } else {
             emptyList()
@@ -69,9 +89,34 @@ class GoldenTest {
     }
   }
 
-  private fun compile(source: File, options: CompileOptions): String =
-      when (val result = Compiler.compile(source.readText(), options)) {
+  private fun compile(source: String, options: CompileOptions): String =
+      when (val result = Compiler.compile(source, options)) {
         is CompileResult.Success -> result.code + "\n"
         is CompileResult.Failure -> result.errors.joinToString("\n") { "error: $it" } + "\n"
       }
+
+  private companion object {
+    /**
+     * [text] with each `@file:Compact` or `@file:ktrapic.Compact`, with or without `()`, in its
+     * header (everything before its first `package` or `import`, where file annotations go) blanked
+     * out: the annotation alone is removed, leaving the rest of its line, such as a trailing
+     * comment or another annotation, and every line where it was, so the source's line numbers stay
+     * as they were.
+     */
+    fun withoutCompact(text: String): String {
+      val end = HEADER_END.find(text)?.range?.first ?: text.length
+      return COMPACT.replace(text.substring(0, end), "") + text.substring(end)
+    }
+
+    val HEADER_END = Regex("^[ \\t]*(package|import)\\b", RegexOption.MULTILINE)
+    val COMPACT = Regex("@file:(ktrapic\\.)?Compact\\b(\\(\\))?")
+
+    /**
+     * A `@file:` annotation naming `Compact`, including spellings [COMPACT] doesn't match (`@file:
+     * Compact`, `@file:[Compact]`, a line break after the colon) and ones outside the header as
+     * [withoutCompact] finds it. A case it matches must compile differently with the annotation
+     * blanked, or the blanking missed it.
+     */
+    val COMPACT_MENTION = Regex("@file:\\s*(\\[[^\\]]*)?\\b(ktrapic\\.)?Compact\\b")
+  }
 }

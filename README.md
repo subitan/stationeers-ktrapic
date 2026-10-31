@@ -256,10 +256,14 @@ java -jar ktfmt-0.64-with-dependencies.jar <files...>
 
 ## Tests
 
-Golden programs live in `test/cases`: each `X.ic10.kts` must compile to `X.ic10`, and to
-`X.compact.ic10` with compact output, as `@file:Compact` compiles it; one that calls functions
-with `jal` must also compile to `X.registers.ic10` with every function's arguments in registers,
-as `@file:InRegisters` compiles it, unless it is recursive, which needs the stack.
+Golden programs live in `test/cases`: each `X.ic10.kts` must compile to `X.ic10` (with each
+`@file:Compact` or `@file:ktrapic.Compact` annotation in its header blanked out, leaving the rest
+of the line and the line numbers as they were, so a compact case's labelled form is still checked;
+its other annotations stay; another spelling, such as `@file:[Compact]`, fails the test rather than
+being blanked),
+and to `X.compact.ic10` with compact output, as `@file:Compact` compiles it; one that calls
+functions with `jal` must also compile to `X.registers.ic10` with every function's arguments in
+registers, as `@file:InRegisters` compiles it, unless it is recursive, which needs the stack.
 `compiler/api`'s `FileAnnotationTest` checks that each annotation compiles every case as the
 option behind those goldens does. After a deliberate change to the output, rewrite them (the path must be absolute):
 

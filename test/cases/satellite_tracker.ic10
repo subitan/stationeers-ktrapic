@@ -1,5 +1,5 @@
 s d5 Mode 10
-s d0 Setting 10000
+s d0 Setting 2000
 while1:
 move r0 0
 move r1 12
@@ -7,46 +7,63 @@ jal aim
 while2:
 l r2 d0 SignalStrength
 bne r2 -1 endwhile2
-s d5 Setting STR("Scan")
+s d5 Setting STR("Sweep")
 add r0 r0 20
 bne r0 360 else1
 move r0 0
-bgt r1 80 skip1
+add r1 r1 24
+bgt r1 90 skip1
 j else2
 skip1:
 move r1 12
-j endif2
 else2:
-add r1 r1 24
-endif2:
 else1:
 jal aim
 j while2
 endwhile2:
+s d5 Setting STR("Hunt")
+move r3 8
 while3:
 l r2 d0 SignalStrength
 bgt r2 1 skip2
 j endwhile3
 skip2:
-s d5 Setting STR("Tuning")
 l r2 d0 SignalStrength
 div r2 r2 2
 floor r2 r2
 max r2 1 r2
-move r3 0
-move r4 r2
-jal fineTune
-mul r4 r2 -1
-move r3 0
-jal fineTune
-move r3 r2
+min r3 r3 r2
 move r4 0
-jal fineTune
-mul r3 r2 -1
+move r5 r3
+jal lineSearch
+beqz r2 else3
+move r2 1
+j endif3
+else3:
+mul r5 r3 -1
 move r4 0
-jal fineTune
+jal lineSearch
+endif3:
+move r6 r2
+move r4 r3
+move r5 0
+jal lineSearch
+bnez r2 else4
+mul r4 r3 -1
+move r5 0
+jal lineSearch
+bnez r2 else4
+bnez r6 else4
+ble r3 1 skip3
+j else5
+skip3:
+j return3
+else5:
+div r3 r3 2
+else4:
 j while3
 endwhile3:
+return3:
 l r0 d0 SignalStrength
 beq r0 -1 while1
 s d5 Setting STR("Done!")
@@ -69,11 +86,11 @@ j while5
 endwhile5:
 move r2 0
 while6:
-l r3 d0 SignalStrength
-bne r3 -1 endwhile6
-blt r2 20 skip3
+l r7 d0 SignalStrength
+bne r7 -1 endwhile6
+blt r2 20 skip4
 j endwhile6
-skip3:
+skip4:
 sleep 1
 add r2 r2 1
 j while6
@@ -85,36 +102,34 @@ s d3 Setting r2
 l r2 d0 Vertical
 s d4 Setting r2
 j ra
-fineTune:
+lineSearch:
 push ra
-l r5 d0 SignalStrength
-move r6 r0
-move r7 r1
-add r0 r0 r3
-add r1 r1 r4
+move r8 0
+while7:
+l r2 d0 SignalStrength
+move r9 r2
+move r10 r0
+move r11 r1
+add r0 r0 r4
+add r1 r1 r5
 max r1 0 r1
-min r1 90 r1
-push r2
-push r5
-push r6
-push r7
+min r1 89.5 r1
 jal aim
-pop r7
-pop r6
-pop r5
-pop r2
-l r3 d0 SignalStrength
-beq r3 -1 or1
-beq r5 -1 else4
-bgt r3 r5 skip4
-j else4
-skip4:
+l r2 d0 SignalStrength
+beq r2 -1 or1
+beq r9 -1 else7
+bge r2 r9 skip5
+j else7
+skip5:
 or1:
-move r0 r6
-move r1 r7
-push r2
+move r0 r10
+move r1 r11
 jal aim
-pop r2
-else4:
+move r2 r8
+j return8
+else7:
+move r8 1
+j while7
+return8:
 pop ra
 j ra
