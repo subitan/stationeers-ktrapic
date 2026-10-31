@@ -95,8 +95,12 @@ if $stage_only; then exit 0; fi
 dotnet build tools/workshop-upload/WorkshopUpload.csproj -c Release -nologo -v q
 uploader=tools/workshop-upload/bin/Release/net48/WorkshopUpload.exe
 current="$(workshop_visibility "$uploader" "$item")" || die "couldn't read Workshop item $item's visibility"
-[ "$visibility" = public ] || [ "$current" = private ] ||
+if [ "$visibility" = private ] && [ "$current" != private ]; then
+  [ -z "$item_arg" ] ||
+    die "Workshop item $item is $current: a trial goes only to a private item; make it private or" \
+      "name another with --item"
   die "Workshop item $item is $current: uploading without --public would replace the release its" \
     "subscribers have and hide it from them. Try the release on a private test item" \
     "(upload-release.sh $tag --item ID), then publish it with --public"
+fi
 "$uploader" --item "$item" --content "$(cygpath -w "$root/$stage")" --note "$note" --visibility "$visibility"
