@@ -17,7 +17,9 @@ import kotlin.math.*
 // off each position. Once the dish has a contact, the program line-searches along each axis: it
 // keeps stepping one way while each step brings the offset down, then goes back to the best
 // position. Steps start at 8 degrees, are never more than half the offset, and halve whenever no
-// direction helps. It stops once the dish is within a degree, or once no 1 degree step helps.
+// direction helps. A step up over the zenith carries on down the far side; the tilt stops at 89.5
+// degrees, short of the zenith, where heading steps would not move the dish. It stops once the
+// dish is within a degree, or once no step of a degree or less helps.
 // Status text goes to a console on d5; the offset, heading and elevation go to displays on d2, d3
 // and d4. Flip the lever on d1 to start again.
 
@@ -93,7 +95,14 @@ fun lineSearch(dh: Double, dv: Double): Boolean {
     val oldHeading = heading
     val oldTilt = tilt
     heading += dh
-    tilt = min(90.0, max(0.0, tilt + dv))
+    tilt = max(0.0, tilt + dv)
+    // A move up over the zenith carries on down the far side. The tilt stops short of 90, where a
+    // heading step would not move the beam, so that heading steps can still bring the dish round.
+    if (tilt > 90.0) {
+      tilt = 180.0 - tilt
+      heading += 180.0
+    }
+    tilt = min(89.5, tilt)
     aim()
     val after = dish.SignalStrength
     if (after == -1.0 || (before != -1.0 && after >= before)) {
@@ -124,9 +133,9 @@ inline fun sweep() {
 }
 
 /**
- * Searches along each axis in turn, in steps of 8 degrees, then 4, 2 and 1, halving the step once
- * no direction gets the dish any closer, and never stepping more than half the offset. Ends once
- * the dish is within a degree, or as close as whole degrees allow, or has lost the contact.
+ * Searches along each axis in turn, in steps of at most 8 degrees and at most half the offset,
+ * halving the step once no direction gets the dish any closer. Ends once the dish is within a
+ * degree, or once no step of a degree or less gets it closer, or once it has lost the contact.
  */
 fun adjust() {
   debug("Hunt")
@@ -136,7 +145,7 @@ fun adjust() {
     // Up, or else down; then right, or else left (both always searched); halve once none helps.
     val vertical = lineSearch(0.0, step) || lineSearch(0.0, -step)
     if (!(lineSearch(step, 0.0) || lineSearch(-step, 0.0) || vertical)) {
-      if (step == 1.0) return
+      if (step <= 1.0) return
       step /= 2.0
     }
   }

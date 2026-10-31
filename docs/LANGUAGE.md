@@ -604,16 +604,18 @@ nullable types, exceptions, casts and type checks, and coroutines.
 a chip from the game: it points a medium satellite dish at a satellite, sweeping the sky at four
 tilts until the dish resolves a contact, then line-searching along each axis: it keeps stepping
 one way while each step brings the offset down, then goes back to the best position. Steps start
-at 8 degrees, are never more than half the offset, and halve whenever no direction helps; it stops
-once within a degree, or once no 1 degree step helps. It sweeps again if the contact goes away, and
-waits on a lever to start again. The dish's power is a constant, `POWER`, of 2000 W: the medium
-dish accepts far more, more than standard cable's 5000 W, which can burn its cables. At the game's
-turn rate a full pass of the sky takes roughly 40 minutes, by estimate rather than timing; a
-smaller `WAIT` shortens it, at the cost of missing contacts further off each position. It uses
+at 8 degrees, are never more than half the offset, and halve whenever no direction helps. A step up
+over the zenith carries on down the far side, and the tilt stops at 89.5 degrees, where heading
+steps still move the dish. It stops once within a degree, or once no step of a degree or less
+helps. It sweeps again if the contact goes away, and waits on a lever to start again. The dish's
+power is a constant, `POWER`, of 2000 W: the medium dish accepts far more, more than standard
+cable's 5000 W, which can burn its cables. At the game's turn rate a full pass of the sky takes
+roughly 40 minutes, by estimate rather than timing; a smaller `WAIT` shortens it, at the cost of
+missing contacts further off each position. It uses
 typed devices (`SatelliteDish.Medium.at(d0)`, `Switch.Lever.at(d1)`, `LedDisplay.Small.at(...)`),
 top-level `var`s, functions (inlined, called on the stack, and two `@InRegisters`), `continue`,
 text on a display, `kotlin.math`, `sleep` and `yield`. It starts with `@file:Compact`: compiled
-with labels it would take 131 lines, over the chip's 128, and compact it takes 104.
+with labels it would take 141 lines, over the chip's 128, and compact it takes 110.
 `SatelliteTrackerTest` runs it against a
 simulated dish that models what the program relies on: how the game's dish turns and reports that
 it has stopped, and that it resolves a contact only once stopped, more slowly the further off it

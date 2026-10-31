@@ -1,25 +1,33 @@
 s d5 Mode 10
 s d0 Setting 2000
+while1:
 move r0 0
 move r1 12
-jal 58
+jal aim
+while2:
 l r2 d0 SignalStrength
-bne r2 -1 17
+bne r2 -1 endwhile2
 s d5 Setting STR("Sweep")
 add r0 r0 20
-bne r0 360 15
+bne r0 360 else1
 move r0 0
 add r1 r1 24
-bgt r1 90 14
-j 15
+bgt r1 90 skip1
+j else2
+skip1:
 move r1 12
-jal 58
-j 5
+else2:
+else1:
+jal aim
+j while2
+endwhile2:
 s d5 Setting STR("Hunt")
 move r3 8
+while3:
 l r2 d0 SignalStrength
-bgt r2 1 22
-j 49
+bgt r2 1 skip2
+j endwhile3
+skip2:
 l r2 d0 SignalStrength
 div r2 r2 2
 floor r2 r2
@@ -27,49 +35,66 @@ max r2 1 r2
 min r3 r3 r2
 move r4 0
 move r5 r3
-jal 79
-beqz r2 33
+jal lineSearch
+beqz r2 else3
 move r2 1
-j 36
+j endif3
+else3:
 mul r5 r3 -1
 move r4 0
-jal 79
+jal lineSearch
+endif3:
 move r6 r2
 move r4 r3
 move r5 0
-jal 79
-bnez r2 48
+jal lineSearch
+bnez r2 else4
 mul r4 r3 -1
 move r5 0
-jal 79
-bnez r2 48
-bnez r6 48
-beq r3 1 49
+jal lineSearch
+bnez r2 else4
+bnez r6 else4
+ble r3 1 skip3
+j else5
+skip3:
+j return3
+else5:
 div r3 r3 2
-j 19
+else4:
+j while3
+endwhile3:
+return3:
 l r0 d0 SignalStrength
-beq r0 -1 2
+beq r0 -1 while1
 s d5 Setting STR("Done!")
 s d1 Open 0
+while4:
 l r0 d1 Open
-bnez r0 57
+bnez r0 endwhile4
 sleep 2
-j 53
-j 2
+j while4
+endwhile4:
+j while1
+aim:
 s d0 Horizontal r0
 s d0 Vertical r1
+while5:
 l r2 d0 Idle
-bnez r2 64
+bnez r2 endwhile5
 yield
-j 60
+j while5
+endwhile5:
 move r2 0
+while6:
 l r7 d0 SignalStrength
-bne r7 -1 72
-blt r2 20 69
-j 72
+bne r7 -1 endwhile6
+blt r2 20 skip4
+j endwhile6
+skip4:
 sleep 1
 add r2 r2 1
-j 65
+j while6
+endwhile6:
 l r2 d0 SignalStrength
 s d2 Setting r2
 l r2 d0 Horizontal
@@ -77,8 +102,10 @@ s d3 Setting r2
 l r2 d0 Vertical
 s d4 Setting r2
 j ra
+lineSearch:
 push ra
 move r8 0
+while7:
 l r2 d0 SignalStrength
 move r9 r2
 move r10 r0
@@ -86,19 +113,29 @@ move r11 r1
 add r0 r0 r4
 add r1 r1 r5
 max r1 0 r1
-min r1 90 r1
-jal 58
+bgt r1 90 skip5
+j else7
+skip5:
+sub r1 180 r1
+add r0 r0 180
+else7:
+min r1 89.5 r1
+jal aim
 l r2 d0 SignalStrength
-beq r2 -1 95
-beq r9 -1 100
-bge r2 r9 95
-j 100
+beq r2 -1 or1
+beq r9 -1 else8
+bge r2 r9 skip6
+j else8
+skip6:
+or1:
 move r0 r10
 move r1 r11
-jal 58
+jal aim
 move r2 r8
-j 102
+j return8
+else8:
 move r8 1
-j 81
+j while7
+return8:
 pop ra
 j ra
