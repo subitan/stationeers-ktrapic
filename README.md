@@ -288,6 +288,20 @@ JUnit 4's `org.junit.Test` compiles (Truth brings JUnit 4 onto the classpath) bu
 runs: a class with only JUnit 4 tests finds none and its target fails, while JUnit 4 tests
 mixed into a class with JUnit 5 tests are silently skipped.
 
+## Support
+
+KTrapIC is free, and stays free. If it's useful to you and you'd like to say thanks with a tip,
+these go to the maintainer:
+
+| | Address |
+|---|---|
+| Bitcoin (native SegWit) | `bc1qctag0alxj6sza79sh2jyqrsj95qcyuqwnfksuf` |
+| Ethereum, and EVM-compatible networks | `0x01F46Aa11769f351581d71b1Fa2342f32BCDc646` |
+| Solana | `7pfA9akYBbxp9s9ryT62BVwfVwN73fWq2NQDk4Ypn9G` |
+
+Copy an address from here rather than from anywhere else: these are the only ones. Bug reports,
+programs you've written and pull requests are just as welcome.
+
 ## License
 
 MIT; see [LICENSE](LICENSE).
