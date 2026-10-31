@@ -23,7 +23,7 @@ import org.junit.jupiter.api.Test
  *   Vertical is kept within 0 to 90. Writing the target it already has does nothing. Reading them
  *   gives where it points now, which follows the target the short way round at about the game's
  *   turn rate. Idle reads 1 once it has stopped, and 0 from a write that moves it until then.
- * - Setting is the dish's power in whole watts, kept within the dish's range.
+ * - Setting is the dish's power in whole watts, kept within the dish's range (see [MAX_WATTS]).
  * - SignalStrength is the angle, in degrees, between where the dish points and the satellite. It
  *   reads -1 after any move or change of Setting until the dish has resolved the satellite again.
  *   Resolving starts once the dish stops and takes longer the further off it points and the less
@@ -59,6 +59,9 @@ class SatelliteTrackerTest {
     /** Each heading and tilt the dish has been turned to, in order. */
     val targets = mutableListOf<Pair<Double, Double>>()
 
+    /** For each of [targets], the offset where the dish pointed when it was told to turn there. */
+    val offsetsBefore = mutableListOf<Double>()
+
     /** While true, the dish has no contact to resolve. */
     var lost = false
       set(value) {
@@ -86,6 +89,7 @@ class SatelliteTrackerTest {
         if (targetH != oldH || targetV != oldV) {
           moves++
           targets += targetH to targetV
+          offsetsBefore += offset()
           resolving = TURNING
         }
         // A write sets the target; reads still give where the dish points.
@@ -94,7 +98,10 @@ class SatelliteTrackerTest {
     }
 
     /** The angle between where the dish points and the satellite, in degrees. */
-    fun offset(): Double {
+    fun offset(): Double = offsetAt(h, v)
+
+    /** The angle between heading [h] and tilt [v] and the satellite, in degrees. */
+    fun offsetAt(h: Double, v: Double): Double {
       fun direction(h: Double, v: Double): DoubleArray {
         val (hr, vr) = Math.toRadians(h) to Math.toRadians(v)
         return doubleArrayOf(cos(vr) * cos(hr), cos(vr) * sin(hr), sin(vr))
@@ -147,9 +154,14 @@ class SatelliteTrackerTest {
       /** Degrees per tick: about 1.8 a second horizontally and 0.9 vertically. */
       const val H_PER_TICK = 0.9
       const val V_PER_TICK = 0.45
-      /** The range the dish keeps its Setting within, in watts. */
+      /**
+       * The range the dish keeps its Setting within, in watts. The class's default range tops out
+       * at 200 W, but the medium dish's prefab evidently overrides it: in game, the maintainer's
+       * medium dish took 7500 W when told 10000. So this assumes 7500, which is all the program's
+       * POWER of 2000 needs to know: that the dish takes it as written.
+       */
       const val MIN_WATTS = 50.0
-      const val MAX_WATTS = 200.0
+      const val MAX_WATTS = 7500.0
       /** A contact resolves in the dish's base time when this many watts reach it. */
       const val WATTS_TO_RESOLVE = 100.0
       const val BASE_SECONDS = 10.0
@@ -157,11 +169,21 @@ class SatelliteTrackerTest {
 
       /**
        * The share of its power the dish brings to bear on a contact [offset] degrees off: all of it
-       * within 2 degrees, then falling in straight lines through 0.9 at 5, 0.1 at 22.5 and 0.05 at
-       * 45, as the game's dish has it.
+       * within 2 degrees, then falling in straight lines through 0.9 at 5, 0.1 at 22.5, 0.05 at 45,
+       * 0.01 at 90 and 0.001 at 180, as the game's dish has it. At the program's POWER, that lets
+       * the dish resolve a contact up to about 60 degrees off within the program's wait.
        */
       fun falloff(offset: Double): Double {
-        val points = listOf(0.0 to 1.0, 2.0 to 1.0, 5.0 to 0.9, 22.5 to 0.1, 45.0 to 0.05)
+        val points =
+            listOf(
+                0.0 to 1.0,
+                2.0 to 1.0,
+                5.0 to 0.9,
+                22.5 to 0.1,
+                45.0 to 0.05,
+                90.0 to 0.01,
+                180.0 to 0.001,
+            )
         if (offset >= points.last().first) return points.last().second
         val i = points.indexOfFirst { it.first > offset }
         val (x0, y0) = points[i - 1]
@@ -221,10 +243,10 @@ class SatelliteTrackerTest {
     /** Checks that, once it found the satellite, it tuned in without sweeping again. */
     fun assertNoSweepAfterTuning() {
       val texts = texts()
-      assertWithMessage("tuned ($options)").that(texts).contains(TUNING)
+      assertWithMessage("tuned ($options)").that(texts).contains(HUNT)
       assertWithMessage("no sweep after tuning ($options)")
-          .that(texts.subList(texts.indexOf(TUNING), texts.size))
-          .doesNotContain(SCAN)
+          .that(texts.subList(texts.indexOf(HUNT), texts.size))
+          .doesNotContain(SWEEP)
     }
   }
 
@@ -238,17 +260,16 @@ class SatelliteTrackerTest {
   @Test
   fun `the tracker finds the satellite, and starts again when the lever is flipped`() {
     for (options in allOptions()) {
-      // The sweep first finds the satellite about 15 degrees off, near the edge of what the dish
-      // can resolve in the program's wait, so its first nudge down takes it out of reach and has
-      // to be undone.
+      // The sweep first finds the satellite near the edge of what the dish can resolve in the
+      // program's wait, so the hunt starts with 8 degree steps.
       val run = Run(options, Dish(satelliteH = 130.0, satelliteV = 2.0, h = 300.0, v = 10.0))
       val dish = run.dish
 
       run.runUntil(100_000) { run.console["Setting"] == DONE }
       run.assertDone()
       assertThat(run.console["Mode"]).isEqualTo(10.0)
-      assertWithMessage("full power ($options)").that(dish.power).isEqualTo(Dish.MAX_WATTS)
-      assertThat(run.texts()).contains(SCAN)
+      assertWithMessage("power ($options)").that(dish.power).isEqualTo(POWER)
+      assertThat(run.texts()).contains(SWEEP)
       run.assertNoSweepAfterTuning()
 
       // It waits on the lever, and turns it back off before waiting.
@@ -265,8 +286,8 @@ class SatelliteTrackerTest {
 
   @Test
   fun `the sweep finds a satellite low or high in the sky`() {
-    // Near the horizon; on it, straight below a sweep position, so that the first nudge, up, loses
-    // the contact; near the zenith; and low where a sweep at one tilt would miss it.
+    // Near the horizon; on it, so that moves down are clamped; near the zenith; and low, between
+    // two of the sweep's tilts.
     val satellites = listOf(200.0 to 3.0, 120.0 to 0.0, 75.0 to 85.0, 353.0 to 18.5)
     for (options in allOptions()) {
       for ((h, v) in satellites) {
@@ -285,13 +306,13 @@ class SatelliteTrackerTest {
       val run = Run(options, Dish(satelliteH = 137.0, satelliteV = 52.0, h = 300.0, v = 10.0))
       val dish = run.dish
 
-      run.runUntil(100_000) { run.console["Setting"] == TUNING }
-      assertWithMessage("tuning ($options)").that(run.console["Setting"]).isEqualTo(TUNING)
+      run.runUntil(100_000) { run.console["Setting"] == HUNT }
+      assertWithMessage("tuning ($options)").that(run.console["Setting"]).isEqualTo(HUNT)
       dish.lost = true
       val tuningAt = run.texts().size
-      run.runUntil(100_000) { run.texts().drop(tuningAt).contains(SCAN) }
+      run.runUntil(100_000) { run.texts().drop(tuningAt).contains(SWEEP) }
       val afterLoss = run.texts().drop(tuningAt)
-      assertWithMessage("sweeps again ($options)").that(afterLoss).contains(SCAN)
+      assertWithMessage("sweeps again ($options)").that(afterLoss).contains(SWEEP)
       assertWithMessage("not done ($options)").that(afterLoss).doesNotContain(DONE)
 
       dish.lost = false
@@ -301,25 +322,30 @@ class SatelliteTrackerTest {
   }
 
   @Test
-  fun `a nudge that resolves where the dish had yet to is kept`() {
+  fun `a move that resolves where the dish had yet to is kept`() {
     for (options in allOptions()) {
-      // The sweep finds the satellite 9 degrees below 140, 12, so the first nudges are 4 degrees.
-      // Losing the contact over the first nudge and its undo leaves the dish reading -1 where the
-      // second nudge starts; that nudge, down, resolves closer and should stay.
+      // Losing the contact over the hunt's first move, up, and its undo leaves the dish reading -1
+      // where the next line search, down, starts. Its first move resolves, and must count as
+      // closer: the search goes on from there rather than back to where the dish could not resolve.
       val run = Run(options, Dish(satelliteH = 140.0, satelliteV = 3.0, h = 0.0, v = 45.0))
       val dish = run.dish
 
-      run.runUntil(100_000) { dish.targets.lastOrNull() == (140.0 to 16.0) }
+      run.runUntil(100_000) { run.console["Setting"] == HUNT }
+      assertWithMessage("hunting ($options)").that(run.console["Setting"]).isEqualTo(HUNT)
+      // The hunt's first move is made in the same tick as it says so.
+      val start = dish.targets.size - 1
       dish.lost = true
-      run.runUntil(1_000) { dish.targets.lastOrNull() == (140.0 to 8.0) }
+      run.runUntil(1_000) { dish.targets.size > start + 2 }
       dish.lost = false
-      assertWithMessage("nudge, undo, nudge ($options)")
-          .that(dish.targets.takeLast(3))
-          .containsExactly(140.0 to 16.0, 140.0 to 12.0, 140.0 to 8.0)
-          .inOrder()
-      val moves = dish.moves
-      run.runUntil(1_000) { dish.moves > moves }
-      assertWithMessage("kept ($options)").that(dish.targets.last()).isEqualTo(144.0 to 8.0)
+      val (from, up, undo, down) = dish.targets.subList(start - 1, start + 3).toList()
+      assertWithMessage("up ($options)").that(up.first).isEqualTo(from.first)
+      assertWithMessage("up ($options)").that(up.second).isGreaterThan(from.second)
+      assertWithMessage("undone ($options)").that(undo).isEqualTo(from)
+      assertWithMessage("down ($options)").that(down.first).isEqualTo(from.first)
+      assertWithMessage("down ($options)").that(down.second).isLessThan(from.second)
+
+      run.runUntil(1_000) { dish.targets.size > start + 3 }
+      assertWithMessage("kept ($options)").that(dish.targets[start + 3]).isNotEqualTo(from)
 
       run.runUntil(100_000) { run.console["Setting"] == DONE }
       run.assertDone()
@@ -327,10 +353,49 @@ class SatelliteTrackerTest {
   }
 
   @Test
+  fun `a dish that lands close steps by at most half the offset and stops within a degree`() {
+    for (options in allOptions()) {
+      // The sweep's first position, 0, 12, is about 5 degrees from the satellite.
+      val run = Run(options, Dish(satelliteH = 4.0, satelliteV = 15.5, h = 0.0, v = 45.0))
+      val dish = run.dish
+
+      run.runUntil(100_000) { run.console["Setting"] == DONE }
+      run.assertDone()
+      assertWithMessage("no sweep ($options)").that(run.texts()).doesNotContain(SWEEP)
+      // The first target is the sweep's; the hunt's moves follow it. The hunt sizes its step from
+      // the offset where it starts, at most half of it, rather than probing 8 degrees, and the
+      // step never grows from there.
+      assertWithMessage("hunted ($options)").that(dish.targets.size).isGreaterThan(1)
+      val steps =
+          (1 until dish.targets.size).map { i ->
+            val (h0, v0) = dish.targets[i - 1]
+            val (h1, v1) = dish.targets[i]
+            maxOf(abs(((h1 - h0 + 540.0) % 360.0) - 180.0), abs(v1 - v0))
+          }
+      assertWithMessage("first step ($options)")
+          .that(steps.first())
+          .isAtMost(maxOf(1.0, dish.offsetsBefore[1] / 2.0))
+      assertWithMessage("steps ($options)").that(steps.max()).isEqualTo(steps.first())
+      // Once it reaches within a degree, it only finishes the line it is on: it goes on along it,
+      // and back, but probes no other direction.
+      val within = dish.targets.indexOfFirst { (h, v) -> dish.offsetAt(h, v) <= 1.0 }
+      assertWithMessage("reached within a degree ($options)").that(within).isGreaterThan(0)
+      val (h0, _) = dish.targets[within - 1]
+      val (h1, v1) = dish.targets[within]
+      val horizontal = h0 != h1
+      for ((h, v) in dish.targets.drop(within)) {
+        assertWithMessage("same line after ${dish.targets[within]} ($options)")
+            .that(if (horizontal) v else h)
+            .isEqualTo(if (horizontal) v1 else h1)
+      }
+    }
+  }
+
+  @Test
   fun `a nudge clamped at the zenith is undone to where the dish was`() {
     for (options in allOptions()) {
       // The contact appears 14 degrees below the dish as the sweep reaches 0, 84, so the first
-      // nudge, up 7, stops at 90, where the dish can't resolve it in time.
+      // move, up 7 (half the offset), stops at 90, which is further off, so it is undone.
       val run = Run(options, Dish(satelliteH = 0.0, satelliteV = 70.0, h = 0.0, v = 45.0))
       val dish = run.dish
       dish.lost = true
@@ -349,8 +414,10 @@ class SatelliteTrackerTest {
   }
 
   private companion object {
+    /** The program's POWER, in watts. */
+    const val POWER = 2000.0
     val DONE = Hashes.str("Done!")
-    val SCAN = Hashes.str("Scan")
-    val TUNING = Hashes.str("Tuning")
+    val SWEEP = Hashes.str("Sweep")
+    val HUNT = Hashes.str("Hunt")
   }
 }

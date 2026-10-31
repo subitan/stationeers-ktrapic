@@ -33,6 +33,13 @@ class FileAnnotationTest {
           "@file:NoTailCalls" to CompileOptions(tailCalls = false),
       )
 
+  /**
+   * [source] with each of [annotations] it lacks written above it. A case may carry one itself, and
+   * none may be written twice.
+   */
+  private fun annotated(source: String, vararg annotations: String) =
+      annotations.filterNot { it in source.lines() }.joinToString("") { "$it\n" } + source
+
   @Test
   fun `each annotation compiles every case as its option does`() {
     val sources = cases.listFiles { file -> file.name.endsWith(".ic10.kts") }.orEmpty().sorted()
@@ -41,11 +48,11 @@ class FileAnnotationTest {
       val source = file.readText()
       for ((annotation, options) in annotations) {
         assertWithMessage("%s with %s", file.name, annotation)
-            .that(compile("$annotation\n$source"))
+            .that(compile(annotated(source, annotation)))
             .isEqualTo(compile(source, options))
       }
       assertWithMessage("%s with all three", file.name)
-          .that(compile(annotations.joinToString("\n") { it.first } + "\n" + source))
+          .that(compile(annotated(source, *annotations.map { it.first }.toTypedArray())))
           .isEqualTo(compile(source, CompileOptions(true, stackCalls = false, tailCalls = false)))
     }
   }
