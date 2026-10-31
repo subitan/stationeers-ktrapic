@@ -4,6 +4,7 @@ import com.google.common.truth.Truth.assertThat
 import java.nio.file.Path
 import kotlin.io.path.createDirectories
 import kotlin.io.path.createFile
+import kotlin.io.path.exists
 import kotlin.io.path.readText
 import kotlin.io.path.writeText
 import org.junit.jupiter.api.Test
@@ -67,6 +68,7 @@ class InstallerTest {
     about.resolve("images").createDirectories().resolve("thumb.png").writeText("png")
     val mods = tmp.resolve("mods").createDirectories()
     mods.resolve("KTrapIC").createDirectories().resolve("KTrapIC.dll").writeText("old dll")
+    mods.resolve("KTrapIC/About").createDirectories().resolve("old.png").writeText("old png")
 
     val pluginDir = installPlugin(dll, about, mods)
 
@@ -74,6 +76,7 @@ class InstallerTest {
     assertThat(pluginDir.resolve("KTrapIC.dll").readText()).isEqualTo("new dll")
     assertThat(pluginDir.resolve("About/About.xml").readText()).isEqualTo("<ModMetadata/>")
     assertThat(pluginDir.resolve("About/images/thumb.png").readText()).isEqualTo("png")
+    assertThat(pluginDir.resolve("About/old.png").exists()).isFalse()
   }
 
   @Test
@@ -90,6 +93,37 @@ class InstallerTest {
     jar.writeText("newer jar")
     installCompiler(jar, tmp.resolve("mods/KTrapIC"))
     assertThat(installed.readText()).isEqualTo("newer jar")
+  }
+
+  @Test
+  fun `only the compiler installed in the plugin's directory is the installed compiler`() {
+    val pluginDir = tmp.resolve("mods/KTrapIC")
+    val installed = compilerPath(pluginDir).toString()
+    assertThat(isInstalledCompiler(installed, pluginDir)).isTrue()
+    assertThat(isInstalledCompiler(installed.replace('\\', '/'), pluginDir)).isTrue()
+    assertThat(isInstalledCompiler("$pluginDir/x/../compiler/ktrapic-daemon.jar", pluginDir))
+        .isTrue()
+    assertThat(isInstalledCompiler(tmp.resolve("ktrapic-daemon.jar").toString(), pluginDir))
+        .isFalse()
+    assertThat(isInstalledCompiler("$pluginDir/compiler/other.jar", pluginDir)).isFalse()
+    assertThat(isInstalledCompiler("bad\u0000path", pluginDir)).isFalse()
+  }
+
+  @Test
+  fun `the installed compiler is removed, and its directory if that's left empty`() {
+    val pluginDir = tmp.resolve("mods/KTrapIC")
+    val jar = tmp.resolve("ktrapic-daemon_deploy.jar").apply { writeText("jar") }
+    installCompiler(jar, pluginDir)
+    removeCompiler(pluginDir)
+    assertThat(pluginDir.resolve("compiler").exists()).isFalse()
+
+    installCompiler(jar, pluginDir)
+    pluginDir.resolve("compiler/notes.txt").writeText("mine")
+    removeCompiler(pluginDir)
+    assertThat(compilerPath(pluginDir).exists()).isFalse()
+    assertThat(pluginDir.resolve("compiler/notes.txt").exists()).isTrue()
+
+    removeCompiler(tmp.resolve("elsewhere")) // Nothing installed: nothing to do.
   }
 
   @Test
@@ -129,6 +163,35 @@ class InstallerTest {
   }
 
   @Test
+  fun `a settings file's CRLF line endings are kept`() {
+    val crlf = SETTINGS.replace("\n", "\r\n")
+    val config = tmp.resolve("ktrapic.cfg").apply { writeText(crlf) }
+    setDaemonJarPath(config, null)
+    assertThat(config.readText())
+        .isEqualTo(crlf.replace("DaemonJarPath = C:/old/daemon.jar", "DaemonJarPath = "))
+    assertThat(daemonJarPath(config)).isNull()
+
+    config.writeText("[General]\r\n\r\nCompact = false\r\n")
+    setDaemonJarPath(config, Path.of("/jar"))
+    assertThat(config.readText())
+        .startsWith("[General]\r\n\r\nCompact = false\r\n\r\n[Development]\r\n")
+    assertThat(config.readText()).doesNotContainMatch("[^\r]\n")
+  }
+
+  @Test
+  fun `DaemonJarPath is read from the Development section only`() {
+    val config = tmp.resolve("ktrapic.cfg")
+    config.writeText("[General]\n\nDaemonJarPath = C:/elsewhere.jar\n")
+    assertThat(daemonJarPath(config)).isNull()
+
+    config.writeText("[General]\n\nDaemonJarPath = C:/elsewhere.jar\n\n[Development]\n")
+    setDaemonJarPath(config, Path.of("/jar"))
+    assertThat(daemonJarPath(config))
+        .isEqualTo(Path.of("/jar").toAbsolutePath().toString().replace('\\', '/'))
+    assertThat(config.readText()).contains("DaemonJarPath = C:/elsewhere.jar\n")
+  }
+
+  @Test
   fun `a missing settings file is created`() {
     val config = tmp.resolve("BepInEx/config/ktrapic.cfg")
     assertThat(daemonJarPath(config)).isNull()
@@ -137,7 +200,7 @@ class InstallerTest {
   }
 
   private companion object {
-    /** As the plugin writes it (BepInEx 5). */
+    /** As the plugin writes it (BepInEx 5), but with LF line endings, where Windows has CRLF. */
     val SETTINGS =
         """
         ## Settings file was created by plugin KTrapIC v0.1.0

@@ -93,8 +93,10 @@ jobs:
           test -f "$mods/KTrapIC/compiler/ktrapic-daemon.jar"
           grep -qxF "DaemonJarPath = $mods/KTrapIC/compiler/ktrapic-daemon.jar" \
             "$game/BepInEx/config/com.github.subitan.stationeers-ktrapic.cfg"
-          if bazel run --config=ci //mod:install; then
-            echo "Installing without a mods directory should fail"; exit 1
+          status=0
+          bazel run --config=ci //mod:install || status=$?
+          if [ "$status" -ne 2 ]; then
+            echo "Installing without a mods directory should fail with a usage error (2), not $status"; exit 1
           fi
       - name: Test the daemon client, running the daemon on the packaged runtime
         run: |

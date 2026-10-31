@@ -1,15 +1,21 @@
 package ktrapic.install
 
 import java.io.File
+import java.io.IOException
 import java.nio.file.Files
+import java.nio.file.InvalidPathException
 import java.nio.file.Path
+import java.nio.file.Paths
 import java.nio.file.StandardCopyOption.REPLACE_EXISTING
 import kotlin.io.path.createDirectories
+import kotlin.io.path.deleteExisting
+import kotlin.io.path.deleteIfExists
 import kotlin.io.path.exists
 import kotlin.io.path.isDirectory
 import kotlin.io.path.isRegularFile
+import kotlin.io.path.listDirectoryEntries
 import kotlin.io.path.name
-import kotlin.io.path.readLines
+import kotlin.io.path.readText
 import kotlin.io.path.writeText
 
 /** A problem with what `bazel run //mod:install` was given, reported with the usage. */
@@ -56,55 +62,106 @@ fun checkModsDir(dir: Path) {
 
 /**
  * Copies the plugin, [dll] and the [about] directory, into `<modsDir>/KTrapIC`, replacing what is
- * there, and returns that directory.
+ * there (the whole `About` directory, so files no longer in [about] go), and returns that
+ * directory.
  */
 fun installPlugin(dll: Path, about: Path, modsDir: Path): Path {
   val target = modsDir.resolve("KTrapIC").createDirectories()
   Files.copy(dll, target.resolve(dll.name), REPLACE_EXISTING)
-  copyTree(about, target.resolve("About"))
+  val installedAbout = target.resolve("About")
+  if (installedAbout.exists() && !installedAbout.toFile().deleteRecursively()) {
+    throw IOException("Couldn't delete $installedAbout")
+  }
+  copyTree(about, installedAbout)
   return target
 }
+
+/** Where [installCompiler] puts the compiler in the plugin's directory. */
+fun compilerPath(pluginDir: Path): Path = pluginDir.resolve("compiler/ktrapic-daemon.jar")
 
 /**
  * Copies the compiler [jar] into the plugin's directory, and returns where it is. The copy is left
  * writable, though Bazel's outputs are read-only, so the next install can replace it.
  */
 fun installCompiler(jar: Path, pluginDir: Path): Path {
-  val target = pluginDir.resolve("compiler").createDirectories().resolve("ktrapic-daemon.jar")
+  val target = compilerPath(pluginDir)
+  target.parent.createDirectories()
   Files.copy(jar, target, REPLACE_EXISTING)
   target.toFile().setWritable(true)
   return target
 }
 
 /**
+ * Whether [daemonJarPath], a `DaemonJarPath` setting, is the compiler [installCompiler] puts in
+ * [pluginDir]. Paths are compared as the platform does, so on Windows case and a trailing separator
+ * don't matter.
+ */
+fun isInstalledCompiler(daemonJarPath: String, pluginDir: Path): Boolean {
+  val path =
+      try {
+        Paths.get(daemonJarPath)
+      } catch (e: InvalidPathException) {
+        return false
+      }
+  return path.toAbsolutePath().normalize() == compilerPath(pluginDir).toAbsolutePath().normalize()
+}
+
+/** Deletes the compiler [installCompiler] put in [pluginDir], and its directory if that's empty. */
+fun removeCompiler(pluginDir: Path) {
+  val jar = compilerPath(pluginDir)
+  jar.deleteIfExists()
+  val dir = jar.parent
+  if (dir.isDirectory() && dir.listDirectoryEntries().isEmpty()) dir.deleteExisting()
+}
+
+/**
  * Sets `DaemonJarPath` in the [config] file's `[Development]` section to [jar] (or to nothing, if
- * null), keeping the rest of the file. The file and the section are added if they're missing.
+ * null), keeping the rest of the file and its line endings. The file and the section are added if
+ * they're missing.
  */
 fun setDaemonJarPath(config: Path, jar: Path?) {
   val value = jar?.toAbsolutePath()?.toString()?.replace(File.separatorChar, '/') ?: ""
   val setting = "DaemonJarPath = $value"
-  val lines = if (config.exists()) config.readLines().toMutableList() else mutableListOf()
-  val section = lines.indexOfFirst { it.trim() == "[Development]" }
-  if (section < 0) {
+  val text = if (config.exists()) config.readText() else ""
+  val lines = splitLines(text)
+  val section = developmentSection(lines)
+  if (section == null) {
     if (lines.isNotEmpty() && lines.last().isNotBlank()) lines += ""
     lines += listOf("[Development]", "", setting)
   } else {
-    val end =
-        (section + 1 until lines.size).firstOrNull { lines[it].trim().startsWith("[") }
-            ?: lines.size
-    val existing = (section + 1 until end).firstOrNull { isDaemonJarPath(lines[it]) }
-    if (existing != null) lines[existing] = setting else lines.add(section + 1, setting)
+    val existing = section.firstOrNull { isDaemonJarPath(lines[it]) }
+    if (existing != null) lines[existing] = setting else lines.add(section.first, setting)
   }
+  val newline = if ("\r\n" in text) "\r\n" else "\n"
   config.parent.createDirectories()
-  config.writeText(lines.joinToString("\n", postfix = "\n"))
+  config.writeText(lines.joinToString(newline, postfix = newline))
 }
 
-/** The [config] file's `DaemonJarPath`, or null if it's missing or empty. */
+/** The `DaemonJarPath` in the [config] file's `[Development]` section, or null if none or empty. */
 fun daemonJarPath(config: Path): String? {
   if (!config.exists()) return null
-  return config.readLines().firstOrNull(::isDaemonJarPath)?.substringAfter('=')?.trim()?.takeIf {
-    it.isNotEmpty()
-  }
+  val lines = splitLines(config.readText())
+  val section = developmentSection(lines) ?: return null
+  return section
+      .firstOrNull { isDaemonJarPath(lines[it]) }
+      ?.let { lines[it].substringAfter('=').trim() }
+      ?.takeIf { it.isNotEmpty() }
+}
+
+/** [text]'s lines, without their line endings or an empty last one. */
+private fun splitLines(text: String): MutableList<String> =
+    text.lines().toMutableList().apply { if (isNotEmpty() && last().isEmpty()) removeAt(lastIndex) }
+
+/**
+ * The indices of the lines after the `[Development]` header, up to the next section's, or null if
+ * there's no such header. (The range is empty, starting after the header, if the section is.)
+ */
+private fun developmentSection(lines: List<String>): IntRange? {
+  val header = lines.indexOfFirst { it.trim() == "[Development]" }
+  if (header < 0) return null
+  val end =
+      (header + 1 until lines.size).firstOrNull { lines[it].trim().startsWith("[") } ?: lines.size
+  return header + 1 until end
 }
 
 private fun isDaemonJarPath(line: String) =

@@ -42,8 +42,9 @@ mod. Install KTrapIC in one of three ways:
   `setting.xml`). With `--local-compiler`, it also copies this checkout's compiler
   (`//daemon:ktrapic-daemon_deploy.jar`) to `mods/KTrapIC/compiler/ktrapic-daemon.jar` and sets
   the plugin's `DaemonJarPath` to it, so the plugin compiles with it rather than the release's;
-  installing again without `--local-compiler` clears that setting again. Close the game first: it
-  keeps the plugin's DLL open.
+  installing again without `--local-compiler` clears that setting and deletes the copy. If the
+  game's directory, with BepInEx in it, isn't found, `--local-compiler` stops before building or
+  installing anything. Close the game first: it keeps the plugin's DLL open.
 
 The plugin doesn't include the compiler. The first time a Kotlin program is edited it downloads,
 from this repository's GitHub release for its version, the compiler (`ktrapic-daemon.jar`) and a
@@ -51,8 +52,9 @@ trimmed Java 21 runtime to run it on (`ktrapic-runtime-windows-x64.zip`), about 
 into `BepInEx/cache/ktrapic`. It checks the release again each time it starts the compiler, and downloads
 again only if the release's files have changed. A Release build of the plugin uses the release
 tagged with its version (`v0.1.0`); a Debug build uses the rolling `dev` release, which every push
-to `main` replaces. The runtime is for Windows x64, which is also what the game runs as under
-CrossOver or Proton on macOS and Linux. Elsewhere, set both `JavaPath` and `DaemonJarPath`
+to `main` replaces. The runtime is for Windows x64. The game runs as that under CrossOver on
+macOS, where the downloaded compiler has been run, and should under Proton on Linux too. If the
+compiler doesn't start, or on any other platform, set both `JavaPath` and `DaemonJarPath`
 (below).
 
 ## Using it

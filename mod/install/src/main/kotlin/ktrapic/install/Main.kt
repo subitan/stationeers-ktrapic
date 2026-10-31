@@ -12,7 +12,8 @@ import kotlin.system.exitProcess
  * build, which downloads the compiler from the rolling `dev` release) with `dotnet` and installs it
  * into StationeersLaunchPad's local mods directory. With `--local-compiler` it also installs this
  * checkout's compiler beside it and points the plugin's `DaemonJarPath` setting at it; without, it
- * clears a `DaemonJarPath` that points at a compiler this installed before.
+ * clears a `DaemonJarPath` that points at a compiler this installed before, and deletes that
+ * compiler.
  */
 fun main(args: Array<String>) {
   val workspace =
@@ -30,6 +31,18 @@ fun main(args: Array<String>) {
       }
 
   val project = workspace.resolve("mod/KTrapIC.csproj")
+  // Checked before anything is built or copied, so a run that can't finish changes nothing.
+  val gameDir = gameDirectory(project)
+  val config = gameDir?.resolve(CONFIG_FILE)
+  if (request.localCompiler && (gameDir == null || !gameDir.resolve("BepInEx").isDirectory())) {
+    fail(
+        "To set DaemonJarPath, the game's directory, with BepInEx installed in it, is needed: " +
+            "set StationeersDirectory in mod/Local.Developer.props or STATIONEERS_DIR" +
+            (gameDir?.let { " (it is now $it)" } ?: "") +
+            "."
+    )
+  }
+
   println("Building the plugin (dotnet build ${workspace.relativize(project)})")
   val build = listOf("dotnet", "build", project.toString(), "-c", "Debug", "-nologo", "-v:minimal")
   if (run(build) != 0) fail("The plugin's build failed.")
@@ -45,17 +58,7 @@ fun main(args: Array<String>) {
       }
   println("Installed the plugin in $pluginDir")
 
-  val gameDir = gameDirectory(project)
-  val config = gameDir?.resolve(CONFIG_FILE)
   if (request.localCompiler) {
-    if (gameDir == null || !gameDir.resolve("BepInEx").isDirectory()) {
-      fail(
-          "To set DaemonJarPath, the game's directory, with BepInEx installed in it, is needed: " +
-              "set StationeersDirectory in mod/Local.Developer.props or STATIONEERS_DIR" +
-              (gameDir?.let { " (it is now $it)" } ?: "") +
-              "."
-      )
-    }
     // `bazel run` starts in the runfiles tree, where the daemon jar is.
     val daemonJar = Paths.get(System.getProperty("ktrapic.daemonJar")).toAbsolutePath()
     val jar = installCompiler(daemonJar, pluginDir)
@@ -63,10 +66,17 @@ fun main(args: Array<String>) {
     println("Installed this checkout's compiler as $jar, and set DaemonJarPath to it in $config")
   } else if (config != null) {
     val current = daemonJarPath(config)
-    val ours = pluginDir.resolve("compiler/ktrapic-daemon.jar")
-    if (current != null && Paths.get(current).toAbsolutePath() == ours.toAbsolutePath()) {
+    if (current != null && isInstalledCompiler(current, pluginDir)) {
       setDaemonJarPath(config, null)
-      println("Cleared DaemonJarPath in $config, so the plugin downloads the release's compiler")
+      try {
+        removeCompiler(pluginDir)
+      } catch (e: IOException) {
+        fail("Couldn't delete ${compilerPath(pluginDir)} (is the game running?): $e")
+      }
+      println(
+          "Cleared DaemonJarPath in $config, and deleted ${compilerPath(pluginDir)}, so the " +
+              "plugin downloads the release's compiler"
+      )
     } else if (current != null) {
       println("Note: DaemonJarPath in $config is $current, so the plugin compiles with that jar")
     }
