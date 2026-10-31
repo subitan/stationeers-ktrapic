@@ -88,22 +88,18 @@ move r11 r1
 add r0 r0 r4
 add r1 r1 r5
 max r1 0 r1
-bgt r1 90 92
-j 94
-sub r1 180 r1
-add r0 r0 180
 min r1 89.5 r1
 jal 60
 l r2 d0 SignalStrength
-beq r2 -1 101
-beq r9 -1 106
-bge r2 r9 101
-j 106
+beq r2 -1 97
+beq r9 -1 102
+bge r2 r9 97
+j 102
 move r0 r10
 move r1 r11
 jal 60
 move r2 r8
-j 108
+j 104
 move r8 1
 j 83
 pop ra

@@ -113,27 +113,21 @@ move r11 r1
 add r0 r0 r4
 add r1 r1 r5
 max r1 0 r1
-bgt r1 90 skip5
-j else7
-skip5:
-sub r1 180 r1
-add r0 r0 180
-else7:
 min r1 89.5 r1
 jal aim
 l r2 d0 SignalStrength
 beq r2 -1 or1
-beq r9 -1 else8
-bge r2 r9 skip6
-j else8
-skip6:
+beq r9 -1 else7
+bge r2 r9 skip5
+j else7
+skip5:
 or1:
 move r0 r10
 move r1 r11
 jal aim
 move r2 r8
 j return8
-else8:
+else7:
 move r8 1
 j while7
 return8:

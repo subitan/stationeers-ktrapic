@@ -392,11 +392,10 @@ class SatelliteTrackerTest {
   }
 
   @Test
-  fun `a step over the zenith that goes further off is undone to where the dish was`() {
+  fun `a step up clamped short of the zenith that goes further off is undone to where the dish was`() {
     for (options in allOptions()) {
       // The contact appears 14 degrees below the dish as the sweep reaches 0, 84, so the first
-      // move, up 7 (half the offset), carries over the zenith to 180, 89, which is further off,
-      // so it is undone.
+      // move, up 7 (half the offset), is clamped to 0, 89.5, which is further off, so it is undone.
       val run = Run(options, Dish(satelliteH = 0.0, satelliteV = 70.0, h = 0.0, v = 45.0))
       val dish = run.dish
       dish.lost = true
@@ -405,23 +404,15 @@ class SatelliteTrackerTest {
       dish.lost = false
       run.runUntil(100_000) { run.console["Setting"] == DONE }
       run.assertDone()
-      // The program writes the heading, then the tilt, so a move that changes both passes through
-      // a target with only the heading changed.
-      val over = dish.targets.indexOf(180.0 to 89.0)
-      assertWithMessage("over the zenith ($options)").that(over).isGreaterThan(1)
-      assertWithMessage("from ($options)")
-          .that(dish.targets.subList(over - 2, over))
-          .containsExactly(0.0 to 84.0, 180.0 to 84.0)
-          .inOrder()
-      assertWithMessage("undone to ($options)")
-          .that(dish.targets.subList(over + 1, over + 3))
-          .containsExactly(0.0 to 89.0, 0.0 to 84.0)
-          .inOrder()
+      val up = dish.targets.indexOf(0.0 to 89.5)
+      assertWithMessage("up ($options)").that(up).isGreaterThan(0)
+      assertWithMessage("from ($options)").that(dish.targets[up - 1]).isEqualTo(0.0 to 84.0)
+      assertWithMessage("undone to ($options)").that(dish.targets[up + 1]).isEqualTo(0.0 to 84.0)
     }
   }
 
   @Test
-  fun `a satellite just past the zenith, on the far side, is tuned in over the top`() {
+  fun `a satellite just past the zenith, on the far side, is tuned in`() {
     // The sweep resolves these from the near side of the zenith, so the hunt climbs towards it.
     for (options in allOptions()) {
       for ((h, v) in listOf(180.0 to 83.0, 180.0 to 85.0)) {
@@ -438,9 +429,9 @@ class SatelliteTrackerTest {
   fun `a dish that climbs to the zenith turns its heading towards the satellite`() {
     for (options in allOptions()) {
       // The contact appears as the sweep reaches 0, 84, a quarter turn of heading from it, so the
-      // hunt climbs as high as the dish may tilt, where moving up or down along either side of the
-      // zenith is further off. Only heading steps there, which still move the dish below the
-      // zenith, bring it round to the satellite.
+      // hunt climbs as high as the dish may tilt, where a move up is clamped and a move down is
+      // further off. Only heading steps there, which still move the dish below the zenith, bring
+      // it round to the satellite.
       val run = Run(options, Dish(satelliteH = 270.0, satelliteV = 88.0, h = 0.0, v = 45.0))
       val dish = run.dish
       dish.lost = true

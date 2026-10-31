@@ -16,10 +16,10 @@ import kotlin.math.*
 // estimate rather than timing; a smaller WAIT shortens it, at the cost of missing contacts further
 // off each position. Once the dish has a contact, the program line-searches along each axis: it
 // keeps stepping one way while each step brings the offset down, then goes back to the best
-// position. Steps start at 8 degrees, are never more than half the offset, and halve whenever no
-// direction helps. A step up over the zenith carries on down the far side; the tilt stops at 89.5
-// degrees, short of the zenith, where heading steps would not move the dish. It stops once the
-// dish is within a degree, or once no step of a degree or less helps.
+// position. Steps start at 8 degrees, are cut to half the offset as it falls (but not below a
+// degree), and halve whenever no direction helps. The tilt stops at 89.5 degrees, short of the
+// zenith, where heading steps would not move the dish. It stops once the dish is within a degree,
+// or once no step of a degree or less helps.
 // Status text goes to a console on d5; the offset, heading and elevation go to displays on d2, d3
 // and d4. Flip the lever on d1 to start again.
 
@@ -45,8 +45,8 @@ dish.Setting = POWER
 
 /**
  * The longest the program waits, in seconds, for the dish to resolve a contact where it points. At
- * full power, with the game's default figures for a dish and a contact, that is enough to resolve
- * one about 17 degrees off, which covers the gaps between the sweep's positions.
+ * [POWER], with the game's default figures for a dish and a contact, that is enough to resolve one
+ * about 60 degrees off, well beyond the gaps between the sweep's positions.
  */
 val WAIT = 20
 
@@ -95,14 +95,9 @@ fun lineSearch(dh: Double, dv: Double): Boolean {
     val oldHeading = heading
     val oldTilt = tilt
     heading += dh
-    tilt = max(0.0, tilt + dv)
-    // A move up over the zenith carries on down the far side. The tilt stops short of 90, where a
-    // heading step would not move the beam, so that heading steps can still bring the dish round.
-    if (tilt > 90.0) {
-      tilt = 180.0 - tilt
-      heading += 180.0
-    }
-    tilt = min(89.5, tilt)
+    // The tilt stops short of 90, where a heading step would not move the beam, so that heading
+    // steps can still bring the dish round to a contact near or past the zenith.
+    tilt = min(89.5, max(0.0, tilt + dv))
     aim()
     val after = dish.SignalStrength
     if (after == -1.0 || (before != -1.0 && after >= before)) {
@@ -133,8 +128,8 @@ inline fun sweep() {
 }
 
 /**
- * Searches along each axis in turn, in steps of at most 8 degrees and at most half the offset,
- * halving the step once no direction gets the dish any closer. Ends once the dish is within a
+ * Searches along each axis in turn, in steps of at most 8 degrees, cut to half the offset as it
+ * falls but not below a degree, halving the step once no direction gets the dish any closer. Ends once the dish is within a
  * degree, or once no step of a degree or less gets it closer, or once it has lost the contact.
  */
 fun adjust() {

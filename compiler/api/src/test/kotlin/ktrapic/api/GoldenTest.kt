@@ -9,9 +9,11 @@ import org.junit.jupiter.api.Test
  * Compiles each `test/cases/X.ic10.kts` and compares the result with `X.ic10` and `X.compact.ic10`.
  * A case whose code calls functions with `jal` is also compiled with `stackCalls = false`, to
  * `X.registers.ic10`, so the convention passing arguments in registers stays covered, unless it is
- * recursive, which that convention rejects. `X.ic10` is compiled without the case's `@file:Compact`
- * line, if it has one, so that the labelled form of a compact case is still checked; the other two
- * keep it.
+ * recursive, which that convention rejects. `X.ic10` is compiled with any `@file:Compact` in the
+ * case's header blanked out, so that the labelled form of a compact case is still checked; the
+ * other two keep it. Only `@file:Compact` is blanked: it is the one annotation a case needs to fit
+ * the chip, and the labelled form is what `X.ic10` exists to show, while a case's other file
+ * annotations are part of how it is meant to compile.
  *
  * To write the expected files from the current compiler, run with the workspace's `test/cases`
  * directory in KTRAPIC_UPDATE_GOLDENS: `bazel test //compiler/api:GoldenTest
@@ -31,7 +33,7 @@ class GoldenTest {
       val text = source.readText()
       val outputs =
           listOf(
-              ".ic10" to compile(text.replace(COMPACT_LINE, ""), CompileOptions()),
+              ".ic10" to compile(withoutCompact(text), CompileOptions()),
               ".compact.ic10" to compile(text, CompileOptions(compact = true)),
           )
       val registers =
@@ -81,7 +83,18 @@ class GoldenTest {
       }
 
   private companion object {
-    /** A case's `@file:Compact` line, which `X.ic10` is compiled without; blanked, not removed. */
-    val COMPACT_LINE = Regex("^@file:Compact[ \\t]*$", RegexOption.MULTILINE)
+    /**
+     * [text] with each `@file:Compact` in its header (everything before its first `package` or
+     * `import`, where file annotations go) blanked out: the annotation alone is removed, leaving
+     * the rest of its line, such as a trailing comment or another annotation, and every line where
+     * it was, so the source's line numbers stay as they were.
+     */
+    fun withoutCompact(text: String): String {
+      val end = HEADER_END.find(text)?.range?.first ?: text.length
+      return COMPACT.replace(text.substring(0, end), "") + text.substring(end)
+    }
+
+    val HEADER_END = Regex("^[ \\t]*(package|import)\\b", RegexOption.MULTILINE)
+    val COMPACT = Regex("@file:(ktrapic\\.)?Compact\\b(\\(\\))?")
   }
 }
