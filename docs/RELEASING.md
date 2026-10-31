@@ -33,8 +33,13 @@ To release version X.Y.Z:
    ```
    Once the item is public, a private upload would replace the release its subscribers have and
    hide the item from them, so the script refuses to upload to it without `--public`. Try a later
-   release first as a test build of its commit on the private test item (see below), then run
-   only the `--public` command.
+   release on the private test item (see below) instead, then publish it:
+   ```
+   tools/workshop-upload/upload-release.sh vX.Y.Z --item <test item>
+   tools/workshop-upload/upload-release.sh vX.Y.Z --public
+   ```
+   With `--item` the script uploads the release's zip to that item, which must be private, with
+   that item as the staged `About.xml`'s `WorkshopHandle`; it can't be combined with `--public`.
 
    It uploads the release's own `KTrapIC-vX.Y.Z.zip`, so the Workshop carries the same DLL as
    GitHub, after checking that the release has the compiler jar and the runtime the plugin
