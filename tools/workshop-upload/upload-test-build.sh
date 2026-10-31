@@ -5,14 +5,15 @@
 #   tools/workshop-upload/upload-test-build.sh [--note TEXT] [--stage-only]
 #
 # It builds a Debug plugin, which downloads the compiler from the rolling `dev` release, from the
-# committed HEAD. The build is versioned <About.xml's version>.<number of commits in HEAD>, so every
-# upload has its own version, shown in game as "KTrapIC 0.1.0.412 loaded" in the BepInEx log. It
-# stages the plugin with About/ in mod/dist/workshop-test/KTrapIC and uploads that to the item
-# About.xml names (WorkshopHandle), through the Steam client signed in on this machine, with a
-# change note naming the version and commit. --note adds to the change note; --stage-only stops
-# before the upload.
+# committed HEAD, which must be on origin/main. The build is versioned <About.xml's version>.<number
+# of commits up to HEAD>, so every upload has its own version, shown in game as "KTrapIC 0.1.0.412
+# loaded" in the BepInEx log. It stages the plugin with About/ in mod/dist/workshop-test/KTrapIC
+# and uploads that to the item About.xml names (WorkshopHandle), through the Steam client signed in
+# on this machine, with a change note naming the version and commit. --note adds to the change
+# note; --stage-only stops before the upload.
 #
-# Windows only. Needs dotnet, the game installed (STATIONEERS_DIR, or Steam's default path) and
+# Windows only. Needs dotnet, the game installed (found as the plugin build finds it:
+# StationeersDirectory in mod/Local.Developer.props, STATIONEERS_DIR, or Steam's default path) and
 # Steam running, signed in as the item's owner. Stationeers must not be running on any machine
 # signed in to that account: the upload runs as the game, and Steam would end the other session.
 set -euo pipefail
@@ -32,8 +33,8 @@ root="$(git rev-parse --show-toplevel)"
 cd "$root"
 about=mod/About/About.xml
 
-[ -z "$(git status --porcelain --untracked-files=no)" ] ||
-  die "commit or set aside the local changes first: a test build is of a commit"
+[ -z "$(git status --porcelain)" ] ||
+  die "commit or set aside the local changes, untracked files included, first: a test build is of a commit"
 if tasklist //FI "IMAGENAME eq rocketstation.exe" 2>/dev/null | grep -qi rocketstation; then
   die "Stationeers is running here; quit it first"
 fi
@@ -47,10 +48,11 @@ commit="$(git rev-parse --short HEAD)"
 note="$version: test build (Debug, compiler from the dev release) of $commit, $(git log -1 --format=%s)"
 [ -z "$note_extra" ] || note="$note. $note_extra"
 
-git fetch -q origin main || echo "upload-test-build: couldn't fetch origin; not checking HEAD against main" >&2
-if ! git merge-base --is-ancestor HEAD origin/main; then
-  echo "upload-test-build: HEAD isn't on origin/main, so the dev release's compiler may not match this build" >&2
-fi
+# main has one commit per merged PR and no merge commits, so the commit count is unique there; on
+# a branch it can equal another build's.
+git fetch -q origin main || die "couldn't fetch origin's main, so can't check that HEAD is on it"
+git merge-base --is-ancestor HEAD origin/main ||
+  die "HEAD isn't on origin/main: test builds are of commits on main, the only place their versions are unique"
 
 dotnet build mod/KTrapIC.csproj -c Debug -warnaserror -nologo -v q -p:TestVersion="$version"
 

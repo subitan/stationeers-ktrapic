@@ -33,7 +33,7 @@ release it is private, for the maintainer's own testing.
 ### Test builds on the Workshop
 
 A test build goes to the item with one command, on Windows, from a clean checkout of the commit
-to test (normally `main`):
+to test, which must be on `main` (the script checks it against `origin/main`):
 
 ```
 tools/workshop-upload/upload-test-build.sh [--note TEXT]
@@ -46,9 +46,10 @@ that account, since the upload runs as the game. Every test build:
 - **is a Debug build**, which downloads the compiler from the `dev` release. A Release build
   downloads from the release `vX.Y.Z` for its version, which doesn't exist until that version is
   tagged.
-- **has a version of its own**, `X.Y.Z.N`: About.xml's version, then the number of commits in the
-  build's commit. In game, the BepInEx log's "KTrapIC X.Y.Z.N loaded" tells it apart from any other
-  upload. The version is set only in the build; About.xml keeps `X.Y.Z`.
+- **has a version of its own**, `X.Y.Z.N`: About.xml's version, then the number of commits on
+  `main` up to the build's commit. `main` has one commit per merged PR and no merge commits, so N
+  is unique to that commit, and in game the BepInEx log's "KTrapIC X.Y.Z.N loaded" tells it apart
+  from any other upload. The version is set only in the build; About.xml keeps `X.Y.Z`.
 - **says what it is in the item's change note**: its version and commit.
 
 Don't upload through the game's Workshop menu (Workshop > Mods > Publish). It uploads whatever is

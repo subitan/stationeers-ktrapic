@@ -5,9 +5,11 @@
     Steam login is needed. Unlike the game's publisher it keeps the item's visibility as asked:
     private unless told otherwise. upload-test-build.sh drives it; see docs/RELEASING.md.
 
-    Windows only (the game's Facepunch build is Win64), and it builds against the installed game:
-    the STATIONEERS_DIR environment variable, or Steam's default path.
+    Windows only (the game's Facepunch build is Win64), and it builds against the installed game,
+    found as the plugin build finds it: StationeersDirectory in mod/Local.Developer.props, the
+    STATIONEERS_DIR environment variable, or Steam's default path.
   -->
+  <Import Project="../../mod/Local.Developer.props" Condition="Exists('../../mod/Local.Developer.props')" />
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net48</TargetFramework>
@@ -15,7 +17,7 @@
     <LangVersion>latest</LangVersion>
     <EnableDefaultItems>false</EnableDefaultItems>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <StationeersDirectory Condition="'$(STATIONEERS_DIR)' != ''">$(STATIONEERS_DIR)</StationeersDirectory>
+    <StationeersDirectory Condition="'$(StationeersDirectory)' == '' And '$(STATIONEERS_DIR)' != ''">$(STATIONEERS_DIR)</StationeersDirectory>
     <StationeersDirectory Condition="'$(StationeersDirectory)' == ''">C:/Program Files (x86)/Steam/steamapps/common/Stationeers</StationeersDirectory>
     <ManagedDir>$(StationeersDirectory)/rocketstation_Data/Managed</ManagedDir>
     <PluginsDir>$(StationeersDirectory)/rocketstation_Data/Plugins/x86_64</PluginsDir>
@@ -29,6 +31,6 @@
   <Target Name="CheckGame" BeforeTargets="ResolveAssemblyReferences">
     <Error
       Condition="!Exists('$(ManagedDir)/Facepunch.Steamworks.Win64.dll')"
-      Text="Stationeers wasn't found in '$(StationeersDirectory)': set STATIONEERS_DIR to the game's install directory." />
+      Text="Stationeers wasn't found in '$(StationeersDirectory)': set StationeersDirectory in mod/Local.Developer.props, or the STATIONEERS_DIR environment variable, to the game's install directory." />
   </Target>
 </Project>
