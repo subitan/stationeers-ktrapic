@@ -24,11 +24,21 @@ To release version X.Y.Z:
 3. The Release workflow checks the tag against `About.xml`, builds a Release build of the plugin
    (which downloads from the `vX.Y.Z` release), the compiler jar and the Windows runtime, and
    publishes them as the GitHub release `vX.Y.Z`.
+4. Upload the release to the Steam Workshop, on Windows, from a checkout of `main`:
+   ```
+   tools/workshop-upload/upload-release.sh vX.Y.Z --public
+   ```
+   It uploads the release's own `KTrapIC-vX.Y.Z.zip`, so the Workshop carries the same DLL as
+   GitHub, after checking that the release has the compiler jar and the runtime the plugin
+   downloads, and that the zip is version X.Y.Z. Without `--public` the item stays private, to
+   try the release first; run it again with `--public` to publish it. It uploads as the test
+   builds below do, through the Steam client signed in on that machine, with the game closed on
+   every machine signed in to that account.
 
-Publishing a release to the Steam Workshop isn't automated yet (#115). The Workshop item is
+The Workshop item is
 [3830564236](https://steamcommunity.com/sharedfiles/filedetails/?id=3830564236), recorded as
 `WorkshopHandle` in `mod/About/About.xml`, so every upload updates that item. Until the first
-release it is private, for the maintainer's own testing.
+release is published it is private, for the maintainer's own testing.
 
 ### Test builds on the Workshop
 
@@ -40,7 +50,9 @@ tools/workshop-upload/upload-test-build.sh [--note TEXT]
 ```
 
 It uploads through the Steam client signed in on that machine, as the item's owner, so it needs no
-login, and it keeps the item private. Stationeers must not be running on any machine signed in to
+login, and it keeps the item private. It refuses once the item is public, so a release's
+subscribers never get a test build: after the first release, test builds need a private item of
+their own. Stationeers must not be running on any machine signed in to
 that account, since the upload runs as the game. Every test build:
 
 - **is a Debug build**, which downloads the compiler from the `dev` release. A Release build

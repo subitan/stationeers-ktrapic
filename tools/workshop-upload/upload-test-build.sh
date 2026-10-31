@@ -72,5 +72,11 @@ echo "Change note: $note"
 if $stage_only; then exit 0; fi
 
 dotnet build tools/workshop-upload/WorkshopUpload.csproj -c Release -nologo -v q
-tools/workshop-upload/bin/Release/net48/WorkshopUpload.exe --item "$item" \
-  --content "$(cygpath -w "$root/$stage")" --note "$note" --visibility private
+uploader=tools/workshop-upload/bin/Release/net48/WorkshopUpload.exe
+# Once a release is public, its subscribers would get a test build, and the upload would make the
+# item private, hiding the release from everyone else.
+check="$("$uploader" --item "$item" --check)" || die "couldn't read Workshop item $item"
+echo "$check"
+grep -q "visibility private" <<<"$check" ||
+  die "Workshop item $item isn't private: test builds go only to an item no one else gets"
+"$uploader" --item "$item" --content "$(cygpath -w "$root/$stage")" --note "$note" --visibility private
