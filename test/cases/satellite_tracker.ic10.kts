@@ -129,8 +129,9 @@ inline fun sweep() {
 
 /**
  * Searches along each axis in turn, in steps of at most 8 degrees, cut to half the offset as it
- * falls but not below a degree, halving the step once no direction gets the dish any closer. Ends once the dish is within a
- * degree, or once no step of a degree or less gets it closer, or once it has lost the contact.
+ * falls but not below a degree, halving the step once no direction gets the dish any closer. Ends
+ * once the dish is within a degree, or once no step of a degree or less gets it closer, or once it
+ * has lost the contact.
  */
 fun adjust() {
   debug("Hunt")
