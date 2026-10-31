@@ -300,8 +300,8 @@ these go to the maintainer:
 | Solana | `7pfA9akYBbxp9s9ryT62BVwfVwN73fWq2NQDk4Ypn9G` |
 | Cash App | [`$geekinasuit`](https://cash.app/$geekinasuit) |
 
-Copy an address from here rather than from anywhere else: these are the only ones. Bug reports,
-programs you've written and pull requests are just as welcome.
+Copy an address or follow a link from here rather than from anywhere else: these are the only
+ones. Bug reports, programs you've written and pull requests are just as welcome.
 
 ## License
 
