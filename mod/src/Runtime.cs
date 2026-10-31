@@ -143,7 +143,6 @@ namespace KTrapIC
                 throw new Exception($"Couldn't download {url}: {request.error}");
         }
 
-        /// <summary>Unzips <paramref name="zip"/> into <paramref name="dir"/>, refusing entries that would land outside it.</summary>
         /// <summary>
         /// Deletes <paramref name="path"/> if it's there. Under CrossOver (Wine) a delete can fail with
         /// a meaningless "Unknown error" (even of a file that doesn't exist, which Windows ignores), so
@@ -172,6 +171,7 @@ namespace KTrapIC
             catch (IOException) when (!Directory.Exists(path)) { }
         }
 
+        /// <summary>Unzips <paramref name="zip"/> into <paramref name="dir"/>, refusing entries that would land outside it.</summary>
         private static void Extract(string zip, string dir)
         {
             string root = Path.GetFullPath(dir) + Path.DirectorySeparatorChar;
