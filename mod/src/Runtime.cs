@@ -79,12 +79,12 @@ namespace KTrapIC
                 if (!reinstall && current && (!needJava || File.Exists(java)) && (!needJar || File.Exists(jar)))
                     return (java, jar);
 
-                File.Delete(StampFile);
+                DeleteFile(StampFile);
                 if (needJar)
                 {
                     Progress = "Downloading the KTrapIC compiler";
                     await Download(Url(jarAsset), jar + ".part");
-                    File.Delete(jar);
+                    DeleteFile(jar);
                     File.Move(jar + ".part", jar);
                 }
                 if (needJava)
@@ -94,10 +94,9 @@ namespace KTrapIC
                     await Download(Url(runtimeAsset), zip);
                     Progress = "Unpacking the Java runtime";
                     await UniTask.SwitchToThreadPool();
-                    if (Directory.Exists(RuntimeDir))
-                        Directory.Delete(RuntimeDir, true);
+                    DeleteDirectory(RuntimeDir);
                     Extract(zip, RuntimeDir);
-                    File.Delete(zip);
+                    DeleteFile(zip);
                 }
                 File.WriteAllText(StampFile, stamp);
                 Log.Info($"Installed the KTrapIC compiler from release {ReleaseTag}");
@@ -145,6 +144,34 @@ namespace KTrapIC
         }
 
         /// <summary>Unzips <paramref name="zip"/> into <paramref name="dir"/>, refusing entries that would land outside it.</summary>
+        /// <summary>
+        /// Deletes <paramref name="path"/> if it's there. Under CrossOver (Wine) a delete can fail with
+        /// a meaningless "Unknown error" (even of a file that doesn't exist, which Windows ignores), so
+        /// a missing file isn't touched, and a failure is ignored if the file is gone anyway.
+        /// </summary>
+        private static void DeleteFile(string path)
+        {
+            if (!File.Exists(path))
+                return;
+            try
+            {
+                File.Delete(path);
+            }
+            catch (IOException) when (!File.Exists(path)) { }
+        }
+
+        /// <summary>Deletes the directory <paramref name="path"/> and all it holds, as <see cref="DeleteFile"/> does a file.</summary>
+        private static void DeleteDirectory(string path)
+        {
+            if (!Directory.Exists(path))
+                return;
+            try
+            {
+                Directory.Delete(path, true);
+            }
+            catch (IOException) when (!Directory.Exists(path)) { }
+        }
+
         private static void Extract(string zip, string dir)
         {
             string root = Path.GetFullPath(dir) + Path.DirectorySeparatorChar;
