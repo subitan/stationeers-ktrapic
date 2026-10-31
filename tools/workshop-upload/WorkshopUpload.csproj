@@ -1,0 +1,36 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    Updates the plugin's Steam Workshop item through the Steam client running on this machine, as
+    the game's own Workshop publisher does (Facepunch.Steamworks, from the game's install), so no
+    Steam login is needed. Unlike the game's publisher it keeps the item's visibility as asked:
+    private unless told otherwise. upload-test-build.sh drives it; see docs/RELEASING.md.
+
+    Windows only (the game's Facepunch build is Win64), and it builds against the installed game,
+    found as the plugin build finds it: StationeersDirectory in mod/Local.Developer.props, the
+    STATIONEERS_DIR environment variable, or Steam's default path.
+  -->
+  <Import Project="../../mod/Local.Developer.props" Condition="Exists('../../mod/Local.Developer.props')" />
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net48</TargetFramework>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>latest</LangVersion>
+    <EnableDefaultItems>false</EnableDefaultItems>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <StationeersDirectory Condition="'$(StationeersDirectory)' == '' And '$(STATIONEERS_DIR)' != ''">$(STATIONEERS_DIR)</StationeersDirectory>
+    <StationeersDirectory Condition="'$(StationeersDirectory)' == ''">C:/Program Files (x86)/Steam/steamapps/common/Stationeers</StationeersDirectory>
+    <ManagedDir>$(StationeersDirectory)/rocketstation_Data/Managed</ManagedDir>
+    <PluginsDir>$(StationeersDirectory)/rocketstation_Data/Plugins/x86_64</PluginsDir>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="src/**/*.cs" />
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3" PrivateAssets="all" />
+    <Reference Include="Facepunch.Steamworks.Win64" HintPath="$(ManagedDir)/Facepunch.Steamworks.Win64.dll" />
+    <None Include="$(PluginsDir)/steam_api64.dll" CopyToOutputDirectory="PreserveNewest" Link="steam_api64.dll" />
+  </ItemGroup>
+  <Target Name="CheckGame" BeforeTargets="ResolveAssemblyReferences">
+    <Error
+      Condition="!Exists('$(ManagedDir)/Facepunch.Steamworks.Win64.dll')"
+      Text="Stationeers wasn't found in '$(StationeersDirectory)': set StationeersDirectory in mod/Local.Developer.props, or the STATIONEERS_DIR environment variable, to the game's install directory." />
+  </Target>
+</Project>

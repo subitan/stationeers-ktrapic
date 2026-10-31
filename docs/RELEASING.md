@@ -25,12 +25,36 @@ To release version X.Y.Z:
    (which downloads from the `vX.Y.Z` release), the compiler jar and the Windows runtime, and
    publishes them as the GitHub release `vX.Y.Z`.
 
-Publishing to the Steam Workshop isn't automated yet (#115). The Workshop item is
+Publishing a release to the Steam Workshop isn't automated yet (#115). The Workshop item is
 [3830564236](https://steamcommunity.com/sharedfiles/filedetails/?id=3830564236), recorded as
 `WorkshopHandle` in `mod/About/About.xml`, so every upload updates that item. Until the first
-release it is private, for the maintainer's own testing, and holds the `dev` Debug build. The
-game's Workshop menu (Workshop > Mods > Publish) uploads the mod folder, but it makes the item
-public on every upload, so set it private again afterwards, or upload with SteamCMD instead.
+release it is private, for the maintainer's own testing.
+
+### Test builds on the Workshop
+
+A test build goes to the item with one command, on Windows, from a clean checkout of the commit
+to test, which must be on `main` (the script checks it against `origin/main`):
+
+```
+tools/workshop-upload/upload-test-build.sh [--note TEXT]
+```
+
+It uploads through the Steam client signed in on that machine, as the item's owner, so it needs no
+login, and it keeps the item private. Stationeers must not be running on any machine signed in to
+that account, since the upload runs as the game. Every test build:
+
+- **is a Debug build**, which downloads the compiler from the `dev` release. A Release build
+  downloads from the release `vX.Y.Z` for its version, which doesn't exist until that version is
+  tagged.
+- **has a version of its own**, `X.Y.Z.N`: About.xml's version, then the number of commits on
+  `main` up to the build's commit. `main` has one commit per merged PR and no merge commits, so N
+  is unique to that commit, and in game the BepInEx log's "KTrapIC X.Y.Z.N loaded" tells it apart
+  from any other upload. The version is set only in the build; About.xml keeps `X.Y.Z`.
+- **says what it is in the item's change note**: its version and commit.
+
+Don't upload through the game's Workshop menu (Workshop > Mods > Publish). It uploads whatever is
+in the local mod folder, under that folder's version, and it makes the item public on every
+upload. A first publish through it also made a second item.
 
 ## The IntelliJ plugin
 
