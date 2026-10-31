@@ -8,7 +8,9 @@ namespace KTrapIC
     /// <summary>
     /// One of the daemon's completions (an LSP <c>CompletionItem</c>): a name that could go at the
     /// caret, what kind of thing it is (an LSP <c>CompletionItemKind</c>), its declaration (such as
-    /// <c>var Setting: Double</c>), and where it sorts.
+    /// <c>var Setting: Double</c>), where it sorts, and, for an SDK type, what it is also found by:
+    /// its label and the game's names of its prefabs, space-separated
+    /// (<c>LedDisplay StructureConsoleLED5 ...</c>).
     /// </summary>
     public sealed class Completion
     {
@@ -16,6 +18,7 @@ namespace KTrapIC
         public int kind;
         public string detail;
         public string sortText;
+        public string filterText;
     }
 
     /// <summary>
@@ -100,19 +103,31 @@ namespace KTrapIC
 
         /// <summary>
         /// The completions to show for <paramref name="word"/>: those starting with it (as typed,
-        /// case and all), in the daemon's order, and not those starting with <c>_</c>. Null if
-        /// none match, or the only one is the word itself.
+        /// case and all), in the daemon's order, then those found by their <c>filterText</c>
+        /// instead, the SDK types whose game names have a word starting with it, ignoring case
+        /// (<c>LedDisplay</c> for <c>Console</c>, from <c>StructureConsoleLED5</c>; see
+        /// <see cref="WordStarts"/>), and not those starting with <c>_</c>. Null if none match, or
+        /// the only one is the word itself. What accepting inserts is what those starting with the
+        /// word share past it: the editor can only add to the word, not replace it.
         /// </summary>
         public static CompletionChoice Choose(IEnumerable<Completion> completions, string word)
         {
-            var matching = completions
-                .Where(c => !string.IsNullOrEmpty(c.label) && c.label.StartsWith(word, StringComparison.Ordinal) && !c.label.StartsWith("_"))
-                .OrderBy(c => c.sortText ?? "", StringComparer.Ordinal)
-                .ToList();
+            var named = new List<Completion>();
+            var found = new List<Completion>();
+            foreach (var c in completions.OrderBy(c => c.sortText ?? "", StringComparer.Ordinal))
+            {
+                if (string.IsNullOrEmpty(c.label) || c.label.StartsWith("_"))
+                    continue;
+                if (c.label.StartsWith(word, StringComparison.Ordinal))
+                    named.Add(c);
+                else if (word.Length > 0 && c.filterText != null && WordStarts(c.filterText, word))
+                    found.Add(c);
+            }
+            var matching = named.Concat(found).ToList();
             if (matching.Count == 0 || (matching.Count == 1 && matching[0].label == word))
                 return null;
-            string shared = matching[0].label;
-            foreach (var completion in matching)
+            string shared = named.Count > 0 ? named[0].label : "";
+            foreach (var completion in named)
             {
                 int length = 0;
                 while (length < shared.Length && length < completion.label.Length && shared[length] == completion.label[length])
@@ -125,6 +140,36 @@ namespace KTrapIC
                 Matched = matching.Count,
                 Insert = shared.Length > word.Length ? shared.Substring(word.Length) : null,
             };
+        }
+
+        /// <summary>
+        /// Whether a word of <paramref name="text"/> starts with <paramref name="word"/>, ignoring
+        /// case: a word starts at the start of the text, after anything that isn't a letter or a
+        /// digit (a space, a dot), at a capital after a lower-case letter or a digit, or at a digit
+        /// after a letter. <c>Console</c>, <c>ConsoleLED</c> and <c>led</c> start words of
+        /// <c>StructureConsoleLED5</c>; <c>onsole</c> doesn't.
+        /// </summary>
+        public static bool WordStarts(string text, string word)
+        {
+            for (int at = 0; at + word.Length <= text.Length; at++)
+            {
+                if (WordStartsAt(text, at) && string.Compare(text, at, word, 0, word.Length, StringComparison.OrdinalIgnoreCase) == 0)
+                    return true;
+            }
+            return false;
+        }
+
+        private static bool WordStartsAt(string text, int at)
+        {
+            char c = text[at];
+            if (!char.IsLetterOrDigit(c))
+                return false;
+            if (at == 0)
+                return true;
+            char before = text[at - 1];
+            if (!char.IsLetterOrDigit(before))
+                return true;
+            return (char.IsUpper(c) && !char.IsUpper(before)) || (char.IsDigit(c) && char.IsLetter(before));
         }
     }
 }

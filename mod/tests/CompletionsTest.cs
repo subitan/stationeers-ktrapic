@@ -305,6 +305,45 @@ public class CompletionsTest
     }
 
     [Fact]
+    public void ShowsThoseFoundByAGameNameAfterThoseStartingWithTheWord()
+    {
+        var led = Item("LedDisplay", 0);
+        led.filterText = "LedDisplay StructureConsoleLED5 StructureConsoleLED1x2 StructureConsoleLED1x3";
+        var small = Item("LedDisplay.Small", 2);
+        small.filterText = "LedDisplay.Small StructureConsoleLED5";
+        var choice = Completions.Choose(new[] { led, Item("Consoles", 3), small, Item("Open", 1) }, "Console");
+
+        Assert.Equal(new[] { "Consoles", "LedDisplay", "LedDisplay.Small" }, choice.Shown.Select(c => c.label));
+        Assert.Equal(3, choice.Matched);
+        Assert.Equal("s", choice.Insert);
+    }
+
+    [Fact]
+    public void NothingToInsertWhenOnlyGameNamesMatch()
+    {
+        var led = Item("LedDisplay", 0);
+        led.filterText = "LedDisplay StructureConsoleLED5";
+
+        var choice = Completions.Choose(new[] { led }, "consoleled");
+
+        Assert.Equal(new[] { "LedDisplay" }, choice.Shown.Select(c => c.label));
+        Assert.Null(choice.Insert);
+    }
+
+    [Theory]
+    [InlineData("LedDisplay StructureConsoleLED5", "Console", true)]
+    [InlineData("LedDisplay StructureConsoleLED5", "consoleLED", true)]
+    [InlineData("LedDisplay StructureConsoleLED5", "led", true)]
+    [InlineData("LedDisplay StructureConsoleLED5", "Struct", true)]
+    [InlineData("LedDisplay.Small StructureConsoleLED5", "Small", true)]
+    [InlineData("LedDisplay StructureConsoleLED1x2", "1x2", true)]
+    [InlineData("LedDisplay StructureConsoleLED5", "onsole", false)]
+    [InlineData("LedDisplay StructureConsoleLED5", "ED5", false)]
+    [InlineData("LedDisplay StructureConsoleLED5", "Display StructureX", false)]
+    public void WordStartsAtACapitalADigitOrASeparator(string text, string word, bool starts) =>
+        Assert.Equal(starts, Completions.WordStarts(text, word));
+
+    [Fact]
     public void NothingShownForNoMatchOrOnlyTheWordItself()
     {
         Assert.Null(Completions.Choose(new[] { Item("On", 0) }, "x"));

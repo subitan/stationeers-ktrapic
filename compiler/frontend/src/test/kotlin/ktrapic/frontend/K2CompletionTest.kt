@@ -386,4 +386,60 @@ class K2CompletionTest {
   fun `internal SDK declarations are not offered`() {
     assertThat(labels("|")).doesNotContain("intrinsic")
   }
+
+  @Test
+  fun `an SDK type carries its prefab's game name, and a family its members'`() {
+    val items = complete("val a = |\n")
+
+    assertThat(items.single { it.label == "GrowLight" }.prefabs)
+        .containsExactly("StructureGrowLight")
+    val led = items.single { it.label == "LedDisplay" }
+    assertThat(led.prefabs)
+        .containsExactly("StructureConsoleLED5", "StructureConsoleLED1x2", "StructureConsoleLED1x3")
+    assertThat(led.filterText)
+        .isEqualTo("LedDisplay StructureConsoleLED5 StructureConsoleLED1x2 StructureConsoleLED1x3")
+    assertThat(led.detail).isEqualTo("ktrapic.LedDisplay")
+    assertThat(items.single { it.label == "Color" }.prefabs).isEmpty()
+    assertThat(items.single { it.label == "Color" }.filterText).isNull()
+  }
+
+  @Test
+  fun `after a family, each member carries its own game name`() {
+    val items = complete("LedDisplay.|\n")
+
+    assertThat(items.single { it.label == "Small" }.prefabs).containsExactly("StructureConsoleLED5")
+  }
+
+  @Test
+  fun `a family's members are offered by a later word of their game names`() {
+    val items = complete("val a = Console|\n")
+
+    val small = items.single { it.label == "LedDisplay.Small" }
+    assertThat(small.kind).isEqualTo(Completion.Kind.CLASS)
+    assertThat(small.detail).isEqualTo("ktrapic.LedDisplay.Small")
+    assertThat(small.prefabs).containsExactly("StructureConsoleLED5")
+    assertThat(items.map { it.label }).containsAtLeast("LedDisplay.Medium", "LedDisplay.Large")
+    assertThat(labels("val a = ConsoleLED|\n"))
+        .containsAtLeast("LedDisplay.Small", "LedDisplay.Medium", "LedDisplay.Large")
+    assertThat(labels("val a = consoleled|\n")).contains("LedDisplay.Small")
+  }
+
+  @Test
+  fun `a family's members are not offered by game names for a short word, the first word, or the family's own name`() {
+    assertThat(labels("val a = Co|\n").filter { '.' in it }).isEmpty()
+    assertThat(labels("val a = Structure|\n").filter { '.' in it }).isEmpty()
+    assertThat(labels("val a = Led|\n")).doesNotContain("LedDisplay.Small")
+    assertThat(labels("d0.Console|\n")).doesNotContain("LedDisplay.Small")
+  }
+
+  @Test
+  fun `a later word of a game name starts at a capital, a digit or after a separator`() {
+    assertThat(K2Completion.laterWordStarts("StructureConsoleLED5", "Console")).isTrue()
+    assertThat(K2Completion.laterWordStarts("StructureConsoleLED5", "consoleled")).isTrue()
+    assertThat(K2Completion.laterWordStarts("StructureConsoleLED5", "LED")).isTrue()
+    assertThat(K2Completion.laterWordStarts("StructureConsoleLED1x2", "1x2")).isTrue()
+    assertThat(K2Completion.laterWordStarts("StructureConsoleLED5", "Structure")).isFalse()
+    assertThat(K2Completion.laterWordStarts("StructureConsoleLED5", "onsole")).isFalse()
+    assertThat(K2Completion.laterWordStarts("StructureConsoleLED5", "ED")).isFalse()
+  }
 }

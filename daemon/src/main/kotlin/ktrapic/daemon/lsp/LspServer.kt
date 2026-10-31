@@ -15,6 +15,7 @@ import ktrapic.api.Compiler
 import ktrapic.daemon.Daemon
 import ktrapic.frontend.Completion
 import ktrapic.frontend.Hover
+import ktrapic.frontend.K2Completion
 import ktrapic.frontend.SignatureHelp
 
 /** JSON-RPC's and LSP's error codes. */
@@ -52,8 +53,9 @@ internal class ResponseError(val code: Int, message: String) : Exception(message
  * not kept, but compiled again.
  *
  * **`textDocument/completion`** lists what could be written at the position, from the compiler's
- * analysis of the document's current text (see [completion]); a repeat of the latest request costs
- * nothing, and an analysis that fails is answered with InternalError.
+ * analysis of the document's current text, matched by SDK types' game prefab names as well as their
+ * own (see [completion]); a repeat of the latest request costs nothing, and an analysis that fails
+ * is answered with InternalError.
  *
  * **`textDocument/hover`** describes the name at the position ([hover]), and
  * **`textDocument/signatureHelp`** the functions the call around it could be to ([signatureHelp]),
@@ -352,9 +354,13 @@ internal constructor(
    * lists them). Each item's `sortText` keeps [completer]'s order, `detail` is its declaration
    * (such as `var Setting: Double`), and its `kind` is one the IC10 Editor can show: it colours an
    * item by indexing a 24-colour table with the kind, so Operator (24) and TypeParameter (25) are
-   * never sent. Runs as compiles do, one at a time. A request at the same text and index as the
-   * latest one gets that one's list again without analysing the text, as the IC10 Editor asks twice
-   * for each keystroke. If the analysis fails, the request is answered with InternalError.
+   * never sent. An SDK type's item has a `filterText` of its label and the game's names of its
+   * prefabs (`LedDisplay StructureConsoleLED5 StructureConsoleLED1x2 StructureConsoleLED1x3`), so a
+   * client's filter finds it by either; the list is `isIncomplete` while the word typed is too
+   * short for family members to be offered by their game names ([gameNamesPending]). Runs as
+   * compiles do, one at a time. A request at the same text and index as the latest one gets that
+   * one's list again without analysing the text, as the IC10 Editor asks twice for each keystroke.
+   * If the analysis fails, the request is answered with InternalError.
    */
   private fun completion(params: JsonElement?): JsonElement {
     val (text, offset) = textAndOffset(params)
@@ -371,13 +377,27 @@ internal constructor(
             addProperty("kind", kindOf(completion.kind))
             if (completion.detail.isNotEmpty()) addProperty("detail", completion.detail)
             addProperty("sortText", "%05d".format(index))
+            completion.filterText?.let { addProperty("filterText", it) }
           }
       )
     }
     return JsonObject().apply {
-      addProperty("isIncomplete", false)
+      addProperty("isIncomplete", gameNamesPending(text, offset))
       add("items", items)
     }
+  }
+
+  /**
+   * Whether the list at [offset] in [text] may grow as the word there is typed: with no dot before
+   * it, a word shorter than [K2Completion.GAME_NAME_MIN_LENGTH] gets no family members by their
+   * game names, which a longer one may. A client that keeps a list while the word grows, as Monaco
+   * does, asks again until then.
+   */
+  private fun gameNamesPending(text: String, offset: Int): Boolean {
+    var start = offset
+    while (start > 0 && Character.isJavaIdentifierPart(text[start - 1])) start--
+    val afterDot = text.substring(0, start).trimEnd().endsWith('.')
+    return !afterDot && offset - start < K2Completion.GAME_NAME_MIN_LENGTH
   }
 
   /** [completer]'s list, or an InternalError answer if it fails ([analysed]). */

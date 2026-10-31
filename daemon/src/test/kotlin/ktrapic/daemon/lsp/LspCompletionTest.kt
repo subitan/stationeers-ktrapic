@@ -66,6 +66,43 @@ class LspCompletionTest {
   }
 
   @Test
+  fun `an SDK type's item is filtered by its label and its prefabs' game names`() {
+    LspTestClient().use { client ->
+      client.initialize()
+      client.open(uri, "val a = Console\n")
+
+      val result = client.complete(0, 15)["result"].asJsonObject
+      val items = result["items"].asJsonArray.map { it.asJsonObject }
+      val led = items.single { it["label"].asString == "LedDisplay" }
+      assertThat(led["filterText"].asString)
+          .isEqualTo(
+              "LedDisplay StructureConsoleLED5 StructureConsoleLED1x2 StructureConsoleLED1x3"
+          )
+      assertThat(led["detail"].asString).isEqualTo("ktrapic.LedDisplay")
+      val small = items.single { it["label"].asString == "LedDisplay.Small" }
+      assertThat(small["filterText"].asString).isEqualTo("LedDisplay.Small StructureConsoleLED5")
+      assertThat(items.single { it["label"].asString == "val" }.has("filterText")).isFalse()
+      assertThat(result["isIncomplete"].asBoolean).isFalse()
+    }
+  }
+
+  @Test
+  fun `the list is incomplete while a word with no dot before it is too short for game names`() {
+    LspTestClient(completer = { _, _ -> emptyList() }).use { client ->
+      client.initialize()
+      client.open(uri, "val a = Co\nval b = d0.Se\n")
+
+      fun incomplete(line: Int, character: Int) =
+          client.complete(line, character)["result"].asJsonObject["isIncomplete"].asBoolean
+
+      assertThat(incomplete(0, 8)).isTrue()
+      assertThat(incomplete(0, 10)).isTrue()
+      assertThat(incomplete(1, 11)).isFalse()
+      assertThat(incomplete(1, 13)).isFalse()
+    }
+  }
+
+  @Test
   fun `completion is given the text and the position's index in it`() {
     var given: Pair<String, Int>? = null
     LspTestClient(
