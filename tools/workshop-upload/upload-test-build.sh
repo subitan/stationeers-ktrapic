@@ -60,6 +60,9 @@ stage=mod/dist/workshop-test/KTrapIC
 rm -rf "$stage"
 mkdir -p "$stage"
 cp mod/bin/Debug/net48/KTrapIC.dll "$stage/"
+# The plugin attribute's version, which the "loaded" log line shows, is stored in the DLL as UTF-8.
+grep -qaF "$version" "$stage/KTrapIC.dll" ||
+  die "the built DLL doesn't carry $version: does mod/KTrapIC.csproj take TestVersion?"
 cp -r mod/About "$stage/"
 sed -i "s|<Version>$base</Version>|<Version>$version</Version>|" "$stage/About/About.xml"
 grep -q "<Version>$version</Version>" "$stage/About/About.xml" || die "couldn't set the staged About.xml's version"
