@@ -17,10 +17,33 @@ DLLs the plugin's CI build compiles against.
 ## Installing
 
 KTrapIC is a [StationeersLaunchPad](https://github.com/StationeersLaunchPad/StationeersLaunchPad)
-plugin mod: it needs BepInEx, StationeersLaunchPad and the IC10 Editor mod. Unzip a release's
-`KTrapIC-<version>.zip` into StationeersLaunchPad's local mods directory
-(`Documents/my games/Stationeers/mods`), which gives `mods/KTrapIC/KTrapIC.dll` and
-`mods/KTrapIC/About/`.
+plugin mod. It needs BepInEx and StationeersLaunchPad, installed as StationeersLaunchPad's page
+says, and the [IC10 Editor](https://steamcommunity.com/sharedfiles/filedetails/?id=3592775931)
+mod. Install KTrapIC in one of three ways:
+
+- **From the Steam Workshop:** subscribe to
+  [KTrapIC](https://steamcommunity.com/sharedfiles/filedetails/?id=3830564236), and the IC10
+  Editor with it, then enable both in StationeersLaunchPad's mod list. (The item is private until
+  the first release, v0.1.0.)
+- **From a GitHub release:** unzip a release's `KTrapIC-<version>.zip` into StationeersLaunchPad's
+  local mods directory (`Documents/My Games/Stationeers/mods`), which gives
+  `mods/KTrapIC/KTrapIC.dll` and `mods/KTrapIC/About/`. No version has been tagged yet, so for now
+  use the [`dev` release](https://github.com/subitan/stationeers-ktrapic/releases/tag/dev), whose
+  zip, `KTrapIC-main.zip`, is a Debug build of `main`.
+- **From a checkout of this repository:** with the .NET SDK (10 or later) on the `PATH`, and the
+  game found as [Building](#building) says,
+
+  ```
+  bazel run //mod:install -- "<Documents>/My Games/Stationeers/mods"
+  ```
+
+  builds the plugin (a Debug build) and copies it, with `About/`, into `mods/KTrapIC`. The
+  directory is required, and must be the local mods directory (named `mods`, or beside the game's
+  `setting.xml`). With `--local-compiler`, it also copies this checkout's compiler
+  (`//daemon:ktrapic-daemon_deploy.jar`) to `mods/KTrapIC/compiler/ktrapic-daemon.jar` and sets
+  the plugin's `DaemonJarPath` to it, so the plugin compiles with it rather than the release's;
+  installing again without `--local-compiler` clears that setting again. Close the game first: it
+  keeps the plugin's DLL open.
 
 The plugin doesn't include the compiler. The first time a Kotlin program is edited it downloads,
 from this repository's GitHub release for its version, the compiler (`ktrapic-daemon.jar`) and a
@@ -28,10 +51,9 @@ trimmed Java 21 runtime to run it on (`ktrapic-runtime-windows-x64.zip`), about 
 into `BepInEx/cache/ktrapic`. It checks the release again each time it starts the compiler, and downloads
 again only if the release's files have changed. A Release build of the plugin uses the release
 tagged with its version (`v0.1.0`); a Debug build uses the rolling `dev` release, which every push
-to `main` replaces. No version has been tagged yet, so for now install from the
-[`dev` release](https://github.com/subitan/stationeers-ktrapic/releases/tag/dev), whose zip,
-`KTrapIC-main.zip`, is a Debug build. Only Windows x64 has a runtime release; elsewhere, set both
-`JavaPath` and `DaemonJarPath` (below).
+to `main` replaces. The runtime is for Windows x64, which is also what the game runs as under
+CrossOver or Proton on macOS and Linux. Elsewhere, set both `JavaPath` and `DaemonJarPath`
+(below).
 
 ## Using it
 
@@ -189,8 +211,9 @@ The first build downloads the IC10 Editor release it compiles against into `mod/
 ([stationeers-modding-template](https://github.com/aproposmath/stationeers-modding-template)), which
 needs `git submodule update --init` and Git LFS.
 
-To try a local compiler in game, build it (`bazel build //daemon:ktrapic-daemon_deploy.jar`) and
-set `DaemonJarPath` to it, and `JavaPath` to a JDK 21's `bin/java.exe`.
+To try a local compiler in game, install with `--local-compiler` (see [Installing](#installing)),
+or build it (`bazel build //daemon:ktrapic-daemon_deploy.jar`) and set `DaemonJarPath` to it
+yourself. The downloaded runtime runs it, unless `JavaPath` is set to a JDK 21's `bin/java.exe`.
 
 ### Tests
 

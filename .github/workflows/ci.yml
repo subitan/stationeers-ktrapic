@@ -83,6 +83,19 @@ jobs:
           chmod +x "$RUNNER_TEMP"/runtime/bin/*
       - name: Build the mod
         run: dotnet build -c Release mod/KTrapIC.csproj
+      - name: Install the mod from the checkout, with its compiler, into a scratch mods directory
+        run: |
+          mods="$RUNNER_TEMP/mods" game="$RUNNER_TEMP/game"
+          mkdir -p "$mods" "$game/BepInEx/config"
+          STATIONEERS_DIR="$game" bazel run --config=ci //mod:install -- "$mods" --local-compiler
+          test -f "$mods/KTrapIC/KTrapIC.dll"
+          test -f "$mods/KTrapIC/About/About.xml"
+          test -f "$mods/KTrapIC/compiler/ktrapic-daemon.jar"
+          grep -qxF "DaemonJarPath = $mods/KTrapIC/compiler/ktrapic-daemon.jar" \
+            "$game/BepInEx/config/com.github.subitan.stationeers-ktrapic.cfg"
+          if bazel run --config=ci //mod:install; then
+            echo "Installing without a mods directory should fail"; exit 1
+          fi
       - name: Test the daemon client, running the daemon on the packaged runtime
         run: |
           JAVA_HOME="$RUNNER_TEMP/runtime" \
