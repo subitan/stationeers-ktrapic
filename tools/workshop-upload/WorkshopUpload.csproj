@@ -3,7 +3,8 @@
     Updates the plugin's Steam Workshop item through the Steam client running on this machine, as
     the game's own Workshop publisher does (Facepunch.Steamworks, from the game's install), so no
     Steam login is needed. Unlike the game's publisher it keeps the item's visibility as asked:
-    private unless told otherwise. upload-test-build.sh drives it; see docs/RELEASING.md.
+    private unless told otherwise. upload-test-build.sh and upload-release.sh drive it; see
+    docs/RELEASING.md.
 
     Windows only (the game's Facepunch build is Win64), and it builds against the installed game,
     found as the plugin build finds it: StationeersDirectory in mod/Local.Developer.props, the

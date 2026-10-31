@@ -5,12 +5,19 @@
 #
 # It uploads the plugin exactly as the GitHub release vX.Y.Z has it, KTrapIC-vX.Y.Z.zip, rather than
 # a local build, so the Workshop and GitHub carry the same DLL. First it checks that the release has
-# everything the plugin downloads on first use (the compiler jar and the Windows runtime), and that
-# the zip's About.xml and DLL are version X.Y.Z. It stages the zip's KTrapIC folder in
+# everything the plugin downloads on first use (the compiler jar and the Windows runtime), that the
+# zip's About.xml and DLL are version X.Y.Z, and that the DLL is a Release build, which downloads
+# from vX.Y.Z (a Debug build downloads from `dev`). It stages the zip's KTrapIC folder in
 # mod/dist/workshop-release/KTrapIC and uploads that to the item the zip's About.xml names
-# (WorkshopHandle), with a change note naming the version. The item stays private unless --public
-# is given; --public makes it public, so everyone subscribed gets this version. --note adds to the
-# change note; --stage-only stops before the upload.
+# (WorkshopHandle), with a change note naming the version. --public makes the item public, so
+# everyone subscribed gets this version. --note adds to the change note; --stage-only stops before
+# the upload.
+#
+# Without --public the upload makes the item private. That is only for trying the first release
+# while the item is still private: once it is public, a private upload would replace the release its
+# subscribers have and hide the item from them, so the script refuses to upload without --public to
+# an item that isn't private. Later releases are tried first as a test build on a private test item
+# (upload-test-build.sh --item), and then uploaded here with --public.
 #
 # Windows only. Needs curl, unzip, dotnet (to build the uploader; the game installed, found as the
 # plugin build finds it) and Steam running, signed in as the item's owner. Stationeers must not be
@@ -19,6 +26,7 @@
 set -euo pipefail
 
 die() { echo "upload-release: $*" >&2; exit 1; }
+. "$(dirname "$0")/workshop-item.sh"
 
 tag="" visibility=private note_extra="" stage_only=false
 while [ $# -gt 0 ]; do
@@ -32,6 +40,7 @@ while [ $# -gt 0 ]; do
 done
 [[ "$tag" =~ ^v([0-9]+\.[0-9]+\.[0-9]+)$ ]] || die "name the release, as vX.Y.Z"
 version="${BASH_REMATCH[1]}"
+version_re="${version//./[.]}"
 
 if tasklist //FI "IMAGENAME eq rocketstation.exe" 2>/dev/null | grep -qi rocketstation; then
   die "Stationeers is running here; quit it first"
@@ -54,10 +63,17 @@ curl -sfL -o "$dist/KTrapIC-$tag.zip" "$release/KTrapIC-$tag.zip" ||
 unzip -q "$dist/KTrapIC-$tag.zip" -d "$dist"
 [ -f "$stage/KTrapIC.dll" ] && [ -f "$stage/About/About.xml" ] ||
   die "KTrapIC-$tag.zip doesn't hold KTrapIC/KTrapIC.dll and KTrapIC/About/About.xml"
-grep -q "<Version>$version</Version>" "$stage/About/About.xml" ||
-  die "the release's About.xml isn't version $version"
+about_version="$(sed -n 's|.*<Version>\(.*\)</Version>.*|\1|p' "$stage/About/About.xml")"
+[ "$about_version" = "$version" ] ||
+  die "the release's About.xml is version '$about_version', not $version"
 # The plugin attribute's version, which the "loaded" log line shows, is stored in the DLL as UTF-8.
-grep -qaF "$version" "$stage/KTrapIC.dll" || die "the release's DLL doesn't carry $version"
+# LC_ALL=C makes every byte of the DLL a character the brackets can match.
+LC_ALL=C grep -qaE "(^|[^0-9.])$version_re([^0-9.]|$)" "$stage/KTrapIC.dll" ||
+  die "the release's DLL doesn't carry $version"
+# The release the plugin downloads from is a string constant, stored as UTF-16: "vX.Y.Z" in a
+# Release build, "dev" in a Debug one. Dropping the NUL bytes makes its ASCII text plain.
+tr -d '\000' <"$stage/KTrapIC.dll" | LC_ALL=C grep -qaE "v$version_re([^0-9.]|$)" ||
+  die "the release's DLL isn't a Release build that downloads from $tag"
 item="$(sed -n 's|.*<WorkshopHandle>\([0-9]*\)</WorkshopHandle>.*|\1|p' "$stage/About/About.xml")"
 [ -n "$item" ] || die "the release's About.xml has no WorkshopHandle"
 
@@ -68,5 +84,10 @@ echo "Change note: $note"
 if $stage_only; then exit 0; fi
 
 dotnet build tools/workshop-upload/WorkshopUpload.csproj -c Release -nologo -v q
-tools/workshop-upload/bin/Release/net48/WorkshopUpload.exe --item "$item" \
-  --content "$(cygpath -w "$root/$stage")" --note "$note" --visibility "$visibility"
+uploader=tools/workshop-upload/bin/Release/net48/WorkshopUpload.exe
+current="$(workshop_visibility "$uploader" "$item")" || die "couldn't read Workshop item $item's visibility"
+[ "$visibility" = public ] || [ "$current" = private ] ||
+  die "Workshop item $item is $current: uploading without --public would replace the release its" \
+    "subscribers have and hide it from them. Try the release as a test build on a private test item" \
+    "(upload-test-build.sh --item ID), then upload it here with --public"
+"$uploader" --item "$item" --content "$(cygpath -w "$root/$stage")" --note "$note" --visibility "$visibility"
