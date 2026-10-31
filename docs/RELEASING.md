@@ -25,7 +25,12 @@ To release version X.Y.Z:
    (which downloads from the `vX.Y.Z` release), the compiler jar and the Windows runtime, and
    publishes them as the GitHub release `vX.Y.Z`.
 
-Publishing to the Steam Workshop isn't automated yet (#115).
+Publishing to the Steam Workshop isn't automated yet (#115). The Workshop item is
+[3830564236](https://steamcommunity.com/sharedfiles/filedetails/?id=3830564236), recorded as
+`WorkshopHandle` in `mod/About/About.xml`, so every upload updates that item. Until the first
+release it is private, for the maintainer's own testing, and holds the `dev` Debug build. The
+game's Workshop menu (Workshop > Mods > Publish) uploads the mod folder, but it makes the item
+public on every upload, so set it private again afterwards, or upload with SteamCMD instead.
 
 ## The IntelliJ plugin
 
