@@ -298,6 +298,7 @@ these go to the maintainer:
 | Bitcoin (native SegWit) | `bc1qctag0alxj6sza79sh2jyqrsj95qcyuqwnfksuf` |
 | Ethereum, and EVM-compatible networks | `0x01F46Aa11769f351581d71b1Fa2342f32BCDc646` |
 | Solana | `7pfA9akYBbxp9s9ryT62BVwfVwN73fWq2NQDk4Ypn9G` |
+| Cash App | [`$geekinasuit`](https://cash.app/$geekinasuit) |
 
 Copy an address from here rather than from anywhere else: these are the only ones. Bug reports,
 programs you've written and pull requests are just as welcome.
