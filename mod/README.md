@@ -44,7 +44,9 @@ mod. Install KTrapIC in one of three ways:
   the plugin's `DaemonJarPath` to it, so the plugin compiles with it rather than the release's;
   installing again without `--local-compiler` clears that setting and deletes the copy. If the
   game's directory, with BepInEx in it, isn't found, `--local-compiler` stops before building or
-  installing anything. Close the game first: it keeps the plugin's DLL open.
+  installing anything. `--local-compiler` works only on Windows: on Linux or macOS the game runs
+  as a Windows program, so `DaemonJarPath` must be the jar's path as the game sees it, and you set
+  it by hand (see [Building](#building)). Close the game first: it keeps the plugin's DLL open.
 
 The plugin doesn't include the compiler. The first time a Kotlin program is edited it downloads,
 from this repository's GitHub release for its version, the compiler (`ktrapic-daemon.jar`) and a
@@ -208,14 +210,19 @@ dotnet build KTrapIC.csproj -t:Install   # and copy it, with About/, into Statio
 dotnet build -c Release KTrapIC.csproj -t:Dist   # the release layout, in dist/KTrapIC
 ```
 
+`bazel run //mod:install` (see [Installing](#installing)) is the supported way to install from a
+checkout. `-t:Install` only copies the DLL and `About/` into `StationeersModDir`: it doesn't
+remove files gone from `About/`, or touch `DaemonJarPath` or a compiler `--local-compiler`
+installed.
+
 The first build downloads the IC10 Editor release it compiles against into `mod/deps`. A CI build
 (`GITHUB_ACTIONS=true`) uses the stand-in game DLLs of the `mod/Template` submodule
 ([stationeers-modding-template](https://github.com/aproposmath/stationeers-modding-template)), which
 needs `git submodule update --init` and Git LFS.
 
-To try a local compiler in game, install with `--local-compiler` (see [Installing](#installing)),
-or build it (`bazel build //daemon:ktrapic-daemon_deploy.jar`) and set `DaemonJarPath` to it
-yourself. The downloaded runtime runs it, unless `JavaPath` is set to a JDK 21's `bin/java.exe`.
+To try a local compiler in game, install with `--local-compiler` on Windows (see
+[Installing](#installing)), or build it (`bazel build //daemon:ktrapic-daemon_deploy.jar`) and set
+`DaemonJarPath` to it yourself, as the game sees its path. The downloaded runtime runs it, unless `JavaPath` is set to a JDK 21's `bin/java.exe`.
 
 ### Tests
 

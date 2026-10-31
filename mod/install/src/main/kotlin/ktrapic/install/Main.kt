@@ -10,10 +10,10 @@ import kotlin.system.exitProcess
 /**
  * `bazel run //mod:install -- <mods-dir> [--local-compiler]` builds the IC10 Editor plugin (a Debug
  * build, which downloads the compiler from the rolling `dev` release) with `dotnet` and installs it
- * into StationeersLaunchPad's local mods directory. With `--local-compiler` it also installs this
- * checkout's compiler beside it and points the plugin's `DaemonJarPath` setting at it; without, it
- * clears a `DaemonJarPath` that points at a compiler this installed before, and deletes that
- * compiler.
+ * into StationeersLaunchPad's local mods directory. With `--local-compiler` (on Windows only, see
+ * [localCompilerRefusal]) it also installs this checkout's compiler beside it and points the
+ * plugin's `DaemonJarPath` setting at it; without, it clears a `DaemonJarPath` that points at a
+ * compiler this installed before, and deletes that compiler.
  */
 fun main(args: Array<String>) {
   val workspace =
@@ -30,8 +30,9 @@ fun main(args: Array<String>) {
         exitProcess(2)
       }
 
-  val project = workspace.resolve("mod/KTrapIC.csproj")
   // Checked before anything is built or copied, so a run that can't finish changes nothing.
+  if (request.localCompiler) localCompilerRefusal(System.getProperty("os.name"))?.let { fail(it) }
+  val project = workspace.resolve("mod/KTrapIC.csproj")
   val gameDir = gameDirectory(project)
   val config = gameDir?.resolve(CONFIG_FILE)
   if (request.localCompiler && (gameDir == null || !gameDir.resolve("BepInEx").isDirectory())) {
@@ -62,8 +63,12 @@ fun main(args: Array<String>) {
     // `bazel run` starts in the runfiles tree, where the daemon jar is.
     val daemonJar = Paths.get(System.getProperty("ktrapic.daemonJar")).toAbsolutePath()
     val jar = installCompiler(daemonJar, pluginDir)
-    setDaemonJarPath(config!!, jar)
-    println("Installed this checkout's compiler as $jar, and set DaemonJarPath to it in $config")
+    val replaced = daemonJarPath(config!!)?.takeUnless { isInstalledCompiler(it, pluginDir) }
+    setDaemonJarPath(config, jar)
+    println(
+        "Installed this checkout's compiler as $jar, and set DaemonJarPath to it in $config" +
+            (replaced?.let { " (it was $it)" } ?: "")
+    )
   } else if (config != null) {
     val current = daemonJarPath(config)
     if (current != null && isInstalledCompiler(current, pluginDir)) {

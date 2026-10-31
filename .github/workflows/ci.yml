@@ -83,16 +83,29 @@ jobs:
           chmod +x "$RUNNER_TEMP"/runtime/bin/*
       - name: Build the mod
         run: dotnet build -c Release mod/KTrapIC.csproj
-      - name: Install the mod from the checkout, with its compiler, into a scratch mods directory
+      - name: Install the mod from the checkout into a scratch mods directory
         run: |
           mods="$RUNNER_TEMP/mods" game="$RUNNER_TEMP/game"
-          mkdir -p "$mods" "$game/BepInEx/config"
-          STATIONEERS_DIR="$game" bazel run --config=ci //mod:install -- "$mods" --local-compiler
+          jar="$mods/KTrapIC/compiler/ktrapic-daemon.jar"
+          cfg="$game/BepInEx/config/com.github.subitan.stationeers-ktrapic.cfg"
+          mkdir -p "$mods/KTrapIC/compiler" "$game/BepInEx/config"
+          # A compiler and setting as --local-compiler leaves them (on Windows), for the plain install to remove.
+          echo jar > "$jar"
+          printf '[Development]\n\nDaemonJarPath = %s\n' "$jar" > "$cfg"
+          STATIONEERS_DIR="$game" bazel run --config=ci //mod:install -- "$mods"
           test -f "$mods/KTrapIC/KTrapIC.dll"
           test -f "$mods/KTrapIC/About/About.xml"
-          test -f "$mods/KTrapIC/compiler/ktrapic-daemon.jar"
-          grep -qxF "DaemonJarPath = $mods/KTrapIC/compiler/ktrapic-daemon.jar" \
-            "$game/BepInEx/config/com.github.subitan.stationeers-ktrapic.cfg"
+          test ! -e "$mods/KTrapIC/compiler"
+          grep -qxF "DaemonJarPath = " "$cfg"
+          status=0
+          STATIONEERS_DIR="$game" bazel run --config=ci //mod:install -- "$mods" --local-compiler \
+            2> "$RUNNER_TEMP/refusal.txt" || status=$?
+          if [ "$status" -ne 1 ] || ! grep -qF "works only on Windows" "$RUNNER_TEMP/refusal.txt"; then
+            cat "$RUNNER_TEMP/refusal.txt"
+            echo "--local-compiler should be refused off Windows (1), not $status"; exit 1
+          fi
+          test ! -e "$mods/KTrapIC/compiler"
+          grep -qxF "DaemonJarPath = " "$cfg"
           status=0
           bazel run --config=ci //mod:install || status=$?
           if [ "$status" -ne 2 ]; then

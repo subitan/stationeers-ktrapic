@@ -76,6 +76,19 @@ fun installPlugin(dll: Path, about: Path, modsDir: Path): Path {
   return target
 }
 
+/**
+ * Why `--local-compiler` can't be used on a host whose `os.name` is [osName], or null if it can.
+ * The game is a Windows program, run under Proton or CrossOver elsewhere, so `DaemonJarPath` must
+ * be the jar's path as Windows sees it; only on Windows is that the path this host has for it.
+ */
+fun localCompilerRefusal(osName: String): String? =
+    if (osName.startsWith("Windows", ignoreCase = true)) null
+    else
+        "--local-compiler works only on Windows. The game runs as a Windows program here, so " +
+            "DaemonJarPath must be the compiler's path as the game sees it: build it with " +
+            "`bazel build //daemon:ktrapic-daemon_deploy.jar`, and set DaemonJarPath, in the " +
+            "[Development] section of $CONFIG_FILE in the game's directory, by hand."
+
 /** Where [installCompiler] puts the compiler in the plugin's directory. */
 fun compilerPath(pluginDir: Path): Path = pluginDir.resolve("compiler/ktrapic-daemon.jar")
 

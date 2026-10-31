@@ -80,6 +80,14 @@ class InstallerTest {
   }
 
   @Test
+  fun `the local compiler is refused off Windows`() {
+    assertThat(localCompilerRefusal("Windows 10")).isNull()
+    assertThat(localCompilerRefusal("Windows Server 2022")).isNull()
+    assertThat(localCompilerRefusal("Linux")).contains("DaemonJarPath")
+    assertThat(localCompilerRefusal("Mac OS X")).contains("works only on Windows")
+  }
+
+  @Test
   fun `the compiler is installed in the plugin's directory`() {
     val jar = tmp.resolve("ktrapic-daemon_deploy.jar").apply { writeText("jar") }
     val installed = installCompiler(jar, tmp.resolve("mods/KTrapIC"))
