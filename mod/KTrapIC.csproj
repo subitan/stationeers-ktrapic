@@ -86,6 +86,8 @@
       <Output TaskParameter="Result" PropertyName="ModId" />
     </XmlPeek>
     <PropertyGroup>
+      <!-- A Workshop test build's own version (tools/workshop-upload/upload-test-build.sh). -->
+      <ModVersion Condition="'$(TestVersion)' != ''">$(TestVersion)</ModVersion>
       <ModInfoFile>$(IntermediateOutputPath)ModInfo.g.cs</ModInfoFile>
     </PropertyGroup>
     <WriteLinesToFile
