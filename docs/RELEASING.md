@@ -24,24 +24,51 @@ To release version X.Y.Z:
 3. The Release workflow checks the tag against `About.xml`, builds a Release build of the plugin
    (which downloads from the `vX.Y.Z` release), the compiler jar and the Windows runtime, and
    publishes them as the GitHub release `vX.Y.Z`.
+4. Upload the release to the Steam Workshop, on Windows, from a checkout of `main`. For the
+   first release, while the item is still private, try it first with a private upload, then
+   publish it:
+   ```
+   tools/workshop-upload/upload-release.sh vX.Y.Z
+   tools/workshop-upload/upload-release.sh vX.Y.Z --public
+   ```
+   Once the item is public, a private upload would replace the release its subscribers have and
+   hide the item from them, so the script refuses to upload to it without `--public`. Try a later
+   release on the private test item (see below) instead, then publish it:
+   ```
+   tools/workshop-upload/upload-release.sh vX.Y.Z --item <test item>
+   tools/workshop-upload/upload-release.sh vX.Y.Z --public
+   ```
+   With `--item` the script uploads the release's zip to that item, which must be private, with
+   that item as the staged `About.xml`'s `WorkshopHandle`; it can't be combined with `--public`.
 
-Publishing a release to the Steam Workshop isn't automated yet (#115). The Workshop item is
+   It uploads the release's own `KTrapIC-vX.Y.Z.zip`, so the Workshop carries the same DLL as
+   GitHub, after checking that the release has the compiler jar and the runtime the plugin
+   downloads, and that the zip is a Release build of version X.Y.Z. It uploads as the test builds
+   below do, through the Steam client signed in on that machine, with the game closed on every
+   machine signed in to that account.
+
+The Workshop item is
 [3830564236](https://steamcommunity.com/sharedfiles/filedetails/?id=3830564236), recorded as
-`WorkshopHandle` in `mod/About/About.xml`, so every upload updates that item. Until the first
-release it is private, for the maintainer's own testing.
+`WorkshopHandle` in `mod/About/About.xml`, so every release updates that item. Until the first
+release is published it is private, for the maintainer's own testing.
 
 ### Test builds on the Workshop
 
-A test build goes to the item with one command, on Windows, from a clean checkout of the commit
-to test, which must be on `main` (the script checks it against `origin/main`):
+A test build goes to a private Workshop item with one command, on Windows, from a clean checkout
+of the commit to test, which must be on `main` (the script checks it against `origin/main`):
 
 ```
-tools/workshop-upload/upload-test-build.sh [--note TEXT]
+tools/workshop-upload/upload-test-build.sh [--item ID] [--note TEXT]
 ```
 
 It uploads through the Steam client signed in on that machine, as the item's owner, so it needs no
-login, and it keeps the item private. Stationeers must not be running on any machine signed in to
-that account, since the upload runs as the game. Every test build:
+login, and it keeps the item private. It refuses an item that isn't private, so no one else ever
+gets a test build. Without `--item` it uploads to the release item, which works only until the
+first release is published. After that, test builds go to a private test item of the
+maintainer's, named with `--item`; the staged `About.xml` names that item as its
+`WorkshopHandle`. The uploader can't make a new item, so the maintainer makes the test item
+once, by hand, as a private item owned by the same account. Stationeers must not be running on
+any machine signed in to that account, since the upload runs as the game. Every test build:
 
 - **is a Debug build**, which downloads the compiler from the `dev` release. A Release build
   downloads from the release `vX.Y.Z` for its version, which doesn't exist until that version is
