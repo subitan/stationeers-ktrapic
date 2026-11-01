@@ -78,7 +78,7 @@ internal static class Program
             string title = Arg("--title") ?? meta.Element("Name")?.Value.Trim();
             if (string.IsNullOrWhiteSpace(title))
             {
-                Console.Error.WriteLine($"{about} has no Name, and there's no --title.");
+                Console.Error.WriteLine($"The item needs a title: a --title that isn't blank, or else a Name in {about}.");
                 return 1;
             }
             string preview = Arg("--preview") ?? Path.Combine(content, "About", "Preview.png");
@@ -147,7 +147,8 @@ internal static class Program
             {
                 Console.Error.WriteLine($"The upload failed: {result.Result}." +
                     (create && result.FileId.Value != 0
-                        ? $" Steam made item {result.FileId} before it failed: update it with --item, or delete it."
+                        ? $" Steam made item {result.FileId} before it failed, with no title, description or tags," +
+                          " and it may not be private: delete it on the Workshop, then run --create again."
                         : ""));
                 return 1;
             }

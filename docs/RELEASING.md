@@ -73,12 +73,15 @@ tools/workshop-upload/upload-test-build.sh --stage-only
 dotnet build tools/workshop-upload/WorkshopUpload.csproj -c Release
 tools/workshop-upload/bin/Release/net48/WorkshopUpload.exe --create \
   --content mod/dist/workshop-test/KTrapIC --title "KTrapIC (test builds)" --note "Test item"
+tools/workshop-upload/upload-test-build.sh --item <the printed ID>
 ```
 
 `--create` takes the item's description and tags from the staged `About.xml`, and its preview
 from `About/Preview.png`; it makes the item private, owned by the account signed in to Steam, and
-prints its ID. Stationeers must not be running on any machine signed in to that account, since
-the upload runs as the game. Every test build:
+prints its ID. Note that ID: it is the `--item` for every test build from then on. The stage
+made without `--item` names the release item as its `WorkshopHandle`, so the last command
+uploads the test build again, staged with the new item's ID. Stationeers must not be running on
+any machine signed in to that account, since the upload runs as the game. Every test build:
 
 - **is a Debug build**, which downloads the compiler from the `dev` release. A Release build
   downloads from the release `vX.Y.Z` for its version, which doesn't exist until that version is
