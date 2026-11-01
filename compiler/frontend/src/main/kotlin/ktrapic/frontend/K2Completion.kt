@@ -97,6 +97,14 @@ data class Completion(
 }
 
 /**
+ * What could be written at a position ([items]), and whether the analysis found a receiver written
+ * before the word there (`d0.`, `f().`, `LedDisplay.`). After a receiver, the list is what can
+ * follow it, whatever the word; without one, it includes family members found by the whole word's
+ * game name ([K2Completion]), so it can change as the word grows.
+ */
+data class Completions(val items: List<Completion>, val hasReceiver: Boolean)
+
+/**
  * Lists what could be written at a position in a script-style program, from the Kotlin K2
  * compiler's analysis of it: after `receiver.`, the members and extensions of the receiver's type
  * (or, after a class or object name, what it holds); anywhere else, the locals, parameters and
@@ -478,32 +486,33 @@ object K2Completion {
 
   /**
    * What could be written at [offset] (a `String` index) in [source], compiled against
-   * kotlin-stdlib and the jars in [classpath] with [defaultImports]. Returns an empty list when
-   * nothing applies, such as inside a comment or a string.
+   * kotlin-stdlib and the jars in [classpath] with [defaultImports]. Lists nothing when nothing
+   * applies, such as inside a comment or a string, and then has no receiver.
    */
   fun complete(
       source: String,
       offset: Int,
       classpath: List<File> = emptyList(),
       defaultImports: List<String> = emptyList(),
-  ): List<Completion> {
+  ): Completions {
+    val none = Completions(emptyList(), hasReceiver = false)
     val caret = offset.coerceIn(0, source.length)
     var start = caret
     while (start > 0 && Character.isJavaIdentifierPart(source[start - 1])) start--
     var end = caret
     while (end < source.length && Character.isJavaIdentifierPart(source[end])) end++
-    if (start < source.length && start < end && Character.isDigit(source[start])) return emptyList()
+    if (start < source.length && start < end && Character.isDigit(source[start])) return none
     val edited = source.substring(0, start) + PLACEHOLDER + source.substring(end)
 
     return withScript(edited, classpath, defaultImports) { parsed ->
       val script = parsed.script
       if (inCommentOrString(script.findElementAt(script.text.indexOf(PLACEHOLDER)))) {
-        return@withScript emptyList()
+        return@withScript none
       }
       val at = parsed.wrapped.text.indexOf(PLACEHOLDER)
-      if (at < 0) return@withScript emptyList()
+      if (at < 0) return@withScript none
       val typed = source.substring(start, caret)
-      parsed.analyse { Analysis(it, at, typed).completions() }.orEmpty()
+      parsed.analyse { Analysis(it, at, typed).completions() } ?: none
     }
   }
 
@@ -540,18 +549,20 @@ object K2Completion {
       output.fir.forEach { it.accept(visitor) }
     }
 
-    fun completions(): List<Completion> {
+    fun completions(): Completions {
       val receiver = access?.explicitReceiver
       val items =
           if (receiver != null) members(receiver)
           else inScope() + topLevel() + membersByGameName() + keywords()
       // One item per name: overloads share one, and a name declared nearer the caret shadows
       // the same name declared further out, which comes later in the list.
-      return items
-          .filter {
-            it.kind == Completion.Kind.KEYWORD || it.label.split('.').all(::isPlainIdentifier)
-          }
-          .distinctBy { it.label }
+      val shown =
+          items
+              .filter {
+                it.kind == Completion.Kind.KEYWORD || it.label.split('.').all(::isPlainIdentifier)
+              }
+              .distinctBy { it.label }
+      return Completions(shown, hasReceiver = receiver != null)
     }
 
     /**

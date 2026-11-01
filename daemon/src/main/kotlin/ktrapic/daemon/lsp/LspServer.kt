@@ -14,6 +14,7 @@ import java.util.concurrent.Future
 import ktrapic.api.Compiler
 import ktrapic.daemon.Daemon
 import ktrapic.frontend.Completion
+import ktrapic.frontend.Completions
 import ktrapic.frontend.Hover
 import ktrapic.frontend.SignatureHelp
 
@@ -93,7 +94,7 @@ internal constructor(
     private val debounceMillis: Long,
     private val scheduler: Scheduler,
     private val compiler: (String) -> JsonObject,
-    private val completer: (String, Int) -> List<Completion> = Compiler::complete,
+    private val completer: (String, Int) -> Completions = Compiler::complete,
     private val hoverer: (String, Int) -> Hover? = Compiler::hover,
     private val signer: (String, Int) -> SignatureHelp? = Compiler::signatureHelp,
 ) {
@@ -130,7 +131,7 @@ internal constructor(
         override fun removeEldestEntry(eldest: Map.Entry<String, JsonObject>) = size > KEPT_COMPILES
       }
 
-  private class LastCompletion(val text: String, val offset: Int, val completions: List<Completion>)
+  private class LastCompletion(val text: String, val offset: Int, val completions: Completions)
 
   /** The latest completion's text, offset and list, for [completion]. Under [compiles]' lock. */
   private var lastCompletion: LastCompletion? = null
@@ -355,10 +356,14 @@ internal constructor(
    * item by indexing a 24-colour table with the kind, so Operator (24) and TypeParameter (25) are
    * never sent. An SDK type's item has a `filterText` of its label and the meaningful words of the
    * game's names of its prefabs (`LedDisplay ConsoleLED5 ConsoleLED1x2 ConsoleLED1x3`), so a
-   * client's filter finds it by either. The list is `isIncomplete` unless the word follows a dot
-   * ([changesAsTyped]). Runs as compiles do, one at a time. A request at the same text and index as
-   * the latest one gets that one's list again without analysing the text, as the IC10 Editor asks
-   * twice for each keystroke. If the analysis fails, the request is answered with InternalError.
+   * client's filter finds it by either. The list is `isIncomplete` unless the analysis found a
+   * receiver before the word ([Completions.hasReceiver]): without one, the family members offered
+   * by their game names depend on the whole word, not only its start (`BatteryL` gives
+   * `Battery.Large`, `Bat` doesn't), so a client that keeps a list while the word grows, as Monaco
+   * does, must ask again rather than filter it. Runs as compiles do, one at a time. A request at
+   * the same text and index as the latest one gets that one's list again without analysing the
+   * text, as the IC10 Editor asks twice for each keystroke. If the analysis fails, the request is
+   * answered with InternalError.
    */
   private fun completion(params: JsonElement?): JsonElement {
     val (text, offset) = textAndOffset(params)
@@ -368,7 +373,7 @@ internal constructor(
               ?: complete(text, offset).also { lastCompletion = LastCompletion(text, offset, it) }
         }
     val items = JsonArray()
-    completions.forEachIndexed { index, completion ->
+    completions.items.forEachIndexed { index, completion ->
       items.add(
           JsonObject().apply {
             addProperty("label", completion.label)
@@ -380,33 +385,13 @@ internal constructor(
       )
     }
     return JsonObject().apply {
-      addProperty("isIncomplete", changesAsTyped(text, offset))
+      addProperty("isIncomplete", !completions.hasReceiver)
       add("items", items)
     }
   }
 
-  /**
-   * Whether the list at [offset] in [text] may change as the word there is typed, so a client that
-   * keeps a list while the word grows, as Monaco does, must ask again rather than filter it. With
-   * no dot before the word, the family members offered by their game names depend on the whole
-   * word, not only its start (`BatteryL` gives `Battery.Large`, `Bat` doesn't), so the list does.
-   * After a dot (`d0.`, `f().`), what can follow the receiver doesn't depend on the word. A dot in
-   * a number or a range (`1.`, `0..`) isn't one a receiver comes before.
-   */
-  private fun changesAsTyped(text: String, offset: Int): Boolean {
-    var start = offset
-    while (start > 0 && Character.isJavaIdentifierPart(text[start - 1])) start--
-    val before = text.substring(0, start).trimEnd()
-    if (!before.endsWith('.') || before.length < 2) return true
-    val dot = before.length - 1
-    if (before[dot - 1] == ')' || before[dot - 1] == ']') return false
-    var name = dot
-    while (name > 0 && Character.isJavaIdentifierPart(before[name - 1])) name--
-    return name == dot || before[name].isDigit()
-  }
-
   /** [completer]'s list, or an InternalError answer if it fails ([analysed]). */
-  private fun complete(text: String, offset: Int): List<Completion> =
+  private fun complete(text: String, offset: Int): Completions =
       analysed("Completion") { completer(text, offset) }
 
   /**

@@ -72,9 +72,9 @@ moment after typing stops:
   the names that start with what's typed, then, once three letters are typed, the SDK types with a
   word of their name or their game prefab names starting with it, in any case: typing `Console`
   lists `LedDisplay` (`StructureConsoleLED5`) and its sizes (`LedDisplay.Small`). The `Structure`
-  or `Item` a game name starts with doesn't count. Accepting the list (the editor's autocomplete key) types the
-  part that all the names starting with what's typed share; one found by its game name is there
-  to be read and typed. Until the compiler has started, nothing is listed.
+  or `Item` a game name starts with doesn't count. Accepting the list (the editor's autocomplete
+  key) types the part that all the names starting with what's typed share; one found by its game
+  name is there to be read and typed. Until the compiler has started, nothing is listed.
 - Resting the mouse on a name shows what it is: the class it was used on, its declaration
   (`var Text: String`), whether a logic type is read-only or write-only, and the SDK's
   description of it, where the SDK has one. An error's message, if the name has one, comes first.

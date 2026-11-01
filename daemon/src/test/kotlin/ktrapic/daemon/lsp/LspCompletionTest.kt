@@ -2,6 +2,7 @@ package ktrapic.daemon.lsp
 
 import com.google.common.truth.Truth.assertThat
 import com.google.gson.JsonObject
+import ktrapic.frontend.Completions
 import org.junit.jupiter.api.Test
 
 class LspCompletionTest {
@@ -53,7 +54,8 @@ class LspCompletionTest {
         ktrapic.frontend.Completion.Kind.entries.map {
           ktrapic.frontend.Completion(it.name.lowercase(), it, "")
         }
-    LspTestClient(completer = { _, _ -> completions }).use { client ->
+    LspTestClient(completer = { _, _ -> Completions(completions, hasReceiver = false) }).use {
+        client ->
       client.initialize()
       client.open(uri, "")
 
@@ -99,21 +101,58 @@ class LspCompletionTest {
   }
 
   @Test
-  fun `the list is complete only after a dot that follows a name or a bracket`() {
-    LspTestClient(completer = { _, _ -> emptyList() }).use { client ->
+  fun `the list is complete only where the analysis finds a receiver before the word`() {
+    LspTestClient().use { client ->
       client.initialize()
-      client.open(uri, "val a = Console\nval b = d0.Se\nval c = f().\nval d = 1.\nval e = 0..Co\n")
+      client.open(
+          uri,
+          listOf(
+                  "fun main() {",
+                  "  // Turn on the light.",
+                  "  Bat",
+                  "  // Turn on the light.",
+                  "  BatteryL",
+                  "  val s = \"Turn on d0.Se\"",
+                  "  d0.Se",
+                  "  val n = 1.co",
+                  "  val r = 0..Co",
+                  "}",
+              )
+              .joinToString("\n", postfix = "\n"),
+      )
+
+      fun result(line: Int, character: Int) =
+          client.complete(line, character)["result"].asJsonObject
+
+      fun incomplete(line: Int, character: Int) = result(line, character)["isIncomplete"].asBoolean
+
+      fun labels(line: Int, character: Int) =
+          result(line, character)["items"].asJsonArray.map { it.asJsonObject["label"].asString }
+
+      // A comment's sentence-ending dot is no receiver's, and a longer word adds to the list.
+      assertThat(incomplete(2, 5)).isTrue()
+      assertThat(labels(2, 5)).doesNotContain("Battery.Large")
+      assertThat(labels(4, 10)).contains("Battery.Large")
+      assertThat(incomplete(5, 24)).isTrue()
+      assertThat(incomplete(6, 7)).isFalse()
+      assertThat(incomplete(7, 14)).isFalse()
+      assertThat(incomplete(8, 15)).isTrue()
+    }
+  }
+
+  @Test
+  fun `isIncomplete follows whether the completer found a receiver, not the text`() {
+    var hasReceiver = true
+    LspTestClient(completer = { _, _ -> Completions(emptyList(), hasReceiver) }).use { client ->
+      client.initialize()
+      client.open(uri, "val a = Con\nd0.\n")
 
       fun incomplete(line: Int, character: Int) =
           client.complete(line, character)["result"].asJsonObject["isIncomplete"].asBoolean
 
-      assertThat(incomplete(0, 8)).isTrue()
-      assertThat(incomplete(0, 15)).isTrue()
-      assertThat(incomplete(1, 11)).isFalse()
-      assertThat(incomplete(1, 13)).isFalse()
-      assertThat(incomplete(2, 12)).isFalse()
-      assertThat(incomplete(3, 10)).isTrue()
-      assertThat(incomplete(4, 13)).isTrue()
+      assertThat(incomplete(0, 11)).isFalse()
+      hasReceiver = false
+      assertThat(incomplete(1, 3)).isTrue()
     }
   }
 
@@ -122,7 +161,7 @@ class LspCompletionTest {
     var given: Pair<String, Int>? = null
     LspTestClient(
             completer = { text, offset ->
-              emptyList<ktrapic.frontend.Completion>().also { given = text to offset }
+              Completions(emptyList(), hasReceiver = true).also { given = text to offset }
             }
         )
         .use { client ->
@@ -157,12 +196,15 @@ class LspCompletionTest {
     LspTestClient(
             completer = { _, _ ->
               if (calls++ == 0) throw AssertionError("boom")
-              listOf(
-                  ktrapic.frontend.Completion(
-                      "Setting",
-                      ktrapic.frontend.Completion.Kind.PROPERTY,
-                      "",
-                  )
+              Completions(
+                  listOf(
+                      ktrapic.frontend.Completion(
+                          "Setting",
+                          ktrapic.frontend.Completion.Kind.PROPERTY,
+                          "",
+                      )
+                  ),
+                  hasReceiver = true,
               )
             }
         )
@@ -186,7 +228,7 @@ class LspCompletionTest {
             completer = { _, _ ->
               calls.incrementAndGet()
               Thread.sleep(200)
-              emptyList()
+              Completions(emptyList(), hasReceiver = true)
             },
             compiler = { _ -> JsonObject() },
         )

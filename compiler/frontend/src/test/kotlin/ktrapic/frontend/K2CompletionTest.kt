@@ -10,7 +10,10 @@ class K2CompletionTest {
   private val sdkJar = File(Device::class.java.protectionDomain.codeSource.location.toURI())
 
   /** Completes at the `|` in [source]. */
-  private fun complete(source: String): List<Completion> {
+  private fun complete(source: String): List<Completion> = completions(source).items
+
+  /** Completes at the `|` in [source], with whether a receiver was found. */
+  private fun completions(source: String): Completions {
     val offset = source.indexOf('|')
     return K2Completion.complete(
         source.removeRange(offset, offset + 1),

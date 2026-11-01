@@ -32,7 +32,7 @@ class OfferedCompilesTest {
     fun complete(): List<Completion> {
       val source = before + line.replace("#", "0") + after
       val offset = source.indexOf('|')
-      return Compiler.complete(source.removeRange(offset, offset + 1), offset)
+      return Compiler.complete(source.removeRange(offset, offset + 1), offset).items
     }
   }
 
@@ -317,6 +317,7 @@ class OfferedCompilesTest {
   fun `every keyword offered compiles`() {
     val offered =
         Compiler.complete("val a = 1\n\n", 10)
+            .items
             .filter { it.kind == Completion.Kind.KEYWORD }
             .map { it.label }
 
@@ -329,7 +330,9 @@ class OfferedCompilesTest {
 
   private fun offered(source: String): List<String> {
     val offset = source.indexOf('|')
-    return Compiler.complete(source.removeRange(offset, offset + 1), offset).map { it.label }
+    return Compiler.complete(source.removeRange(offset, offset + 1), offset).items.map {
+      it.label
+    }
   }
 
   @Test

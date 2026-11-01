@@ -351,7 +351,7 @@ internal class ManualScheduler : Scheduler {
 internal class LspTestClient(
     val scheduler: Scheduler = ManualScheduler(),
     debounceMillis: Long = 150,
-    completer: (String, Int) -> List<ktrapic.frontend.Completion> = ktrapic.api.Compiler::complete,
+    completer: (String, Int) -> ktrapic.frontend.Completions = ktrapic.api.Compiler::complete,
     hoverer: (String, Int) -> ktrapic.frontend.Hover? = ktrapic.api.Compiler::hover,
     signer: (String, Int) -> ktrapic.frontend.SignatureHelp? = ktrapic.api.Compiler::signatureHelp,
     compiler: (String) -> JsonObject = Daemon::compile,

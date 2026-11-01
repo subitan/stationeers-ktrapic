@@ -7,7 +7,7 @@ import ktrapic.backend.FileOptions
 import ktrapic.backend.Lowered
 import ktrapic.backend.StackCalled
 import ktrapic.backend.TooManyRegistersException
-import ktrapic.frontend.Completion
+import ktrapic.frontend.Completions
 import ktrapic.frontend.Diagnostic
 import ktrapic.frontend.FrontendResult
 import ktrapic.frontend.Hover
@@ -293,7 +293,7 @@ object Compiler {
    * What could be written at [offset] (a `String` index) in [source], as a program compiles it:
    * against the SDK, with `ktrapic.*` imported. See [K2Completion].
    */
-  fun complete(source: String, offset: Int): List<Completion> =
+  fun complete(source: String, offset: Int): Completions =
       K2Completion.complete(source, offset, listOf(sdkJar()), listOf("ktrapic.*"))
 
   /** What the name at [offset] in [source] is, as a program compiles it. See [K2Hover]. */
