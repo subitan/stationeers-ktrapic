@@ -83,7 +83,10 @@ internal static class Program
             string text = meta.Element("Description")?.Value.Trim();
             if (string.IsNullOrEmpty(version) || string.IsNullOrEmpty(text))
             {
-                Console.Error.WriteLine($"{about} needs a Version and a Description: the item's description is made from them.");
+                string missing = string.IsNullOrEmpty(version)
+                    ? string.IsNullOrEmpty(text) ? "a Version and a Description" : "a Version"
+                    : "a Description";
+                Console.Error.WriteLine($"{about} needs {missing}: the item's description is made from its Version and Description.");
                 return 1;
             }
             // Headed by the version so the item's page says which version it holds; Steam has no
@@ -91,9 +94,10 @@ internal static class Program
             description = $"[b]Version {version}[/b]\n\n{text}";
             // Steam ignores a description of 8000 bytes or more (its limit counts the terminator)
             // and still reports the upload a success.
-            if (Encoding.UTF8.GetByteCount(description) >= 8000)
+            int bytes = Encoding.UTF8.GetByteCount(description);
+            if (bytes >= 8000)
             {
-                Console.Error.WriteLine($"{about}'s Description is too long: with its version header it's longer than Steam's 7999 bytes.");
+                Console.Error.WriteLine($"{about}'s Description is too long: {bytes} UTF-8 bytes with its version header, and Steam takes at most 7999.");
                 return 1;
             }
         }

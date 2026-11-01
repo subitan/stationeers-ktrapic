@@ -55,8 +55,11 @@ release is published it is private, for the maintainer's own testing.
 Every upload replaces the item's description with the staged `About.xml`'s, headed by its
 version (`X.Y.Z`, or `X.Y.Z.N` for a test build), since Steam has no version field and the change
 notes are on a tab of their own. So edit the description in `mod/About/About.xml`, not on the
-Workshop page: an edit made there is lost at the next upload. The title and tags stay as the
-item's first upload set them.
+Workshop page: an edit made there is lost at the next upload. Steam takes at most 7999 UTF-8
+bytes of description, version header included, and the uploader refuses a longer one, or an
+`About.xml` with no Version or Description. For a release that refusal comes only at step 4, after
+the GitHub release is published, and the fix is then a release of the next version. The title and
+tags stay as the item's first upload set them.
 
 ### Test builds on the Workshop
 
