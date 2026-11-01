@@ -32,6 +32,7 @@ fun main(args: Array<String>) {
 
   // Checked before anything is built or copied, so a run that can't finish changes nothing.
   if (request.localCompiler) localCompilerRefusal(System.getProperty("os.name"))?.let { fail(it) }
+  linkRefusal(request.modsDir)?.let { fail(it) }
   val project = workspace.resolve("mod/KTrapIC.csproj")
   val gameDir = gameDirectory(project)
   val config = gameDir?.resolve(CONFIG_FILE)

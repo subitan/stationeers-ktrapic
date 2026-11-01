@@ -222,7 +222,8 @@ needs `git submodule update --init` and Git LFS.
 
 To try a local compiler in game, install with `--local-compiler` on Windows (see
 [Installing](#installing)), or build it (`bazel build //daemon:ktrapic-daemon_deploy.jar`) and set
-`DaemonJarPath` to it yourself, as the game sees its path. The downloaded runtime runs it, unless `JavaPath` is set to a JDK 21's `bin/java.exe`.
+`DaemonJarPath` to it yourself, as the game sees its path. The downloaded runtime runs it, unless
+`JavaPath` is set to a JDK 21's `bin/java.exe`.
 
 ### Tests
 

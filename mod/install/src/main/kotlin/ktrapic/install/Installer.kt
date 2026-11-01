@@ -4,9 +4,12 @@ import java.io.File
 import java.io.IOException
 import java.nio.file.Files
 import java.nio.file.InvalidPathException
+import java.nio.file.LinkOption
+import java.nio.file.NoSuchFileException
 import java.nio.file.Path
 import java.nio.file.Paths
 import java.nio.file.StandardCopyOption.REPLACE_EXISTING
+import java.nio.file.attribute.BasicFileAttributes
 import kotlin.io.path.createDirectories
 import kotlin.io.path.deleteExisting
 import kotlin.io.path.deleteIfExists
@@ -66,6 +69,7 @@ fun checkModsDir(dir: Path) {
  * directory.
  */
 fun installPlugin(dll: Path, about: Path, modsDir: Path): Path {
+  linkRefusal(modsDir)?.let { throw IOException(it) }
   val target = modsDir.resolve("KTrapIC").createDirectories()
   Files.copy(dll, target.resolve(dll.name), REPLACE_EXISTING)
   val installedAbout = target.resolve("About")
@@ -74,6 +78,33 @@ fun installPlugin(dll: Path, about: Path, modsDir: Path): Path {
   }
   copyTree(about, installedAbout)
   return target
+}
+
+/**
+ * Why [installPlugin] won't install into [modsDir], or null if it will: `<modsDir>/KTrapIC` or its
+ * `About` directory is a symbolic link, a Windows junction or another reparse point. Replacing
+ * `About` deletes what is in it, which through a link would be the files it points at.
+ */
+fun linkRefusal(modsDir: Path): String? {
+  val link =
+      listOf(modsDir.resolve("KTrapIC"), modsDir.resolve("KTrapIC/About")).firstOrNull {
+        isLink(it)
+      } ?: return null
+  return "$link is a link, so installing would delete the files it points at: remove the link, " +
+      "and run this again."
+}
+
+/**
+ * Whether [path] is a symbolic link, or (as Java sees a Windows junction) some other special file.
+ */
+private fun isLink(path: Path): Boolean {
+  val attributes =
+      try {
+        Files.readAttributes(path, BasicFileAttributes::class.java, LinkOption.NOFOLLOW_LINKS)
+      } catch (e: NoSuchFileException) {
+        return false
+      }
+  return attributes.isSymbolicLink || attributes.isOther
 }
 
 /**

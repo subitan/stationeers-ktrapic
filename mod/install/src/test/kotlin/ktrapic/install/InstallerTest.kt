@@ -1,12 +1,15 @@
 package ktrapic.install
 
 import com.google.common.truth.Truth.assertThat
+import java.io.IOException
+import java.nio.file.Files
 import java.nio.file.Path
 import kotlin.io.path.createDirectories
 import kotlin.io.path.createFile
 import kotlin.io.path.exists
 import kotlin.io.path.readText
 import kotlin.io.path.writeText
+import org.junit.jupiter.api.Assumptions.assumeTrue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.io.TempDir
@@ -77,6 +80,55 @@ class InstallerTest {
     assertThat(pluginDir.resolve("About/About.xml").readText()).isEqualTo("<ModMetadata/>")
     assertThat(pluginDir.resolve("About/images/thumb.png").readText()).isEqualTo("png")
     assertThat(pluginDir.resolve("About/old.png").exists()).isFalse()
+  }
+
+  @Test
+  fun `a linked About directory is refused, and what it points at is kept`() {
+    val (dll, about, mods) = buildAndMods()
+    val linked = tmp.resolve("checkout/About").createDirectories()
+    linked.resolve("About.xml").writeText("<ModMetadata/>")
+    val link = mods.resolve("KTrapIC").createDirectories().resolve("About")
+    try {
+      Files.createSymbolicLink(link, linked)
+    } catch (e: Exception) {
+      assumeTrue(false, "can't create a symbolic link here: $e")
+    }
+
+    assertThat(linkRefusal(mods)).contains("is a link")
+    assertThrows<IOException> { installPlugin(dll, about, mods) }
+    assertThat(linked.resolve("About.xml").exists()).isTrue()
+  }
+
+  @Test
+  fun `a junction is refused`() {
+    assumeTrue(System.getProperty("os.name").startsWith("Windows"), "junctions are Windows'")
+    val (dll, about, mods) = buildAndMods()
+    val linked = tmp.resolve("checkout").createDirectories()
+    linked.resolve("KTrapIC.dll").writeText("kept")
+    val link = mods.resolve("KTrapIC")
+    val mklink = ProcessBuilder("cmd", "/c", "mklink", "/J", "$link", "$linked")
+    assumeTrue(mklink.inheritIO().start().waitFor() == 0, "mklink /J failed")
+
+    assertThat(linkRefusal(mods)).contains("is a link")
+    assertThrows<IOException> { installPlugin(dll, about, mods) }
+    assertThat(linked.resolve("KTrapIC.dll").readText()).isEqualTo("kept")
+  }
+
+  @Test
+  fun `an install that isn't linked isn't refused`() {
+    val mods = tmp.resolve("mods").createDirectories()
+    assertThat(linkRefusal(mods)).isNull()
+    mods.resolve("KTrapIC/About").createDirectories()
+    assertThat(linkRefusal(mods)).isNull()
+  }
+
+  /** A built plugin (its dll and About directory) and an empty mods directory. */
+  private fun buildAndMods(): Triple<Path, Path, Path> {
+    val build = tmp.resolve("build").createDirectories()
+    val dll = build.resolve("KTrapIC.dll").apply { writeText("new dll") }
+    val about = build.resolve("About").createDirectories()
+    about.resolve("About.xml").writeText("<ModMetadata/>")
+    return Triple(dll, about, tmp.resolve("mods").createDirectories())
   }
 
   @Test
