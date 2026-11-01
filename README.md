@@ -123,11 +123,13 @@ compiler's analysis of a document's current text, it answers `textDocument/compl
 could be written at a position, `textDocument/hover` with the declaration of the name there, its
 class, whether it is read-only or write-only, and the SDK's KDoc for it, as plain text, and
 `textDocument/signatureHelp` with the functions the call around a position could be to. A
-completion of an SDK type has a `filterText` of its name and the game's names of its prefabs, so
-typing `Console` or `ConsoleLED` finds `LedDisplay` (`StructureConsoleLED5`, ...). With no dot
-before it, a word of three letters or more that starts a later word of a family member's game
-name also lists that member by its qualified name (`LedDisplay.Small`); until the word is that
-long, the list is marked `isIncomplete`, so the editor asks again as it grows. It answers
+completion of an SDK type has a `filterText` of its name and the game's names of its prefabs,
+less the `Structure` or `Item` they start with, so typing `Console` or `ConsoleLED` finds
+`LedDisplay` (`LedDisplay ConsoleLED5 ...`, from `StructureConsoleLED5`). With no dot before it, a
+word of three letters or more that starts a word of a family member's game name also lists that
+member by its qualified name (`LedDisplay.Small`), unless it starts the family's own name; as a
+longer word can bring members a shorter one didn't, a list with no dot before the word is marked
+`isIncomplete`, so the editor asks again as it grows. It answers
 `textDocument/semanticTokens/full` with no tokens, as the IC10 Editor asks for them after every
 change. See `daemon/src/main/kotlin/ktrapic/daemon/lsp/LspServer.kt`. The IC10 Editor plugin
 speaks this mode (see [mod/README.md](mod/README.md#how-the-plugin-talks-to-the-compiler)).

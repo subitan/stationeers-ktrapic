@@ -75,30 +75,45 @@ class LspCompletionTest {
       val items = result["items"].asJsonArray.map { it.asJsonObject }
       val led = items.single { it["label"].asString == "LedDisplay" }
       assertThat(led["filterText"].asString)
-          .isEqualTo(
-              "LedDisplay StructureConsoleLED5 StructureConsoleLED1x2 StructureConsoleLED1x3"
-          )
+          .isEqualTo("LedDisplay ConsoleLED5 ConsoleLED1x2 ConsoleLED1x3")
       assertThat(led["detail"].asString).isEqualTo("ktrapic.LedDisplay")
       val small = items.single { it["label"].asString == "LedDisplay.Small" }
-      assertThat(small["filterText"].asString).isEqualTo("LedDisplay.Small StructureConsoleLED5")
+      assertThat(small["filterText"].asString).isEqualTo("LedDisplay.Small ConsoleLED5")
       assertThat(items.single { it["label"].asString == "val" }.has("filterText")).isFalse()
-      assertThat(result["isIncomplete"].asBoolean).isFalse()
     }
   }
 
   @Test
-  fun `the list is incomplete while a word with no dot before it is too short for game names`() {
+  fun `a list for a word with no dot before it is incomplete, as a longer word can add to it`() {
+    LspTestClient().use { client ->
+      client.initialize()
+      client.open(uri, "val a = Bat\nval b = BatteryL\n")
+
+      val bat = client.complete(0, 11)["result"].asJsonObject
+      assertThat(bat["isIncomplete"].asBoolean).isTrue()
+      assertThat(client.complete(0, 11).items().map { it["label"].asString })
+          .doesNotContain("Battery.Large")
+      assertThat(client.complete(1, 16).items().map { it["label"].asString })
+          .contains("Battery.Large")
+    }
+  }
+
+  @Test
+  fun `the list is complete only after a dot that follows a name or a bracket`() {
     LspTestClient(completer = { _, _ -> emptyList() }).use { client ->
       client.initialize()
-      client.open(uri, "val a = Co\nval b = d0.Se\n")
+      client.open(uri, "val a = Console\nval b = d0.Se\nval c = f().\nval d = 1.\nval e = 0..Co\n")
 
       fun incomplete(line: Int, character: Int) =
           client.complete(line, character)["result"].asJsonObject["isIncomplete"].asBoolean
 
       assertThat(incomplete(0, 8)).isTrue()
-      assertThat(incomplete(0, 10)).isTrue()
+      assertThat(incomplete(0, 15)).isTrue()
       assertThat(incomplete(1, 11)).isFalse()
       assertThat(incomplete(1, 13)).isFalse()
+      assertThat(incomplete(2, 12)).isFalse()
+      assertThat(incomplete(3, 10)).isTrue()
+      assertThat(incomplete(4, 13)).isTrue()
     }
   }
 

@@ -15,7 +15,6 @@ import ktrapic.api.Compiler
 import ktrapic.daemon.Daemon
 import ktrapic.frontend.Completion
 import ktrapic.frontend.Hover
-import ktrapic.frontend.K2Completion
 import ktrapic.frontend.SignatureHelp
 
 /** JSON-RPC's and LSP's error codes. */
@@ -354,13 +353,12 @@ internal constructor(
    * lists them). Each item's `sortText` keeps [completer]'s order, `detail` is its declaration
    * (such as `var Setting: Double`), and its `kind` is one the IC10 Editor can show: it colours an
    * item by indexing a 24-colour table with the kind, so Operator (24) and TypeParameter (25) are
-   * never sent. An SDK type's item has a `filterText` of its label and the game's names of its
-   * prefabs (`LedDisplay StructureConsoleLED5 StructureConsoleLED1x2 StructureConsoleLED1x3`), so a
-   * client's filter finds it by either; the list is `isIncomplete` while the word typed is too
-   * short for family members to be offered by their game names ([gameNamesPending]). Runs as
-   * compiles do, one at a time. A request at the same text and index as the latest one gets that
-   * one's list again without analysing the text, as the IC10 Editor asks twice for each keystroke.
-   * If the analysis fails, the request is answered with InternalError.
+   * never sent. An SDK type's item has a `filterText` of its label and the meaningful words of the
+   * game's names of its prefabs (`LedDisplay ConsoleLED5 ConsoleLED1x2 ConsoleLED1x3`), so a
+   * client's filter finds it by either. The list is `isIncomplete` unless the word follows a dot
+   * ([changesAsTyped]). Runs as compiles do, one at a time. A request at the same text and index as
+   * the latest one gets that one's list again without analysing the text, as the IC10 Editor asks
+   * twice for each keystroke. If the analysis fails, the request is answered with InternalError.
    */
   private fun completion(params: JsonElement?): JsonElement {
     val (text, offset) = textAndOffset(params)
@@ -382,22 +380,29 @@ internal constructor(
       )
     }
     return JsonObject().apply {
-      addProperty("isIncomplete", gameNamesPending(text, offset))
+      addProperty("isIncomplete", changesAsTyped(text, offset))
       add("items", items)
     }
   }
 
   /**
-   * Whether the list at [offset] in [text] may grow as the word there is typed: with no dot before
-   * it, a word shorter than [K2Completion.GAME_NAME_MIN_LENGTH] gets no family members by their
-   * game names, which a longer one may. A client that keeps a list while the word grows, as Monaco
-   * does, asks again until then.
+   * Whether the list at [offset] in [text] may change as the word there is typed, so a client that
+   * keeps a list while the word grows, as Monaco does, must ask again rather than filter it. With
+   * no dot before the word, the family members offered by their game names depend on the whole
+   * word, not only its start (`BatteryL` gives `Battery.Large`, `Bat` doesn't), so the list does.
+   * After a dot (`d0.`, `f().`), what can follow the receiver doesn't depend on the word. A dot in
+   * a number or a range (`1.`, `0..`) isn't one a receiver comes before.
    */
-  private fun gameNamesPending(text: String, offset: Int): Boolean {
+  private fun changesAsTyped(text: String, offset: Int): Boolean {
     var start = offset
     while (start > 0 && Character.isJavaIdentifierPart(text[start - 1])) start--
-    val afterDot = text.substring(0, start).trimEnd().endsWith('.')
-    return !afterDot && offset - start < K2Completion.GAME_NAME_MIN_LENGTH
+    val before = text.substring(0, start).trimEnd()
+    if (!before.endsWith('.') || before.length < 2) return true
+    val dot = before.length - 1
+    if (before[dot - 1] == ')' || before[dot - 1] == ']') return false
+    var name = dot
+    while (name > 0 && Character.isJavaIdentifierPart(before[name - 1])) name--
+    return name == dot || before[name].isDigit()
   }
 
   /** [completer]'s list, or an InternalError answer if it fails ([analysed]). */

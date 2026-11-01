@@ -74,11 +74,14 @@ data class Completion(
     val prefabs: List<String> = emptyList(),
 ) {
   /**
-   * What an editor matches the typed word against: the label and then [prefabs], space-separated,
-   * or null for an item with no prefabs, which is matched on its label alone.
+   * What an editor matches the typed word against: the label and then the meaningful words of each
+   * of [prefabs] ([K2Completion.gameNameWords]), space-separated (`LedDisplay ConsoleLED5 ...`), or
+   * null for an item with no prefabs, which is matched on its label alone.
    */
   val filterText: String?
-    get() = if (prefabs.isEmpty()) null else (listOf(label) + prefabs).joinToString(" ")
+    get() =
+        if (prefabs.isEmpty()) null
+        else (listOf(label) + prefabs.map(K2Completion::gameNameWords)).joinToString(" ")
 
   enum class Kind {
     LOCAL,
@@ -104,9 +107,11 @@ data class Completion(
  *
  * An SDK type's item carries the game's names of its prefabs ([Completion.prefabs]). Where no
  * receiver is written and the word typed is at least [GAME_NAME_MIN_LENGTH] letters, a family's
- * member whose game name has a word starting with it, other than its first, is offered too, by its
- * qualified name (`LedDisplay.Small` for `Console`, from `StructureConsoleLED5`): unless the word
- * starts the family's own name, when the family is the item to pick.
+ * member is offered too, by its qualified name, when a word of its game name's [gameNameWords]
+ * starts with the typed word ([wordStarts]): `LedDisplay.Small` for `Console`, from
+ * `StructureConsoleLED5`. Not when the typed word starts the family's own name, as the family is
+ * then the item to pick, so a longer word can bring members a shorter one doesn't (`BatteryL` gives
+ * `Battery.Large`, `Bat` doesn't).
  *
  * The program is analysed with a placeholder name in place of the word at the caret, so the
  * reference there is the only one the analysis need not resolve. Errors elsewhere in the program
@@ -269,21 +274,45 @@ object K2Completion {
   const val GAME_NAME_MIN_LENGTH = 3
 
   /**
-   * Whether a word of [name], other than its first, starts with [word], ignoring case: a word
-   * starts at a capital after a lower-case letter or a digit, at a digit after a letter, or after
-   * anything that isn't a letter or a digit. `Console`, `ConsoleLED` and `LED` start words of
-   * `StructureConsoleLED5`; `Structure`, which most game names start with, isn't counted.
+   * The words game prefab names start with to say what kind of thing they are, which nearly all of
+   * them do: matched on, they would find nearly every SDK type.
    */
-  fun laterWordStarts(name: String, word: String): Boolean =
-      word.isNotEmpty() &&
-          (1 until name.length).any { wordStartsAt(name, it) && name.startsWith(word, it, true) }
+  private val GAME_NAME_KINDS = listOf("Structure", "Item")
 
-  private fun wordStartsAt(name: String, at: Int): Boolean {
+  /**
+   * [prefab], a game prefab name, without the word of [GAME_NAME_KINDS] it starts with, if it does:
+   * `ConsoleLED5` for `StructureConsoleLED5`, `SDBSilo` for `StructureSDBSilo`.
+   */
+  fun gameNameWords(prefab: String): String {
+    val kind = GAME_NAME_KINDS.firstOrNull {
+      prefab.length > it.length && prefab.startsWith(it) && wordStartsAt(prefab, it.length)
+    }
+    return if (kind == null) prefab else prefab.substring(kind.length)
+  }
+
+  /**
+   * Whether a word of [text] starts with [word], ignoring case. A word starts at the start of the
+   * text, at a letter or digit after anything else (a space, a dot), at a capital after a
+   * lower-case letter or a digit, at the last capital of a run of them followed by a lower-case
+   * letter (`Silo` in `SDBSilo`), or at a digit after a letter. `Console`, `consoleLED` and `led`
+   * start words of `LedDisplay ConsoleLED5`; `onsole` and `ED5` don't. The mod's
+   * `Completions.WordStarts` is the same rule.
+   */
+  fun wordStarts(text: String, word: String): Boolean =
+      word.isNotEmpty() &&
+          (0..text.length - word.length).any {
+            wordStartsAt(text, it) && text.startsWith(word, it, ignoreCase = true)
+          }
+
+  private fun wordStartsAt(text: String, at: Int): Boolean {
+    val c = text[at]
+    if (!c.isLetterOrDigit()) return false
     if (at == 0) return true
-    val c = name[at]
-    val before = name[at - 1]
-    if (!before.isLetterOrDigit()) return c.isLetterOrDigit()
-    return c.isUpperCase() && !before.isUpperCase() || c.isDigit() && before.isLetter()
+    val before = text[at - 1]
+    if (!before.isLetterOrDigit()) return true
+    if (c.isDigit()) return before.isLetter()
+    if (!c.isUpperCase()) return false
+    return !before.isUpperCase() || text.getOrNull(at + 1)?.isLowerCase() == true
   }
 
   /** The keywords a KTrapIC program can use. */
@@ -526,8 +555,8 @@ object K2Completion {
     }
 
     /**
-     * The SDK families' members whose game names have a word, other than the first, that starts
-     * with [typed], by their qualified names (`LedDisplay.Small`), when [typed] is at least
+     * The SDK families' members with a word of their game name's [gameNameWords] that starts with
+     * [typed], by their qualified names (`LedDisplay.Small`), when [typed] is at least
      * [GAME_NAME_MIN_LENGTH] long and doesn't start the family's own name. See [K2Completion].
      */
     private fun membersByGameName(): List<Completion> {
@@ -545,7 +574,7 @@ object K2Completion {
               }
               familyMembers(family).mapNotNull { member ->
                 val prefab = prefabNameOf(member) ?: return@mapNotNull null
-                if (!laterWordStarts(prefab, typed)) return@mapNotNull null
+                if (!wordStarts(gameNameWords(prefab), typed)) return@mapNotNull null
                 classifier(member)?.copy(label = nameOf(member.classId))
               }
             }

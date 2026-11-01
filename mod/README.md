@@ -69,9 +69,10 @@ moment after typing stops:
   locals, parameters and functions in scope, and the SDK's names. A dot typed after a name
   lists them too (`d0.`, `PresenceSensor.`), at the end of a line or in the middle of one. Of
   Kotlin's own functions, only those KTrapIC compiles are listed. The list shows at most 20 of
-  the names that start with what's typed, then the SDK types whose game prefab names have a word
-  starting with it, in any case: typing `Console` lists `LedDisplay` (`StructureConsoleLED5`) and
-  its sizes (`LedDisplay.Small`). Accepting the list (the editor's autocomplete key) types the
+  the names that start with what's typed, then, once three letters are typed, the SDK types with a
+  word of their name or their game prefab names starting with it, in any case: typing `Console`
+  lists `LedDisplay` (`StructureConsoleLED5`) and its sizes (`LedDisplay.Small`). The `Structure`
+  or `Item` a game name starts with doesn't count. Accepting the list (the editor's autocomplete key) types the
   part that all the names starting with what's typed share; one found by its game name is there
   to be read and typed. Until the compiler has started, nothing is listed.
 - Resting the mouse on a name shows what it is: the class it was used on, its declaration

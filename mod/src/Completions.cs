@@ -9,8 +9,8 @@ namespace KTrapIC
     /// One of the daemon's completions (an LSP <c>CompletionItem</c>): a name that could go at the
     /// caret, what kind of thing it is (an LSP <c>CompletionItemKind</c>), its declaration (such as
     /// <c>var Setting: Double</c>), where it sorts, and, for an SDK type, what it is also found by:
-    /// its label and the game's names of its prefabs, space-separated
-    /// (<c>LedDisplay StructureConsoleLED5 ...</c>).
+    /// its label and the meaningful words of the game's names of its prefabs, space-separated
+    /// (<c>LedDisplay ConsoleLED5 ...</c>, from <c>StructureConsoleLED5</c>).
     /// </summary>
     public sealed class Completion
     {
@@ -23,9 +23,10 @@ namespace KTrapIC
 
     /// <summary>
     /// What the completion popup shows for the word being typed: at most <see cref="Completions.MaxShown"/>
-    /// of the completions that start with it, how many matched in all, and the text that accepting
-    /// inserts, which is what all of them share past the word (the IC10 Editor inserts that, as it
-    /// has no way to pick one). Null when nothing is worth showing.
+    /// of the completions that start with it and then of those found by their <c>filterText</c>
+    /// (<see cref="Completions.Choose"/>), how many matched in all, and the text that accepting
+    /// inserts, which is what those starting with the word share past it (the IC10 Editor inserts
+    /// that, as it has no way to pick one). Null when nothing is worth showing.
     /// </summary>
     public sealed class CompletionChoice
     {
@@ -59,6 +60,13 @@ namespace KTrapIC
     {
         /// <summary>How many completions the popup lists.</summary>
         public const int MaxShown = 20;
+
+        /// <summary>
+        /// How long the word typed must be for completions to be found by their <c>filterText</c>:
+        /// a shorter one would find most SDK types. The daemon offers family members by their game
+        /// names from the same length.
+        /// </summary>
+        public const int FilterTextMinLength = 3;
 
         /// <summary>The identifier that ends at <paramref name="column"/> of <paramref name="line"/>, or "".</summary>
         public static string WordBefore(string line, int column)
@@ -103,10 +111,11 @@ namespace KTrapIC
 
         /// <summary>
         /// The completions to show for <paramref name="word"/>: those starting with it (as typed,
-        /// case and all), in the daemon's order, then those found by their <c>filterText</c>
-        /// instead, the SDK types whose game names have a word starting with it, ignoring case
-        /// (<c>LedDisplay</c> for <c>Console</c>, from <c>StructureConsoleLED5</c>; see
-        /// <see cref="WordStarts"/>), and not those starting with <c>_</c>. Null if none match, or
+        /// case and all), in the daemon's order, then, for a word of at least
+        /// <see cref="FilterTextMinLength"/> letters, those found by their <c>filterText</c>
+        /// instead: the SDK types with a word of their name or their game names starting with it,
+        /// ignoring case (<c>LedDisplay</c> for <c>Console</c>, from <c>ConsoleLED5</c>; see
+        /// <see cref="WordStarts"/>). Not those starting with <c>_</c>. Null if none match, or
         /// the only one is the word itself. What accepting inserts is what those starting with the
         /// word share past it: the editor can only add to the word, not replace it.
         /// </summary>
@@ -120,7 +129,7 @@ namespace KTrapIC
                     continue;
                 if (c.label.StartsWith(word, StringComparison.Ordinal))
                     named.Add(c);
-                else if (word.Length > 0 && c.filterText != null && WordStarts(c.filterText, word))
+                else if (word.Length >= FilterTextMinLength && c.filterText != null && WordStarts(c.filterText, word))
                     found.Add(c);
             }
             var matching = named.Concat(found).ToList();
@@ -144,13 +153,17 @@ namespace KTrapIC
 
         /// <summary>
         /// Whether a word of <paramref name="text"/> starts with <paramref name="word"/>, ignoring
-        /// case: a word starts at the start of the text, after anything that isn't a letter or a
-        /// digit (a space, a dot), at a capital after a lower-case letter or a digit, or at a digit
-        /// after a letter. <c>Console</c>, <c>ConsoleLED</c> and <c>led</c> start words of
-        /// <c>StructureConsoleLED5</c>; <c>onsole</c> doesn't.
+        /// case. A word starts at the start of the text, at a letter or digit after anything else
+        /// (a space, a dot), at a capital after a lower-case letter or a digit, at the last capital
+        /// of a run of them followed by a lower-case letter (<c>Silo</c> in <c>SDBSilo</c>), or at
+        /// a digit after a letter. <c>Console</c>, <c>consoleLED</c> and <c>led</c> start words of
+        /// <c>LedDisplay ConsoleLED5</c>; <c>onsole</c> and <c>ED5</c> don't. The daemon's
+        /// <c>K2Completion.wordStarts</c> is the same rule.
         /// </summary>
         public static bool WordStarts(string text, string word)
         {
+            if (word.Length == 0)
+                return false;
             for (int at = 0; at + word.Length <= text.Length; at++)
             {
                 if (WordStartsAt(text, at) && string.Compare(text, at, word, 0, word.Length, StringComparison.OrdinalIgnoreCase) == 0)
@@ -169,7 +182,11 @@ namespace KTrapIC
             char before = text[at - 1];
             if (!char.IsLetterOrDigit(before))
                 return true;
-            return (char.IsUpper(c) && !char.IsUpper(before)) || (char.IsDigit(c) && char.IsLetter(before));
+            if (char.IsDigit(c))
+                return char.IsLetter(before);
+            if (!char.IsUpper(c))
+                return false;
+            return !char.IsUpper(before) || (at + 1 < text.Length && char.IsLower(text[at + 1]));
         }
     }
 }

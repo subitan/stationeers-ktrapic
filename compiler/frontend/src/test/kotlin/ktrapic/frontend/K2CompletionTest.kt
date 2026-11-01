@@ -396,8 +396,7 @@ class K2CompletionTest {
     val led = items.single { it.label == "LedDisplay" }
     assertThat(led.prefabs)
         .containsExactly("StructureConsoleLED5", "StructureConsoleLED1x2", "StructureConsoleLED1x3")
-    assertThat(led.filterText)
-        .isEqualTo("LedDisplay StructureConsoleLED5 StructureConsoleLED1x2 StructureConsoleLED1x3")
+    assertThat(led.filterText).isEqualTo("LedDisplay ConsoleLED5 ConsoleLED1x2 ConsoleLED1x3")
     assertThat(led.detail).isEqualTo("ktrapic.LedDisplay")
     assertThat(items.single { it.label == "Color" }.prefabs).isEmpty()
     assertThat(items.single { it.label == "Color" }.filterText).isNull()
@@ -411,7 +410,7 @@ class K2CompletionTest {
   }
 
   @Test
-  fun `a family's members are offered by a later word of their game names`() {
+  fun `a family's members are offered by a word of their game names`() {
     val items = complete("val a = Console|\n")
 
     val small = items.single { it.label == "LedDisplay.Small" }
@@ -425,7 +424,7 @@ class K2CompletionTest {
   }
 
   @Test
-  fun `a family's members are not offered by game names for a short word, the first word, or the family's own name`() {
+  fun `a family's members are not offered by game names for a short word, a structure, or the family's own name`() {
     assertThat(labels("val a = Co|\n").filter { '.' in it }).isEmpty()
     assertThat(labels("val a = Structure|\n").filter { '.' in it }).isEmpty()
     assertThat(labels("val a = Led|\n")).doesNotContain("LedDisplay.Small")
@@ -433,13 +432,70 @@ class K2CompletionTest {
   }
 
   @Test
-  fun `a later word of a game name starts at a capital, a digit or after a separator`() {
-    assertThat(K2Completion.laterWordStarts("StructureConsoleLED5", "Console")).isTrue()
-    assertThat(K2Completion.laterWordStarts("StructureConsoleLED5", "consoleled")).isTrue()
-    assertThat(K2Completion.laterWordStarts("StructureConsoleLED5", "LED")).isTrue()
-    assertThat(K2Completion.laterWordStarts("StructureConsoleLED1x2", "1x2")).isTrue()
-    assertThat(K2Completion.laterWordStarts("StructureConsoleLED5", "Structure")).isFalse()
-    assertThat(K2Completion.laterWordStarts("StructureConsoleLED5", "onsole")).isFalse()
-    assertThat(K2Completion.laterWordStarts("StructureConsoleLED5", "ED")).isFalse()
+  fun `a longer word brings members its shorter start withheld for the family's own name`() {
+    assertThat(labels("val a = Bat|\n")).doesNotContain("Battery.Large")
+    assertThat(labels("val a = BatteryL|\n")).contains("Battery.Large")
+  }
+
+  @Test
+  fun `a family's members are offered by the word after an acronym in their game names`() {
+    assertThat(labels("val a = Silo|\n")).contains("ItemStorage.SdbSilo")
+    assertThat(labels("val a = Hopper|\n"))
+        .containsAtLeast("SDBHopper.Standard", "SDBHopper.Advanced")
+  }
+
+  @Test
+  fun `the start of a game name that says it is a structure or an item finds nothing`() {
+    /** The items a client finds for [word] by their filterText and not by their label. */
+    fun found(word: String) =
+        complete("val a = $word|\n")
+            .filter { item ->
+              !item.label.startsWith(word) &&
+                  item.filterText?.let { K2Completion.wordStarts(it, word) } == true
+            }
+            .map { it.label }
+
+    for (word in listOf("Str", "Struct", "Ite")) {
+      assertWithMessage(word).that(found(word)).isEmpty()
+    }
+    // `St` finds the few types with a word such as Storage or Station in a game name, not the
+    // hundreds whose game names start with Structure.
+    assertThat(found("St")).containsAtLeast("ItemStorage", "WeatherStation")
+    assertThat(found("St").size).isLessThan(20)
+  }
+
+  @Test
+  fun `a game name's words leave out the word saying it is a structure or an item`() {
+    assertThat(K2Completion.gameNameWords("StructureConsoleLED5")).isEqualTo("ConsoleLED5")
+    assertThat(K2Completion.gameNameWords("StructureSDBSilo")).isEqualTo("SDBSilo")
+    assertThat(K2Completion.gameNameWords("ItemBatteryCellLarge")).isEqualTo("BatteryCellLarge")
+    assertThat(K2Completion.gameNameWords("Landingpad_GasConnectorInwardPiece"))
+        .isEqualTo("Landingpad_GasConnectorInwardPiece")
+    assertThat(K2Completion.gameNameWords("Itemised")).isEqualTo("Itemised")
+  }
+
+  /** The same examples as the mod's `CompletionsTest.WordStartsAtACapitalADigitOrASeparator`. */
+  @Test
+  fun `a word starts at a capital, a digit or after a separator`() {
+    val examples =
+        listOf(
+            Triple("LedDisplay ConsoleLED5", "Console", true),
+            Triple("LedDisplay ConsoleLED5", "consoleLED", true),
+            Triple("LedDisplay ConsoleLED5", "led", true),
+            Triple("LedDisplay ConsoleLED5", "display", true),
+            Triple("LedDisplay.Small ConsoleLED5", "Small", true),
+            Triple("LedDisplay ConsoleLED1x2", "1x2", true),
+            Triple("ItemStorage.SdbSilo SDBSilo", "Silo", true),
+            Triple("SDBHopper.Standard SDBHopper", "Hopper", true),
+            Triple("LedDisplay ConsoleLED5", "onsole", false),
+            Triple("LedDisplay ConsoleLED5", "ED5", false),
+            Triple("LedDisplay ConsoleLED5", "Display ConsoleX", false),
+            Triple("LedDisplay ConsoleLED5", "", false),
+        )
+    for ((text, word, starts) in examples) {
+      assertWithMessage("'$word' in '$text'")
+          .that(K2Completion.wordStarts(text, word))
+          .isEqualTo(starts)
+    }
   }
 }
