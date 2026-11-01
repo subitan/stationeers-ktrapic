@@ -75,10 +75,10 @@ internal static class Program
                 Console.Error.WriteLine($"Couldn't read {about}: {e.Message}");
                 return 1;
             }
-            string title = Arg("--title") ?? meta.Element("Name")?.Value.Trim();
+            string title = string.IsNullOrWhiteSpace(Arg("--title")) ? meta.Element("Name")?.Value.Trim() : Arg("--title");
             if (string.IsNullOrWhiteSpace(title))
             {
-                Console.Error.WriteLine($"The item needs a title: a --title that isn't blank, or else a Name in {about}.");
+                Console.Error.WriteLine($"The item needs a title: {about} has no Name, and there's no --title.");
                 return 1;
             }
             string preview = Arg("--preview") ?? Path.Combine(content, "About", "Preview.png");
