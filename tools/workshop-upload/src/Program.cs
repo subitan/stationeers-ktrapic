@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using Steamworks;
@@ -13,11 +14,13 @@ using Steamworks.Ugc;
 ///   WorkshopUpload --item ID --content DIR [--preview PNG] --note TEXT [--visibility private|friends|public]
 ///   WorkshopUpload --item ID --visibility private|friends|public
 ///   WorkshopUpload --create --content DIR [--title TEXT] [--preview PNG] --note TEXT [--visibility private|friends|public]
-/// --check only reads the item's details; nothing changes. An update sets only the content, preview,
-/// change note and visibility; the title, description and tags stay as they are. --create makes a
-/// new item, as the game's publisher does, from DIR/About/About.xml's name (or --title),
-/// description and tags, with DIR/About/Preview.png (or --preview) as its preview, and prints the
-/// new item's ID. Every upload is private unless --visibility says otherwise.
+/// --check only reads the item's details; nothing changes. An update sets the content, preview,
+/// change note and visibility, and replaces the description with DIR/About/About.xml's, headed by
+/// its version; the title and tags stay as they are. --create makes a new item, as the game's
+/// publisher does, from About.xml's name (or --title), description (headed by its version, as an
+/// update's is) and tags, with DIR/About/Preview.png (or --preview) as its preview, and prints the
+/// new item's ID. --visibility alone changes nothing else. Every upload is private unless
+/// --visibility says otherwise.
 /// </summary>
 internal static class Program
 {
@@ -60,12 +63,13 @@ internal static class Program
             return 2;
         }
 
-        // A new item's details are read before attaching to Steam, so a bad About.xml changes nothing.
+        // The item's details are read before attaching to Steam, so a bad About.xml changes nothing.
         Editor editor = default;
-        if (create)
+        XElement meta = null;
+        string description = null;
+        if (content != null && !check && !visibilityOnly)
         {
             string about = Path.Combine(content, "About", "About.xml");
-            XElement meta;
             try
             {
                 meta = XDocument.Load(about).Root;
@@ -75,6 +79,31 @@ internal static class Program
                 Console.Error.WriteLine($"Couldn't read {about}: {e.Message}");
                 return 1;
             }
+            string version = meta.Element("Version")?.Value.Trim();
+            string text = meta.Element("Description")?.Value.Trim();
+            if (string.IsNullOrEmpty(version) || string.IsNullOrEmpty(text))
+            {
+                string missing = string.IsNullOrEmpty(version)
+                    ? string.IsNullOrEmpty(text) ? "a Version and a Description" : "a Version"
+                    : "a Description";
+                Console.Error.WriteLine($"{about} needs {missing}: the item's description is made from its Version and Description.");
+                return 1;
+            }
+            // Headed by the version so the item's page says which version it holds; Steam has no
+            // version field of its own.
+            description = $"[b]Version {version}[/b]\n\n{text}";
+            // Steam ignores a description of 8000 bytes or more (its limit counts the terminator)
+            // and still reports the upload a success.
+            int bytes = Encoding.UTF8.GetByteCount(description);
+            if (bytes >= 8000)
+            {
+                Console.Error.WriteLine($"{about}'s Description is too long: {bytes} UTF-8 bytes with its version header, and Steam takes at most 7999.");
+                return 1;
+            }
+        }
+        if (create)
+        {
+            string about = Path.Combine(content, "About", "About.xml");
             string title = string.IsNullOrWhiteSpace(Arg("--title")) ? meta.Element("Name")?.Value.Trim() : Arg("--title");
             if (string.IsNullOrWhiteSpace(title))
             {
@@ -89,7 +118,7 @@ internal static class Program
             }
             editor = Editor.NewCommunityFile
                 .WithTitle(title)
-                .WithDescription(meta.Element("Description")?.Value.Trim() ?? "")
+                .WithDescription(description)
                 .WithContent(Path.GetFullPath(content))
                 .WithPreviewFile(Path.GetFullPath(preview))
                 .WithChangeLog(note);
@@ -131,7 +160,7 @@ internal static class Program
 
                 editor = new Editor(item);
                 if (!visibilityOnly)
-                    editor = editor.WithContent(Path.GetFullPath(content)).WithChangeLog(note);
+                    editor = editor.WithContent(Path.GetFullPath(content)).WithDescription(description).WithChangeLog(note);
                 string preview = Arg("--preview");
                 if (preview != null)
                     editor = editor.WithPreviewFile(Path.GetFullPath(preview));

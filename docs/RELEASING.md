@@ -52,6 +52,15 @@ The Workshop item is
 `WorkshopHandle` in `mod/About/About.xml`, so every release updates that item. Until the first
 release is published it is private, for the maintainer's own testing.
 
+Every upload replaces the item's description with the staged `About.xml`'s, headed by its
+version (`X.Y.Z`, or `X.Y.Z.N` for a test build), since Steam has no version field and the change
+notes are on a tab of their own. So edit the description in `mod/About/About.xml`, not on the
+Workshop page: an edit made there is lost at the next upload. Steam takes at most 7999 UTF-8
+bytes of description, version header included, and the uploader refuses a longer one, or an
+`About.xml` with no Version or Description. For a release that refusal comes only at step 4, after
+the GitHub release is published, and the fix is then a release of the next version. The title and
+tags stay as the item's first upload set them.
+
 ### Test builds on the Workshop
 
 A test build goes to a private Workshop item with one command, on Windows, from a clean checkout
@@ -90,7 +99,8 @@ any machine signed in to that account, since the upload runs as the game. Every 
   `main` up to the build's commit. `main` has one commit per merged PR and no merge commits, so N
   is unique to that commit, and in game the BepInEx log's "KTrapIC X.Y.Z.N loaded" tells it apart
   from any other upload. The version is set only in the build; About.xml keeps `X.Y.Z`.
-- **says what it is in the item's change note**: its version and commit.
+- **says what it is in the item's change note**: its version and commit. The item's
+  description starts with that version, `X.Y.Z.N`, too.
 
 Don't upload through the game's Workshop menu (Workshop > Mods > Publish). It uploads whatever is
 in the local mod folder, under that folder's version, and it makes the item public on every
