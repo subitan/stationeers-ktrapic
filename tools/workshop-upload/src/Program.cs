@@ -13,11 +13,13 @@ using Steamworks.Ugc;
 ///   WorkshopUpload --item ID --content DIR [--preview PNG] --note TEXT [--visibility private|friends|public]
 ///   WorkshopUpload --item ID --visibility private|friends|public
 ///   WorkshopUpload --create --content DIR [--title TEXT] [--preview PNG] --note TEXT [--visibility private|friends|public]
-/// --check only reads the item's details; nothing changes. An update sets only the content, preview,
-/// change note and visibility; the title, description and tags stay as they are. --create makes a
-/// new item, as the game's publisher does, from DIR/About/About.xml's name (or --title),
-/// description and tags, with DIR/About/Preview.png (or --preview) as its preview, and prints the
-/// new item's ID. Every upload is private unless --visibility says otherwise.
+/// --check only reads the item's details; nothing changes. An update sets the content, preview,
+/// change note and visibility, and replaces the description with DIR/About/About.xml's, headed by
+/// its version; the title and tags stay as they are. --create makes a new item, as the game's
+/// publisher does, from About.xml's name (or --title), description (headed by its version, as an
+/// update's is) and tags, with DIR/About/Preview.png (or --preview) as its preview, and prints the
+/// new item's ID. --visibility alone changes nothing else. Every upload is private unless
+/// --visibility says otherwise.
 /// </summary>
 internal static class Program
 {
@@ -60,12 +62,13 @@ internal static class Program
             return 2;
         }
 
-        // A new item's details are read before attaching to Steam, so a bad About.xml changes nothing.
+        // The item's details are read before attaching to Steam, so a bad About.xml changes nothing.
         Editor editor = default;
-        if (create)
+        XElement meta = null;
+        string description = null;
+        if (content != null && !check && !visibilityOnly)
         {
             string about = Path.Combine(content, "About", "About.xml");
-            XElement meta;
             try
             {
                 meta = XDocument.Load(about).Root;
@@ -75,6 +78,11 @@ internal static class Program
                 Console.Error.WriteLine($"Couldn't read {about}: {e.Message}");
                 return 1;
             }
+            description = DescriptionOf(meta);
+        }
+        if (create)
+        {
+            string about = Path.Combine(content, "About", "About.xml");
             string title = string.IsNullOrWhiteSpace(Arg("--title")) ? meta.Element("Name")?.Value.Trim() : Arg("--title");
             if (string.IsNullOrWhiteSpace(title))
             {
@@ -89,7 +97,7 @@ internal static class Program
             }
             editor = Editor.NewCommunityFile
                 .WithTitle(title)
-                .WithDescription(meta.Element("Description")?.Value.Trim() ?? "")
+                .WithDescription(description)
                 .WithContent(Path.GetFullPath(content))
                 .WithPreviewFile(Path.GetFullPath(preview))
                 .WithChangeLog(note);
@@ -131,7 +139,7 @@ internal static class Program
 
                 editor = new Editor(item);
                 if (!visibilityOnly)
-                    editor = editor.WithContent(Path.GetFullPath(content)).WithChangeLog(note);
+                    editor = editor.WithContent(Path.GetFullPath(content)).WithDescription(description).WithChangeLog(note);
                 string preview = Arg("--preview");
                 if (preview != null)
                     editor = editor.WithPreviewFile(Path.GetFullPath(preview));
@@ -160,5 +168,16 @@ internal static class Program
         {
             SteamClient.Shutdown();
         }
+    }
+
+    /// <summary>
+    /// About.xml's description, headed by its version, so the item's page says which version it
+    /// holds; Steam has no version field of its own.
+    /// </summary>
+    private static string DescriptionOf(XElement meta)
+    {
+        string version = meta.Element("Version")?.Value.Trim();
+        string description = meta.Element("Description")?.Value.Trim() ?? "";
+        return string.IsNullOrEmpty(version) ? description : $"[b]Version {version}[/b]\n\n{description}";
     }
 }
