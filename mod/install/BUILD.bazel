@@ -1,0 +1,28 @@
+load("@rules_java//java:java_binary.bzl", "java_binary")
+load("@rules_kotlin//kotlin:jvm.bzl", "kt_jvm_library")
+load("//build_defs/kotlin:junit5.bzl", "kt_junit5_tests")
+
+kt_jvm_library(
+    name = "install_lib",
+    srcs = glob(["src/main/kotlin/**/*.kt"]),
+)
+
+# bazel run //mod:install -- <mods-dir> [--local-compiler] (see mod/README.md)
+java_binary(
+    name = "install",
+    data = ["//daemon:ktrapic-daemon_deploy.jar"],
+    jvm_flags = ["-Dktrapic.daemonJar=$(rootpath //daemon:ktrapic-daemon_deploy.jar)"],
+    main_class = "ktrapic.install.MainKt",
+    visibility = ["//mod:__pkg__"],
+    runtime_deps = [":install_lib"],
+)
+
+kt_junit5_tests(
+    name = "install_tests",
+    srcs = glob(["src/test/kotlin/**/*.kt"]),
+    associates = [":install_lib"],
+    deps = [
+        "@maven//:com_google_truth_truth",
+        "@maven//:org_junit_jupiter_junit_jupiter_api",
+    ],
+)

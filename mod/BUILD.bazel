@@ -4,3 +4,10 @@ exports_files(
     ["src/SdkNames.g.cs"],
     visibility = ["//tools/datagen:__pkg__"],
 )
+
+# bazel run //mod:install -- <mods-dir> [--local-compiler]: builds the plugin and installs it into
+# StationeersLaunchPad's local mods directory (see README.md).
+alias(
+    name = "install",
+    actual = "//mod/install",
+)

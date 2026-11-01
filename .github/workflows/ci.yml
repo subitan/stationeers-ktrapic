@@ -83,6 +83,39 @@ jobs:
           chmod +x "$RUNNER_TEMP"/runtime/bin/*
       - name: Build the mod
         run: dotnet build -c Release mod/KTrapIC.csproj
+      - name: Install the mod from the checkout into a scratch mods directory
+        run: |
+          mods="$RUNNER_TEMP/mods" game="$RUNNER_TEMP/game"
+          jar="$mods/KTrapIC/compiler/ktrapic-daemon.jar"
+          cfg="$game/BepInEx/config/com.github.subitan.stationeers-ktrapic.cfg"
+          mkdir -p "$mods/KTrapIC/compiler" "$game/BepInEx/config"
+          # A compiler and setting as --local-compiler leaves them (on Windows), for the plain install to remove.
+          echo jar > "$jar"
+          printf '[Development]\n\nDaemonJarPath = %s\n' "$jar" > "$cfg"
+          STATIONEERS_DIR="$game" bazel run --config=ci //mod:install -- "$mods"
+          test -f "$mods/KTrapIC/KTrapIC.dll"
+          test -f "$mods/KTrapIC/About/About.xml"
+          test ! -e "$mods/KTrapIC/compiler"
+          grep -qxF "DaemonJarPath = " "$cfg"
+          # Refused before anything is built or copied: an empty mods directory stays empty.
+          empty="$RUNNER_TEMP/empty/mods"
+          mkdir -p "$empty"
+          status=0
+          STATIONEERS_DIR="$game" bazel run --config=ci //mod:install -- "$empty" --local-compiler \
+            2> "$RUNNER_TEMP/refusal.txt" || status=$?
+          if [ "$status" -ne 1 ] || ! grep -qF "works only on Windows" "$RUNNER_TEMP/refusal.txt"; then
+            cat "$RUNNER_TEMP/refusal.txt"
+            echo "--local-compiler should be refused off Windows (1), not $status"; exit 1
+          fi
+          if [ -n "$(ls -A "$empty")" ]; then
+            ls -AR "$empty"; echo "The refused --local-compiler install changed $empty"; exit 1
+          fi
+          grep -qxF "DaemonJarPath = " "$cfg"
+          status=0
+          bazel run --config=ci //mod:install || status=$?
+          if [ "$status" -ne 2 ]; then
+            echo "Installing without a mods directory should fail with a usage error (2), not $status"; exit 1
+          fi
       - name: Test the daemon client, running the daemon on the packaged runtime
         run: |
           JAVA_HOME="$RUNNER_TEMP/runtime" \
