@@ -97,7 +97,7 @@ any machine signed in to that account, since the upload runs as the game. Every 
   is unique to that commit, and in game the BepInEx log's "KTrapIC X.Y.Z.N loaded" tells it apart
   from any other upload. The version is set only in the build; About.xml keeps `X.Y.Z`.
 - **says what it is in the item's change note**: its version and commit. The item's
-  description starts with the version too.
+  description starts with that version, `X.Y.Z.N`, too.
 
 Don't upload through the game's Workshop menu (Workshop > Mods > Publish). It uploads whatever is
 in the local mod folder, under that folder's version, and it makes the item public on every

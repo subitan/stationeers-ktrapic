@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using Steamworks;
@@ -78,7 +79,23 @@ internal static class Program
                 Console.Error.WriteLine($"Couldn't read {about}: {e.Message}");
                 return 1;
             }
-            description = DescriptionOf(meta);
+            string version = meta.Element("Version")?.Value.Trim();
+            string text = meta.Element("Description")?.Value.Trim();
+            if (string.IsNullOrEmpty(version) || string.IsNullOrEmpty(text))
+            {
+                Console.Error.WriteLine($"{about} needs a Version and a Description: the item's description is made from them.");
+                return 1;
+            }
+            // Headed by the version so the item's page says which version it holds; Steam has no
+            // version field of its own.
+            description = $"[b]Version {version}[/b]\n\n{text}";
+            // Steam ignores a description of 8000 bytes or more (its limit counts the terminator)
+            // and still reports the upload a success.
+            if (Encoding.UTF8.GetByteCount(description) >= 8000)
+            {
+                Console.Error.WriteLine($"{about}'s Description is too long: with its version header it's longer than Steam's 7999 bytes.");
+                return 1;
+            }
         }
         if (create)
         {
@@ -168,16 +185,5 @@ internal static class Program
         {
             SteamClient.Shutdown();
         }
-    }
-
-    /// <summary>
-    /// About.xml's description, headed by its version, so the item's page says which version it
-    /// holds; Steam has no version field of its own.
-    /// </summary>
-    private static string DescriptionOf(XElement meta)
-    {
-        string version = meta.Element("Version")?.Value.Trim();
-        string description = meta.Element("Description")?.Value.Trim() ?? "";
-        return string.IsNullOrEmpty(version) ? description : $"[b]Version {version}[/b]\n\n{description}";
     }
 }
