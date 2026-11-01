@@ -1,9 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <!--
-    Updates the plugin's Steam Workshop item through the Steam client running on this machine, as
-    the game's own Workshop publisher does (Facepunch.Steamworks, from the game's install), so no
-    Steam login is needed. Unlike the game's publisher it keeps the item's visibility as asked:
-    private unless told otherwise. upload-test-build.sh and upload-release.sh drive it; see
+    Updates the plugin's Steam Workshop item, or makes a new item, through the Steam client running
+    on this machine, as the game's own Workshop publisher does (Facepunch.Steamworks, from the
+    game's install), so no Steam login is needed. Unlike the game's publisher it keeps the item's
+    visibility as asked: private unless told otherwise. upload-test-build.sh and upload-release.sh drive it; see
     docs/RELEASING.md.
 
     Windows only (the game's Facepunch build is Win64), and it builds against the installed game,
@@ -26,6 +26,8 @@
   <ItemGroup>
     <Compile Include="src/**/*.cs" />
     <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3" PrivateAssets="all" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
     <Reference Include="Facepunch.Steamworks.Win64" HintPath="$(ManagedDir)/Facepunch.Steamworks.Win64.dll" />
     <None Include="$(PluginsDir)/steam_api64.dll" CopyToOutputDirectory="PreserveNewest" Link="steam_api64.dll" />
   </ItemGroup>
