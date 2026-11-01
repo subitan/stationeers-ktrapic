@@ -14,7 +14,9 @@ import org.jetbrains.kotlin.fir.declarations.FirNamedFunction
 import org.jetbrains.kotlin.fir.declarations.FirProperty
 import org.jetbrains.kotlin.fir.declarations.FirRegularClass
 import org.jetbrains.kotlin.fir.declarations.FirResolvePhase
+import org.jetbrains.kotlin.fir.declarations.toAnnotationClassId
 import org.jetbrains.kotlin.fir.expressions.FirBlock
+import org.jetbrains.kotlin.fir.expressions.FirLiteralExpression
 import org.jetbrains.kotlin.fir.expressions.FirQualifiedAccessExpression
 import org.jetbrains.kotlin.fir.expressions.FirResolvedQualifier
 import org.jetbrains.kotlin.fir.expressions.FirWhenExpression
@@ -59,8 +61,28 @@ import org.jetbrains.kotlin.name.StandardClassIds
 import org.jetbrains.kotlin.name.isSubpackageOf
 import org.jetbrains.kotlin.types.AbstractTypeChecker
 
-/** A name that could go at the caret, with what kind of thing it names. */
-data class Completion(val label: String, val kind: Kind, val detail: String) {
+/**
+ * A name that could go at the caret, with what kind of thing it names. [prefabs] are the game's
+ * names of the prefabs an SDK type stands for (`StructureConsoleLED5`): a typed device's or a
+ * family member's own, or each of a family's members', so an editor can find the type by the game's
+ * name as well as by its own.
+ */
+data class Completion(
+    val label: String,
+    val kind: Kind,
+    val detail: String,
+    val prefabs: List<String> = emptyList(),
+) {
+  /**
+   * What an editor matches the typed word against: the label and then the meaningful words of each
+   * of [prefabs] ([K2Completion.gameNameWords]), space-separated (`LedDisplay ConsoleLED5 ...`), or
+   * null for an item with no prefabs, which is matched on its label alone.
+   */
+  val filterText: String?
+    get() =
+        if (prefabs.isEmpty()) null
+        else (listOf(label) + prefabs.map(K2Completion::gameNameWords)).joinToString(" ")
+
   enum class Kind {
     LOCAL,
     PROPERTY,
@@ -75,6 +97,14 @@ data class Completion(val label: String, val kind: Kind, val detail: String) {
 }
 
 /**
+ * What could be written at a position ([items]), and whether the analysis found a receiver written
+ * before the word there (`d0.`, `f().`, `LedDisplay.`). After a receiver, the list is what can
+ * follow it, whatever the word; without one, it includes family members found by the whole word's
+ * game name ([K2Completion]), so it can change as the word grows.
+ */
+data class Completions(val items: List<Completion>, val hasReceiver: Boolean)
+
+/**
  * Lists what could be written at a position in a script-style program, from the Kotlin K2
  * compiler's analysis of it: after `receiver.`, the members and extensions of the receiver's type
  * (or, after a class or object name, what it holds); anywhere else, the locals, parameters and
@@ -82,6 +112,14 @@ data class Completion(val label: String, val kind: Kind, val detail: String) {
  * declarations, only those KTrapIC compiles are offered, on the receivers it compiles them on
  * ([SUPPORTED_STDLIB]); of the keywords, only those a program can use ([KEYWORDS]). A name shadowed
  * by one declared nearer the caret is offered once.
+ *
+ * An SDK type's item carries the game's names of its prefabs ([Completion.prefabs]). Where no
+ * receiver is written and the word typed is at least [GAME_NAME_MIN_LENGTH] letters, a family's
+ * member is offered too, by its qualified name, when a word of its game name's [gameNameWords]
+ * starts with the typed word ([wordStarts]): `LedDisplay.Small` for `Console`, from
+ * `StructureConsoleLED5`. Not when the typed word starts the family's own name, as the family is
+ * then the item to pick, so a longer word can bring members a shorter one doesn't (`BatteryL` gives
+ * `Battery.Large`, `Bat` doesn't).
  *
  * The program is analysed with a placeholder name in place of the word at the caret, so the
  * reference there is the only one the analysis need not resolve. Errors elsewhere in the program
@@ -233,6 +271,57 @@ object K2Completion {
   private val VALUE_CLASS_KINDS = setOf(ClassKind.OBJECT, ClassKind.ENUM_CLASS)
 
   private const val PLACEHOLDER = "ktrapicCompletionPlaceholder"
+
+  /** The SDK's annotation giving a typed device's game prefab name. */
+  private val PREFAB_NAME = ClassId.topLevel(FqName("ktrapic.PrefabName"))
+
+  /**
+   * How long the word typed must be for a family's members to be offered by their game names, with
+   * no receiver: a shorter one would match most of them.
+   */
+  const val GAME_NAME_MIN_LENGTH = 3
+
+  /**
+   * The words game prefab names start with to say what kind of thing they are, which nearly all of
+   * them do: matched on, they would find nearly every SDK type.
+   */
+  private val GAME_NAME_KINDS = listOf("Structure", "Item")
+
+  /**
+   * [prefab], a game prefab name, without the word of [GAME_NAME_KINDS] it starts with, if it does:
+   * `ConsoleLED5` for `StructureConsoleLED5`, `SDBSilo` for `StructureSDBSilo`.
+   */
+  fun gameNameWords(prefab: String): String {
+    val kind = GAME_NAME_KINDS.firstOrNull {
+      prefab.length > it.length && prefab.startsWith(it) && wordStartsAt(prefab, it.length)
+    }
+    return if (kind == null) prefab else prefab.substring(kind.length)
+  }
+
+  /**
+   * Whether a word of [text] starts with [word], ignoring case. A word starts at the start of the
+   * text, at a letter or digit after anything else (a space, a dot), at a capital after a
+   * lower-case letter or a digit, at the last capital of a run of them followed by a lower-case
+   * letter (`Silo` in `SDBSilo`), or at a digit after a letter. `Console`, `consoleLED` and `led`
+   * start words of `LedDisplay ConsoleLED5`; `onsole` and `ED5` don't. The mod's
+   * `Completions.WordStarts` is the same rule.
+   */
+  fun wordStarts(text: String, word: String): Boolean =
+      word.isNotEmpty() &&
+          (0..text.length - word.length).any {
+            wordStartsAt(text, it) && text.startsWith(word, it, ignoreCase = true)
+          }
+
+  private fun wordStartsAt(text: String, at: Int): Boolean {
+    val c = text[at]
+    if (!c.isLetterOrDigit()) return false
+    if (at == 0) return true
+    val before = text[at - 1]
+    if (!before.isLetterOrDigit()) return true
+    if (c.isDigit()) return before.isLetter()
+    if (!c.isUpperCase()) return false
+    return !before.isUpperCase() || text.getOrNull(at + 1)?.isLowerCase() == true
+  }
 
   /** The keywords a KTrapIC program can use. */
   val KEYWORDS =
@@ -397,35 +486,42 @@ object K2Completion {
 
   /**
    * What could be written at [offset] (a `String` index) in [source], compiled against
-   * kotlin-stdlib and the jars in [classpath] with [defaultImports]. Returns an empty list when
-   * nothing applies, such as inside a comment or a string.
+   * kotlin-stdlib and the jars in [classpath] with [defaultImports]. Lists nothing when nothing
+   * applies, such as inside a comment or a string, and then has no receiver.
    */
   fun complete(
       source: String,
       offset: Int,
       classpath: List<File> = emptyList(),
       defaultImports: List<String> = emptyList(),
-  ): List<Completion> {
+  ): Completions {
+    val none = Completions(emptyList(), hasReceiver = false)
     val caret = offset.coerceIn(0, source.length)
     var start = caret
     while (start > 0 && Character.isJavaIdentifierPart(source[start - 1])) start--
     var end = caret
     while (end < source.length && Character.isJavaIdentifierPart(source[end])) end++
-    if (start < source.length && start < end && Character.isDigit(source[start])) return emptyList()
+    if (start < source.length && start < end && Character.isDigit(source[start])) return none
     val edited = source.substring(0, start) + PLACEHOLDER + source.substring(end)
 
     return withScript(edited, classpath, defaultImports) { parsed ->
       val script = parsed.script
       if (inCommentOrString(script.findElementAt(script.text.indexOf(PLACEHOLDER)))) {
-        return@withScript emptyList()
+        return@withScript none
       }
       val at = parsed.wrapped.text.indexOf(PLACEHOLDER)
-      if (at < 0) return@withScript emptyList()
-      parsed.analyse { Analysis(it, at).completions() }.orEmpty()
+      if (at < 0) return@withScript none
+      val typed = source.substring(start, caret)
+      parsed.analyse { Analysis(it, at, typed).completions() } ?: none
     }
   }
 
-  private class Analysis(output: SingleModuleFrontendOutput, private val at: Int) {
+  /** [typed] is the part of the word at the caret that comes before it. */
+  private class Analysis(
+      output: SingleModuleFrontendOutput,
+      private val at: Int,
+      private val typed: String,
+  ) {
     private val session: FirSession = output.session
     private val scopeSession: ScopeSession = output.scopeSession
     private val path = mutableListOf<FirElement>()
@@ -453,14 +549,79 @@ object K2Completion {
       output.fir.forEach { it.accept(visitor) }
     }
 
-    fun completions(): List<Completion> {
+    fun completions(): Completions {
       val receiver = access?.explicitReceiver
-      val items = if (receiver != null) members(receiver) else inScope() + topLevel() + keywords()
+      val items =
+          if (receiver != null) members(receiver)
+          else inScope() + topLevel() + membersByGameName() + keywords()
       // One item per name: overloads share one, and a name declared nearer the caret shadows
       // the same name declared further out, which comes later in the list.
-      return items
-          .filter { it.kind == Completion.Kind.KEYWORD || isPlainIdentifier(it.label) }
-          .distinctBy { it.label }
+      val shown =
+          items
+              .filter {
+                it.kind == Completion.Kind.KEYWORD || it.label.split('.').all(::isPlainIdentifier)
+              }
+              .distinctBy { it.label }
+      return Completions(shown, hasReceiver = receiver != null)
+    }
+
+    /**
+     * The SDK families' members with a word of their game name's [gameNameWords] that starts with
+     * [typed], by their qualified names (`LedDisplay.Small`), when [typed] is at least
+     * [GAME_NAME_MIN_LENGTH] long and doesn't start the family's own name. See [K2Completion].
+     */
+    private fun membersByGameName(): List<Completion> {
+      if (typed.length < GAME_NAME_MIN_LENGTH) return emptyList()
+      return IMPORTED_PACKAGES.flatMap { pkg ->
+            names(pkg).classifiers.flatMap { name ->
+              val family =
+                  session.symbolProvider.getClassLikeSymbolByClassId(ClassId(pkg, name))
+                      as? FirRegularClassSymbol
+              if (
+                  family?.classKind != ClassKind.INTERFACE ||
+                      name.asString().startsWith(typed, ignoreCase = true)
+              ) {
+                return@flatMap emptyList()
+              }
+              familyMembers(family).mapNotNull { member ->
+                val prefab = prefabNameOf(member) ?: return@mapNotNull null
+                if (!wordStarts(gameNameWords(prefab), typed)) return@mapNotNull null
+                classifier(member)?.copy(label = nameOf(member.classId))
+              }
+            }
+          }
+          .sortedBy { it.label.lowercase() }
+    }
+
+    /** [family]'s nested classes. */
+    private fun familyMembers(family: FirRegularClassSymbol): List<FirRegularClassSymbol> {
+      val members = mutableListOf<FirRegularClassSymbol>()
+      session.kotlinScopeProvider
+          .getNestedClassifierScope(family.fir, session, scopeSession)
+          ?.processAllClassifiers { (it as? FirRegularClassSymbol)?.let(members::add) }
+      return members
+    }
+
+    /** The game's name of the prefab [symbol] stands for, from its `@PrefabName`, if it has one. */
+    private fun prefabNameOf(symbol: FirRegularClassSymbol): String? =
+        symbol.resolvedAnnotationsWithArguments
+            .firstOrNull { it.toAnnotationClassId(session) == PREFAB_NAME }
+            ?.argumentMapping
+            ?.mapping
+            ?.values
+            ?.firstOrNull()
+            ?.let { (it as? FirLiteralExpression)?.value as? String }
+
+    /**
+     * The game's names of the prefabs [symbol] stands for: its own, or, for a family, each of its
+     * members'.
+     */
+    private fun prefabsOf(symbol: FirRegularClassSymbol): List<String> {
+      prefabNameOf(symbol)?.let {
+        return listOf(it)
+      }
+      if (symbol.classKind != ClassKind.INTERFACE) return emptyList()
+      return familyMembers(symbol).mapNotNull(::prefabNameOf)
     }
 
     /** What can follow `receiver.`. */
@@ -721,7 +882,8 @@ object K2Completion {
                 if (classLike is FirTypeAliasSymbol) Completion.Kind.CLASS
                 else Completion.Kind.CLASS
           }
-      return Completion(label, kind, qualifiedNameOf(classLike.classId))
+      val prefabs = (classLike as? FirRegularClassSymbol)?.let(::prefabsOf).orEmpty()
+      return Completion(label, kind, qualifiedNameOf(classLike.classId), prefabs)
     }
   }
 }

@@ -10,7 +10,10 @@ class K2CompletionTest {
   private val sdkJar = File(Device::class.java.protectionDomain.codeSource.location.toURI())
 
   /** Completes at the `|` in [source]. */
-  private fun complete(source: String): List<Completion> {
+  private fun complete(source: String): List<Completion> = completions(source).items
+
+  /** Completes at the `|` in [source], with whether a receiver was found. */
+  private fun completions(source: String): Completions {
     val offset = source.indexOf('|')
     return K2Completion.complete(
         source.removeRange(offset, offset + 1),
@@ -51,6 +54,15 @@ class K2CompletionTest {
   @Test
   fun `after an LED display, its write-only Text`() {
     assertThat(labels("val sign = LedDisplay.Small.at(d5)\nsign.|\n")).contains("Text")
+  }
+
+  @Test
+  fun `a receiver is found after a device's dot, not after a comment's or a string's`() {
+    assertThat(completions("val a = d0.|\n").hasReceiver).isTrue()
+    assertThat(completions("val a = Bat|\n").hasReceiver).isFalse()
+    assertThat(completions("fun main() {\n  // Turn on the light.\n  Bat|\n}\n").hasReceiver)
+        .isFalse()
+    assertThat(completions("val s = \"Turn on d0.Se|\"\n").hasReceiver).isFalse()
   }
 
   @Test
@@ -385,5 +397,117 @@ class K2CompletionTest {
   @Test
   fun `internal SDK declarations are not offered`() {
     assertThat(labels("|")).doesNotContain("intrinsic")
+  }
+
+  @Test
+  fun `an SDK type carries its prefab's game name, and a family its members'`() {
+    val items = complete("val a = |\n")
+
+    assertThat(items.single { it.label == "GrowLight" }.prefabs)
+        .containsExactly("StructureGrowLight")
+    val led = items.single { it.label == "LedDisplay" }
+    assertThat(led.prefabs)
+        .containsExactly("StructureConsoleLED5", "StructureConsoleLED1x2", "StructureConsoleLED1x3")
+    assertThat(led.filterText).isEqualTo("LedDisplay ConsoleLED5 ConsoleLED1x2 ConsoleLED1x3")
+    assertThat(led.detail).isEqualTo("ktrapic.LedDisplay")
+    assertThat(items.single { it.label == "Color" }.prefabs).isEmpty()
+    assertThat(items.single { it.label == "Color" }.filterText).isNull()
+  }
+
+  @Test
+  fun `after a family, each member carries its own game name`() {
+    val items = complete("LedDisplay.|\n")
+
+    assertThat(items.single { it.label == "Small" }.prefabs).containsExactly("StructureConsoleLED5")
+  }
+
+  @Test
+  fun `a family's members are offered by a word of their game names`() {
+    val items = complete("val a = Console|\n")
+
+    val small = items.single { it.label == "LedDisplay.Small" }
+    assertThat(small.kind).isEqualTo(Completion.Kind.CLASS)
+    assertThat(small.detail).isEqualTo("ktrapic.LedDisplay.Small")
+    assertThat(small.prefabs).containsExactly("StructureConsoleLED5")
+    assertThat(items.map { it.label }).containsAtLeast("LedDisplay.Medium", "LedDisplay.Large")
+    assertThat(labels("val a = ConsoleLED|\n"))
+        .containsAtLeast("LedDisplay.Small", "LedDisplay.Medium", "LedDisplay.Large")
+    assertThat(labels("val a = consoleled|\n")).contains("LedDisplay.Small")
+  }
+
+  @Test
+  fun `a family's members are not offered by game names for a short word, a structure, or the family's own name`() {
+    assertThat(labels("val a = Co|\n").filter { '.' in it }).isEmpty()
+    assertThat(labels("val a = Structure|\n").filter { '.' in it }).isEmpty()
+    assertThat(labels("val a = Led|\n")).doesNotContain("LedDisplay.Small")
+    assertThat(labels("d0.Console|\n")).doesNotContain("LedDisplay.Small")
+  }
+
+  @Test
+  fun `a longer word brings members its shorter start withheld for the family's own name`() {
+    assertThat(labels("val a = Bat|\n")).doesNotContain("Battery.Large")
+    assertThat(labels("val a = BatteryL|\n")).contains("Battery.Large")
+  }
+
+  @Test
+  fun `a family's members are offered by the word after an acronym in their game names`() {
+    assertThat(labels("val a = Silo|\n")).contains("ItemStorage.SdbSilo")
+    assertThat(labels("val a = Hopper|\n"))
+        .containsAtLeast("SDBHopper.Standard", "SDBHopper.Advanced")
+  }
+
+  @Test
+  fun `the start of a game name that says it is a structure or an item finds nothing`() {
+    /** The items a client finds for [word] by their filterText and not by their label. */
+    fun found(word: String) =
+        complete("val a = $word|\n")
+            .filter { item ->
+              !item.label.startsWith(word) &&
+                  item.filterText?.let { K2Completion.wordStarts(it, word) } == true
+            }
+            .map { it.label }
+
+    for (word in listOf("Str", "Struct", "Ite")) {
+      assertWithMessage(word).that(found(word)).isEmpty()
+    }
+    // `St` finds the few types with a word such as Storage or Station in a game name, not the
+    // hundreds whose game names start with Structure.
+    assertThat(found("St")).containsAtLeast("ItemStorage", "WeatherStation")
+    assertThat(found("St").size).isLessThan(20)
+  }
+
+  @Test
+  fun `a game name's words leave out the word saying it is a structure or an item`() {
+    assertThat(K2Completion.gameNameWords("StructureConsoleLED5")).isEqualTo("ConsoleLED5")
+    assertThat(K2Completion.gameNameWords("StructureSDBSilo")).isEqualTo("SDBSilo")
+    assertThat(K2Completion.gameNameWords("ItemBatteryCellLarge")).isEqualTo("BatteryCellLarge")
+    assertThat(K2Completion.gameNameWords("Landingpad_GasConnectorInwardPiece"))
+        .isEqualTo("Landingpad_GasConnectorInwardPiece")
+    assertThat(K2Completion.gameNameWords("Itemised")).isEqualTo("Itemised")
+  }
+
+  /** The same examples as the mod's `CompletionsTest.WordStartsAtACapitalADigitOrASeparator`. */
+  @Test
+  fun `a word starts at a capital, a digit or after a separator`() {
+    val examples =
+        listOf(
+            Triple("LedDisplay ConsoleLED5", "Console", true),
+            Triple("LedDisplay ConsoleLED5", "consoleLED", true),
+            Triple("LedDisplay ConsoleLED5", "led", true),
+            Triple("LedDisplay ConsoleLED5", "display", true),
+            Triple("LedDisplay.Small ConsoleLED5", "Small", true),
+            Triple("LedDisplay ConsoleLED1x2", "1x2", true),
+            Triple("ItemStorage.SdbSilo SDBSilo", "Silo", true),
+            Triple("SDBHopper.Standard SDBHopper", "Hopper", true),
+            Triple("LedDisplay ConsoleLED5", "onsole", false),
+            Triple("LedDisplay ConsoleLED5", "ED5", false),
+            Triple("LedDisplay ConsoleLED5", "Display ConsoleX", false),
+            Triple("LedDisplay ConsoleLED5", "", false),
+        )
+    for ((text, word, starts) in examples) {
+      assertWithMessage("'$word' in '$text'")
+          .that(K2Completion.wordStarts(text, word))
+          .isEqualTo(starts)
+    }
   }
 }

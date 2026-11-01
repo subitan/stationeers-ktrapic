@@ -305,6 +305,65 @@ public class CompletionsTest
     }
 
     [Fact]
+    public void ShowsThoseFoundByAGameNameAfterThoseStartingWithTheWord()
+    {
+        var led = Item("LedDisplay", 0);
+        led.filterText = "LedDisplay ConsoleLED5 ConsoleLED1x2 ConsoleLED1x3";
+        var small = Item("LedDisplay.Small", 2);
+        small.filterText = "LedDisplay.Small ConsoleLED5";
+        var choice = Completions.Choose(new[] { led, Item("Consoles", 3), small, Item("Open", 1) }, "Console");
+
+        Assert.Equal(new[] { "Consoles", "LedDisplay", "LedDisplay.Small" }, choice.Shown.Select(c => c.label));
+        Assert.Equal(3, choice.Matched);
+        Assert.Equal("s", choice.Insert);
+    }
+
+    [Fact]
+    public void NothingToInsertWhenOnlyGameNamesMatch()
+    {
+        var led = Item("LedDisplay", 0);
+        led.filterText = "LedDisplay ConsoleLED5";
+
+        var choice = Completions.Choose(new[] { led }, "consoleled");
+
+        Assert.Equal(new[] { "LedDisplay" }, choice.Shown.Select(c => c.label));
+        Assert.Null(choice.Insert);
+    }
+
+    [Fact]
+    public void NoneFoundByAGameNameForAWordUnderThreeLetters()
+    {
+        var led = Item("LedDisplay", 0);
+        led.filterText = "LedDisplay ConsoleLED5";
+        var locker = Item("Locker", 1);
+        locker.filterText = "Locker StorageLocker";
+        var completions = new[] { led, locker, Item("StopWatch", 2) };
+
+        Assert.Equal(new[] { "StopWatch" }, Completions.Choose(completions, "St").Shown.Select(c => c.label));
+        Assert.Null(Completions.Choose(completions, "Co"));
+        Assert.Null(Completions.Choose(completions, "Str"));
+        Assert.Equal(new[] { "LedDisplay" }, Completions.Choose(completions, "Con").Shown.Select(c => c.label));
+        Assert.Equal(new[] { "StopWatch", "Locker" }, Completions.Choose(completions, "Sto").Shown.Select(c => c.label));
+    }
+
+    /// <summary>The same examples as the daemon's <c>K2CompletionTest</c> has for <c>wordStarts</c>.</summary>
+    [Theory]
+    [InlineData("LedDisplay ConsoleLED5", "Console", true)]
+    [InlineData("LedDisplay ConsoleLED5", "consoleLED", true)]
+    [InlineData("LedDisplay ConsoleLED5", "led", true)]
+    [InlineData("LedDisplay ConsoleLED5", "display", true)]
+    [InlineData("LedDisplay.Small ConsoleLED5", "Small", true)]
+    [InlineData("LedDisplay ConsoleLED1x2", "1x2", true)]
+    [InlineData("ItemStorage.SdbSilo SDBSilo", "Silo", true)]
+    [InlineData("SDBHopper.Standard SDBHopper", "Hopper", true)]
+    [InlineData("LedDisplay ConsoleLED5", "onsole", false)]
+    [InlineData("LedDisplay ConsoleLED5", "ED5", false)]
+    [InlineData("LedDisplay ConsoleLED5", "Display ConsoleX", false)]
+    [InlineData("LedDisplay ConsoleLED5", "", false)]
+    public void WordStartsAtACapitalADigitOrASeparator(string text, string word, bool starts) =>
+        Assert.Equal(starts, Completions.WordStarts(text, word));
+
+    [Fact]
     public void NothingShownForNoMatchOrOnlyTheWordItself()
     {
         Assert.Null(Completions.Choose(new[] { Item("On", 0) }, "x"));

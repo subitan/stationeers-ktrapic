@@ -14,6 +14,7 @@ import java.util.concurrent.Future
 import ktrapic.api.Compiler
 import ktrapic.daemon.Daemon
 import ktrapic.frontend.Completion
+import ktrapic.frontend.Completions
 import ktrapic.frontend.Hover
 import ktrapic.frontend.SignatureHelp
 
@@ -52,8 +53,9 @@ internal class ResponseError(val code: Int, message: String) : Exception(message
  * not kept, but compiled again.
  *
  * **`textDocument/completion`** lists what could be written at the position, from the compiler's
- * analysis of the document's current text (see [completion]); a repeat of the latest request costs
- * nothing, and an analysis that fails is answered with InternalError.
+ * analysis of the document's current text, matched by SDK types' game prefab names as well as their
+ * own (see [completion]); a repeat of the latest request costs nothing, and an analysis that fails
+ * is answered with InternalError.
  *
  * **`textDocument/hover`** describes the name at the position ([hover]), and
  * **`textDocument/signatureHelp`** the functions the call around it could be to ([signatureHelp]),
@@ -92,7 +94,7 @@ internal constructor(
     private val debounceMillis: Long,
     private val scheduler: Scheduler,
     private val compiler: (String) -> JsonObject,
-    private val completer: (String, Int) -> List<Completion> = Compiler::complete,
+    private val completer: (String, Int) -> Completions = Compiler::complete,
     private val hoverer: (String, Int) -> Hover? = Compiler::hover,
     private val signer: (String, Int) -> SignatureHelp? = Compiler::signatureHelp,
 ) {
@@ -129,7 +131,7 @@ internal constructor(
         override fun removeEldestEntry(eldest: Map.Entry<String, JsonObject>) = size > KEPT_COMPILES
       }
 
-  private class LastCompletion(val text: String, val offset: Int, val completions: List<Completion>)
+  private class LastCompletion(val text: String, val offset: Int, val completions: Completions)
 
   /** The latest completion's text, offset and list, for [completion]. Under [compiles]' lock. */
   private var lastCompletion: LastCompletion? = null
@@ -352,9 +354,16 @@ internal constructor(
    * lists them). Each item's `sortText` keeps [completer]'s order, `detail` is its declaration
    * (such as `var Setting: Double`), and its `kind` is one the IC10 Editor can show: it colours an
    * item by indexing a 24-colour table with the kind, so Operator (24) and TypeParameter (25) are
-   * never sent. Runs as compiles do, one at a time. A request at the same text and index as the
-   * latest one gets that one's list again without analysing the text, as the IC10 Editor asks twice
-   * for each keystroke. If the analysis fails, the request is answered with InternalError.
+   * never sent. An SDK type's item has a `filterText` of its label and the meaningful words of the
+   * game's names of its prefabs (`LedDisplay ConsoleLED5 ConsoleLED1x2 ConsoleLED1x3`), so a
+   * client's filter finds it by either. The list is `isIncomplete` unless the analysis found a
+   * receiver before the word ([Completions.hasReceiver]): without one, the family members offered
+   * by their game names depend on the whole word, not only its start (`BatteryL` gives
+   * `Battery.Large`, `Bat` doesn't), so a client that keeps a list while the word grows, as Monaco
+   * does, must ask again rather than filter it. Runs as compiles do, one at a time. A request at
+   * the same text and index as the latest one gets that one's list again without analysing the
+   * text, as the IC10 Editor asks twice for each keystroke. If the analysis fails, the request is
+   * answered with InternalError.
    */
   private fun completion(params: JsonElement?): JsonElement {
     val (text, offset) = textAndOffset(params)
@@ -364,24 +373,25 @@ internal constructor(
               ?: complete(text, offset).also { lastCompletion = LastCompletion(text, offset, it) }
         }
     val items = JsonArray()
-    completions.forEachIndexed { index, completion ->
+    completions.items.forEachIndexed { index, completion ->
       items.add(
           JsonObject().apply {
             addProperty("label", completion.label)
             addProperty("kind", kindOf(completion.kind))
             if (completion.detail.isNotEmpty()) addProperty("detail", completion.detail)
             addProperty("sortText", "%05d".format(index))
+            completion.filterText?.let { addProperty("filterText", it) }
           }
       )
     }
     return JsonObject().apply {
-      addProperty("isIncomplete", false)
+      addProperty("isIncomplete", !completions.hasReceiver)
       add("items", items)
     }
   }
 
   /** [completer]'s list, or an InternalError answer if it fails ([analysed]). */
-  private fun complete(text: String, offset: Int): List<Completion> =
+  private fun complete(text: String, offset: Int): Completions =
       analysed("Completion") { completer(text, offset) }
 
   /**
