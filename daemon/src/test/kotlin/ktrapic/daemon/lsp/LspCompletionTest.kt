@@ -86,7 +86,7 @@ class LspCompletionTest {
   }
 
   @Test
-  fun `a list for a word with no dot before it is incomplete, as a longer word can add to it`() {
+  fun `a list for a word with no receiver before it is incomplete, as a longer word can add to it`() {
     LspTestClient().use { client ->
       client.initialize()
       client.open(uri, "val a = Bat\nval b = BatteryL\n")

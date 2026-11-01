@@ -57,6 +57,15 @@ class K2CompletionTest {
   }
 
   @Test
+  fun `a receiver is found after a device's dot, not after a comment's or a string's`() {
+    assertThat(completions("val a = d0.|\n").hasReceiver).isTrue()
+    assertThat(completions("val a = Bat|\n").hasReceiver).isFalse()
+    assertThat(completions("fun main() {\n  // Turn on the light.\n  Bat|\n}\n").hasReceiver)
+        .isFalse()
+    assertThat(completions("val s = \"Turn on d0.Se|\"\n").hasReceiver).isFalse()
+  }
+
+  @Test
   fun `after a dot in the middle of a line, what goes there`() {
     assertThat(labels("val s = PresenceSensor.|.at(d0)\n"))
         .containsAtLeast("Motion", "Proximity", "Occupancy")

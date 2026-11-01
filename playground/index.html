@@ -916,7 +916,7 @@ function registerProviders() {
       const word = model.getWordUntilPosition(position);
       const range = new monaco.Range(position.lineNumber, word.startColumn, position.lineNumber, word.endColumn);
       // filterText carries an SDK type's game prefab names, so "Console" finds LedDisplay;
-      // isIncomplete (with no dot before the word) asks again as the word grows, as the family
+      // isIncomplete (with no receiver before the word) asks again as the word grows, as the family
       // members offered by those names depend on the whole word.
       return {
         incomplete: !Array.isArray(result) && !!result?.isIncomplete,
