@@ -147,11 +147,18 @@ internal static class Program
                     return 1;
                 }
                 var it = details.Value;
-                // A deleted item comes back as an empty record, with no owner, rather than as no record.
+                // A failed lookup, such as one of a deleted item, still comes back as a record: an empty
+                // one (no title, owner 0) carrying the lookup's own result.
+                if (it.Result != Result.OK)
+                {
+                    Console.Error.WriteLine($"Steam's lookup of Workshop item {item} failed: {it.Result}. " +
+                        "A deleted item answers FileNotFound.");
+                    return 1;
+                }
                 if (it.Owner.Id.Value == 0)
                 {
-                    Console.Error.WriteLine($"Steam has no details for Workshop item {item}: it was probably deleted " +
-                        "(check it on the Workshop), or the lookup failed (try again).");
+                    Console.Error.WriteLine($"Steam returned an empty record for Workshop item {item} (owner 0), " +
+                        "though the lookup reported OK.");
                     return 1;
                 }
                 Console.WriteLine($"Item {item}: \"{it.Title}\", owner {it.Owner.Id}, updated {it.Updated:u}, " +
