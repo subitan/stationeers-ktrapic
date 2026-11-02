@@ -48,7 +48,7 @@ To release version X.Y.Z:
    machine signed in to that account.
 
 The Workshop item is
-[3830564236](https://steamcommunity.com/sharedfiles/filedetails/?id=3830564236), recorded as
+[3830564594](https://steamcommunity.com/sharedfiles/filedetails/?id=3830564594), recorded as
 `WorkshopHandle` in `mod/About/About.xml`, so every release updates that item. Until the first
 release is published it is private, for the maintainer's own testing.
 

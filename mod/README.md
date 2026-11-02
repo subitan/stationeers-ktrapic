@@ -22,9 +22,9 @@ says, and the [IC10 Editor](https://steamcommunity.com/sharedfiles/filedetails/?
 mod. Install KTrapIC in one of three ways:
 
 - **From the Steam Workshop:** subscribe to
-  [KTrapIC](https://steamcommunity.com/sharedfiles/filedetails/?id=3830564236), and the IC10
+  [KTrapIC](https://steamcommunity.com/sharedfiles/filedetails/?id=3830564594), and the IC10
   Editor with it, then enable both in StationeersLaunchPad's mod list. (The item is private until
-  the first release, v0.1.0.)
+  the first release on the Workshop, v0.1.1.)
 - **From a GitHub release:** unzip a release's `KTrapIC-<version>.zip` into StationeersLaunchPad's
   local mods directory (`Documents/My Games/Stationeers/mods`), which gives
   `mods/KTrapIC/KTrapIC.dll` and `mods/KTrapIC/About/`. No version has been tagged yet, so for now

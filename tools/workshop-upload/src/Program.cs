@@ -147,6 +147,13 @@ internal static class Program
                     return 1;
                 }
                 var it = details.Value;
+                // A deleted item comes back as an empty record, with no owner, rather than as no record.
+                if (it.Owner.Id.Value == 0)
+                {
+                    Console.Error.WriteLine($"Steam has no details for Workshop item {item}: it was probably deleted " +
+                        "(check it on the Workshop), or the lookup failed (try again).");
+                    return 1;
+                }
                 Console.WriteLine($"Item {item}: \"{it.Title}\", owner {it.Owner.Id}, updated {it.Updated:u}, " +
                     $"visibility {(it.IsPrivate ? "private" : it.IsFriendsOnly ? "friends" : it.IsPublic ? "public" : "unlisted")}, " +
                     $"tags {string.Join(", ", it.Tags ?? new string[0])}.");
