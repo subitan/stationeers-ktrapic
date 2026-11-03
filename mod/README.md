@@ -24,12 +24,12 @@ mod. Install KTrapIC in one of three ways:
 - **From the Steam Workshop:** subscribe to
   [KTrapIC](https://steamcommunity.com/sharedfiles/filedetails/?id=3830564594), and the IC10
   Editor with it, then enable both in StationeersLaunchPad's mod list. (The item is private until
-  the first release on the Workshop, v0.1.1.)
+  the first release on the Workshop, v0.1.2.)
 - **From a GitHub release:** unzip a release's `KTrapIC-<version>.zip` into StationeersLaunchPad's
   local mods directory (`Documents/My Games/Stationeers/mods`), which gives
   `mods/KTrapIC/KTrapIC.dll` and `mods/KTrapIC/About/`. The first release,
   [v0.1.0](https://github.com/subitan/stationeers-ktrapic/releases/tag/v0.1.0), is on GitHub only;
-  from v0.1.1 on, each release is on the Workshop too. The
+  from v0.1.2 on, each release is on the Workshop too. The
   [`dev` release](https://github.com/subitan/stationeers-ktrapic/releases/tag/dev)'s zip,
   `KTrapIC-main.zip`, is a Debug build of the latest `main`.
 - **From a checkout of this repository:** with the .NET SDK (10 or later) on the `PATH`, and the
@@ -55,7 +55,7 @@ from this repository's GitHub release for its version, the compiler (`ktrapic-da
 trimmed Java 21 runtime to run it on (`ktrapic-runtime-windows-x64.zip`), about 110 MB in all,
 into `BepInEx/cache/ktrapic`. It checks the release again each time it starts the compiler, and downloads
 again only if the release's files have changed. A Release build of the plugin uses the release
-tagged with its version (`v0.1.1` for 0.1.1); a Debug build uses the rolling `dev` release, which every push
+tagged with its version (`v0.1.2` for 0.1.2); a Debug build uses the rolling `dev` release, which every push
 to `main` replaces. The runtime is for Windows x64. The game runs as that under CrossOver on
 macOS, where the downloaded compiler has been run, and should under Proton on Linux too. If the
 compiler doesn't start, or on any other platform, set both `JavaPath` and `DaemonJarPath`

@@ -2,7 +2,7 @@
   <Name>KTrapIC - Kotlin to IC10 Compiler</Name>
   <Author>Christian Jackson-Gruber</Author>
   <ModID>com.github.subitan.stationeers-ktrapic</ModID>
-  <Version>0.1.1</Version>
+  <Version>0.1.2</Version>
   <Description>
 Program IC10 chips in Kotlin. KTrapIC adds a "Kotlin" language to the IC10 Editor mod: write a program against typed devices, batches and slots, see the IC10 it compiles to as you type, and export it to the chip as IC10. The Kotlin source is kept with the chip, so it opens as Kotlin again.
 
@@ -21,6 +21,9 @@ See: https://github.com/StationeersLaunchPad/StationeersLaunchPad
 KTrapIC is modelled on aproposmath's PyTrapIC, which does the same for Python, and is built on aproposmath's IC10 Editor mod. Thank you to aproposmath for both.
 PyTrapIC: https://github.com/aproposmath/stationeers-pytrapic
 IC10 Editor: https://github.com/aproposmath/StationeersIC10Editor
+
+[b]How it's made[/b]
+Most of KTrapIC's code was written by AI, under my direction. I've been a professional software engineer for over 20 years: I make the design calls, every change is reviewed, and the compiler is tested against an IC10 emulator.
 
 Source code and language guide: https://github.com/subitan/stationeers-ktrapic
 
