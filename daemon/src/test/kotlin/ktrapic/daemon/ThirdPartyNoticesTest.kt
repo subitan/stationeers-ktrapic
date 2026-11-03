@@ -218,6 +218,9 @@ class ThirdPartyNoticesTest {
                 INTELLIJ + "third-party/intellij/javolution_license.txt",
             "org/jetbrains/kotlin/com/intellij/openapi/util/text/Pluralizer.class" to
                 INTELLIJ + "third-party/pluralize/LICENSE",
+            // Six of its classes are PicoContainer's exceptions; the rest are JetBrains'.
+            "org/jetbrains/kotlin/com/intellij/util/pico" to
+                INTELLIJ + "third-party/picocontainer/LICENSE.txt",
             "org/jetbrains/concurrency" to INTELLIJ,
             "messages" to INTELLIJ,
             "misc" to INTELLIJ,

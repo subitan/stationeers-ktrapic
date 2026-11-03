@@ -21,7 +21,7 @@ the jar lacks a file that an entry names or that `kotlin/README.md` links to.
 | `pluralize/` | IntelliJ's `Pluralizer`, from Blake Embrey's pluralize (IntelliJ `platform/util/base`), MIT | `org/jetbrains/kotlin/com/intellij/openapi/util/text/Pluralizer` | https://github.com/blakeembrey/pluralize/blob/v8.0.0/LICENSE (the text the class's source header quotes; IntelliJ's `license/` has no file for it) |
 | `asm/` | ASM 9.6.1 (IntelliJ's `asm-all` build), BSD-3-Clause | `org/jetbrains/org/objectweb/asm/` | https://gitlab.ow2.org/asm/asm/-/raw/ASM_9_6/LICENSE.txt (no ASM_9_6_1 tag exists) |
 | `jdom/` | JDOM, IntelliJ's fork (util-jdom 251.27812.49), JDOM license | `org/jetbrains/kotlin/org/jdom/` | https://github.com/hunterhacker/jdom/blob/JDOM-2.0.6.1/LICENSE.txt (the fork's sources carry the same text, copyright 2000-2012) |
-| `picocontainer/` | PicoContainer interfaces, in IntelliJ core, BSD-3-Clause | `org/jetbrains/kotlin/org/picocontainer/` | https://github.com/picocontainer/PicoContainer1/blob/picocontainer-1.2/LICENSE.txt |
+| `picocontainer/` | PicoContainer's interfaces and six of its exception classes, in IntelliJ core (`platform/extensions`, `platform/core-impl`), BSD-3-Clause | `org/jetbrains/kotlin/org/picocontainer/`, `org/jetbrains/kotlin/com/intellij/util/pico/` (with IntelliJ's notices: the package's other classes are JetBrains') | https://github.com/picocontainer/PicoContainer1/blob/picocontainer-1.2/LICENSE.txt |
 | `antlr4/` | ANTLR 4 runtime 4.13.2, BSD-3-Clause | `org/jetbrains/kotlin/org/antlr/v4/` | https://github.com/antlr/antlr4/blob/4.13.2/LICENSE.txt |
 | `log4j/` | log4j 1.2.17 (JetBrains' 1.2.17.2 build), Apache-2.0 | `org/jetbrains/kotlin/org/apache/log4j/` | https://github.com/apache/logging-log4j1/tree/v1_2_17 (`LICENSE`, `NOTICE`) |
 | `jansi/` | Jansi 2.4.0, Apache-2.0 | `org/jetbrains/kotlin/org/fusesource/jansi/` | https://github.com/fusesource/jansi/blob/jansi-2.4.0/license.txt |
@@ -43,12 +43,19 @@ Notes:
 - Gson, Guava, fastutil, Aalto XML, Jansi, StreamEx, Vavr and the OpenTelemetry API have no NOTICE
   file at their repository roots at these versions.
 - IntelliJ's `license/` directory at 251.27812.49 also has notices for JavaHelp, Saxon and YourKit.
-  None of the IntelliJ modules whose classes the jar holds (`platform/util*`, `platform/core-*`,
-  `platform/extensions`, `java/java-psi-*`, `java/java-frontback-*`) contains code from them. The
-  other code in those modules under another project's copyright is under Apache-2.0 (fastutil's
-  `Hash`, AOSP's `DisposableWrapperList`), which IntelliJ's `LICENSE.txt` covers.
-  `ConcurrentIntObjectHashMap`, adapted from Doug Lea's public-domain `ConcurrentHashMap`, carries
-  JetBrains' Apache-2.0 header.
+  The IntelliJ modules whose classes the jar holds are `platform/util*`, `platform/core-*`,
+  `platform/extensions`, `java/java-psi-*` and `java/java-frontback-*`. Their Java and Kotlin
+  sources at that tag, test directories aside, were searched for copyright lines that do not name
+  JetBrains in each file's first 99 lines, and for "adapted from", "derived from", "ported from"
+  and "public domain"; a file counted as in the jar when a class of its name is in the same package
+  under `org/jetbrains/kotlin/`. The files found that are in the jar, apart from the packages with
+  their own rows (`org/jdom`, `org/picocontainer`, `org/apache/log4j`), are `ImmutableText`,
+  `Pluralizer` and the six PicoContainer classes in `com/intellij/util/pico`, with their own rows
+  above; fastutil's `Hash` and AOSP's `DisposableWrapperList`, under Apache-2.0, which IntelliJ's
+  `LICENSE.txt` covers; and `ConcurrentIntObjectHashMap`, adapted from Doug Lea's public-domain
+  `ConcurrentHashMap`, which carries JetBrains' Apache-2.0 header. None is from JavaHelp, Saxon or
+  YourKit. The search reads headers and comments, so it would not find copied code that names its
+  source in neither.
 - The versions of the libraries shaded into the Kotlin compiler come from Kotlin's build files at
   v2.4.21 (`gradle/libs.versions.toml`, `gradle/versions.properties`,
   `prepare/compiler/build.gradle.kts`); the others from `maven_install.json`.
