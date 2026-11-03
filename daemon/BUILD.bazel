@@ -1,4 +1,5 @@
 load("@rules_java//java:java_binary.bzl", "java_binary")
+load("@rules_java//java:java_library.bzl", "java_library")
 load("@rules_kotlin//kotlin:jvm.bzl", "kt_jvm_library")
 load("//build_defs/kotlin:junit5.bzl", "kt_junit5_tests")
 
@@ -14,6 +15,28 @@ kt_jvm_library(
     ],
 )
 
+# The license notices the deploy jar ships, as META-INF/ktrapic/: KTrapIC's own, and PyTrapIC's,
+# whose data the SDK's generated sources come from.
+genrule(
+    name = "notice_files",
+    srcs = [
+        "//:LICENSE",
+        "//sdk:data/PYTRAPIC-LICENSE",
+    ],
+    outs = [
+        "notices/META-INF/ktrapic/LICENSE",
+        "notices/META-INF/ktrapic/PYTRAPIC-LICENSE",
+    ],
+    cmd = "cp $(location //:LICENSE) $(location notices/META-INF/ktrapic/LICENSE) && " +
+          "cp $(location //sdk:data/PYTRAPIC-LICENSE) $(location notices/META-INF/ktrapic/PYTRAPIC-LICENSE)",
+)
+
+java_library(
+    name = "notices",
+    resource_strip_prefix = "daemon/notices",
+    resources = [":notice_files"],
+)
+
 # The compile daemon (PyTrapIC's stdin/stdout protocol, or the Language Server Protocol with
 # --lsp). The playground and the IC10 Editor plugin run its deploy jar:
 # bazel build //daemon:ktrapic-daemon_deploy.jar
@@ -21,7 +44,10 @@ java_binary(
     name = "ktrapic-daemon",
     main_class = "ktrapic.daemon.DaemonKt",
     visibility = ["//visibility:public"],
-    runtime_deps = [":daemon_lib"],
+    runtime_deps = [
+        ":daemon_lib",
+        ":notices",
+    ],
 )
 
 kt_junit5_tests(
