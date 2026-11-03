@@ -26,7 +26,7 @@ IC10 Editor: https://github.com/aproposmath/StationeersIC10Editor
 Most of KTrapIC's code was written by AI, under my direction. I've been a professional software engineer for over 20 years: I make the design calls, and the compiler is tested against an IC10 emulator.
 
 KTrapIC is open source, under the MIT License. Source code and language guide: https://github.com/subitan/stationeers-ktrapic
-The project also has a web playground you can run on your own computer, to write and compile programs outside the game and test them against simulated devices.
+The project also has a web playground, which you build and run on your own computer from the source code, to write and compile programs outside the game and test them against simulated devices: https://github.com/subitan/stationeers-ktrapic#playground
 
 [b]Support[/b]
 KTrapIC is free. To leave a tip, see the project's Support section (the only place its addresses are listed): https://github.com/subitan/stationeers-ktrapic#support
