@@ -7,9 +7,10 @@ import org.junit.jupiter.api.Test
 
 /**
  * Checks that the deploy jar carries a license notice for everything it bundles: the files in
- * third_party/licenses ship unchanged, and every path in the jar is covered by an entry in
- * [COVERAGE]. When a dependency change adds a package to the jar, this fails until the package is
- * added to [COVERAGE] (with its notice in third_party/licenses, if no notice there covers it).
+ * third_party/licenses ship unchanged, every path in the jar is covered by an entry in [COVERAGE],
+ * and every notice that [COVERAGE] names or Kotlin's license README links to ships. When a
+ * dependency change adds a package to the jar, this fails until the package is added to [COVERAGE]
+ * (with its notice in third_party/licenses, if no notice there covers it).
  */
 class ThirdPartyNoticesTest {
   private val workspace = File(System.getenv("TEST_SRCDIR"), System.getenv("TEST_WORKSPACE"))
@@ -38,6 +39,20 @@ class ThirdPartyNoticesTest {
           .that(COVERAGE.values.flatten().map { NOTICES + it }.toSortedSet() - names)
           .isEmpty()
 
+      val kotlinReadme = jar.getEntry(KOTLIN_README)
+      assertWithMessage("%s in the deploy jar", KOTLIN_README).that(kotlinReadme).isNotNull()
+      val readme = jar.getInputStream(kotlinReadme).use { it.readBytes().decodeToString() }
+      val linked =
+          KOTLIN_README_LINK.findAll(readme)
+              .map { it.groupValues[1] }
+              .filterNot { it.startsWith("third_party/testdata/") }
+              .map { THIRD_PARTY + "kotlin/" + it }
+              .toSortedSet()
+      assertWithMessage("files linked from %s", KOTLIN_README).that(linked).isNotEmpty()
+      assertWithMessage("notices that %s links to but the deploy jar lacks", KOTLIN_README)
+          .that(linked - names)
+          .isEmpty()
+
       val used = mutableSetOf<String>()
       val uncovered = sortedSetOf<String>()
       for (entry in entries) {
@@ -63,6 +78,18 @@ class ThirdPartyNoticesTest {
   private companion object {
     const val NOTICES = "META-INF/ktrapic/"
     const val THIRD_PARTY = NOTICES + "third-party/"
+
+    /**
+     * Kotlin's license README, which attributes code in the Kotlin artifacts to the files in its
+     * `third_party/` directory. [COVERAGE] maps all of `kotlin/` and `org/jetbrains/kotlin/` to it
+     * rather than to those files one by one, so the test checks that every file it links to ships.
+     * Its `third_party/testdata/` files cover test code that is in no distribution, and are not
+     * vendored.
+     */
+    const val KOTLIN_README = THIRD_PARTY + "kotlin/README.md"
+
+    /** A Markdown link to a file in Kotlin's `third_party/`: `[x]: path` or `[x](path)`. */
+    val KOTLIN_README_LINK = Regex("""(?:]: |]\()(third_party/[\w./-]+)""")
 
     /** Classes for newer JVMs, in a multi-release jar: checked as if they were at the top. */
     val MULTI_RELEASE = Regex("^META-INF/versions/\\d+/")
@@ -171,6 +198,10 @@ class ThirdPartyNoticesTest {
             "kotlin" to KOTLIN,
             "kotlin/reflect/jvm/internal/impl/protobuf" to
                 KOTLIN + "third-party/kotlin/third_party/protobuf_license.txt",
+            // kotlin-reflect 1.6.10's code derived from PCollections. Kotlin's v2.4.21 set does
+            // not list it, so its notice comes from Kotlin's v1.6.10 set.
+            "kotlin/reflect/jvm/internal/pcollections" to
+                KOTLIN + "third-party/kotlin-reflect/pcollections_LICENSE.txt",
             "custom-formatters.js" to KOTLIN,
             "kotlinManifest.properties" to KOTLIN,
             "org/jetbrains/kotlin/protobuf" to

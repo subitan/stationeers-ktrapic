@@ -8,12 +8,14 @@ this README included, under `META-INF/ktrapic/third-party/`. KTrapIC's own licen
 are next to it in `META-INF/ktrapic/`.
 
 `daemon/src/test/kotlin/ktrapic/daemon/ThirdPartyNoticesTest.kt` maps every package in the jar to
-the files here that cover it, and fails when the jar gains a package that no entry covers.
+the files here that cover it, and fails when the jar gains a package that no entry covers, or when
+the jar lacks a file that an entry names or that `kotlin/README.md` links to.
 
 | Directory | Component (version) | Packages in the jar | Source |
 |---|---|---|---|
-| `kotlin/` | Kotlin compiler, standard library, reflection, scripting, build-tools API, daemon client (2.4.21; kotlin-reflect 1.6.10, as kotlin-compiler-embeddable 2.4.21 depends on it), all Apache-2.0 | `kotlin/`, `org/jetbrains/kotlin/` (except the shaded libraries below) | Kotlin's `license/` set at tag v2.4.21: https://github.com/JetBrains/kotlin/tree/v2.4.21/license |
+| `kotlin/` | Kotlin compiler, standard library, reflection, scripting, build-tools API, daemon client (2.4.21; kotlin-reflect 1.6.10, as kotlin-compiler-embeddable 2.4.21 depends on it), all Apache-2.0 | `kotlin/`, `org/jetbrains/kotlin/` (except the shaded and derived code below) | Kotlin's `license/` set at tag v2.4.21: https://github.com/JetBrains/kotlin/tree/v2.4.21/license |
 | `kotlin/third_party/` | Libraries shaded into the Kotlin compiler that Kotlin's set covers: fastutil 8.5.14-jb1, Guava 33.3.1-jre, protobuf 2.6.1 (relocated), Aalto XML 1.3.0, Stax2 API 4.2.1, OpenTelemetry API 1.41.0 | see the test | as above |
+| `kotlin-reflect/` | Code in kotlin-reflect 1.6.10 derived from PCollections, MIT (Kotlin's v2.4.21 set does not list it) | `kotlin/reflect/jvm/internal/pcollections/` | `pcollections_LICENSE.txt` from Kotlin's `license/third_party/` at tag v1.6.10: https://github.com/JetBrains/kotlin/blob/v1.6.10/license/third_party/pcollections_LICENSE.txt |
 | `intellij/` | IntelliJ Platform core, shaded into the Kotlin compiler (build 251.27812.49), Apache-2.0 | `org/jetbrains/kotlin/com/intellij/`, `org/jetbrains/concurrency/`, `messages/`, `misc/` | https://github.com/JetBrains/intellij-community/tree/idea/251.27812.49 (`LICENSE.txt`, `NOTICE.txt`) |
 | `asm/` | ASM 9.6.1 (IntelliJ's `asm-all` build), BSD-3-Clause | `org/jetbrains/org/objectweb/asm/` | https://gitlab.ow2.org/asm/asm/-/raw/ASM_9_6/LICENSE.txt (no ASM_9_6_1 tag exists) |
 | `jdom/` | JDOM, IntelliJ's fork (util-jdom 251.27812.49), JDOM license | `org/jetbrains/kotlin/org/jdom/` | https://github.com/hunterhacker/jdom/blob/JDOM-2.0.6.1/LICENSE.txt (the fork's sources carry the same text, copyright 2000-2012) |
@@ -25,7 +27,7 @@ the files here that cover it, and fails when the jar gains a package that no ent
 | `javax-inject/` | javax.inject 1, Apache-2.0 | `org/jetbrains/kotlin/javax/inject/` | The project ships no license file (its `pom.xml` names Apache-2.0); the text is https://www.apache.org/licenses/LICENSE-2.0.txt |
 | `kotlinx-collections-immutable/` | kotlinx.collections.immutable 0.5.1, Apache-2.0 | `org/jetbrains/kotlin/kotlinx/collections/immutable/` | https://github.com/Kotlin/kotlinx.collections.immutable/blob/v0.5.1/LICENSE.txt |
 | `streamex/` | StreamEx 0.7.2, Apache-2.0 | `org/jetbrains/kotlin/one/util/streamex/` | https://github.com/amaembo/streamex/blob/streamex-0.7.2/LICENSE |
-| `lz4-java/` | lz4-java 1.7.1, Apache-2.0, with its native libraries built from LZ4 and xxHash (BSD-2-Clause) | `org/jetbrains/kotlin/net/jpountz/` | https://github.com/lz4/lz4-java/blob/1.7.1/LICENSE.txt; `lz4-lib-LICENSE` is `lib/LICENSE` of LZ4 at the submodule commit lz4-java 1.7.1 pins: https://github.com/lz4/lz4/blob/fdf2ef5809ca875c454510610764d9125ef2ebbd/lib/LICENSE |
+| `lz4-java/` | lz4-java 1.7.1, Apache-2.0, with its native libraries built from LZ4's `lib/` (`lz4.c`, `lz4hc.c` and LZ4's copy of xxHash, `xxhash.c`; BSD-2-Clause) | `org/jetbrains/kotlin/net/jpountz/` | https://github.com/lz4/lz4-java/blob/1.7.1/LICENSE.txt; `lz4-lib-LICENSE` is `lib/LICENSE` of LZ4 at the submodule commit lz4-java 1.7.1 pins: https://github.com/lz4/lz4/blob/fdf2ef5809ca875c454510610764d9125ef2ebbd/lib/LICENSE |
 | `vavr/` | Vavr 0.10.4, Apache-2.0 | `org/jetbrains/kotlin/io/vavr/` | https://github.com/vavr-io/vavr/blob/v0.10.4/LICENSE |
 | `kotlinx-coroutines/` | kotlinx.coroutines 1.8.0, Apache-2.0 | `kotlinx/coroutines/`, `_COROUTINE/`, `DebugProbesKt.bin` | https://github.com/Kotlin/kotlinx.coroutines/tree/1.8.0 (`LICENSE.txt`, `license/NOTICE.txt`) |
 | `gson/` | Gson 2.8.9, Apache-2.0 | `com/google/gson/` | https://github.com/google/gson/blob/gson-parent-2.8.9/LICENSE |
