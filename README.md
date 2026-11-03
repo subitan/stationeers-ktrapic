@@ -250,6 +250,9 @@ and `import-pytrapic-structures <structures_generated.py> <source description>`.
 PyTrapIC is under the MIT License; its notice is in `sdk/data/PYTRAPIC-LICENSE`. The daemon jar
 and the IntelliJ plugin's `script/sdk.jar` ship it, with KTrapIC's own `LICENSE`, in
 `META-INF/ktrapic/`; the IC10 Editor plugin's release zip carries KTrapIC's `LICENSE`.
+The daemon jar also bundles the Kotlin compiler and other libraries; their license notices, kept in
+[`third_party/licenses/`](third_party/licenses/README.md), ship in the jar under
+`META-INF/ktrapic/third-party/`.
 
 ## Formatting
 
