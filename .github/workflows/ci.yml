@@ -148,6 +148,10 @@ jobs:
       - name: Build and test the plugin
         working-directory: intellij
         run: bash ./gradlew --no-daemon buildPlugin test
+      - name: Check the license notices in the plugin's sdk.jar
+        run: |
+          unzip -p intellij/build/bundled/sdk.jar META-INF/ktrapic/LICENSE | cmp - LICENSE
+          unzip -p intellij/build/bundled/sdk.jar META-INF/ktrapic/PYTRAPIC-LICENSE | cmp - sdk/data/PYTRAPIC-LICENSE
       - uses: actions/upload-artifact@v4
         with:
           name: ktrapic-intellij
