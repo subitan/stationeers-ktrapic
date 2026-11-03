@@ -6,3 +6,10 @@ define_kt_toolchain(
     jvm_target = "21",
     language_version = "2.4",
 )
+
+# KTrapIC's license, shipped in the daemon jar (//daemon:notices) and the IC10 Editor plugin's
+# release zip.
+exports_files(
+    ["LICENSE"],
+    visibility = ["//daemon:__pkg__"],
+)

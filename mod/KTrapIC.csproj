@@ -111,13 +111,13 @@
     <Copy SourceFiles="@(AboutFiles)" DestinationFolder="$(StationeersModDir)/KTrapIC/About/%(RecursiveDir)" SkipUnchangedFiles="true" />
   </Target>
 
-  <!-- The release layout, dist/KTrapIC/{KTrapIC.dll, About/}, which release.yml zips. -->
+  <!-- The release layout, dist/KTrapIC/{KTrapIC.dll, LICENSE, About/}, which release.yml zips. -->
   <Target Name="Dist" DependsOnTargets="Build">
     <ItemGroup>
       <AboutFiles Include="About/**/*" />
     </ItemGroup>
     <RemoveDir Directories="$(DistDir)/KTrapIC" />
-    <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(DistDir)/KTrapIC" />
+    <Copy SourceFiles="$(TargetPath);$(MSBuildProjectDirectory)/../LICENSE" DestinationFolder="$(DistDir)/KTrapIC" />
     <Copy SourceFiles="@(AboutFiles)" DestinationFolder="$(DistDir)/KTrapIC/About/%(RecursiveDir)" />
   </Target>
 </Project>

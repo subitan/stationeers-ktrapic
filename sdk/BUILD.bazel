@@ -38,3 +38,9 @@ exports_files(
     ],
     visibility = ["//harness:__pkg__"],
 )
+
+# PyTrapIC's license, which the generated sources derived from its data ship with.
+exports_files(
+    ["data/PYTRAPIC-LICENSE"],
+    visibility = ["//daemon:__pkg__"],
+)

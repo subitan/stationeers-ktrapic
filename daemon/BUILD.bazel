@@ -1,6 +1,10 @@
+load("@bazel_skylib//rules:copy_file.bzl", "copy_file")
 load("@rules_java//java:java_binary.bzl", "java_binary")
+load("@rules_java//java:java_library.bzl", "java_library")
 load("@rules_kotlin//kotlin:jvm.bzl", "kt_jvm_library")
 load("//build_defs/kotlin:junit5.bzl", "kt_junit5_tests")
+
+_NOTICES_TEST = "src/test/kotlin/ktrapic/daemon/NoticesTest.kt"
 
 kt_jvm_library(
     name = "daemon_lib",
@@ -14,6 +18,29 @@ kt_jvm_library(
     ],
 )
 
+# The license notices the deploy jar ships, in META-INF/ktrapic/: KTrapIC's own, and PyTrapIC's,
+# whose data the SDK's generated sources come from. NoticesTest checks they reach the jar.
+copy_file(
+    name = "notice_ktrapic",
+    src = "//:LICENSE",
+    out = "notices/META-INF/ktrapic/LICENSE",
+)
+
+copy_file(
+    name = "notice_pytrapic",
+    src = "//sdk:data/PYTRAPIC-LICENSE",
+    out = "notices/META-INF/ktrapic/PYTRAPIC-LICENSE",
+)
+
+java_library(
+    name = "notices",
+    resource_strip_prefix = "daemon/notices",
+    resources = [
+        ":notice_ktrapic",
+        ":notice_pytrapic",
+    ],
+)
+
 # The compile daemon (PyTrapIC's stdin/stdout protocol, or the Language Server Protocol with
 # --lsp). The playground and the IC10 Editor plugin run its deploy jar:
 # bazel build //daemon:ktrapic-daemon_deploy.jar
@@ -21,18 +48,39 @@ java_binary(
     name = "ktrapic-daemon",
     main_class = "ktrapic.daemon.DaemonKt",
     visibility = ["//visibility:public"],
-    runtime_deps = [":daemon_lib"],
+    runtime_deps = [
+        ":daemon_lib",
+        ":notices",
+    ],
 )
 
 kt_junit5_tests(
     name = "daemon_tests",
-    srcs = glob(["src/test/kotlin/**/*.kt"]),
+    srcs = glob(
+        ["src/test/kotlin/**/*.kt"],
+        exclude = [_NOTICES_TEST],
+    ),
     associates = [":daemon_lib"],
     size = "medium",
     deps = [
         "//compiler/api",
         "//compiler/frontend",
         "@maven//:com_google_code_gson_gson",
+        "@maven//:com_google_truth_truth",
+        "@maven//:org_junit_jupiter_junit_jupiter_api",
+    ],
+)
+
+# Apart from the tests above, so that only it waits on the deploy jar.
+kt_junit5_tests(
+    name = "notices_tests",
+    srcs = [_NOTICES_TEST],
+    data = [
+        ":ktrapic-daemon_deploy.jar",
+        "//:LICENSE",
+        "//sdk:data/PYTRAPIC-LICENSE",
+    ],
+    deps = [
         "@maven//:com_google_truth_truth",
         "@maven//:org_junit_jupiter_junit_jupiter_api",
     ],
