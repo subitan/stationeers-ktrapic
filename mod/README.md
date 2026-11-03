@@ -27,8 +27,9 @@ mod. Install KTrapIC in one of three ways:
   the first release on the Workshop, v0.1.2.)
 - **From a GitHub release:** unzip a release's `KTrapIC-<version>.zip` into StationeersLaunchPad's
   local mods directory (`Documents/My Games/Stationeers/mods`), which gives
-  `mods/KTrapIC/KTrapIC.dll` and `mods/KTrapIC/About/`. The first release,
-  [v0.1.0](https://github.com/subitan/stationeers-ktrapic/releases/tag/v0.1.0), is on GitHub only;
+  `mods/KTrapIC/KTrapIC.dll` and `mods/KTrapIC/About/`. The first releases,
+  [v0.1.0](https://github.com/subitan/stationeers-ktrapic/releases/tag/v0.1.0) and
+  [v0.1.1](https://github.com/subitan/stationeers-ktrapic/releases/tag/v0.1.1), are on GitHub only;
   from v0.1.2 on, each release is on the Workshop too. The
   [`dev` release](https://github.com/subitan/stationeers-ktrapic/releases/tag/dev)'s zip,
   `KTrapIC-main.zip`, is a Debug build of the latest `main`.
