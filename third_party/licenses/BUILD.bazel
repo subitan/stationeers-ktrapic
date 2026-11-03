@@ -1,0 +1,32 @@
+load("@bazel_skylib//rules:copy_file.bzl", "copy_file")
+load("@rules_java//java:java_library.bzl", "java_library")
+
+# The license and notice files of the third-party code in the daemon's deploy jar (see README.md).
+# Every file here, README.md included, ships in the jar under META-INF/ktrapic/third-party/.
+_NOTICES = glob(
+    ["**"],
+    exclude = ["BUILD.bazel"],
+)
+
+[
+    copy_file(
+        name = "copy_" + notice.replace("/", "_"),
+        src = notice,
+        out = "META-INF/ktrapic/third-party/" + notice,
+    )
+    for notice in _NOTICES
+]
+
+java_library(
+    name = "notices",
+    resource_strip_prefix = "third_party/licenses",
+    resources = [":copy_" + notice.replace("/", "_") for notice in _NOTICES],
+    visibility = ["//daemon:__pkg__"],
+)
+
+# The source files, for the daemon's ThirdPartyNoticesTest to compare the jar against.
+filegroup(
+    name = "files",
+    srcs = _NOTICES,
+    visibility = ["//daemon:__pkg__"],
+)

@@ -4,7 +4,10 @@ load("@rules_java//java:java_library.bzl", "java_library")
 load("@rules_kotlin//kotlin:jvm.bzl", "kt_jvm_library")
 load("//build_defs/kotlin:junit5.bzl", "kt_junit5_tests")
 
-_NOTICES_TEST = "src/test/kotlin/ktrapic/daemon/NoticesTest.kt"
+_NOTICES_TESTS = [
+    "src/test/kotlin/ktrapic/daemon/NoticesTest.kt",
+    "src/test/kotlin/ktrapic/daemon/ThirdPartyNoticesTest.kt",
+]
 
 kt_jvm_library(
     name = "daemon_lib",
@@ -19,7 +22,9 @@ kt_jvm_library(
 )
 
 # The license notices the deploy jar ships, in META-INF/ktrapic/: KTrapIC's own, and PyTrapIC's,
-# whose data the SDK's generated sources come from. NoticesTest checks they reach the jar.
+# whose data the SDK's generated sources come from. NoticesTest checks they reach the jar. The
+# bundled libraries' notices come from //third_party/licenses, in META-INF/ktrapic/third-party/;
+# ThirdPartyNoticesTest checks that every package in the jar has one.
 copy_file(
     name = "notice_ktrapic",
     src = "//:LICENSE",
@@ -51,6 +56,7 @@ java_binary(
     runtime_deps = [
         ":daemon_lib",
         ":notices",
+        "//third_party/licenses:notices",
     ],
 )
 
@@ -58,7 +64,7 @@ kt_junit5_tests(
     name = "daemon_tests",
     srcs = glob(
         ["src/test/kotlin/**/*.kt"],
-        exclude = [_NOTICES_TEST],
+        exclude = _NOTICES_TESTS,
     ),
     associates = [":daemon_lib"],
     size = "medium",
@@ -71,14 +77,15 @@ kt_junit5_tests(
     ],
 )
 
-# Apart from the tests above, so that only it waits on the deploy jar.
+# Apart from the tests above, so that only these wait on the deploy jar.
 kt_junit5_tests(
     name = "notices_tests",
-    srcs = [_NOTICES_TEST],
+    srcs = _NOTICES_TESTS,
     data = [
         ":ktrapic-daemon_deploy.jar",
         "//:LICENSE",
         "//sdk:data/PYTRAPIC-LICENSE",
+        "//third_party/licenses:files",
     ],
     deps = [
         "@maven//:com_google_truth_truth",
