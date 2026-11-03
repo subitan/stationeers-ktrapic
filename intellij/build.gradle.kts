@@ -113,6 +113,11 @@ val sdkJar =
       from(sdk.output)
       // The sources too, for the KDoc that hovers in the editor show, as in the Bazel build.
       from(sdk.kotlin.srcDirs)
+      // The license notices, as in the daemon's jar: KTrapIC's own, and PyTrapIC's, whose data the
+      // SDK's generated sources come from.
+      from(listOf("../LICENSE", "../sdk/data/PYTRAPIC-LICENSE").map(rootProject::file)) {
+        into("META-INF/ktrapic")
+      }
       // The platform's Gradle plugin adds plugin.xml to every source set's resources.
       exclude("META-INF/plugin.xml")
     }

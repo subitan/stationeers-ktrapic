@@ -248,8 +248,8 @@ The enums and prefabs were imported from
 with `bazel run //tools/datagen -- import-pytrapic <types_generated.py> <source description>`
 and `import-pytrapic-structures <structures_generated.py> <source description>`.
 PyTrapIC is under the MIT License; its notice is in `sdk/data/PYTRAPIC-LICENSE`. The daemon jar
-ships it, with KTrapIC's own `LICENSE`, as `META-INF/ktrapic/`; the plugin's release zip carries
-KTrapIC's `LICENSE`.
+and the IntelliJ plugin's `script/sdk.jar` ship it, with KTrapIC's own `LICENSE`, in
+`META-INF/ktrapic/`; the IC10 Editor plugin's release zip carries KTrapIC's `LICENSE`.
 
 ## Formatting
 

@@ -117,7 +117,7 @@
       <AboutFiles Include="About/**/*" />
     </ItemGroup>
     <RemoveDir Directories="$(DistDir)/KTrapIC" />
-    <Copy SourceFiles="$(TargetPath);../LICENSE" DestinationFolder="$(DistDir)/KTrapIC" />
+    <Copy SourceFiles="$(TargetPath);$(MSBuildProjectDirectory)/../LICENSE" DestinationFolder="$(DistDir)/KTrapIC" />
     <Copy SourceFiles="@(AboutFiles)" DestinationFolder="$(DistDir)/KTrapIC/About/%(RecursiveDir)" />
   </Target>
 </Project>

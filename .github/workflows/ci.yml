@@ -81,8 +81,12 @@ jobs:
           mod/package-runtime.sh "$RUNNER_TEMP/runtime.zip"
           mkdir "$RUNNER_TEMP/runtime" && unzip -q "$RUNNER_TEMP/runtime.zip" -d "$RUNNER_TEMP/runtime"
           chmod +x "$RUNNER_TEMP"/runtime/bin/*
-      - name: Build the mod
-        run: dotnet build -c Release mod/KTrapIC.csproj
+      - name: Build the mod and its release layout
+        run: |
+          dotnet build -c Release -t:Dist mod/KTrapIC.csproj
+          test -f mod/dist/KTrapIC/KTrapIC.dll
+          test -f mod/dist/KTrapIC/LICENSE
+          test -f mod/dist/KTrapIC/About/About.xml
       - name: Install the mod from the checkout into a scratch mods directory
         run: |
           mods="$RUNNER_TEMP/mods" game="$RUNNER_TEMP/game"
