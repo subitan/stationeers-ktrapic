@@ -18,6 +18,7 @@ the jar lacks a file that an entry names or that `kotlin/README.md` links to.
 | `kotlin-reflect/` | Code in kotlin-reflect 1.6.10 derived from PCollections, MIT (Kotlin's v2.4.21 set does not list it) | `kotlin/reflect/jvm/internal/pcollections/` | `pcollections_LICENSE.txt` from Kotlin's `license/third_party/` at tag v1.6.10: https://github.com/JetBrains/kotlin/blob/v1.6.10/license/third_party/pcollections_LICENSE.txt |
 | `intellij/` | IntelliJ Platform core, shaded into the Kotlin compiler (build 251.27812.49), Apache-2.0 | `org/jetbrains/kotlin/com/intellij/`, `org/jetbrains/concurrency/`, `messages/`, `misc/` | https://github.com/JetBrains/intellij-community/tree/idea/251.27812.49 (`LICENSE.txt`, `NOTICE.txt`) |
 | `intellij/javolution_license.txt` | IntelliJ's `ImmutableText`, a pruned version of Javolution's `javolution.text.Text` (IntelliJ `platform/util/base`), BSD-2-Clause | `org/jetbrains/kotlin/com/intellij/util/text/ImmutableText` and its nested classes | `license/javolution_license.txt` of IntelliJ at the same tag: https://github.com/JetBrains/intellij-community/blob/idea/251.27812.49/license/javolution_license.txt (the same text as the class's source header) |
+| `commons-compress/` | IntelliJ's `UnrecognizedExtraField` (IntelliJ `platform/util`, in the source file `UnknownExtraField.java`), Apache Commons Compress's class of that name with IntelliJ's changes, Apache-2.0 (Commons Compress's `LICENSE.txt` is the Apache-2.0 text, as in `vavr/LICENSE`) | `org/jetbrains/kotlin/com/intellij/util/io/zip/UnrecognizedExtraField` | `NOTICE.txt` of Commons Compress 1.20, the release current when IntelliJ added the class (January 2021): https://github.com/apache/commons-compress/blob/rel/1.20/NOTICE.txt. The class keeps that release's ASF header and method bodies (`Arrays.copyOfRange`, the null check on the local data), which Apache Ant's `org.apache.tools.zip.UnrecognizedExtraField` has neither at 1.10.9 nor on its `master` |
 | `pluralize/` | IntelliJ's `Pluralizer`, from Blake Embrey's pluralize (IntelliJ `platform/util/base`), MIT | `org/jetbrains/kotlin/com/intellij/openapi/util/text/Pluralizer` | https://github.com/blakeembrey/pluralize/blob/v8.0.0/LICENSE (the text the class's source header quotes; IntelliJ's `license/` has no file for it) |
 | `asm/` | ASM 9.6.1 (IntelliJ's `asm-all` build), BSD-3-Clause | `org/jetbrains/org/objectweb/asm/` | https://gitlab.ow2.org/asm/asm/-/raw/ASM_9_6/LICENSE.txt (no ASM_9_6_1 tag exists) |
 | `jdom/` | JDOM, IntelliJ's fork (util-jdom 251.27812.49), JDOM license | `org/jetbrains/kotlin/org/jdom/` | https://github.com/hunterhacker/jdom/blob/JDOM-2.0.6.1/LICENSE.txt (the fork's sources carry the same text, copyright 2000-2012) |
@@ -43,19 +44,39 @@ Notes:
 - Gson, Guava, fastutil, Aalto XML, Jansi, StreamEx, Vavr and the OpenTelemetry API have no NOTICE
   file at their repository roots at these versions.
 - IntelliJ's `license/` directory at 251.27812.49 also has notices for JavaHelp, Saxon and YourKit.
-  The IntelliJ modules whose classes the jar holds are `platform/util*`, `platform/core-*`,
-  `platform/extensions`, `java/java-psi-*` and `java/java-frontback-*`. Their Java and Kotlin
-  sources at that tag, test directories aside, were searched for copyright lines that do not name
-  JetBrains in each file's first 99 lines, and for "adapted from", "derived from", "ported from"
-  and "public domain"; a file counted as in the jar when a class of its name is in the same package
-  under `org/jetbrains/kotlin/`. The files found that are in the jar, apart from the packages with
-  their own rows (`org/jdom`, `org/picocontainer`, `org/apache/log4j`), are `ImmutableText`,
-  `Pluralizer` and the six PicoContainer classes in `com/intellij/util/pico`, with their own rows
-  above; fastutil's `Hash` and AOSP's `DisposableWrapperList`, under Apache-2.0, which IntelliJ's
-  `LICENSE.txt` covers; and `ConcurrentIntObjectHashMap`, adapted from Doug Lea's public-domain
-  `ConcurrentHashMap`, which carries JetBrains' Apache-2.0 header. None is from JavaHelp, Saxon or
-  YourKit. The search reads headers and comments, so it would not find copied code that names its
-  source in neither.
+  None of the jar's IntelliJ code comes from them. How that code was checked: each class in the jar
+  under `org/jetbrains/kotlin/com/intellij/` and `org/jetbrains/concurrency/` was matched to the
+  IntelliJ source files at that tag that declare it, by each file's package and the classes,
+  interfaces, enums, objects and records it declares (nested ones included, and `<File>Kt` for
+  Kotlin files), not by file name. The matched files, test directories aside, are in
+  `platform/util` (with `util/base` and `util/xmlDom`), `platform/util-rt`,
+  `platform/util-class-loader`, `platform/core-api`, `platform/core-impl`, `platform/extensions`,
+  `platform/diagnostic`, `java/java-psi-api`, `java/java-psi-impl`, `java/java-frontback-psi-api`
+  and `java/java-frontback-psi-impl`. They account for every such class but one,
+  `openapi/vfs/VirtualFileSetFactoryKt`, whose source is in Kotlin's repository
+  (`compiler/cli/cli-base`, under JetBrains' Apache-2.0 header). The Java and Kotlin sources of
+  those modules were searched for copyright lines that do not name JetBrains, for the ASF header,
+  and for "adapted from", "derived from", "ported from", "copied from" and "public domain".
+  - In the jar, under another project's copyright: `ImmutableText` (Javolution), `Pluralizer`
+    (pluralize), the six PicoContainer classes in `com/intellij/util/pico` and
+    `UnrecognizedExtraField` (Commons Compress), with their own rows above; fastutil's
+    `com/intellij/psi/stubs/Hash` and AOSP's `DisposableWrapperList`, under Apache-2.0, which
+    IntelliJ's `LICENSE.txt` covers.
+  - In the jar, under JetBrains' header but naming another source: `ConcurrentIntObjectHashMap`,
+    adapted from Doug Lea's public-domain `ConcurrentHashMap`; `SmartFMap.toString`, which its
+    comment says is copied from the JDK's `AbstractMap`; and `indexOfIgnoreCase` in `Strings` and
+    `StringUtil`, which theirs say is copied from the JDK's `String.indexOf`. The jar, like
+    IntelliJ, ships no notice for these beyond IntelliJ's. `_JavaDocLexer` is JFlex output and has
+    no copyright header.
+  - Not in the jar: fastutil-derived `openapi/vfs/Hash`, `util/lang/Hash` and the three
+    `StrippedLong*` classes; Higher Frequency Trading's `Xxh3Impl`, `Access` and
+    `CharSequenceAccess`; Guava's `Murmur3_32Hash`; Thomas Mueller's `Xor16`; minimatch's three
+    files (MIT); AOSP's five `util/ui/accessibility` files; JGraphT-adapted `SimpleCyclesIterator`;
+    the JDK-derived `ImmutableList`; the public-domain `ReentrantMutex`, the hash maps and `Helpers`
+    in `com/intellij/concurrency`, and `util/ConcurrentLongObjectHashMap`; and nanoxml.
+  - The packages with their own rows (`org/jdom`, `org/picocontainer`, `org/apache/log4j`) were
+    not part of this match. The search reads headers and comments, so it would not find copied
+    code that names its source in neither.
 - The versions of the libraries shaded into the Kotlin compiler come from Kotlin's build files at
   v2.4.21 (`gradle/libs.versions.toml`, `gradle/versions.properties`,
   `prepare/compiler/build.gradle.kts`); the others from `maven_install.json`.

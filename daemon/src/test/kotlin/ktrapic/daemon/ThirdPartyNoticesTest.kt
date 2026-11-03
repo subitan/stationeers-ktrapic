@@ -218,6 +218,9 @@ class ThirdPartyNoticesTest {
                 INTELLIJ + "third-party/intellij/javolution_license.txt",
             "org/jetbrains/kotlin/com/intellij/openapi/util/text/Pluralizer.class" to
                 INTELLIJ + "third-party/pluralize/LICENSE",
+            // Apache Commons Compress's class, Apache-2.0 like IntelliJ, but with its own NOTICE.
+            "org/jetbrains/kotlin/com/intellij/util/io/zip/UnrecognizedExtraField.class" to
+                INTELLIJ + "third-party/commons-compress/NOTICE.txt",
             // Six of its classes are PicoContainer's exceptions; the rest are JetBrains'.
             "org/jetbrains/kotlin/com/intellij/util/pico" to
                 INTELLIJ + "third-party/picocontainer/LICENSE.txt",
