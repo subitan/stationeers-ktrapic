@@ -95,15 +95,20 @@ class ThirdPartyNoticesTest {
     val MULTI_RELEASE = Regex("^META-INF/versions/\\d+/")
 
     /**
-     * Whether [key] covers [path]: a key names a file, a directory with everything under it, or,
-     * ending in a slash and an asterisk, only the files directly in a directory. A path is covered
-     * by the longest key that covers it. META-INF/ holds manifests, service registrations, Kotlin
-     * module metadata, build metadata and the notices themselves, not packages, so the test leaves
-     * it out (apart from multi-release classes).
+     * Whether [key] covers [path]: a key names a file, a class with its nested classes, a directory
+     * with everything under it, or, ending in a slash and an asterisk, only the files directly in a
+     * directory. A path is covered by the longest key that covers it. META-INF/ holds manifests,
+     * service registrations, Kotlin module metadata, build metadata and the notices themselves, not
+     * packages, so the test leaves it out (apart from multi-release classes).
      */
     fun covers(key: String, path: String) =
-        if (key.endsWith("/*")) path.substringBeforeLast('/', "") == key.removeSuffix("/*")
-        else path == key || path.startsWith("$key/")
+        when {
+          key.endsWith("/*") -> path.substringBeforeLast('/', "") == key.removeSuffix("/*")
+          key.endsWith(".class") ->
+              path == key ||
+                  (path.startsWith(key.removeSuffix(".class") + "$") && path.endsWith(".class"))
+          else -> path == key || path.startsWith("$key/")
+        }
 
     val KTRAPIC = listOf("LICENSE", "PYTRAPIC-LICENSE")
     val KOTLIN =
@@ -208,6 +213,11 @@ class ThirdPartyNoticesTest {
                 KOTLIN + "third-party/kotlin/third_party/protobuf_license.txt",
             // IntelliJ Platform core, shaded into the compiler, and what it bundles.
             "org/jetbrains/kotlin/com/intellij" to INTELLIJ,
+            // IntelliJ classes that carry another project's code, under that project's license.
+            "org/jetbrains/kotlin/com/intellij/util/text/ImmutableText.class" to
+                INTELLIJ + "third-party/intellij/javolution_license.txt",
+            "org/jetbrains/kotlin/com/intellij/openapi/util/text/Pluralizer.class" to
+                INTELLIJ + "third-party/pluralize/LICENSE",
             "org/jetbrains/concurrency" to INTELLIJ,
             "messages" to INTELLIJ,
             "misc" to INTELLIJ,
