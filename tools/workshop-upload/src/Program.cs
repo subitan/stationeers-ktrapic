@@ -22,7 +22,10 @@ using Steamworks.Ugc;
 /// --visibility alone changes nothing else. Every upload is private unless --visibility says
 /// otherwise. Every item gets the Mod tag (see ModTag): --create adds it to About.xml's tags, and
 /// an update of an item that lacks it sets the item's tags from About.xml with Mod added; --check
-/// and --visibility alone say when it's missing.
+/// and --visibility alone say when it's missing. Facepunch.Steamworks hands an item's tags back
+/// lowercased, so the check of an existing item can't see the tag's case: an item tagged Mod in
+/// another casing counts as tagged and keeps its tags. Items made by the game's publisher or by
+/// this tool have the exact Mod.
 /// </summary>
 internal static class Program
 {
