@@ -188,8 +188,8 @@ internal static class Program
                 string preview = Arg("--preview");
                 if (preview != null)
                     editor = editor.WithPreviewFile(Path.GetFullPath(preview));
-                // Setting any tag replaces all the item's tags, and Steam hands them back lowercased,
-                // so they're set from About.xml, as --create sets them.
+                // Setting any tag replaces all the item's tags, and Facepunch.Steamworks hands them back
+                // lowercased, so they're set from About.xml, as --create sets them.
                 if (!tagged && !visibilityOnly)
                 {
                     Console.WriteLine($"Setting the tags from About.xml, with {ModTag}.");
@@ -223,13 +223,16 @@ internal static class Program
         }
     }
 
-    /// <summary>About.xml's tags, led by the Mod tag unless they already have it.</summary>
+    /// <summary>
+    /// About.xml's tags, led by the Mod tag. Any other casing of Mod is dropped, since the game and
+    /// StationeersLaunchPad ask Steam for exactly Mod.
+    /// </summary>
     private static string[] AboutTags(XElement meta)
     {
         var tags = (meta.Element("Tags")?.Elements("Tag") ?? Enumerable.Empty<XElement>())
             .Select(tag => tag.Value.Trim()).Where(tag => tag.Length > 0).ToList();
-        if (!tags.Contains(ModTag, StringComparer.OrdinalIgnoreCase))
-            tags.Insert(0, ModTag);
+        tags.RemoveAll(tag => string.Equals(tag, ModTag, StringComparison.OrdinalIgnoreCase));
+        tags.Insert(0, ModTag);
         return tags.ToArray();
     }
 }
