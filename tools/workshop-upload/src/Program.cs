@@ -16,15 +16,24 @@ using Steamworks.Ugc;
 ///   WorkshopUpload --create --content DIR [--title TEXT] [--preview PNG] --note TEXT [--visibility private|friends|public]
 /// --check only reads the item's details; nothing changes. An update sets the content, preview,
 /// change note and visibility, and replaces the description with DIR/About/About.xml's, headed by
-/// its version; the title and tags stay as they are. --create makes a new item, as the game's
-/// publisher does, from About.xml's name (or --title), description (headed by its version, as an
-/// update's is) and tags, with DIR/About/Preview.png (or --preview) as its preview, and prints the
-/// new item's ID. --visibility alone changes nothing else. Every upload is private unless
-/// --visibility says otherwise.
+/// its version; the title stays as it is. --create makes a new item, as the game's publisher does,
+/// from About.xml's name (or --title), description (headed by its version, as an update's is) and
+/// tags, with DIR/About/Preview.png (or --preview) as its preview, and prints the new item's ID.
+/// --visibility alone changes nothing else. Every upload is private unless --visibility says
+/// otherwise. Every item gets the Mod tag (see ModTag): --create adds it to About.xml's tags, and
+/// an update of an item that lacks it sets the item's tags from About.xml with Mod added; --check
+/// and --visibility alone say when it's missing. Facepunch.Steamworks hands an item's tags back
+/// lowercased, so the check of an existing item can't see the tag's case: an item tagged Mod in
+/// another casing counts as tagged and keeps its tags. Items made by the game's publisher or by
+/// this tool have the exact Mod.
 /// </summary>
 internal static class Program
 {
     private const uint StationeersAppId = 544550;
+    // The game's own Workshop list, and StationeersLaunchPad's, ask Steam only for subscribed items
+    // tagged Mod, the tag the game's publisher gives every mod; an item without it is downloaded
+    // but never listed. Steam's item page doesn't show it.
+    private const string ModTag = "Mod";
 
     private static async Task<int> Main(string[] args)
     {
@@ -122,8 +131,8 @@ internal static class Program
                 .WithContent(Path.GetFullPath(content))
                 .WithPreviewFile(Path.GetFullPath(preview))
                 .WithChangeLog(note);
-            foreach (var tag in meta.Element("Tags")?.Elements("Tag") ?? Enumerable.Empty<XElement>())
-                editor = editor.WithTag(tag.Value.Trim());
+            foreach (var tag in AboutTags(meta))
+                editor = editor.WithTag(tag);
         }
 
         try
@@ -169,6 +178,10 @@ internal static class Program
                     Console.Error.WriteLine("This account doesn't own the item, so it can't update it.");
                     return 1;
                 }
+                bool tagged = it.HasTag(ModTag);
+                if (!tagged)
+                    Console.WriteLine($"It has no {ModTag} tag, so the game and StationeersLaunchPad don't list it" +
+                        (check || visibilityOnly ? "; an update with --content adds the tag." : "."));
                 if (check)
                     return 0;
 
@@ -178,6 +191,14 @@ internal static class Program
                 string preview = Arg("--preview");
                 if (preview != null)
                     editor = editor.WithPreviewFile(Path.GetFullPath(preview));
+                // Setting any tag replaces all the item's tags, and Facepunch.Steamworks hands them back
+                // lowercased, so they're set from About.xml, as --create sets them.
+                if (!tagged && !visibilityOnly)
+                {
+                    Console.WriteLine($"Setting the tags from About.xml, with {ModTag}.");
+                    foreach (var tag in AboutTags(meta))
+                        editor = editor.WithTag(tag);
+                }
             }
             switch (visibility)
             {
@@ -203,5 +224,18 @@ internal static class Program
         {
             SteamClient.Shutdown();
         }
+    }
+
+    /// <summary>
+    /// About.xml's tags, led by the Mod tag. Any other casing of Mod is dropped, since the game and
+    /// StationeersLaunchPad ask Steam for exactly Mod.
+    /// </summary>
+    private static string[] AboutTags(XElement meta)
+    {
+        var tags = (meta.Element("Tags")?.Elements("Tag") ?? Enumerable.Empty<XElement>())
+            .Select(tag => tag.Value.Trim()).Where(tag => tag.Length > 0).ToList();
+        tags.RemoveAll(tag => string.Equals(tag, ModTag, StringComparison.OrdinalIgnoreCase));
+        tags.Insert(0, ModTag);
+        return tags.ToArray();
     }
 }
