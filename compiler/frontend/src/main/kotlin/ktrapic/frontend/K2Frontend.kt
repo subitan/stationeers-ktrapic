@@ -327,14 +327,39 @@ private class CollectingMessageCollector : MessageCollector {
   }
 
   /**
-   * Whether what starts at 1-based [line] and [column] of [text] is written after a `.`, as a
-   * member of what comes before it (`Small` in `Generator.Small`).
+   * Whether what starts at 1-based [line] and [column] of [text] is written after a `.` or `::`, as
+   * a member of what comes before it (`Small` in `Generator.Small`, `Generator::Small`), with only
+   * whitespace, line breaks or block comments between them.
    */
   private fun afterDot(text: String, line: Int, column: Int): Boolean {
-    val lineText = text.lineSequence().elementAtOrNull(line - 1) ?: return false
-    var at = minOf(column - 1, lineText.length) - 1
-    while (at >= 0 && lineText[at].isWhitespace()) at--
-    return at >= 0 && lineText[at] == '.'
+    var at = (offsetOf(text, line, column) ?: return false) - 1
+    while (at >= 0) {
+      at =
+          when {
+            text[at].isWhitespace() -> at - 1
+            text[at] == '/' && at > 0 && text[at - 1] == '*' ->
+                text.lastIndexOf("/*", at - 2).takeIf { it >= 0 }?.minus(1) ?: return false
+            else -> break
+          }
+    }
+    if (at < 0) return false
+    return text[at] == '.' || (text[at] == ':' && at > 0 && text[at - 1] == ':')
+  }
+
+  /**
+   * The offset in [text] of 1-based [line] and [column], kept within that line, or null if [text]
+   * has fewer lines. Lines end as [lineSequence] ends them: at `\r\n`, `\n` or `\r`.
+   */
+  private fun offsetOf(text: String, line: Int, column: Int): Int? {
+    val breaks = charArrayOf('\n', '\r')
+    var start = 0
+    repeat(line - 1) {
+      val end = text.indexOfAny(breaks, start)
+      if (end < 0) return null
+      start = if (text[end] == '\r' && text.getOrNull(end + 1) == '\n') end + 2 else end + 1
+    }
+    val lineEnd = text.indexOfAny(breaks, start).let { if (it < 0) text.length else it }
+    return minOf(start + maxOf(column - 1, 0), lineEnd)
   }
 }
 

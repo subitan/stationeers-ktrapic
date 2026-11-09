@@ -104,7 +104,8 @@ moment after typing stops:
   or `Item` a game name starts with doesn't count. Accepting the list (the editor's autocomplete
   key) types the part that all the names starting with what's typed share. When none start with
   it and just one is found by its game name, accepting puts that one in place of what's typed:
-  `Stirling` becomes `Generator.StirlingEngine`. Until the compiler has started, nothing is listed.
+  `Stirling` becomes `Generator.StirlingEngine`. So does a whole game name that is part of another
+  one: `WindTurbine` becomes `Generator.WindTurbine`, not `Generator.UprightWindTurbine`. Until the compiler has started, nothing is listed.
 - Resting the mouse on a name shows what it is: the class it was used on, its declaration
   (`var Text: String`), whether a logic type is read-only or write-only, and the SDK's
   description of it, where the SDK has one. An error's message, if the name has one, comes first.

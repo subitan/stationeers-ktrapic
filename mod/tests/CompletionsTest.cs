@@ -367,6 +367,23 @@ public class CompletionsTest
     }
 
     [Fact]
+    public void ReplacesTheWordWithTheOneOfSeveralFoundThatItNamesInFull()
+    {
+        var generator = Item("Generator", 0);
+        generator.filterText = "Generator WindTurbine UprightWindTurbine";
+        var upright = Item("Generator.UprightWindTurbine", 1);
+        upright.filterText = "Generator.UprightWindTurbine UprightWindTurbine";
+        var wind = Item("Generator.WindTurbine", 2);
+        wind.filterText = "Generator.WindTurbine WindTurbine";
+        var completions = new[] { generator, upright, wind };
+
+        Assert.Equal("Generator.WindTurbine", Completions.Choose(completions, "WindTurbine").Replace);
+        Assert.Equal("Generator.WindTurbine", Completions.Choose(completions, "windturbine").Replace);
+        Assert.Null(Completions.Choose(completions, "Wind").Replace);
+        Assert.Null(Completions.Choose(completions, "Turbine").Replace);
+    }
+
+    [Fact]
     public void ReplacesNothingWhenSeveralAreFoundByAGameNameOrOneStartsWithTheWord()
     {
         var led = Item("LedDisplay", 0);

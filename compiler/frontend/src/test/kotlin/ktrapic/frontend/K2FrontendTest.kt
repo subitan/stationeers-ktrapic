@@ -120,6 +120,11 @@ class K2FrontendTest {
   fun `a wrong member written after its qualifier gets no other family's member suggested`() {
     assertThat(errorFor("val e = Generator.Small.at(d0)\n"))
         .isEqualTo("Unresolved reference 'Small'.")
+    assertThat(errorFor("val e = Generator.\n    Small.at(d0)\n"))
+        .isEqualTo("Unresolved reference 'Small'.")
+    assertThat(errorFor("val e = Generator. /* c */ Small\n"))
+        .isEqualTo("Unresolved reference 'Small'.")
+    assertThat(errorFor("val e = Generator::Small\n")).isEqualTo("Unresolved reference 'Small'.")
   }
 
   @Test

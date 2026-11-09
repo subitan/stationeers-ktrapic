@@ -27,8 +27,10 @@ namespace KTrapIC
     /// (<see cref="Completions.Choose"/>), how many matched in all, and what accepting does: insert
     /// <see cref="Insert"/>, what those starting with the word share past it (the IC10 Editor's
     /// popup has no way to pick one), or, when none start with it and only one is found by its
-    /// <c>filterText</c> (a family found with its member doesn't count), put <see cref="Replace"/>, that one's label, in place of the word
-    /// (<c>Generator.StirlingEngine</c> for <c>Stirling</c>). Null when nothing is worth showing.
+    /// <c>filterText</c> (a family found with its member doesn't count) or just one of several has
+    /// the word as a whole word of it, put <see cref="Replace"/>, that one's label, in place of the
+    /// word (<c>Generator.StirlingEngine</c> for <c>Stirling</c>, <c>Generator.WindTurbine</c> for
+    /// <c>WindTurbine</c>). Null when nothing is worth showing.
     /// </summary>
     public sealed class CompletionChoice
     {
@@ -133,8 +135,9 @@ namespace KTrapIC
         /// <see cref="WordStarts"/>). Not those starting with <c>_</c>. Null if none match, or
         /// the only one is the word itself. What accepting inserts is what those starting with the
         /// word share past it; when none start with it and just one is found by its
-        /// <c>filterText</c>, not counting a family whose member is found too, accepting replaces
-        /// the word with that one's label instead.
+        /// <c>filterText</c>, not counting a family whose member is found too, or just one of several
+        /// has the word as a whole word of its <c>filterText</c>, accepting replaces the word with
+        /// that one's label instead.
         /// </summary>
         public static CompletionChoice Choose(IEnumerable<Completion> completions, string word)
         {
@@ -165,21 +168,31 @@ namespace KTrapIC
                 Shown = matching.Take(MaxShown).ToList(),
                 Matched = matching.Count,
                 Insert = shared.Length > word.Length ? shared.Substring(word.Length) : null,
-                Replace = named.Count == 0 ? OnlyOneFound(found) : null,
+                Replace = named.Count == 0 ? OnlyOneFound(found, word) : null,
             };
         }
 
         /// <summary>
         /// The label of the one completion of <paramref name="found"/> that isn't the qualifier of
-        /// another's label, or null if there isn't just one. A family's <c>filterText</c> carries
-        /// its members' game names, so a word that finds <c>Generator.StirlingEngine</c> finds
-        /// <c>Generator</c> too; the member is the one meant.
+        /// another's label, or, when there are several, of the one whose <c>filterText</c> has
+        /// <paramref name="word"/> as a whole word, ignoring case; null if there isn't just one. A
+        /// family's <c>filterText</c> carries its members' game names, so a word that finds
+        /// <c>Generator.StirlingEngine</c> finds <c>Generator</c> too; the member is the one meant.
+        /// A game name can be a word inside another's (<c>WindTurbine</c> in
+        /// <c>UprightWindTurbine</c>), so typing all of it still finds both; the one it names in
+        /// full is the one meant.
         /// </summary>
-        private static string OnlyOneFound(List<Completion> found)
+        private static string OnlyOneFound(List<Completion> found, string word)
         {
             var candidates = found
                 .Where(c => !found.Any(other => other.label.StartsWith(c.label + ".", StringComparison.Ordinal)))
                 .ToList();
+            if (candidates.Count > 1)
+            {
+                candidates = candidates
+                    .Where(c => c.filterText.Split(' ').Contains(word, StringComparer.OrdinalIgnoreCase))
+                    .ToList();
+            }
             return candidates.Count == 1 ? candidates[0].label : null;
         }
 
