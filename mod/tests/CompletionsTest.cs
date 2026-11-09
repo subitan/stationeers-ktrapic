@@ -394,9 +394,14 @@ public class CompletionsTest
         medium.filterText = "LedDisplay.Medium ConsoleLED1x2";
         var large = Item("LedDisplay.Large", 3);
         large.filterText = "LedDisplay.Large ConsoleLED1x3";
+        // The SDK's Console family, whose label is a game name the LedDisplay sizes start with too.
+        var console = Item("Console", 4);
+        console.filterText = "Console Console ConsoleDual ConsoleMonitor";
+        var leds = new[] { led, small, medium, large };
 
-        Assert.Null(Completions.Choose(new[] { led, small, medium, large }, "Console").Replace);
-        Assert.Equal("LedDisplay.Small", Completions.Choose(new[] { led, small, medium, large }, "ConsoleLED5").Replace);
+        Assert.Null(Completions.Choose(leds, "consoleLED").Replace);
+        Assert.Equal("LedDisplay.Small", Completions.Choose(leds, "ConsoleLED5").Replace);
+        Assert.Null(Completions.Choose(leds.Append(console), "Console").Replace);
         Assert.Null(Completions.Choose(new[] { Item("Consoles", 4), small }, "Console").Replace);
         Assert.Null(Completions.Choose(Generators(), "Generator").Replace);
     }

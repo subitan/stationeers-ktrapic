@@ -108,6 +108,18 @@ class K2FrontendTest {
   }
 
   @Test
+  fun `a family member written alone under a comment ending in a full stop is suggested`() {
+    val hint = "Unresolved reference 'StirlingEngine'. Did you mean Generator.StirlingEngine?"
+    assertThat(
+            errorFor("while (true) {\n    // Turn the engine on.\n    StirlingEngine.at(d0)\n}\n")
+        )
+        .isEqualTo(hint)
+    assertThat(errorFor("fun f() {\n    // Turn the engine on.\n    StirlingEngine.at(d0)\n}\n"))
+        .isEqualTo(hint)
+    assertThat(errorFor("val e = /* see x. /* y */ */ StirlingEngine.at(d0)\n")).isEqualTo(hint)
+  }
+
+  @Test
   fun `a member name several families share suggests a few of them`() {
     assertThat(errorFor("val e = Small.at(d0)\n"))
         .isEqualTo(
@@ -124,7 +136,14 @@ class K2FrontendTest {
         .isEqualTo("Unresolved reference 'Small'.")
     assertThat(errorFor("val e = Generator. /* c */ Small\n"))
         .isEqualTo("Unresolved reference 'Small'.")
+    assertThat(errorFor("val e = Generator. // c\n    Small\n"))
+        .isEqualTo("Unresolved reference 'Small'.")
+    assertThat(errorFor("val e = Generator. /* a /* b */ c */ Small\n"))
+        .isEqualTo("Unresolved reference 'Small'.")
+    assertThat(errorFor("val e = Generator.Small()\n")).isEqualTo("Unresolved reference 'Small'.")
     assertThat(errorFor("val e = Generator::Small\n")).isEqualTo("Unresolved reference 'Small'.")
+    assertThat(errorFor("val e: Generator.Small? = null\n"))
+        .isEqualTo("Unresolved reference 'Small'.")
   }
 
   @Test

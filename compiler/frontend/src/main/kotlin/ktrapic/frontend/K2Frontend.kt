@@ -40,7 +40,13 @@ import org.jetbrains.kotlin.config.CompilerConfiguration
 import org.jetbrains.kotlin.config.Services
 import org.jetbrains.kotlin.fir.FirSession
 import org.jetbrains.kotlin.ir.declarations.IrModuleFragment
+import org.jetbrains.kotlin.psi.KtCallExpression
+import org.jetbrains.kotlin.psi.KtCallableReferenceExpression
+import org.jetbrains.kotlin.psi.KtFile
 import org.jetbrains.kotlin.psi.KtPsiFactory
+import org.jetbrains.kotlin.psi.KtQualifiedExpression
+import org.jetbrains.kotlin.psi.KtSimpleNameExpression
+import org.jetbrains.kotlin.psi.KtUserType
 
 /**
  * A problem with the program, at a position in the user's source (1-based). [kotlin] is true for
@@ -116,7 +122,7 @@ object K2Frontend {
       // K2's extra checkers don't check the script's top-level properties, which the wrapper
       // makes members of an object: ScriptWrapper.unreadProperties does.
       val diagnostics =
-          (messages.diagnostics(wrapped, session) + ScriptWrapper.unreadProperties(script))
+          (messages.diagnostics(script, wrapped, session) + ScriptWrapper.unreadProperties(script))
               .sortedWith(compareBy({ it.line }, { it.column }))
       if (captured !is CapturedIr || diagnostics.any { it.severity == Diagnostic.Severity.ERROR }) {
         return FrontendResult.Failure(diagnostics)
@@ -293,11 +299,15 @@ private class CollectingMessageCollector : MessageCollector {
   /**
    * Errors and warnings, positioned in the user's source, with the SDK's prefab types written as a
    * program writes them (see [withCompanionsRendered]) and an unresolved name that a family's
-   * member has, written alone rather than after a `.`, followed by that member
-   * ([SdkFamilies.withFamilyMembersNamed]), when there is a front end [session]; compiler chatter
-   * is dropped.
+   * member has, written alone in [script] rather than as a member of something ([qualified]),
+   * followed by that member ([SdkFamilies.withFamilyMembersNamed]), when there is a front end
+   * [session]; compiler chatter is dropped.
    */
-  fun diagnostics(wrapped: WrappedSource, session: FirSession?): List<Diagnostic> {
+  fun diagnostics(
+      script: KtFile,
+      wrapped: WrappedSource,
+      session: FirSession?,
+  ): List<Diagnostic> {
     val familyMembers by lazy { session?.let(SdkFamilies::membersByName).orEmpty() }
     return messages.mapNotNull { message ->
       val severity =
@@ -320,46 +330,36 @@ private class CollectingMessageCollector : MessageCollector {
           else wrapped.originalPosition(location.line, location.column)
       val rendered = session?.let { withCompanionsRendered(message.text, it) } ?: message.text
       val text =
-          if (location != null && afterDot(wrapped.text, location.line, location.column)) rendered
+          if (location != null && location.line > 0 && qualified(script, line, column)) rendered
           else SdkFamilies.withFamilyMembersNamed(rendered) { familyMembers[it].orEmpty() }
       Diagnostic(severity, text, line, column, kotlin = true)
     }
   }
 
   /**
-   * Whether what starts at 1-based [line] and [column] of [text] is written after a `.` or `::`, as
-   * a member of what comes before it (`Small` in `Generator.Small`, `Generator::Small`), with only
-   * whitespace, line breaks or block comments between them.
+   * Whether the name at 1-based [line] and [column] of [script] is written as a member of what
+   * comes before it: the selector of a qualified expression (`Small` in `Generator.Small` or
+   * `Generator.Small()`), a callable reference (`Generator::Small`), or the last part of a
+   * qualified type. Whatever whitespace or comments stand between the qualifier and the name, the
+   * parser skips them.
    */
-  private fun afterDot(text: String, line: Int, column: Int): Boolean {
-    var at = (offsetOf(text, line, column) ?: return false) - 1
-    while (at >= 0) {
-      at =
-          when {
-            text[at].isWhitespace() -> at - 1
-            text[at] == '/' && at > 0 && text[at - 1] == '*' ->
-                text.lastIndexOf("/*", at - 2).takeIf { it >= 0 }?.minus(1) ?: return false
-            else -> break
-          }
-    }
-    if (at < 0) return false
-    return text[at] == '.' || (text[at] == ':' && at > 0 && text[at - 1] == ':')
-  }
-
-  /**
-   * The offset in [text] of 1-based [line] and [column], kept within that line, or null if [text]
-   * has fewer lines. Lines end as [lineSequence] ends them: at `\r\n`, `\n` or `\r`.
-   */
-  private fun offsetOf(text: String, line: Int, column: Int): Int? {
-    val breaks = charArrayOf('\n', '\r')
-    var start = 0
+  private fun qualified(script: KtFile, line: Int, column: Int): Boolean {
+    val source = script.text
+    var lineStart = 0
     repeat(line - 1) {
-      val end = text.indexOfAny(breaks, start)
-      if (end < 0) return null
-      start = if (text[end] == '\r' && text.getOrNull(end + 1) == '\n') end + 2 else end + 1
+      lineStart = source.indexOf('\n', lineStart).takeIf { it >= 0 }?.plus(1) ?: return false
     }
-    val lineEnd = text.indexOfAny(breaks, start).let { if (it < 0) text.length else it }
-    return minOf(start + maxOf(column - 1, 0), lineEnd)
+    val name =
+        script.findElementAt(lineStart + column - 1)?.parent as? KtSimpleNameExpression
+            ?: return false
+    val selector =
+        (name.parent as? KtCallExpression)?.takeIf { it.calleeExpression == name } ?: name
+    return when (val parent = selector.parent) {
+      is KtQualifiedExpression -> parent.selectorExpression == selector
+      is KtCallableReferenceExpression -> parent.callableReference == name
+      is KtUserType -> parent.referenceExpression == name && parent.qualifier != null
+      else -> false
+    }
   }
 }
 
