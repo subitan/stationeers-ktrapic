@@ -331,6 +331,91 @@ public class CompletionsTest
     }
 
     [Fact]
+    public void ReplacesTheWordWithTheOnlyOneFoundByAGameName()
+    {
+        var ice = Item("IceCrusher", 0);
+        ice.filterText = "IceCrusher IceCrusher";
+
+        var choice = Completions.Choose(new[] { ice, Item("Generator", 1) }, "Crusher");
+
+        Assert.Equal(new[] { "IceCrusher" }, choice.Shown.Select(c => c.label));
+        Assert.Null(choice.Insert);
+        Assert.Equal("IceCrusher", choice.Replace);
+    }
+
+    /// <summary>The family and its members as the daemon sends them: the family's <c>filterText</c> has its members' game names.</summary>
+    private static Completion[] Generators()
+    {
+        var generator = Item("Generator", 0);
+        generator.filterText = "Generator GasGenerator SolidFuelGenerator StirlingEngine WindTurbine UprightWindTurbine";
+        var solidFuel = Item("Generator.SolidFuel", 1);
+        solidFuel.filterText = "Generator.SolidFuel SolidFuelGenerator";
+        var stirling = Item("Generator.StirlingEngine", 2);
+        stirling.filterText = "Generator.StirlingEngine StirlingEngine";
+        return new[] { generator, solidFuel, stirling };
+    }
+
+    [Fact]
+    public void ReplacesTheWordWithTheOnlyMemberFoundByAGameNameNotItsFamily()
+    {
+        var choice = Completions.Choose(Generators(), "Stirling");
+
+        Assert.Equal(new[] { "Generator", "Generator.StirlingEngine" }, choice.Shown.Select(c => c.label));
+        Assert.Null(choice.Insert);
+        Assert.Equal("Generator.StirlingEngine", choice.Replace);
+        Assert.Equal("Generator.SolidFuel", Completions.Choose(Generators(), "SolidFuel").Replace);
+    }
+
+    [Fact]
+    public void ReplacesTheWordWithTheOneOfSeveralFoundThatItNamesInFull()
+    {
+        var generator = Item("Generator", 0);
+        generator.filterText = "Generator WindTurbine UprightWindTurbine";
+        var upright = Item("Generator.UprightWindTurbine", 1);
+        upright.filterText = "Generator.UprightWindTurbine UprightWindTurbine";
+        var wind = Item("Generator.WindTurbine", 2);
+        wind.filterText = "Generator.WindTurbine WindTurbine";
+        var completions = new[] { generator, upright, wind };
+
+        Assert.Equal("Generator.WindTurbine", Completions.Choose(completions, "WindTurbine").Replace);
+        Assert.Equal("Generator.WindTurbine", Completions.Choose(completions, "windturbine").Replace);
+        Assert.Null(Completions.Choose(completions, "Wind").Replace);
+        Assert.Null(Completions.Choose(completions, "Turbine").Replace);
+    }
+
+    [Fact]
+    public void ReplacesNothingWhenSeveralAreFoundByAGameNameOrOneStartsWithTheWord()
+    {
+        var led = Item("LedDisplay", 0);
+        led.filterText = "LedDisplay ConsoleLED5 ConsoleLED1x2 ConsoleLED1x3";
+        var small = Item("LedDisplay.Small", 1);
+        small.filterText = "LedDisplay.Small ConsoleLED5";
+        var medium = Item("LedDisplay.Medium", 2);
+        medium.filterText = "LedDisplay.Medium ConsoleLED1x2";
+        var large = Item("LedDisplay.Large", 3);
+        large.filterText = "LedDisplay.Large ConsoleLED1x3";
+        // The SDK's Console family, whose label is a game name the LedDisplay sizes start with too.
+        var console = Item("Console", 4);
+        console.filterText = "Console Console ConsoleDual ConsoleMonitor";
+        var leds = new[] { led, small, medium, large };
+
+        Assert.Null(Completions.Choose(leds, "consoleLED").Replace);
+        Assert.Equal("LedDisplay.Small", Completions.Choose(leds, "ConsoleLED5").Replace);
+        Assert.Null(Completions.Choose(leds.Append(console), "Console").Replace);
+        Assert.Null(Completions.Choose(new[] { Item("Consoles", 4), small }, "Console").Replace);
+        Assert.Null(Completions.Choose(Generators(), "Generator").Replace);
+    }
+
+    [Fact]
+    public void ReplaceWordBeforeReplacesTheWordEndingAtTheColumn()
+    {
+        Assert.Equal(
+            ("val e = Generator.StirlingEngine.at(d0)", 32),
+            Completions.ReplaceWordBefore("val e = Stirling.at(d0)", 16, "Generator.StirlingEngine"));
+        Assert.Equal(("Generator.StirlingEngine", 24), Completions.ReplaceWordBefore("Stirling", 8, "Generator.StirlingEngine"));
+    }
+
+    [Fact]
     public void NoneFoundByAGameNameForAWordUnderThreeLetters()
     {
         var led = Item("LedDisplay", 0);

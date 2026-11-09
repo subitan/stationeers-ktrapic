@@ -1,6 +1,8 @@
 package ktrapic.frontend
 
 import com.google.common.truth.Truth.assertThat
+import java.io.File
+import ktrapic.Device
 import org.jetbrains.kotlin.ir.util.dump
 import org.junit.jupiter.api.Test
 
@@ -84,6 +86,69 @@ class K2FrontendTest {
     val error = result.diagnostics.first { it.severity == Diagnostic.Severity.ERROR }
     assertThat(error.line).isEqualTo(2)
     assertThat(error.column).isIn(1..source.lines()[1].length)
+  }
+
+  private val sdkJar = File(Device::class.java.protectionDomain.codeSource.location.toURI())
+
+  /** The first error compiling [source] against the SDK, as a program is compiled. */
+  private fun errorFor(source: String): String {
+    val result =
+        K2Frontend.compile(source, listOf(sdkJar), listOf("ktrapic.*")) { it.module.dump() }
+    assertThat(result).isInstanceOf(FrontendResult.Failure::class.java)
+    return result.diagnostics.first { it.severity == Diagnostic.Severity.ERROR }.message
+  }
+
+  @Test
+  fun `a family member written alone is suggested with its family`() {
+    assertThat(errorFor("val e = StirlingEngine.at(d0)\n"))
+        .isEqualTo("Unresolved reference 'StirlingEngine'. Did you mean Generator.StirlingEngine?")
+    assertThat(errorFor("val e = StructureStirlingEngine.at(d0)\n"))
+        .endsWith("Did you mean Generator.StirlingEngine?")
+    assertThat(errorFor("val e = SolidFuel.at(d0)\n")).endsWith("Did you mean Generator.SolidFuel?")
+  }
+
+  @Test
+  fun `a family member written alone under a comment ending in a full stop is suggested`() {
+    val hint = "Unresolved reference 'StirlingEngine'. Did you mean Generator.StirlingEngine?"
+    assertThat(
+            errorFor("while (true) {\n    // Turn the engine on.\n    StirlingEngine.at(d0)\n}\n")
+        )
+        .isEqualTo(hint)
+    assertThat(errorFor("fun f() {\n    // Turn the engine on.\n    StirlingEngine.at(d0)\n}\n"))
+        .isEqualTo(hint)
+    assertThat(errorFor("val e = /* see x. /* y */ */ StirlingEngine.at(d0)\n")).isEqualTo(hint)
+  }
+
+  @Test
+  fun `a member name several families share suggests a few of them`() {
+    assertThat(errorFor("val e = Small.at(d0)\n"))
+        .isEqualTo(
+            "Unresolved reference 'Small'. Did you mean Battery.Small, BatteryCell.Small, " +
+                "BatteryCharger.Small, Fridge.Small, HangarDoor.Small or one of 7 more?"
+        )
+  }
+
+  @Test
+  fun `a wrong member written after its qualifier gets no other family's member suggested`() {
+    assertThat(errorFor("val e = Generator.Small.at(d0)\n"))
+        .isEqualTo("Unresolved reference 'Small'.")
+    assertThat(errorFor("val e = Generator.\n    Small.at(d0)\n"))
+        .isEqualTo("Unresolved reference 'Small'.")
+    assertThat(errorFor("val e = Generator. /* c */ Small\n"))
+        .isEqualTo("Unresolved reference 'Small'.")
+    assertThat(errorFor("val e = Generator. // c\n    Small\n"))
+        .isEqualTo("Unresolved reference 'Small'.")
+    assertThat(errorFor("val e = Generator. /* a /* b */ c */ Small\n"))
+        .isEqualTo("Unresolved reference 'Small'.")
+    assertThat(errorFor("val e = Generator.Small()\n")).isEqualTo("Unresolved reference 'Small'.")
+    assertThat(errorFor("val e = Generator::Small\n")).isEqualTo("Unresolved reference 'Small'.")
+    assertThat(errorFor("val e: Generator.Small? = null\n"))
+        .isEqualTo("Unresolved reference 'Small'.")
+  }
+
+  @Test
+  fun `an unresolved name no family member has is left as K2 says it`() {
+    assertThat(errorFor("val e = NoSuchThing\n")).isEqualTo("Unresolved reference 'NoSuchThing'.")
   }
 
   @Test

@@ -24,15 +24,20 @@ namespace KTrapIC
     /// <summary>
     /// What the completion popup shows for the word being typed: at most <see cref="Completions.MaxShown"/>
     /// of the completions that start with it and then of those found by their <c>filterText</c>
-    /// (<see cref="Completions.Choose"/>), how many matched in all, and the text that accepting
-    /// inserts, which is what those starting with the word share past it (the IC10 Editor inserts
-    /// that, as it has no way to pick one). Null when nothing is worth showing.
+    /// (<see cref="Completions.Choose"/>), how many matched in all, and what accepting does: insert
+    /// <see cref="Insert"/>, what those starting with the word share past it (the IC10 Editor's
+    /// popup has no way to pick one), or, when none start with it and only one is found by its
+    /// <c>filterText</c> (a family found with its member doesn't count) or just one of several has
+    /// the word as a whole word of it, put <see cref="Replace"/>, that one's label, in place of the
+    /// word (<c>Generator.StirlingEngine</c> for <c>Stirling</c>, <c>Generator.WindTurbine</c> for
+    /// <c>WindTurbine</c>). Null when nothing is worth showing.
     /// </summary>
     public sealed class CompletionChoice
     {
         public IReadOnlyList<Completion> Shown;
         public int Matched;
         public string Insert;
+        public string Replace;
     }
 
     /// <summary>
@@ -67,6 +72,18 @@ namespace KTrapIC
         /// names from the same length.
         /// </summary>
         public const int FilterTextMinLength = 3;
+
+        /// <summary>
+        /// <paramref name="line"/> with the identifier that ends at <paramref name="column"/>
+        /// (<see cref="WordBefore"/>) replaced by <paramref name="replacement"/>, and the column
+        /// just after the replacement.
+        /// </summary>
+        public static (string Line, int Column) ReplaceWordBefore(string line, int column, string replacement)
+        {
+            column = Math.Min(column, line.Length);
+            int start = column - WordBefore(line, column).Length;
+            return (line.Substring(0, start) + replacement + line.Substring(column), start + replacement.Length);
+        }
 
         /// <summary>The identifier that ends at <paramref name="column"/> of <paramref name="line"/>, or "".</summary>
         public static string WordBefore(string line, int column)
@@ -117,7 +134,10 @@ namespace KTrapIC
         /// ignoring case (<c>LedDisplay</c> for <c>Console</c>, from <c>ConsoleLED5</c>; see
         /// <see cref="WordStarts"/>). Not those starting with <c>_</c>. Null if none match, or
         /// the only one is the word itself. What accepting inserts is what those starting with the
-        /// word share past it: the editor can only add to the word, not replace it.
+        /// word share past it; when none start with it and just one is found by its
+        /// <c>filterText</c>, not counting a family whose member is found too, or just one of several
+        /// has the word as a whole word of its <c>filterText</c>, accepting replaces the word with
+        /// that one's label instead.
         /// </summary>
         public static CompletionChoice Choose(IEnumerable<Completion> completions, string word)
         {
@@ -148,7 +168,32 @@ namespace KTrapIC
                 Shown = matching.Take(MaxShown).ToList(),
                 Matched = matching.Count,
                 Insert = shared.Length > word.Length ? shared.Substring(word.Length) : null,
+                Replace = named.Count == 0 ? OnlyOneFound(found, word) : null,
             };
+        }
+
+        /// <summary>
+        /// The label of the one completion of <paramref name="found"/> that isn't the qualifier of
+        /// another's label, or, when there are several, of the one whose <c>filterText</c> has
+        /// <paramref name="word"/> as a whole word, ignoring case; null if there isn't just one. A
+        /// family's <c>filterText</c> carries its members' game names, so a word that finds
+        /// <c>Generator.StirlingEngine</c> finds <c>Generator</c> too; the member is the one meant.
+        /// A game name can be a word inside another's (<c>WindTurbine</c> in
+        /// <c>UprightWindTurbine</c>), so typing all of it still finds both; the one it names in
+        /// full is the one meant.
+        /// </summary>
+        private static string OnlyOneFound(List<Completion> found, string word)
+        {
+            var candidates = found
+                .Where(c => !found.Any(other => other.label.StartsWith(c.label + ".", StringComparison.Ordinal)))
+                .ToList();
+            if (candidates.Count > 1)
+            {
+                candidates = candidates
+                    .Where(c => c.filterText.Split(' ').Contains(word, StringComparer.OrdinalIgnoreCase))
+                    .ToList();
+            }
+            return candidates.Count == 1 ? candidates[0].label : null;
         }
 
         /// <summary>

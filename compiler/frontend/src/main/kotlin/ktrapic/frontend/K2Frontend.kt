@@ -40,7 +40,13 @@ import org.jetbrains.kotlin.config.CompilerConfiguration
 import org.jetbrains.kotlin.config.Services
 import org.jetbrains.kotlin.fir.FirSession
 import org.jetbrains.kotlin.ir.declarations.IrModuleFragment
+import org.jetbrains.kotlin.psi.KtCallExpression
+import org.jetbrains.kotlin.psi.KtCallableReferenceExpression
+import org.jetbrains.kotlin.psi.KtFile
 import org.jetbrains.kotlin.psi.KtPsiFactory
+import org.jetbrains.kotlin.psi.KtQualifiedExpression
+import org.jetbrains.kotlin.psi.KtSimpleNameExpression
+import org.jetbrains.kotlin.psi.KtUserType
 
 /**
  * A problem with the program, at a position in the user's source (1-based). [kotlin] is true for
@@ -116,7 +122,7 @@ object K2Frontend {
       // K2's extra checkers don't check the script's top-level properties, which the wrapper
       // makes members of an object: ScriptWrapper.unreadProperties does.
       val diagnostics =
-          (messages.diagnostics(wrapped, session) + ScriptWrapper.unreadProperties(script))
+          (messages.diagnostics(script, wrapped, session) + ScriptWrapper.unreadProperties(script))
               .sortedWith(compareBy({ it.line }, { it.column }))
       if (captured !is CapturedIr || diagnostics.any { it.severity == Diagnostic.Severity.ERROR }) {
         return FrontendResult.Failure(diagnostics)
@@ -292,32 +298,69 @@ private class CollectingMessageCollector : MessageCollector {
 
   /**
    * Errors and warnings, positioned in the user's source, with the SDK's prefab types written as a
-   * program writes them (see [withCompanionsRendered]) when there is a front end [session];
-   * compiler chatter is dropped.
+   * program writes them (see [withCompanionsRendered]) and an unresolved name that a family's
+   * member has, written alone in [script] rather than as a member of something ([qualified]),
+   * followed by that member ([SdkFamilies.withFamilyMembersNamed]), when there is a front end
+   * [session]; compiler chatter is dropped.
    */
-  fun diagnostics(wrapped: WrappedSource, session: FirSession?): List<Diagnostic> =
-      messages.mapNotNull { message ->
-        val severity =
-            when {
-              message.severity.isError -> Diagnostic.Severity.ERROR
-              message.severity.isWarning -> Diagnostic.Severity.WARNING
-              else -> return@mapNotNull null
-            }
-        val location = message.location
-        // A warning is only worth showing about the user's own text: one about the text wrapping
-        // added, or with no position in the source, is not something the program could change.
-        if (
-            severity == Diagnostic.Severity.WARNING &&
-                (location == null || !wrapped.isInSource(location.line, location.column))
-        ) {
-          return@mapNotNull null
-        }
-        val (line, column) =
-            if (location == null || location.line <= 0) 0 to 0
-            else wrapped.originalPosition(location.line, location.column)
-        val text = session?.let { withCompanionsRendered(message.text, it) } ?: message.text
-        Diagnostic(severity, text, line, column, kotlin = true)
+  fun diagnostics(
+      script: KtFile,
+      wrapped: WrappedSource,
+      session: FirSession?,
+  ): List<Diagnostic> {
+    val familyMembers by lazy { session?.let(SdkFamilies::membersByName).orEmpty() }
+    return messages.mapNotNull { message ->
+      val severity =
+          when {
+            message.severity.isError -> Diagnostic.Severity.ERROR
+            message.severity.isWarning -> Diagnostic.Severity.WARNING
+            else -> return@mapNotNull null
+          }
+      val location = message.location
+      // A warning is only worth showing about the user's own text: one about the text wrapping
+      // added, or with no position in the source, is not something the program could change.
+      if (
+          severity == Diagnostic.Severity.WARNING &&
+              (location == null || !wrapped.isInSource(location.line, location.column))
+      ) {
+        return@mapNotNull null
       }
+      val (line, column) =
+          if (location == null || location.line <= 0) 0 to 0
+          else wrapped.originalPosition(location.line, location.column)
+      val rendered = session?.let { withCompanionsRendered(message.text, it) } ?: message.text
+      val text =
+          if (location != null && location.line > 0 && qualified(script, line, column)) rendered
+          else SdkFamilies.withFamilyMembersNamed(rendered) { familyMembers[it].orEmpty() }
+      Diagnostic(severity, text, line, column, kotlin = true)
+    }
+  }
+
+  /**
+   * Whether the name at 1-based [line] and [column] of [script] is written as a member of what
+   * comes before it: the selector of a qualified expression (`Small` in `Generator.Small` or
+   * `Generator.Small()`), a callable reference (`Generator::Small`), or the last part of a
+   * qualified type. Whatever whitespace or comments stand between the qualifier and the name, the
+   * parser skips them.
+   */
+  private fun qualified(script: KtFile, line: Int, column: Int): Boolean {
+    val source = script.text
+    var lineStart = 0
+    repeat(line - 1) {
+      lineStart = source.indexOf('\n', lineStart).takeIf { it >= 0 }?.plus(1) ?: return false
+    }
+    val name =
+        script.findElementAt(lineStart + column - 1)?.parent as? KtSimpleNameExpression
+            ?: return false
+    val selector =
+        (name.parent as? KtCallExpression)?.takeIf { it.calleeExpression == name } ?: name
+    return when (val parent = selector.parent) {
+      is KtQualifiedExpression -> parent.selectorExpression == selector
+      is KtCallableReferenceExpression -> parent.callableReference == name
+      is KtUserType -> parent.referenceExpression == name && parent.qualifier != null
+      else -> false
+    }
+  }
 }
 
 /**
