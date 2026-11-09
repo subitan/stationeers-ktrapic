@@ -24,16 +24,10 @@ To release version X.Y.Z:
 3. The Release workflow checks the tag against `About.xml`, builds a Release build of the plugin
    (which downloads from the `vX.Y.Z` release), the compiler jar and the Windows runtime, and
    publishes them as the GitHub release `vX.Y.Z`.
-4. Upload the release to the Steam Workshop, on Windows, from a checkout of `main`. For the
-   first Workshop release, while the item is still private, try it first with a private upload, then
-   publish it:
-   ```
-   tools/workshop-upload/upload-release.sh vX.Y.Z
-   tools/workshop-upload/upload-release.sh vX.Y.Z --public
-   ```
-   Once the item is public, a private upload would replace the release its subscribers have and
-   hide the item from them, so the script refuses to upload to it without `--public`. Try a later
-   release on the private test item (see below) instead, then publish it:
+4. Upload the release to the Steam Workshop, on Windows, from a checkout of `main`. The item is
+   public, and a private upload would replace the release its subscribers have and hide the item
+   from them, so the script refuses to upload to it without `--public`. Try the release on the
+   private test item (see below) first, then publish it:
    ```
    tools/workshop-upload/upload-release.sh vX.Y.Z --item <test item>
    tools/workshop-upload/upload-release.sh vX.Y.Z --public
@@ -49,8 +43,8 @@ To release version X.Y.Z:
 
 The Workshop item is
 [3830564594](https://steamcommunity.com/sharedfiles/filedetails/?id=3830564594), recorded as
-`WorkshopHandle` in `mod/About/About.xml`, so every release updates that item. Until the first
-Workshop release is published it is private, for the maintainer's own testing.
+`WorkshopHandle` in `mod/About/About.xml`, so every release updates that item. It has been public
+since v0.1.2, its first Workshop release.
 
 Every upload replaces the item's description with the staged `About.xml`'s, headed by its
 version (`X.Y.Z`, or `X.Y.Z.N` for a test build), since Steam has no version field and the change
@@ -72,9 +66,8 @@ tools/workshop-upload/upload-test-build.sh [--item ID] [--note TEXT]
 
 It uploads through the Steam client signed in on that machine, as the item's owner, so it needs no
 login, and it keeps the item private. It refuses an item that isn't private, so no one else ever
-gets a test build. Without `--item` it uploads to the release item, which works only until the
-first Workshop release is published. After that, test builds go to a private test item of the
-maintainer's, named with `--item`; the staged `About.xml` names that item as its
+gets a test build. Without `--item` it would upload to the release item, which is public, so it
+refuses. Test builds go to a private test item of the maintainer's, named with `--item`; the staged `About.xml` names that item as its
 `WorkshopHandle`. The maintainer makes the test item once, from a staged test build:
 
 ```
