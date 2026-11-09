@@ -146,10 +146,10 @@ you type, with the IC10 shown beside them and the compiler's errors marked in th
 exported to the chip as IC10 with the Kotlin source kept alongside, so the chip opens as Kotlin
 again. Install it from the
 [Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3830564594). It needs
-BepInEx and StationeersLaunchPad, installed as StationeersLaunchPad's page says, and the IC10 Editor
-(see [mod/README.md](mod/README.md#installing)). On first use it downloads the compiler and a Java
-runtime for it from this repository's GitHub release. See [mod/README.md](mod/README.md) for
-using and building it.
+BepInEx and [StationeersLaunchPad](https://github.com/StationeersLaunchPad/StationeersLaunchPad),
+installed as its page says, and the IC10 Editor (see [mod/README.md](mod/README.md#installing)).
+On first use it downloads the compiler and a Java runtime for it from this repository's GitHub
+release. See [mod/README.md](mod/README.md) for using and building it.
 
 ## Editing in IntelliJ
 
