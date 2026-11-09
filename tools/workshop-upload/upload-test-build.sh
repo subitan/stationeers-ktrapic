@@ -13,8 +13,8 @@
 # (WorkshopHandle). The staged About.xml names the item it is uploaded to. --note adds to the
 # change note; --stage-only stops before the upload.
 #
-# It uploads only to a private item, so no one else gets a test build. Once the release item is
-# public, test builds go to a private test item of the maintainer's, named with --item.
+# It uploads only to a private item, so no one else gets a test build. The release item is public,
+# so test builds go to a private test item of the maintainer's, named with --item.
 #
 # Windows only. Needs dotnet, the game installed (found as the plugin build finds it:
 # StationeersDirectory in mod/Local.Developer.props, STATIONEERS_DIR, or Steam's default path) and

@@ -10,6 +10,10 @@ chip's pins, typed devices, slots and batch operations on the network compile (s
 `test/cases/satellite_tracker.ic10.kts`, a port of a chip from the game), and a plugin for the
 IC10 Editor mod compiles them in game.
 
+To use it in game, subscribe to
+[KTrapIC on the Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3830564594)
+(see [In game](#in-game)).
+
 Programs are Kotlin scripts named `*.ic10.kts`. The `ktrapic` API needs no import, since
 `import ktrapic.*` is implied; writing it anyway is fine.
 
@@ -53,7 +57,7 @@ functions, devices, the maths and numeric rules, and the chip's size limits. The
 | 9 | A test harness in the playground: run a program against fake devices ([#66](https://github.com/subitan/stationeers-ktrapic/issues/66)) | Done |
 | 10 | Advanced compiler features: functions called on the stack by default, with per-function and program-wide opt-outs, and recursion ([#120](https://github.com/subitan/stationeers-ktrapic/issues/120)); values kept in a circuit housing's stack memory when registers run out ([#129](https://github.com/subitan/stationeers-ktrapic/issues/129)) | Done |
 | 11 | An IntelliJ plugin: KTrapIC's own errors and the compiled IC10 in the IDE ([#23](https://github.com/subitan/stationeers-ktrapic/issues/23)) | In progress |
-| 12 | **First release.** Before it: compile options as file annotations, not settings ([#141](https://github.com/subitan/stationeers-ktrapic/issues/141)); basic completion and hovers in the playground ([#20](https://github.com/subitan/stationeers-ktrapic/issues/20)); install instructions ([#86](https://github.com/subitan/stationeers-ktrapic/issues/86)). Then the IC10 Editor plugin's tagged release, v0.1.0 and v0.1.1 on GitHub and v0.1.2 on the Steam Workshop ([#115](https://github.com/subitan/stationeers-ktrapic/issues/115)), and after it the IntelliJ plugin on JetBrains Marketplace | In progress |
+| 12 | **First release.** Before it: compile options as file annotations, not settings ([#141](https://github.com/subitan/stationeers-ktrapic/issues/141)); basic completion and hovers in the playground ([#20](https://github.com/subitan/stationeers-ktrapic/issues/20)); install instructions ([#86](https://github.com/subitan/stationeers-ktrapic/issues/86)). Then the IC10 Editor plugin's tagged release: v0.1.0 and v0.1.1 on GitHub, and v0.1.2, public on the Steam Workshop since 2026-11-03 ([#115](https://github.com/subitan/stationeers-ktrapic/issues/115)). Still to come: the IntelliJ plugin on JetBrains Marketplace | In progress |
 | 13 | **After the first release.** Language: `waitUntil` ([#139](https://github.com/subitan/stationeers-ktrapic/issues/139)), your own enums and `when`, classes, lambdas. Editors: the rest of the playground's parity ([#20](https://github.com/subitan/stationeers-ktrapic/issues/20)), richer type hovers ([#118](https://github.com/subitan/stationeers-ktrapic/issues/118)), Test pane ([#116](https://github.com/subitan/stationeers-ktrapic/issues/116)), plugin polish ([#44](https://github.com/subitan/stationeers-ktrapic/issues/44), [#84](https://github.com/subitan/stationeers-ktrapic/issues/84)). Bigger programs: several chips ([#30](https://github.com/subitan/stationeers-ktrapic/issues/30)), slot kinds ([#34](https://github.com/subitan/stationeers-ktrapic/issues/34)). Game data from the game itself ([#81](https://github.com/subitan/stationeers-ktrapic/issues/81), [#83](https://github.com/subitan/stationeers-ktrapic/issues/83), [#68](https://github.com/subitan/stationeers-ktrapic/issues/68)). Fixes ([#39](https://github.com/subitan/stationeers-ktrapic/issues/39), [#5](https://github.com/subitan/stationeers-ktrapic/issues/5)). ktfmt's Google style ([#46](https://github.com/subitan/stationeers-ktrapic/issues/46)), and the emulator given back to PyTrapIC ([#18](https://github.com/subitan/stationeers-ktrapic/issues/18)) | Planned |
 
 ## Credits
@@ -140,9 +144,12 @@ The plugin in `mod/` adds a "Kotlin" language to the
 [IC10 Editor](https://github.com/aproposmath/StationeersIC10Editor) mod: programs are compiled as
 you type, with the IC10 shown beside them and the compiler's errors marked in the code, and
 exported to the chip as IC10 with the Kotlin source kept alongside, so the chip opens as Kotlin
-again. On first use it downloads the compiler and a Java runtime for it from this repository's
-GitHub release. See [mod/README.md](mod/README.md)
-for installing, using and building it.
+again. Install it from the
+[Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3830564594). It needs
+BepInEx and [StationeersLaunchPad](https://github.com/StationeersLaunchPad/StationeersLaunchPad),
+installed as its page says, and the IC10 Editor (see [mod/README.md](mod/README.md#installing)).
+On first use it downloads the compiler and a Java runtime for it from this repository's GitHub
+release. See [mod/README.md](mod/README.md) for using and building it.
 
 ## Editing in IntelliJ
 
