@@ -110,9 +110,16 @@ class K2FrontendTest {
   @Test
   fun `a member name several families share suggests a few of them`() {
     assertThat(errorFor("val e = Small.at(d0)\n"))
-        .containsMatch(
-            """Did you mean (\w+\.Small, )*\w+\.Small( or (one of \d+ more|\w+\.Small))?\?$"""
+        .isEqualTo(
+            "Unresolved reference 'Small'. Did you mean Battery.Small, BatteryCell.Small, " +
+                "BatteryCharger.Small, Fridge.Small, HangarDoor.Small or one of 7 more?"
         )
+  }
+
+  @Test
+  fun `a wrong member written after its qualifier gets no other family's member suggested`() {
+    assertThat(errorFor("val e = Generator.Small.at(d0)\n"))
+        .isEqualTo("Unresolved reference 'Small'.")
   }
 
   @Test

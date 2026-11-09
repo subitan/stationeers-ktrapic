@@ -333,26 +333,55 @@ public class CompletionsTest
     [Fact]
     public void ReplacesTheWordWithTheOnlyOneFoundByAGameName()
     {
-        var stirling = Item("Generator.StirlingEngine", 1);
+        var ice = Item("IceCrusher", 0);
+        ice.filterText = "IceCrusher IceCrusher";
+
+        var choice = Completions.Choose(new[] { ice, Item("Generator", 1) }, "Crusher");
+
+        Assert.Equal(new[] { "IceCrusher" }, choice.Shown.Select(c => c.label));
+        Assert.Null(choice.Insert);
+        Assert.Equal("IceCrusher", choice.Replace);
+    }
+
+    /// <summary>The family and its members as the daemon sends them: the family's <c>filterText</c> has its members' game names.</summary>
+    private static Completion[] Generators()
+    {
+        var generator = Item("Generator", 0);
+        generator.filterText = "Generator GasGenerator SolidFuelGenerator StirlingEngine WindTurbine UprightWindTurbine";
+        var solidFuel = Item("Generator.SolidFuel", 1);
+        solidFuel.filterText = "Generator.SolidFuel SolidFuelGenerator";
+        var stirling = Item("Generator.StirlingEngine", 2);
         stirling.filterText = "Generator.StirlingEngine StirlingEngine";
+        return new[] { generator, solidFuel, stirling };
+    }
 
-        var choice = Completions.Choose(new[] { Item("Generator", 0), stirling }, "Stirling");
+    [Fact]
+    public void ReplacesTheWordWithTheOnlyMemberFoundByAGameNameNotItsFamily()
+    {
+        var choice = Completions.Choose(Generators(), "Stirling");
 
-        Assert.Equal(new[] { "Generator.StirlingEngine" }, choice.Shown.Select(c => c.label));
+        Assert.Equal(new[] { "Generator", "Generator.StirlingEngine" }, choice.Shown.Select(c => c.label));
         Assert.Null(choice.Insert);
         Assert.Equal("Generator.StirlingEngine", choice.Replace);
+        Assert.Equal("Generator.SolidFuel", Completions.Choose(Generators(), "SolidFuel").Replace);
     }
 
     [Fact]
     public void ReplacesNothingWhenSeveralAreFoundByAGameNameOrOneStartsWithTheWord()
     {
         var led = Item("LedDisplay", 0);
-        led.filterText = "LedDisplay ConsoleLED5";
-        var small = Item("LedDisplay.Small", 2);
+        led.filterText = "LedDisplay ConsoleLED5 ConsoleLED1x2 ConsoleLED1x3";
+        var small = Item("LedDisplay.Small", 1);
         small.filterText = "LedDisplay.Small ConsoleLED5";
+        var medium = Item("LedDisplay.Medium", 2);
+        medium.filterText = "LedDisplay.Medium ConsoleLED1x2";
+        var large = Item("LedDisplay.Large", 3);
+        large.filterText = "LedDisplay.Large ConsoleLED1x3";
 
-        Assert.Null(Completions.Choose(new[] { led, small }, "Console").Replace);
-        Assert.Null(Completions.Choose(new[] { Item("Consoles", 1), small }, "Console").Replace);
+        Assert.Null(Completions.Choose(new[] { led, small, medium, large }, "Console").Replace);
+        Assert.Equal("LedDisplay.Small", Completions.Choose(new[] { led, small, medium, large }, "ConsoleLED5").Replace);
+        Assert.Null(Completions.Choose(new[] { Item("Consoles", 4), small }, "Console").Replace);
+        Assert.Null(Completions.Choose(Generators(), "Generator").Replace);
     }
 
     [Fact]

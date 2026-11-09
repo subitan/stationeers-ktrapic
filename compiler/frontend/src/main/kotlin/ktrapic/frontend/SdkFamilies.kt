@@ -63,33 +63,39 @@ internal object SdkFamilies {
           ?.let { (it as? FirLiteralExpression)?.value as? String }
 
   /**
-   * The family members [name] could mean, by their qualified names (`Generator.StirlingEngine`):
-   * those whose own name, game prefab name or game name's [K2Completion.gameNameWords] is [name]
-   * (`SolidFuel`, `StructureStirlingEngine`, `StirlingEngine`), sorted.
+   * The family members each name could mean, by their qualified names (`Generator.StirlingEngine`),
+   * sorted: a member is under its own name, its game prefab name and that name's
+   * [K2Completion.gameNameWords] (`StirlingEngine`, `StructureStirlingEngine`).
    */
-  fun membersNamed(name: String, session: FirSession): List<String> {
+  fun membersByName(session: FirSession): Map<String, List<String>> {
     val scopeSession = ScopeSession()
-    return families(session)
-        .flatMap { family ->
-          members(family, session, scopeSession).filter { member ->
-            val prefab = prefabNameOf(member, session)
-            member.classId.shortClassName.asString() == name ||
-                (prefab != null && (prefab == name || K2Completion.gameNameWords(prefab) == name))
-          }
-        }
-        .map { nameOf(it.classId) }
-        .sorted()
+    val byName = mutableMapOf<String, MutableSet<String>>()
+    for (family in families(session)) {
+      for (member in members(family, session, scopeSession)) {
+        val qualified = nameOf(member.classId)
+        val prefab = prefabNameOf(member, session)
+        val names =
+            listOfNotNull(
+                member.classId.shortClassName.asString(),
+                prefab,
+                prefab?.let(K2Completion::gameNameWords),
+            )
+        for (name in names) byName.getOrPut(name) { sortedSetOf() } += qualified
+      }
+    }
+    return byName.mapValues { it.value.toList() }
   }
 
   /**
-   * [message], with the family members its unresolved name could mean suggested after it, when it
-   * is K2's `Unresolved reference 'StirlingEngine'.` and there are any: `Did you mean
-   * Generator.StirlingEngine?`. A family's member is written with the family's name, so a program
-   * that writes it alone, as the game's name suggests, gets told where it is.
+   * [message], with the family members its unresolved name could mean ([membersNamed], as
+   * [membersByName] gives them) suggested after it, when it is K2's `Unresolved reference
+   * 'StirlingEngine'.` and there are any: `Did you mean Generator.StirlingEngine?`. A family's
+   * member is written with the family's name, so a program that writes it alone, as the game's name
+   * suggests, gets told where it is. [membersNamed] is only called for such a message.
    */
-  fun withFamilyMembersNamed(message: String, session: FirSession): String {
+  fun withFamilyMembersNamed(message: String, membersNamed: (String) -> List<String>): String {
     val name = UNRESOLVED.matchEntire(message)?.groupValues?.get(1) ?: return message
-    val members = membersNamed(name, session)
+    val members = membersNamed(name)
     if (members.isEmpty()) return message
     val shown = members.take(MAX_SUGGESTED)
     val choices =

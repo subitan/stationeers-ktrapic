@@ -293,35 +293,49 @@ private class CollectingMessageCollector : MessageCollector {
   /**
    * Errors and warnings, positioned in the user's source, with the SDK's prefab types written as a
    * program writes them (see [withCompanionsRendered]) and an unresolved name that a family's
-   * member has followed by that member ([SdkFamilies.withFamilyMembersNamed]), when there is a
-   * front end [session]; compiler chatter is dropped.
+   * member has, written alone rather than after a `.`, followed by that member
+   * ([SdkFamilies.withFamilyMembersNamed]), when there is a front end [session]; compiler chatter
+   * is dropped.
    */
-  fun diagnostics(wrapped: WrappedSource, session: FirSession?): List<Diagnostic> =
-      messages.mapNotNull { message ->
-        val severity =
-            when {
-              message.severity.isError -> Diagnostic.Severity.ERROR
-              message.severity.isWarning -> Diagnostic.Severity.WARNING
-              else -> return@mapNotNull null
-            }
-        val location = message.location
-        // A warning is only worth showing about the user's own text: one about the text wrapping
-        // added, or with no position in the source, is not something the program could change.
-        if (
-            severity == Diagnostic.Severity.WARNING &&
-                (location == null || !wrapped.isInSource(location.line, location.column))
-        ) {
-          return@mapNotNull null
-        }
-        val (line, column) =
-            if (location == null || location.line <= 0) 0 to 0
-            else wrapped.originalPosition(location.line, location.column)
-        val text =
-            session?.let {
-              SdkFamilies.withFamilyMembersNamed(withCompanionsRendered(message.text, it), it)
-            } ?: message.text
-        Diagnostic(severity, text, line, column, kotlin = true)
+  fun diagnostics(wrapped: WrappedSource, session: FirSession?): List<Diagnostic> {
+    val familyMembers by lazy { session?.let(SdkFamilies::membersByName).orEmpty() }
+    return messages.mapNotNull { message ->
+      val severity =
+          when {
+            message.severity.isError -> Diagnostic.Severity.ERROR
+            message.severity.isWarning -> Diagnostic.Severity.WARNING
+            else -> return@mapNotNull null
+          }
+      val location = message.location
+      // A warning is only worth showing about the user's own text: one about the text wrapping
+      // added, or with no position in the source, is not something the program could change.
+      if (
+          severity == Diagnostic.Severity.WARNING &&
+              (location == null || !wrapped.isInSource(location.line, location.column))
+      ) {
+        return@mapNotNull null
       }
+      val (line, column) =
+          if (location == null || location.line <= 0) 0 to 0
+          else wrapped.originalPosition(location.line, location.column)
+      val rendered = session?.let { withCompanionsRendered(message.text, it) } ?: message.text
+      val text =
+          if (location != null && afterDot(wrapped.text, location.line, location.column)) rendered
+          else SdkFamilies.withFamilyMembersNamed(rendered) { familyMembers[it].orEmpty() }
+      Diagnostic(severity, text, line, column, kotlin = true)
+    }
+  }
+
+  /**
+   * Whether what starts at 1-based [line] and [column] of [text] is written after a `.`, as a
+   * member of what comes before it (`Small` in `Generator.Small`).
+   */
+  private fun afterDot(text: String, line: Int, column: Int): Boolean {
+    val lineText = text.lineSequence().elementAtOrNull(line - 1) ?: return false
+    var at = minOf(column - 1, lineText.length) - 1
+    while (at >= 0 && lineText[at].isWhitespace()) at--
+    return at >= 0 && lineText[at] == '.'
+  }
 }
 
 /**
