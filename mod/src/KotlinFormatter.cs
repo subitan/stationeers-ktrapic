@@ -164,6 +164,13 @@ namespace KTrapIC
         private StyledText _hoverText;
 
         /// <summary>
+        /// What accepting the shown completions puts in place of the word at the caret, when it
+        /// replaces the word rather than adding to it (<see cref="CompletionChoice.Replace"/>), or
+        /// null. Used on the main thread.
+        /// </summary>
+        private string _autocompleteReplace;
+
+        /// <summary>
         /// The latest compile's warnings (<see cref="ApplyWarnings"/>) and the tokens they mark,
         /// and the toolbar count's list of them. A mark goes when its line is edited, as an
         /// error's does, and stays when the editor parses the same text again. Used on the main
@@ -429,6 +436,7 @@ namespace KTrapIC
         {
             _autocomplete = null;
             _autocompleteInsertText = null;
+            _autocompleteReplace = null;
             var caret = Editor.CaretPos;
             if (caret.Line >= Lines.Count)
                 return;
@@ -482,6 +490,7 @@ namespace KTrapIC
             }
             _autocomplete = popup;
             _autocompleteInsertText = null;
+            _autocompleteReplace = null;
         }
 
         /// <summary>
@@ -622,6 +631,7 @@ namespace KTrapIC
                 popup.AddLine($"... and {choice.Matched - choice.Shown.Count} more", DefaultStyle);
             _autocomplete = popup;
             _autocompleteInsertText = choice.Insert;
+            _autocompleteReplace = choice.Replace;
         }
 
         /// <summary>The color of a completion of LSP <c>CompletionItemKind</c> <paramref name="kind"/>, as the code colors its names.</summary>
@@ -648,13 +658,23 @@ namespace KTrapIC
         }
 
         /// <summary>
-        /// Inserts the shown completions' shared text, only while they're shown: the editor keeps
-        /// the text to insert after it stops showing them.
+        /// Inserts the shown completions' shared text, or puts the one found by its game name in
+        /// place of the word at the caret (<see cref="CompletionChoice.Replace"/>), only while
+        /// they're shown: the editor keeps the text to insert after it stops showing them.
         /// </summary>
         public override void PerformAutocomplete()
         {
-            if (_autocomplete != null)
+            if (_autocomplete == null)
+                return;
+            var caret = Editor.CaretPos;
+            if (_autocompleteReplace == null || caret.Line >= Lines.Count)
+            {
                 base.PerformAutocomplete();
+                return;
+            }
+            var (line, column) = Completions.ReplaceWordBefore(Lines[caret.Line].Text, caret.Col, _autocompleteReplace);
+            Editor.ReplaceLine(caret.Line, line);
+            Editor.CaretPos = new TextPosition(caret.Line, column);
         }
 
         /// <summary>

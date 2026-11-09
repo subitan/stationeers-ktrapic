@@ -331,6 +331,40 @@ public class CompletionsTest
     }
 
     [Fact]
+    public void ReplacesTheWordWithTheOnlyOneFoundByAGameName()
+    {
+        var stirling = Item("Generator.StirlingEngine", 1);
+        stirling.filterText = "Generator.StirlingEngine StirlingEngine";
+
+        var choice = Completions.Choose(new[] { Item("Generator", 0), stirling }, "Stirling");
+
+        Assert.Equal(new[] { "Generator.StirlingEngine" }, choice.Shown.Select(c => c.label));
+        Assert.Null(choice.Insert);
+        Assert.Equal("Generator.StirlingEngine", choice.Replace);
+    }
+
+    [Fact]
+    public void ReplacesNothingWhenSeveralAreFoundByAGameNameOrOneStartsWithTheWord()
+    {
+        var led = Item("LedDisplay", 0);
+        led.filterText = "LedDisplay ConsoleLED5";
+        var small = Item("LedDisplay.Small", 2);
+        small.filterText = "LedDisplay.Small ConsoleLED5";
+
+        Assert.Null(Completions.Choose(new[] { led, small }, "Console").Replace);
+        Assert.Null(Completions.Choose(new[] { Item("Consoles", 1), small }, "Console").Replace);
+    }
+
+    [Fact]
+    public void ReplaceWordBeforeReplacesTheWordEndingAtTheColumn()
+    {
+        Assert.Equal(
+            ("val e = Generator.StirlingEngine.at(d0)", 32),
+            Completions.ReplaceWordBefore("val e = Stirling.at(d0)", 16, "Generator.StirlingEngine"));
+        Assert.Equal(("Generator.StirlingEngine", 24), Completions.ReplaceWordBefore("Stirling", 8, "Generator.StirlingEngine"));
+    }
+
+    [Fact]
     public void NoneFoundByAGameNameForAWordUnderThreeLetters()
     {
         var led = Item("LedDisplay", 0);

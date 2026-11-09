@@ -292,8 +292,9 @@ private class CollectingMessageCollector : MessageCollector {
 
   /**
    * Errors and warnings, positioned in the user's source, with the SDK's prefab types written as a
-   * program writes them (see [withCompanionsRendered]) when there is a front end [session];
-   * compiler chatter is dropped.
+   * program writes them (see [withCompanionsRendered]) and an unresolved name that a family's
+   * member has followed by that member ([SdkFamilies.withFamilyMembersNamed]), when there is a
+   * front end [session]; compiler chatter is dropped.
    */
   fun diagnostics(wrapped: WrappedSource, session: FirSession?): List<Diagnostic> =
       messages.mapNotNull { message ->
@@ -315,7 +316,10 @@ private class CollectingMessageCollector : MessageCollector {
         val (line, column) =
             if (location == null || location.line <= 0) 0 to 0
             else wrapped.originalPosition(location.line, location.column)
-        val text = session?.let { withCompanionsRendered(message.text, it) } ?: message.text
+        val text =
+            session?.let {
+              SdkFamilies.withFamilyMembersNamed(withCompanionsRendered(message.text, it), it)
+            } ?: message.text
         Diagnostic(severity, text, line, column, kotlin = true)
       }
 }

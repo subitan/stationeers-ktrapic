@@ -271,7 +271,10 @@ interface: an elevator level is a shaft with doors and power, so `ElevatorLevel`
 Likewise interior doors, hangar doors and airlocks extend `Door`, the family of the glass, blast
 and composite doors, so `inline fun close(door: Door)` closes any of them.
 The [device reference](DEVICES.md#families) lists every family and its members; every other prefab
-is a type of its own.
+is a type of its own. A member is written with its family's name: the Stirling engine is
+`Generator.StirlingEngine`, and `StirlingEngine` alone is an unresolved reference, whose error
+suggests the member it could mean (`Did you mean Generator.StirlingEngine?`), found by the
+member's own name or the game's name of its prefab, with or without `Structure` or `Item`.
 
 ### Views
 

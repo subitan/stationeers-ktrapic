@@ -1,6 +1,8 @@
 package ktrapic.frontend
 
 import com.google.common.truth.Truth.assertThat
+import java.io.File
+import ktrapic.Device
 import org.jetbrains.kotlin.ir.util.dump
 import org.junit.jupiter.api.Test
 
@@ -84,6 +86,38 @@ class K2FrontendTest {
     val error = result.diagnostics.first { it.severity == Diagnostic.Severity.ERROR }
     assertThat(error.line).isEqualTo(2)
     assertThat(error.column).isIn(1..source.lines()[1].length)
+  }
+
+  private val sdkJar = File(Device::class.java.protectionDomain.codeSource.location.toURI())
+
+  /** The first error compiling [source] against the SDK, as a program is compiled. */
+  private fun errorFor(source: String): String {
+    val result =
+        K2Frontend.compile(source, listOf(sdkJar), listOf("ktrapic.*")) { it.module.dump() }
+    assertThat(result).isInstanceOf(FrontendResult.Failure::class.java)
+    return result.diagnostics.first { it.severity == Diagnostic.Severity.ERROR }.message
+  }
+
+  @Test
+  fun `a family member written alone is suggested with its family`() {
+    assertThat(errorFor("val e = StirlingEngine.at(d0)\n"))
+        .isEqualTo("Unresolved reference 'StirlingEngine'. Did you mean Generator.StirlingEngine?")
+    assertThat(errorFor("val e = StructureStirlingEngine.at(d0)\n"))
+        .endsWith("Did you mean Generator.StirlingEngine?")
+    assertThat(errorFor("val e = SolidFuel.at(d0)\n")).endsWith("Did you mean Generator.SolidFuel?")
+  }
+
+  @Test
+  fun `a member name several families share suggests a few of them`() {
+    assertThat(errorFor("val e = Small.at(d0)\n"))
+        .containsMatch(
+            """Did you mean (\w+\.Small, )*\w+\.Small( or (one of \d+ more|\w+\.Small))?\?$"""
+        )
+  }
+
+  @Test
+  fun `an unresolved name no family member has is left as K2 says it`() {
+    assertThat(errorFor("val e = NoSuchThing\n")).isEqualTo("Unresolved reference 'NoSuchThing'.")
   }
 
   @Test

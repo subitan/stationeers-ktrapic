@@ -14,9 +14,7 @@ import org.jetbrains.kotlin.fir.declarations.FirNamedFunction
 import org.jetbrains.kotlin.fir.declarations.FirProperty
 import org.jetbrains.kotlin.fir.declarations.FirRegularClass
 import org.jetbrains.kotlin.fir.declarations.FirResolvePhase
-import org.jetbrains.kotlin.fir.declarations.toAnnotationClassId
 import org.jetbrains.kotlin.fir.expressions.FirBlock
-import org.jetbrains.kotlin.fir.expressions.FirLiteralExpression
 import org.jetbrains.kotlin.fir.expressions.FirQualifiedAccessExpression
 import org.jetbrains.kotlin.fir.expressions.FirResolvedQualifier
 import org.jetbrains.kotlin.fir.expressions.FirWhenExpression
@@ -271,9 +269,6 @@ object K2Completion {
   private val VALUE_CLASS_KINDS = setOf(ClassKind.OBJECT, ClassKind.ENUM_CLASS)
 
   private const val PLACEHOLDER = "ktrapicCompletionPlaceholder"
-
-  /** The SDK's annotation giving a typed device's game prefab name. */
-  private val PREFAB_NAME = ClassId.topLevel(FqName("ktrapic.PrefabName"))
 
   /**
    * How long the word typed must be for a family's members to be offered by their game names, with
@@ -594,23 +589,12 @@ object K2Completion {
     }
 
     /** [family]'s nested classes. */
-    private fun familyMembers(family: FirRegularClassSymbol): List<FirRegularClassSymbol> {
-      val members = mutableListOf<FirRegularClassSymbol>()
-      session.kotlinScopeProvider
-          .getNestedClassifierScope(family.fir, session, scopeSession)
-          ?.processAllClassifiers { (it as? FirRegularClassSymbol)?.let(members::add) }
-      return members
-    }
+    private fun familyMembers(family: FirRegularClassSymbol): List<FirRegularClassSymbol> =
+        SdkFamilies.members(family, session, scopeSession)
 
     /** The game's name of the prefab [symbol] stands for, from its `@PrefabName`, if it has one. */
     private fun prefabNameOf(symbol: FirRegularClassSymbol): String? =
-        symbol.resolvedAnnotationsWithArguments
-            .firstOrNull { it.toAnnotationClassId(session) == PREFAB_NAME }
-            ?.argumentMapping
-            ?.mapping
-            ?.values
-            ?.firstOrNull()
-            ?.let { (it as? FirLiteralExpression)?.value as? String }
+        SdkFamilies.prefabNameOf(symbol, session)
 
     /**
      * The game's names of the prefabs [symbol] stands for: its own, or, for a family, each of its

@@ -24,15 +24,18 @@ namespace KTrapIC
     /// <summary>
     /// What the completion popup shows for the word being typed: at most <see cref="Completions.MaxShown"/>
     /// of the completions that start with it and then of those found by their <c>filterText</c>
-    /// (<see cref="Completions.Choose"/>), how many matched in all, and the text that accepting
-    /// inserts, which is what those starting with the word share past it (the IC10 Editor inserts
-    /// that, as it has no way to pick one). Null when nothing is worth showing.
+    /// (<see cref="Completions.Choose"/>), how many matched in all, and what accepting does: insert
+    /// <see cref="Insert"/>, what those starting with the word share past it (the IC10 Editor's
+    /// popup has no way to pick one), or, when none start with it and only one is found by its
+    /// <c>filterText</c>, put <see cref="Replace"/>, that one's label, in place of the word
+    /// (<c>Generator.StirlingEngine</c> for <c>Stirling</c>). Null when nothing is worth showing.
     /// </summary>
     public sealed class CompletionChoice
     {
         public IReadOnlyList<Completion> Shown;
         public int Matched;
         public string Insert;
+        public string Replace;
     }
 
     /// <summary>
@@ -67,6 +70,18 @@ namespace KTrapIC
         /// names from the same length.
         /// </summary>
         public const int FilterTextMinLength = 3;
+
+        /// <summary>
+        /// <paramref name="line"/> with the identifier that ends at <paramref name="column"/>
+        /// (<see cref="WordBefore"/>) replaced by <paramref name="replacement"/>, and the column
+        /// just after the replacement.
+        /// </summary>
+        public static (string Line, int Column) ReplaceWordBefore(string line, int column, string replacement)
+        {
+            column = Math.Min(column, line.Length);
+            int start = column - WordBefore(line, column).Length;
+            return (line.Substring(0, start) + replacement + line.Substring(column), start + replacement.Length);
+        }
 
         /// <summary>The identifier that ends at <paramref name="column"/> of <paramref name="line"/>, or "".</summary>
         public static string WordBefore(string line, int column)
@@ -117,7 +132,8 @@ namespace KTrapIC
         /// ignoring case (<c>LedDisplay</c> for <c>Console</c>, from <c>ConsoleLED5</c>; see
         /// <see cref="WordStarts"/>). Not those starting with <c>_</c>. Null if none match, or
         /// the only one is the word itself. What accepting inserts is what those starting with the
-        /// word share past it: the editor can only add to the word, not replace it.
+        /// word share past it; when none start with it and just one is found by its
+        /// <c>filterText</c>, accepting replaces the word with that one's label instead.
         /// </summary>
         public static CompletionChoice Choose(IEnumerable<Completion> completions, string word)
         {
@@ -148,6 +164,7 @@ namespace KTrapIC
                 Shown = matching.Take(MaxShown).ToList(),
                 Matched = matching.Count,
                 Insert = shared.Length > word.Length ? shared.Substring(word.Length) : null,
+                Replace = named.Count == 0 && found.Count == 1 ? found[0].label : null,
             };
         }
 
