@@ -67,7 +67,8 @@ tools/workshop-upload/upload-test-build.sh [--item ID] [--note TEXT]
 It uploads through the Steam client signed in on that machine, as the item's owner, so it needs no
 login, and it keeps the item private. It refuses an item that isn't private, so no one else ever
 gets a test build. Without `--item` it would upload to the release item, which is public, so it
-refuses. Test builds go to a private test item of the maintainer's, named with `--item`; the staged `About.xml` names that item as its
+refuses, though only after it has fetched and built the plugin. Test builds go to a private test
+item of the maintainer's, named with `--item`; the staged `About.xml` names that item as its
 `WorkshopHandle`. The maintainer makes the test item once, from a staged test build:
 
 ```

@@ -15,11 +15,10 @@
 #
 # Without --public the upload makes the item private, to try the release before publishing it. It
 # uploads that way only to an item that is already private: on a public item, a private upload would
-# replace the release its subscribers have and hide the item from them. So the first release, while
-# the release item is still private, is tried on that item; a later release is tried on a private
-# test item of the maintainer's, named with --item (the staged About.xml then names that item as its
-# WorkshopHandle), and then uploaded with --public. --item is only for such a trial, so it can't be
-# combined with --public.
+# replace the release its subscribers have and hide the item from them. The release item is public,
+# so a release is tried on a private test item of the maintainer's, named with --item (the staged
+# About.xml then names that item as its WorkshopHandle), and then uploaded with --public. --item is
+# only for such a trial, so it can't be combined with --public.
 #
 # Windows only. Needs curl, unzip, dotnet (to build the uploader; the game installed, found as the
 # plugin build finds it) and Steam running, signed in as the item's owner. Stationeers must not be
